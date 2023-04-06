@@ -1,0 +1,34 @@
+<div class="input-container">
+  <label class="label-text" [ngClass]="{ 'label-text-disabled': disabled }">{{
+    label
+  }}</label>
+
+  <div
+    class="input-wrap"
+    [ngClass]="{ password: type === 'password', 'input-wrap-error': error }"
+  >
+    <input
+      [type]="currentType"
+      [value]="value"
+      (input)="updateValue($event)"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [ngStyle]="{ width: width }"
+      (blur)="onBlur()"
+    />
+    <span
+      *ngIf="type === 'password'"
+      class="password-show-btn"
+      [ngClass]="{ 'password-show-btn-active': currentType === 'text' }"
+      (click)="togglePassword()"
+      >SHOW</span
+    >
+  </div>
+
+  <div *ngIf="loading" class="progress-bar" [ngStyle]="{ width: width }">
+    <div class="progress-bar-line inc"></div>
+    <div class="progress-bar-line dec"></div>
+  </div>
+  <div *ngIf="!error" class="hint-text">{{ hint }}</div>
+  <div *ngIf="error" class="error-text">{{ error }}</div>
+</div>

@@ -1,0 +1,35 @@
+@import "../../../variables.scss";
+
+:host {
+  border-right: 1px solid lightgrey;
+  background-color: white;
+}
+
+.sidebar {
+  width: $sidebar-width;
+  overflow-y: auto;
+  .list {
+    &-title {
+      margin: 0;
+      padding: 12px 0 12px 12px;
+      color: $color-text;
+    }
+    &-item {
+      border-bottom: 1px solid lightgrey;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      padding-left: 30px;
+      text-decoration: none;
+      color: $color-text;
+      &:hover {
+        background: $highlight-color;
+      }
+    }
+    ._active {
+      color: white;
+      font-weight: bold;
+      background: $color-calm;
+    }
+  }
+}

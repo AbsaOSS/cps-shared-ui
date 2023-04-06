@@ -1,0 +1,12 @@
+<div class="sidebar">
+  <div class="list">
+    <h3 class="list-title">Components</h3>
+    <a
+      *ngFor="let comp of components"
+      class="list-item"
+      [routerLink]="[comp.url]"
+      routerLinkActive="_active"
+      >{{ comp.title }}</a
+    >
+  </div>
+</div>

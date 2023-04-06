@@ -1,0 +1,36 @@
+<form [formGroup]="form">
+  <div class="inputs-group">
+    <cps-input
+      label="Required numeric input"
+      formControlName="requiredInput"
+      placeholder="Enter 8 digit value"
+      type="number"
+    ></cps-input>
+    <cps-input
+      label="Loading input"
+      hint="This input is currently in a loading state"
+      [loading]="true"
+    ></cps-input>
+    <cps-input
+      label="Password input"
+      placeholder="Enter password"
+      type="password"
+    ></cps-input>
+    <cps-input
+      label="Disabled input"
+      hint="This input is disabled"
+      [disabled]="true"
+    ></cps-input>
+    <div class="sync-val-example">
+      <cps-input
+        width="400px"
+        label="Input with two-way binding, type something in"
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }"
+      >
+        ></cps-input
+      >
+      <span class="sync-val">{{ syncVal }}</span>
+    </div>
+  </div>
+</form>

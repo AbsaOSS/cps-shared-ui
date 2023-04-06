@@ -1,0 +1,20 @@
+@import "./variables.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+}
+
+.composition-page {
+  padding: 24px;
+  position: absolute;
+  width: calc(100% - $sidebar-width - 1px);
+  height: calc(100% - $top-tbar-height - $inner-tbar-height);
+}

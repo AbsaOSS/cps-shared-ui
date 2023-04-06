@@ -1,0 +1,37 @@
+@import "../variables.scss";
+
+.top-toolbar {
+  height: $top-tbar-height;
+  background-color: white;
+  display: flex;
+  padding-left: 20px;
+  align-items: center;
+  border-bottom: 1px solid lightgrey;
+  img {
+    width: 42px;
+    height: 42px;
+  }
+  span {
+    margin-left: 16px;
+    font-size: 18px;
+    color: $color-calm;
+  }
+}
+.container {
+  display: flex;
+  height: calc(100vh - $top-tbar-height);
+
+  .composition-body {
+    width: 100%;
+    background-color: $composition-background;
+    &-toolbar {
+      height: $inner-tbar-height;
+      background: $color-calm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+  }
+}
