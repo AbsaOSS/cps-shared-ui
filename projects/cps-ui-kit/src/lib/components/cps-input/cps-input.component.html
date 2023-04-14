@@ -5,24 +5,48 @@
 
   <div
     class="input-wrap"
-    [ngClass]="{ password: type === 'password', 'input-wrap-error': error }"
+    [ngClass]="{
+      password: type === 'password',
+      'input-wrap-error': error,
+      clearable: clearable,
+    }"
   >
     <input
       [type]="currentType"
       [value]="value"
-      (input)="updateValue($event)"
+      (input)="updateValueEvent($event)"
       [placeholder]="placeholder"
       [disabled]="disabled"
-      [ngStyle]="{ width: width }"
+      [ngStyle]="{
+        width: width,
+        'padding-left': prefixWidth ? prefixWidth : 'none'
+      }"
       (blur)="onBlur()"
     />
-    <span
-      *ngIf="type === 'password'"
-      class="password-show-btn"
-      [ngClass]="{ 'password-show-btn-active': currentType === 'text' }"
-      (click)="togglePassword()"
-      >SHOW</span
-    >
+
+    <div class="prefix">
+      <span *ngIf="prefixIcon" class="prefix-icon">
+        <cps-icon [icon]="prefixIcon" [size]="prefixIconSize"></cps-icon>
+      </span>
+
+      <span *ngIf="prefixText" class="prefix-text" #prefixTextSpan>
+        {{ prefixText }}
+      </span>
+    </div>
+
+    <div class="action-btns">
+      <span *ngIf="clearable" class="clear-btn">
+        <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+      </span>
+
+      <span
+        *ngIf="type === 'password'"
+        class="password-show-btn"
+        [ngClass]="{ 'password-show-btn-active': currentType === 'text' }"
+      >
+        <cps-icon icon="eye" size="18px" (click)="togglePassword()"></cps-icon>
+      </span>
+    </div>
   </div>
 
   <div *ngIf="loading" class="progress-bar" [ngStyle]="{ width: width }">

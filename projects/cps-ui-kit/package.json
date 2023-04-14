@@ -5,6 +5,12 @@
     "@angular/common": "^15.2.0",
     "@angular/core": "^15.2.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AbsaOSS/cps-shared-ui"
+  },
+  "homepage": "https://github.com/AbsaOSS/cps-shared-ui",
+  "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
     "tslib": "^2.3.0"
   },

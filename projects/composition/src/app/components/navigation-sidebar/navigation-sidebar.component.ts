@@ -15,6 +15,10 @@ export class NavigationSidebarComponent {
       title: 'Input',
       url: '/input',
     },
+    {
+      title: 'Icons',
+      url: '/icons',
+    },
     // extend this list
   ];
 }
