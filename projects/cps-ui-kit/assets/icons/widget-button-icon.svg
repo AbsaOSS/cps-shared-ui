@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+    <symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 17" id="widget-button-icon">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.19531 8.90212H12.2526L10.0566 11.0121L11.0006 11.9197L14.8046 8.26117L11.0006 4.60267L10.0566 5.51025L12.2526 7.62023L1.19531 7.62023V8.90212Z" fill="currentColor"></path>
+    <mask id="mask0_2056_51362" maskUnits="userSpaceOnUse" x="1" y="4" width="14" height="8">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.19531 8.90212H12.2526L10.0566 11.0121L11.0006 11.9197L14.8046 8.26117L11.0006 4.60267L10.0566 5.51025L12.2526 7.62023L1.19531 7.62023V8.90212Z" fill="white"></path>
+    </mask>
+  </symbol>
+</svg>

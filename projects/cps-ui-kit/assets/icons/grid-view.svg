@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" id="grid-view">
+    <path d="M15 1H1v14h14V1zm-2 12H3V3h10v10zM32 1H18v14h14V1zm-2 12H20V3h10v10zM35 15h14V1H35v14zm2-12h10v10H37V3zM15 18H1v14h14V18zm-2 12H3V20h10v10zM18 32h14V18H18v14zm2-12h10v10H20V20zM35 32h14V18H35v14zm2-12h10v10H37V20zM15 35H1v14h14V35zm-2 12H3V37h10v10zM18 49h14V35H18v14zm2-12h10v10H20V37zM35 49h14V35H35v14zm2-12h10v10H37V37z"></path>
+  </symbol>
+</svg>

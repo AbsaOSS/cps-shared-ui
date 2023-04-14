@@ -1,0 +1,22 @@
+@import "../../../../variables.scss";
+
+.search-input {
+  margin-bottom: 24px;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.icon-row {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+  span {
+    margin-left: 16px;
+    color: $color-calm;
+  }
+}

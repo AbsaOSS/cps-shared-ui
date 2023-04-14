@@ -55,7 +55,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "projects/composition/src/favicon.ico",
-              "projects/composition/src/assets"
+              "projects/composition/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./projects/cps-ui-kit/assets",
+                "output": "assets"
+              }
             ],
             "styles": ["projects/composition/src/styles.scss"],
             "scripts": []

@@ -1,54 +1,68 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Optional,
+  Output,
   Self,
+  ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CpsIconComponent],
   selector: 'cps-input',
   templateUrl: './cps-input.component.html',
   styleUrls: ['./cps-input.component.scss'],
 })
 export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
   @Input() placeholder = 'Enter value';
   @Input() hint = '';
   @Input() disabled = false;
   @Input() width = '100%';
-  @Input() type = 'text';
+  @Input() type: 'text' | 'number' | 'password' = 'text';
   @Input() loading = false;
-  //@Input() clearable = false; //TODO after buttons and icons are implemented
-
-  private _statusChangesSubscription: Subscription = new Subscription();
-
-  private _value = '';
-
-  error = '';
-  currentType = '';
-
-  set value(value: any) {
+  @Input() clearable = false;
+  @Input() prefixIcon = '';
+  @Input() prefixIconSize: iconSizeType = 'small';
+  @Input() prefixText = '';
+  @Input() set value(value: any) {
     this._value = value;
     this.onChange(value);
   }
+
+  @Output() valueChanged = new EventEmitter<string>();
+
+  @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
+
+  private _statusChangesSubscription: Subscription = new Subscription();
 
   get value(): any {
     return this._value;
   }
 
+  private _value = '';
+
+  error = '';
+  currentType = '';
+  prefixWidth = '';
+
   constructor(
     @Self() @Optional() private _control: NgControl,
-    private _elementRef: ElementRef<HTMLElement>
+    private _elementRef: ElementRef<HTMLElement>,
+    private cdRef: ChangeDetectorRef
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -64,8 +78,20 @@ export class CpsInputComponent
     ) as Subscription;
   }
 
-  togglePassword() {
-    this.currentType = this.currentType === 'password' ? 'text' : 'password';
+  ngAfterViewInit() {
+    let w = 0;
+    if (this.prefixText) {
+      w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
+    }
+    if (this.prefixIcon) {
+      w += 38 - (this.prefixText ? 14 : 0);
+    }
+    this.prefixWidth = w > 0 ? `${w}px` : '';
+    this.cdRef.detectChanges();
+  }
+
+  ngOnDestroy() {
+    this._statusChangesSubscription?.unsubscribe();
   }
 
   private _checkErrors() {
@@ -106,10 +132,23 @@ export class CpsInputComponent
     this.value = value;
   }
 
-  updateValue(event: any) {
-    const value = event.target.value;
+  updateValueEvent(event: any) {
+    const value = event?.target?.value || '';
+    this._updateValue(value);
+  }
+
+  private _updateValue(value: string) {
     this.writeValue(value);
     this.onChange(value);
+    this.valueChanged.emit(value);
+  }
+
+  clear() {
+    if (this.value !== '') this._updateValue('');
+  }
+
+  togglePassword() {
+    this.currentType = this.currentType === 'password' ? 'text' : 'password';
   }
 
   setDisabledState(disabled: boolean) {
@@ -123,9 +162,5 @@ export class CpsInputComponent
 
   focus() {
     this._elementRef?.nativeElement?.querySelector('input')?.focus();
-  }
-
-  ngOnDestroy() {
-    this._statusChangesSubscription?.unsubscribe();
   }
 }

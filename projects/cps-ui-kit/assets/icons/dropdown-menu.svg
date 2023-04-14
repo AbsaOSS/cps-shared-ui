@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+<symbol id="dropdown-menu" viewBox="0 0 7 14">
+  <ellipse cx="3.02641" cy="3" rx="1.02641" ry="1" fill="currentColor"/>
+  <ellipse cx="3.02641" cy="7" rx="1.02641" ry="1" fill="currentColor"/>
+  <ellipse cx="3.02641" cy="11" rx="1.02641" ry="1" fill="currentColor"/>
+
+</symbol></svg>

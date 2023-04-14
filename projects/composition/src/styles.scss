@@ -17,4 +17,5 @@ body {
   position: absolute;
   width: calc(100% - $sidebar-width - 1px);
   height: calc(100% - $top-tbar-height - $inner-tbar-height);
+  overflow: auto;
 }

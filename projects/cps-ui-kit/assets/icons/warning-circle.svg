@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+<symbol id="warning-circle" viewBox="0 0 16 16">
+<mask id="mask0_1345_44291" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 8C0 3.589 3.589 0 8 0C12.411 0 16 3.589 16 8C16 12.411 12.411 16 8 16C3.589 16 0 12.411 0 8ZM1 8C1 11.859 4.141 15 8 15C11.859 15 15 11.859 15 8C15 4.141 11.859 1 8 1C4.141 1 1 4.141 1 8ZM7.999 10.099C7.531 10.099 7.171 10.47 7.171 10.975C7.171 11.471 7.531 11.841 7.999 11.841C8.467 11.841 8.828 11.471 8.828 10.975C8.828 10.47 8.467 10.099 7.999 10.099ZM8.427 9.304H7.571L7.394 5.492L7.354 4.224H8.646L8.605 5.492L8.427 9.304Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_1345_44291)">
+<rect width="16" height="16" fill="black"/>
+</g>
+
+</symbol>
+</svg>
