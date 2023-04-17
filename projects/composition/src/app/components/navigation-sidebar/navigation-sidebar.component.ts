@@ -10,6 +10,13 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./navigation-sidebar.component.scss'],
 })
 export class NavigationSidebarComponent {
+  styles = [
+    {
+      title: 'Color pack',
+      url: '/colors',
+    },
+    // extend this list
+  ];
   components = [
     {
       title: 'Input',

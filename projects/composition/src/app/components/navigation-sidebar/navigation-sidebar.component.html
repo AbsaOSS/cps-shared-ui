@@ -1,5 +1,15 @@
 <div class="sidebar">
   <div class="list">
+    <h3 class="list-title">Styles</h3>
+    <a
+      *ngFor="let style of styles"
+      class="list-item"
+      [routerLink]="[style.url]"
+      routerLinkActive="_active"
+      >{{ style.title }}</a
+    >
+  </div>
+  <div class="list">
     <h3 class="list-title">Components</h3>
     <a
       *ngFor="let comp of components"
