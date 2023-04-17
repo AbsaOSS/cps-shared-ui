@@ -1,0 +1,436 @@
+:root {
+  //Main
+  --cps-color-energy: #ff780f;
+  --cps-color-energy-lighten5: #ffff9f;
+  --cps-color-energy-lighten4: #ffe883;
+  --cps-color-energy-lighten3: #ffcb68;
+  --cps-color-energy-lighten2: #ffaf4d;
+  --cps-color-energy-lighten1: #ff9331;
+  --cps-color-energy-darken1: #de5d00;
+  --cps-color-energy-darken2: #be4300;
+  --cps-color-energy-darken3: #9f2800;
+  --cps-color-energy-darken4: #820100;
+
+  --cps-color-prepared: #fa551e;
+  --cps-color-prepared-lighten5: #ffe4a1;
+  --cps-color-prepared-lighten4: #ffc786;
+  --cps-color-prepared-lighten3: #ffaa6c;
+  --cps-color-prepared-lighten2: #ff8e52;
+  --cps-color-prepared-lighten1: #ff7138;
+  --cps-color-prepared-darken1: #d93700;
+  --cps-color-prepared-darken2: #b91000;
+  --cps-color-prepared-darken3: #990000;
+  --cps-color-prepared-darken4: #7c0000;
+
+  --cps-color-agile: #f52d28;
+  --cps-color-agile-lighten5: #ffc8a6;
+  --cps-color-agile-lighten4: #ffaa8b;
+  --cps-color-agile-lighten3: #ff8d71;
+  --cps-color-agile-lighten2: #ff6f58;
+  --cps-color-agile-lighten1: #ff5040;
+  --cps-color-agile-darken1: #d40010;
+  --cps-color-agile-darken2: #b30000;
+  --cps-color-agile-darken3: #930000;
+  --cps-color-agile-darken4: #760000;
+
+  --cps-color-passion: #dc0032;
+  --cps-color-passion-lighten5: #ffb3ae;
+  --cps-color-passion-lighten4: #ff9693;
+  --cps-color-passion-lighten3: #ff7879;
+  --cps-color-passion-lighten2: #ff5a61;
+  --cps-color-passion-lighten1: #fd3849;
+  --cps-color-passion-darken1: #bc001d;
+  --cps-color-passion-darken2: #9b0007;
+  --cps-color-passion-darken3: #7d0000;
+  --cps-color-passion-darken4: #600000;
+
+  --cps-color-warmth: #be0028;
+  --cps-color-warmth-lighten5: #ffa9a2;
+  --cps-color-warmth-lighten4: #ff8d87;
+  --cps-color-warmth-lighten3: #ff706e;
+  --cps-color-warmth-lighten2: #fe5255;
+  --cps-color-warmth-lighten1: #de333e;
+  --cps-color-warmth-darken1: #9e0013;
+  --cps-color-warmth-darken2: #800000;
+  --cps-color-warmth-darken3: #630000;
+  --cps-color-warmth-darken4: #4b0000;
+
+  --cps-color-human: #aa052d;
+  --cps-color-human-lighten5: #ffa4a7;
+  --cps-color-human-lighten4: #ff888d;
+  --cps-color-human-lighten3: #ff6c73;
+  --cps-color-human-lighten2: #e84f5a;
+  --cps-color-human-lighten1: #c93143;
+  --cps-color-human-darken1: #8b0019;
+  --cps-color-human-darken2: #6d0000;
+  --cps-color-human-darken3: #520000;
+  --cps-color-human-darken4: #400000;
+
+  --cps-color-grounded: #960528;
+  --cps-color-grounded-lighten5: #ff9ea1;
+  --cps-color-grounded-lighten4: #ff8286;
+  --cps-color-grounded-lighten3: #f2666d;
+  --cps-color-grounded-lighten2: #d34b55;
+  --cps-color-grounded-lighten1: #b42e3e;
+  --cps-color-grounded-darken1: #780014;
+  --cps-color-grounded-darken2: #5c0000;
+  --cps-color-grounded-darken3: #440000;
+  --cps-color-grounded-darken4: #390000;
+
+  --cps-color-care: #f05a7d;
+  --cps-color-care-lighten5: #ffe9ff;
+  --cps-color-care-lighten4: #ffcce9;
+  --cps-color-care-lighten3: #ffafcd;
+  --cps-color-care-lighten2: #ff93b1;
+  --cps-color-care-lighten1: #ff7697;
+  --cps-color-care-darken1: #d13d64;
+  --cps-color-care-darken2: #b31a4c;
+  --cps-color-care-darken3: #950036;
+  --cps-color-care-darken4: #770021;
+
+  --cps-color-smile: #f0325a;
+  --cps-color-smile-lighten5: #ffcbdd;
+  --cps-color-smile-lighten4: #ffadc1;
+  --cps-color-smile-lighten3: #ff90a6;
+  --cps-color-smile-lighten2: #ff728c;
+  --cps-color-smile-lighten1: #ff5472;
+  --cps-color-smile-darken1: #d00043;
+  --cps-color-smile-darken2: #b0002d;
+  --cps-color-smile-darken3: #910019;
+  --cps-color-smile-darken4: #720000;
+
+  --cps-color-surprise: #af144b;
+  --cps-color-surprise-lighten5: #ffaccb;
+  --cps-color-surprise-lighten4: #ff8fb0;
+  --cps-color-surprise-lighten3: #ff7395;
+  --cps-color-surprise-lighten2: #ec577b;
+  --cps-color-surprise-lighten1: #cd3963;
+  --cps-color-surprise-darken1: #910035;
+  --cps-color-surprise-darken2: #730020;
+  --cps-color-surprise-darken3: #560008;
+  --cps-color-surprise-darken4: #400000;
+
+  --cps-color-calm: #870a3c;
+  --cps-color-calm-lighten5: #ff9bb9;
+  --cps-color-calm-lighten4: #fd809e;
+  --cps-color-calm-lighten3: #df6584;
+  --cps-color-calm-lighten2: #c14a6b;
+  --cps-color-calm-lighten1: #a42e53;
+  --cps-color-calm-darken1: #6b0027;
+  --cps-color-calm-darken2: #4f0012;
+  --cps-color-calm-darken3: #390000;
+  --cps-color-calm-darken4: #300000;
+
+  --cps-color-luxury: #640032;
+  --cps-color-luxury-lighten5: #f28bad;
+  --cps-color-luxury-lighten4: #d57192;
+  --cps-color-luxury-lighten3: #b85779;
+  --cps-color-luxury-lighten2: #9b3d60;
+  --cps-color-luxury-lighten1: #7f2248;
+  --cps-color-luxury-darken1: #49001d;
+  --cps-color-luxury-darken2: #340002;
+  --cps-color-luxury-darken3: #290000;
+  --cps-color-luxury-darken4: #1c0000;
+
+  --cps-color-depth: #500a28;
+  --cps-color-depth-lighten5: #d989a0;
+  --cps-color-depth-lighten4: #bc6f86;
+  --cps-color-depth-lighten3: #a0566d;
+  --cps-color-depth-lighten2: #853d55;
+  --cps-color-depth-lighten1: #6a253e;
+  --cps-color-depth-darken1: #370013;
+  --cps-color-depth-darken2: #290000;
+  --cps-color-depth-darken3: #1b0000;
+  --cps-color-depth-darken4: #000000;
+
+  //Backgrounds
+  --cps-color-bg-light: #f9f8f8;
+  // --cps-color-bg-light-lighten5: #ffffff;
+  // --cps-color-bg-light-lighten4: #ffffff;
+  // --cps-color-bg-light-lighten3: #ffffff;
+  // --cps-color-bg-light-lighten2: #ffffff;
+  // --cps-color-bg-light-lighten1: #ffffff;
+  // --cps-color-bg-light-darken1: #dcdbdb;
+  // --cps-color-bg-light-darken2: #c1c0c0;
+  // --cps-color-bg-light-darken3: #a5a5a5;
+  // --cps-color-bg-light-darken4: #8b8a8a;
+
+  --cps-color-bg-mid: #f4f3f3;
+  // --cps-color-bg-mid-lighten5: #ffffff;
+  // --cps-color-bg-mid-lighten4: #ffffff;
+  // --cps-color-bg-mid-lighten3: #ffffff;
+  // --cps-color-bg-mid-lighten2: #ffffff;
+  // --cps-color-bg-mid-lighten1: #ffffff;
+  // --cps-color-bg-mid-darken1: #d8d7d7;
+  // --cps-color-bg-mid-darken2: #bcbbbb;
+  // --cps-color-bg-mid-darken3: #a1a0a0;
+  // --cps-color-bg-mid-darken4: #878686;
+
+  --cps-color-bg-dark: #eeeded;
+  // --cps-color-bg-dark-lighten5: #ffffff;
+  // --cps-color-bg-dark-lighten4: #ffffff;
+  // --cps-color-bg-dark-lighten3: #ffffff;
+  // --cps-color-bg-dark-lighten2: #ffffff;
+  // --cps-color-bg-dark-lighten1: #ffffff;
+  // --cps-color-bg-dark-darken1: #d2d1d1;
+  // --cps-color-bg-dark-darken2: #b6b5b5;
+  // --cps-color-bg-dark-darken3: #9b9a9a;
+  // --cps-color-bg-dark-darken4: #818080;
+
+  //Lines
+  --cps-color-line-light: #e3e2e2;
+  // --cps-color-line-light-lighten5: #ffffff;
+  // --cps-color-line-light-lighten4: #ffffff;
+  // --cps-color-line-light-lighten3: #ffffff;
+  // --cps-color-line-light-lighten2: #ffffff;
+  // --cps-color-line-light-lighten1: #ffffff;
+  // --cps-color-line-light-darken1: #c7c6c6;
+  // --cps-color-line-light-darken2: #acabab;
+  // --cps-color-line-light-darken3: #919090;
+  // --cps-color-line-light-darken4: #787777;
+
+  --cps-color-line-mid: #d7d5d5;
+  // --cps-color-line-mid-lighten5: #ffffff;
+  // --cps-color-line-mid-lighten4: #ffffff;
+  // --cps-color-line-mid-lighten3: #ffffff;
+  // --cps-color-line-mid-lighten2: #ffffff;
+  // --cps-color-line-mid-lighten1: #f3f1f1;
+  // --cps-color-line-mid-darken1: #bbb9b9;
+  // --cps-color-line-mid-darken2: #a09e9e;
+  // --cps-color-line-mid-darken3: #868484;
+  // --cps-color-line-mid-darken4: #6d6b6b;
+
+  --cps-color-line-dark: #cac7c7;
+  // --cps-color-line-dark-lighten5: #ffffff;
+  // --cps-color-line-dark-lighten4: #ffffff;
+  // --cps-color-line-dark-lighten3: #ffffff;
+  // --cps-color-line-dark-lighten2: #ffffff;
+  // --cps-color-line-dark-lighten1: #e6e3e3;
+  // --cps-color-line-dark-darken1: #afacac;
+  // --cps-color-line-dark-darken2: #949191;
+  // --cps-color-line-dark-darken3: #7a7878;
+  // --cps-color-line-dark-darken4: #615f5f;
+
+  //Darks
+  --cps-color-silver: #736464;
+  --cps-color-silver-lighten5: #fbe9e9;
+  --cps-color-silver-lighten4: #decdcd;
+  --cps-color-silver-lighten3: #c2b2b1;
+  --cps-color-silver-lighten2: #a79797;
+  --cps-color-silver-lighten1: #8d7d7d;
+  --cps-color-silver-darken1: #5a4c4c;
+  --cps-color-silver-darken2: #433535;
+  --cps-color-silver-darken3: #2c2020;
+  --cps-color-silver-darken4: #190909;
+
+  --cps-color-platinum: #5a4b4b;
+  --cps-color-platinum-lighten5: #decccc;
+  --cps-color-platinum-lighten4: #c2b0b0;
+  --cps-color-platinum-lighten3: #a79695;
+  --cps-color-platinum-lighten2: #8c7c7c;
+  --cps-color-platinum-lighten1: #736363;
+  --cps-color-platinum-darken1: #423434;
+  --cps-color-platinum-darken2: #2c1f1f;
+  --cps-color-platinum-darken3: #190707;
+  --cps-color-platinum-darken4: #000000;
+
+  --cps-color-graphite: #2d2323;
+  --cps-color-graphite-lighten5: #a79a9a;
+  --cps-color-graphite-lighten4: #8d8080;
+  --cps-color-graphite-lighten3: #736767;
+  --cps-color-graphite-lighten2: #5b4f4f;
+  --cps-color-graphite-lighten1: #433838;
+  --cps-color-graphite-darken1: #190d0d;
+  --cps-color-graphite-darken2: #000000;
+  --cps-color-graphite-darken3: #000000;
+  --cps-color-graphite-darken4: #000000;
+
+  //States
+  --cps-color-info: #099ef3;
+  --cps-color-info-lighten5: #d0ffff;
+  --cps-color-info-lighten4: #b0ffff;
+  --cps-color-info-lighten3: #90f1ff;
+  --cps-color-info-lighten2: #6fd4ff;
+  --cps-color-info-lighten1: #49b9ff;
+  --cps-color-info-darken1: #0084d6;
+  --cps-color-info-darken2: #006bba;
+  --cps-color-info-darken3: #00539f;
+  --cps-color-info-darken4: #003d84;
+
+  --cps-color-success: #3bb719;
+  --cps-color-success-lighten5: #d5ffaa;
+  --cps-color-success-lighten4: #b7ff8e;
+  --cps-color-success-lighten3: #99ff72;
+  --cps-color-success-lighten2: #7bf057;
+  --cps-color-success-lighten1: #5dd33a;
+  --cps-color-success-darken1: #059b00;
+  --cps-color-success-darken2: #008100;
+  --cps-color-success-darken3: #006600;
+  --cps-color-success-darken4: #004d00;
+
+  --cps-color-warn: #ff9f00;
+  --cps-color-warn-lighten5: #ffffa3;
+  --cps-color-warn-lighten4: #ffff87;
+  --cps-color-warn-lighten3: #fff26b;
+  --cps-color-warn-lighten2: #ffd64e;
+  --cps-color-warn-lighten1: #ffba30;
+  --cps-color-warn-darken1: #df8500;
+  --cps-color-warn-darken2: #c06b00;
+  --cps-color-warn-darken3: #a15300;
+  --cps-color-warn-darken4: #843b00;
+
+  --cps-color-error: #f60e08;
+  --cps-color-error-lighten5: #ffbd8c;
+  --cps-color-error-lighten4: #ff9f72;
+  --cps-color-error-lighten3: #ff8058;
+  --cps-color-error-lighten2: #ff623f;
+  --cps-color-error-lighten1: #ff4025;
+  --cps-color-error-darken1: #d40000;
+  --cps-color-error-darken2: #b30000;
+  --cps-color-error-darken3: #940000;
+  --cps-color-error-darken4: #760000;
+
+  // --cps-color-info-soft: #3fa8e3;
+  // --cps-color-info-soft-lighten5: #deffff;
+  // --cps-color-info-soft-lighten4: #bfffff;
+  // --cps-color-info-soft-lighten3: #a1fcff;
+  // --cps-color-info-soft-lighten2: #82dfff;
+  // --cps-color-info-soft-lighten1: #62c3ff;
+  // --cps-color-info-soft-darken1: #028ec7;
+  // --cps-color-info-soft-darken2: #0074ab;
+  // --cps-color-info-soft-darken3: #005c91;
+  // --cps-color-info-soft-darken4: #004477;
+
+  // --cps-color-success-soft: #61c246;
+  // --cps-color-success-soft-lighten5: #f3ffce;
+  // --cps-color-success-soft-lighten4: #d5ffb2;
+  // --cps-color-success-soft-lighten3: #b8ff96;
+  // --cps-color-success-soft-lighten2: #9bfb7b;
+  // --cps-color-success-soft-lighten1: #7ede60;
+  // --cps-color-success-soft-darken1: #43a62b;
+  // --cps-color-success-soft-darken2: #208b08;
+  // --cps-color-success-soft-darken3: #007100;
+  // --cps-color-success-soft-darken4: #005800;
+
+  // --cps-color-warn-soft: #f09937;
+  // --cps-color-warn-soft-lighten5: #ffffbf;
+  // --cps-color-warn-soft-lighten4: #ffffa3;
+  // --cps-color-warn-soft-lighten3: #ffec87;
+  // --cps-color-warn-soft-lighten2: #ffd06c;
+  // --cps-color-warn-soft-lighten1: #ffb452;
+  // --cps-color-warn-soft-darken1: #d17f1a;
+  // --cps-color-warn-soft-darken2: #b26600;
+  // --cps-color-warn-soft-darken3: #944d00;
+  // --cps-color-warn-soft-darken4: #783600;
+
+  // --cps-color-error-soft: #eb5545;
+  // --cps-color-error-soft-lighten5: #ffe3c6;
+  // --cps-color-error-soft-lighten4: #ffc6ab;
+  // --cps-color-error-soft-lighten3: #ffa990;
+  // --cps-color-error-soft-lighten2: #ff8d76;
+  // --cps-color-error-soft-lighten1: #ff715d;
+  // --cps-color-error-soft-darken1: #cb382e;
+  // --cps-color-error-soft-darken2: #ac1518;
+  // --cps-color-error-soft-darken3: #8d0000;
+  // --cps-color-error-soft-darken4: #6f0000;
+
+  --cps-color-info-bg: #f7fcfe;
+  // --cps-color-info-bg-lighten5: #ffffff;
+  // --cps-color-info-bg-lighten4: #ffffff;
+  // --cps-color-info-bg-lighten3: #ffffff;
+  // --cps-color-info-bg-lighten2: #ffffff;
+  // --cps-color-info-bg-lighten1: #ffffff;
+  // --cps-color-info-bg-darken1: #dbdfe1;
+  // --cps-color-info-bg-darken2: #bfc3c5;
+  // --cps-color-info-bg-darken3: #a4a8aa;
+  // --cps-color-info-bg-darken4: #898e90;
+
+  --cps-color-success-bg: #f8fbf7;
+  // --cps-color-success-bg-lighten5: #ffffff;
+  // --cps-color-success-bg-lighten4: #ffffff;
+  // --cps-color-success-bg-lighten3: #ffffff;
+  // --cps-color-success-bg-lighten2: #ffffff;
+  // --cps-color-success-bg-lighten1: #ffffff;
+  // --cps-color-success-bg-darken1: #dbdedb;
+  // --cps-color-success-bg-darken2: #c0c3bf;
+  // --cps-color-success-bg-darken3: #a5a7a4;
+  // --cps-color-success-bg-darken4: #8a8d89;
+
+  --cps-color-warn-bg: #fffcf7;
+  // --cps-color-warn-bg-lighten5: #ffffff;
+  // --cps-color-warn-bg-lighten4: #ffffff;
+  // --cps-color-warn-bg-lighten3: #ffffff;
+  // --cps-color-warn-bg-lighten2: #ffffff;
+  // --cps-color-warn-bg-lighten1: #ffffff;
+  // --cps-color-warn-bg-darken1: #e2dfdb;
+  // --cps-color-warn-bg-darken2: #c6c3bf;
+  // --cps-color-warn-bg-darken3: #aba8a4;
+  // --cps-color-warn-bg-darken4: #918e89;
+
+  --cps-color-error-bg: #fef8f8;
+  // --cps-color-error-bg-lighten5: #ffffff;
+  // --cps-color-error-bg-lighten4: #ffffff;
+  // --cps-color-error-bg-lighten3: #ffffff;
+  // --cps-color-error-bg-lighten2: #ffffff;
+  // --cps-color-error-bg-lighten1: #ffffff;
+  // --cps-color-error-bg-darken1: #e1dbdb;
+  // --cps-color-error-bg-darken2: #c5c0c0;
+  // --cps-color-error-bg-darken3: #aaa5a5;
+  // --cps-color-error-bg-darken4: #908a8a;
+
+  //Text
+  --cps-color-text-darkest: #2d2323;
+  // --cps-color-text-darkest-lighten5: #a79a9a;
+  // --cps-color-text-darkest-lighten4: #8d8080;
+  // --cps-color-text-darkest-lighten3: #736767;
+  // --cps-color-text-darkest-lighten2: #5b4f4f;
+  // --cps-color-text-darkest-lighten1: #433838;
+  // --cps-color-text-darkest-darken1: #190d0d;
+  // --cps-color-text-darkest-darken2: #000000;
+  // --cps-color-text-darkest-darken3: #000000;
+  // --cps-color-text-darkest-darken4: #000000;
+
+  --cps-color-text-dark: #524a4a;
+  // --cps-color-text-dark-lighten5: #d4caca;
+  // --cps-color-text-dark-lighten4: #b8afaf;
+  // --cps-color-text-dark-lighten3: #9d9494;
+  // --cps-color-text-dark-lighten2: #837b7b;
+  // --cps-color-text-dark-lighten1: #6a6262;
+  // --cps-color-text-dark-darken1: #3b3333;
+  // --cps-color-text-dark-darken2: #251e1e;
+  // --cps-color-text-dark-darken3: #110505;
+  // --cps-color-text-dark-darken4: #000000;
+
+  --cps-color-text-mild: #787272;
+  // --cps-color-text-mild-lighten5: #fff9f9;
+  // --cps-color-text-mild-lighten4: #e4dddd;
+  // --cps-color-text-mild-lighten3: #c8c1c1;
+  // --cps-color-text-mild-lighten2: #aca6a6;
+  // --cps-color-text-mild-lighten1: #928b8b;
+  // --cps-color-text-mild-darken1: #5f5a5a;
+  // --cps-color-text-mild-darken2: #484242;
+  // --cps-color-text-mild-darken3: #312c2c;
+  // --cps-color-text-mild-darken4: #1c1818;
+
+  --cps-color-text-light: #9a9595;
+  // --cps-color-text-light-lighten5: #ffffff;
+  // --cps-color-text-light-lighten4: #ffffff;
+  // --cps-color-text-light-lighten3: #ede7e7;
+  // --cps-color-text-light-lighten2: #d0cbcb;
+  // --cps-color-text-light-lighten1: #b5b0b0;
+  // --cps-color-text-light-darken1: #807b7b;
+  // --cps-color-text-light-darken2: #676262;
+  // --cps-color-text-light-darken3: #4f4b4b;
+  // --cps-color-text-light-darken4: #383434;
+
+  --cps-color-text-lightest: #b5b2b2;
+  // --cps-color-text-lightest-lighten5: #ffffff;
+  // --cps-color-text-lightest-lighten4: #ffffff;
+  // --cps-color-text-lightest-lighten3: #ffffff;
+  // --cps-color-text-lightest-lighten2: #edeaea;
+  // --cps-color-text-lightest-lighten1: #d1cdcd;
+  // --cps-color-text-lightest-darken1: #9a9797;
+  // --cps-color-text-lightest-darken2: #807d7d;
+  // --cps-color-text-lightest-darken3: #676464;
+  // --cps-color-text-lightest-darken4: #4f4d4d;
+}

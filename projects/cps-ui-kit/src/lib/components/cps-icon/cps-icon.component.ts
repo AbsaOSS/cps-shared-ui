@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
+import { getCSSColor } from '../../utils/colors-utils';
 
-const iconNames = [
+export const iconNames = [
   'absa-logo',
   'access',
   'access-denied',
@@ -103,6 +104,8 @@ const iconNames = [
   'xls',
 ];
 
+export type IconType = typeof iconNames[number];
+
 export type iconSizeType =
   | number
   | `${number}px`
@@ -125,12 +128,14 @@ export class CpsIconComponent implements OnChanges {
 
   @Input() color = 'currentColor';
 
+  iconColor = 'currentColor';
   url = '../../../../assets/icons/';
   pxSize = '';
 
   classesList: string[] = [];
 
   ngOnChanges(): void {
+    this.iconColor = getCSSColor(this.color);
     this.setClasses();
   }
 
@@ -165,5 +170,3 @@ export class CpsIconComponent implements OnChanges {
     }
   }
 }
-
-export type IconType = typeof iconNames[number];

@@ -1,0 +1,42 @@
+<div class="search-input">
+  <cps-input
+    placeholder="Search a color"
+    (valueChanged)="onSearchChanged($event)"
+    prefixIcon="search"
+    prefixIconSize="18px"
+    [clearable]="true"
+  ></cps-input>
+</div>
+
+<div class="colors">
+  <div class="colors-group" *ngFor="let group of filteredColorsList">
+    <div class="colors-group-title">{{ group.name }}</div>
+    <div class="colors-group-body">
+      <div
+        *ngFor="let colorBlock of group.colors"
+        class="colors-group-body-block"
+      >
+        <div
+          class="colors-group-body-block-title"
+          [ngStyle]="{
+            'background-color': colorBlock[0].value,
+            color: colorNameColor[colorBlock[0].value]
+          }"
+        >
+          {{ colorBlock[0].name }}
+        </div>
+        <div
+          class="colors-group-body-block-color"
+          *ngFor="let color of colorBlock"
+          [ngStyle]="{
+            'background-color': color.value,
+            color: colorNameColor[color.value]
+          }"
+        >
+          <span>{{ color.name }}</span>
+          <span>{{ color.value.toUpperCase() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

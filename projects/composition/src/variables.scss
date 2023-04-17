@@ -4,5 +4,5 @@ $composition-background: #f3f3f3;
 $top-tbar-height: 64px;
 $inner-tbar-height: 45px;
 
-$color-calm: #870a3c;
-$color-text: #524a4a;
+$color-calm: var(--cps-color-calm);
+$color-text: var(--cps-color-text-dark);
