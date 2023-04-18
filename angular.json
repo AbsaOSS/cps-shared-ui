@@ -5,9 +5,14 @@
   "projects": {
     "cps-ui-kit": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "projects/cps-ui-kit",
       "sourceRoot": "projects/cps-ui-kit/src",
-      "prefix": "lib",
+      "prefix": "cps",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
