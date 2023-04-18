@@ -160,4 +160,15 @@ export class ColorsPageComponent implements OnInit {
 
     this.filteredColorsList = filteredList;
   }
+
+  onCopyColor(color: string) {
+    navigator.clipboard.writeText(color).then(
+      () => {
+        console.log('Color copied to clipboard');
+      },
+      () => {
+        console.error('Failed to copy color to clickboard');
+      }
+    );
+  }
 }

@@ -5,6 +5,7 @@
     prefixIcon="search"
     prefixIconSize="18px"
     [clearable]="true"
+    hint="Click on any color name or value to copy it"
   ></cps-input>
 </div>
 
@@ -23,7 +24,11 @@
             color: colorNameColor[colorBlock[0].value]
           }"
         >
-          {{ colorBlock[0].name }}
+          <span
+            style="cursor: pointer"
+            (click)="onCopyColor(colorBlock[0].name)"
+            >{{ colorBlock[0].name }}</span
+          >
         </div>
         <div
           class="colors-group-body-block-color"
@@ -33,8 +38,12 @@
             color: colorNameColor[color.value]
           }"
         >
-          <span>{{ color.name }}</span>
-          <span>{{ color.value.toUpperCase() }}</span>
+          <span style="cursor: pointer" (click)="onCopyColor(color.name)">{{
+            color.name
+          }}</span>
+          <span style="cursor: pointer" (click)="onCopyColor(color.value)">{{
+            color.value.toUpperCase()
+          }}</span>
         </div>
       </div>
     </div>
