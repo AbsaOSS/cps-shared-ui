@@ -32,7 +32,7 @@ export class IconsPageComponent implements OnInit {
   onCopyIconName(name: string) {
     navigator.clipboard.writeText(name).then(
       () => {
-        console.log('Content copied to clipboard');
+        console.log('Icon name copied to clipboard');
       },
       () => {
         console.error('Failed to copy icon name to clickboard');
