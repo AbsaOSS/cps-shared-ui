@@ -38,9 +38,12 @@ export class CpsInputComponent
   @Input() prefixIcon = '';
   @Input() prefixIconSize: iconSizeType = 'small';
   @Input() prefixText = '';
-  @Input() set value(value: any) {
+  @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);
+  }
+  get value(): string {
+    return this._value;
   }
 
   @Output() valueChanged = new EventEmitter<string>();
@@ -48,10 +51,6 @@ export class CpsInputComponent
   @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
 
   private _statusChangesSubscription: Subscription = new Subscription();
-
-  get value(): any {
-    return this._value;
-  }
 
   private _value = '';
 
@@ -102,12 +101,12 @@ export class CpsInputComponent
       return;
     }
 
-    if (errors.hasOwnProperty('required')) {
+    if ('required' in errors) {
       this.error = 'Field is required';
       return;
     }
 
-    if (errors.hasOwnProperty('minlength')) {
+    if ('minlength' in errors) {
       this.error = `Field must contain at least ${errors['minlength'].requiredLength} characters`;
       return;
     }
@@ -133,7 +132,7 @@ export class CpsInputComponent
     this.onTouched = fn;
   }
 
-  writeValue(value: any) {
+  writeValue(value: string) {
     this.value = value;
   }
 
