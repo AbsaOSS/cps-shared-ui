@@ -4,7 +4,7 @@ $input-label-disabled-color: var(--cps-color-text-mild);
 $input-pass-show-btn-color: var(--cps-color-text-mild);
 $input-placeholder-color: var(--cps-color-text-lightest);
 $input-border-color: var(--cps-color-text-lightest);
-$input-label-color: var(--cps-color-text-darkest);
+$input-label-color: var(--cps-color-text-dark);
 $input-text-color: var(--cps-color-text-dark);
 $input-prefix-text-color: var(--cps-color-text-mild);
 
@@ -14,7 +14,7 @@ $error-background: #fef3f2;
 $hover-transition-duration: 0.3s;
 
 .input-container {
-  gap: 0.4rem !important;
+  gap: 0.2rem !important;
   display: flex !important;
   flex-direction: column !important;
   font-family: "Source Sans Pro", sans-serif;
@@ -135,12 +135,13 @@ $hover-transition-duration: 0.3s;
   .hint-text {
     color: $input-hint-color;
     font-size: 0.75rem;
-    height: 0.875rem;
+    min-height: 1.125rem;
   }
   .error-text {
     color: $color-error;
     font-weight: bold;
     font-size: 0.75rem;
+    min-height: 1.125rem;
   }
   .label-text {
     color: $input-label-color;
