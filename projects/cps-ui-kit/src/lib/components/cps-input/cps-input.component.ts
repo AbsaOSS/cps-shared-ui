@@ -107,6 +107,11 @@ export class CpsInputComponent
       return;
     }
 
+    if (errors.hasOwnProperty('minlength')) {
+      this.error = `Field must contain at least ${errors['minlength'].requiredLength} characters`;
+      return;
+    }
+
     const errArr = Object.values(errors);
     if (errArr.length < 1) {
       this.error = '';
