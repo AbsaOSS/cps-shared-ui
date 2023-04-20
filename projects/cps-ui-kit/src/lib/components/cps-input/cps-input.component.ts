@@ -28,7 +28,7 @@ export class CpsInputComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
-  @Input() placeholder = 'Enter value';
+  @Input() placeholder = 'Please enter';
   @Input() hint = '';
   @Input() disabled = false;
   @Input() width = '100%';
@@ -155,9 +155,7 @@ export class CpsInputComponent
     this.currentType = this.currentType === 'password' ? 'text' : 'password';
   }
 
-  setDisabledState(disabled: boolean) {
-    this.disabled = disabled;
-  }
+  setDisabledState(disabled: boolean) {}
 
   onBlur() {
     this._control?.control?.markAsTouched();
