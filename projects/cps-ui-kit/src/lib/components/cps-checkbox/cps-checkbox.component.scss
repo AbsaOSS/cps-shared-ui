@@ -1,0 +1,72 @@
+$color: var(--cps-color-calm);
+$border-color: var(--cps-color-text-dark);
+$label-color: var(--cps-color-text-darkest);
+$disabled-label-color: var(--cps-color-text-mild);
+$disabled-border-color-unchecked: var(--cps-color-text-light);
+$disabled-background-checked: var(--cps-color-text-lightest);
+$border-radius: 2px;
+$tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+);
+
+:host {
+  min-width: max-content;
+  display: inline-block;
+
+  .checkbox-container {
+    line-height: normal;
+
+    label.checkbox {
+      padding-left: 1.75rem;
+      position: relative;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      input[type="checkbox"] {
+        display: none;
+
+        &:hover:not(:disabled) ~ .indicator {
+          border-color: $color;
+        }
+
+        &:checked ~ .indicator {
+          color: white;
+          background: $color $tick-image 50% 40% no-repeat;
+          border: 2px solid $color;
+        }
+
+        &:disabled:checked ~ .indicator {
+          background: $disabled-background-checked $tick-image 50% 40% no-repeat;
+          border-color: $disabled-background-checked;
+        }
+
+        &:disabled ~ .indicator {
+          border-color: $disabled-border-color-unchecked;
+        }
+      }
+
+      .label {
+        top: 1px;
+        position: relative;
+        color: $label-color;
+        &-disabled {
+          color: $disabled-label-color;
+        }
+      }
+
+      .indicator {
+        border-radius: $border-radius;
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 18px;
+        border: 2px solid $border-color;
+        pointer-events: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    }
+  }
+}

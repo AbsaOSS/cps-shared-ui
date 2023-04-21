@@ -23,6 +23,10 @@ export class NavigationSidebarComponent {
       url: '/input',
     },
     {
+      title: 'Checkbox',
+      url: '/checkbox',
+    },
+    {
       title: 'Icons',
       url: '/icons',
     },

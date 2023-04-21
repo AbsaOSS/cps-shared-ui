@@ -3,4 +3,5 @@
  */
 
 export * from './lib/components/cps-input/cps-input.component';
+export * from './lib/components/cps-checkbox/cps-checkbox.component';
 export * from './lib/components/cps-icon/cps-icon.component';
