@@ -1,7 +1,9 @@
 @import "./variables.scss";
 @import "../../cps-ui-kit/styles/styles.scss";
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
