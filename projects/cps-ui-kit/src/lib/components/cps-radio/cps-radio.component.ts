@@ -1,41 +1,45 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   Optional,
   Output,
   Self,
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { NgControl } from '@angular/forms';
+
+export type RadioOption = {
+  value: any;
+  label: string;
+  disabled?: boolean;
+};
 
 @Component({
   standalone: true,
   imports: [CommonModule],
-  selector: 'cps-checkbox',
-  templateUrl: './cps-checkbox.component.html',
-  styleUrls: ['./cps-checkbox.component.scss'],
+  selector: 'cps-radio',
+  templateUrl: './cps-radio.component.html',
+  styleUrls: ['./cps-radio.component.scss'],
 })
-export class CpsCheckboxComponent implements ControlValueAccessor {
-  @Input() label = '';
+export class CpsRadioComponent {
+  @Input() options = [] as RadioOption[];
+  @Input() groupLabel = '';
+  @Input() vertical = false;
   @Input() disabled = false;
-  @Input() set value(value: boolean) {
+  @Input() set value(value: any) {
     this._value = value;
     this.onChange(value);
   }
-  get value(): boolean {
+  get value(): any {
     return this._value;
   }
 
   @Output() valueChanged = new EventEmitter<boolean>();
 
-  private _value = false;
+  private _value: any = undefined;
 
-  constructor(
-    @Self() @Optional() private _control: NgControl,
-    private _elementRef: ElementRef<HTMLElement>
-  ) {
+  constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -52,25 +56,22 @@ export class CpsCheckboxComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  writeValue(value: boolean) {
+  writeValue(value: any) {
     this.value = value;
   }
 
   updateValueEvent(event: any) {
     event.preventDefault();
     if (this.disabled) return;
-    this._updateValue(!this.value);
+    const value = event?.target?.value || '';
+    this._updateValue(value);
   }
 
-  private _updateValue(value: boolean) {
+  private _updateValue(value: any) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
   setDisabledState(disabled: boolean) {}
-
-  focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
-  }
 }

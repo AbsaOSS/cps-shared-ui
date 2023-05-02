@@ -27,6 +27,10 @@ export class NavigationSidebarComponent {
       url: '/checkbox',
     },
     {
+      title: 'Radio',
+      url: '/radio',
+    },
+    {
       title: 'Icons',
       url: '/icons',
     },
