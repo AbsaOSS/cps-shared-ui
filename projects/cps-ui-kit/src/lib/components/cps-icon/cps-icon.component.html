@@ -3,8 +3,8 @@
   [ngClass]="classesList"
   [style.color]="iconColor"
   [ngStyle]="{
-    width: pxSize ? pxSize : 'none',
-    height: pxSize ? pxSize : 'none'
+    width: pxSize || 'none',
+    height: pxSize || 'none'
   }"
 >
   <svg>

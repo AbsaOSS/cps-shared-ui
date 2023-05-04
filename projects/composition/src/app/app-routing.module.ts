@@ -5,6 +5,7 @@ import { IconsPageComponent } from './pages/icons-page/icons-page/icons-page.com
 import { ColorsPageComponent } from './pages/colors-page/colors-page/colors-page.component';
 import { CheckboxPageComponent } from './pages/checkbox-page/checkbox-page.component';
 import { RadioPageComponent } from './pages/radio-page/radio-page.component';
+import { ButtonPageComponent } from './pages/button-page/button-page.component';
 
 const routes: Routes = [
   {
@@ -13,9 +14,19 @@ const routes: Routes = [
     component: ColorsPageComponent,
   },
   {
+    path: 'icon',
+    title: 'Icon',
+    component: IconsPageComponent,
+  },
+  {
     path: 'input',
     title: 'Input',
     component: InputPageComponent,
+  },
+  {
+    path: 'button',
+    title: 'Button',
+    component: ButtonPageComponent,
   },
   {
     path: 'checkbox',
@@ -26,11 +37,6 @@ const routes: Routes = [
     path: 'radio',
     title: 'Radio',
     component: RadioPageComponent,
-  },
-  {
-    path: 'icons',
-    title: 'Icons',
-    component: IconsPageComponent,
   },
   { path: '**', redirectTo: 'colors' },
 ];
