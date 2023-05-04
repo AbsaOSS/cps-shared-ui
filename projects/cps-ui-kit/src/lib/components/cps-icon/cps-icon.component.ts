@@ -75,7 +75,6 @@ export const iconNames = [
   'rectangle-rounded',
   'refresh-browse',
   'remove',
-  'required',
   'right',
   'schema_filter',
   'search',
@@ -106,11 +105,11 @@ export const iconNames = [
   'xls',
 ];
 
-export type IconType = typeof iconNames[number];
+export type IconType = (typeof iconNames)[number];
 
 export type iconSizeType =
   | number
-  | `${number}px`
+  | string
   | 'fill'
   | 'xsmall'
   | 'small'

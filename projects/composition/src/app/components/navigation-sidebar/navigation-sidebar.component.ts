@@ -19,8 +19,16 @@ export class NavigationSidebarComponent {
   ];
   components = [
     {
+      title: 'Icon',
+      url: '/icon',
+    },
+    {
       title: 'Input',
       url: '/input',
+    },
+    {
+      title: 'Button',
+      url: '/button',
     },
     {
       title: 'Checkbox',
@@ -29,10 +37,6 @@ export class NavigationSidebarComponent {
     {
       title: 'Radio',
       url: '/radio',
-    },
-    {
-      title: 'Icons',
-      url: '/icons',
     },
     // extend this list
   ];

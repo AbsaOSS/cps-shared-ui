@@ -1,0 +1,27 @@
+.buttons-group {
+  margin-bottom: 32px;
+  &-title {
+    font-size: 24px;
+    color: var(--cps-color-depth);
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    font-weight: 600;
+  }
+  &-row {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    align-items: center;
+  }
+}
+
+.dark-background {
+  background-color: var(--cps-color-calm);
+  padding-top: 18px;
+  padding-bottom: 18px;
+  padding-left: 18px;
+  padding-right: 18px;
+}

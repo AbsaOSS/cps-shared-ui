@@ -7,7 +7,7 @@ import {
   Output,
   Self,
 } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 export type RadioOption = {
   value: any;
@@ -22,7 +22,7 @@ export type RadioOption = {
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss'],
 })
-export class CpsRadioComponent {
+export class CpsRadioComponent implements ControlValueAccessor {
   @Input() options = [] as RadioOption[];
   @Input() groupLabel = '';
   @Input() vertical = false;
