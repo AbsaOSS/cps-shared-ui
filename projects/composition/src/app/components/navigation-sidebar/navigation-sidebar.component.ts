@@ -38,6 +38,10 @@ export class NavigationSidebarComponent {
       title: 'Radio',
       url: '/radio',
     },
+    {
+      title: 'Tag',
+      url: '/tag',
+    },
     // extend this list
   ];
 }

@@ -6,6 +6,7 @@ import { ColorsPageComponent } from './pages/colors-page/colors-page/colors-page
 import { CheckboxPageComponent } from './pages/checkbox-page/checkbox-page.component';
 import { RadioPageComponent } from './pages/radio-page/radio-page.component';
 import { ButtonPageComponent } from './pages/button-page/button-page.component';
+import { TagPageComponent } from './pages/tag-page/tag-page.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,11 @@ const routes: Routes = [
     path: 'radio',
     title: 'Radio',
     component: RadioPageComponent,
+  },
+  {
+    path: 'tag',
+    title: 'Tag',
+    component: TagPageComponent,
   },
   { path: '**', redirectTo: 'colors' },
 ];
