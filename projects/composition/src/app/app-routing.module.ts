@@ -7,6 +7,7 @@ import { CheckboxPageComponent } from './pages/checkbox-page/checkbox-page.compo
 import { RadioPageComponent } from './pages/radio-page/radio-page.component';
 import { ButtonPageComponent } from './pages/button-page/button-page.component';
 import { TagPageComponent } from './pages/tag-page/tag-page.component';
+import { ChipPageComponent } from './pages/chip-page/chip-page.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,11 @@ const routes: Routes = [
     path: 'tag',
     title: 'Tag',
     component: TagPageComponent,
+  },
+  {
+    path: 'chip',
+    title: 'Chip',
+    component: ChipPageComponent,
   },
   { path: '**', redirectTo: 'colors' },
 ];

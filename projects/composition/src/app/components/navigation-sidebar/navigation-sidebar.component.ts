@@ -42,6 +42,10 @@ export class NavigationSidebarComponent {
       title: 'Tag',
       url: '/tag',
     },
+    {
+      title: 'Chip',
+      url: '/chip',
+    },
     // extend this list
   ];
 }

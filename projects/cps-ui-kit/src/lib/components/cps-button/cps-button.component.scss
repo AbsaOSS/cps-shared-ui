@@ -18,7 +18,7 @@
 
     &:hover:not(:active):not(:disabled) {
       background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);
-      box-shadow: 0 2px 8px 0 rgba(12, 12, 13, 0.2);
+      box-shadow: 0 2px 4px 0 rgba(12, 12, 13, 0.2);
     }
 
     &:active:not(:disabled) {
