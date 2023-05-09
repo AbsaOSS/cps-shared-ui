@@ -16,6 +16,7 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
+import { convertSize } from '../../utils/size-utils';
 
 @Component({
   standalone: true,
@@ -31,7 +32,7 @@ export class CpsInputComponent
   @Input() placeholder = 'Please enter';
   @Input() hint = '';
   @Input() disabled = false;
-  @Input() width = '100%';
+  @Input() width: number | string = '100%';
   @Input() type: 'text' | 'number' | 'password' = 'text';
   @Input() loading = false;
   @Input() clearable = false;
@@ -57,6 +58,7 @@ export class CpsInputComponent
   error = '';
   currentType = '';
   prefixWidth = '';
+  cvtWidth = '';
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -70,6 +72,8 @@ export class CpsInputComponent
 
   ngOnInit(): void {
     this.currentType = this.type;
+    this.cvtWidth = convertSize(this.width);
+
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
       () => {
         this._checkErrors();

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
+import { convertSize } from '../../utils/size-utils';
 
 export const iconNames = [
   'absa-logo',
@@ -131,7 +132,7 @@ export class CpsIconComponent implements OnChanges {
 
   iconColor = 'currentColor';
   url = '../../../../assets/icons/';
-  pxSize = '';
+  cvtSize = '';
 
   classesList: string[] = ['icon'];
 
@@ -141,33 +142,30 @@ export class CpsIconComponent implements OnChanges {
   }
 
   setClasses(): void {
-    if (typeof this.size === 'number') {
-      this.pxSize = this.size + 'px';
-    } else if (this.size.endsWith('px')) {
-      this.pxSize = this.size;
-    } else {
-      switch (this.size) {
-        case 'fill': {
-          this.classesList.push('icon--fill');
-          break;
-        }
-        case 'xsmall': {
-          this.classesList.push('icon--xsmall');
-          break;
-        }
-        case 'small': {
-          this.classesList.push('icon--small');
-          break;
-        }
-        case 'normal': {
-          this.classesList.push('icon--normal');
-          break;
-        }
-        case 'large': {
-          this.classesList.push('icon--large');
-          break;
-        }
+    switch (this.size) {
+      case 'fill': {
+        this.classesList.push('icon--fill');
+        break;
       }
+      case 'xsmall': {
+        this.classesList.push('icon--xsmall');
+        break;
+      }
+      case 'small': {
+        this.classesList.push('icon--small');
+        break;
+      }
+      case 'normal': {
+        this.classesList.push('icon--normal');
+        break;
+      }
+      case 'large': {
+        this.classesList.push('icon--large');
+        break;
+      }
+      default:
+        this.cvtSize = convertSize(this.size);
+        break;
     }
   }
 }

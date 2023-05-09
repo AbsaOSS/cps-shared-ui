@@ -13,191 +13,193 @@ $error-background: #fef3f2;
 
 $hover-transition-duration: 0.2s;
 
-.input-container {
-  gap: 0.2rem !important;
-  display: flex !important;
-  flex-direction: column !important;
-  font-family: "Source Sans Pro", sans-serif;
+:host {
+  .input-container {
+    gap: 0.2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    font-family: "Source Sans Pro", sans-serif;
 
-  .input-wrap {
-    position: relative;
-    overflow: hidden;
-    &:hover {
-      input:enabled {
-        border: 1px solid $color-calm;
-      }
-    }
-    &-error {
-      input {
-        border-color: $color-error !important;
-        &:not(:focus) {
-          background: $error-background !important;
+    .input-wrap {
+      position: relative;
+      overflow: hidden;
+      &:hover {
+        input:enabled {
+          border: 1px solid $color-calm;
         }
       }
-    }
-
-    input {
-      font-size: 1rem;
-      color: $input-text-color;
-      background: #ffffff;
-      padding: 0.375rem 0.75rem;
-      line-height: 1.5;
-      border: 1px solid $input-border-color;
-      transition-duration: $hover-transition-duration;
-      appearance: none;
-      border-radius: 4px;
-      width: 100%;
-      &:focus {
-        border: 1px solid $color-calm;
-        outline: 0;
-      }
-
-      &:disabled {
-        background-color: #f7f7f7;
-        opacity: 1;
-      }
-    }
-
-    input:focus + .prefix > .prefix-icon,
-    input:hover + .prefix > .prefix-icon {
-      color: $color-calm;
-    }
-
-    .action-btns {
-      display: flex;
-      align-items: center;
-      position: absolute;
-      top: 50%;
-      right: 0.75rem;
-      margin-top: -0.5rem;
-
-      .clear-btn {
-        cursor: pointer;
-        color: $color-calm;
-        cps-icon {
-          opacity: 0.5;
-          transition-duration: $hover-transition-duration;
-          &:hover {
-            opacity: 1;
+      &-error {
+        input {
+          border-color: $color-error !important;
+          &:not(:focus) {
+            background: $error-background !important;
           }
         }
       }
 
-      .password-show-btn {
-        margin-left: 0.5rem;
-        cursor: pointer;
-        color: $input-pass-show-btn-color;
-        &-active {
-          color: $color-calm;
+      input {
+        font-size: 1rem;
+        color: $input-text-color;
+        background: #ffffff;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        border: 1px solid $input-border-color;
+        transition-duration: $hover-transition-duration;
+        appearance: none;
+        border-radius: 4px;
+        width: 100%;
+        &:focus {
+          border: 1px solid $color-calm;
+          outline: 0;
         }
-        cps-icon {
-          transition-duration: $hover-transition-duration;
-          &:hover {
+
+        &:disabled {
+          background-color: #f7f7f7;
+          opacity: 1;
+        }
+      }
+
+      input:focus + .prefix > .prefix-icon,
+      input:hover + .prefix > .prefix-icon {
+        color: $color-calm;
+      }
+
+      .action-btns {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        margin-top: -0.5rem;
+
+        .clear-btn {
+          cursor: pointer;
+          color: $color-calm;
+          cps-icon {
+            opacity: 0.5;
+            transition-duration: $hover-transition-duration;
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+
+        .password-show-btn {
+          margin-left: 0.5rem;
+          cursor: pointer;
+          color: $input-pass-show-btn-color;
+          &-active {
+            color: $color-calm;
+          }
+          cps-icon {
+            transition-duration: $hover-transition-duration;
+            &:hover {
+              color: $color-calm;
+            }
+          }
+        }
+      }
+
+      .prefix {
+        height: -webkit-fill-available;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        left: 0.75rem;
+        transform: translate(0, -50%);
+        &:hover {
+          .prefix-icon {
             color: $color-calm;
           }
         }
-      }
-    }
-
-    .prefix {
-      height: -webkit-fill-available;
-      display: flex;
-      align-items: center;
-      position: absolute;
-      top: 50%;
-      left: 0.75rem;
-      transform: translate(0, -50%);
-      &:hover {
-        .prefix-icon {
-          color: $color-calm;
+        &-icon {
+          transition-duration: $hover-transition-duration;
+          height: -webkit-fill-available;
+          margin-right: 0.5rem;
+        }
+        &-text {
+          color: $input-prefix-text-color;
         }
       }
-      &-icon {
-        transition-duration: $hover-transition-duration;
-        height: -webkit-fill-available;
-        margin-right: 0.5rem;
-      }
-      &-text {
-        color: $input-prefix-text-color;
+    }
+
+    .password.clearable > input {
+      padding-right: 3.8rem;
+    }
+
+    .password > input,
+    .clearable > input {
+      padding-right: 2.2rem;
+    }
+
+    .hint-text {
+      color: $input-hint-color;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+    }
+    .error-text {
+      color: $color-error;
+      font-weight: bold;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+    }
+    .label-text {
+      color: $input-label-color;
+      font-size: 0.875rem;
+      &-disabled {
+        color: $input-label-disabled-color;
       }
     }
-  }
-
-  .password.clearable > input {
-    padding-right: 3.8rem;
-  }
-
-  .password > input,
-  .clearable > input {
-    padding-right: 2.2rem;
-  }
-
-  .hint-text {
-    color: $input-hint-color;
-    font-size: 0.75rem;
-    min-height: 1.125rem;
-    cursor: default;
-  }
-  .error-text {
-    color: $color-error;
-    font-weight: bold;
-    font-size: 0.75rem;
-    min-height: 1.125rem;
-    cursor: default;
-  }
-  .label-text {
-    color: $input-label-color;
-    font-size: 0.875rem;
-    &-disabled {
-      color: $input-label-disabled-color;
+    ::placeholder {
+      color: $input-placeholder-color;
+      font-style: italic;
+      opacity: 1; /* Firefox */
     }
-  }
-  ::placeholder {
-    color: $input-placeholder-color;
-    font-style: italic;
-    opacity: 1; /* Firefox */
-  }
-  .progress-bar {
-    margin-top: -6px;
-    margin-bottom: 1px;
-    position: relative;
-    height: 3px;
-    overflow-x: hidden;
-    border-radius: 4px;
-    &-line {
-      position: absolute;
-      background: $color-calm;
-      opacity: 0.3;
+    .progress-bar {
+      margin-top: -6px;
+      margin-bottom: 1px;
+      position: relative;
       height: 3px;
-      left: -5%;
-      top: 0;
+      overflow-x: hidden;
+      border-radius: 4px;
+      &-line {
+        position: absolute;
+        background: $color-calm;
+        opacity: 0.3;
+        height: 3px;
+        left: -5%;
+        top: 0;
+      }
+      .inc {
+        animation: increase 2s infinite;
+      }
+      .dec {
+        animation: decrease 2s 0.5s infinite;
+      }
     }
-    .inc {
-      animation: increase 2s infinite;
-    }
-    .dec {
-      animation: decrease 2s 0.5s infinite;
-    }
-  }
 
-  @keyframes increase {
-    from {
-      left: -5%;
-      width: 5%;
+    @keyframes increase {
+      from {
+        left: -5%;
+        width: 5%;
+      }
+      to {
+        left: 130%;
+        width: 100%;
+      }
     }
-    to {
-      left: 130%;
-      width: 100%;
-    }
-  }
-  @keyframes decrease {
-    from {
-      left: -80%;
-      width: 80%;
-    }
-    to {
-      left: 110%;
-      width: 10%;
+    @keyframes decrease {
+      from {
+        left: -80%;
+        width: 80%;
+      }
+      to {
+        left: 110%;
+        width: 10%;
+      }
     }
   }
 }

@@ -18,8 +18,8 @@
       [placeholder]="placeholder"
       [disabled]="disabled"
       [ngStyle]="{
-        width: width,
-        'padding-left': prefixWidth ? prefixWidth : 'none'
+        width: cvtWidth,
+        'padding-left': prefixWidth || 'none'
       }"
       (blur)="onBlur()"
     />
@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <div *ngIf="loading" class="progress-bar" [ngStyle]="{ width: width }">
+  <div *ngIf="loading" class="progress-bar" [ngStyle]="{ width: cvtWidth }">
     <div class="progress-bar-line inc"></div>
     <div class="progress-bar-line dec"></div>
   </div>
