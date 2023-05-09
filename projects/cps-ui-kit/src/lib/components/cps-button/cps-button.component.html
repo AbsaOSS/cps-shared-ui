@@ -8,8 +8,7 @@
     [ngStyle]="{
     'background-color': type==='solid' ? buttonColor : 'transparent',
     color: textColor,
-    'min-width': pxWidth || 'none',
-    height: pxHeight || 'none',
+    height: cvtHeight || 'none',
   }"
   >
     <div class="button__content">
@@ -18,13 +17,13 @@
         class="button__icon"
         [icon]="icon"
         [color]="disabled ? 'text-light' : textColor"
-        [size]="pxIconSize"
+        [size]="cvtIconSize"
       >
       </cps-icon>
       <span
         class="button__text"
         *ngIf="label"
-        [ngStyle]="{ 'font-size': pxFontSize || null }"
+        [ngStyle]="{ 'font-size': cvtFontSize || null }"
         >{{ label }}</span
       >
     </div>

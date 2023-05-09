@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { convertSize, parseSize } from '../../utils/size-utils';
 
 @Component({
   standalone: true,
@@ -17,7 +25,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() label = '';
   @Input() icon = '';
   @Input() iconPosition: 'before' | 'after' = 'before';
-  @Input() size: 'xsmall' | 'small' | 'normal' | 'large' | 'fill' = 'normal';
+  @Input() size: 'xsmall' | 'small' | 'normal' | 'large' = 'normal';
   @Input() width: number | string = 0;
   @Input() height: number | string = 0;
   @Input() disabled = false;
@@ -28,10 +36,12 @@ export class CpsButtonComponent implements OnInit {
   buttonColor = '';
   textColor = '';
 
-  pxWidth = '';
-  pxHeight = '';
-  pxFontSize = '';
-  pxIconSize = '';
+  @HostBinding('style.width')
+  cvtWidth = '';
+
+  cvtHeight = '';
+  cvtFontSize = '';
+  cvtIconSize = '';
 
   classesList: string[] = [];
 
@@ -46,21 +56,19 @@ export class CpsButtonComponent implements OnInit {
     this.classesList = ['button'];
 
     if (this.width) {
-      const _w = parseInt('' + this.width);
-      if (_w && !isNaN(_w)) {
-        this.pxWidth = _w + 'px';
-      }
+      this.cvtWidth = convertSize(this.width);
     }
 
     if (this.height) {
-      const _h = parseInt('' + this.height);
-      if (_h && !isNaN(_h)) {
-        this.pxHeight = _h + 'px';
-      }
+      this.cvtHeight = convertSize(this.height);
+      if (this.cvtHeight) {
+        const parsedHeight = parseSize(this.cvtHeight);
+        const unit = parsedHeight.unit;
+        const size = parsedHeight.value * 0.4;
+        const isPx = unit === 'px';
 
-      if (this.pxHeight) {
-        this.pxFontSize = Math.floor(parseInt(this.pxHeight) * 0.4) + 'px';
-        this.pxIconSize = Math.ceil(parseInt(this.pxHeight) * 0.4) + 'px';
+        this.cvtFontSize = `${isPx ? Math.floor(size) : size}${unit}`;
+        this.cvtIconSize = `${isPx ? Math.ceil(size) : size}${unit}`;
       }
     } else {
       switch (this.size) {
@@ -70,10 +78,6 @@ export class CpsButtonComponent implements OnInit {
         }
         case 'large': {
           this.classesList.push('button--large');
-          break;
-        }
-        case 'fill': {
-          this.classesList.push('button--fill');
           break;
         }
         case 'small': {
