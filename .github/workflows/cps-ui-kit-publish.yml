@@ -31,6 +31,13 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Bump version and create a new commit
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          npm version minor -m "Bump version to %s"
+          git push --follow-tags
+
       - name: Build CPS UI Kit Component Library
         run: npm run build -- --project=cps-ui-kit --configuration=production
 
@@ -39,4 +46,3 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-
