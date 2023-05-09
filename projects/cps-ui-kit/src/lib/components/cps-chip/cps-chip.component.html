@@ -1,0 +1,17 @@
+<div [ngClass]="classesList">
+  <cps-icon
+    *ngIf="icon"
+    class="chip-icon"
+    [icon]="icon"
+    color="text-darkest"
+  ></cps-icon>
+  <span class="chip-label">{{ label }}</span>
+  <cps-icon
+    *ngIf="closable"
+    class="chip-close-icon"
+    icon="close-x"
+    size="xsmall"
+    color="text-darkest"
+    (click)="onCloseClick()"
+  ></cps-icon>
+</div>

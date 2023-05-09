@@ -1,5 +1,6 @@
 :host {
-  display: flex;
+  width: fit-content;
+  display: inline-block;
   .tag {
     min-height: 25px;
     align-items: center;
@@ -11,10 +12,6 @@
     border: solid 1px;
     border-left: solid 4px;
 
-    &.tag--elevated {
-      box-shadow: 1px 3px 4px rgb(0 0 0 / 10%);
-    }
-
     &.tag--security {
       border-color: var(--cps-color-warn);
     }
@@ -25,6 +22,9 @@
 
     &.tag--selectable {
       cursor: pointer;
+      &:hover:not(:active):not(:disabled) {
+        box-shadow: 1px 3px 4px rgb(0 0 0 / 10%);
+      }
     }
 
     &.tag--disabled {

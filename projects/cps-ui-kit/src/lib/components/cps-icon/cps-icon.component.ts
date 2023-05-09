@@ -133,7 +133,7 @@ export class CpsIconComponent implements OnChanges {
   url = '../../../../assets/icons/';
   pxSize = '';
 
-  classesList: string[] = [];
+  classesList: string[] = ['icon'];
 
   ngOnChanges(): void {
     this.iconColor = getCSSColor(this.color);

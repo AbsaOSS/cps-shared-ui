@@ -1,0 +1,51 @@
+:host {
+  width: fit-content;
+  display: inline-block;
+  .chip {
+    display: inline-flex;
+    background-color: var(--cps-color-bg-dark);
+    border-radius: 14px;
+    padding: 4px 12px;
+    cursor: default;
+    &-close-icon {
+      margin-left: 6px;
+      cursor: pointer;
+      &:hover {
+        ::ng-deep .icon {
+          color: var(--cps-color-calm) !important;
+        }
+      }
+    }
+    &-label {
+      font-size: 14px;
+      color: var(--cps-color-text-darkest);
+    }
+
+    &.chip-disabled {
+      pointer-events: none;
+      background-color: var(--cps-color-bg-mid);
+      .chip-label {
+        color: var(--cps-color-text-light);
+      }
+      .chip-icon,
+      .chip-close-icon {
+        ::ng-deep .icon {
+          color: var(--cps-color-text-light) !important;
+        }
+      }
+    }
+
+    &.chip--icon-before {
+      .chip-icon {
+        margin-right: 6px;
+      }
+    }
+
+    &.chip--icon-after {
+      .chip-icon {
+        margin-left: 6px;
+        order: 1;
+      }
+    }
+  }
+}

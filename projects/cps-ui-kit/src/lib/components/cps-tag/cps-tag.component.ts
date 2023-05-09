@@ -22,7 +22,6 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   @Input() type: 'security' | 'classification' | 'custom' = 'custom'; //higher precedence over color
   @Input() label = '';
   @Input() color = '';
-  @Input() elevated = false;
   @Input() disabled = false;
   @Input() selectable = false;
   @Input() set value(value: boolean) {
@@ -52,9 +51,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   setClasses(): void {
     this.classesList = ['tag'];
-    if (this.elevated) {
-      this.classesList.push('tag--elevated');
-    }
+
     if (this.selectable) {
       this.classesList.push('tag--selectable');
     }

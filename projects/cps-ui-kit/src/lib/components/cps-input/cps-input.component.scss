@@ -136,12 +136,14 @@ $hover-transition-duration: 0.2s;
     color: $input-hint-color;
     font-size: 0.75rem;
     min-height: 1.125rem;
+    cursor: default;
   }
   .error-text {
     color: $color-error;
     font-weight: bold;
     font-size: 0.75rem;
     min-height: 1.125rem;
+    cursor: default;
   }
   .label-text {
     color: $input-label-color;
