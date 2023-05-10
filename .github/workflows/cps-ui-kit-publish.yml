@@ -1,0 +1,51 @@
+name: CPS UI Kit - Publish
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'projects/cps-ui-kit/**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check commit message
+        run: |
+          commit_message=$(git log --format=%B -n 1)
+          if [[ "$commit_message" != *"Bump version"* ]]; then
+            echo "Commit message doesn't contain 'Bump version'. Skipping job execution."
+            exit 1
+          fi
+
+      - name: Use Node.js v16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: projects/cps-ui-kit/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('projects/cps-ui-kit/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Build CPS UI Kit Component Library
+        run: npm run build -- --project=cps-ui-kit --configuration=production
+
+      - name: Publish to NPM registry
+        working-directory: dist/cps-ui-kit
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
