@@ -1,6 +1,9 @@
 :host {
   width: fit-content;
   display: inline-block;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   .tag {
     min-height: 25px;
     align-items: center;

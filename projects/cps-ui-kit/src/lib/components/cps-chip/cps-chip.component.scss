@@ -1,6 +1,9 @@
 :host {
   width: fit-content;
   display: inline-block;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   .chip {
     display: inline-flex;
     background-color: var(--cps-color-bg-dark);
