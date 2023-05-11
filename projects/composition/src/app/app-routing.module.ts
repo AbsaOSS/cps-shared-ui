@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { InputPageComponent } from './pages/input-page/input-page.component';
+import { SelectPageComponent } from './pages/select-page/select-page.component';
 import { IconsPageComponent } from './pages/icons-page/icons-page/icons-page.component';
 import { ColorsPageComponent } from './pages/colors-page/colors-page/colors-page.component';
 import { CheckboxPageComponent } from './pages/checkbox-page/checkbox-page.component';
@@ -24,6 +25,11 @@ const routes: Routes = [
     path: 'input',
     title: 'Input',
     component: InputPageComponent,
+  },
+  {
+    path: 'select',
+    title: 'Select',
+    component: SelectPageComponent,
   },
   {
     path: 'button',

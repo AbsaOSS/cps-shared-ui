@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+  <cps-select
+    [options]="options"
+    optionLabel="name"
+    optionValue="code"
+    optionInfo="info"
+    placeholder="Select something"
+    [returnObject]="true"
+    formControlName="requiredSelect"
+    [disabled]="false"
+    label="I'm a select component"
+    hint="Hello, im just a hint"
+    [clearable]="true"
+  ></cps-select>
+</form>

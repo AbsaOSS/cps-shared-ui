@@ -1,0 +1,168 @@
+$color-calm: var(--cps-color-calm);
+$color-error: #cc3333;
+$error-background: #fef3f2;
+$select-placeholder-color: var(--cps-color-text-lightest);
+$select-label-color: var(--cps-color-text-dark);
+$select-label-disabled-color: var(--cps-color-text-mild);
+$select-items-disabled-color: var(--cps-color-text-mild);
+$select-hint-color: var(--cps-color-text-mild);
+$highlight-background: #f8f4f5;
+$selected-option-background: #efe4e7;
+$select-option-info-color: var(--cps-color-text-light);
+$select-option-value-color: var(--cps-color-text-dark);
+
+$hover-transition-duration: 0.2s;
+
+:host {
+  display: flex;
+  min-width: max-content;
+
+  .cps-select {
+    position: relative;
+    width: 100%;
+    outline: none;
+    font-family: Source Sans Pro, sans-serif;
+
+    &.active {
+      .cps-select-options {
+        display: block;
+      }
+      .cps-select-box {
+        border: 1px solid $color-calm;
+      }
+    }
+
+    .cps-select-label {
+      display: inline-block;
+      margin-bottom: 0.2rem;
+      color: $select-label-color;
+      font-size: 0.875rem;
+    }
+
+    .cps-select-box {
+      justify-content: space-between;
+      height: 38px;
+      width: 100%;
+      cursor: pointer;
+      background: #fff;
+      font-size: 1rem;
+      outline: none;
+      padding: 0 10px;
+      border-radius: 4px;
+      align-items: center;
+      display: flex;
+      border: 1px solid var(--cps-color-text-lightest);
+      transition-duration: $hover-transition-duration;
+
+      &-placeholder {
+        color: $select-placeholder-color;
+        font-style: italic;
+      }
+
+      &:hover {
+        border: 1px solid $color-calm;
+      }
+
+      .cps-select-box-icons {
+        display: flex;
+
+        .cps-select-box-clear-icon {
+          display: flex;
+          color: $color-calm;
+          margin-left: 8px;
+          cps-icon {
+            opacity: 0.5;
+            transition-duration: $hover-transition-duration;
+            &:hover {
+              opacity: 1;
+            }
+          }
+        }
+        .cps-select-box-chevron {
+          display: flex;
+          margin-left: 8px;
+          transition-duration: $hover-transition-duration;
+        }
+      }
+    }
+
+    &.active {
+      .cps-select-box-chevron {
+        top: 22px;
+        transform: rotate(180deg);
+      }
+    }
+
+    .cps-select-options {
+      position: absolute;
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+      overflow-x: hidden;
+      display: none;
+      max-height: 240px;
+      overflow-y: auto;
+      box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
+        0 1px 10px #0000001f;
+
+      .cps-select-options-option {
+        padding: 12px;
+        justify-content: space-between;
+        display: flex;
+        cursor: pointer;
+        &:hover {
+          background: $highlight-background;
+        }
+        &-label {
+          color: $select-option-value-color;
+        }
+        &-info {
+          color: $select-option-info-color;
+        }
+        &.selected {
+          background: $selected-option-background;
+          font-weight: 600;
+          .cps-select-options-option-label {
+            color: $color-calm;
+          }
+        }
+      }
+    }
+
+    .cps-select-hint {
+      color: $select-hint-color;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+      margin-top: 0.2rem;
+    }
+    .cps-select-error {
+      color: $color-error;
+      font-weight: bold;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+      margin-top: 0.2rem;
+    }
+
+    &.disabled {
+      pointer-events: none;
+      .cps-select-box {
+        background: #f7f7f7;
+        &-items {
+          color: $select-items-disabled-color;
+        }
+      }
+      .cps-select-label {
+        color: $select-label-disabled-color;
+      }
+    }
+    &.error {
+      .cps-select-box {
+        border-color: $color-error !important;
+        background: $error-background !important;
+      }
+    }
+  }
+}
