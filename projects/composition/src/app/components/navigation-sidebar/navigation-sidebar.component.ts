@@ -27,6 +27,10 @@ export class NavigationSidebarComponent {
       url: '/input',
     },
     {
+      title: 'Select',
+      url: '/select',
+    },
+    {
       title: 'Button',
       url: '/button',
     },

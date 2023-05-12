@@ -47,7 +47,8 @@ export class CpsChipComponent implements OnChanges {
     }
   }
 
-  onCloseClick() {
+  onCloseClick(event: any) {
+    event.stopPropagation();
     this.closed.emit();
   }
 }
