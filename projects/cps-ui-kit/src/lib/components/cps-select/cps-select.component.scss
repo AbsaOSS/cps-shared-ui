@@ -4,7 +4,7 @@ $error-background: #fef3f2;
 $select-placeholder-color: var(--cps-color-text-lightest);
 $select-label-color: var(--cps-color-text-dark);
 $select-label-disabled-color: var(--cps-color-text-mild);
-$select-items-disabled-color: var(--cps-color-text-mild);
+$select-items-disabled-color: var(--cps-color-text-light);
 $select-hint-color: var(--cps-color-text-mild);
 $highlight-background: #f8f4f5;
 $selected-option-background: #efe4e7;
@@ -15,7 +15,6 @@ $hover-transition-duration: 0.2s;
 
 :host {
   display: flex;
-  min-width: max-content;
 
   .cps-select {
     position: relative;
@@ -40,14 +39,15 @@ $hover-transition-duration: 0.2s;
     }
 
     .cps-select-box {
+      overflow: hidden;
       justify-content: space-between;
-      height: 38px;
+      min-height: 38px;
       width: 100%;
       cursor: pointer;
-      background: #fff;
+      background: white;
       font-size: 1rem;
       outline: none;
-      padding: 0 10px;
+      padding: 6px 10px;
       border-radius: 4px;
       align-items: center;
       display: flex;
@@ -59,7 +59,18 @@ $hover-transition-duration: 0.2s;
         font-style: italic;
       }
 
-      &:hover {
+      &-items {
+        .text-group,
+        .single-item {
+          color: $select-option-value-color;
+        }
+        //   .chips-group {
+        //     display: flex;
+        //     gap: 4px;
+        //   }
+      }
+
+      text-group &:hover {
         border: 1px solid $color-calm;
       }
 
@@ -94,9 +105,10 @@ $hover-transition-duration: 0.2s;
     }
 
     .cps-select-options {
+      z-index: 1001;
       position: absolute;
       width: 100%;
-      background: #fff;
+      background: white;
       box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
       border-radius: 4px;
       overflow-x: hidden;
@@ -120,11 +132,45 @@ $hover-transition-duration: 0.2s;
         &-info {
           color: $select-option-info-color;
         }
+        &-check {
+          background-color: transparent;
+          border: 0;
+          width: 16px;
+          height: 16px;
+          cursor: pointer;
+          display: inline-block;
+          vertical-align: middle;
+          box-sizing: border-box;
+          position: relative;
+          flex-shrink: 0;
+          transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+            background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+          margin-right: 8px;
+          opacity: 0;
+          &::after {
+            color: $color-calm;
+            top: 4px;
+            left: 1px;
+            width: 8px;
+            height: 3px;
+            border-left: 2px solid currentColor;
+            transform: rotate(-45deg);
+            opacity: 1;
+            box-sizing: content-box;
+            position: absolute;
+            content: "";
+            border-bottom: 2px solid currentColor;
+            transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+          }
+        }
         &.selected {
           background: $selected-option-background;
           font-weight: 600;
           .cps-select-options-option-label {
             color: $color-calm;
+          }
+          .cps-select-options-option-check {
+            opacity: 1;
           }
         }
       }
@@ -152,6 +198,10 @@ $hover-transition-duration: 0.2s;
         background: #f7f7f7;
         &-items {
           color: $select-items-disabled-color;
+          .text-group,
+          .single-item {
+            color: $select-items-disabled-color;
+          }
         }
       }
       .cps-select-label {
@@ -163,6 +213,11 @@ $hover-transition-duration: 0.2s;
         border-color: $color-error !important;
         background: $error-background !important;
       }
+    }
+
+    .select-all-option {
+      border-bottom: 1px solid lightgrey;
+      font-weight: 600;
     }
   }
 }

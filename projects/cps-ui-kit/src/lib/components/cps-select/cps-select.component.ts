@@ -4,19 +4,23 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
+import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
 
 @Component({
   standalone: true,
@@ -25,34 +29,38 @@ import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
     FormsModule,
     ClickOutsideDirective,
     CpsIconComponent,
+    CpsChipComponent,
     LabelByValuePipe,
+    CombineLabelsPipe,
   ],
   selector: 'cps-select',
   templateUrl: './cps-select.component.html',
   styleUrls: ['./cps-select.component.scss'],
 })
 export class CpsSelectComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
 {
   @Input() label = '';
   @Input() placeholder = 'Please select';
   @Input() hint = '';
-  @Input() multiple = false; //TODO
+  @Input() returnObject = true;
+  @Input() multiple = false;
   @Input() disabled = false;
-  @Input() singleLine = false; //occupy one line plus text (+n others) //TODO only if multiple === true
   @Input() width: number | string = '100%';
-  @Input() selectAll = false; //TODO only if multiple === true
-  @Input() chips = true; //TODO only if multiple === true
-  @Input() closableChips = true; //TODO only if multiple === true
+  @Input() selectAll = true;
+  @Input() chips = true;
+  @Input() closableChips = true;
   @Input() clearable = false;
   @Input() openOnClear = true;
   @Input() options = [] as any[];
   @Input() optionLabel = 'label';
-  @Input() optionValue: string = 'value'; //works only if returnObject === false
-  @Input() returnObject = true;
+  @Input() optionValue: string = 'value'; //works only if returnObject === false (TODO potentially can be of any type)
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
-  @Input() set value(value: any) {
+
+  @Input('value') _value: any = undefined;
+
+  set value(value: any) {
     value = this._convertValue(value);
     this._value = value;
     this.onChange(value);
@@ -67,7 +75,6 @@ export class CpsSelectComponent
   selectContainer!: ElementRef;
 
   private _statusChangesSubscription: Subscription = new Subscription();
-  private _value = undefined;
 
   error = '';
   cvtWidth = '';
@@ -78,8 +85,17 @@ export class CpsSelectComponent
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('_value' in changes && changes['_value'].isFirstChange()) {
+      this.value = this._convertValue(this.value);
+    }
+  }
+
   ngOnInit() {
     this.cvtWidth = convertSize(this.width);
+    if (this.multiple && !this._value) {
+      this._value = [];
+    }
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
       () => {
@@ -100,15 +116,48 @@ export class CpsSelectComponent
       } else dd.classList.remove('active');
     } else dd.classList.toggle('active');
     if (dd.classList.contains('active')) {
-      //TODO for multiple case
-      const element =
+      const selected =
         this.selectContainer.nativeElement.querySelector('.selected');
-      if (element) element.scrollIntoView();
+      if (selected) selected.scrollIntoView();
     }
   }
 
-  select(option: any): void {
-    this.updateValue(this.returnObject ? option : option[this.optionValue]);
+  select(option: any, byValue: boolean): void {
+    const val = byValue
+      ? option
+      : this.returnObject
+      ? option
+      : option[this.optionValue];
+    if (this.multiple) {
+      let res = [] as any;
+      if (this.value.includes(val)) {
+        res = this.value.filter((v: any) => v !== val);
+      } else {
+        this.options.forEach((o) => {
+          const ov = this.returnObject ? o : o[this.optionValue];
+          if (this.value.some((v: any) => v === ov) || val === ov) {
+            res.push(ov);
+          }
+        });
+      }
+      this.updateValue(res);
+    } else {
+      this.updateValue(val);
+    }
+  }
+
+  toggleAll() {
+    let res = [];
+    if (this.value.length < this.options.length) {
+      if (this.returnObject) {
+        res = this.options;
+      } else {
+        this.options.forEach((o) => {
+          res.push(o[this.optionValue]);
+        });
+      }
+    }
+    this.updateValue(res);
   }
 
   private _checkErrors(): void {
@@ -152,8 +201,33 @@ export class CpsSelectComponent
 
   private _convertValue(value: any): any {
     if (!this.returnObject) {
-      if (typeof value !== 'string') {
-        value = value ? value[this.optionValue] : '';
+      if (this.multiple) {
+        if (Array.isArray(value)) {
+          const temp: any = [];
+          value.forEach((v) => {
+            if (typeof v !== 'string') {
+              temp.push(v ? v[this.optionValue] : '');
+            } else temp.push(v);
+          });
+          value = temp;
+        } else {
+          if (!value) value = [];
+          else {
+            if (typeof value !== 'string') {
+              value = [value[this.optionValue]];
+            } else value = [value];
+          }
+        }
+      } else {
+        if (typeof value !== 'string') {
+          value = value ? value[this.optionValue] : '';
+        }
+      }
+    } else {
+      if (this.multiple) {
+        if (!Array.isArray(value)) {
+          value = [value];
+        }
       }
     }
     return value;
@@ -173,11 +247,15 @@ export class CpsSelectComponent
   clear(dd: HTMLElement, event: any): void {
     event.stopPropagation();
 
-    if (this.value) {
+    if (
+      (!this.multiple && this.value) ||
+      (this.multiple && this.value?.length > 0)
+    ) {
       if (this.openOnClear) {
         this.toggleOptions(dd, true);
       }
-      this.updateValue(this.returnObject ? undefined : '');
+      const val = this.multiple ? [] : this.returnObject ? undefined : '';
+      this.updateValue(val);
     }
   }
 

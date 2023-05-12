@@ -20,44 +20,25 @@ import {
 export class SelectPageComponent implements OnInit {
   options = [
     { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM', info: 'hello' },
-    { name: 'London', code: 'LDN' },
+    { name: 'Prague', code: 'PRG', info: 'Prague info' },
+    { name: 'Capetown', code: 'CPT', info: 'Capetown info' },
+    { name: 'Rome', code: 'RM' },
+    { name: 'London', code: 'LDN', info: 'London info' },
     { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS', info: 'abcd' },
-    { name: 'Tokyo', code: 'TOK', info: 'abcd' },
-    { name: 'Capetown', code: 'CPT', info: 'abcd' },
-    { name: 'Oslo', code: 'OSL', info: 'abcd' },
-    { name: 'Prague', code: 'PRG', info: 'abcd' },
-    { name: 'Berlin', code: 'BER', info: 'abcd' },
-    { name: 'Moscow', code: 'MOS', info: 'abcd' },
+    { name: 'Paris', code: 'PRS' },
+    { name: 'Tokyo', code: 'TOK' },
+    { name: 'Oslo', code: 'OSL', info: 'Oslo info' },
+    { name: 'Berlin', code: 'BER' },
   ];
-  selOpt: any = undefined;
 
   form: any;
+  syncVal: any = [];
 
   constructor(private _formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {
-    this.selOpt = this.options[2];
     this.form = this._formBuilder.group({
-      requiredSelect: [
-        this.options[4],
-        [
-          Validators.required,
-          (control: AbstractControl): ValidationErrors | null =>
-            this._checkDigits(control),
-        ],
-      ],
+      requiredSelect: [this.options[1], [Validators.required]],
     });
-  }
-
-  private _checkDigits(control: AbstractControl) {
-    // const val = control.value;
-    // if (!val) return null;
-
-    // if (!/\b\d{8}\b/g.test(val)) {
-    //   return { mustMatch8Dig: 'Field must contain exactly 8 digits' };
-    // }
-    return null;
   }
 }

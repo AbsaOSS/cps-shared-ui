@@ -1,15 +1,80 @@
 <form [formGroup]="form">
-  <cps-select
-    [options]="options"
-    optionLabel="name"
-    optionValue="code"
-    optionInfo="info"
-    placeholder="Select something"
-    [returnObject]="true"
-    formControlName="requiredSelect"
-    [disabled]="false"
-    label="I'm a select component"
-    hint="Hello, im just a hint"
-    [clearable]="true"
-  ></cps-select>
+  <div class="selects-group">
+    <cps-select
+      label="Required single select"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      formControlName="requiredSelect"
+    ></cps-select>
+    <cps-select
+      label="Disabled select"
+      [disabled]="true"
+      hint="This select is disabled"
+    ></cps-select>
+    <cps-select
+      label="Multiple select"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="false"
+      [multiple]="true"
+      [chips]="false"
+      [returnObject]="false"
+      value="CPT"
+      hint="This select is not clearable"
+    ></cps-select>
+    <cps-select
+      label="Multiple select with chips"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [value]="[options[0], options[4]]"
+    ></cps-select>
+    <cps-select
+      label="Multiple select with non-closable chips"
+      hint="This select doesn't have Select All option"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [closableChips]="false"
+      [selectAll]="false"
+      [value]="[options[0], options[4]]"
+    ></cps-select>
+    <div class="sync-val-example">
+      <cps-select
+        width="500"
+        label="Multiple select with two-way binding, select something"
+        [returnObject]="false"
+        [options]="options"
+        optionLabel="name"
+        optionValue="code"
+        optionInfo="info"
+        placeholder="Select a city"
+        hint="This select has a fixed width of 500px"
+        [clearable]="true"
+        [multiple]="true"
+        [closableChips]="false"
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }"
+      ></cps-select>
+      <span class="sync-val">{{ syncVal }}</span>
+    </div>
+  </div>
 </form>

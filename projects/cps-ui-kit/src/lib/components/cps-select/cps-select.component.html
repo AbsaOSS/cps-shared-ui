@@ -13,18 +13,53 @@
     (click)="toggleOptions(selectContainer)"
     (clickOutside)="toggleOptions(selectContainer, false)"
   >
-    <div class="cps-select-box-placeholder" *ngIf="!value">
+    <div
+      class="cps-select-box-placeholder"
+      *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)"
+    >
       {{ placeholder }}
     </div>
-    <div class="cps-select-box-items" *ngIf="value">
-      {{
-        returnObject
-          ? value[optionLabel]
-          : (value | labelByValue : options : optionValue : optionLabel)
-      }}
+    <div
+      class="cps-select-box-items"
+      *ngIf="(value && !multiple) || (value?.length > 0 && multiple)"
+    >
+      <span *ngIf="!multiple" class="single-item">
+        {{
+          returnObject
+            ? value[optionLabel]
+            : (value | labelByValue : options : optionValue : optionLabel)
+        }}</span
+      >
+      <div *ngIf="multiple && !chips" class="text-group">
+        <span>
+          {{
+            value
+              | combineLabels
+                : options
+                : optionValue
+                : optionLabel
+                : returnObject
+          }}</span
+        >
+      </div>
+
+      <div *ngIf="multiple && chips" class="chips-group">
+        <cps-chip
+          *ngFor="let val of value"
+          [disabled]="disabled"
+          [closable]="closableChips"
+          (closed)="select(val, true)"
+          [label]="
+            returnObject
+              ? val[optionLabel]
+              : (val | labelByValue : options : optionValue : optionLabel)
+          "
+        >
+        </cps-chip>
+      </div>
     </div>
     <span class="cps-select-box-icons">
-      <span *ngIf="clearable" class="cps-select-box-clear-icon">
+      <span *ngIf="clearable && !disabled" class="cps-select-box-clear-icon">
         <cps-icon
           icon="delete"
           size="small"
@@ -39,16 +74,37 @@
 
   <div class="cps-select-options">
     <div
+      class="cps-select-options-option select-all-option"
+      [class.selected]="value?.length === options.length"
+      *ngIf="multiple && selectAll"
+      (click)="toggleAll()"
+    >
+      <span>
+        <span *ngIf="multiple" class="cps-select-options-option-check"> </span>
+        <span class="cps-select-options-option-label">Select all</span>
+      </span>
+    </div>
+    <div
       class="cps-select-options-option"
       *ngFor="let option of options"
-      (click)="select(option)"
+      (click)="select(option, false)"
       [class.selected]="
-        returnObject ? option === value : option[optionValue] === value
+        multiple
+          ? returnObject
+            ? value?.includes(option)
+            : value?.includes(option[optionValue])
+          : returnObject
+          ? option === value
+          : option[optionValue] === value
       "
     >
-      <span class="cps-select-options-option-label">{{
-        option[optionLabel]
-      }}</span>
+      <span>
+        <span *ngIf="multiple" class="cps-select-options-option-check"> </span>
+        <span class="cps-select-options-option-label">{{
+          option[optionLabel]
+        }}</span>
+      </span>
+
       <span class="cps-select-options-option-info">{{
         option[optionInfo]
       }}</span>
