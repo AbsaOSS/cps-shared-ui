@@ -146,6 +146,13 @@ export class CpsSelectComponent
     }
   }
 
+  onOptionClick(option: any, dd: HTMLElement) {
+    this.select(option, false);
+    if (!this.multiple) {
+      this.toggleOptions(dd, false);
+    }
+  }
+
   toggleAll() {
     let res = [];
     if (this.value.length < this.options.length) {
