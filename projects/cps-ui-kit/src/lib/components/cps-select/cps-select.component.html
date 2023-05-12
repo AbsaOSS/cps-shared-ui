@@ -8,7 +8,10 @@
   (blur)="onBlur()"
 >
   <label *ngIf="label" class="cps-select-label">{{ label }}</label>
-  <div (clickOutside)="toggleOptions(selectContainer, false)">
+  <div
+    [class.focused]="isOpened"
+    (clickOutside)="toggleOptions(selectContainer, false)"
+  >
     <div class="cps-select-box" (click)="toggleOptions(selectContainer)">
       <div
         class="cps-select-box-placeholder"

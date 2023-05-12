@@ -79,6 +79,8 @@ export class CpsSelectComponent
   error = '';
   cvtWidth = '';
 
+  isOpened = false;
+
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -111,16 +113,28 @@ export class CpsSelectComponent
   toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
     if (typeof show === 'boolean') {
-      if (show) {
-        dd.classList.add('active');
-      } else dd.classList.remove('active');
+      if (show) dd.classList.add('active');
+      else dd.classList.remove('active');
     } else dd.classList.toggle('active');
-    if (dd.classList.contains('active')) {
+
+    this.isOpened = dd.classList.contains('active');
+
+    if (this.isOpened) {
       const selected =
         this.selectContainer.nativeElement.querySelector('.selected');
       if (selected) selected.scrollIntoView();
     }
   }
+
+  // private _filterOptions() {
+  //   if (!this.optionsFilter || !this.multiple) return;
+  //   this.filteredOptions = this.options.filter((o) => {
+  //     if (this.returnObject) {
+  //       return !this.value.find((v: any) => v === o);
+  //     }
+  //     return !this.value.find((v: any) => v === o[this.optionValue]);
+  //   });
+  // }
 
   select(option: any, byValue: boolean): void {
     const val = byValue
@@ -188,11 +202,6 @@ export class CpsSelectComponent
     const message = errArr.find((msg) => typeof msg === 'string');
 
     this.error = message || 'Unknown error';
-  }
-
-  onClear(): void {
-    this._control?.control?.markAsTouched();
-    this._checkErrors();
   }
 
   onChange = (event: any) => {};
