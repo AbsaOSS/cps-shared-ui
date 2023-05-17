@@ -6,6 +6,7 @@ on:
       - 'master'
     paths:
       - 'projects/cps-ui-kit/**'
+      - '.github/**'
 
 jobs:
   publish:
@@ -18,7 +19,7 @@ jobs:
       - name: Check commit message
         id: check_commit
         run: |
-          commit_message=${{ github.event.head_commit.message }}
+          commit_message="${{ github.event.head_commit.message }}"
           if [[ "$commit_message" != *"Bump version"* ]]; then
             echo "Commit message doesn't contain 'Bump version'. Skipping job execution."
             echo "::set-output name=skip::true"
@@ -46,7 +47,7 @@ jobs:
 
       - name: Build CPS UI Kit Component Library
         if: steps.check_commit.outputs.skip != 'true'
-        run: npm run build -- --project=cps-ui-kit --configuration=production
+        run: npm run build
 
       - name: Publish to NPM registry
         if: steps.check_commit.outputs.skip != 'true'
