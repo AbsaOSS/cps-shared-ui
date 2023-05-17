@@ -5,7 +5,7 @@ import {
   HostBinding,
   Input,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -16,11 +16,11 @@ import { convertSize, parseSize } from '../../utils/size-utils';
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-button',
   templateUrl: './cps-button.component.html',
-  styleUrls: ['./cps-button.component.scss'],
+  styleUrls: ['./cps-button.component.scss']
 })
 export class CpsButtonComponent implements OnInit {
   @Input() color = 'calm';
-  @Input() contentColor = 'white'; //works only with solid type
+  @Input() contentColor = 'white'; // works only with solid type
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
   @Input() label = '';
   @Input() icon = '';
@@ -37,7 +37,7 @@ export class CpsButtonComponent implements OnInit {
   textColor = '';
 
   @HostBinding('style.width')
-  cvtWidth = '';
+    cvtWidth = '';
 
   cvtHeight = '';
   cvtFontSize = '';
@@ -45,14 +45,14 @@ export class CpsButtonComponent implements OnInit {
 
   classesList: string[] = [];
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this.buttonColor = getCSSColor(this.color);
     this.textColor =
       this.type === 'solid' ? getCSSColor(this.contentColor) : this.buttonColor;
     this.setClasses();
   }
 
-  setClasses() {
+  setClasses () {
     this.classesList = ['button'];
 
     if (this.width) {
@@ -120,7 +120,7 @@ export class CpsButtonComponent implements OnInit {
     }
   }
 
-  onClick(event: Event) {
+  onClick (event: Event) {
     this.clicked.emit(event);
   }
 }

@@ -3,20 +3,21 @@ import {
   Output,
   EventEmitter,
   ElementRef,
-  HostListener,
+  HostListener
 } from '@angular/core';
 
 @Directive({
   standalone: true,
-  selector: '[clickOutside]',
+  selector: '[clickOutside]'
 })
 export class ClickOutsideDirective {
   @Output() clickOutside = new EventEmitter<void>();
 
-  constructor(private elementRef: ElementRef) {}
+  // eslint-disable-next-line no-useless-constructor
+  constructor (private elementRef: ElementRef) {}
 
   @HostListener('document:click', ['$event.target'])
-  public onClick(target: any) {
+  public onClick (target: any) {
     if (!this.elementRef?.nativeElement?.classList?.contains('focused')) return;
     const clickedInside = this.elementRef?.nativeElement?.contains(target);
     if (!clickedInside) {

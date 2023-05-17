@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import { CpsSelectComponent } from 'cps-ui-kit';
-import {
-  AbstractControl,
-  FormsModule,
-  ReactiveFormsModule,
-  UntypedFormBuilder,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
 
 @Component({
   standalone: true,
@@ -15,7 +8,7 @@ import {
   selector: 'app-select-page',
   templateUrl: './select-page.component.html',
   styleUrls: ['./select-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class SelectPageComponent implements OnInit {
   options = [
@@ -28,17 +21,18 @@ export class SelectPageComponent implements OnInit {
     { name: 'Paris', code: 'PRS' },
     { name: 'Tokyo', code: 'TOK' },
     { name: 'Oslo', code: 'OSL', info: 'Oslo info' },
-    { name: 'Berlin', code: 'BER' },
+    { name: 'Berlin', code: 'BER' }
   ];
 
   form: any;
   syncVal: any = [];
 
-  constructor(private _formBuilder: UntypedFormBuilder) {}
+  // eslint-disable-next-line no-useless-constructor
+  constructor (private _formBuilder: UntypedFormBuilder) {}
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this.form = this._formBuilder.group({
-      requiredSelect: [this.options[1], [Validators.required]],
+      requiredSelect: [this.options[1], [Validators.required]]
     });
   }
 }

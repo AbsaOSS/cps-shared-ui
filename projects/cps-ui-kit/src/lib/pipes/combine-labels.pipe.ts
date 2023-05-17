@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ standalone: true, name: 'combineLabels' })
 export class CombineLabelsPipe implements PipeTransform {
-  transform(
+  transform (
     values: any[],
     options: any[],
     valueKey: string,

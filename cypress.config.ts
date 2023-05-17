@@ -4,9 +4,9 @@ export default defineConfig({
   component: {
     devServer: {
       framework: 'angular',
-      bundler: 'webpack',
+      bundler: 'webpack'
     },
     specPattern: 'projects/cps-ui-kit/**/*.cy.ts',
-    video: false,
-  },
+    video: false
+  }
 });

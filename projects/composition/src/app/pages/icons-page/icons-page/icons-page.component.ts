@@ -9,27 +9,27 @@ import { CpsIconComponent, CpsInputComponent, iconNames } from 'cps-ui-kit';
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',
   styleUrls: ['./icons-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class IconsPageComponent implements OnInit {
   filteredIconsList = [] as string[];
 
-  ngOnInit() {
+  ngOnInit () {
     this.filteredIconsList = iconNames;
   }
 
-  onSearchChanged(value: string) {
+  onSearchChanged (value: string) {
     this._filterIcons(value);
   }
 
-  private _filterIcons(name: string) {
+  private _filterIcons (name: string) {
     name = name.toLowerCase();
     this.filteredIconsList = iconNames.filter((n) =>
       n.toLowerCase().includes(name)
     );
   }
 
-  onCopyIconName(name: string) {
+  onCopyIconName (name: string) {
     navigator.clipboard.writeText(name).then(
       () => {
         console.log('Icon name copied to clipboard');

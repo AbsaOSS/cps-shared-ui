@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ standalone: true, name: 'labelByValue' })
 export class LabelByValuePipe implements PipeTransform {
-  transform(
+  transform (
     value: string,
     options: any[],
     valueKey: string,

@@ -50,7 +50,7 @@ export const getCpsColors = (): [string, string][] =>
           const props = [...rule.style]
             .map((propName) => [
               propName.trim(),
-              rule.style.getPropertyValue(propName).trim(),
+              rule.style.getPropertyValue(propName).trim()
             ])
             .filter(([propName]) => propName.indexOf('--cps-color') === 0);
 

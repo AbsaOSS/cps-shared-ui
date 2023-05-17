@@ -6,7 +6,7 @@ import {
   OnChanges,
   Optional,
   Output,
-  Self,
+  Self
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
@@ -16,19 +16,20 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   imports: [CommonModule],
   selector: 'cps-tag',
   templateUrl: './cps-tag.component.html',
-  styleUrls: ['./cps-tag.component.scss'],
+  styleUrls: ['./cps-tag.component.scss']
 })
 export class CpsTagComponent implements ControlValueAccessor, OnChanges {
-  @Input() type: 'security' | 'classification' | 'custom' = 'custom'; //higher precedence over color
+  @Input() type: 'security' | 'classification' | 'custom' = 'custom'; // higher precedence over color
   @Input() label = '';
   @Input() color = '';
   @Input() disabled = false;
   @Input() selectable = false;
-  @Input() set value(value: boolean) {
+  @Input() set value (value: boolean) {
     this._value = value;
     this.onChange(value);
   }
-  get value(): boolean {
+
+  get value (): boolean {
     return this._value;
   }
 
@@ -39,17 +40,17 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   private _value = false;
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  constructor (@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
   }
 
-  ngOnChanges(): void {
+  ngOnChanges (): void {
     this.setClasses();
   }
 
-  setClasses(): void {
+  setClasses (): void {
     this.classesList = ['tag'];
 
     if (this.selectable) {
@@ -72,27 +73,29 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
-  registerOnChange(fn: any) {
+  registerOnChange (fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any) {
+  registerOnTouched (fn: any) {
     this.onTouched = fn;
   }
 
-  writeValue(value: boolean) {
+  writeValue (value: boolean) {
     this.value = value;
   }
 
-  toggleSelected() {
+  toggleSelected () {
     if (this.disabled || !this.selectable) return;
     this._updateValue(!this.value);
   }
 
-  private _updateValue(value: boolean) {
+  private _updateValue (value: boolean) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);

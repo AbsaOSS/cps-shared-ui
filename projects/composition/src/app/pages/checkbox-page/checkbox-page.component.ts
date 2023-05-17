@@ -8,7 +8,7 @@ import { CpsCheckboxComponent } from 'cps-ui-kit';
   selector: 'app-checkbox-page',
   templateUrl: './checkbox-page.component.html',
   styleUrls: ['./checkbox-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class CheckboxPageComponent {
   syncVal = true;

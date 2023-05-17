@@ -1,12 +1,4 @@
-<i
-  *ngIf="icon"
-  [ngClass]="classesList"
-  [style.color]="iconColor"
-  [ngStyle]="{
-    width: cvtSize || 'none',
-    height: cvtSize || 'none'
-  }"
->
+<i *ngIf="icon" [ngClass]="classesList" [style.color]="iconColor" [ngStyle]="{width: cvtSize || 'none', height: cvtSize || 'none'}">
   <svg>
     <use attr.xlink:href="{{ url }}{{ icon }}.svg#{{ icon }}"></use>
   </svg>
