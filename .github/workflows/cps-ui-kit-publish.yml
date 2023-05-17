@@ -9,7 +9,7 @@ on:
       - '.github/**'
 
 jobs:
-  bump_build_publish:
+  version-bump:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +29,20 @@ jobs:
           git config user.email github-actions@github.com
           npm version minor -m "Bump version to %s"
           git push origin HEAD:master --follow-tags
+
+  publish:
+    needs: version-bump
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js v16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Cache node_modules
         uses: actions/cache@v3
