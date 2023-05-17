@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Install dependencies
-        run: npm ci --production
+        run: npm ci
 
       - name: Build CPS UI Kit Component Library
         run: npm run build
