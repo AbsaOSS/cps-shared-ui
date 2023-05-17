@@ -1,4 +1,4 @@
-name: CPS UI Kit - Publish
+name: CPS UI Kit - Bump, Build & Publish
 
 on:
   push:
@@ -9,31 +9,28 @@ on:
       - '.github/**'
 
 jobs:
-  publish:
+  bump_build_publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Check commit message
-        id: check_commit
-        run: |
-          commit_message="${{ github.event.head_commit.message }}"
-          if [[ "$commit_message" != *"Bump version"* ]]; then
-            echo "Commit message doesn't contain 'Bump version'. Skipping job execution."
-            echo "::set-output name=skip::true"
-          fi
-
       - name: Use Node.js v16.x
-        if: steps.check_commit.outputs.skip != 'true'
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Bump version and create a new commit
+        working-directory: projects/cps-ui-kit
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          npm version minor -m "Bump version to %s"
+          git push origin HEAD:master --follow-tags
+
       - name: Cache node_modules
-        if: steps.check_commit.outputs.skip != 'true'
         uses: actions/cache@v3
         with:
           path: projects/cps-ui-kit/node_modules
@@ -42,15 +39,12 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Install dependencies
-        if: steps.check_commit.outputs.skip != 'true'
         run: npm ci
 
       - name: Build CPS UI Kit Component Library
-        if: steps.check_commit.outputs.skip != 'true'
         run: npm run build
 
       - name: Publish to NPM registry
-        if: steps.check_commit.outputs.skip != 'true'
         working-directory: dist/cps-ui-kit
         run: npm publish
         env:
