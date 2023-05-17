@@ -7,49 +7,50 @@ import { RouterModule } from '@angular/router';
   imports: [RouterModule, CommonModule],
   selector: 'app-navigation-sidebar',
   templateUrl: './navigation-sidebar.component.html',
-  styleUrls: ['./navigation-sidebar.component.scss'],
+  styleUrls: ['./navigation-sidebar.component.scss']
 })
 export class NavigationSidebarComponent {
   styles = [
     {
       title: 'Color pack',
-      url: '/colors',
-    },
+      url: '/colors'
+    }
     // extend this list
   ];
+
   components = [
     {
       title: 'Icon',
-      url: '/icon',
+      url: '/icon'
     },
     {
       title: 'Input',
-      url: '/input',
+      url: '/input'
     },
     {
       title: 'Select',
-      url: '/select',
+      url: '/select'
     },
     {
       title: 'Button',
-      url: '/button',
+      url: '/button'
     },
     {
       title: 'Checkbox',
-      url: '/checkbox',
+      url: '/checkbox'
     },
     {
       title: 'Radio',
-      url: '/radio',
+      url: '/radio'
     },
     {
       title: 'Tag',
-      url: '/tag',
+      url: '/tag'
     },
     {
       title: 'Chip',
-      url: '/chip',
-    },
+      url: '/chip'
+    }
     // extend this list
   ];
 }

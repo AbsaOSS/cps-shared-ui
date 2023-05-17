@@ -8,7 +8,7 @@ import { CpsTagComponent } from 'cps-ui-kit';
   selector: 'app-tag-page',
   templateUrl: './tag-page.component.html',
   styleUrls: ['./tag-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class TagPageComponent {
   syncVal = true;

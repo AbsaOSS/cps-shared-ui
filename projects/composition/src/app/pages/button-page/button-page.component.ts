@@ -7,11 +7,11 @@ import { CpsButtonComponent } from 'cps-ui-kit';
   selector: 'app-button-page',
   templateUrl: './button-page.component.html',
   styleUrls: ['./button-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class ButtonPageComponent {
   isLoading = false;
-  onClickForLoading() {
+  onClickForLoading () {
     this.isLoading = true;
     setTimeout(() => {
       this.isLoading = false;

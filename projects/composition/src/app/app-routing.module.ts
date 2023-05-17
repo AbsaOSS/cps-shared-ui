@@ -14,53 +14,53 @@ const routes: Routes = [
   {
     path: 'colors',
     title: 'Color pack',
-    component: ColorsPageComponent,
+    component: ColorsPageComponent
   },
   {
     path: 'icon',
     title: 'Icon',
-    component: IconsPageComponent,
+    component: IconsPageComponent
   },
   {
     path: 'input',
     title: 'Input',
-    component: InputPageComponent,
+    component: InputPageComponent
   },
   {
     path: 'select',
     title: 'Select',
-    component: SelectPageComponent,
+    component: SelectPageComponent
   },
   {
     path: 'button',
     title: 'Button',
-    component: ButtonPageComponent,
+    component: ButtonPageComponent
   },
   {
     path: 'checkbox',
     title: 'Checkbox',
-    component: CheckboxPageComponent,
+    component: CheckboxPageComponent
   },
   {
     path: 'radio',
     title: 'Radio',
-    component: RadioPageComponent,
+    component: RadioPageComponent
   },
   {
     path: 'tag',
     title: 'Tag',
-    component: TagPageComponent,
+    component: TagPageComponent
   },
   {
     path: 'chip',
     title: 'Chip',
-    component: ChipPageComponent,
+    component: ChipPageComponent
   },
-  { path: '**', redirectTo: 'colors' },
+  { path: '**', redirectTo: 'colors' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

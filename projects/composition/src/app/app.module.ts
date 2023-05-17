@@ -15,9 +15,9 @@ import { CpsIconComponent } from 'cps-ui-kit';
     BrowserAnimationsModule,
     AppRoutingModule,
     NavigationSidebarComponent,
-    CpsIconComponent,
+    CpsIconComponent
   ],
   providers: [{ provide: TitleStrategy, useClass: AppPrefixTitleStrategy }],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

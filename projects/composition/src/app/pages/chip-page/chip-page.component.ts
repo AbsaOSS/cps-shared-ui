@@ -8,12 +8,12 @@ import { CpsButtonComponent, CpsChipComponent } from 'cps-ui-kit';
   selector: 'app-chip-page',
   templateUrl: './chip-page.component.html',
   styleUrls: ['./chip-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class ChipPageComponent {
   chipClosed = false;
 
-  onToggleChip() {
+  onToggleChip () {
     this.chipClosed = !this.chipClosed;
   }
 }

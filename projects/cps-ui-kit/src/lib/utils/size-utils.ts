@@ -1,5 +1,5 @@
 export const convertSize = (size: number | string): string => {
-  let res = String(size).trim();
+  const res = String(size).trim();
   if (!res) {
     return '';
   }

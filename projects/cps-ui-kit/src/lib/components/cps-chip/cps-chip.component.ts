@@ -3,7 +3,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output,
+  Output
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-chip',
   templateUrl: './cps-chip.component.html',
-  styleUrls: ['./cps-chip.component.scss'],
+  styleUrls: ['./cps-chip.component.scss']
 })
 export class CpsChipComponent implements OnChanges {
   @Input() label = '';
@@ -26,11 +26,11 @@ export class CpsChipComponent implements OnChanges {
 
   classesList = ['chip'];
 
-  ngOnChanges() {
+  ngOnChanges () {
     this.setClasses();
   }
 
-  setClasses() {
+  setClasses () {
     if (this.disabled) this.classesList.push('chip-disabled');
 
     if (this.icon && this.label) {
@@ -47,7 +47,7 @@ export class CpsChipComponent implements OnChanges {
     }
   }
 
-  onCloseClick(event: any) {
+  onCloseClick (event: any) {
     event.stopPropagation();
     this.closed.emit();
   }

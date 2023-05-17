@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   UntypedFormBuilder,
   ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { CpsInputComponent } from 'cps-ui-kit';
 
@@ -15,28 +15,29 @@ import { CpsInputComponent } from 'cps-ui-kit';
   selector: 'app-input-page',
   templateUrl: './input-page.component.html',
   styleUrls: ['./input-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class InputPageComponent implements OnInit {
   form: any;
   syncVal = '';
 
-  constructor(private _formBuilder: UntypedFormBuilder) {}
+  // eslint-disable-next-line no-useless-constructor
+  constructor (private _formBuilder: UntypedFormBuilder) {}
 
-  ngOnInit() {
+  ngOnInit () {
     this.form = this._formBuilder.group({
       requiredInput: [
         '',
         [
           Validators.required,
           (control: AbstractControl): ValidationErrors | null =>
-            this._checkDigits(control),
-        ],
-      ],
+            this._checkDigits(control)
+        ]
+      ]
     });
   }
 
-  private _checkDigits(control: AbstractControl) {
+  private _checkDigits (control: AbstractControl) {
     const val = control.value;
     if (!val) return null;
 

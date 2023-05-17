@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { CpsInputComponent } from 'cps-ui-kit';
 import {
   getCpsColors,
-  getTextColor,
+  getTextColor
 } from 'projects/cps-ui-kit/src/lib/utils/colors-utils';
 
 type colorGroupsType = {
@@ -17,36 +17,36 @@ type colorGroupsType = {
   selector: 'app-colors-page',
   templateUrl: './colors-page.component.html',
   styleUrls: ['./colors-page.component.scss'],
-  host: { class: 'composition-page' },
+  host: { class: 'composition-page' }
 })
 export class ColorsPageComponent implements OnInit {
   colorsList: colorGroupsType = [
     {
       name: 'Main',
-      colors: [[], [], [], [], [], [], [], [], [], [], [], [], []],
+      colors: [[], [], [], [], [], [], [], [], [], [], [], [], []]
     },
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
     { name: 'Backgrounds', colors: [[], [], []] },
     { name: 'Lines', colors: [[], [], []] },
-    { name: 'Text', colors: [[], [], [], [], []] },
+    { name: 'Text', colors: [[], [], [], [], []] }
   ];
 
   filteredColorsList: colorGroupsType = [
     {
       name: 'Main',
-      colors: [[], [], [], [], [], [], [], [], [], [], [], [], []],
+      colors: [[], [], [], [], [], [], [], [], [], [], [], [], []]
     },
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
     { name: 'Backgrounds', colors: [[], [], []] },
     { name: 'Lines', colors: [[], [], []] },
-    { name: 'Text', colors: [[], [], [], [], []] },
+    { name: 'Text', colors: [[], [], [], [], []] }
   ];
 
   colorNameColor: { [key: string]: string } = {};
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     const customColors = getCpsColors();
     customColors.forEach((clr) => {
       const name = clr[0].replace(/^--cps-color-/, '');
@@ -130,11 +130,11 @@ export class ColorsPageComponent implements OnInit {
     this.filteredColorsList = [...this.colorsList];
   }
 
-  onSearchChanged(value: string) {
+  onSearchChanged (value: string) {
     this._filterColors(value);
   }
 
-  private _filterColors(searchStr: string) {
+  private _filterColors (searchStr: string) {
     searchStr = searchStr.toLowerCase();
 
     const filteredList: colorGroupsType = [];
@@ -161,7 +161,7 @@ export class ColorsPageComponent implements OnInit {
     this.filteredColorsList = filteredList;
   }
 
-  onCopyColor(color: string) {
+  onCopyColor (color: string) {
     navigator.clipboard.writeText(color).then(
       () => {
         console.log('Color copied to clipboard');

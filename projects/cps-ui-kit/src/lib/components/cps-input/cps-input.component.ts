@@ -11,7 +11,7 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
@@ -23,11 +23,10 @@ import { convertSize } from '../../utils/size-utils';
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-input',
   templateUrl: './cps-input.component.html',
-  styleUrls: ['./cps-input.component.scss'],
+  styleUrls: ['./cps-input.component.scss']
 })
 export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
-{
+implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   @Input() label = '';
   @Input() placeholder = 'Please enter';
   @Input() hint = '';
@@ -40,11 +39,12 @@ export class CpsInputComponent
   @Input() prefixIconSize: iconSizeType = 'small';
   @Input() prefixText = '';
   @Input() hideDetails = false;
-  @Input() set value(value: string) {
+  @Input() set value (value: string) {
     this._value = value;
     this.onChange(value);
   }
-  get value(): string {
+
+  get value (): string {
     return this._value;
   }
 
@@ -61,7 +61,7 @@ export class CpsInputComponent
   prefixWidth = '';
   cvtWidth = '';
 
-  constructor(
+  constructor (
     @Self() @Optional() private _control: NgControl,
     private _elementRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef
@@ -71,7 +71,7 @@ export class CpsInputComponent
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this.currentType = this.type;
     this.cvtWidth = convertSize(this.width);
 
@@ -82,7 +82,7 @@ export class CpsInputComponent
     ) as Subscription;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit () {
     let w = 0;
     if (this.prefixText) {
       w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
@@ -94,11 +94,11 @@ export class CpsInputComponent
     this.cdRef.detectChanges();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy () {
     this._statusChangesSubscription?.unsubscribe();
   }
 
-  private _checkErrors() {
+  private _checkErrors () {
     const errors = this._control?.errors;
 
     if (!this._control?.control?.touched || !errors) {
@@ -112,6 +112,7 @@ export class CpsInputComponent
     }
 
     if ('minlength' in errors) {
+      // eslint-disable-next-line dot-notation
       this.error = `Field must contain at least ${errors['minlength'].requiredLength} characters`;
       return;
     }
@@ -126,48 +127,51 @@ export class CpsInputComponent
     this.error = message || 'Unknown error';
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
-  registerOnChange(fn: any) {
+  registerOnChange (fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn: any) {
+  registerOnTouched (fn: any) {
     this.onTouched = fn;
   }
 
-  writeValue(value: string) {
+  writeValue (value: string) {
     this.value = value;
   }
 
-  updateValueEvent(event: any) {
+  updateValueEvent (event: any) {
     const value = event?.target?.value || '';
     this._updateValue(value);
   }
 
-  private _updateValue(value: string) {
+  private _updateValue (value: string) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
-  clear() {
+  clear () {
     if (this.value !== '') this._updateValue('');
   }
 
-  togglePassword() {
+  togglePassword () {
     this.currentType = this.currentType === 'password' ? 'text' : 'password';
   }
 
-  setDisabledState(disabled: boolean) {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setDisabledState (disabled: boolean) {}
 
-  onBlur() {
+  onBlur () {
     this._control?.control?.markAsTouched();
     this._checkErrors();
   }
 
-  focus() {
+  focus () {
     this._elementRef?.nativeElement?.querySelector('input')?.focus();
   }
 }
