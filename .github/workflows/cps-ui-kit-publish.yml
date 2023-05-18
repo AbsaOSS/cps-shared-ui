@@ -10,11 +10,14 @@ on:
 
 jobs:
   version-bump:
+    if: "!contains(github.event.head_commit.message, 'Bump version to')"
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Use Node.js v16.x
         uses: actions/setup-node@v3
@@ -22,13 +25,21 @@ jobs:
           node-version: 16.x
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Bump version and create a new commit
+      - name: Bump version
+        id: bump
         working-directory: projects/cps-ui-kit
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          npm version minor -m "Bump version to %s"
-          git push origin HEAD:master --follow-tags
+          version=$(npm version minor -m "Bump version to %s")
+          echo "::set-output name=version::$version"
+
+      - name: Commit and push
+        working-directory: projects/cps-ui-kit
+        run: |
+          git add package.json
+          git commit -m "Bump version to ${{ steps.bump.outputs.version }}"
+          git push origin HEAD:master
 
   publish:
     needs: version-bump
@@ -37,6 +48,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Use Node.js v16.x
         uses: actions/setup-node@v3
