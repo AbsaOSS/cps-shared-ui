@@ -51,6 +51,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Fetch latest commits
+        run: git pull origin master
+
       - name: Use Node.js v16.x
         uses: actions/setup-node@v3
         with:
@@ -70,6 +73,10 @@ jobs:
 
       - name: Build CPS UI Kit Component Library
         run: npm run build
+
+      - name: Print current version
+        working-directory: dist/cps-ui-kit
+        run: npm version
 
       - name: Publish to NPM registry
         working-directory: dist/cps-ui-kit
