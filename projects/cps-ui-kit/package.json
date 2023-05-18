@@ -13,7 +13,7 @@
     "url": "https://github.com/AbsaOSS/cps-shared-ui"
   },
   "homepage": "https://github.com/AbsaOSS/cps-shared-ui",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "Apache License 2.0",
   "dependencies": {
     "tslib": "^2.3.0"
   },
