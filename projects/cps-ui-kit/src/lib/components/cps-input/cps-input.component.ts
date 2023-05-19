@@ -40,6 +40,7 @@ export class CpsInputComponent
   @Input() prefixIconSize: iconSizeType = 'small';
   @Input() prefixText = '';
   @Input() hideDetails = false;
+  @Input() persistentClear = false;
   @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);

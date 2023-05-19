@@ -64,6 +64,16 @@ $hover-transition-duration: 0.2s;
         color: $color-calm;
       }
 
+      &:hover {
+        .action-btns {
+          .clear-btn {
+            cps-icon {
+              opacity: 0.5;
+            }
+          }
+        }
+      }
+
       .action-btns {
         display: flex;
         align-items: center;
@@ -76,7 +86,7 @@ $hover-transition-duration: 0.2s;
           cursor: pointer;
           color: $color-calm;
           cps-icon {
-            opacity: 0.5;
+            opacity: 0;
             transition-duration: $hover-transition-duration;
             &:hover {
               opacity: 1;
@@ -120,6 +130,16 @@ $hover-transition-duration: 0.2s;
         }
         &-text {
           color: $input-prefix-text-color;
+        }
+      }
+    }
+
+    .persistent-clear {
+      .action-btns {
+        .clear-btn {
+          cps-icon {
+            opacity: 0.5;
+          }
         }
       }
     }

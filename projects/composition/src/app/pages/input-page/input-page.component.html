@@ -12,16 +12,18 @@
     <cps-input
       label="Password input"
       placeholder="Enter password"
+      [clearable]="true"
       type="password"></cps-input>
     <cps-input
       label="Disabled input"
       hint="This input is disabled"
       [disabled]="true"></cps-input>
     <cps-input
-      label="Clearable input"
+      label="Clearable input with persistent clear icon"
       hint="This input is clearable"
       value="Clear me"
-      [clearable]="true"></cps-input>
+      [clearable]="true"
+      [persistentClear]="true"></cps-input>
     <cps-input
       label="Input with prefix icon"
       prefixIcon="search"
