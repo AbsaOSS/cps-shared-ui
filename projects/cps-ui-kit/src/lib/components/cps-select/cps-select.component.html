@@ -8,7 +8,11 @@
   (blur)="onBlur()">
   <label *ngIf="label" class="cps-select-label">{{ label }} </label>
   <div
+    class="cps-select-container"
     [class.focused]="isOpened"
+    [ngClass]="{
+      'persistent-clear': persistentClear
+    }"
     (clickOutside)="toggleOptions(selectContainer, false)">
     <div class="cps-select-box" (click)="toggleOptions(selectContainer)">
       <div
@@ -54,7 +58,16 @@
         </div>
       </div>
       <span class="cps-select-box-icons">
-        <span *ngIf="clearable && !disabled" class="cps-select-box-clear-icon">
+        <span
+          *ngIf="clearable && !disabled"
+          [style.visibility]="
+            persistentClear ||
+            (!persistentClear &&
+              ((multiple && value?.length) || (!multiple && value)))
+              ? 'visible'
+              : 'hidden'
+          "
+          class="cps-select-box-clear-icon">
           <cps-icon
             icon="delete"
             size="small"

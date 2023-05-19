@@ -28,7 +28,7 @@
       value="CPT"
       hint="This select is not clearable"></cps-select>
     <cps-select
-      label="Multiple select with chips"
+      label="Multiple select with chips and persistent clear icon"
       [options]="options"
       optionLabel="name"
       optionValue="code"
@@ -36,6 +36,7 @@
       placeholder="Select a city"
       [clearable]="true"
       [multiple]="true"
+      [persistentClear]="true"
       [value]="[options[0], options[4]]"></cps-select>
     <cps-select
       label="Multiple select with non-closable chips"
