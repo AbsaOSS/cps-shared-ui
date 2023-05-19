@@ -40,6 +40,20 @@ $hover-transition-duration: 0.2s;
       font-size: 0.875rem;
     }
 
+    .persistent-clear,
+    .cps-autocomplete-container.focused,
+    .cps-autocomplete-container:hover {
+      .cps-autocomplete-box {
+        .cps-autocomplete-box-icons {
+          .cps-autocomplete-box-clear-icon {
+            cps-icon {
+              opacity: 0.5;
+            }
+          }
+        }
+      }
+    }
+
     .cps-autocomplete-box {
       overflow: hidden;
       min-height: 38px;
@@ -146,10 +160,10 @@ $hover-transition-duration: 0.2s;
           color: $color-calm;
           margin-left: 8px;
           cps-icon {
-            opacity: 0.5;
+            opacity: 0;
             transition-duration: $hover-transition-duration;
             &:hover {
-              opacity: 1;
+              opacity: 1 !important;
             }
           }
         }

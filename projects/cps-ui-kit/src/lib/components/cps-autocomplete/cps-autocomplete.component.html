@@ -7,7 +7,11 @@
   (keydown.escape)="onEscClicked(autocompleteContainer)">
   <label *ngIf="label" class="cps-autocomplete-label">{{ label }}</label>
   <div
+    class="cps-autocomplete-container"
     [class.focused]="isOpened"
+    [ngClass]="{
+      'persistent-clear': persistentClear
+    }"
     (clickOutside)="onClickOutside(autocompleteContainer)">
     <div class="cps-autocomplete-box" (click)="onBoxClick()">
       <div class="cps-autocomplete-box-area">
@@ -69,6 +73,13 @@
         <span class="cps-autocomplete-box-icons">
           <span
             *ngIf="clearable && !disabled"
+            [style.visibility]="
+              persistentClear ||
+              (!persistentClear &&
+                ((multiple && value?.length) || (!multiple && value)))
+                ? 'visible'
+                : 'hidden'
+            "
             class="cps-autocomplete-box-clear-icon">
             <cps-icon
               icon="delete"

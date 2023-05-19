@@ -58,6 +58,7 @@ export class CpsAutocompleteComponent
   @Input() optionValue = 'value'; // works only if returnObject === false (TODO potentially can be of any type)
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
+  @Input() persistentClear = false;
 
   @Input('value') _value: any = undefined;
 
