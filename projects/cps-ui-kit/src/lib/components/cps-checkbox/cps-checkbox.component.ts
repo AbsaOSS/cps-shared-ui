@@ -20,12 +20,12 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 export class CpsCheckboxComponent implements ControlValueAccessor {
   @Input() label = '';
   @Input() disabled = false;
-  @Input() set value (value: boolean) {
+  @Input() set value(value: boolean) {
     this._value = value;
     this.onChange(value);
   }
 
-  get value (): boolean {
+  get value(): boolean {
     return this._value;
   }
 
@@ -33,7 +33,7 @@ export class CpsCheckboxComponent implements ControlValueAccessor {
 
   private _value = false;
 
-  constructor (
+  constructor(
     @Self() @Optional() private _control: NgControl,
     private _elementRef: ElementRef<HTMLElement>
   ) {
@@ -47,34 +47,34 @@ export class CpsCheckboxComponent implements ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
-  registerOnChange (fn: any) {
+  registerOnChange(fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched (fn: any) {
+  registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
 
-  writeValue (value: boolean) {
+  writeValue(value: boolean) {
     this.value = value;
   }
 
-  updateValueEvent (event: any) {
+  updateValueEvent(event: any) {
     event.preventDefault();
     if (this.disabled) return;
     this._updateValue(!this.value);
   }
 
-  private _updateValue (value: boolean) {
+  private _updateValue(value: boolean) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState (disabled: boolean) {}
+  setDisabledState(disabled: boolean) {}
 
-  focus () {
+  focus() {
     this._elementRef?.nativeElement?.querySelector('input')?.focus();
   }
 }

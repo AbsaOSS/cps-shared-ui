@@ -1,19 +1,16 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
-    'cypress'
-  ],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'standard',
-    'plugin:cypress/recommended'
+    'plugin:cypress/recommended',
+    'prettier'
   ],
+  plugins: ['@typescript-eslint', 'cypress', 'prettier'],
   rules: {
-    semi: 'off',
-    '@typescript-eslint/semi': ['error']
+    'prettier/prettier': ['error']
   },
   globals: {
     Cypress: 'readonly'

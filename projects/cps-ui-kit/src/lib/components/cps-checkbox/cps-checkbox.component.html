@@ -1,8 +1,7 @@
 <div class="checkbox-container">
   <label
     class="checkbox"
-    [ngStyle]="{ cursor: disabled ? 'default' : 'pointer' }"
-  >
+    [ngStyle]="{ cursor: disabled ? 'default' : 'pointer' }">
     <span class="label" [ngClass]="{ 'label-disabled': disabled }">{{
       label
     }}</span>
@@ -10,8 +9,7 @@
       type="checkbox"
       [disabled]="disabled"
       [checked]="value"
-      (change)="updateValueEvent($event)"
-    />
+      (change)="updateValueEvent($event)" />
     <span class="indicator"></span>
   </label>
 </div>

@@ -4,47 +4,39 @@
       label="Required numeric input"
       formControlName="requiredInput"
       placeholder="Enter 8 digit value"
-      type="number"
-    ></cps-input>
+      type="number"></cps-input>
     <cps-input
       label="Loading input"
       hint="This input is currently in a loading state"
-      [loading]="true"
-    ></cps-input>
+      [loading]="true"></cps-input>
     <cps-input
       label="Password input"
       placeholder="Enter password"
-      type="password"
-    ></cps-input>
+      type="password"></cps-input>
     <cps-input
       label="Disabled input"
       hint="This input is disabled"
-      [disabled]="true"
-    ></cps-input>
+      [disabled]="true"></cps-input>
     <cps-input
       label="Clearable input"
       hint="This input is clearable"
       value="Clear me"
-      [clearable]="true"
-    ></cps-input>
+      [clearable]="true"></cps-input>
     <cps-input
       label="Input with prefix icon"
       prefixIcon="search"
       prefixIconSize="18px"
-      placeholder="Search something"
-    ></cps-input>
+      placeholder="Search something"></cps-input>
     <cps-input
       label="Input with prefix text"
       prefixText="USD"
-      placeholder="Enter amount"
-    ></cps-input>
+      placeholder="Enter amount"></cps-input>
     <div class="sync-val-example">
       <cps-input
         width="400"
         label="Input with two-way binding, type something in"
         [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }"
-      >
+        [ngModelOptions]="{ standalone: true }">
         ></cps-input
       >
       <span class="sync-val">{{ syncVal }}</span>

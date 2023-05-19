@@ -8,22 +8,19 @@
       vertical
         ? 'radio-group-content-vertical'
         : 'radio-group-content-horizontal'
-    "
-  >
+    ">
     <label
       *ngFor="let option of options"
       class="radio-group-content-button"
       [ngStyle]="{
         cursor: option.disabled || disabled ? 'default' : 'pointer'
-      }"
-    >
+      }">
       <input
         type="radio"
         [disabled]="option.disabled || disabled"
         [value]="option.value"
         [checked]="value === option.value"
-        (change)="updateValueEvent($event)"
-      />
+        (change)="updateValueEvent($event)" />
       <span class="radio-group-content-button-label">{{ option.label }}</span>
     </label>
   </div>

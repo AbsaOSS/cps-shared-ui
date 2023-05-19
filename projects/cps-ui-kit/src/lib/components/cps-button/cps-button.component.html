@@ -9,16 +9,14 @@
     'background-color': type==='solid' ? buttonColor : 'transparent',
     color: textColor,
     height: cvtHeight || 'none',
-  }"
-  >
+  }">
     <div class="button__content">
       <cps-icon
         *ngIf="icon"
         class="button__icon"
         [icon]="icon"
         [color]="disabled ? 'text-light' : textColor"
-        [size]="cvtIconSize"
-      >
+        [size]="cvtIconSize">
       </cps-icon>
       <span
         class="button__text"

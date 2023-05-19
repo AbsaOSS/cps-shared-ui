@@ -1,5 +1,5 @@
-@import "./variables.scss";
-@import "../../cps-ui-kit/styles/styles.scss";
+@import './variables.scss';
+@import '../../cps-ui-kit/styles/styles.scss';
 
 *,
 *::before,
@@ -11,7 +11,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px;
 }
 

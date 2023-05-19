@@ -4,21 +4,18 @@
   <cps-chip
     label="Right icon chip"
     icon="checked"
-    iconPosition="after"
-  ></cps-chip>
+    iconPosition="after"></cps-chip>
   <cps-chip label="Disabled chip" icon="eye" [disabled]="true"></cps-chip>
   <div>
     <cps-chip
       *ngIf="!chipClosed"
       label="Closable chip"
       [closable]="true"
-      (closed)="onToggleChip()"
-    ></cps-chip>
+      (closed)="onToggleChip()"></cps-chip>
     <cps-button
       *ngIf="chipClosed"
       label="Reset chip"
       (clicked)="onToggleChip()"
-      size="xsmall"
-    ></cps-button>
+      size="xsmall"></cps-button>
   </div>
 </div>

@@ -22,9 +22,9 @@ export class InputPageComponent implements OnInit {
   syncVal = '';
 
   // eslint-disable-next-line no-useless-constructor
-  constructor (private _formBuilder: UntypedFormBuilder) {}
+  constructor(private _formBuilder: UntypedFormBuilder) {}
 
-  ngOnInit () {
+  ngOnInit() {
     this.form = this._formBuilder.group({
       requiredInput: [
         '',
@@ -37,7 +37,7 @@ export class InputPageComponent implements OnInit {
     });
   }
 
-  private _checkDigits (control: AbstractControl) {
+  private _checkDigits(control: AbstractControl) {
     const val = control.value;
     if (!val) return null;
 

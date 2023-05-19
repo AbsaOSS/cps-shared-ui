@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  Validators
+} from '@angular/forms';
 import { CpsSelectComponent } from 'cps-ui-kit';
 
 @Component({
@@ -28,9 +33,9 @@ export class SelectPageComponent implements OnInit {
   syncVal: any = [];
 
   // eslint-disable-next-line no-useless-constructor
-  constructor (private _formBuilder: UntypedFormBuilder) {}
+  constructor(private _formBuilder: UntypedFormBuilder) {}
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     this.form = this._formBuilder.group({
       requiredSelect: [this.options[1], [Validators.required]]
     });

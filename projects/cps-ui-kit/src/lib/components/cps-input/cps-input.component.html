@@ -9,8 +9,7 @@
       password: type === 'password',
       'input-wrap-error': error,
       clearable: clearable,
-    }"
-  >
+    }">
     <input
       [type]="currentType"
       [value]="value"
@@ -21,8 +20,7 @@
         width: cvtWidth,
         'padding-left': prefixWidth || 'none'
       }"
-      (blur)="onBlur()"
-    />
+      (blur)="onBlur()" />
 
     <div class="prefix">
       <span *ngIf="prefixIcon" class="prefix-icon">
@@ -42,8 +40,7 @@
       <span
         *ngIf="type === 'password'"
         class="password-show-btn"
-        [ngClass]="{ 'password-show-btn-active': currentType === 'text' }"
-      >
+        [ngClass]="{ 'password-show-btn-active': currentType === 'text' }">
         <cps-icon icon="eye" size="18px" (click)="togglePassword()"></cps-icon>
       </span>
     </div>

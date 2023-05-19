@@ -3,8 +3,7 @@
     *ngIf="icon"
     class="chip-icon"
     [icon]="icon"
-    color="text-darkest"
-  ></cps-icon>
+    color="text-darkest"></cps-icon>
   <span class="chip-label">{{ label }}</span>
   <cps-icon
     *ngIf="closable"
@@ -12,6 +11,5 @@
     icon="close-x"
     size="xsmall"
     color="text-darkest"
-    (click)="onCloseClick($event)"
-  ></cps-icon>
+    (click)="onCloseClick($event)"></cps-icon>
 </div>

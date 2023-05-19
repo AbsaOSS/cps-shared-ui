@@ -8,13 +8,11 @@
       optionInfo="info"
       placeholder="Select a city"
       [clearable]="true"
-      formControlName="requiredSelect"
-    ></cps-select>
+      formControlName="requiredSelect"></cps-select>
     <cps-select
       label="Disabled select"
       [disabled]="true"
-      hint="This select is disabled"
-    ></cps-select>
+      hint="This select is disabled"></cps-select>
     <cps-select
       label="Multiple select"
       [returnObject]="false"
@@ -28,8 +26,7 @@
       [chips]="false"
       [returnObject]="false"
       value="CPT"
-      hint="This select is not clearable"
-    ></cps-select>
+      hint="This select is not clearable"></cps-select>
     <cps-select
       label="Multiple select with chips"
       [returnObject]="false"
@@ -40,8 +37,7 @@
       placeholder="Select a city"
       [clearable]="true"
       [multiple]="true"
-      [value]="[options[0], options[4]]"
-    ></cps-select>
+      [value]="[options[0], options[4]]"></cps-select>
     <cps-select
       label="Multiple select with non-closable chips"
       hint="This select doesn't have Select All option"
@@ -55,8 +51,7 @@
       [multiple]="true"
       [closableChips]="false"
       [selectAll]="false"
-      [value]="[options[0], options[4]]"
-    ></cps-select>
+      [value]="[options[0], options[4]]"></cps-select>
     <div class="sync-val-example">
       <cps-select
         width="500"
@@ -72,8 +67,7 @@
         [multiple]="true"
         [closableChips]="false"
         [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }"
-      ></cps-select>
+        [ngModelOptions]="{ standalone: true }"></cps-select>
       <span class="sync-val">{{ syncVal }}</span>
     </div>
   </div>

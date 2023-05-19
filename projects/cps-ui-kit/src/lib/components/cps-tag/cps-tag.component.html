@@ -2,7 +2,6 @@
   [ngClass]="classesList"
   [class.unselected]="!value && selectable"
   [ngStyle]="{ 'border-color': tagColor || 'none' }"
-  (click)="toggleSelected()"
->
+  (click)="toggleSelected()">
   <p>{{ label }}</p>
 </div>

@@ -18,7 +18,7 @@ $hover-transition-duration: 0.2s;
     gap: 0.2rem !important;
     display: flex !important;
     flex-direction: column !important;
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
 
     .input-wrap {
       position: relative;
@@ -154,6 +154,7 @@ $hover-transition-duration: 0.2s;
       }
     }
     ::placeholder {
+      font-family: Source Sans Pro, sans-serif;
       color: $input-placeholder-color;
       font-style: italic;
       opacity: 1; /* Firefox */

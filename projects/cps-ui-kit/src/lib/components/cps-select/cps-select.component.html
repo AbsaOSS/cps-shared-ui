@@ -5,24 +5,20 @@
   [ngClass]="{ disabled: disabled, error: error }"
   #selectContainer
   (keydown.escape)="toggleOptions(selectContainer, false)"
-  (blur)="onBlur()"
->
-  <label *ngIf="label" class="cps-select-label">{{ label }}</label>
+  (blur)="onBlur()">
+  <label *ngIf="label" class="cps-select-label">{{ label }} </label>
   <div
     [class.focused]="isOpened"
-    (clickOutside)="toggleOptions(selectContainer, false)"
-  >
+    (clickOutside)="toggleOptions(selectContainer, false)">
     <div class="cps-select-box" (click)="toggleOptions(selectContainer)">
       <div
         class="cps-select-box-placeholder"
-        *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)"
-      >
+        *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)">
         {{ placeholder }}
       </div>
       <div
         class="cps-select-box-items"
-        *ngIf="(value && !multiple) || (value?.length > 0 && multiple)"
-      >
+        *ngIf="(value && !multiple) || (value?.length > 0 && multiple)">
         <span *ngIf="!multiple" class="single-item">
           {{
             returnObject
@@ -31,7 +27,7 @@
           }}</span
         >
         <div *ngIf="multiple && !chips" class="text-group">
-          <span>
+          <span class="text-group-item">
             {{
               value
                 | combineLabels
@@ -39,8 +35,8 @@
                   : optionValue
                   : optionLabel
                   : returnObject
-            }}</span
-          >
+            }}
+          </span>
         </div>
 
         <div *ngIf="multiple && chips" class="chips-group">
@@ -53,8 +49,7 @@
               returnObject
                 ? val[optionLabel]
                 : (val | labelByValue : options : optionValue : optionLabel)
-            "
-          >
+            ">
           </cps-chip>
         </div>
       </div>
@@ -63,15 +58,13 @@
           <cps-icon
             icon="delete"
             size="small"
-            (click)="clear(selectContainer, $event)"
-          ></cps-icon>
+            (click)="clear(selectContainer, $event)"></cps-icon>
         </span>
         <span class="cps-select-box-chevron">
           <cps-icon
             icon="chevron-down"
             size="small"
-            color="text-dark"
-          ></cps-icon>
+            color="text-dark"></cps-icon>
         </span>
       </span>
     </div>
@@ -81,9 +74,8 @@
         class="cps-select-options-option select-all-option"
         [class.allselected]="value?.length === options.length"
         *ngIf="multiple && selectAll"
-        (click)="toggleAll()"
-      >
-        <span>
+        (click)="toggleAll()">
+        <span class="cps-select-options-option-left">
           <span *ngIf="multiple" class="cps-select-options-option-check">
           </span>
           <span class="cps-select-options-option-label">Select all</span>
@@ -101,9 +93,8 @@
             : returnObject
             ? option === value
             : option[optionValue] === value
-        "
-      >
-        <span>
+        ">
+        <span class="cps-select-options-option-left">
           <span *ngIf="multiple" class="cps-select-options-option-check">
           </span>
           <span class="cps-select-options-option-label">{{
@@ -111,7 +102,7 @@
           }}</span>
         </span>
 
-        <span class="cps-select-options-option-info">{{
+        <span class="cps-select-options-option-right">{{
           option[optionInfo]
         }}</span>
       </div>

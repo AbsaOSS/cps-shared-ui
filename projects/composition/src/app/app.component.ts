@@ -9,7 +9,7 @@ import { filter, map } from 'rxjs/operators';
 })
 export class AppComponent {
   componentTitle = '';
-  constructor (
+  constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {
