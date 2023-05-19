@@ -4,7 +4,6 @@ import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/size-utils';
 
 export const iconNames = [
-  'absa-logo',
   'access',
   'access-denied',
   'access-menu',
@@ -103,7 +102,7 @@ export const iconNames = [
   'wallet',
   'warning',
   'widget-button-icon',
-  'xls'
+  'xls',
 ];
 
 export type IconType = (typeof iconNames)[number];
@@ -122,7 +121,7 @@ export type iconSizeType =
   imports: [CommonModule],
   selector: 'cps-icon',
   templateUrl: './cps-icon.component.html',
-  styleUrls: ['./cps-icon.component.scss']
+  styleUrls: ['./cps-icon.component.scss'],
 })
 export class CpsIconComponent implements OnChanges {
   @Input() icon: IconType = '';
@@ -136,12 +135,12 @@ export class CpsIconComponent implements OnChanges {
 
   classesList: string[] = ['icon'];
 
-  ngOnChanges (): void {
+  ngOnChanges(): void {
     this.iconColor = getCSSColor(this.color);
     this.setClasses();
   }
 
-  setClasses (): void {
+  setClasses(): void {
     switch (this.size) {
       case 'fill': {
         this.classesList.push('icon--fill');
