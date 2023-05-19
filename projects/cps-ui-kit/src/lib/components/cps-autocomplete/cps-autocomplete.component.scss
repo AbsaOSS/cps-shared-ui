@@ -68,8 +68,8 @@ $hover-transition-duration: 0.2s;
         color: $autocomplete-option-value-color;
         border-style: none;
         outline: none;
+        font-family: Source Sans Pro, sans-serif;
         &::placeholder {
-          font-family: Source Sans Pro, sans-serif;
           color: $autocomplete-placeholder-color;
           font-style: italic;
           opacity: 1; /* Firefox */
