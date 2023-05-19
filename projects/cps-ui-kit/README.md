@@ -7,6 +7,7 @@ Angular shared components library.
 - Icon
 - Input
 - Select
+- Autocomplete
 - Button
 - Checkbox
 - Radio

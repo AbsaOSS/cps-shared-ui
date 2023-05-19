@@ -12,6 +12,7 @@ This repository consists of two projects:
 - Icon
 - Input
 - Select
+- Autocomplete
 - Button
 - Checkbox
 - Radio

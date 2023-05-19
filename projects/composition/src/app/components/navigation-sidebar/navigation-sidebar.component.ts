@@ -32,6 +32,10 @@ export class NavigationSidebarComponent {
       url: '/select'
     },
     {
+      title: 'Autocomplete',
+      url: '/autocomplete'
+    },
+    {
       title: 'Button',
       url: '/button'
     },

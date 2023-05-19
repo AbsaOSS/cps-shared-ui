@@ -1,0 +1,74 @@
+<form [formGroup]="form">
+  <div class="autocompletes-group">
+    <cps-autocomplete
+      label="Required single autocomplete"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="true"
+      formControlName="requiredAutocomplete"></cps-autocomplete>
+    <cps-autocomplete
+      label="Disabled autocomplete"
+      [disabled]="true"
+      hint="This autocomplete is disabled"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="false"
+      [multiple]="true"
+      [chips]="false"
+      [returnObject]="false"
+      value="CPT"
+      hint="This autocomplete is not clearable"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete with chips"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="true"
+      [multiple]="true"
+      [value]="[options[0], options[4]]"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete with non-closable chips"
+      hint="This autocomplete doesn't have Select All option"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="true"
+      [multiple]="true"
+      [closableChips]="false"
+      [selectAll]="false"
+      [value]="[options[0], options[4]]"></cps-autocomplete>
+    <div class="sync-val-example">
+      <cps-autocomplete
+        width="500"
+        label="Multiple autocomplete with two-way binding, select something"
+        [returnObject]="false"
+        [options]="options"
+        optionLabel="name"
+        optionValue="code"
+        optionInfo="info"
+        placeholder="Enter a city"
+        hint="This autocomplete has a fixed width of 500px"
+        [clearable]="true"
+        [multiple]="true"
+        [closableChips]="false"
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }"></cps-autocomplete>
+      <span class="sync-val">{{ syncVal }}</span>
+    </div>
+  </div>
+</form>
