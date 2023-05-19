@@ -34,7 +34,12 @@
     </div>
 
     <div class="action-btns">
-      <span *ngIf="clearable" class="clear-btn">
+      <span
+        *ngIf="clearable"
+        [style.visibility]="
+          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
+        "
+        class="clear-btn">
         <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
       </span>
 
