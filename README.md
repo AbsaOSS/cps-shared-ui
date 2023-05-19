@@ -1,6 +1,6 @@
 ## Consumer Products UI Kit
 
-#### Shared components library
+### Shared components library
 
 This repository consists of two projects:
 
@@ -9,15 +9,15 @@ This repository consists of two projects:
 
 #### Available components
 
-- Icon
-- Input
-- Select
 - Autocomplete
 - Button
 - Checkbox
-- Radio
-- Tag
 - Chip
+- Icon
+- Input
+- Radio
+- Select
+- Tag
 
 ## Development server
 
