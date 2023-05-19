@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200mm" height="210mm" version="1.1" viewBox="0 0 200 210" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<g transform="translate(-12.03 -74.725)">
+<flowRoot fill="#000000" font-family="sans-serif" font-size="40px" letter-spacing="0px" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><flowRegion><rect x="290.92" y="490.16" width="108.59" height="65.66"/></flowRegion><flowPara/></flowRoot>
+<g aria-label="rsa">
+<g transform="matrix(1.253 0 0 1.253 -25.728 -44.395)">
+<g transform="scale(1.0018 .99819)" fill="#850a3b" stroke-width="2.8826" aria-label="UI">
+<path d="m97.814 217.57q-6.1111 0-11.3-1.8449-5.0734-1.9602-8.7631-5.5346-3.6897-3.6897-5.7652-9.109-1.9602-5.4193-1.9602-12.338v-51.541h9.8008v51.541q0 10.262 4.8428 14.99 4.9581 4.6122 13.145 4.6122 8.3019 0 13.145-4.7275 4.9581-4.7275 4.9581-14.874v-51.541h9.4549v51.541q0 6.8029-1.9602 12.222-1.9602 5.304-5.5346 8.9937-3.5744 3.6897-8.6478 5.6499-5.0734 1.9602-11.415 1.9602z"/>
+<path d="m149.59 216.19h-9.8008v-78.983h9.8008z"/>
+</g>
+</g>
+<circle cx="112.03" cy="174.73" r="90" fill="none" stroke="#850a3b" stroke-width="10"/>
+</g>
+</g>
+</svg>

@@ -4,7 +4,6 @@ import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/size-utils';
 
 export const iconNames = [
-  'absa-logo',
   'access',
   'access-denied',
   'access-menu',
