@@ -33,6 +33,7 @@ import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
     LabelByValuePipe,
     CombineLabelsPipe
   ],
+  providers: [LabelByValuePipe],
   selector: 'cps-autocomplete',
   templateUrl: './cps-autocomplete.component.html',
   styleUrls: ['./cps-autocomplete.component.scss']
@@ -79,17 +80,16 @@ export class CpsAutocompleteComponent
 
   error = '';
   cvtWidth = '';
-
   isOpened = false;
-
   inputText = '';
   filteredOptions = [] as any[];
-
   backspaceClickedOnce = false;
-
   activeSingle = false;
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    private _labelByValue: LabelByValuePipe
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -173,12 +173,6 @@ export class CpsAutocompleteComponent
     }
   }
 
-  private _clearInput() {
-    this.filteredOptions = this.options;
-    this.inputText = '';
-    this.activeSingle = false;
-  }
-
   toggleAll() {
     let res = [];
     if (this.value.length < this.options.length) {
@@ -235,7 +229,7 @@ export class CpsAutocompleteComponent
     }
     this.backspaceClickedOnce = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
-    // TODO check case for returnObject and without it
+
     this.filteredOptions = this.options.filter((o: any) =>
       o[this.optionLabel].toLowerCase().includes(searchVal)
     );
@@ -286,6 +280,19 @@ export class CpsAutocompleteComponent
     this.valueChanged.emit(value);
   }
 
+  private _getValueLabel() {
+    return this.value
+      ? this.returnObject
+        ? this.value[this.optionLabel]
+        : this._labelByValue.transform(
+            this.value,
+            this.options,
+            this.optionValue,
+            this.optionLabel
+          )
+      : '';
+  }
+
   clear(dd: HTMLElement, event: any): void {
     event.stopPropagation();
 
@@ -313,14 +320,23 @@ export class CpsAutocompleteComponent
     this._checkErrors();
   }
 
-  onClickOutside(dd: HTMLElement) {
+  private _clearInput() {
+    this.filteredOptions = this.options;
+    this.inputText = '';
+    this.activeSingle = false;
+  }
+
+  private _closeAndClear(dd: HTMLElement) {
     this._clearInput();
     this.toggleOptions(dd, false);
   }
 
+  onClickOutside(dd: HTMLElement) {
+    this._closeAndClear(dd);
+  }
+
   onEscClicked(dd: HTMLElement) {
-    this._clearInput();
-    this.toggleOptions(dd, false);
+    this._closeAndClear(dd);
   }
 
   onEnterClicked(event: any) {
@@ -329,11 +345,10 @@ export class CpsAutocompleteComponent
       if (this.multiple) return;
       const val = this.returnObject ? undefined : '';
       this.updateValue(val);
-      this.toggleOptions(this.autocompleteContainer?.nativeElement, false);
-      this._clearInput();
+      this._closeAndClear(this.autocompleteContainer?.nativeElement);
       return;
     }
-    // TODO check case for returnObject and without it
+
     const found = this.filteredOptions.find(
       (o: any) => o[this.optionLabel].toLowerCase() === searchVal
     );
@@ -345,14 +360,22 @@ export class CpsAutocompleteComponent
       );
     } else {
       if (!this.multiple) {
-        // TODO check case for returnObject and without it
-        this.inputText = this.value ? this.value[this.optionLabel] : '';
+        this.inputText = this._getValueLabel();
         this.filteredOptions = this.options;
         return;
       }
     }
 
     this._clearInput();
+  }
+
+  onBoxClick() {
+    if (!this.multiple) {
+      this.activeSingle = true;
+      this.inputText = this._getValueLabel();
+      this.filteredOptions = this.options;
+    }
+    this.focus();
   }
 
   onRemoveLastValue(event: any) {
@@ -377,16 +400,6 @@ export class CpsAutocompleteComponent
 
   focusInput() {
     this.autocompleteContainer?.nativeElement?.querySelector('input')?.focus();
-  }
-
-  onBoxClick() {
-    if (!this.multiple) {
-      this.activeSingle = true;
-      // TODO check case for returnObject and without it
-      this.inputText = this.value ? this.value[this.optionLabel] : '';
-      this.filteredOptions = this.options;
-    }
-    this.focus();
   }
 
   focus() {
