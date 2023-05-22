@@ -85,6 +85,8 @@ export class CpsSelectComponent
 
   isOpened = false;
 
+  optionHighlightedIndex = -1;
+
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -115,7 +117,7 @@ export class CpsSelectComponent
     this._statusChangesSubscription?.unsubscribe();
   }
 
-  toggleOptions(dd: HTMLElement, show?: boolean): void {
+  private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
     if (typeof show === 'boolean') {
       if (show) dd.classList.add('active');
@@ -166,9 +168,107 @@ export class CpsSelectComponent
   }
 
   onOptionClick(option: any, dd: HTMLElement) {
+    this._clickOption(option, dd);
+  }
+
+  private _clickOption(option: any, dd: HTMLElement) {
     this.select(option, false);
     if (!this.multiple) {
-      this.toggleOptions(dd, false);
+      this._toggleOptions(dd, false);
+    }
+  }
+
+  private _getHTMLOptions() {
+    return (
+      this.selectContainer?.nativeElement?.querySelectorAll(
+        '.cps-select-options-option'
+      ) || []
+    );
+  }
+
+  private _dehighlightOption(el?: HTMLElement) {
+    if (el) el.classList.remove('highlighten');
+    else {
+      if (this.optionHighlightedIndex < 0) return;
+      const optionItems = this._getHTMLOptions();
+      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
+      this.optionHighlightedIndex = -1;
+    }
+  }
+
+  private _highlightOption(el: HTMLElement) {
+    el.classList.add('highlighten');
+    const parent = el.parentElement;
+    if (!parent) return;
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
+      el.scrollIntoView();
+    }
+  }
+
+  private _navigateOptionsByArrows(up: boolean) {
+    if (!this.isOpened) return;
+
+    const optionItems = this._getHTMLOptions();
+    const len = optionItems.length;
+    if (len < 1) return;
+
+    if (len === 1) {
+      this._highlightOption(optionItems[0]);
+      return;
+    }
+
+    if (up) {
+      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+      this.optionHighlightedIndex =
+        this.optionHighlightedIndex < 1
+          ? len - 1
+          : this.optionHighlightedIndex - 1;
+      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    } else {
+      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+      this.optionHighlightedIndex = [-1, len - 1].includes(
+        this.optionHighlightedIndex
+      )
+        ? 0
+        : this.optionHighlightedIndex + 1;
+      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    }
+  }
+
+  onClickOutside(dd: HTMLElement) {
+    this._toggleOptions(dd, false);
+    this._dehighlightOption();
+  }
+
+  onBoxClick(dd: HTMLElement) {
+    this._toggleOptions(dd);
+    this._dehighlightOption();
+  }
+
+  onKeyDown(event: any, dd: HTMLElement) {
+    const code = event.keyCode;
+    // escape
+    if (code === 27) {
+      this._toggleOptions(dd, false);
+      this._dehighlightOption();
+    }
+    // enter
+    else if (code === 13) {
+      let idx = this.optionHighlightedIndex;
+      if (this.multiple && this.selectAll) {
+        if (idx === 0) {
+          this.toggleAll();
+          return;
+        } else idx--;
+      }
+
+      this._clickOption(this.options[idx], dd);
+    }
+    // vertical arrows
+    else if ([38, 40].includes(code)) {
+      this._navigateOptionsByArrows(code === 38);
     }
   }
 
@@ -275,11 +375,12 @@ export class CpsSelectComponent
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
-        this.toggleOptions(dd, true);
+        this._toggleOptions(dd, true);
       }
       const val = this.multiple ? [] : this.returnObject ? undefined : '';
       this.updateValue(val);
     }
+    this._dehighlightOption();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -292,6 +393,6 @@ export class CpsSelectComponent
 
   focus() {
     this.selectContainer?.nativeElement?.focus();
-    this.toggleOptions(this.selectContainer?.nativeElement, true);
+    this._toggleOptions(this.selectContainer?.nativeElement, true);
   }
 }

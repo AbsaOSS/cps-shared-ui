@@ -4,7 +4,7 @@
   tabindex="0"
   [ngClass]="{ disabled: disabled, error: error }"
   #selectContainer
-  (keydown.escape)="toggleOptions(selectContainer, false)"
+  (keydown)="onKeyDown($event, selectContainer)"
   (blur)="onBlur()">
   <label *ngIf="label" class="cps-select-label">{{ label }} </label>
   <div
@@ -13,8 +13,8 @@
     [ngClass]="{
       'persistent-clear': persistentClear
     }"
-    (clickOutside)="toggleOptions(selectContainer, false)">
-    <div class="cps-select-box" (click)="toggleOptions(selectContainer)">
+    (clickOutside)="onClickOutside(selectContainer)">
+    <div class="cps-select-box" (click)="onBoxClick(selectContainer)">
       <div class="cps-select-box-left">
         <cps-icon
           *ngIf="prefixIcon"

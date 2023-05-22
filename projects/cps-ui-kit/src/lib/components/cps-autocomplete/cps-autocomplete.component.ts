@@ -124,7 +124,7 @@ export class CpsAutocompleteComponent
     this._statusChangesSubscription?.unsubscribe();
   }
 
-  toggleOptions(dd: HTMLElement, show?: boolean): void {
+  private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
     this.backspaceClickedOnce = false;
     if (typeof show === 'boolean') {
@@ -194,7 +194,7 @@ export class CpsAutocompleteComponent
   private _clickOption(option: any, dd: HTMLElement) {
     this.select(option, false);
     if (!this.multiple) {
-      this.toggleOptions(dd, false);
+      this._toggleOptions(dd, false);
     }
   }
 
@@ -236,7 +236,7 @@ export class CpsAutocompleteComponent
 
   filterOptions(event: any) {
     if (!this.isOpened) {
-      this.toggleOptions(this.autocompleteContainer?.nativeElement, true);
+      this._toggleOptions(this.autocompleteContainer?.nativeElement, true);
     }
     this.backspaceClickedOnce = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
@@ -312,7 +312,7 @@ export class CpsAutocompleteComponent
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
-        this.toggleOptions(dd, true);
+        this._toggleOptions(dd, true);
       }
       const val = this.multiple ? [] : this.returnObject ? undefined : '';
       this.updateValue(val);
@@ -340,7 +340,7 @@ export class CpsAutocompleteComponent
 
   private _closeAndClear(dd: HTMLElement) {
     this._clearInput();
-    this.toggleOptions(dd, false);
+    this._toggleOptions(dd, false);
     this._dehighlightOption();
   }
 
@@ -388,12 +388,13 @@ export class CpsAutocompleteComponent
   }
 
   onContainerKeyDown(event: any, dd: HTMLElement) {
+    const code = event.keyCode;
     // escape
-    if (event.keyCode === 27) {
+    if (code === 27) {
       this._closeAndClear(dd);
     }
     // enter
-    else if (event.keyCode === 13) {
+    else if (code === 13) {
       let idx = this.optionHighlightedIndex;
       if (this.multiple && this.selectAll) {
         if (idx === 0) {
@@ -405,8 +406,8 @@ export class CpsAutocompleteComponent
       this._clickOption(option, dd);
     }
     // vertical arrows
-    else if ([38, 40].includes(event.keyCode)) {
-      this._navigateOptionsByArrows(event.keyCode === 38);
+    else if ([38, 40].includes(code)) {
+      this._navigateOptionsByArrows(code === 38);
     }
   }
 
@@ -476,7 +477,7 @@ export class CpsAutocompleteComponent
     );
     if (found) {
       this.select(found, false);
-      this.toggleOptions(
+      this._toggleOptions(
         this.autocompleteContainer?.nativeElement,
         this.multiple
       );
@@ -518,6 +519,6 @@ export class CpsAutocompleteComponent
   focus() {
     this.autocompleteContainer?.nativeElement?.focus();
     this.focusInput();
-    this.toggleOptions(this.autocompleteContainer?.nativeElement, true);
+    this._toggleOptions(this.autocompleteContainer?.nativeElement, true);
   }
 }
