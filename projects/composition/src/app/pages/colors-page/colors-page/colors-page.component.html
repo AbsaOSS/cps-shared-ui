@@ -3,10 +3,8 @@
     placeholder="Search a color"
     (valueChanged)="onSearchChanged($event)"
     prefixIcon="search"
-    prefixIconSize="18px"
     [clearable]="true"
-    hint="Click on any color name or value to copy it"
-  ></cps-input>
+    hint="Click on any color name or value to copy it"></cps-input>
 </div>
 
 <div class="colors">
@@ -15,15 +13,13 @@
     <div class="colors-group-body">
       <div
         *ngFor="let colorBlock of group.colors"
-        class="colors-group-body-block"
-      >
+        class="colors-group-body-block">
         <div
           class="colors-group-body-block-title"
           [ngStyle]="{
             'background-color': colorBlock[0].value,
             color: colorNameColor[colorBlock[0].value]
-          }"
-        >
+          }">
           <span
             style="cursor: pointer"
             (click)="onCopyColor(colorBlock[0].name)"
@@ -36,8 +32,7 @@
           [ngStyle]="{
             'background-color': color.value,
             color: colorNameColor[color.value]
-          }"
-        >
+          }">
           <span style="cursor: pointer" (click)="onCopyColor(color.name)">{{
             color.name
           }}</span>

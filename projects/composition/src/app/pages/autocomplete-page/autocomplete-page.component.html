@@ -1,88 +1,87 @@
 <form [formGroup]="form">
-  <div class="selects-group">
-    <cps-select
-      label="Required single select"
+  <div class="autocompletes-group">
+    <cps-autocomplete
+      label="Required single autocomplete"
       [options]="options"
       optionLabel="name"
       optionValue="code"
       optionInfo="info"
-      placeholder="Select a city"
+      placeholder="Enter a city"
       [clearable]="true"
-      formControlName="requiredSelect"></cps-select>
-    <cps-select
-      label="Disabled select"
+      formControlName="requiredAutocomplete"></cps-autocomplete>
+    <cps-autocomplete
+      label="Disabled autocomplete"
       [disabled]="true"
-      hint="This select is disabled"></cps-select>
-    <cps-select
-      label="Multiple select"
+      hint="This autocomplete is disabled"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete"
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
       optionValue="code"
       optionInfo="info"
-      placeholder="Select a city"
+      placeholder="Enter a city"
       [clearable]="false"
       [multiple]="true"
       [chips]="false"
       [returnObject]="false"
       value="CPT"
-      hint="This select is not clearable"></cps-select>
-    <cps-select
-      label="Multiple select with chips and persistent clear icon"
+      hint="This autocomplete is not clearable"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete with chips and persistent clear icon"
       [options]="options"
       optionLabel="name"
       optionValue="code"
       optionInfo="info"
-      placeholder="Select a city"
+      placeholder="Enter a city"
       [clearable]="true"
       [multiple]="true"
       [persistentClear]="true"
-      [value]="[options[0], options[4]]"></cps-select>
-    <cps-select
-      label="Multiple select with non-closable chips"
-      hint="This select doesn't have Select All option"
+      [value]="[options[0], options[4]]"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete with non-closable chips"
+      hint="This autocomplete doesn't have Select All option"
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
       optionValue="code"
       optionInfo="info"
-      placeholder="Select a city"
+      placeholder="Enter a city"
       [clearable]="true"
       [multiple]="true"
       [closableChips]="false"
       [selectAll]="false"
-      [value]="[options[0], options[4]]"></cps-select>
-    <cps-select
-      label="Multiple select with prefix icon"
+      [value]="[options[0], options[4]]"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete with prefix icon"
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
       optionValue="code"
       optionInfo="info"
-      placeholder="Select a city"
+      placeholder="Enter a city"
       [clearable]="true"
       [multiple]="true"
       [chips]="false"
       [returnObject]="false"
       prefixIcon="plus"
-      value="CPT">
-    </cps-select>
+      value="CPT"></cps-autocomplete>
     <div class="sync-val-example">
-      <cps-select
+      <cps-autocomplete
         width="500"
-        label="Multiple select with two-way binding, select something"
+        label="Multiple autocomplete with two-way binding, select something"
         [returnObject]="false"
         [options]="options"
         optionLabel="name"
         optionValue="code"
         optionInfo="info"
-        placeholder="Select a city"
-        hint="This select has a fixed width of 500px"
+        placeholder="Enter a city"
+        hint="This autocomplete has a fixed width of 500px"
         [clearable]="true"
         [multiple]="true"
         [closableChips]="false"
         [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }"></cps-select>
+        [ngModelOptions]="{ standalone: true }"></cps-autocomplete>
       <span class="sync-val">{{ syncVal }}</span>
     </div>
   </div>

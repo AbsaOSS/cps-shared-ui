@@ -26,11 +26,11 @@ export class CpsChipComponent implements OnChanges {
 
   classesList = ['chip'];
 
-  ngOnChanges () {
+  ngOnChanges() {
     this.setClasses();
   }
 
-  setClasses () {
+  setClasses() {
     if (this.disabled) this.classesList.push('chip-disabled');
 
     if (this.icon && this.label) {
@@ -47,7 +47,7 @@ export class CpsChipComponent implements OnChanges {
     }
   }
 
-  onCloseClick (event: any) {
+  onCloseClick(event: any) {
     event.stopPropagation();
     this.closed.emit();
   }

@@ -9,8 +9,8 @@
       password: type === 'password',
       'input-wrap-error': error,
       clearable: clearable,
-    }"
-  >
+      'persistent-clear': persistentClear
+    }">
     <input
       [type]="currentType"
       [value]="value"
@@ -21,8 +21,7 @@
         width: cvtWidth,
         'padding-left': prefixWidth || 'none'
       }"
-      (blur)="onBlur()"
-    />
+      (blur)="onBlur()" />
 
     <div class="prefix">
       <span *ngIf="prefixIcon" class="prefix-icon">
@@ -35,15 +34,19 @@
     </div>
 
     <div class="action-btns">
-      <span *ngIf="clearable" class="clear-btn">
+      <span
+        *ngIf="clearable"
+        [style.visibility]="
+          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
+        "
+        class="clear-btn">
         <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
       </span>
 
       <span
         *ngIf="type === 'password'"
         class="password-show-btn"
-        [ngClass]="{ 'password-show-btn-active': currentType === 'text' }"
-      >
+        [ngClass]="{ 'password-show-btn-active': currentType === 'text' }">
         <cps-icon icon="eye" size="18px" (click)="togglePassword()"></cps-icon>
       </span>
     </div>

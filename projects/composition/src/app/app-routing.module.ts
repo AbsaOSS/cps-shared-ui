@@ -9,6 +9,7 @@ import { RadioPageComponent } from './pages/radio-page/radio-page.component';
 import { ButtonPageComponent } from './pages/button-page/button-page.component';
 import { TagPageComponent } from './pages/tag-page/tag-page.component';
 import { ChipPageComponent } from './pages/chip-page/chip-page.component';
+import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplete-page.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
     path: 'select',
     title: 'Select',
     component: SelectPageComponent
+  },
+  {
+    path: 'autocomplete',
+    title: 'Autocomplete',
+    component: AutocompletePageComponent
   },
   {
     path: 'button',

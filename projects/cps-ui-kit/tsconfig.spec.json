@@ -3,13 +3,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
-    "types": [
-      "cypress"
-    ]
+    "types": ["cypress"]
   },
-  "include": [
-    "**/*.spec.ts",
-    "**/*.cy.ts",
-    "**/*.d.ts"
-  ]
+  "include": ["**/*.spec.ts", "**/*.cy.ts", "**/*.d.ts"]
 }

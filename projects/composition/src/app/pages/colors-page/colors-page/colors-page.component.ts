@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CpsInputComponent } from 'cps-ui-kit';
-import {
-  getCpsColors,
-  getTextColor
-} from 'projects/cps-ui-kit/src/lib/utils/colors-utils';
+import { CpsInputComponent, getCpsColors, getTextColor } from 'cps-ui-kit';
 
 type colorGroupsType = {
   name: string;
@@ -46,7 +42,7 @@ export class ColorsPageComponent implements OnInit {
 
   colorNameColor: { [key: string]: string } = {};
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     const customColors = getCpsColors();
     customColors.forEach((clr) => {
       const name = clr[0].replace(/^--cps-color-/, '');
@@ -130,11 +126,11 @@ export class ColorsPageComponent implements OnInit {
     this.filteredColorsList = [...this.colorsList];
   }
 
-  onSearchChanged (value: string) {
+  onSearchChanged(value: string) {
     this._filterColors(value);
   }
 
-  private _filterColors (searchStr: string) {
+  private _filterColors(searchStr: string) {
     searchStr = searchStr.toLowerCase();
 
     const filteredList: colorGroupsType = [];
@@ -161,7 +157,7 @@ export class ColorsPageComponent implements OnInit {
     this.filteredColorsList = filteredList;
   }
 
-  onCopyColor (color: string) {
+  onCopyColor(color: string) {
     navigator.clipboard.writeText(color).then(
       () => {
         console.log('Color copied to clipboard');

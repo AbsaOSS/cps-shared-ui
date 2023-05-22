@@ -13,7 +13,7 @@ import { CpsButtonComponent, CpsChipComponent } from 'cps-ui-kit';
 export class ChipPageComponent {
   chipClosed = false;
 
-  onToggleChip () {
+  onToggleChip() {
     this.chipClosed = !this.chipClosed;
   }
 }

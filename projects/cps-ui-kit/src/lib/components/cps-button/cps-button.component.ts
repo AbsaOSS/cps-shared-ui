@@ -37,7 +37,7 @@ export class CpsButtonComponent implements OnInit {
   textColor = '';
 
   @HostBinding('style.width')
-    cvtWidth = '';
+  cvtWidth = '';
 
   cvtHeight = '';
   cvtFontSize = '';
@@ -45,14 +45,14 @@ export class CpsButtonComponent implements OnInit {
 
   classesList: string[] = [];
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     this.buttonColor = getCSSColor(this.color);
     this.textColor =
       this.type === 'solid' ? getCSSColor(this.contentColor) : this.buttonColor;
     this.setClasses();
   }
 
-  setClasses () {
+  setClasses() {
     this.classesList = ['button'];
 
     if (this.width) {
@@ -120,7 +120,7 @@ export class CpsButtonComponent implements OnInit {
     }
   }
 
-  onClick (event: Event) {
+  onClick(event: Event) {
     this.clicked.emit(event);
   }
 }

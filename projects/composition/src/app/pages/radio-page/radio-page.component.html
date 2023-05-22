@@ -4,18 +4,15 @@
     [options]="options"
     value="second"
     [disabled]="true"
-    [vertical]="true"
-  ></cps-radio>
+    [vertical]="true"></cps-radio>
   <cps-radio
     groupLabel="Radio group with partially disabled options"
-    [options]="partiallyDisabledOptions"
-  ></cps-radio>
+    [options]="partiallyDisabledOptions"></cps-radio>
   <div class="sync-val-example">
     <cps-radio
       groupLabel="Radio group with two-way binding"
       [options]="options"
-      [(ngModel)]="syncVal"
-    ></cps-radio>
+      [(ngModel)]="syncVal"></cps-radio>
     <div class="sync-val">Selected value: {{ syncVal }}</div>
   </div>
 </div>

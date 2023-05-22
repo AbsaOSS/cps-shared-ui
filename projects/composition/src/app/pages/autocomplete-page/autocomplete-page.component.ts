@@ -5,17 +5,17 @@ import {
   UntypedFormBuilder,
   Validators
 } from '@angular/forms';
-import { CpsSelectComponent } from 'cps-ui-kit';
+import { CpsAutocompleteComponent } from 'cps-ui-kit';
 
 @Component({
   standalone: true,
-  imports: [CpsSelectComponent, FormsModule, ReactiveFormsModule],
-  selector: 'app-select-page',
-  templateUrl: './select-page.component.html',
-  styleUrls: ['./select-page.component.scss'],
+  imports: [CpsAutocompleteComponent, FormsModule, ReactiveFormsModule],
+  selector: 'app-autocomplete-page',
+  templateUrl: './autocomplete-page.component.html',
+  styleUrls: ['./autocomplete-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class SelectPageComponent implements OnInit {
+export class AutocompletePageComponent implements OnInit {
   options = [
     { name: 'New York', code: 'NY' },
     { name: 'Prague', code: 'PRG', info: 'Prague info' },
@@ -37,7 +37,7 @@ export class SelectPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._formBuilder.group({
-      requiredSelect: [this.options[1], [Validators.required]]
+      requiredAutocomplete: [this.options[1], [Validators.required]]
     });
   }
 }

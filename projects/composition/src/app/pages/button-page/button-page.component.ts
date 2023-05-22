@@ -11,7 +11,7 @@ import { CpsButtonComponent } from 'cps-ui-kit';
 })
 export class ButtonPageComponent {
   isLoading = false;
-  onClickForLoading () {
+  onClickForLoading() {
     this.isLoading = true;
     setTimeout(() => {
       this.isLoading = false;

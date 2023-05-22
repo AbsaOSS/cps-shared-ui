@@ -26,7 +26,8 @@ import { convertSize } from '../../utils/size-utils';
   styleUrls: ['./cps-input.component.scss']
 })
 export class CpsInputComponent
-implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
+{
   @Input() label = '';
   @Input() placeholder = 'Please enter';
   @Input() hint = '';
@@ -36,15 +37,16 @@ implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   @Input() loading = false;
   @Input() clearable = false;
   @Input() prefixIcon = '';
-  @Input() prefixIconSize: iconSizeType = 'small';
+  @Input() prefixIconSize: iconSizeType = '18px';
   @Input() prefixText = '';
   @Input() hideDetails = false;
-  @Input() set value (value: string) {
+  @Input() persistentClear = false;
+  @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);
   }
 
-  get value (): string {
+  get value(): string {
     return this._value;
   }
 
@@ -61,7 +63,7 @@ implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   prefixWidth = '';
   cvtWidth = '';
 
-  constructor (
+  constructor(
     @Self() @Optional() private _control: NgControl,
     private _elementRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef
@@ -71,7 +73,7 @@ implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     this.currentType = this.type;
     this.cvtWidth = convertSize(this.width);
 
@@ -82,7 +84,7 @@ implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
     ) as Subscription;
   }
 
-  ngAfterViewInit () {
+  ngAfterViewInit() {
     let w = 0;
     if (this.prefixText) {
       w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
@@ -94,11 +96,11 @@ implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
     this.cdRef.detectChanges();
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
 
-  private _checkErrors () {
+  private _checkErrors() {
     const errors = this._control?.errors;
 
     if (!this._control?.control?.touched || !errors) {
@@ -132,46 +134,46 @@ implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
-  registerOnChange (fn: any) {
+  registerOnChange(fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched (fn: any) {
+  registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
 
-  writeValue (value: string) {
+  writeValue(value: string) {
     this.value = value;
   }
 
-  updateValueEvent (event: any) {
+  updateValueEvent(event: any) {
     const value = event?.target?.value || '';
     this._updateValue(value);
   }
 
-  private _updateValue (value: string) {
+  private _updateValue(value: string) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
-  clear () {
+  clear() {
     if (this.value !== '') this._updateValue('');
   }
 
-  togglePassword () {
+  togglePassword() {
     this.currentType = this.currentType === 'password' ? 'text' : 'password';
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState (disabled: boolean) {}
+  setDisabledState(disabled: boolean) {}
 
-  onBlur () {
+  onBlur() {
     this._control?.control?.markAsTouched();
     this._checkErrors();
   }
 
-  focus () {
+  focus() {
     this._elementRef?.nativeElement?.querySelector('input')?.focus();
   }
 }

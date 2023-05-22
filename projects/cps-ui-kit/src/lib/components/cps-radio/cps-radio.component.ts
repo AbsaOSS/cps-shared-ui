@@ -27,12 +27,12 @@ export class CpsRadioComponent implements ControlValueAccessor {
   @Input() groupLabel = '';
   @Input() vertical = false;
   @Input() disabled = false;
-  @Input() set value (value: any) {
+  @Input() set value(value: any) {
     this._value = value;
     this.onChange(value);
   }
 
-  get value (): any {
+  get value(): any {
     return this._value;
   }
 
@@ -40,7 +40,7 @@ export class CpsRadioComponent implements ControlValueAccessor {
 
   private _value: any = undefined;
 
-  constructor (@Self() @Optional() private _control: NgControl) {
+  constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -51,31 +51,31 @@ export class CpsRadioComponent implements ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
-  registerOnChange (fn: any) {
+  registerOnChange(fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched (fn: any) {
+  registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
 
-  writeValue (value: any) {
+  writeValue(value: any) {
     this.value = value;
   }
 
-  updateValueEvent (event: any) {
+  updateValueEvent(event: any) {
     event.preventDefault();
     if (this.disabled) return;
     const value = event?.target?.value || '';
     this._updateValue(value);
   }
 
-  private _updateValue (value: any) {
+  private _updateValue(value: any) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState (disabled: boolean) {}
+  setDisabledState(disabled: boolean) {}
 }

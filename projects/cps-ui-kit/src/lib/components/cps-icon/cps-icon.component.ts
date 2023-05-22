@@ -135,12 +135,12 @@ export class CpsIconComponent implements OnChanges {
 
   classesList: string[] = ['icon'];
 
-  ngOnChanges (): void {
+  ngOnChanges(): void {
     this.iconColor = getCSSColor(this.color);
     this.setClasses();
   }
 
-  setClasses (): void {
+  setClasses(): void {
     switch (this.size) {
       case 'fill': {
         this.classesList.push('icon--fill');

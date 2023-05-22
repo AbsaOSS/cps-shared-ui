@@ -7,6 +7,7 @@ $input-border-color: var(--cps-color-text-lightest);
 $input-label-color: var(--cps-color-text-dark);
 $input-text-color: var(--cps-color-text-dark);
 $input-prefix-text-color: var(--cps-color-text-mild);
+$input-prefix-icon-color: var(--cps-color-text-dark);
 
 $color-error: #cc3333;
 $error-background: #fef3f2;
@@ -18,7 +19,7 @@ $hover-transition-duration: 0.2s;
     gap: 0.2rem !important;
     display: flex !important;
     flex-direction: column !important;
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
 
     .input-wrap {
       position: relative;
@@ -64,6 +65,22 @@ $hover-transition-duration: 0.2s;
         color: $color-calm;
       }
 
+      input:focus + .prefix + .action-btns > .clear-btn {
+        cps-icon {
+          opacity: 0.5;
+        }
+      }
+
+      &:hover {
+        .action-btns {
+          .clear-btn {
+            cps-icon {
+              opacity: 0.5;
+            }
+          }
+        }
+      }
+
       .action-btns {
         display: flex;
         align-items: center;
@@ -76,10 +93,10 @@ $hover-transition-duration: 0.2s;
           cursor: pointer;
           color: $color-calm;
           cps-icon {
-            opacity: 0.5;
+            opacity: 0;
             transition-duration: $hover-transition-duration;
             &:hover {
-              opacity: 1;
+              opacity: 1 !important;
             }
           }
         }
@@ -117,9 +134,20 @@ $hover-transition-duration: 0.2s;
           transition-duration: $hover-transition-duration;
           height: -webkit-fill-available;
           margin-right: 0.5rem;
+          color: $input-prefix-icon-color;
         }
         &-text {
           color: $input-prefix-text-color;
+        }
+      }
+    }
+
+    .persistent-clear {
+      .action-btns {
+        .clear-btn {
+          cps-icon {
+            opacity: 0.5;
+          }
         }
       }
     }
@@ -154,6 +182,7 @@ $hover-transition-duration: 0.2s;
       }
     }
     ::placeholder {
+      font-family: Source Sans Pro, sans-serif;
       color: $input-placeholder-color;
       font-style: italic;
       opacity: 1; /* Firefox */

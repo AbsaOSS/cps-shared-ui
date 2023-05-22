@@ -1,17 +1,18 @@
 # CPS UI Kit
 
-Angular shared components library.
+## Angular shared components library
 
 ### Available components
 
-- Icon
-- Input
-- Select
+- Autocomplete
 - Button
 - Checkbox
-- Radio
-- Tag
 - Chip
+- Icon
+- Input
+- Radio
+- Select
+- Tag
 
 ### License
 

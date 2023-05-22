@@ -3,18 +3,15 @@
   <cps-checkbox
     label="Disabled checkbox checked"
     [disabled]="true"
-    [value]="true"
-  ></cps-checkbox>
+    [value]="true"></cps-checkbox>
   <cps-checkbox
     label="Disabled checkbox unchecked"
     [disabled]="true"
-    [value]="false"
-  ></cps-checkbox>
+    [value]="false"></cps-checkbox>
   <div class="sync-val-example">
     <cps-checkbox
       label="Checkbox with two-way binding"
-      [(ngModel)]="syncVal"
-    ></cps-checkbox>
+      [(ngModel)]="syncVal"></cps-checkbox>
     <div class="sync-val">Is checked: {{ syncVal }}</div>
   </div>
 </div>

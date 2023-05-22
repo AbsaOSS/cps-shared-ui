@@ -20,16 +20,8 @@ export class NavigationSidebarComponent {
 
   components = [
     {
-      title: 'Icon',
-      url: '/icon'
-    },
-    {
-      title: 'Input',
-      url: '/input'
-    },
-    {
-      title: 'Select',
-      url: '/select'
+      title: 'Autocomplete',
+      url: '/autocomplete'
     },
     {
       title: 'Button',
@@ -40,16 +32,28 @@ export class NavigationSidebarComponent {
       url: '/checkbox'
     },
     {
+      title: 'Chip',
+      url: '/chip'
+    },
+    {
+      title: 'Icon',
+      url: '/icon'
+    },
+    {
+      title: 'Input',
+      url: '/input'
+    },
+    {
       title: 'Radio',
       url: '/radio'
     },
     {
-      title: 'Tag',
-      url: '/tag'
+      title: 'Select',
+      url: '/select'
     },
     {
-      title: 'Chip',
-      url: '/chip'
+      title: 'Tag',
+      url: '/tag'
     }
     // extend this list
   ];

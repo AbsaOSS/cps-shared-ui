@@ -16,7 +16,7 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
@@ -38,7 +38,8 @@ import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
   styleUrls: ['./cps-select.component.scss']
 })
 export class CpsSelectComponent
-implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
+  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
+{
   @Input() label = '';
   @Input() placeholder = 'Please select';
   @Input() hint = '';
@@ -56,23 +57,26 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
   @Input() optionValue = 'value'; // works only if returnObject === false (TODO potentially can be of any type)
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
+  @Input() persistentClear = false;
+  @Input() prefixIcon = '';
+  @Input() prefixIconSize: iconSizeType = '18px';
 
   @Input('value') _value: any = undefined;
 
-  set value (value: any) {
+  set value(value: any) {
     value = this._convertValue(value);
     this._value = value;
     this.onChange(value);
   }
 
-  get value (): any {
+  get value(): any {
     return this._value;
   }
 
   @Output() valueChanged = new EventEmitter<any>();
 
   @ViewChild('selectContainer')
-    selectContainer!: ElementRef;
+  selectContainer!: ElementRef;
 
   private _statusChangesSubscription: Subscription = new Subscription();
 
@@ -81,20 +85,22 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
 
   isOpened = false;
 
-  constructor (@Self() @Optional() private _control: NgControl) {
+  optionHighlightedIndex = -1;
+
+  constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
   }
 
-  ngOnChanges (changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {
     // eslint-disable-next-line dot-notation
     if ('_value' in changes && changes['_value'].isFirstChange()) {
       this.value = this._convertValue(this.value);
     }
   }
 
-  ngOnInit () {
+  ngOnInit() {
     this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
@@ -107,11 +113,11 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
     ) as Subscription;
   }
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
 
-  toggleOptions (dd: HTMLElement, show?: boolean): void {
+  private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
     if (typeof show === 'boolean') {
       if (show) dd.classList.add('active');
@@ -137,12 +143,12 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
   //   });
   // }
 
-  select (option: any, byValue: boolean): void {
+  select(option: any, byValue: boolean): void {
     const val = byValue
       ? option
       : this.returnObject
-        ? option
-        : option[this.optionValue];
+      ? option
+      : option[this.optionValue];
     if (this.multiple) {
       let res = [] as any;
       if (this.value.includes(val)) {
@@ -161,14 +167,112 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
     }
   }
 
-  onOptionClick (option: any, dd: HTMLElement) {
+  onOptionClick(option: any, dd: HTMLElement) {
+    this._clickOption(option, dd);
+  }
+
+  private _clickOption(option: any, dd: HTMLElement) {
     this.select(option, false);
     if (!this.multiple) {
-      this.toggleOptions(dd, false);
+      this._toggleOptions(dd, false);
     }
   }
 
-  toggleAll () {
+  private _getHTMLOptions() {
+    return (
+      this.selectContainer?.nativeElement?.querySelectorAll(
+        '.cps-select-options-option'
+      ) || []
+    );
+  }
+
+  private _dehighlightOption(el?: HTMLElement) {
+    if (el) el.classList.remove('highlighten');
+    else {
+      if (this.optionHighlightedIndex < 0) return;
+      const optionItems = this._getHTMLOptions();
+      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
+      this.optionHighlightedIndex = -1;
+    }
+  }
+
+  private _highlightOption(el: HTMLElement) {
+    el.classList.add('highlighten');
+    const parent = el.parentElement;
+    if (!parent) return;
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
+      el.scrollIntoView();
+    }
+  }
+
+  private _navigateOptionsByArrows(up: boolean) {
+    if (!this.isOpened) return;
+
+    const optionItems = this._getHTMLOptions();
+    const len = optionItems.length;
+    if (len < 1) return;
+
+    if (len === 1) {
+      this._highlightOption(optionItems[0]);
+      return;
+    }
+
+    if (up) {
+      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+      this.optionHighlightedIndex =
+        this.optionHighlightedIndex < 1
+          ? len - 1
+          : this.optionHighlightedIndex - 1;
+      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    } else {
+      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+      this.optionHighlightedIndex = [-1, len - 1].includes(
+        this.optionHighlightedIndex
+      )
+        ? 0
+        : this.optionHighlightedIndex + 1;
+      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    }
+  }
+
+  onClickOutside(dd: HTMLElement) {
+    this._toggleOptions(dd, false);
+    this._dehighlightOption();
+  }
+
+  onBoxClick(dd: HTMLElement) {
+    this._toggleOptions(dd);
+    this._dehighlightOption();
+  }
+
+  onKeyDown(event: any, dd: HTMLElement) {
+    const code = event.keyCode;
+    // escape
+    if (code === 27) {
+      this._toggleOptions(dd, false);
+      this._dehighlightOption();
+    }
+    // enter
+    else if (code === 13) {
+      let idx = this.optionHighlightedIndex;
+      if (this.multiple && this.selectAll) {
+        if (idx === 0) {
+          this.toggleAll();
+          return;
+        } else idx--;
+      }
+
+      this._clickOption(this.options[idx], dd);
+    }
+    // vertical arrows
+    else if ([38, 40].includes(code)) {
+      this._navigateOptionsByArrows(code === 38);
+    }
+  }
+
+  toggleAll() {
     let res = [];
     if (this.value.length < this.options.length) {
       if (this.returnObject) {
@@ -182,7 +286,7 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
     this.updateValue(res);
   }
 
-  private _checkErrors (): void {
+  private _checkErrors(): void {
     const errors = this._control?.errors;
 
     if (!this._control?.control?.touched || !errors) {
@@ -210,15 +314,15 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
-  registerOnChange (fn: any) {
+  registerOnChange(fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched (fn: any) {
+  registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
 
-  private _convertValue (value: any): any {
+  private _convertValue(value: any): any {
     if (!this.returnObject) {
       if (this.multiple) {
         if (Array.isArray(value)) {
@@ -252,18 +356,18 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
     return value;
   }
 
-  writeValue (value: any) {
+  writeValue(value: any) {
     value = this._convertValue(value);
     this.value = value;
   }
 
-  private updateValue (value: any): void {
+  private updateValue(value: any): void {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
-  clear (dd: HTMLElement, event: any): void {
+  clear(dd: HTMLElement, event: any): void {
     event.stopPropagation();
 
     if (
@@ -271,23 +375,24 @@ implements ControlValueAccessor, OnInit, OnDestroy, OnChanges {
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
-        this.toggleOptions(dd, true);
+        this._toggleOptions(dd, true);
       }
       const val = this.multiple ? [] : this.returnObject ? undefined : '';
       this.updateValue(val);
     }
+    this._dehighlightOption();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState (disabled: boolean) {}
+  setDisabledState(disabled: boolean) {}
 
-  onBlur () {
+  onBlur() {
     this._control?.control?.markAsTouched();
     this._checkErrors();
   }
 
-  focus () {
+  focus() {
     this.selectContainer?.nativeElement?.focus();
-    this.toggleOptions(this.selectContainer?.nativeElement, true);
+    this._toggleOptions(this.selectContainer?.nativeElement, true);
   }
 }
