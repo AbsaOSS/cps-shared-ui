@@ -3,10 +3,10 @@
   class="cps-autocomplete"
   tabindex="1"
   [ngClass]="{ disabled: disabled, error: error }"
-  #autocompleteContainer
-  (keydown.escape)="onEscClicked(autocompleteContainer)">
+  #autocompleteContainer>
   <label *ngIf="label" class="cps-autocomplete-label">{{ label }}</label>
   <div
+    (keydown)="onContainerKeyDown($event, autocompleteContainer)"
     class="cps-autocomplete-container"
     [class.focused]="isOpened"
     [ngClass]="{
@@ -163,8 +163,7 @@
         : ''
     "
     (input)="filterOptions($event)"
-    (keydown.backspace)="onRemoveLastValue($event)"
-    (keydown.enter)="onEnterClicked($event)"
+    (keydown)="onInputKeyDown($event)"
     [(ngModel)]="inputText"
     (blur)="onBlur()" />
 </ng-template>

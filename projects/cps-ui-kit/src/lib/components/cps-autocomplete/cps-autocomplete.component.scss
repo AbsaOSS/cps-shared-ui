@@ -6,8 +6,10 @@ $autocomplete-label-color: var(--cps-color-text-dark);
 $autocomplete-label-disabled-color: var(--cps-color-text-mild);
 $autocomplete-items-disabled-color: var(--cps-color-text-light);
 $autocomplete-hint-color: var(--cps-color-text-mild);
-$highlight-background: #f8f4f5;
+$option-hover-background: #f8f4f5;
 $selected-option-background: #efe4e7;
+$option-highlight-background: #f5eeef;
+$option-highlight-selected-background: #e6d4d9;
 $autocomplete-option-info-color: var(--cps-color-text-light);
 $autocomplete-option-value-color: var(--cps-color-text-dark);
 $autocomplete-about-remove-color: var(--cps-color-text-light);
@@ -216,7 +218,7 @@ $hover-transition-duration: 0.2s;
         cursor: pointer;
 
         &:hover {
-          background: $highlight-background;
+          background: $option-hover-background;
         }
 
         &-label {
@@ -277,6 +279,12 @@ $hover-transition-duration: 0.2s;
         }
         &.selected {
           background: $selected-option-background;
+        }
+        &.highlighten {
+          background: $option-highlight-background;
+        }
+        &.selected.highlighten {
+          background: $option-highlight-selected-background;
         }
       }
     }

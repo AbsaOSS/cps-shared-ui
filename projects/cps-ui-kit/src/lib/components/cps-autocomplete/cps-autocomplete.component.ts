@@ -88,6 +88,7 @@ export class CpsAutocompleteComponent
   filteredOptions = [] as any[];
   backspaceClickedOnce = false;
   activeSingle = false;
+  optionHighlightedIndex = -1;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -170,10 +171,7 @@ export class CpsAutocompleteComponent
   }
 
   onOptionClick(option: any, dd: HTMLElement) {
-    this.select(option, false);
-    if (!this.multiple) {
-      this.toggleOptions(dd, false);
-    }
+    this._clickOption(option, dd);
   }
 
   toggleAll() {
@@ -188,6 +186,16 @@ export class CpsAutocompleteComponent
       }
     }
     this.updateValue(res);
+    setTimeout(() => {
+      this.focusInput();
+    }, 0);
+  }
+
+  private _clickOption(option: any, dd: HTMLElement) {
+    this.select(option, false);
+    if (!this.multiple) {
+      this.toggleOptions(dd, false);
+    }
   }
 
   private _checkErrors(): void {
@@ -310,6 +318,7 @@ export class CpsAutocompleteComponent
       this.updateValue(val);
     }
     this._clearInput();
+    this._dehighlightOption();
     setTimeout(() => {
       this.focusInput();
     }, 0);
@@ -332,18 +341,128 @@ export class CpsAutocompleteComponent
   private _closeAndClear(dd: HTMLElement) {
     this._clearInput();
     this.toggleOptions(dd, false);
+    this._dehighlightOption();
   }
 
   onClickOutside(dd: HTMLElement) {
     this._closeAndClear(dd);
   }
 
-  onEscClicked(dd: HTMLElement) {
-    this._closeAndClear(dd);
+  private _getHTMLOptions() {
+    return (
+      this.autocompleteContainer?.nativeElement?.querySelectorAll(
+        '.cps-autocomplete-options-option'
+      ) || []
+    );
   }
 
-  onEnterClicked(event: any) {
-    const searchVal = (event?.target?.value || '').toLowerCase();
+  private _dehighlightOption(el?: HTMLElement) {
+    if (el) el.classList.remove('highlighten');
+    else {
+      if (this.optionHighlightedIndex < 0) return;
+      const optionItems = this._getHTMLOptions();
+      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
+      this.optionHighlightedIndex = -1;
+    }
+  }
+
+  private _highlightOption(el: HTMLElement) {
+    el.classList.add('highlighten');
+    const parent = el.parentElement;
+    if (!parent) return;
+    const parentRect = parent.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
+      el.scrollIntoView();
+    }
+  }
+
+  onBoxClick() {
+    if (!this.multiple) {
+      this.activeSingle = true;
+      this.inputText = this._getValueLabel();
+      this.filteredOptions = this.options;
+    }
+    this.focus();
+    this._dehighlightOption();
+  }
+
+  onContainerKeyDown(event: any, dd: HTMLElement) {
+    // escape
+    if (event.keyCode === 27) {
+      this._closeAndClear(dd);
+    }
+    // enter
+    else if (event.keyCode === 13) {
+      let idx = this.optionHighlightedIndex;
+      if (this.multiple && this.selectAll) {
+        if (idx === 0) {
+          this.toggleAll();
+          return;
+        } else idx--;
+      }
+      const option = this.filteredOptions[idx];
+      this._clickOption(option, dd);
+    }
+    // vertical arrows
+    else if ([38, 40].includes(event.keyCode)) {
+      this._navigateOptionsByArrows(event.keyCode === 38);
+    }
+  }
+
+  onInputKeyDown(event: any) {
+    const code = event.keyCode;
+    // backspace
+    if (code === 8) {
+      this._removeLastValue();
+      event.stopPropagation();
+    }
+    // enter
+    else if (code === 13) {
+      if (this.optionHighlightedIndex < 0) {
+        this._confirmInput(event?.target?.value || '');
+        event.stopPropagation();
+      }
+    } else if ([38, 40].includes(code)) {
+      event.preventDefault();
+    } else {
+      this._dehighlightOption();
+    }
+  }
+
+  private _navigateOptionsByArrows(up: boolean) {
+    if (!this.isOpened) return;
+
+    const optionItems = this._getHTMLOptions();
+    const len = optionItems.length;
+    if (len < 1) return;
+
+    if (len === 1) {
+      this._highlightOption(optionItems[0]);
+      return;
+    }
+
+    if (up) {
+      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+      this.optionHighlightedIndex =
+        this.optionHighlightedIndex < 1
+          ? len - 1
+          : this.optionHighlightedIndex - 1;
+      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    } else {
+      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+      this.optionHighlightedIndex = [-1, len - 1].includes(
+        this.optionHighlightedIndex
+      )
+        ? 0
+        : this.optionHighlightedIndex + 1;
+      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    }
+  }
+
+  private _confirmInput(searchVal: string) {
+    if (!this.isOpened) return;
+    searchVal = searchVal.toLowerCase();
     if (!searchVal) {
       if (this.multiple) return;
       const val = this.returnObject ? undefined : '';
@@ -372,16 +491,7 @@ export class CpsAutocompleteComponent
     this._clearInput();
   }
 
-  onBoxClick() {
-    if (!this.multiple) {
-      this.activeSingle = true;
-      this.inputText = this._getValueLabel();
-      this.filteredOptions = this.options;
-    }
-    this.focus();
-  }
-
-  onRemoveLastValue(event: any) {
+  private _removeLastValue() {
     if (!this.multiple || this.inputText) return;
 
     if (this.value?.length) {
