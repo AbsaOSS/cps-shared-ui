@@ -12,6 +12,7 @@ $autocomplete-option-info-color: var(--cps-color-text-light);
 $autocomplete-option-value-color: var(--cps-color-text-dark);
 $autocomplete-about-remove-color: var(--cps-color-text-light);
 $autocomplete-about-remove-background: var(--cps-color-bg-mid);
+$autocomplete-prefix-icon-color: var(--cps-color-text-dark);
 
 $hover-transition-duration: 0.2s;
 
@@ -30,6 +31,11 @@ $hover-transition-duration: 0.2s;
       }
       .cps-autocomplete-box {
         border: 1px solid $color-calm;
+        .cps-autocomplete-box-area {
+          .prefix-icon {
+            color: $color-calm;
+          }
+        }
       }
     }
 
@@ -73,6 +79,7 @@ $hover-transition-duration: 0.2s;
         align-items: center;
         .prefix-icon {
           margin-right: 0.5rem;
+          color: $autocomplete-prefix-icon-color;
         }
       }
 
@@ -150,6 +157,11 @@ $hover-transition-duration: 0.2s;
 
       &:hover {
         border: 1px solid $color-calm;
+        .cps-autocomplete-box-area {
+          .prefix-icon {
+            color: $color-calm;
+          }
+        }
       }
 
       .cps-autocomplete-box-icons {

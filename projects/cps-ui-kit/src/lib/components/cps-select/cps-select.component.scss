@@ -10,6 +10,7 @@ $highlight-background: #f8f4f5;
 $selected-option-background: #efe4e7;
 $select-option-info-color: var(--cps-color-text-light);
 $select-option-value-color: var(--cps-color-text-dark);
+$select-prefix-icon-color: var(--cps-color-text-dark);
 
 $hover-transition-duration: 0.2s;
 
@@ -28,6 +29,11 @@ $hover-transition-duration: 0.2s;
       }
       .cps-select-box {
         border: 1px solid $color-calm;
+        .cps-select-box-left {
+          .prefix-icon {
+            color: $color-calm;
+          }
+        }
       }
     }
 
@@ -94,15 +100,21 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      &:hover {
-        border: 1px solid $color-calm;
-      }
-
       .cps-select-box-left {
         display: inline-flex;
         align-items: center;
         .prefix-icon {
           margin-right: 0.5rem;
+          color: $select-prefix-icon-color;
+        }
+      }
+
+      &:hover {
+        border: 1px solid $color-calm;
+        .cps-select-box-left {
+          .prefix-icon {
+            color: $color-calm;
+          }
         }
       }
 
