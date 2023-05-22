@@ -98,6 +98,14 @@ $hover-transition-duration: 0.2s;
         border: 1px solid $color-calm;
       }
 
+      .cps-select-box-left {
+        display: inline-flex;
+        align-items: center;
+        .prefix-icon {
+          margin-right: 0.5rem;
+        }
+      }
+
       .cps-select-box-icons {
         display: flex;
 

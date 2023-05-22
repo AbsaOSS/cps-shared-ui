@@ -16,7 +16,7 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
@@ -58,6 +58,8 @@ export class CpsSelectComponent
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
+  @Input() prefixIcon = '';
+  @Input() prefixIconSize: iconSizeType = '18px';
 
   @Input('value') _value: any = undefined;
 

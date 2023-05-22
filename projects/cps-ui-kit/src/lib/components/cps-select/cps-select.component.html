@@ -15,46 +15,54 @@
     }"
     (clickOutside)="toggleOptions(selectContainer, false)">
     <div class="cps-select-box" (click)="toggleOptions(selectContainer)">
-      <div
-        class="cps-select-box-placeholder"
-        *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)">
-        {{ placeholder }}
-      </div>
-      <div
-        class="cps-select-box-items"
-        *ngIf="(value && !multiple) || (value?.length > 0 && multiple)">
-        <span *ngIf="!multiple" class="single-item">
-          {{
-            returnObject
-              ? value[optionLabel]
-              : (value | labelByValue : options : optionValue : optionLabel)
-          }}</span
-        >
-        <div *ngIf="multiple && !chips" class="text-group">
-          <span class="text-group-item">
-            {{
-              value
-                | combineLabels
-                  : options
-                  : optionValue
-                  : optionLabel
-                  : returnObject
-            }}
-          </span>
+      <div class="cps-select-box-left">
+        <cps-icon
+          *ngIf="prefixIcon"
+          [icon]="prefixIcon"
+          [size]="prefixIconSize"
+          class="prefix-icon">
+        </cps-icon>
+        <div
+          class="cps-select-box-placeholder"
+          *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)">
+          {{ placeholder }}
         </div>
-
-        <div *ngIf="multiple && chips" class="chips-group">
-          <cps-chip
-            *ngFor="let val of value"
-            [disabled]="disabled"
-            [closable]="closableChips"
-            (closed)="select(val, true)"
-            [label]="
+        <div
+          class="cps-select-box-items"
+          *ngIf="(value && !multiple) || (value?.length > 0 && multiple)">
+          <span *ngIf="!multiple" class="single-item">
+            {{
               returnObject
-                ? val[optionLabel]
-                : (val | labelByValue : options : optionValue : optionLabel)
-            ">
-          </cps-chip>
+                ? value[optionLabel]
+                : (value | labelByValue : options : optionValue : optionLabel)
+            }}</span
+          >
+          <div *ngIf="multiple && !chips" class="text-group">
+            <span class="text-group-item">
+              {{
+                value
+                  | combineLabels
+                    : options
+                    : optionValue
+                    : optionLabel
+                    : returnObject
+              }}
+            </span>
+          </div>
+
+          <div *ngIf="multiple && chips" class="chips-group">
+            <cps-chip
+              *ngFor="let val of value"
+              [disabled]="disabled"
+              [closable]="closableChips"
+              (closed)="select(val, true)"
+              [label]="
+                returnObject
+                  ? val[optionLabel]
+                  : (val | labelByValue : options : optionValue : optionLabel)
+              ">
+            </cps-chip>
+          </div>
         </div>
       </div>
       <span class="cps-select-box-icons">

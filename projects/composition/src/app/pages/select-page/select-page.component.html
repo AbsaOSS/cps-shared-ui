@@ -52,6 +52,21 @@
       [closableChips]="false"
       [selectAll]="false"
       [value]="[options[0], options[4]]"></cps-select>
+    <cps-select
+      label="Multiple select with prefix icon"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      [returnObject]="false"
+      prefixIcon="plus"
+      value="CPT">
+    </cps-select>
     <div class="sync-val-example">
       <cps-select
         width="500"

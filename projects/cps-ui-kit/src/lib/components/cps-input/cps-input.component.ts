@@ -37,7 +37,7 @@ export class CpsInputComponent
   @Input() loading = false;
   @Input() clearable = false;
   @Input() prefixIcon = '';
-  @Input() prefixIconSize: iconSizeType = 'small';
+  @Input() prefixIconSize: iconSizeType = '18px';
   @Input() prefixText = '';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
