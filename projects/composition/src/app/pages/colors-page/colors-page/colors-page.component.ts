@@ -1,10 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CpsInputComponent } from 'cps-ui-kit';
-import {
-  getCpsColors,
-  getTextColor
-} from 'projects/cps-ui-kit/src/lib/utils/colors-utils';
+import { CpsInputComponent, getCpsColors, getTextColor } from 'cps-ui-kit';
 
 type colorGroupsType = {
   name: string;
