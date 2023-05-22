@@ -52,6 +52,20 @@
       [closableChips]="false"
       [selectAll]="false"
       [value]="[options[0], options[4]]"></cps-autocomplete>
+    <cps-autocomplete
+      label="Multiple autocomplete with prefix icon"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="code"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      [returnObject]="false"
+      prefixIcon="plus"
+      value="CPT"></cps-autocomplete>
     <div class="sync-val-example">
       <cps-autocomplete
         width="500"

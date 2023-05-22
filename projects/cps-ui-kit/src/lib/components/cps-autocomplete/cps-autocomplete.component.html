@@ -15,6 +15,12 @@
     (clickOutside)="onClickOutside(autocompleteContainer)">
     <div class="cps-autocomplete-box" (click)="onBoxClick()">
       <div class="cps-autocomplete-box-area">
+        <cps-icon
+          *ngIf="prefixIcon"
+          [icon]="prefixIcon"
+          [size]="prefixIconSize"
+          class="prefix-icon">
+        </cps-icon>
         <div
           class="cps-autocomplete-box-items"
           *ngIf="
