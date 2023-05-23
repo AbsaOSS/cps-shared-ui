@@ -140,6 +140,14 @@
         }}</span>
       </div>
     </div>
+    <cps-progress-linear
+      *ngIf="loading"
+      height="3"
+      radius="4"
+      opacity="0.3"
+      class="autocomplete-progress-bar"
+      bgColor="transparent">
+    </cps-progress-linear>
   </div>
   <div *ngIf="!error && !hideDetails" class="cps-autocomplete-hint">
     {{ hint }}

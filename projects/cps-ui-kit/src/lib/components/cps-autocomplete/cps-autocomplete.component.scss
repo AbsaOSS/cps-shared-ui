@@ -27,6 +27,10 @@ $hover-transition-duration: 0.2s;
     outline: none;
     font-family: Source Sans Pro, sans-serif;
 
+    &-container {
+      position: relative;
+    }
+
     &.active {
       .cps-autocomplete-options {
         display: block;
@@ -331,6 +335,12 @@ $hover-transition-duration: 0.2s;
     .select-all-option {
       border-bottom: 1px solid lightgrey;
       font-weight: 600;
+    }
+
+    .autocomplete-progress-bar {
+      position: absolute;
+      bottom: 1px;
+      padding: 0 1px;
     }
   }
 
