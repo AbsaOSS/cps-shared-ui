@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
 import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
+import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
@@ -30,6 +31,7 @@ import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
     ClickOutsideDirective,
     CpsIconComponent,
     CpsChipComponent,
+    CpsProgressLinearComponent,
     LabelByValuePipe,
     CombineLabelsPipe
   ],
@@ -60,6 +62,7 @@ export class CpsSelectComponent
   @Input() persistentClear = false;
   @Input() prefixIcon = '';
   @Input() prefixIconSize: iconSizeType = '18px';
+  @Input() loading = false;
 
   @Input('value') _value: any = undefined;
 

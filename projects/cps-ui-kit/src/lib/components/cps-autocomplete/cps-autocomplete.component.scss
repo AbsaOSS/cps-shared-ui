@@ -29,6 +29,11 @@ $hover-transition-duration: 0.2s;
 
     &-container {
       position: relative;
+      .autocomplete-progress-bar {
+        position: absolute;
+        bottom: 1px;
+        padding: 0 1px;
+      }
     }
 
     &.active {
@@ -155,8 +160,9 @@ $hover-transition-duration: 0.2s;
           flex-wrap: wrap;
           .text-group-item {
             padding-bottom: 3px;
-            padding-top: 3px;
+            padding-top: 2.5px;
             padding-right: 4px;
+            height: 24px;
           }
         }
       }
@@ -335,12 +341,6 @@ $hover-transition-duration: 0.2s;
     .select-all-option {
       border-bottom: 1px solid lightgrey;
       font-weight: 600;
-    }
-
-    .autocomplete-progress-bar {
-      position: absolute;
-      bottom: 1px;
-      padding: 0 1px;
     }
   }
 
