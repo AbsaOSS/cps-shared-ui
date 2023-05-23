@@ -24,6 +24,16 @@ $hover-transition-duration: 0.2s;
     width: 100%;
     outline: none;
     font-family: Source Sans Pro, sans-serif;
+    display: grid;
+
+    &-container {
+      position: relative;
+      .select-progress-bar {
+        position: absolute;
+        bottom: 1px;
+        padding: 0 1px;
+      }
+    }
 
     &.active {
       .cps-select-options {

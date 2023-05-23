@@ -10,6 +10,12 @@
       [clearable]="true"
       formControlName="requiredAutocomplete"></cps-autocomplete>
     <cps-autocomplete
+      label="Loading autocomplete"
+      [loading]="true"
+      [options]="options"
+      optionLabel="name"
+      hint="This autocomplete is currently in a loading state"></cps-autocomplete>
+    <cps-autocomplete
       label="Disabled autocomplete"
       [disabled]="true"
       hint="This autocomplete is disabled"></cps-autocomplete>

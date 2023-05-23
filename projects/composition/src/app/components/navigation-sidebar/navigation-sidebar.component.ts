@@ -44,6 +44,10 @@ export class NavigationSidebarComponent {
       url: '/input'
     },
     {
+      title: 'Progress linear',
+      url: '/progress-linear'
+    },
+    {
       title: 'Radio',
       url: '/radio'
     },

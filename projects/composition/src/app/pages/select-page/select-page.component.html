@@ -10,6 +10,12 @@
       [clearable]="true"
       formControlName="requiredSelect"></cps-select>
     <cps-select
+      label="Loading select"
+      [loading]="true"
+      [options]="options"
+      optionLabel="name"
+      hint="This select is currently in a loading state"></cps-select>
+    <cps-select
       label="Disabled select"
       [disabled]="true"
       hint="This select is disabled"></cps-select>

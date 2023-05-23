@@ -17,10 +17,11 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
+import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsIconComponent],
+  imports: [CommonModule, CpsIconComponent, CpsProgressLinearComponent],
   selector: 'cps-input',
   templateUrl: './cps-input.component.html',
   styleUrls: ['./cps-input.component.scss']
