@@ -50,16 +50,15 @@
         <cps-icon icon="eye" size="18px" (click)="togglePassword()"></cps-icon>
       </span>
     </div>
+    <cps-progress-linear
+      *ngIf="loading"
+      height="3"
+      radius="4"
+      opacity="0.3"
+      class="input-progress-bar"
+      bgColor="transparent">
+    </cps-progress-linear>
   </div>
-
-  <cps-progress-linear
-    *ngIf="loading"
-    height="3"
-    radius="4"
-    opacity="0.3"
-    class="input-progress-bar"
-    bgColor="transparent">
-  </cps-progress-linear>
   <div *ngIf="!error && !hideDetails" class="hint-text">{{ hint }}</div>
   <div *ngIf="error && !hideDetails" class="error-text">{{ error }}</div>
 </div>

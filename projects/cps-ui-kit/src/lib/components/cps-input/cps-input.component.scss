@@ -140,6 +140,12 @@ $hover-transition-duration: 0.2s;
           color: $input-prefix-text-color;
         }
       }
+      .input-progress-bar {
+        position: absolute;
+        bottom: 1px;
+        padding: 0 1px;
+        display: block;
+      }
     }
 
     .persistent-clear {
@@ -186,10 +192,6 @@ $hover-transition-duration: 0.2s;
       color: $input-placeholder-color;
       font-style: italic;
       opacity: 1; /* Firefox */
-    }
-    .input-progress-bar {
-      margin-top: -7px;
-      padding: 0 1px;
     }
   }
 }
