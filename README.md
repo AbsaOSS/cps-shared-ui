@@ -15,6 +15,7 @@ This repository consists of two projects:
 - Chip
 - Icon
 - Input
+- Progress linear (indeterminate)
 - Radio
 - Select
 - Tag

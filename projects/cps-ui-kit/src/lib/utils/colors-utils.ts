@@ -61,6 +61,7 @@ export const getCpsColors = (): [string, string][] =>
   );
 
 export const getCSSColor = (val: string): string => {
+  if (!val) return '';
   return isValidCSSColor(val) ? val : `var(--cps-color-${val})`;
 };
 

@@ -1,0 +1,39 @@
+:host {
+  .cps-progress-linear {
+    position: relative;
+    overflow-x: hidden;
+    &-line {
+      position: absolute;
+      height: inherit;
+      left: -5%;
+      top: 0;
+    }
+    .inc {
+      animation: increase 2s infinite;
+    }
+    .dec {
+      animation: decrease 2s 0.5s infinite;
+    }
+  }
+
+  @keyframes increase {
+    from {
+      left: -5%;
+      width: 5%;
+    }
+    to {
+      left: 130%;
+      width: 100%;
+    }
+  }
+  @keyframes decrease {
+    from {
+      left: -80%;
+      width: 80%;
+    }
+    to {
+      left: 110%;
+      width: 10%;
+    }
+  }
+}

@@ -10,6 +10,7 @@
 - Chip
 - Icon
 - Input
+- Progress linear (indeterminate)
 - Radio
 - Select
 - Tag
