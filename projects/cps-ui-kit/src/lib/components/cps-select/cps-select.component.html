@@ -107,13 +107,12 @@
         *ngFor="let option of options"
         (click)="onOptionClick(option, selectContainer)"
         [class.selected]="
-          multiple
-            ? returnObject
-              ? value?.includes(option)
-              : value?.includes(option[optionValue])
-            : returnObject
-            ? option === value
-            : option[optionValue] === value
+          option
+            | checkOptionSelected
+              : value
+              : multiple
+              : returnObject
+              : optionValue
         ">
         <span class="cps-select-options-option-left">
           <span *ngIf="multiple" class="cps-select-options-option-check">

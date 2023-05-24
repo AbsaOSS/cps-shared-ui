@@ -4,13 +4,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
-  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
@@ -22,6 +20,8 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
+import { find, isEqual } from 'lodash-es';
 
 @Component({
   standalone: true,
@@ -33,19 +33,20 @@ import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
     CpsChipComponent,
     CpsProgressLinearComponent,
     LabelByValuePipe,
-    CombineLabelsPipe
+    CombineLabelsPipe,
+    CheckOptionSelectedPipe
   ],
   selector: 'cps-select',
   templateUrl: './cps-select.component.html',
   styleUrls: ['./cps-select.component.scss']
 })
 export class CpsSelectComponent
-  implements ControlValueAccessor, OnInit, OnDestroy, OnChanges
+  implements ControlValueAccessor, OnInit, OnDestroy
 {
   @Input() label = '';
   @Input() placeholder = 'Please select';
   @Input() hint = '';
-  @Input() returnObject = true;
+  @Input() returnObject = true; // if false, value will be option[optionValue]
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() width: number | string = '100%';
@@ -56,7 +57,7 @@ export class CpsSelectComponent
   @Input() openOnClear = true;
   @Input() options = [] as any[];
   @Input() optionLabel = 'label';
-  @Input() optionValue = 'value'; // works only if returnObject === false (TODO potentially can be of any type)
+  @Input() optionValue = 'value'; // needed only if returnObject === false
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
@@ -67,7 +68,6 @@ export class CpsSelectComponent
   @Input('value') _value: any = undefined;
 
   set value(value: any) {
-    value = this._convertValue(value);
     this._value = value;
     this.onChange(value);
   }
@@ -93,13 +93,6 @@ export class CpsSelectComponent
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    // eslint-disable-next-line dot-notation
-    if ('_value' in changes && changes['_value'].isFirstChange()) {
-      this.value = this._convertValue(this.value);
     }
   }
 
@@ -147,6 +140,9 @@ export class CpsSelectComponent
   // }
 
   select(option: any, byValue: boolean): void {
+    function includes(array: any[], val: any): boolean {
+      return array ? !!find(array, (item) => isEqual(item, val)) : false;
+    }
     const val = byValue
       ? option
       : this.returnObject
@@ -154,12 +150,12 @@ export class CpsSelectComponent
       : option[this.optionValue];
     if (this.multiple) {
       let res = [] as any;
-      if (this.value.includes(val)) {
-        res = this.value.filter((v: any) => v !== val);
+      if (includes(this.value, val)) {
+        res = this.value.filter((v: any) => !isEqual(v, val));
       } else {
         this.options.forEach((o) => {
           const ov = this.returnObject ? o : o[this.optionValue];
-          if (this.value.some((v: any) => v === ov) || val === ov) {
+          if (this.value.some((v: any) => isEqual(v, ov)) || isEqual(val, ov)) {
             res.push(ov);
           }
         });
@@ -325,42 +321,7 @@ export class CpsSelectComponent
     this.onTouched = fn;
   }
 
-  private _convertValue(value: any): any {
-    if (!this.returnObject) {
-      if (this.multiple) {
-        if (Array.isArray(value)) {
-          const temp: any = [];
-          value.forEach((v) => {
-            if (typeof v !== 'string') {
-              temp.push(v ? v[this.optionValue] : '');
-            } else temp.push(v);
-          });
-          value = temp;
-        } else {
-          if (!value) value = [];
-          else {
-            if (typeof value !== 'string') {
-              value = [value[this.optionValue]];
-            } else value = [value];
-          }
-        }
-      } else {
-        if (typeof value !== 'string') {
-          value = value ? value[this.optionValue] : '';
-        }
-      }
-    } else {
-      if (this.multiple) {
-        if (!Array.isArray(value)) {
-          value = [value];
-        }
-      }
-    }
-    return value;
-  }
-
   writeValue(value: any) {
-    value = this._convertValue(value);
     this.value = value;
   }
 
