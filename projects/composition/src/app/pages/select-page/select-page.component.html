@@ -4,40 +4,40 @@
       label="Required single select"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
       optionInfo="info"
       placeholder="Select a city"
       [clearable]="true"
-      formControlName="requiredSelect"></cps-select>
+      formControlName="requiredSelect">
+    </cps-select>
     <cps-select
       label="Loading select"
       [loading]="true"
       [options]="options"
       optionLabel="name"
-      hint="This select is currently in a loading state"></cps-select>
+      hint="This select is currently in a loading state">
+    </cps-select>
     <cps-select
       label="Disabled select"
       [disabled]="true"
-      hint="This select is disabled"></cps-select>
+      hint="This select is disabled">
+    </cps-select>
     <cps-select
       label="Multiple select"
-      [returnObject]="false"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
+      optionValue="data"
       optionInfo="info"
       placeholder="Select a city"
       [clearable]="false"
       [multiple]="true"
       [chips]="false"
       [returnObject]="false"
-      value="CPT"
+      [value]="[{ code: 'CPT' }]"
       hint="This select is not clearable"></cps-select>
     <cps-select
       label="Multiple select with chips and persistent clear icon"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
       optionInfo="info"
       placeholder="Select a city"
       [clearable]="true"
@@ -50,39 +50,36 @@
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
+      optionValue="data"
       optionInfo="info"
       placeholder="Select a city"
       [clearable]="true"
       [multiple]="true"
       [closableChips]="false"
       [selectAll]="false"
-      [value]="[options[0], options[4]]"></cps-select>
+      [value]="[options[0].data, options[4].data]"></cps-select>
     <cps-select
       label="Multiple select with prefix icon"
-      [returnObject]="false"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
       optionInfo="info"
       placeholder="Select a city"
       [clearable]="true"
       [multiple]="true"
       [chips]="false"
-      [returnObject]="false"
       prefixIcon="plus"
-      value="CPT">
+      [value]="[options[5]]">
     </cps-select>
     <div class="sync-val-example">
       <cps-select
         width="500"
         label="Multiple select with two-way binding, select something"
         [returnObject]="false"
-        [options]="options"
-        optionLabel="name"
-        optionValue="code"
-        optionInfo="info"
-        placeholder="Select a city"
+        [options]="syncOptions"
+        optionLabel="title"
+        optionValue="val"
+        optionInfo="ticker"
+        placeholder="Select a company"
         hint="This select has a fixed width of 500px"
         [clearable]="true"
         [multiple]="true"

@@ -4,40 +4,40 @@
       label="Required single autocomplete"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
       optionInfo="info"
       placeholder="Enter a city"
       [clearable]="true"
-      formControlName="requiredAutocomplete"></cps-autocomplete>
+      formControlName="requiredAutocomplete">
+    </cps-autocomplete>
     <cps-autocomplete
       label="Loading autocomplete"
       [loading]="true"
       [options]="options"
       optionLabel="name"
-      hint="This autocomplete is currently in a loading state"></cps-autocomplete>
+      hint="This autocomplete is currently in a loading state">
+    </cps-autocomplete>
     <cps-autocomplete
       label="Disabled autocomplete"
       [disabled]="true"
-      hint="This autocomplete is disabled"></cps-autocomplete>
+      hint="This autocomplete is disabled">
+    </cps-autocomplete>
     <cps-autocomplete
       label="Multiple autocomplete"
-      [returnObject]="false"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
+      optionValue="data"
       optionInfo="info"
       placeholder="Enter a city"
       [clearable]="false"
       [multiple]="true"
       [chips]="false"
       [returnObject]="false"
-      value="CPT"
+      [value]="[{ code: 'CPT' }]"
       hint="This autocomplete is not clearable"></cps-autocomplete>
     <cps-autocomplete
       label="Multiple autocomplete with chips and persistent clear icon"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
       optionInfo="info"
       placeholder="Enter a city"
       [clearable]="true"
@@ -50,38 +50,36 @@
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
+      optionValue="data"
       optionInfo="info"
       placeholder="Enter a city"
       [clearable]="true"
       [multiple]="true"
       [closableChips]="false"
       [selectAll]="false"
-      [value]="[options[0], options[4]]"></cps-autocomplete>
+      [value]="[options[0].data, options[4].data]"></cps-autocomplete>
     <cps-autocomplete
       label="Multiple autocomplete with prefix icon"
-      [returnObject]="false"
       [options]="options"
       optionLabel="name"
-      optionValue="code"
       optionInfo="info"
       placeholder="Enter a city"
       [clearable]="true"
       [multiple]="true"
       [chips]="false"
-      [returnObject]="false"
       prefixIcon="plus"
-      value="CPT"></cps-autocomplete>
+      [value]="[options[5]]">
+    </cps-autocomplete>
     <div class="sync-val-example">
       <cps-autocomplete
         width="500"
-        label="Multiple autocomplete with two-way binding, select something"
+        label="Multiple autocomplete with two-way binding, enter something"
         [returnObject]="false"
-        [options]="options"
-        optionLabel="name"
-        optionValue="code"
-        optionInfo="info"
-        placeholder="Enter a city"
+        [options]="syncOptions"
+        optionLabel="title"
+        optionValue="val"
+        optionInfo="ticker"
+        placeholder="Enter a company"
         hint="This autocomplete has a fixed width of 500px"
         [clearable]="true"
         [multiple]="true"

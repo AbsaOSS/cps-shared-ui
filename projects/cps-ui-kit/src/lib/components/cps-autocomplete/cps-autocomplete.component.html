@@ -119,13 +119,12 @@
         *ngFor="let option of filteredOptions"
         (click)="onOptionClick(option, autocompleteContainer)"
         [class.selected]="
-          multiple
-            ? returnObject
-              ? value?.includes(option)
-              : value?.includes(option[optionValue])
-            : returnObject
-            ? option === value
-            : option[optionValue] === value
+          option
+            | checkOptionSelected
+              : value
+              : multiple
+              : returnObject
+              : optionValue
         ">
         <span class="cps-autocomplete-options-option-left">
           <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
