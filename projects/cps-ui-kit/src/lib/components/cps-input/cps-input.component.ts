@@ -38,10 +38,12 @@ export class CpsInputComponent
   @Input() loading = false;
   @Input() clearable = false;
   @Input() prefixIcon = '';
+  @Input() prefixIconClickable = false;
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() prefixText = '';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
+  @Input() error = '';
   @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);
@@ -52,17 +54,17 @@ export class CpsInputComponent
   }
 
   @Output() valueChanged = new EventEmitter<string>();
+  @Output() focused = new EventEmitter();
+  @Output() prefixIconClicked = new EventEmitter();
 
   @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
 
-  private _statusChangesSubscription: Subscription = new Subscription();
-
-  private _value = '';
-
-  error = '';
   currentType = '';
   prefixWidth = '';
   cvtWidth = '';
+
+  private _statusChangesSubscription: Subscription = new Subscription();
+  private _value = '';
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -172,6 +174,15 @@ export class CpsInputComponent
   onBlur() {
     this._control?.control?.markAsTouched();
     this._checkErrors();
+  }
+
+  onClickPrefixIcon() {
+    if (!this.prefixIconClickable) return;
+    this.prefixIconClicked.emit();
+  }
+
+  onFocus() {
+    this.focused.emit();
   }
 
   focus() {
