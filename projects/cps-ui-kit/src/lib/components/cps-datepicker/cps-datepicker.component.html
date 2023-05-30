@@ -1,6 +1,5 @@
 <div
   class="cps-datepicker"
-  [ngClass]="{ active: isOpened }"
   [class.focused]="isOpened"
   (clickOutside)="onClickOutside()"
   [skipTargets]="['label-text', 'error-text', 'hint-text']">
@@ -17,7 +16,7 @@
     [clearable]="clearable"
     (blurred)="onBlur()"
     [error]="error"></cps-input>
-  <div class="cps-datepicker-calendar" [style.top]="topPos">
+  <div class="cps-datepicker-calendar" [style.top]="topPos" *ngIf="isOpened">
     <p-calendar
       [(ngModel)]="value"
       [showIcon]="true"

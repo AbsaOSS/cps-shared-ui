@@ -8,7 +8,10 @@ $text-color: var(--cps-color-text-darkest);
   .cps-datepicker {
     position: relative;
     .cps-datepicker-calendar {
-      display: none;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+      display: block;
       z-index: 1001;
       border-radius: 8px;
       position: absolute;
@@ -17,7 +20,6 @@ $text-color: var(--cps-color-text-darkest);
 
       ::ng-deep {
         .p-datepicker {
-          width: auto !important;
           padding: 0.5rem;
           background: #ffffff;
           color: $text-color;
@@ -314,12 +316,6 @@ $text-color: var(--cps-color-text-darkest);
             font-weight: 700;
           }
         }
-      }
-    }
-
-    &.active {
-      .cps-datepicker-calendar {
-        display: block;
       }
     }
   }
