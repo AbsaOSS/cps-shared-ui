@@ -9,14 +9,7 @@ import {
   Output,
   Self
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormsModule,
-  NgControl
-  // FormControl,
-  // ReactiveFormsModule
-  // Validators
-} from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
@@ -31,7 +24,6 @@ import { convertSize } from '../../utils/size-utils';
     CommonModule,
     FormsModule,
     ClickOutsideDirective
-    // ReactiveFormsModule
   ],
   selector: 'cps-datepicker',
   templateUrl: './cps-datepicker.component.html',
@@ -120,22 +112,26 @@ export class CpsDatepickerComponent
       return;
     }
     const dt = this._stringToDate(val);
-    if (!dt) return;
-    this._updateValue(dt);
-  }
-
-  private _updateValue(value: Date | null) {
-    this.writeValue(value);
-    this.onChange(value);
-    this.valueChanged.emit(value);
+    if (dt) this._updateValue(dt);
   }
 
   writeValue(value: Date | null) {
     this.value = value;
   }
 
-  onClickOutside() {
-    this.toggleCalendar(false);
+  private _updateValue(value: Date | null) {
+    if (this.value === value) return;
+    this.writeValue(value);
+    this.onChange(value);
+    this.valueChanged.emit(value);
+  }
+
+  private _updateValueFromInputString() {
+    if (!this.stringDate) {
+      this._updateValue(null);
+    } else {
+      this._updateValue(this._stringToDate(this.stringDate));
+    }
   }
 
   private _checkDateFormat(dateString: string): boolean {
@@ -166,6 +162,24 @@ export class CpsDatepickerComponent
     return date.getTime() <= maxDate.getTime();
   }
 
+  private _dateToString(dateVal: Date | null): string {
+    if (!dateVal) return '';
+    let month = '' + (dateVal.getMonth() + 1);
+    if (month.length < 2) month = '0' + month;
+    let day = '' + dateVal.getDate();
+    if (day.length < 2) day = '0' + day;
+    const year = dateVal.getFullYear();
+    return `${month}/${day}/${year}`;
+  }
+
+  private _stringToDate(dateString: string): Date | null {
+    if (!this._checkDateFormat(dateString)) return null;
+    const [month, day, year] = dateString.split('/');
+    const dt = new Date(`${year}-${month}-${day}`);
+    const inRange = this._checkDateInRange(dt, this.minDate, this.maxDate);
+    return inRange ? dt : null;
+  }
+
   private _checkErrors() {
     if (this.stringDate && !this._stringToDate(this.stringDate)) {
       this.error = 'Date is invalid';
@@ -193,41 +207,28 @@ export class CpsDatepickerComponent
     this.error = message || 'Unknown error';
   }
 
-  private _dateToString(dateVal: Date | null): string {
-    if (!dateVal) return '';
-    let month = '' + (dateVal.getMonth() + 1);
-    if (month.length < 2) month = '0' + month;
-    let day = '' + dateVal.getDate();
-    if (day.length < 2) day = '0' + day;
-    const year = dateVal.getFullYear();
-    return `${month}/${day}/${year}`;
-  }
-
-  private _stringToDate(dateString: string): Date | null {
-    if (!this._checkDateFormat(dateString)) return null;
-    const [month, day, year] = dateString.split('/');
-    const dt = new Date(`${year}-${month}-${day}`);
-    const inRange = this._checkDateInRange(dt, this.minDate, this.maxDate);
-    return inRange ? dt : null;
-  }
-
-  onSelectDate(dateVal: Date) {
+  onSelectCalendarDate(dateVal: Date) {
     this.toggleCalendar(false);
     this._dateToString(dateVal);
   }
 
-  onBlur() {
+  onInputBlur() {
+    if (this.isOpened) return;
     this._control?.control?.markAsTouched();
-    if (!this.stringDate) {
-      this._updateValue(null);
-    } else {
-      this._updateValue(this._stringToDate(this.stringDate));
-    }
+    this._updateValueFromInputString();
     this._checkErrors();
   }
 
   onClickCalendarIcon() {
+    if (this.disabled) return;
+    if (this.isOpened) this._updateValueFromInputString();
     this.toggleCalendar();
+  }
+
+  onClickOutside() {
+    if (this.disabled || !this.isOpened) return;
+    this._updateValueFromInputString();
+    this.toggleCalendar(false);
   }
 
   onInputFocus() {

@@ -3,6 +3,7 @@ $color-highlight: #f8f4f5;
 $color-selected-background: #efe4e7;
 $other-month-color: var(--cps-color-text-light);
 $text-color: var(--cps-color-text-darkest);
+$disabled-day-color: var(--cps-color-text-lightest);
 
 :host {
   display: flex;
@@ -13,7 +14,7 @@ $text-color: var(--cps-color-text-darkest);
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10 and IE 11 */
       user-select: none; /* Standard syntax */
-      display: block;
+      display: none;
       z-index: 1001;
       border-radius: 8px;
       position: absolute;
@@ -22,6 +23,7 @@ $text-color: var(--cps-color-text-darkest);
 
       ::ng-deep {
         .p-datepicker {
+          width: auto !important;
           padding: 0.5rem;
           background: #ffffff;
           color: $text-color;
@@ -112,6 +114,10 @@ $text-color: var(--cps-color-text-darkest);
           border-radius: 50%;
           transition: box-shadow 0.2s;
           border: 1px solid transparent;
+          &.p-element.p-disabled {
+            color: $disabled-day-color;
+            cursor: default;
+          }
         }
         .p-datepicker table td > span.p-highlight {
           color: $color-calm;

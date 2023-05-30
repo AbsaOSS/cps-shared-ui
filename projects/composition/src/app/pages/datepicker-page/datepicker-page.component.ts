@@ -21,6 +21,10 @@ export class DatepickerPageComponent implements OnInit {
   syncVal = null;
   today = new Date();
 
+  defaultDate = new Date(2023, 2, 16);
+  minDate = new Date(2023, 0, 1);
+  maxDate = new Date(2025, 11, 31);
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 

@@ -15,21 +15,25 @@
     (focused)="onInputFocus()"
     (valueChanged)="onInputValueChanged($event)"
     [clearable]="clearable"
-    (blurred)="onBlur()"
+    (blurred)="onInputBlur()"
     [width]="width"
     [hint]="hint"
     [hideDetails]="hideDetails"
     [persistentClear]="persistentClear"
     [error]="error"></cps-input>
-  <div class="cps-datepicker-calendar" [style.top]="topPos" *ngIf="isOpened">
+  <div
+    class="cps-datepicker-calendar"
+    [style.top]="topPos"
+    [style.display]="isOpened ? 'block' : 'none'">
     <p-calendar
       [(ngModel)]="value"
       [showIcon]="true"
       [showButtonBar]="showTodayButton"
       [inline]="true"
-      (onSelect)="onSelectDate($event)"
-      [selectOtherMonths]="true"
+      (onSelect)="onSelectCalendarDate($event)"
+      [showOtherMonths]="false"
       [minDate]="minDate"
-      [maxDate]="maxDate"></p-calendar>
+      [maxDate]="maxDate">
+    </p-calendar>
   </div>
 </div>
