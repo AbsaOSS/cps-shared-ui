@@ -11,6 +11,7 @@ import { TagPageComponent } from './pages/tag-page/tag-page.component';
 import { ChipPageComponent } from './pages/chip-page/chip-page.component';
 import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplete-page.component';
 import { ProgressLinearPageComponent } from './pages/progress-linear-page/progress-linear-page.component';
+import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
 
 const routes: Routes = [
   {
@@ -67,6 +68,11 @@ const routes: Routes = [
     path: 'progress-linear',
     title: 'Progress linear',
     component: ProgressLinearPageComponent
+  },
+  {
+    path: 'datepicker',
+    title: 'Datepicker',
+    component: DatepickerPageComponent
   },
   { path: '**', redirectTo: 'colors' }
 ];

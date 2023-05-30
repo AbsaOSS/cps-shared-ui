@@ -4,6 +4,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   UntypedFormBuilder,
+  UntypedFormGroup,
   ValidationErrors,
   Validators
 } from '@angular/forms';
@@ -18,7 +19,7 @@ import { CpsInputComponent } from 'cps-ui-kit';
   host: { class: 'composition-page' }
 })
 export class InputPageComponent implements OnInit {
-  form: any;
+  form!: UntypedFormGroup;
   syncVal = '';
 
   // eslint-disable-next-line no-useless-constructor

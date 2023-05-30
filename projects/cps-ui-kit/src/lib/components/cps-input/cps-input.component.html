@@ -1,4 +1,4 @@
-<div class="input-container">
+<div class="input-container" [ngStyle]="{ width: cvtWidth }">
   <label class="label-text" [ngClass]="{ 'label-text-disabled': disabled }">{{
     label
   }}</label>
@@ -21,11 +21,19 @@
         width: cvtWidth,
         'padding-left': prefixWidth || 'none'
       }"
-      (blur)="onBlur()" />
+      (blur)="onBlur()"
+      (focus)="onFocus()" />
 
     <div class="prefix">
       <span *ngIf="prefixIcon" class="prefix-icon">
-        <cps-icon [icon]="prefixIcon" [size]="prefixIconSize"></cps-icon>
+        <cps-icon
+          [icon]="prefixIcon"
+          [size]="prefixIconSize"
+          [style.cursor]="
+            prefixIconClickable && !disabled ? 'pointer' : 'default'
+          "
+          (click)="onClickPrefixIcon()">
+        </cps-icon>
       </span>
 
       <span *ngIf="prefixText" class="prefix-text" #prefixTextSpan>
@@ -33,7 +41,7 @@
       </span>
     </div>
 
-    <div class="action-btns">
+    <div class="action-btns" *ngIf="!disabled">
       <span
         *ngIf="clearable"
         [style.visibility]="

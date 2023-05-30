@@ -13,6 +13,7 @@ This repository consists of two projects:
 - Button
 - Checkbox
 - Chip
+- Datepicker
 - Icon
 - Input
 - Progress linear (indeterminate)

@@ -36,6 +36,10 @@ export class NavigationSidebarComponent {
       url: '/chip'
     },
     {
+      title: 'Datepicker',
+      url: '/datepicker'
+    },
+    {
       title: 'Icon',
       url: '/icon'
     },

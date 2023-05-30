@@ -12,4 +12,5 @@ export * from './lib/components/cps-radio/cps-radio.component';
 export * from './lib/components/cps-tag/cps-tag.component';
 export * from './lib/components/cps-chip/cps-chip.component';
 export * from './lib/components/cps-progress-linear/cps-progress-linear.component';
+export * from './lib/components/cps-datepicker/cps-datepicker.component';
 export * from './lib/utils/colors-utils';

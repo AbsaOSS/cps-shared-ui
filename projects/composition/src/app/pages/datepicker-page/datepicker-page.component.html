@@ -1,0 +1,37 @@
+<form [formGroup]="form">
+  <div class="datepickers-group">
+    <cps-datepicker
+      label="Required datepicker"
+      formControlName="requiredDatepicker"></cps-datepicker>
+    <cps-datepicker
+      label="Disabled datepicker"
+      [disabled]="true"
+      hint="This datepicker is disabled"
+      [value]="today"></cps-datepicker>
+    <cps-datepicker
+      label="Datepicker with a dropdown on input focus"
+      hint="This datepicker shows a calendar when input field is focused"
+      [value]="today"
+      [openOnInputFocus]="true"></cps-datepicker>
+    <cps-datepicker
+      label="Datepicker with restricted date range"
+      hint="This datepicker has selectable dates from 01/01/2023 to 12/31/2025"
+      [showTodayButton]="false"
+      [value]="defaultDate"
+      [minDate]="minDate"
+      [maxDate]="maxDate"></cps-datepicker>
+    <cps-datepicker
+      label="Datepicker without Today button"
+      [showTodayButton]="false"></cps-datepicker>
+    <div class="sync-val-example">
+      <cps-datepicker
+        label="Datepicker with two-way binding, select a date"
+        [(ngModel)]="syncVal"
+        width="350"
+        hint="This datepicker has a fixed width of 350px"
+        placeholder="Select a date"
+        [ngModelOptions]="{ standalone: true }"></cps-datepicker>
+      <div class="sync-val">{{ syncVal }}</div>
+    </div>
+  </div>
+</form>

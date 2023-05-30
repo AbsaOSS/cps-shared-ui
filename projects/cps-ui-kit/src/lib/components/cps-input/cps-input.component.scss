@@ -6,6 +6,7 @@ $input-placeholder-color: var(--cps-color-text-lightest);
 $input-border-color: var(--cps-color-text-lightest);
 $input-label-color: var(--cps-color-text-dark);
 $input-text-color: var(--cps-color-text-dark);
+$input-text-disabled-color: var(--cps-color-text-light);
 $input-prefix-text-color: var(--cps-color-text-mild);
 $input-prefix-icon-color: var(--cps-color-text-dark);
 
@@ -15,7 +16,9 @@ $error-background: #fef3f2;
 $hover-transition-duration: 0.2s;
 
 :host {
+  display: flex;
   .input-container {
+    width: 100%;
     gap: 0.2rem !important;
     display: flex !important;
     flex-direction: column !important;
@@ -55,14 +58,20 @@ $hover-transition-duration: 0.2s;
         }
 
         &:disabled {
+          color: $input-text-disabled-color;
           background-color: #f7f7f7;
           opacity: 1;
+          pointer-events: none;
         }
       }
 
       input:focus + .prefix > .prefix-icon,
       input:hover + .prefix > .prefix-icon {
         color: $color-calm;
+      }
+
+      input:disabled + .prefix > .prefix-icon {
+        color: $input-prefix-icon-color;
       }
 
       input:focus + .prefix + .action-btns > .clear-btn {
@@ -138,6 +147,7 @@ $hover-transition-duration: 0.2s;
         }
         &-text {
           color: $input-prefix-text-color;
+          cursor: default;
         }
       }
       .input-progress-bar {
