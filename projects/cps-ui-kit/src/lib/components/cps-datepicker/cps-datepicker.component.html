@@ -1,5 +1,6 @@
 <div
   class="cps-datepicker"
+  [ngStyle]="{ width: cvtWidth }"
   [class.focused]="isOpened"
   (clickOutside)="onClickOutside()"
   [skipTargets]="['label-text', 'error-text', 'hint-text']">
@@ -15,6 +16,10 @@
     (valueChanged)="onInputValueChanged($event)"
     [clearable]="clearable"
     (blurred)="onBlur()"
+    [width]="width"
+    [hint]="hint"
+    [hideDetails]="hideDetails"
+    [persistentClear]="persistentClear"
     [error]="error"></cps-input>
   <div class="cps-datepicker-calendar" [style.top]="topPos" *ngIf="isOpened">
     <p-calendar

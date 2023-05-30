@@ -21,6 +21,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { convertSize } from '../../utils/size-utils';
 
 @Component({
   standalone: true,
@@ -41,10 +42,14 @@ export class CpsDatepickerComponent
 {
   @Input() label = '';
   @Input() disabled = false;
-  @Input() placeholder = 'mm/dd/yyyy';
-  @Input() openOnInputFocus = false;
+  @Input() width: number | string = '100%';
+  @Input() placeholder = 'MM/DD/YYYY';
+  @Input() hint = '';
   @Input() clearable = true;
+  @Input() hideDetails = false;
+  @Input() persistentClear = false;
   @Input() showTodayButton = true;
+  @Input() openOnInputFocus = false;
 
   @Input()
   minDate!: Date;
@@ -68,6 +73,7 @@ export class CpsDatepickerComponent
   isOpened = false;
   topPos = '57px';
   error = '';
+  cvtWidth = '';
 
   private _statusChangesSubscription: Subscription = new Subscription();
   private _value!: Date | null;
@@ -80,6 +86,7 @@ export class CpsDatepickerComponent
 
   ngOnInit(): void {
     if (!this.label) this.topPos = '41px';
+    this.cvtWidth = convertSize(this.width);
     // this.dateInput.setValue(this.date);
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(

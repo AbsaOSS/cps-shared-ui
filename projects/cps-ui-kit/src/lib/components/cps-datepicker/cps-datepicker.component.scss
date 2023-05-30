@@ -5,8 +5,10 @@ $other-month-color: var(--cps-color-text-light);
 $text-color: var(--cps-color-text-darkest);
 
 :host {
+  display: flex;
   .cps-datepicker {
     position: relative;
+    width: 100%;
     .cps-datepicker-calendar {
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10 and IE 11 */

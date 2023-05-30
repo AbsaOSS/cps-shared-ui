@@ -3,6 +3,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
   UntypedFormBuilder,
+  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { CpsSelectComponent } from 'cps-ui-kit';
@@ -39,7 +40,7 @@ export class SelectPageComponent implements OnInit {
     { title: 'Tesla', val: 'TSLA', ticker: 'TSLA' }
   ];
 
-  form: any;
+  form!: UntypedFormGroup;
   syncVal: any = [];
 
   // eslint-disable-next-line no-useless-constructor
