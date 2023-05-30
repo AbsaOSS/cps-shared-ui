@@ -1,0 +1,31 @@
+<div
+  class="cps-datepicker"
+  [ngClass]="{ active: isOpened }"
+  [class.focused]="isOpened"
+  (clickOutside)="onClickOutside()"
+  [skipTargets]="['label-text', 'error-text', 'hint-text']">
+  <cps-input
+    [disabled]="disabled"
+    [value]="stringDate"
+    [label]="label"
+    prefixIcon="datepicker"
+    [placeholder]="placeholder"
+    (prefixIconClicked)="onClickCalendarIcon()"
+    [prefixIconClickable]="true"
+    (focused)="onInputFocus()"
+    (valueChanged)="onInputValueChanged($event)"
+    [clearable]="clearable"
+    (blurred)="onBlur()"
+    [error]="error"></cps-input>
+  <div class="cps-datepicker-calendar" [style.top]="topPos">
+    <p-calendar
+      [(ngModel)]="value"
+      [showIcon]="true"
+      [showButtonBar]="showTodayButton"
+      [inline]="true"
+      (onSelect)="onSelectDate($event)"
+      [selectOtherMonths]="true"
+      [minDate]="minDate"
+      [maxDate]="maxDate"></p-calendar>
+  </div>
+</div>

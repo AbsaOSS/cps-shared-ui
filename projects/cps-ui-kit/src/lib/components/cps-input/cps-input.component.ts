@@ -56,6 +56,7 @@ export class CpsInputComponent
   @Output() valueChanged = new EventEmitter<string>();
   @Output() focused = new EventEmitter();
   @Output() prefixIconClicked = new EventEmitter();
+  @Output() blurred = new EventEmitter();
 
   @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
 
@@ -104,6 +105,7 @@ export class CpsInputComponent
   }
 
   private _checkErrors() {
+    if (!this._control) return;
     const errors = this._control?.errors;
 
     if (!this._control?.control?.touched || !errors) {
@@ -174,6 +176,7 @@ export class CpsInputComponent
   onBlur() {
     this._control?.control?.markAsTouched();
     this._checkErrors();
+    this.blurred.emit();
   }
 
   onClickPrefixIcon() {
