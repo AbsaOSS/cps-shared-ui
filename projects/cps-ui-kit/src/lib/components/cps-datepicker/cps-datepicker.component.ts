@@ -87,7 +87,6 @@ export class CpsDatepickerComponent
   ngOnInit(): void {
     if (!this.label) this.topPos = '41px';
     this.cvtWidth = convertSize(this.width);
-    // this.dateInput.setValue(this.date);
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
       () => {
@@ -136,7 +135,7 @@ export class CpsDatepickerComponent
   }
 
   onClickOutside() {
-    this.isOpened = false;
+    this.toggleCalendar(false);
   }
 
   private _checkDateFormat(dateString: string): boolean {
@@ -213,7 +212,7 @@ export class CpsDatepickerComponent
   }
 
   onSelectDate(dateVal: Date) {
-    this.isOpened = false;
+    this.toggleCalendar(false);
     this._dateToString(dateVal);
   }
 
@@ -236,9 +235,15 @@ export class CpsDatepickerComponent
   }
 
   toggleCalendar(show?: boolean) {
-    if (this.disabled) return;
+    if (this.disabled || this.isOpened === show) return;
+
     if (typeof show === 'boolean') {
       this.isOpened = show;
     } else this.isOpened = !this.isOpened;
+
+    if (!this.isOpened) {
+      this._control?.control?.markAsTouched();
+      this._checkErrors();
+    }
   }
 }
