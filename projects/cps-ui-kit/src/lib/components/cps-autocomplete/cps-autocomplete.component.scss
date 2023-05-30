@@ -35,6 +35,12 @@ $hover-transition-duration: 0.2s;
         bottom: 1px;
         padding: 0 1px;
       }
+
+      &.focused {
+        .cps-autocomplete-box {
+          background: white !important;
+        }
+      }
     }
 
     &.active {
@@ -335,7 +341,7 @@ $hover-transition-duration: 0.2s;
     &.error {
       .cps-autocomplete-box {
         border-color: $color-error !important;
-        background: $error-background !important;
+        background: $error-background;
       }
     }
 
