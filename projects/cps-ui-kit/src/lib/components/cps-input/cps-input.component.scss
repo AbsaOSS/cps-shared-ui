@@ -16,7 +16,9 @@ $error-background: #fef3f2;
 $hover-transition-duration: 0.2s;
 
 :host {
+  display: flex;
   .input-container {
+    width: 100%;
     gap: 0.2rem !important;
     display: flex !important;
     flex-direction: column !important;
