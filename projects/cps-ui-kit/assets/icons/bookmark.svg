@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg">
-<symbol id="bookmark" viewBox="0 0 24 24">
-  <path d="m 4.8019489,3.8591173 c 0,-1.3883741 1.1254984,-2.5138726 2.5138724,-2.5138726 H 17.371312 c 1.388412,0 2.513872,1.1254985 2.513872,2.5138726 V 22.713161 l -7.541618,-7.541618 -7.5416171,7.541618 z" stroke="currentColor" fill='transparent' stroke-width="1.88541" stroke-linecap="round" stroke-linejoin="round"/>
-</symbol>
-</svg>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg">
-  <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" id="table-row-warning">
-    <rect width="256" height="256" fill="none"></rect>
-    <line x1="128" x2="128" y1="104" y2="136" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"></line>
-    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24" d="M114.15243,39.98472,26.17616,191.977a16.00005,16.00005,0,0,0,13.84762,24.01535H215.97625A16,16,0,0,0,229.82386,191.977L141.84757,39.98472A16,16,0,0,0,114.15243,39.98472Z"></path>
-    <circle cx="128" cy="176" r="16"></circle>
-  </symbol>
-  </svg>
