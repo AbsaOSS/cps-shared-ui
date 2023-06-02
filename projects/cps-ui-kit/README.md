@@ -11,6 +11,7 @@
 - Datepicker
 - Icon
 - Input
+- Loader
 - Progress linear (indeterminate)
 - Radio
 - Select
