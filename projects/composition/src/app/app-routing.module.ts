@@ -12,6 +12,7 @@ import { ChipPageComponent } from './pages/chip-page/chip-page.component';
 import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplete-page.component';
 import { ProgressLinearPageComponent } from './pages/progress-linear-page/progress-linear-page.component';
 import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
+import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
 
 const routes: Routes = [
@@ -64,6 +65,11 @@ const routes: Routes = [
     path: 'chip',
     title: 'Chip',
     component: ChipPageComponent
+  },
+  {
+    path: 'loader',
+    title: 'Loader',
+    component: LoaderPageComponent
   },
   {
     path: 'progress-linear',

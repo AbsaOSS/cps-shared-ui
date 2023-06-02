@@ -52,6 +52,10 @@ export class NavigationSidebarComponent {
       url: '/input'
     },
     {
+      title: 'Loader',
+      url: '/loader'
+    },
+    {
       title: 'Progress linear',
       url: '/progress-linear'
     },

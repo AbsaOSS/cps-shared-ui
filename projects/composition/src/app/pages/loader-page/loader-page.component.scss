@@ -1,0 +1,19 @@
+$loaders-label-color: var(--cps-color-text-darkest);
+
+.loaders-group {
+  gap: 30px;
+  display: flex;
+  flex-direction: column;
+
+  &-label {
+    margin-bottom: 8px;
+    line-height: 2;
+    color: $loaders-label-color;
+  }
+
+  .loader-container {
+    width: 450px;
+    height: 200px;
+    border: 1px solid lightgrey;
+  }
+}
