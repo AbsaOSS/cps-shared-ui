@@ -16,6 +16,7 @@ This repository consists of two projects:
 - Datepicker
 - Icon
 - Input
+- Loader
 - Progress linear (indeterminate)
 - Radio
 - Select

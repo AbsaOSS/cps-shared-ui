@@ -1,0 +1,37 @@
+<div class="loaders-group">
+  <cps-button
+    label="Toggle fullscreen loader"
+    (clicked)="onFullScreenClick()"></cps-button>
+  <cps-loader *ngIf="fullScreenOpened"></cps-loader>
+
+  <div>
+    <span class="loaders-group-label">Relative loader</span>
+    <div class="loader-container">
+      <cps-loader [fullScreen]="false"></cps-loader>
+    </div>
+  </div>
+
+  <div>
+    <span class="loaders-group-label"
+      >Relative loader without a label and transparent overlay</span
+    >
+    <div class="loader-container">
+      <cps-loader
+        [fullScreen]="false"
+        [showLabel]="false"
+        opacity="0"></cps-loader>
+    </div>
+  </div>
+
+  <div>
+    <span class="loaders-group-label"
+      >Relative loader with white label and increased overlay opacity</span
+    >
+    <div class="loader-container">
+      <cps-loader
+        [fullScreen]="false"
+        labelColor="white"
+        [opacity]="0.6"></cps-loader>
+    </div>
+  </div>
+</div>
