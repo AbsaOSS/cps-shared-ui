@@ -1,1 +1,21 @@
-<p>cps-button-toggle works!</p>
+<div class="cps-btn-toggle">
+  <div class="cps-btn-toggle-label" *ngIf="label">
+    <span>{{ label }}</span>
+  </div>
+  <div class="cps-btn-toggle-content">
+    <label *ngFor="let option of options" class="cps-btn-toggle-content-option">
+      <input
+        class="cps-btn-toggle-content-option-input"
+        [type]="!multiple && mandatory ? 'radio' : 'checkbox'"
+        [disabled]="option.disabled || disabled"
+        [value]="option.value"
+        [checked]="
+          option.value | checkOptionSelected : value : multiple : true : ''
+        "
+        (change)="updateValueEvent($event)" />
+      <span class="cps-btn-toggle-content-option-content">
+        <span>{{ option.label }}</span>
+      </span>
+    </label>
+  </div>
+</div>

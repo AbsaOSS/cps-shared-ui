@@ -1,1 +1,62 @@
-<cps-button-toggle></cps-button-toggle>
+<div class="btn-toggles-group">
+  <cps-button-toggle
+    label="Single button toggles"
+    [options]="options"
+    [value]="options[1].value">
+  </cps-button-toggle>
+
+  <cps-button-toggle
+    label="Single button toggles with partially disabled options"
+    [options]="partiallyDisabledOptions"
+    [value]="partiallyDisabledOptions[1].value">
+  </cps-button-toggle>
+
+  <cps-button-toggle
+    label="Disabled button toggles"
+    [options]="options"
+    [disabled]="true"
+    [value]="options[1].value">
+  </cps-button-toggle>
+
+  <cps-button-toggle
+    label="Single button toggles without mandatory selection"
+    [options]="options"
+    [value]="options[1].value"
+    [mandatory]="false">
+  </cps-button-toggle>
+
+  <cps-button-toggle
+    label="Multiple button toggles"
+    [options]="options"
+    [value]="[options[1].value]"
+    [multiple]="true">
+  </cps-button-toggle>
+
+  <cps-button-toggle
+    label="Multiple button toggles without mandatory selection"
+    [options]="options"
+    [value]="[options[1].value]"
+    [multiple]="true"
+    [mandatory]="false">
+  </cps-button-toggle>
+
+  <div class="sync-val-example">
+    <cps-button-toggle
+      label="Single button toggles with two-way binding"
+      [options]="options"
+      [(ngModel)]="syncVal"
+      [mandatory]="false">
+    </cps-button-toggle>
+    <div class="sync-val">Selected value: {{ syncVal }}</div>
+  </div>
+  <div class="sync-val-example">
+    <cps-button-toggle
+      label="Multiple button toggles with two-way binding"
+      [options]="options"
+      [(ngModel)]="multiSyncVal"
+      [multiple]="true"
+      [mandatory]="false">
+    </cps-button-toggle>
+    <div class="sync-val">Selected values: {{ multiSyncVal }}</div>
+  </div>
+</div>

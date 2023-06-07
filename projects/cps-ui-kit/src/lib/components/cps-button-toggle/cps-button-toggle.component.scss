@@ -1,0 +1,88 @@
+$group-label-color: var(--cps-color-text-dark);
+$group-label-disabled-color: var(--cps-color-text-mild);
+$selected-background-color: var(--cps-color-calm);
+$selected-disabled-background-color: var(--cps-color-line-mid);
+$selected-disabled-option-label-color: var(--cps-color-text-mild);
+$disabled-background-color: #f7f7f7;
+$disabled-option-label-color: var(--cps-color-text-light);
+$option-label-color: var(--cps-color-text-dark);
+$border-color: var(--cps-color-silver);
+$option-hover-background: #f8f4f5;
+
+:host {
+  .cps-btn-toggle {
+    &-label {
+      color: $group-label-color;
+      margin-bottom: 0.75rem;
+    }
+    &-content {
+      display: flex;
+
+      &-option-input {
+        clip: rect(0 0 0 0);
+        clip-path: inset(100%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+
+      &-option-input:checked + .cps-btn-toggle-content-option-content {
+        background-color: $selected-background-color;
+        z-index: 1;
+        color: #ffffff;
+        &:hover {
+          background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);
+        }
+      }
+
+      &-option-input:disabled + .cps-btn-toggle-content-option-content {
+        pointer-events: none;
+        background-color: $disabled-background-color;
+        color: $disabled-option-label-color;
+      }
+
+      &-option-input:disabled:checked + .cps-btn-toggle-content-option-content {
+        background-color: $selected-disabled-background-color;
+        color: $selected-disabled-option-label-color;
+      }
+
+      &-option {
+        &-content {
+          height: 36px;
+          display: flex;
+          width: max-content;
+          align-items: center;
+          cursor: pointer;
+          background-color: #ffffff;
+          padding: 0.375em 0.75em;
+          position: relative;
+          border: 0.0625em solid $border-color;
+          border-right: 0;
+          letter-spacing: 0.05em;
+          color: $option-label-color;
+          text-align: center;
+          transition: background-color 0.2s ease;
+          -webkit-user-select: none; /* Safari */
+          -ms-user-select: none; /* IE 10 and IE 11 */
+          user-select: none; /* Standard syntax */
+          &:hover {
+            background: $option-hover-background;
+          }
+        }
+      }
+    }
+  }
+
+  .cps-btn-toggle-content-option:first-child
+    .cps-btn-toggle-content-option-content {
+    border-radius: 4px 0 0 4px;
+  }
+
+  .cps-btn-toggle-content-option:last-child
+    .cps-btn-toggle-content-option-content {
+    border-radius: 0 4px 4px 0;
+    border-right: 0.0625em solid $border-color;
+  }
+}

@@ -6,6 +6,7 @@
 
 - Autocomplete
 - Button
+- Button toggles
 - Checkbox
 - Chip
 - Datepicker
