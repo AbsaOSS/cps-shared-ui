@@ -28,6 +28,10 @@ export class NavigationSidebarComponent {
       url: '/button'
     },
     {
+      title: 'Button toggles',
+      url: '/button-toggles'
+    },
+    {
       title: 'Checkbox',
       url: '/checkbox'
     },

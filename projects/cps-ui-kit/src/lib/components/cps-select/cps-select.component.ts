@@ -36,6 +36,7 @@ import { find, isEqual } from 'lodash-es';
     CombineLabelsPipe,
     CheckOptionSelectedPipe
   ],
+  providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
   selector: 'cps-select',
   templateUrl: './cps-select.component.html',
   styleUrls: ['./cps-select.component.scss']
