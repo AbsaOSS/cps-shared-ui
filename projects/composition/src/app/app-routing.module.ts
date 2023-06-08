@@ -14,6 +14,7 @@ import { ProgressLinearPageComponent } from './pages/progress-linear-page/progre
 import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
 import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
+import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expansion-panel-page.component';
 
 const routes: Routes = [
   {
@@ -70,6 +71,11 @@ const routes: Routes = [
     path: 'loader',
     title: 'Loader',
     component: LoaderPageComponent
+  },
+  {
+    path: 'expansion-panel',
+    title: 'Expansion panel',
+    component: ExpansionPanelPageComponent
   },
   {
     path: 'progress-linear',

@@ -1,0 +1,22 @@
+<div
+  class="cps-expansion-panel"
+  [class.expanded]="isExpanded"
+  [class.bordered]="bordered"
+  [ngStyle]="{
+    'background-color': backgroundColor,
+    'border-radius': borderRadius
+  }">
+  <div
+    class="cps-expansion-panel-header"
+    [ngClass]="{ disabled: disabled }"
+    [style.cursor]="disabled ? 'default' : 'pointer'"
+    (click)="toggleExpansion()">
+    <div class="cps-expansion-panel-title">{{ headerTitle }}</div>
+    <span class="cps-expansion-panel-chevron" *ngIf="showChevron && !disabled">
+      <cps-icon icon="chevron-down" size="small" color="text-dark"> </cps-icon>
+    </span>
+  </div>
+  <div class="cps-expansion-panel-content">
+    <ng-content></ng-content>
+  </div>
+</div>
