@@ -66,6 +66,10 @@ export class NavigationSidebarComponent {
     {
       title: 'Tag',
       url: '/tag'
+    },
+    {
+      title: 'Textarea',
+      url: '/textarea'
     }
     // extend this list
   ];

@@ -13,6 +13,7 @@ import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplet
 import { ProgressLinearPageComponent } from './pages/progress-linear-page/progress-linear-page.component';
 import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
 import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
+import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
 
 const routes: Routes = [
   {
@@ -79,6 +80,11 @@ const routes: Routes = [
     path: 'datepicker',
     title: 'Datepicker',
     component: DatepickerPageComponent
+  },
+  {
+    path: 'textarea',
+    title: 'Textarea',
+    component: TextareaPageComponent
   },
   { path: '**', redirectTo: 'colors' }
 ];

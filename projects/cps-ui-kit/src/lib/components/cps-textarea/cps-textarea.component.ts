@@ -1,6 +1,4 @@
-import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -10,41 +8,31 @@ import {
   OnInit,
   Optional,
   Output,
-  Self,
-  ViewChild
+  Self
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../../utils/size-utils';
-import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsIconComponent, CpsProgressLinearComponent],
-  selector: 'cps-input',
-  templateUrl: './cps-input.component.html',
-  styleUrls: ['./cps-input.component.scss']
+  selector: 'cps-textarea',
+  templateUrl: './cps-textarea.component.html',
+  styleUrls: ['./cps-textarea.component.scss']
 })
-export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
-{
+export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() label = '';
-  @Input() placeholder = 'Please enter';
+  @Input() placeholder = 'Please enter your text';
   @Input() rows = 5;
   @Input() cols = 20;
+  @Input() autocomplete: 'on' | 'off' = 'off';
+  @Input() autofocus = false;
+  @Input() readonly = false;
+  @Input() spellcheck: boolean | 'default' = 'default';
+  @Input() wrap: 'hard' | 'soft' | 'off' = 'soft';
   @Input() hint = '';
   @Input() disabled = false;
   @Input() width: number | string = '100%';
-  @Input() type: 'text' | 'number' | 'password' = 'text';
-  @Input() loading = false;
   @Input() clearable = false;
-  @Input() prefixIcon = '';
-  @Input() prefixIconClickable = false;
-  @Input() prefixIconSize: iconSizeType = '18px';
-  @Input() prefixText = '';
-  @Input() hideDetails = false;
-  @Input() persistentClear = false;
   @Input() error = '';
   @Input() set value(value: string) {
     this._value = value;
@@ -60,12 +48,6 @@ export class CpsInputComponent
   @Output() prefixIconClicked = new EventEmitter();
   @Output() blurred = new EventEmitter();
 
-  @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
-
-  currentType = '';
-  prefixWidth = '';
-  cvtWidth = '';
-
   private _statusChangesSubscription: Subscription = new Subscription();
   private _value = '';
 
@@ -80,9 +62,6 @@ export class CpsInputComponent
   }
 
   ngOnInit(): void {
-    this.currentType = this.type;
-    this.cvtWidth = convertSize(this.width);
-
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
       () => {
         this._checkErrors();
@@ -90,21 +69,11 @@ export class CpsInputComponent
     ) as Subscription;
   }
 
-  ngAfterViewInit() {
-    let w = 0;
-    if (this.prefixText) {
-      w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
-    }
-    if (this.prefixIcon) {
-      w += 38 - (this.prefixText ? 14 : 0);
-    }
-    this.prefixWidth = w > 0 ? `${w}px` : '';
-    this.cdRef.detectChanges();
-  }
-
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
+
+  onChange = (event: any) => {};
 
   private _checkErrors() {
     if (!this._control) return;
@@ -126,6 +95,12 @@ export class CpsInputComponent
       return;
     }
 
+    if ('maxlength' in errors) {
+      // eslint-disable-next-line dot-notation
+      this.error = `Field must contain ${errors['maxlength'].requiredLength} characters maximum`;
+      return;
+    }
+
     const errArr = Object.values(errors);
     if (errArr.length < 1) {
       this.error = '';
@@ -136,8 +111,6 @@ export class CpsInputComponent
     this.error = message || 'Unknown error';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
@@ -168,10 +141,6 @@ export class CpsInputComponent
     if (this.value !== '') this._updateValue('');
   }
 
-  togglePassword() {
-    this.currentType = this.currentType === 'password' ? 'text' : 'password';
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
 
@@ -179,11 +148,6 @@ export class CpsInputComponent
     this._control?.control?.markAsTouched();
     this._checkErrors();
     this.blurred.emit();
-  }
-
-  onClickPrefixIcon() {
-    if (!this.prefixIconClickable) return;
-    this.prefixIconClicked.emit();
   }
 
   onFocus() {
