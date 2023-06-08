@@ -1,1 +1,43 @@
-<p>cps-textarea works!</p>
+<div class="textarea-container" [ngStyle]="{ width: cvtWidth }">
+  <label class="label-text" [ngClass]="{ 'label-text-disabled': disabled }">{{
+    label
+  }}</label>
+
+  <div
+    class="textarea-wrap"
+    [ngClass]="{
+      'textarea-wrap-error': error,
+      clearable: clearable,
+      'persistent-clear': persistentClear
+    }">
+    <textarea
+      [cols]="cols"
+      [rows]="rows"
+      [autocomplete]="autocomplete"
+      [autofocus]="autofocus"
+      [readonly]="readonly"
+      [spellcheck]="spellcheck"
+      [wrap]="wrap"
+      [disabled]="disabled"
+      [placeholder]="placeholder"
+      [wrap]="wrap"
+      [ngStyle]="{
+        width: cvtWidth
+      }"
+      (blur)="onBlur()"
+      (focus)="onFocus()"></textarea>
+  </div>
+
+  <div class="action-btns" *ngIf="!disabled">
+    <span
+      *ngIf="clearable"
+      [style.visibility]="
+        persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
+      "
+      class="clear-btn">
+      <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+    </span>
+  </div>
+  <div *ngIf="!error && !hideDetails" class="hint-text">{{ hint }}</div>
+  <div *ngIf="error && !hideDetails" class="error-text">{{ error }}</div>
+</div>

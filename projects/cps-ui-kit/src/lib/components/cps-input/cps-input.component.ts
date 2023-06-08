@@ -30,10 +30,8 @@ export class CpsInputComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
-  @Input() placeholder = 'Please enter';
-  @Input() rows = 5;
-  @Input() cols = 20;
   @Input() hint = '';
+  @Input() placeholder = 'Please enter';
   @Input() disabled = false;
   @Input() width: number | string = '100%';
   @Input() type: 'text' | 'number' | 'password' = 'text';

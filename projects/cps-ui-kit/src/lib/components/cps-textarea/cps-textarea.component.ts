@@ -12,15 +12,22 @@ import {
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { convertSize } from '../../utils/size-utils';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'cps-textarea',
+  imports: [CommonModule, CpsIconComponent],
   templateUrl: './cps-textarea.component.html',
   styleUrls: ['./cps-textarea.component.scss']
 })
 export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() label = '';
+  @Input() autocapitalize: 'none' | 'sentences' | 'words' | 'characters' =
+    'none';
+
   @Input() placeholder = 'Please enter your text';
   @Input() rows = 5;
   @Input() cols = 20;
@@ -33,6 +40,8 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() disabled = false;
   @Input() width: number | string = '100%';
   @Input() clearable = false;
+  @Input() hideDetails = false;
+  @Input() persistentClear = false;
   @Input() error = '';
   @Input() set value(value: string) {
     this._value = value;
@@ -51,6 +60,8 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   private _statusChangesSubscription: Subscription = new Subscription();
   private _value = '';
 
+  cvtWidth = '';
+
   constructor(
     @Self() @Optional() private _control: NgControl,
     private _elementRef: ElementRef<HTMLElement>,
@@ -62,6 +73,8 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.cvtWidth = convertSize(this.width);
+
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
       () => {
         this._checkErrors();
@@ -155,6 +168,6 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   }
 
   focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
+    this._elementRef?.nativeElement?.querySelector('textarea')?.focus();
   }
 }
