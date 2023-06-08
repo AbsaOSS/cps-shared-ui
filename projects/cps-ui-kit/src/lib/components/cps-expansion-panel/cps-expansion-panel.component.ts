@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { getCSSColor } from '../../utils/colors-utils';
+import { convertSize } from '../../utils/size-utils';
 
 @Component({
   standalone: true,
@@ -9,7 +11,7 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
   templateUrl: './cps-expansion-panel.component.html',
   styleUrls: ['./cps-expansion-panel.component.scss']
 })
-export class CpsExpansionPanelComponent {
+export class CpsExpansionPanelComponent implements OnInit {
   @Input() headerTitle = '';
   @Input() backgroundColor = 'transparent';
   @Input() showChevron = true;
@@ -17,8 +19,15 @@ export class CpsExpansionPanelComponent {
   @Input() disabled = false;
   @Input() bordered = true;
   @Input() borderRadius: number | string = '4px';
+  @Input() width: number | string = '100%';
   @Output() afterCollapse: EventEmitter<void> = new EventEmitter<void>();
   @Output() afterExpand: EventEmitter<void> = new EventEmitter<void>();
+
+  ngOnInit(): void {
+    this.backgroundColor = getCSSColor(this.backgroundColor);
+    this.borderRadius = convertSize(this.borderRadius);
+    this.width = convertSize(this.width);
+  }
 
   toggleExpansion(): void {
     if (!this.disabled) {

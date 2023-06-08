@@ -1,3 +1,32 @@
-<cps-expansion-panel headerTitle="Panel" backgroundColor="white">
-  <div>Some content</div>
-</cps-expansion-panel>
+<div class="expans-panels-group">
+  <cps-expansion-panel headerTitle="Bordered panel with transparent background">
+    <div>Some content</div>
+  </cps-expansion-panel>
+
+  <cps-expansion-panel headerTitle="Disabled panel" [disabled]="true">
+    <div>Some content</div>
+  </cps-expansion-panel>
+
+  <cps-expansion-panel
+    headerTitle="Unbordered panel with white background"
+    backgroundColor="white"
+    [bordered]="false">
+    <div>Some content</div>
+  </cps-expansion-panel>
+
+  <cps-expansion-panel
+    headerTitle="Bordered panel with 0 border radius without chevron"
+    [showChevron]="false"
+    backgroundColor="white"
+    borderRadius="0">
+    <div>Some content</div>
+  </cps-expansion-panel>
+
+  <cps-expansion-panel
+    headerTitle="Bordered panel with 0 border radius and 500px width"
+    backgroundColor="white"
+    borderRadius="0"
+    width="500">
+    <div>Some content</div>
+  </cps-expansion-panel>
+</div>

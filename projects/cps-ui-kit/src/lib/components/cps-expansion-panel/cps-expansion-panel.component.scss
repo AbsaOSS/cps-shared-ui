@@ -6,6 +6,7 @@ $header-hover-background: #f8f4f5;
 $header-active-background: #f1eaec;
 
 :host {
+  display: flex;
   .cps-expansion-panel {
     overflow: hidden;
     font-family: 'Source Sans Pro', sans-serif;
