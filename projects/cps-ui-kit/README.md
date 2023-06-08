@@ -10,6 +10,7 @@
 - Checkbox
 - Chip
 - Datepicker
+- Expansion panel
 - Icon
 - Input
 - Loader
