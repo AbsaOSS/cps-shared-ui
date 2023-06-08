@@ -44,6 +44,10 @@ export class NavigationSidebarComponent {
       url: '/datepicker'
     },
     {
+      title: 'Expansion panel',
+      url: '/expansion-panel'
+    },
+    {
       title: 'Icon',
       url: '/icon'
     },

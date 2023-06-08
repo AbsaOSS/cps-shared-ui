@@ -15,6 +15,7 @@ This repository consists of two projects:
 - Checkbox
 - Chip
 - Datepicker
+- Expansion panel
 - Icon
 - Input
 - Loader
