@@ -129,12 +129,6 @@ export class CpsAutocompleteComponent
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
-
-    if (this.isOpened) {
-      const selected =
-        this.autocompleteContainer.nativeElement.querySelector('.selected');
-      if (selected) selected.scrollIntoView();
-    }
   }
 
   select(option: any, byValue: boolean): void {
