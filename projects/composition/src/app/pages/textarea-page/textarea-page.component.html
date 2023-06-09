@@ -1,1 +1,19 @@
-<cps-textarea></cps-textarea>
+<form [formGroup]="form">
+  <div class="textarea-group">
+    <cps-textarea
+      label="Required textarea"
+      formControlName="requiredTextarea"></cps-textarea>
+
+    <cps-textarea
+      label="Readonly textarea"
+      [readonly]="true"
+      value="This is a read only textarea"></cps-textarea>
+
+    <cps-textarea label="Disabled textarea" [disabled]="true"></cps-textarea>
+
+    <cps-textarea
+      label="Clearable textarea with persistent clear icon"
+      [clearable]="true"
+      [persistentClear]="true"></cps-textarea>
+  </div>
+</form>

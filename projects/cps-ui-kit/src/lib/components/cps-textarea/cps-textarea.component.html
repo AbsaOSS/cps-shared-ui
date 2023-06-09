@@ -21,11 +21,13 @@
       [disabled]="disabled"
       [placeholder]="placeholder"
       [wrap]="wrap"
+      [value]="value"
       [ngStyle]="{
         width: cvtWidth
       }"
       (blur)="onBlur()"
-      (focus)="onFocus()"></textarea>
+      (focus)="onFocus()"
+      (input)="updateValueEvent($event)"></textarea>
   </div>
 
   <div class="action-btns" *ngIf="!disabled">

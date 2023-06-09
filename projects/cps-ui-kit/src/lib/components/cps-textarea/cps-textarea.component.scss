@@ -46,6 +46,7 @@ $hover-transition-duration: 0.2s;
         padding: 0.375rem 0.75rem;
         line-height: 1.5;
         border: 1px solid $textarea-border-color;
+        transition-property: border-color;
         transition-duration: $hover-transition-duration;
         appearance: none;
         border-radius: 4px;
@@ -61,98 +62,85 @@ $hover-transition-duration: 0.2s;
           opacity: 1;
           pointer-events: none;
         }
-      }
 
-      &:hover {
-        .action-btns {
-          .clear-btn {
-            cps-icon {
-              opacity: 0.5;
-            }
-          }
-        }
-      }
-
-      .action-btns {
-        display: flex;
-        align-items: center;
-        position: absolute;
-        top: 50%;
-        right: 0.75rem;
-        margin-top: -0.5rem;
-
-        .clear-btn {
-          cursor: pointer;
-          color: $color-calm;
+        textarea:focus + .action-btns > .clear-btn {
           cps-icon {
-            opacity: 0;
-            transition-duration: $hover-transition-duration;
-            &:hover {
-              opacity: 1 !important;
+            opacity: 0.5;
+          }
+        }
+
+        &:hover {
+          .action-btns {
+            .clear-btn {
+              cps-icon {
+                opacity: 0.5;
+              }
             }
           }
         }
 
-        .password-show-btn {
-          margin-left: 0.5rem;
-          cursor: pointer;
-          color: $textarea-pass-show-btn-color;
-          &-active {
+        .action-btns {
+          display: flex;
+          align-items: center;
+          position: absolute;
+          top: 50%;
+          right: 0.75rem;
+          margin-top: -0.5rem;
+
+          .clear-btn {
+            cursor: pointer;
             color: $color-calm;
-          }
-          cps-icon {
-            transition-duration: $hover-transition-duration;
-            &:hover {
-              color: $color-calm;
-            }
-          }
-        }
-      }
-
-      .persistent-clear {
-        .action-btns {
-          .clear-btn {
             cps-icon {
-              opacity: 0.5;
+              opacity: 0;
+              transition-duration: $hover-transition-duration;
+              &:hover {
+                opacity: 1 !important;
+              }
             }
           }
         }
-      }
 
-      .password.clearable > textarea {
-        padding-right: 3.8rem;
-      }
-
-      .password > textarea,
-      .clearable > textarea {
-        padding-right: 2.2rem;
-      }
-
-      .hint-text {
-        color: $textarea-hint-color;
-        font-size: 0.75rem;
-        min-height: 1.125rem;
-        cursor: default;
-      }
-      .error-text {
-        color: $color-error;
-        font-weight: bold;
-        font-size: 0.75rem;
-        min-height: 1.125rem;
-        cursor: default;
-      }
-      .label-text {
-        color: $textarea-label-color;
-        font-size: 0.875rem;
-        &-disabled {
-          color: $textarea-label-disabled-color;
+        .persistent-clear {
+          .action-btns {
+            .clear-btn {
+              cps-icon {
+                opacity: 0.5;
+              }
+            }
+          }
         }
-      }
-      ::placeholder {
-        font-family: Source Sans Pro, sans-serif;
-        color: $textarea-placeholder-color;
-        font-style: italic;
-        opacity: 1; /* Firefox */
+
+        .password > textarea,
+        .clearable > textarea {
+          padding-right: 2.2rem;
+        }
+
+        .hint-text {
+          color: $textarea-hint-color;
+          font-size: 0.75rem;
+          min-height: 1.125rem;
+          cursor: default;
+        }
+        .error-text {
+          color: $color-error;
+          font-weight: bold;
+          font-size: 0.75rem;
+          min-height: 1.125rem;
+          cursor: default;
+        }
+        .label-text {
+          color: $textarea-label-color;
+          font-size: 0.875rem;
+          &-disabled {
+            color: $textarea-label-disabled-color;
+          }
+        }
+        ::placeholder {
+          font-family: Source Sans Pro, sans-serif;
+          color: $textarea-placeholder-color;
+          font-style: italic;
+          opacity: 1; /* Firefox */
+        }
       }
     }
   }
