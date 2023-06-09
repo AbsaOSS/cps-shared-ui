@@ -1,4 +1,4 @@
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -9,19 +9,19 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
-import {ControlValueAccessor, FormsModule, NgControl} from '@angular/forms';
-import {Subscription} from 'rxjs';
-import {convertSize} from '../../utils/size-utils';
-import {CpsIconComponent, iconSizeType} from '../cps-icon/cps-icon.component';
-import {CpsChipComponent} from '../cps-chip/cps-chip.component';
-import {CpsProgressLinearComponent} from '../cps-progress-linear/cps-progress-linear.component';
-import {ClickOutsideDirective} from '../../directives/click-outside.directive';
-import {LabelByValuePipe} from '../../pipes/label-by-value.pipe';
-import {CombineLabelsPipe} from '../../pipes/combine-labels.pipe';
-import {CheckOptionSelectedPipe} from '../../pipes/check-option-selected.pipe';
-import {find, isEqual} from 'lodash-es';
+import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { convertSize } from '../../utils/size-utils';
+import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import { CpsChipComponent } from '../cps-chip/cps-chip.component';
+import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { ClickOutsideDirective } from '../../directives/click-outside.directive';
+import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
+import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
+import { find, isEqual } from 'lodash-es';
 
 @Component({
   standalone: true,
@@ -34,12 +34,12 @@ import {find, isEqual} from 'lodash-es';
     CpsProgressLinearComponent,
     LabelByValuePipe,
     CombineLabelsPipe,
-    CheckOptionSelectedPipe
+    CheckOptionSelectedPipe,
   ],
   providers: [LabelByValuePipe],
   selector: 'cps-autocomplete',
   templateUrl: './cps-autocomplete.component.html',
-  styleUrls: ['./cps-autocomplete.component.scss']
+  styleUrls: ['./cps-autocomplete.component.scss'],
 })
 export class CpsAutocompleteComponent
   implements ControlValueAccessor, OnInit, OnDestroy {
@@ -79,7 +79,7 @@ export class CpsAutocompleteComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    private _labelByValue: LabelByValuePipe
+    private _labelByValue: LabelByValuePipe,
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -107,7 +107,7 @@ export class CpsAutocompleteComponent
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
       () => {
         this._checkErrors();
-      }
+      },
     ) as Subscription;
   }
 
@@ -193,7 +193,7 @@ export class CpsAutocompleteComponent
     const searchVal = (event?.target?.value || '').toLowerCase();
 
     this.filteredOptions = this.options.filter((o: any) =>
-      o[this.optionLabel].toLowerCase().includes(searchVal)
+      o[this.optionLabel].toLowerCase().includes(searchVal),
     );
   }
 
@@ -353,7 +353,7 @@ export class CpsAutocompleteComponent
           this.value,
           this.options,
           this.optionValue,
-          this.optionLabel
+          this.optionLabel,
         )
       : '';
   }
@@ -373,7 +373,7 @@ export class CpsAutocompleteComponent
   private _getHTMLOptions() {
     return (
       this.autocompleteContainer?.nativeElement?.querySelectorAll(
-        '.cps-autocomplete-options-option'
+        '.cps-autocomplete-options-option',
       ) || []
     );
   }
@@ -421,7 +421,7 @@ export class CpsAutocompleteComponent
     } else {
       this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
       this.optionHighlightedIndex = [-1, len - 1].includes(
-        this.optionHighlightedIndex
+        this.optionHighlightedIndex,
       )
         ? 0
         : this.optionHighlightedIndex + 1;
@@ -441,13 +441,13 @@ export class CpsAutocompleteComponent
     }
 
     const found = this.filteredOptions.find(
-      (o: any) => o[this.optionLabel].toLowerCase() === searchVal
+      (o: any) => o[this.optionLabel].toLowerCase() === searchVal,
     );
     if (found) {
       this.select(found, false);
       this._toggleOptions(
         this.autocompleteContainer?.nativeElement,
-        this.multiple
+        this.multiple,
       );
     } else {
       if (!this.multiple) {
@@ -467,8 +467,8 @@ export class CpsAutocompleteComponent
       if (this.backspaceClickedOnce) {
         this.updateValue(
           this.value.filter(
-            (v: any, index: number) => index !== this.value.length - 1
-          )
+            (v: any, index: number) => index !== this.value.length - 1,
+          ),
         );
 
         this.backspaceClickedOnce = false;
