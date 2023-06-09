@@ -119,7 +119,6 @@ export class CpsAutocompleteComponent
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
-
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
     this.backspaceClickedOnce = false;
