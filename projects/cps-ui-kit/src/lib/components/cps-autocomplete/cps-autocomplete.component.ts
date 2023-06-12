@@ -310,7 +310,12 @@ export class CpsAutocompleteComponent
     if (this.isOpened) {
       const selected =
         this.autocompleteContainer.nativeElement.querySelector('.selected');
-      if (selected) selected.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'start'});
+      if (selected)
+        selected.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'start'
+        });
     }
   }
 
