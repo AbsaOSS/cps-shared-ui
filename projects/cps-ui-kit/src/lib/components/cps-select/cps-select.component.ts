@@ -127,7 +127,6 @@ export class CpsSelectComponent
         this.selectContainer.nativeElement.querySelector('.selected');
       if (selected)
         selected.scrollIntoView({
-          behavior: 'instant',
           block: 'nearest',
           inline: 'start'
         });
@@ -207,7 +206,10 @@ export class CpsSelectComponent
     const parentRect = parent.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
-      el.scrollIntoView();
+      el.scrollIntoView({
+        block: 'nearest',
+        inline: 'start'
+      });
     }
   }
 
@@ -252,6 +254,7 @@ export class CpsSelectComponent
   }
 
   onKeyDown(event: any, dd: HTMLElement) {
+    event.preventDefault();
     const code = event.keyCode;
     // escape
     if (code === 27) {

@@ -314,7 +314,6 @@ export class CpsAutocompleteComponent
         this.autocompleteContainer.nativeElement.querySelector('.selected');
       if (selected)
         selected.scrollIntoView({
-          behavior: 'instant',
           block: 'nearest',
           inline: 'start'
         });
@@ -407,7 +406,10 @@ export class CpsAutocompleteComponent
     const parentRect = parent.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
-      el.scrollIntoView();
+      el.scrollIntoView({
+        block: 'nearest',
+        inline: 'start'
+      });
     }
   }
 
