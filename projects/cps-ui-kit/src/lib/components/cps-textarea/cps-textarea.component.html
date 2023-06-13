@@ -1,0 +1,45 @@
+<div class="cps-textarea-container" [ngStyle]="{ width: cvtWidth }">
+  <label
+    class="cps-textarea-label-text"
+    [ngClass]="{ 'cps-textarea-label-text-disabled': disabled }"
+    >{{ label }}</label
+  >
+
+  <div
+    class="cps-textarea-wrap"
+    [ngClass]="{
+      'cps-textarea-wrap-error': error,
+      clearable: clearable,
+      'persistent-clear': persistentClear
+    }">
+    <textarea
+      [cols]="cols"
+      [rows]="rows"
+      [autofocus]="autofocus"
+      [disabled]="disabled"
+      [placeholder]="placeholder"
+      [value]="value"
+      [ngStyle]="{
+        width: cvtWidth,
+        resize: resizable
+      }"
+      (blur)="onBlur()"
+      (focus)="onFocus()"
+      (input)="updateValueEvent($event)"></textarea>
+
+    <span
+      *ngIf="clearable && !disabled"
+      [style.visibility]="
+        persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
+      "
+      class="clear-btn">
+      <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+    </span>
+    <div *ngIf="!error && !hideDetails" class="cps-textarea-hint-text">
+      {{ hint }}
+    </div>
+    <div *ngIf="error && !hideDetails" class="cps-textarea-error-text">
+      {{ error }}
+    </div>
+  </div>
+</div>

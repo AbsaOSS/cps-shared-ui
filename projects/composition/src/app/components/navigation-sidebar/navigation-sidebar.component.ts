@@ -76,6 +76,10 @@ export class NavigationSidebarComponent {
       url: '/tag'
     },
     {
+      title: 'Textarea',
+      url: '/textarea'
+    },
+    {
       title: 'Tree select',
       url: '/tree-select'
     }

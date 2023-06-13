@@ -1,0 +1,141 @@
+$color-calm: var(--cps-color-calm);
+$textarea-hint-color: var(--cps-color-text-mild);
+$textarea-label-disabled-color: var(--cps-color-text-mild);
+$textarea-pass-show-btn-color: var(--cps-color-text-mild);
+$textarea-placeholder-color: var(--cps-color-text-lightest);
+$textarea-border-color: var(--cps-color-text-lightest);
+$textarea-label-color: var(--cps-color-text-dark);
+$textarea-text-color: var(--cps-color-text-dark);
+$textarea-text-disabled-color: var(--cps-color-text-light);
+
+$color-error: #cc3333;
+$error-background: #fef3f2;
+
+$hover-transition-duration: 0.2s;
+
+:host {
+  display: flex;
+  .cps-textarea-container {
+    width: 100%;
+    gap: 0.2rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    font-family: 'Source Sans Pro', sans-serif;
+
+    .cps-textarea-wrap {
+      position: relative;
+      overflow: hidden;
+      &:hover {
+        textarea:enabled {
+          border: 1px solid $color-calm;
+        }
+      }
+
+      &-error {
+        textarea {
+          border-color: $color-error !important;
+          &:not(:focus) {
+            background: $error-background !important;
+          }
+        }
+      }
+
+      textarea {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 1rem;
+        color: $textarea-text-color;
+        background: #ffffff;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        min-height: 38px;
+        border: 1px solid $textarea-border-color;
+        transition-property: border-color;
+        transition-duration: $hover-transition-duration;
+        appearance: none;
+        border-radius: 4px;
+        width: 100%;
+        &:focus {
+          border: 1px solid $color-calm;
+          outline: 0;
+        }
+        &:disabled {
+          color: $textarea-text-disabled-color;
+          background-color: #f7f7f7;
+          opacity: 1;
+          pointer-events: none;
+        }
+      }
+
+      textarea:focus + .clear-btn {
+        cps-icon {
+          opacity: 0.5;
+        }
+      }
+
+      &:hover {
+        .clear-btn {
+          cps-icon {
+            opacity: 0.5;
+          }
+        }
+      }
+
+      .clear-btn {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        cursor: pointer;
+        color: $color-calm;
+        cps-icon {
+          opacity: 0;
+          transition-duration: $hover-transition-duration;
+          &:hover {
+            opacity: 1 !important;
+          }
+        }
+      }
+    }
+
+    .persistent-clear {
+      .clear-btn {
+        cps-icon {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .clearable > textarea {
+      padding-right: 2.2rem;
+    }
+
+    .cps-textarea-hint-text {
+      color: $textarea-hint-color;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+    }
+
+    .cps-textarea-error-text {
+      color: $color-error;
+      font-weight: bold;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+    }
+
+    .cps-textarea-label-text {
+      color: $textarea-label-color;
+      font-size: 0.875rem;
+      &-disabled {
+        color: $textarea-label-disabled-color;
+      }
+    }
+
+    ::placeholder {
+      font-family: 'Source Sans Pro', sans-serif;
+      color: $textarea-placeholder-color;
+      font-style: italic;
+      opacity: 1; /* Firefox */
+    }
+  }
+}

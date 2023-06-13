@@ -1,7 +1,4 @@
-import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -10,40 +7,35 @@ import {
   OnInit,
   Optional,
   Output,
-  Self,
-  ViewChild
+  Self
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
-import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsIconComponent, CpsProgressLinearComponent],
-  selector: 'cps-input',
-  templateUrl: './cps-input.component.html',
-  styleUrls: ['./cps-input.component.scss']
+  selector: 'cps-textarea',
+  imports: [CommonModule, CpsIconComponent],
+  templateUrl: './cps-textarea.component.html',
+  styleUrls: ['./cps-textarea.component.scss']
 })
-export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
-{
+export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() label = '';
-  @Input() hint = '';
   @Input() placeholder = 'Please enter';
+  @Input() rows = 5;
+  @Input() cols = 20;
+  @Input() autofocus = false;
+  @Input() hint = '';
   @Input() disabled = false;
   @Input() width: number | string = '100%';
-  @Input() type: 'text' | 'number' | 'password' = 'text';
-  @Input() loading = false;
   @Input() clearable = false;
-  @Input() prefixIcon = '';
-  @Input() prefixIconClickable = false;
-  @Input() prefixIconSize: iconSizeType = '18px';
-  @Input() prefixText = '';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
   @Input() error = '';
+  @Input() resizable: 'vertical' | 'none' = 'vertical';
   @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);
@@ -58,19 +50,14 @@ export class CpsInputComponent
   @Output() prefixIconClicked = new EventEmitter();
   @Output() blurred = new EventEmitter();
 
-  @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
-
-  currentType = '';
-  prefixWidth = '';
-  cvtWidth = '';
-
   private _statusChangesSubscription: Subscription = new Subscription();
   private _value = '';
 
+  cvtWidth = '';
+
   constructor(
     @Self() @Optional() private _control: NgControl,
-    private _elementRef: ElementRef<HTMLElement>,
-    private cdRef: ChangeDetectorRef
+    private _elementRef: ElementRef<HTMLElement>
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -78,7 +65,6 @@ export class CpsInputComponent
   }
 
   ngOnInit(): void {
-    this.currentType = this.type;
     this.cvtWidth = convertSize(this.width);
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
@@ -86,18 +72,6 @@ export class CpsInputComponent
         this._checkErrors();
       }
     ) as Subscription;
-  }
-
-  ngAfterViewInit() {
-    let w = 0;
-    if (this.prefixText) {
-      w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
-    }
-    if (this.prefixIcon) {
-      w += 38 - (this.prefixText ? 14 : 0);
-    }
-    this.prefixWidth = w > 0 ? `${w}px` : '';
-    this.cdRef.detectChanges();
   }
 
   ngOnDestroy() {
@@ -142,6 +116,7 @@ export class CpsInputComponent
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
@@ -172,10 +147,6 @@ export class CpsInputComponent
     if (this.value !== '') this._updateValue('');
   }
 
-  togglePassword() {
-    this.currentType = this.currentType === 'password' ? 'text' : 'password';
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
 
@@ -185,16 +156,11 @@ export class CpsInputComponent
     this.blurred.emit();
   }
 
-  onClickPrefixIcon() {
-    if (!this.prefixIconClickable) return;
-    this.prefixIconClicked.emit();
-  }
-
   onFocus() {
     this.focused.emit();
   }
 
   focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
+    this._elementRef?.nativeElement?.querySelector('textarea')?.focus();
   }
 }
