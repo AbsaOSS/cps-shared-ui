@@ -3,23 +3,23 @@
     type="button"
     [ngClass]="classesList"
     [disabled]="disabled || loading"
-    [class.spinner]="loading"
+    [class.cps-spinner]="loading"
     (click)="onClick($event)"
     [ngStyle]="{
     'background-color': type==='solid' ? buttonColor : 'transparent',
     color: textColor,
     height: cvtHeight || 'none',
   }">
-    <div class="button__content">
+    <div class="cps-button__content">
       <cps-icon
         *ngIf="icon"
-        class="button__icon"
+        class="cps-button__icon"
         [icon]="icon"
         [color]="disabled ? 'text-light' : textColor"
         [size]="cvtIconSize">
       </cps-icon>
       <span
-        class="button__text"
+        class="cps-button__text"
         *ngIf="label"
         [ngStyle]="{ 'font-size': cvtFontSize || null }"
         >{{ label }}</span

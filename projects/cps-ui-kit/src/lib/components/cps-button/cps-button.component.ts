@@ -53,7 +53,7 @@ export class CpsButtonComponent implements OnInit {
   }
 
   setClasses() {
-    this.classesList = ['button'];
+    this.classesList = ['cps-button'];
 
     if (this.width) {
       this.cvtWidth = convertSize(this.width);
@@ -73,19 +73,19 @@ export class CpsButtonComponent implements OnInit {
     } else {
       switch (this.size) {
         case 'normal': {
-          this.classesList.push('button--normal');
+          this.classesList.push('cps-button--normal');
           break;
         }
         case 'large': {
-          this.classesList.push('button--large');
+          this.classesList.push('cps-button--large');
           break;
         }
         case 'small': {
-          this.classesList.push('button--small');
+          this.classesList.push('cps-button--small');
           break;
         }
         case 'xsmall': {
-          this.classesList.push('button--xsmall');
+          this.classesList.push('cps-button--xsmall');
           break;
         }
       }
@@ -93,15 +93,15 @@ export class CpsButtonComponent implements OnInit {
 
     switch (this.type) {
       case 'solid': {
-        this.classesList.push('button--solid');
+        this.classesList.push('cps-button--solid');
         break;
       }
       case 'outlined': {
-        this.classesList.push('button--outlined');
+        this.classesList.push('cps-button--outlined');
         break;
       }
       case 'borderless': {
-        this.classesList.push('button--borderless');
+        this.classesList.push('cps-button--borderless');
         break;
       }
     }
@@ -109,11 +109,11 @@ export class CpsButtonComponent implements OnInit {
     if (this.icon && this.label) {
       switch (this.iconPosition) {
         case 'before': {
-          this.classesList.push('button--icon-before');
+          this.classesList.push('cps-button--icon-before');
           break;
         }
         case 'after': {
-          this.classesList.push('button--icon-after');
+          this.classesList.push('cps-button--icon-after');
           break;
         }
       }
