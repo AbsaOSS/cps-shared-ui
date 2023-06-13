@@ -25,17 +25,10 @@ import { CommonModule } from '@angular/common';
 })
 export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() label = '';
-  @Input() autocapitalize: 'none' | 'sentences' | 'words' | 'characters' =
-    'none';
-
   @Input() placeholder = 'Please enter your text';
   @Input() rows = 5;
   @Input() cols = 20;
-  @Input() autocomplete: 'on' | 'off' = 'off';
   @Input() autofocus = false;
-  @Input() readonly = false;
-  @Input() spellcheck: boolean | 'default' = 'default';
-  @Input() wrap: 'hard' | 'soft' | 'off' = 'soft';
   @Input() hint = '';
   @Input() disabled = false;
   @Input() width: number | string = '100%';
@@ -86,6 +79,7 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
     this._statusChangesSubscription?.unsubscribe();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
 
   private _checkErrors() {

@@ -3,3 +3,11 @@
   display: flex;
   flex-direction: column;
 }
+
+.sync-val-example {
+  display: flex;
+  align-items: center;
+  .sync-val {
+    margin-left: 24px;
+  }
+}

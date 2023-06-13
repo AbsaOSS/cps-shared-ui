@@ -55,93 +55,84 @@ $hover-transition-duration: 0.2s;
           border: 1px solid $color-calm;
           outline: 0;
         }
+      }
 
-        &:disabled {
-          color: $textarea-text-disabled-color;
-          background-color: #f7f7f7;
-          opacity: 1;
-          pointer-events: none;
+      &:disabled {
+        color: $textarea-text-disabled-color;
+        background-color: #f7f7f7;
+        opacity: 1;
+        pointer-events: none;
+      }
+
+      textarea:focus + .clear-btn {
+        cps-icon {
+          opacity: 0.5;
         }
+      }
 
-        textarea:focus + .action-btns > .clear-btn {
+      &:hover {
+        .clear-btn {
           cps-icon {
             opacity: 0.5;
           }
         }
+      }
 
-        &:hover {
-          .action-btns {
-            .clear-btn {
-              cps-icon {
-                opacity: 0.5;
-              }
-            }
+      .clear-btn {
+        align-items: center;
+        position: absolute;
+        top: 12.5%;
+        right: 0.75rem;
+        margin-top: -0.5rem;
+        cursor: pointer;
+        color: $color-calm;
+        cps-icon {
+          opacity: 0;
+          transition-duration: $hover-transition-duration;
+          &:hover {
+            opacity: 1 !important;
           }
-        }
-
-        .action-btns {
-          display: flex;
-          align-items: center;
-          position: absolute;
-          top: 50%;
-          right: 0.75rem;
-          margin-top: -0.5rem;
-
-          .clear-btn {
-            cursor: pointer;
-            color: $color-calm;
-            cps-icon {
-              opacity: 0;
-              transition-duration: $hover-transition-duration;
-              &:hover {
-                opacity: 1 !important;
-              }
-            }
-          }
-        }
-
-        .persistent-clear {
-          .action-btns {
-            .clear-btn {
-              cps-icon {
-                opacity: 0.5;
-              }
-            }
-          }
-        }
-
-        .password > textarea,
-        .clearable > textarea {
-          padding-right: 2.2rem;
-        }
-
-        .hint-text {
-          color: $textarea-hint-color;
-          font-size: 0.75rem;
-          min-height: 1.125rem;
-          cursor: default;
-        }
-        .error-text {
-          color: $color-error;
-          font-weight: bold;
-          font-size: 0.75rem;
-          min-height: 1.125rem;
-          cursor: default;
-        }
-        .label-text {
-          color: $textarea-label-color;
-          font-size: 0.875rem;
-          &-disabled {
-            color: $textarea-label-disabled-color;
-          }
-        }
-        ::placeholder {
-          font-family: Source Sans Pro, sans-serif;
-          color: $textarea-placeholder-color;
-          font-style: italic;
-          opacity: 1; /* Firefox */
         }
       }
+    }
+
+    .persistent-clear {
+      .clear-btn {
+        cps-icon {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .clearable > textarea {
+      padding-right: 2.2rem;
+    }
+
+    .hint-text {
+      color: $textarea-hint-color;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+    }
+    .error-text {
+      color: $color-error;
+      font-weight: bold;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      cursor: default;
+    }
+    .label-text {
+      color: $textarea-label-color;
+      font-size: 0.875rem;
+      &-disabled {
+        color: $textarea-label-disabled-color;
+      }
+    }
+    ::placeholder {
+      font-family: Source Sans Pro, sans-serif;
+      color: $textarea-placeholder-color;
+      font-style: italic;
+      opacity: 1; /* Firefox */
     }
   }
 }

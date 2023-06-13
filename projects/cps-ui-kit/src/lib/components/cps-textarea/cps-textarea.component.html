@@ -13,14 +13,9 @@
     <textarea
       [cols]="cols"
       [rows]="rows"
-      [autocomplete]="autocomplete"
       [autofocus]="autofocus"
-      [readonly]="readonly"
-      [spellcheck]="spellcheck"
-      [wrap]="wrap"
       [disabled]="disabled"
       [placeholder]="placeholder"
-      [wrap]="wrap"
       [value]="value"
       [ngStyle]="{
         width: cvtWidth
@@ -28,11 +23,9 @@
       (blur)="onBlur()"
       (focus)="onFocus()"
       (input)="updateValueEvent($event)"></textarea>
-  </div>
 
-  <div class="action-btns" *ngIf="!disabled">
     <span
-      *ngIf="clearable"
+      *ngIf="clearable && !disabled"
       [style.visibility]="
         persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
       "

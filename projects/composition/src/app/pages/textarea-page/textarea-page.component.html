@@ -4,16 +4,23 @@
       label="Required textarea"
       formControlName="requiredTextarea"></cps-textarea>
 
-    <cps-textarea
-      label="Readonly textarea"
-      [readonly]="true"
-      value="This is a read only textarea"></cps-textarea>
-
     <cps-textarea label="Disabled textarea" [disabled]="true"></cps-textarea>
 
     <cps-textarea
       label="Clearable textarea with persistent clear icon"
       [clearable]="true"
       [persistentClear]="true"></cps-textarea>
+  </div>
+
+  <div class="sync-val-example">
+    <cps-textarea
+      width="400"
+      label="Textarea with two-way binding, type something in"
+      [(ngModel)]="syncVal"
+      hint="This textarea has a fixed width of 400px"
+      [ngModelOptions]="{ standalone: true }">
+      ></cps-textarea
+    >
+    <span class="sync-val">{{ syncVal }}</span>
   </div>
 </form>
