@@ -15,6 +15,7 @@ import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page
 import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
 import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expansion-panel-page.component';
+import { TreeSelectPageComponent } from './pages/tree-select-page/tree-select-page.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,11 @@ const routes: Routes = [
     path: 'select',
     title: 'Select',
     component: SelectPageComponent
+  },
+  {
+    path: 'tree-select',
+    title: 'Tree select',
+    component: TreeSelectPageComponent
   },
   {
     path: 'autocomplete',

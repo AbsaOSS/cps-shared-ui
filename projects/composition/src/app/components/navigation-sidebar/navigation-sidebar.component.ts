@@ -74,6 +74,10 @@ export class NavigationSidebarComponent {
     {
       title: 'Tag',
       url: '/tag'
+    },
+    {
+      title: 'Tree select',
+      url: '/tree-select'
     }
     // extend this list
   ];
