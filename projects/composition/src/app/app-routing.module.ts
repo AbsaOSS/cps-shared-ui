@@ -15,6 +15,7 @@ import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page
 import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
 import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expansion-panel-page.component';
 import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
+import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
 
 const routes: Routes = [
   {
@@ -46,6 +47,11 @@ const routes: Routes = [
     path: 'button',
     title: 'Button',
     component: ButtonPageComponent
+  },
+  {
+    path: 'button-toggles',
+    title: 'Button toggles',
+    component: ButtonTogglePageComponent
   },
   {
     path: 'checkbox',
