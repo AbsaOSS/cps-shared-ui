@@ -16,6 +16,7 @@ export class TreeSelectPageComponent {
       label: 'Documents',
       data: 'Documents Folder',
       icon: 'pi pi-fw pi-inbox',
+      selectable: false,
       children: [
         {
           key: '0-0',

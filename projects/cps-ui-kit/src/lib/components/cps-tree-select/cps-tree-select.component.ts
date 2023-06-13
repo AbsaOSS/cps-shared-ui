@@ -128,7 +128,12 @@ export class CpsTreeSelectComponent
     if (this.isOpened) {
       const selected =
         this.selectContainer.nativeElement.querySelector('.selected');
-      if (selected) selected.scrollIntoView();
+      if (selected)
+        selected.scrollIntoView({
+          behavior: 'instant',
+          block: 'nearest',
+          inline: 'start'
+        });
     }
   }
 
@@ -205,7 +210,10 @@ export class CpsTreeSelectComponent
     const parentRect = parent.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
-      el.scrollIntoView();
+      el.scrollIntoView({
+        block: 'nearest',
+        inline: 'start'
+      });
     }
   }
 
@@ -250,6 +258,7 @@ export class CpsTreeSelectComponent
   }
 
   onKeyDown(event: any, dd: HTMLElement) {
+    event.preventDefault();
     const code = event.keyCode;
     // escape
     if (code === 27) {
@@ -259,6 +268,7 @@ export class CpsTreeSelectComponent
     // enter
     else if (code === 13) {
       let idx = this.optionHighlightedIndex;
+      if (idx < 0) return;
       if (this.multiple && this.selectAll) {
         if (idx === 0) {
           this.toggleAll();
