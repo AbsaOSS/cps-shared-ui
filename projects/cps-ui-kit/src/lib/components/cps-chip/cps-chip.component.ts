@@ -24,23 +24,23 @@ export class CpsChipComponent implements OnChanges {
 
   @Output() closed = new EventEmitter();
 
-  classesList = ['chip'];
+  classesList = ['cps-chip'];
 
   ngOnChanges() {
     this.setClasses();
   }
 
   setClasses() {
-    if (this.disabled) this.classesList.push('chip-disabled');
+    if (this.disabled) this.classesList.push('cps-chip-disabled');
 
     if (this.icon && this.label) {
       switch (this.iconPosition) {
         case 'before': {
-          this.classesList.push('chip--icon-before');
+          this.classesList.push('cps-chip--icon-before');
           break;
         }
         case 'after': {
-          this.classesList.push('chip--icon-after');
+          this.classesList.push('cps-chip--icon-after');
           break;
         }
       }

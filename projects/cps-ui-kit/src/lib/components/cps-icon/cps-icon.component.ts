@@ -133,7 +133,7 @@ export class CpsIconComponent implements OnChanges {
   url = '../../../../assets/';
   cvtSize = '';
 
-  classesList: string[] = ['icon'];
+  classesList: string[] = ['cps-icon'];
 
   ngOnChanges(): void {
     this.iconColor = getCSSColor(this.color);
@@ -143,23 +143,23 @@ export class CpsIconComponent implements OnChanges {
   setClasses(): void {
     switch (this.size) {
       case 'fill': {
-        this.classesList.push('icon--fill');
+        this.classesList.push('cps-icon--fill');
         break;
       }
       case 'xsmall': {
-        this.classesList.push('icon--xsmall');
+        this.classesList.push('cps-icon--xsmall');
         break;
       }
       case 'small': {
-        this.classesList.push('icon--small');
+        this.classesList.push('cps-icon--small');
         break;
       }
       case 'normal': {
-        this.classesList.push('icon--normal');
+        this.classesList.push('cps-icon--normal');
         break;
       }
       case 'large': {
-        this.classesList.push('icon--large');
+        this.classesList.push('cps-icon--large');
         break;
       }
       default:

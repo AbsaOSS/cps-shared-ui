@@ -1,15 +1,17 @@
-<div class="checkbox-container">
+<div class="cps-checkbox-container">
   <label
-    class="checkbox"
+    class="cps-checkbox"
     [ngStyle]="{ cursor: disabled ? 'default' : 'pointer' }">
-    <span class="label" [ngClass]="{ 'label-disabled': disabled }">{{
-      label
-    }}</span>
+    <span
+      class="cps-checkbox-label"
+      [ngClass]="{ 'cps-checkbox-label-disabled': disabled }"
+      >{{ label }}</span
+    >
     <input
       type="checkbox"
       [disabled]="disabled"
       [checked]="value"
       (change)="updateValueEvent($event)" />
-    <span class="indicator"></span>
+    <span class="cps-checkbox-indicator"></span>
   </label>
 </div>

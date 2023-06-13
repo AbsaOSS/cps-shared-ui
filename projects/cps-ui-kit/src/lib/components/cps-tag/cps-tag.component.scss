@@ -4,7 +4,7 @@
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  .tag {
+  .cps-tag {
     min-height: 25px;
     align-items: center;
     padding: 0 10px;
@@ -15,22 +15,22 @@
     border: solid 1px;
     border-left: solid 4px;
 
-    &.tag--security {
+    &.cps-tag--security {
       border-color: var(--cps-color-warn);
     }
 
-    &.tag--classification {
+    &.cps-tag--classification {
       border-color: var(--cps-color-info);
     }
 
-    &.tag--selectable {
+    &.cps-tag--selectable {
       cursor: pointer;
       &:hover:not(:active):not(:disabled) {
         box-shadow: 1px 3px 4px rgb(0 0 0 / 10%);
       }
     }
 
-    &.tag--disabled {
+    &.cps-tag--disabled {
       pointer-events: none;
       border-color: var(--cps-color-line-dark) !important;
       p {
