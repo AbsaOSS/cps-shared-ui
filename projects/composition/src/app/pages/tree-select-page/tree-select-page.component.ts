@@ -17,12 +17,14 @@ export class TreeSelectPageComponent {
       data: 'Documents Folder',
       icon: 'pi pi-fw pi-inbox',
       selectable: false,
+      type: 'root',
       children: [
         {
           key: '0-0',
           label: 'Work',
           data: 'Work Folder',
           icon: 'pi pi-fw pi-cog',
+          attrType: 'string',
           children: [
             {
               key: '0-0-0',

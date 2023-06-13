@@ -23,6 +23,7 @@ import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
+import { TreeNode } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -93,6 +94,8 @@ export class CpsTreeSelectComponent
 
   optionHighlightedIndex = -1;
 
+  selectedNodes!: TreeNode[];
+
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -114,6 +117,14 @@ export class CpsTreeSelectComponent
 
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
+  }
+
+  onSelectNode(node: any) {
+    console.log('SELECTED', node);
+  }
+
+  onUnselectNode(node: any) {
+    console.log('UNSELECTED', node);
   }
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {

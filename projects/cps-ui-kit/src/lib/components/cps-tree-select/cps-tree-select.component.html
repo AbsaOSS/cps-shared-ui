@@ -92,9 +92,24 @@
 
     <div class="cps-select-options">
       <p-tree
+        (onNodeSelect)="onSelectNode($event)"
+        (onNodeUnselect)="onUnselectNode($event)"
         class="w-full md:w-30rem"
         [value]="options"
-        [selectionMode]="multiple ? 'multiple' : 'single'"></p-tree>
+        [(selection)]="selectedNodes"
+        [metaKeySelection]="false"
+        selectionMode="multiple">
+        <ng-template let-node pTemplate="root">
+          <span
+            class="cps-treeselect-root-elem"
+            [ngClass]="{ 'not-selectable': !node.selectable }"
+            >{{ node.label }}</span
+          >
+        </ng-template>
+        <ng-template let-node pTemplate="default">
+          {{ node.label }} {{ node.attrType }}
+        </ng-template>
+      </p-tree>
       <!-- <div
         class="cps-select-options-option select-all-option"
         [class.allselected]="value?.length === options.length"
