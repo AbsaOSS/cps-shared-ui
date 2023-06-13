@@ -1,25 +1,25 @@
-import {CpsAutocompleteComponent} from './cps-autocomplete.component';
+import { CpsAutocompleteComponent } from './cps-autocomplete.component';
 
 describe('CpsAutocompleteComponent', () => {
   const options = [
-    {name: 'New York', data: {code: 'NY'}},
-    {name: 'Prague', data: {code: 'PRG'}, info: 'Prague info'},
-    {name: 'Capetown', data: {code: 'CPT'}, info: 'Capetown info'},
-    {name: 'Rome', data: {code: 'RM'}},
-    {name: 'London', data: {code: 'LDN'}, info: 'London info'},
-    {name: 'Istanbul', data: {code: 'IST'}},
-    {name: 'Paris', data: {code: 'PRS'}},
-    {name: 'Tokyo', data: {code: 'TOK'}},
-    {name: 'Oslo', data: {code: 'OSL'}, info: 'Oslo info'},
-    {name: 'Berlin', data: {code: 'BER'}}
+    { name: 'New York', data: { code: 'NY' } },
+    { name: 'Prague', data: { code: 'PRG' }, info: 'Prague info' },
+    { name: 'Capetown', data: { code: 'CPT' }, info: 'Capetown info' },
+    { name: 'Rome', data: { code: 'RM' } },
+    { name: 'London', data: { code: 'LDN' }, info: 'London info' },
+    { name: 'Istanbul', data: { code: 'IST' } },
+    { name: 'Paris', data: { code: 'PRS' } },
+    { name: 'Tokyo', data: { code: 'TOK' } },
+    { name: 'Oslo', data: { code: 'OSL' }, info: 'Oslo info' },
+    { name: 'Berlin', data: { code: 'BER' } }
   ];
 
   const config = {
     componentProperties: {
-      options: options,
-      optionLabel: 'name',
+      options,
+      optionLabel: 'name'
     }
-  }
+  };
 
   it('should mount', () => {
     cy.mount(CpsAutocompleteComponent);
@@ -30,20 +30,28 @@ describe('CpsAutocompleteComponent', () => {
     cy.mount(CpsAutocompleteComponent, {
       componentProperties: {
         ...config.componentProperties,
-        placeholder: placeholder,
-      },
+        placeholder
+      }
     });
-    cy.get('.cps-autocomplete-box-input').should('have.attr', 'placeholder', placeholder);
+    cy.get('.cps-autocomplete-box-input').should(
+      'have.attr',
+      'placeholder',
+      placeholder
+    );
   });
 
   it('should open dropdown and select first option', () => {
-    let component: CpsAutocompleteComponent;
-    cy.mount(CpsAutocompleteComponent, config).then((c: { componentInstance: CpsAutocompleteComponent; }) => {
-      component = c.componentInstance;
+    cy.mount(CpsAutocompleteComponent, config).then(() => {
       cy.get('[data-cy-id=cps-autocomplete]').click();
-      cy.get('[data-cy-id=cps-autocomplete-options]').should('have.length', options.length);
+      cy.get('[data-cy-id=cps-autocomplete-options]').should(
+        'have.length',
+        options.length
+      );
       cy.get('[data-cy-id=cps-autocomplete-options]').first().click();
-      cy.get('.single-item-selection span').should('have.text', options[0].name);
+      cy.get('.single-item-selection span').should(
+        'have.text',
+        options[0].name
+      );
     });
   });
 
@@ -52,8 +60,8 @@ describe('CpsAutocompleteComponent', () => {
       componentProperties: {
         ...config.componentProperties,
         multiple: true,
-        chips: true,
-      },
+        chips: true
+      }
     });
     cy.get('[data-cy-id=cps-autocomplete]').click();
     cy.get('[data-cy-id=cps-autocomplete-options]').first().click();
@@ -68,5 +76,4 @@ describe('CpsAutocompleteComponent', () => {
     cy.get('[data-cy-id=cps-autocomplete]').click();
     cy.get('[data-cy-id=cps-autocomplete-options]').last().should('be.visible');
   });
-
 });
