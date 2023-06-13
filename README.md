@@ -21,6 +21,7 @@ This repository consists of two projects:
 - Radio
 - Select
 - Tag
+- Textarea
 
 ## Development server
 

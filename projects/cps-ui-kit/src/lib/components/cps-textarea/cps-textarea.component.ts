@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -25,7 +24,7 @@ import { CommonModule } from '@angular/common';
 })
 export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() label = '';
-  @Input() placeholder = 'Please enter your text';
+  @Input() placeholder = 'Please enter';
   @Input() rows = 5;
   @Input() cols = 20;
   @Input() autofocus = false;
@@ -58,8 +57,7 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    private _elementRef: ElementRef<HTMLElement>,
-    private cdRef: ChangeDetectorRef
+    private _elementRef: ElementRef<HTMLElement>
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -79,9 +77,6 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
 
   private _checkErrors() {
     if (!this._control) return;
@@ -118,6 +113,9 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
 
     this.error = message || 'Unknown error';
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange = (event: any) => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};

@@ -16,6 +16,7 @@
 - Radio
 - Select
 - Tag
+- Textarea
 
 ### License
 

@@ -2,26 +2,33 @@
   <div class="textarea-group">
     <cps-textarea
       label="Required textarea"
-      formControlName="requiredTextarea"></cps-textarea>
+      placeholder="Please enter any text"
+      hint="Maximum 3 characters are allowed"
+      [clearable]="true"
+      formControlName="requiredTextarea">
+    </cps-textarea>
 
     <cps-textarea label="Disabled textarea" [disabled]="true"></cps-textarea>
 
     <cps-textarea
       label="Clearable textarea with persistent clear icon"
+      hint="This textarea is clearable"
+      value="Clear me"
       [clearable]="true"
-      [persistentClear]="true"></cps-textarea>
-  </div>
+      [persistentClear]="true">
+    </cps-textarea>
 
-  <div class="sync-val-example">
-    <cps-textarea
-      width="400"
-      label="Textarea with two-way binding, type something in"
-      [(ngModel)]="syncVal"
-      resizable="none"
-      hint="This textarea has a fixed width of 400px"
-      [ngModelOptions]="{ standalone: true }">
-      ></cps-textarea
-    >
-    <span class="sync-val">{{ syncVal }}</span>
+    <div class="sync-val-example">
+      <cps-textarea
+        width="400"
+        label="Textarea with two-way binding, type something in"
+        [(ngModel)]="syncVal"
+        resizable="none"
+        hint="This textarea has a fixed width of 400px"
+        [ngModelOptions]="{ standalone: true }">
+        ></cps-textarea
+      >
+      <span class="sync-val">{{ syncVal }}</span>
+    </div>
   </div>
 </form>

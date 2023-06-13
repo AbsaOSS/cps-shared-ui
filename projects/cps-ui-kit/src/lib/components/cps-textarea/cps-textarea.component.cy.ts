@@ -1,7 +1,7 @@
-import { CpsTextareaComponent } from './cps-textarea.component'
+import { CpsTextareaComponent } from './cps-textarea.component';
 
 describe('CpsTextareaComponent', () => {
   it('should mount', () => {
-    cy.mount(CpsTextareaComponent)
-  })
-})
+    cy.mount(CpsTextareaComponent);
+  });
+});

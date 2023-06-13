@@ -124,6 +124,12 @@ export class CpsInputComponent
       return;
     }
 
+    if ('maxlength' in errors) {
+      // eslint-disable-next-line dot-notation
+      this.error = `Field must contain ${errors['maxlength'].requiredLength} characters maximum`;
+      return;
+    }
+
     const errArr = Object.values(errors);
     if (errArr.length < 1) {
       this.error = '';

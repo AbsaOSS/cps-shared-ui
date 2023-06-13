@@ -25,7 +25,7 @@ export class TextareaPageComponent implements OnInit {
 
   ngOnInit() {
     this.form = this._formBuilder.group({
-      requiredTextarea: ['', [Validators.required]]
+      requiredTextarea: ['', [Validators.required, Validators.maxLength(3)]]
     });
   }
 }

@@ -15,14 +15,14 @@ $hover-transition-duration: 0.2s;
 
 :host {
   display: flex;
-  .textarea-container {
+  .cps-textarea-container {
     width: 100%;
     gap: 0.2rem !important;
     display: flex !important;
     flex-direction: column !important;
     font-family: 'Source Sans Pro', sans-serif;
 
-    .textarea-wrap {
+    .cps-textarea-wrap {
       position: relative;
       overflow: hidden;
       &:hover {
@@ -30,6 +30,7 @@ $hover-transition-duration: 0.2s;
           border: 1px solid $color-calm;
         }
       }
+
       &-error {
         textarea {
           border-color: $color-error !important;
@@ -40,6 +41,7 @@ $hover-transition-duration: 0.2s;
       }
 
       textarea {
+        font-family: 'Source Sans Pro', sans-serif;
         font-size: 1rem;
         color: $textarea-text-color;
         background: #ffffff;
@@ -56,13 +58,12 @@ $hover-transition-duration: 0.2s;
           border: 1px solid $color-calm;
           outline: 0;
         }
-      }
-
-      &:disabled {
-        color: $textarea-text-disabled-color;
-        background-color: #f7f7f7;
-        opacity: 1;
-        pointer-events: none;
+        &:disabled {
+          color: $textarea-text-disabled-color;
+          background-color: #f7f7f7;
+          opacity: 1;
+          pointer-events: none;
+        }
       }
 
       textarea:focus + .clear-btn {
@@ -107,28 +108,31 @@ $hover-transition-duration: 0.2s;
       padding-right: 2.2rem;
     }
 
-    .hint-text {
+    .cps-textarea-hint-text {
       color: $textarea-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
       cursor: default;
     }
-    .error-text {
+
+    .cps-textarea-error-text {
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;
       min-height: 1.125rem;
       cursor: default;
     }
-    .label-text {
+
+    .cps-textarea-label-text {
       color: $textarea-label-color;
       font-size: 0.875rem;
       &-disabled {
         color: $textarea-label-disabled-color;
       }
     }
+
     ::placeholder {
-      font-family: Source Sans Pro, sans-serif;
+      font-family: 'Source Sans Pro', sans-serif;
       color: $textarea-placeholder-color;
       font-style: italic;
       opacity: 1; /* Firefox */

@@ -1,12 +1,14 @@
-<div class="textarea-container" [ngStyle]="{ width: cvtWidth }">
-  <label class="label-text" [ngClass]="{ 'label-text-disabled': disabled }">{{
-    label
-  }}</label>
+<div class="cps-textarea-container" [ngStyle]="{ width: cvtWidth }">
+  <label
+    class="cps-textarea-label-text"
+    [ngClass]="{ 'cps-textarea-label-text-disabled': disabled }"
+    >{{ label }}</label
+  >
 
   <div
-    class="textarea-wrap"
+    class="cps-textarea-wrap"
     [ngClass]="{
-      'textarea-wrap-error': error,
+      'cps-textarea-wrap-error': error,
       clearable: clearable,
       'persistent-clear': persistentClear
     }">
@@ -33,7 +35,11 @@
       class="clear-btn">
       <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
     </span>
-    <div *ngIf="!error && !hideDetails" class="hint-text">{{ hint }}</div>
-    <div *ngIf="error && !hideDetails" class="error-text">{{ error }}</div>
+    <div *ngIf="!error && !hideDetails" class="cps-textarea-hint-text">
+      {{ hint }}
+    </div>
+    <div *ngIf="error && !hideDetails" class="cps-textarea-error-text">
+      {{ error }}
+    </div>
   </div>
 </div>
