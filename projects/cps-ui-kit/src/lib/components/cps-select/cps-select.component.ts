@@ -127,6 +127,7 @@ export class CpsSelectComponent
         this.selectContainer.nativeElement.querySelector('.selected');
       if (selected)
         selected.scrollIntoView({
+          behavior: 'instant',
           block: 'nearest',
           inline: 'start'
         });

@@ -314,6 +314,7 @@ export class CpsAutocompleteComponent
         this.autocompleteContainer.nativeElement.querySelector('.selected');
       if (selected)
         selected.scrollIntoView({
+          behavior: 'instant',
           block: 'nearest',
           inline: 'start'
         });
