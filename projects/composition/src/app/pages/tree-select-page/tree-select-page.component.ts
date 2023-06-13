@@ -1,15 +1,31 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CpsTreeSelectComponent } from 'cps-ui-kit';
 
 @Component({
   standalone: true,
-  imports: [CpsTreeSelectComponent],
+  imports: [CpsTreeSelectComponent, FormsModule],
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',
   styleUrls: ['./tree-select-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class TreeSelectPageComponent {
+  selectedItems = [
+    {
+      key: '0-0-1',
+      label: 'Resume.doc',
+      icon: 'pi pi-fw pi-file',
+      data: 'Resume Document'
+    },
+    {
+      key: '2-1-1',
+      label: 'Untouchables',
+      icon: 'pi pi-fw pi-video',
+      data: 'Untouchables Movie'
+    }
+  ];
+
   options = [
     {
       key: '0',
@@ -17,6 +33,7 @@ export class TreeSelectPageComponent {
       data: 'Documents Folder',
       icon: 'pi pi-fw pi-inbox',
       selectable: false,
+      styleClass: 'fullyExpandable',
       type: 'root',
       children: [
         {

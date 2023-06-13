@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -45,13 +46,13 @@ import { TreeNode } from 'primeng/api';
   styleUrls: ['./cps-tree-select.component.scss']
 })
 export class CpsTreeSelectComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
   @Input() placeholder = 'Please select';
   @Input() hint = '';
   @Input() returnObject = true; // if false, value will be option[optionValue]
-  @Input() multiple = false;
+  @Input() multiple = true;
   @Input() disabled = false;
   @Input() width: number | string = '100%';
   @Input() selectAll = true;
@@ -85,6 +86,8 @@ export class CpsTreeSelectComponent
   @ViewChild('selectContainer')
   selectContainer!: ElementRef;
 
+  @ViewChild('rootNode') rootNode!: ElementRef;
+
   private _statusChangesSubscription: Subscription = new Subscription();
 
   error = '';
@@ -115,16 +118,28 @@ export class CpsTreeSelectComponent
     ) as Subscription;
   }
 
+  ngAfterViewInit() {
+    // this.rootNode.nativeElement.addEventListener(
+    //   'click',
+    //   this.expandNode.bind(this)
+    // );
+  }
+
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
 
   onSelectNode(node: any) {
+    node.expanded = true;
     console.log('SELECTED', node);
   }
 
   onUnselectNode(node: any) {
     console.log('UNSELECTED', node);
+  }
+
+  onClickNode(node: any) {
+    console.log('CLICKED', node);
   }
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
@@ -137,6 +152,8 @@ export class CpsTreeSelectComponent
     this.isOpened = dd.classList.contains('active');
 
     if (this.isOpened) {
+      this._expandToNodes(this.value);
+
       const selected =
         this.selectContainer.nativeElement.querySelector('.selected');
       if (selected)
@@ -382,5 +399,47 @@ export class CpsTreeSelectComponent
   focus() {
     this.selectContainer?.nativeElement?.focus();
     this._toggleOptions(this.selectContainer?.nativeElement, true);
+  }
+
+  // TODO
+  // private _assignKeys() {}
+
+  // TODO
+  // getSelectedPath() {}
+
+  private _expandToNodes(nodes: any[]) {
+    const nodeMap = this._buildNodeMap(this.options);
+    for (const node of nodes) {
+      const parentNode = this._getParentNode(node.key, nodeMap);
+      if (parentNode) {
+        parentNode.expanded = true;
+        this._expandToNodes([parentNode]);
+      }
+    }
+  }
+
+  private _buildNodeMap(options: any[]): Map<string, any> {
+    const nodeMap = new Map<string, any>();
+    for (const option of options) {
+      nodeMap.set(option.key, option);
+      if (option.children) {
+        const childNodeMap = this._buildNodeMap(option.children);
+        childNodeMap.forEach((value, key) => nodeMap.set(key, value));
+      }
+    }
+    return nodeMap;
+  }
+
+  private _getParentNode(key: string, nodeMap: Map<string, any>): any | null {
+    const parentNodeKey = this._getParentKey(key);
+    return nodeMap.get(parentNodeKey) || null;
+  }
+
+  private _getParentKey(key: string): string {
+    const lastSeparatorIndex = key.lastIndexOf('-');
+    if (lastSeparatorIndex !== -1) {
+      return key.substring(0, lastSeparatorIndex);
+    }
+    return '';
   }
 }

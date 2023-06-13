@@ -19,6 +19,10 @@ $hover-transition-duration: 0.2s;
 :host {
   display: flex;
 
+  .cps-treeselect-root-elem {
+    color: red;
+  }
+
   .cps-select {
     position: relative;
     width: 100%;
