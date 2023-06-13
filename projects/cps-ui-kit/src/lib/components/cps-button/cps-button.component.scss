@@ -1,9 +1,10 @@
 :host {
   width: fit-content;
   display: inline-block;
-  .button {
+  .cps-button {
     width: 100%;
     letter-spacing: normal;
+    font-family: 'Source Sans Pro', sans-serif;
 
     display: inline-flex;
     align-items: center;
@@ -68,17 +69,17 @@
     &--large {
       min-height: 48px;
 
-      .button__icon {
+      .cps-button__icon {
         width: 20px;
         height: 20px;
       }
 
-      .button__text {
+      .cps-button__text {
         font-size: 20px;
       }
     }
 
-    &--large.spinner {
+    &--large.cps-spinner {
       min-width: 56px;
       &::after {
         width: 22px;
@@ -89,34 +90,34 @@
     &--normal {
       min-height: 40px;
 
-      .button__icon {
+      .cps-button__icon {
         width: 16px;
         height: 16px;
       }
 
-      .button__text {
+      .cps-button__text {
         font-size: 16px;
       }
     }
 
-    &--normal.spinner {
+    &--normal.cps-spinner {
       min-width: 48px;
     }
 
     &--small {
       min-height: 32px;
 
-      .button__icon {
+      .cps-button__icon {
         width: 14px;
         height: 14px;
       }
 
-      .button__text {
+      .cps-button__text {
         font-size: 14px;
       }
     }
 
-    &--small.spinner {
+    &--small.cps-spinner {
       min-width: 40px;
       &::after {
         width: 14px;
@@ -127,17 +128,17 @@
     &--xsmall {
       min-height: 24px;
 
-      .button__icon {
+      .cps-button__icon {
         width: 12px;
         height: 12px;
       }
 
-      .button__text {
+      .cps-button__text {
         font-size: 12px;
       }
     }
 
-    &--xsmall.spinner {
+    &--xsmall.cps-spinner {
       min-width: 32px;
       &::after {
         width: 10px;
@@ -145,21 +146,21 @@
       }
     }
 
-    &.button--icon-before {
-      .button__icon {
+    &.cps-button--icon-before {
+      .cps-button__icon {
         margin-right: 8px;
       }
     }
 
-    &.button--icon-after {
-      .button__icon {
+    &.cps-button--icon-after {
+      .cps-button__icon {
         margin-left: 8px;
         order: 1;
       }
     }
   }
 
-  .spinner {
+  .cps-spinner {
     position: relative;
 
     &::after {
@@ -179,7 +180,7 @@
       margin: auto;
     }
 
-    .button__content {
+    .cps-button__content {
       visibility: hidden;
     }
   }

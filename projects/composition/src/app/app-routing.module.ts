@@ -13,6 +13,7 @@ import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplet
 import { ProgressLinearPageComponent } from './pages/progress-linear-page/progress-linear-page.component';
 import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
 import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
+import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expansion-panel-page.component';
 import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
 
 const routes: Routes = [
@@ -70,6 +71,11 @@ const routes: Routes = [
     path: 'loader',
     title: 'Loader',
     component: LoaderPageComponent
+  },
+  {
+    path: 'expansion-panel',
+    title: 'Expansion panel',
+    component: ExpansionPanelPageComponent
   },
   {
     path: 'progress-linear',

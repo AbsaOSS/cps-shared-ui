@@ -28,6 +28,10 @@ export class NavigationSidebarComponent {
       url: '/button'
     },
     {
+      title: 'Button toggles',
+      url: '/button-toggles'
+    },
+    {
       title: 'Checkbox',
       url: '/checkbox'
     },
@@ -38,6 +42,10 @@ export class NavigationSidebarComponent {
     {
       title: 'Datepicker',
       url: '/datepicker'
+    },
+    {
+      title: 'Expansion panel',
+      url: '/expansion-panel'
     },
     {
       title: 'Icon',

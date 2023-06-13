@@ -1,34 +1,34 @@
 :host {
   display: inline-flex;
 
-  .icon--fill {
+  .cps-icon--fill {
     width: 100%;
     height: 100%;
   }
 
-  .icon--xsmall {
+  .cps-icon--xsmall {
     width: 12px;
     height: 12px;
   }
 
-  .icon--small {
+  .cps-icon--small {
     width: 16px;
     height: 16px;
   }
 
-  .icon--normal {
+  .cps-icon--normal {
     width: 24px;
     height: 24px;
   }
 
-  .icon--large {
+  .cps-icon--large {
     width: 32px;
     height: 32px;
   }
-}
-svg {
-  color: inherit;
-  fill: currentColor;
-  height: 100%;
-  width: 100%;
+  svg {
+    color: inherit;
+    fill: currentColor;
+    height: 100%;
+    width: 100%;
+  }
 }

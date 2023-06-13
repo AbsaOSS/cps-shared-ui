@@ -11,10 +11,10 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
   min-width: max-content;
   display: inline-block;
 
-  .checkbox-container {
+  .cps-checkbox-container {
     line-height: normal;
 
-    label.checkbox {
+    label.cps-checkbox {
       padding-left: 1.75rem;
       position: relative;
       -webkit-user-select: none;
@@ -25,27 +25,27 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
       input[type='checkbox'] {
         display: none;
 
-        &:hover:not(:disabled) ~ .indicator {
+        &:hover:not(:disabled) ~ .cps-checkbox-indicator {
           border-color: $color;
         }
 
-        &:checked ~ .indicator {
+        &:checked ~ .cps-checkbox-indicator {
           color: white;
           background: $color $tick-image 50% 40% no-repeat;
           border: 2px solid $color;
         }
 
-        &:disabled:checked ~ .indicator {
+        &:disabled:checked ~ .cps-checkbox-indicator {
           background: $disabled-background-checked $tick-image 50% 40% no-repeat;
           border-color: $disabled-background-checked;
         }
 
-        &:disabled ~ .indicator {
+        &:disabled ~ .cps-checkbox-indicator {
           border-color: $disabled-border-color-unchecked;
         }
       }
 
-      .label {
+      .cps-checkbox-label {
         top: 1px;
         position: relative;
         color: $label-color;
@@ -54,7 +54,7 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
         }
       }
 
-      .indicator {
+      .cps-checkbox-indicator {
         border-radius: $border-radius;
         position: absolute;
         left: 0;

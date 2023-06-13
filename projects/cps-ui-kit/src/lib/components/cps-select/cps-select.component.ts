@@ -36,6 +36,7 @@ import { find, isEqual } from 'lodash-es';
     CombineLabelsPipe,
     CheckOptionSelectedPipe
   ],
+  providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
   selector: 'cps-select',
   templateUrl: './cps-select.component.html',
   styleUrls: ['./cps-select.component.scss']
@@ -125,7 +126,12 @@ export class CpsSelectComponent
     if (this.isOpened) {
       const selected =
         this.selectContainer.nativeElement.querySelector('.selected');
-      if (selected) selected.scrollIntoView();
+      if (selected)
+        selected.scrollIntoView({
+          behavior: 'instant',
+          block: 'nearest',
+          inline: 'start'
+        });
     }
   }
 
@@ -202,7 +208,10 @@ export class CpsSelectComponent
     const parentRect = parent.getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
-      el.scrollIntoView();
+      el.scrollIntoView({
+        block: 'nearest',
+        inline: 'start'
+      });
     }
   }
 
@@ -247,6 +256,7 @@ export class CpsSelectComponent
   }
 
   onKeyDown(event: any, dd: HTMLElement) {
+    event.preventDefault();
     const code = event.keyCode;
     // escape
     if (code === 27) {
@@ -256,6 +266,7 @@ export class CpsSelectComponent
     // enter
     else if (code === 13) {
       let idx = this.optionHighlightedIndex;
+      if (idx < 0) return;
       if (this.multiple && this.selectAll) {
         if (idx === 0) {
           this.toggleAll();

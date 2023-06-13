@@ -11,9 +11,11 @@ This repository consists of two projects:
 
 - Autocomplete
 - Button
+- Button toggles
 - Checkbox
 - Chip
 - Datepicker
+- Expansion panel
 - Icon
 - Input
 - Loader

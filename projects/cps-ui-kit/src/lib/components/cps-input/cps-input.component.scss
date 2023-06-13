@@ -17,14 +17,14 @@ $hover-transition-duration: 0.2s;
 
 :host {
   display: flex;
-  .input-container {
+  .cps-input-container {
     width: 100%;
     gap: 0.2rem !important;
     display: flex !important;
     flex-direction: column !important;
     font-family: 'Source Sans Pro', sans-serif;
 
-    .input-wrap {
+    .cps-input-wrap {
       position: relative;
       overflow: hidden;
       &:hover {
@@ -65,23 +65,23 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      input:focus + .prefix > .prefix-icon,
-      input:hover + .prefix > .prefix-icon {
+      input:focus + .cps-input-prefix > .cps-input-prefix-icon,
+      input:hover + .cps-input-prefix > .cps-input-prefix-icon {
         color: $color-calm;
       }
 
-      input:disabled + .prefix > .prefix-icon {
+      input:disabled + .cps-input-prefix > .cps-input-prefix-icon {
         color: $input-prefix-icon-color;
       }
 
-      input:focus + .prefix + .action-btns > .clear-btn {
+      input:focus + .cps-input-prefix + .cps-input-action-btns > .clear-btn {
         cps-icon {
           opacity: 0.5;
         }
       }
 
       &:hover {
-        .action-btns {
+        .cps-input-action-btns {
           .clear-btn {
             cps-icon {
               opacity: 0.5;
@@ -90,7 +90,7 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      .action-btns {
+      .cps-input-action-btns {
         display: flex;
         align-items: center;
         position: absolute;
@@ -126,7 +126,7 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      .prefix {
+      .cps-input-prefix {
         height: -webkit-fill-available;
         display: flex;
         align-items: center;
@@ -135,7 +135,7 @@ $hover-transition-duration: 0.2s;
         left: 0.75rem;
         transform: translate(0, -50%);
         &:hover {
-          .prefix-icon {
+          .cps-input-prefix-icon {
             color: $color-calm;
           }
         }
@@ -150,7 +150,7 @@ $hover-transition-duration: 0.2s;
           cursor: default;
         }
       }
-      .input-progress-bar {
+      .cps-input-progress-bar {
         position: absolute;
         bottom: 1px;
         padding: 0 1px;
@@ -159,7 +159,7 @@ $hover-transition-duration: 0.2s;
     }
 
     .persistent-clear {
-      .action-btns {
+      .cps-input-action-btns {
         .clear-btn {
           cps-icon {
             opacity: 0.5;
@@ -177,20 +177,20 @@ $hover-transition-duration: 0.2s;
       padding-right: 2.2rem;
     }
 
-    .hint-text {
+    .cps-input-hint-text {
       color: $input-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
       cursor: default;
     }
-    .error-text {
+    .cps-input-error-text {
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;
       min-height: 1.125rem;
       cursor: default;
     }
-    .label-text {
+    .cps-input-label-text {
       color: $input-label-color;
       font-size: 0.875rem;
       &-disabled {
