@@ -265,6 +265,7 @@ export class CpsSelectComponent
     // enter
     else if (code === 13) {
       let idx = this.optionHighlightedIndex;
+      if (idx < 0) return;
       if (this.multiple && this.selectAll) {
         if (idx === 0) {
           this.toggleAll();
