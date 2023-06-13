@@ -1,4 +1,5 @@
 <div
+  data-cy-id="cps-autocomplete"
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
   tabindex="1"
@@ -129,7 +130,7 @@
         <span class="cps-autocomplete-options-option-left">
           <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
           </span>
-          <span class="cps-autocomplete-options-option-label">{{
+          <span data-cy-id="cps-autocomplete-options" class="cps-autocomplete-options-option-label">{{
             option[optionLabel]
           }}</span>
         </span>

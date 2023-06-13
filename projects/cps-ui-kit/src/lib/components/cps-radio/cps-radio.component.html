@@ -1,17 +1,17 @@
-<div class="radio-group">
-  <div class="radio-group-label" *ngIf="groupLabel">
+<div class="cps-radio-group">
+  <div class="cps-radio-group-label" *ngIf="groupLabel">
     <span>{{ groupLabel }}</span>
   </div>
   <div
-    class="radio-group-content"
+    class="cps-radio-group-content"
     [ngClass]="
       vertical
-        ? 'radio-group-content-vertical'
-        : 'radio-group-content-horizontal'
+        ? 'cps-radio-group-content-vertical'
+        : 'cps-radio-group-content-horizontal'
     ">
     <label
       *ngFor="let option of options"
-      class="radio-group-content-button"
+      class="cps-radio-group-content-button"
       [ngStyle]="{
         cursor: option.disabled || disabled ? 'default' : 'pointer'
       }">
@@ -21,7 +21,9 @@
         [value]="option.value"
         [checked]="value === option.value"
         (change)="updateValueEvent($event)" />
-      <span class="radio-group-content-button-label">{{ option.label }}</span>
+      <span class="cps-radio-group-content-button-label">{{
+        option.label
+      }}</span>
     </label>
   </div>
 </div>

@@ -9,7 +9,7 @@ $disabled-label-color: var(--cps-color-text-light);
   width: fit-content;
   display: inline-block;
 
-  .radio-group {
+  .cps-radio-group {
     &-label {
       color: $group-label-color;
       margin-bottom: 0.75rem;
@@ -80,7 +80,7 @@ $disabled-label-color: var(--cps-color-text-light);
             box-shadow: inset 1em 1em $disabled-color;
           }
 
-          &:disabled + .radio-group-content-button-label {
+          &:disabled + .cps-radio-group-content-button-label {
             color: $disabled-label-color;
           }
 

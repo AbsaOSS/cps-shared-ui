@@ -1,13 +1,15 @@
-<div class="input-container" [ngStyle]="{ width: cvtWidth }">
-  <label class="label-text" [ngClass]="{ 'label-text-disabled': disabled }">{{
-    label
-  }}</label>
+<div class="cps-input-container" [ngStyle]="{ width: cvtWidth }">
+  <label
+    class="cps-input-label-text"
+    [ngClass]="{ 'cps-input-label-text-disabled': disabled }"
+    >{{ label }}</label
+  >
 
   <div
-    class="input-wrap"
+    class="cps-input-wrap"
     [ngClass]="{
       password: type === 'password',
-      'input-wrap-error': error,
+      'cps-input-wrap-error': error,
       clearable: clearable,
       'persistent-clear': persistentClear
     }">
@@ -24,8 +26,8 @@
       (blur)="onBlur()"
       (focus)="onFocus()" />
 
-    <div class="prefix">
-      <span *ngIf="prefixIcon" class="prefix-icon">
+    <div class="cps-input-prefix">
+      <span *ngIf="prefixIcon" class="cps-input-prefix-icon">
         <cps-icon
           [icon]="prefixIcon"
           [size]="prefixIconSize"
@@ -36,12 +38,12 @@
         </cps-icon>
       </span>
 
-      <span *ngIf="prefixText" class="prefix-text" #prefixTextSpan>
+      <span *ngIf="prefixText" class="cps-input-prefix-text" #prefixTextSpan>
         {{ prefixText }}
       </span>
     </div>
 
-    <div class="action-btns" *ngIf="!disabled">
+    <div class="cps-input-action-btns" *ngIf="!disabled">
       <span
         *ngIf="clearable"
         [style.visibility]="
@@ -63,10 +65,14 @@
       height="3"
       radius="4"
       opacity="0.3"
-      class="input-progress-bar"
+      class="cps-input-progress-bar"
       bgColor="transparent">
     </cps-progress-linear>
   </div>
-  <div *ngIf="!error && !hideDetails" class="hint-text">{{ hint }}</div>
-  <div *ngIf="error && !hideDetails" class="error-text">{{ error }}</div>
+  <div *ngIf="!error && !hideDetails" class="cps-input-hint-text">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-input-error-text">
+    {{ error }}
+  </div>
 </div>

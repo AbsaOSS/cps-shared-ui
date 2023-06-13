@@ -51,21 +51,21 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   }
 
   setClasses(): void {
-    this.classesList = ['tag'];
+    this.classesList = ['cps-tag'];
 
     if (this.selectable) {
-      this.classesList.push('tag--selectable');
+      this.classesList.push('cps-tag--selectable');
     }
     if (this.disabled) {
-      this.classesList.push('tag--disabled');
+      this.classesList.push('cps-tag--disabled');
     }
     switch (this.type) {
       case 'security': {
-        this.classesList.push('tag--security');
+        this.classesList.push('cps-tag--security');
         break;
       }
       case 'classification': {
-        this.classesList.push('tag--classification');
+        this.classesList.push('cps-tag--classification');
         break;
       }
       default:
