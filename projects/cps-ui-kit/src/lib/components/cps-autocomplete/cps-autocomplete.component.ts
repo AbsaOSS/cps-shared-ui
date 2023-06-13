@@ -65,7 +65,20 @@ export class CpsAutocompleteComponent
   @Input() prefixIcon = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
+
+  @Input('value') _value: any = undefined;
+
+  get value(): any {
+    return this._value;
+  }
+
+  set value(value: any) {
+    this._value = value;
+    this.onChange(value);
+  }
+
   @Output() valueChanged = new EventEmitter<any>();
+
   @ViewChild('autocompleteContainer')
   autocompleteContainer!: ElementRef;
 
@@ -86,17 +99,6 @@ export class CpsAutocompleteComponent
     if (this._control) {
       this._control.valueAccessor = this;
     }
-  }
-
-  @Input('value') _value: any = undefined;
-
-  get value(): any {
-    return this._value;
-  }
-
-  set value(value: any) {
-    this._value = value;
-    this.onChange(value);
   }
 
   ngOnInit() {
