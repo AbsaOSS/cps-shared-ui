@@ -36,6 +36,7 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() hideDetails = false;
   @Input() persistentClear = false;
   @Input() error = '';
+  @Input() resizable: 'both' | 'horizontal' | 'vertical' | 'none' = 'vertical';
   @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);

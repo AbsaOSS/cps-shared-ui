@@ -18,7 +18,8 @@
       [placeholder]="placeholder"
       [value]="value"
       [ngStyle]="{
-        width: cvtWidth
+        width: cvtWidth,
+        resize: resizable
       }"
       (blur)="onBlur()"
       (focus)="onFocus()"
@@ -32,7 +33,7 @@
       class="clear-btn">
       <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
     </span>
+    <div *ngIf="!error && !hideDetails" class="hint-text">{{ hint }}</div>
+    <div *ngIf="error && !hideDetails" class="error-text">{{ error }}</div>
   </div>
-  <div *ngIf="!error && !hideDetails" class="hint-text">{{ hint }}</div>
-  <div *ngIf="error && !hideDetails" class="error-text">{{ error }}</div>
 </div>
