@@ -23,7 +23,7 @@ import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
-import { TreeModule } from 'primeng/tree';
+import { Tree, TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 
 @Component({
@@ -86,6 +86,8 @@ export class CpsTreeSelectComponent
   @ViewChild('selectContainer')
   selectContainer!: ElementRef;
 
+  @ViewChild('treeList') treeList!: Tree;
+
   @ViewChild('rootNode') rootNode!: ElementRef;
 
   private _statusChangesSubscription: Subscription = new Subscription();
@@ -98,6 +100,9 @@ export class CpsTreeSelectComponent
   optionHighlightedIndex = -1;
 
   selectedNodes!: TreeNode[];
+
+  treeContainerElement!: HTMLElement;
+  firstFocused = false;
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
@@ -119,14 +124,77 @@ export class CpsTreeSelectComponent
   }
 
   ngAfterViewInit() {
-    // this.rootNode.nativeElement.addEventListener(
-    //   'click',
-    //   this.expandNode.bind(this)
-    // );
+    this._initContainerClickListener();
+  }
+
+  private _handleOnContainerClick(event: any) {
+    function getParentWithClass(
+      element: HTMLElement | null,
+      className: string
+    ) {
+      let currentElement = element;
+      while (currentElement) {
+        if (currentElement.classList.contains(className)) {
+          return currentElement;
+        }
+        currentElement = currentElement.parentElement;
+      }
+      return null;
+    }
+
+    this.firstFocused = true;
+
+    const parent = event.target.classList.contains('p-treenode-content')
+      ? event.target
+      : getParentWithClass(event.target, 'p-treenode-content');
+
+    if (
+      parent?.parentElement?.classList?.contains(
+        'cps-tree-node-fully-expandable'
+      )
+    ) {
+      this.onClickFullyExpandable(event, parent.parentElement);
+    }
+  }
+
+  private _initContainerClickListener() {
+    this.treeContainerElement =
+      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
+    if (this.treeContainerElement) {
+      this.treeContainerElement.addEventListener(
+        'click',
+        this._handleOnContainerClick.bind(this)
+      );
+    }
+  }
+
+  private _getHTMLElementKey(elem: any): string {
+    if (!elem?.classList) return '';
+    const classList = [...elem.classList];
+    const key = classList.find((className: string) => {
+      return className.startsWith('key-');
+    });
+    if (!key) return '';
+    return key.replace('key-', '');
+  }
+
+  onClickFullyExpandable(event: any, elem: HTMLElement) {
+    const key = this._getHTMLElementKey(elem);
+    if (!key) return;
+
+    const treeNode = this.options.find((o) => o.key === key);
+    if (!treeNode) return;
+
+    treeNode.expanded = !treeNode.expanded;
   }
 
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
+    if (this.treeContainerElement)
+      this.treeContainerElement.removeEventListener(
+        'click',
+        this._handleOnContainerClick.bind(this)
+      );
   }
 
   onSelectNode(node: any) {
@@ -138,10 +206,6 @@ export class CpsTreeSelectComponent
     console.log('UNSELECTED', node);
   }
 
-  onClickNode(node: any) {
-    console.log('CLICKED', node);
-  }
-
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
     if (typeof show === 'boolean') {
@@ -150,6 +214,7 @@ export class CpsTreeSelectComponent
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
+    this.firstFocused = false;
 
     if (this.isOpened) {
       this._expandToNodes(this.value);
@@ -245,34 +310,42 @@ export class CpsTreeSelectComponent
     }
   }
 
-  private _navigateOptionsByArrows(up: boolean) {
+  private _initArrowsNavigaton() {
     if (!this.isOpened) return;
 
-    const optionItems = this._getHTMLOptions();
-    const len = optionItems.length;
-    if (len < 1) return;
-
-    if (len === 1) {
-      this._highlightOption(optionItems[0]);
-      return;
+    if (!this.firstFocused) {
+      const firstElem = this.treeContainerElement?.querySelector(
+        '.p-treenode-content'
+      );
+      if (firstElem) (firstElem as HTMLElement).focus();
+      this.firstFocused = true;
     }
 
-    if (up) {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex =
-        this.optionHighlightedIndex < 1
-          ? len - 1
-          : this.optionHighlightedIndex - 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    } else {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex = [-1, len - 1].includes(
-        this.optionHighlightedIndex
-      )
-        ? 0
-        : this.optionHighlightedIndex + 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    }
+    // const optionItems = this._getHTMLOptions();
+    // const len = optionItems.length;
+    // if (len < 1) return;
+
+    // if (len === 1) {
+    //   this._highlightOption(optionItems[0]);
+    //   return;
+    // }
+
+    // if (up) {
+    //   this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+    //   this.optionHighlightedIndex =
+    //     this.optionHighlightedIndex < 1
+    //       ? len - 1
+    //       : this.optionHighlightedIndex - 1;
+    //   this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    // } else {
+    //   this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
+    //   this.optionHighlightedIndex = [-1, len - 1].includes(
+    //     this.optionHighlightedIndex
+    //   )
+    //     ? 0
+    //     : this.optionHighlightedIndex + 1;
+    //   this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    // }
   }
 
   onClickOutside(dd: HTMLElement) {
@@ -306,9 +379,9 @@ export class CpsTreeSelectComponent
 
       this._clickOption(this.options[idx], dd);
     }
-    // vertical arrows
-    else if ([38, 40].includes(code)) {
-      this._navigateOptionsByArrows(code === 38);
+    // click down arrow
+    else if ([40].includes(code)) {
+      this._initArrowsNavigaton();
     }
   }
 

@@ -33,7 +33,7 @@ export class TreeSelectPageComponent {
       data: 'Documents Folder',
       icon: 'pi pi-fw pi-inbox',
       selectable: false,
-      styleClass: 'fullyExpandable',
+      styleClass: 'cps-tree-node-fully-expandable key-0',
       type: 'root',
       children: [
         {
@@ -41,7 +41,7 @@ export class TreeSelectPageComponent {
           label: 'Work',
           data: 'Work Folder',
           icon: 'pi pi-fw pi-cog',
-          attrType: 'string',
+          attrType: 'sdaasd string',
           children: [
             {
               key: '0-0-0',
@@ -75,6 +75,9 @@ export class TreeSelectPageComponent {
     },
     {
       key: '1',
+      selectable: false,
+      styleClass: 'cps-tree-node-fully-expandable key-1',
+      type: 'root',
       label: 'Events',
       data: 'Events Folder',
       icon: 'pi pi-fw pi-calendar',

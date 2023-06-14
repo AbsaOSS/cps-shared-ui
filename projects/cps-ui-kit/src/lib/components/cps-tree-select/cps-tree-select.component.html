@@ -92,23 +92,22 @@
 
     <div class="cps-select-options">
       <p-tree
+        #treeList
         (onNodeSelect)="onSelectNode($event)"
         (onNodeUnselect)="onUnselectNode($event)"
-        (onNodeClick)="onClickNode($event)"
         class="w-full md:w-30rem"
         [value]="options"
         [(selection)]="value"
         [metaKeySelection]="false"
         selectionMode="multiple">
         <ng-template let-node pTemplate="root">
-          <span
-            class="cps-treeselect-root-elem"
-            [ngClass]="{ 'not-selectable': !node.selectable }"
-            >{{ node.label }}</span
-          >
+          <span class="cps-treeselect-root-elem">{{ node.label }}</span>
         </ng-template>
         <ng-template let-node pTemplate="default">
-          {{ node.label }} {{ node.attrType }}
+          <span class="cps-treeselect-option">
+            <span class="cps-treeselect-option-label">{{ node.label }}</span>
+            <span class="cps-treeselect-option-info">{{ node.attrType }}</span>
+          </span>
         </ng-template>
       </p-tree>
       <!-- <div
