@@ -1,2 +1,13 @@
 @import 'bootstrap-grid';
 @import '_variables.scss';
+
+.cps-tooltip {
+  font-size: 13px;
+  background: white;
+  color: #333333;
+  font-family: 'Source Sans Pro', serif;
+  border: 1px solid #3d3e40;
+  max-width: 100%;
+  border-radius: 0;
+  padding: 3px;
+}
