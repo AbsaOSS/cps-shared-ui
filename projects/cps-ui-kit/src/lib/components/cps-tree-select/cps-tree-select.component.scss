@@ -276,6 +276,8 @@ $hover-transition-duration: 0.2s;
         // }
 
         .p-tree-toggler {
+          outline: 0 none;
+          outline-offset: 0;
           cursor: pointer;
           -webkit-user-select: none;
           user-select: none;
