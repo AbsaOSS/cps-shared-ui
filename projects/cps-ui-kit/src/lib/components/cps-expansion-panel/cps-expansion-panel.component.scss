@@ -39,6 +39,19 @@ $header-active-background: #f1eaec;
       }
     }
 
+    &-prefix-icon {
+      display: flex;
+      align-items: center;
+      margin-right: 12px;
+      margin-bottom: 2px;
+      cps-icon {
+        ::ng-deep .cps-icon {
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+
     &-title {
       flex: 1 0 auto;
       display: inline-flex;
