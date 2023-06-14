@@ -1,16 +1,22 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { CpsTreeSelectComponent } from 'cps-ui-kit';
 
 @Component({
   standalone: true,
-  imports: [CpsTreeSelectComponent, FormsModule],
+  imports: [CpsTreeSelectComponent, FormsModule, ReactiveFormsModule],
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',
   styleUrls: ['./tree-select-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class TreeSelectPageComponent {
+export class TreeSelectPageComponent implements OnInit {
   selectedItems = [
     {
       key: '0-0-1',
@@ -151,4 +157,16 @@ export class TreeSelectPageComponent {
       ]
     }
   ];
+
+  form!: UntypedFormGroup;
+  syncVal: any = null;
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private _formBuilder: UntypedFormBuilder) {}
+
+  ngOnInit(): void {
+    this.form = this._formBuilder.group({
+      requiredTreeSelect: [this.options[1].children[0], [Validators.required]]
+    });
+  }
 }

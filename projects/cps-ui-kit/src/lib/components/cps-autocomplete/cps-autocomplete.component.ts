@@ -320,7 +320,7 @@ export class CpsAutocompleteComponent
         selected.scrollIntoView({
           behavior: 'instant',
           block: 'nearest',
-          inline: 'start'
+          inline: 'center'
         });
     }
   }
@@ -413,7 +413,7 @@ export class CpsAutocompleteComponent
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
       el.scrollIntoView({
         block: 'nearest',
-        inline: 'start'
+        inline: 'center'
       });
     }
   }

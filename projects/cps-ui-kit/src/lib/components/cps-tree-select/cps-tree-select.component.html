@@ -94,19 +94,21 @@
       <p-tree
         #treeList
         (onNodeSelect)="onSelectNode($event)"
-        (onNodeUnselect)="onUnselectNode($event)"
-        class="w-full md:w-30rem"
         [value]="options"
         [(selection)]="value"
-        [metaKeySelection]="false"
-        selectionMode="multiple">
+        [metaKeySelection]="multiple ? false : true"
+        [selectionMode]="multiple ? 'multiple' : 'single'">
         <ng-template let-node pTemplate="root">
-          <span class="cps-treeselect-root-elem">{{ node.label }}</span>
+          <span class="cps-treeselect-root-elem">{{ node[optionLabel] }}</span>
         </ng-template>
         <ng-template let-node pTemplate="default">
           <span class="cps-treeselect-option">
-            <span class="cps-treeselect-option-label">{{ node.label }}</span>
-            <span class="cps-treeselect-option-info">{{ node.attrType }}</span>
+            <span class="cps-treeselect-option-label">{{
+              node[optionLabel]
+            }}</span>
+            <span class="cps-treeselect-option-info">{{
+              node[optionInfo]
+            }}</span>
           </span>
         </ng-template>
       </p-tree>

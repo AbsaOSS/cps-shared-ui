@@ -21,10 +21,9 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
-import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
 import { Tree, TreeModule } from 'primeng/tree';
-import { TreeNode } from 'primeng/api';
+// import { TreeNode } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -37,10 +36,9 @@ import { TreeNode } from 'primeng/api';
     CpsChipComponent,
     CpsProgressLinearComponent,
     LabelByValuePipe,
-    CombineLabelsPipe,
-    CheckOptionSelectedPipe
+    CombineLabelsPipe
   ],
-  providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
+  providers: [LabelByValuePipe, CombineLabelsPipe],
   selector: 'cps-tree-select',
   templateUrl: './cps-tree-select.component.html',
   styleUrls: ['./cps-tree-select.component.scss']
@@ -52,23 +50,24 @@ export class CpsTreeSelectComponent
   @Input() placeholder = 'Please select';
   @Input() hint = '';
   @Input() returnObject = true; // if false, value will be option[optionValue]
-  @Input() multiple = true;
+  @Input() multiple = false;
   @Input() disabled = false;
   @Input() width: number | string = '100%';
-  @Input() selectAll = true;
+  // @Input() selectAll = true;
   @Input() chips = true;
   @Input() closableChips = true;
   @Input() clearable = false;
   @Input() openOnClear = true;
   @Input() options = [] as any[];
   @Input() optionLabel = 'label';
-  @Input() optionValue = 'value'; // needed only if returnObject === false
+  @Input() optionValue = 'value'; // needed only if returnObject === false //TODO
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
   @Input() prefixIcon = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
+  @Input() virtualScroll = false; // TODO
 
   @Input('value') _value: any = undefined;
 
@@ -88,21 +87,13 @@ export class CpsTreeSelectComponent
 
   @ViewChild('treeList') treeList!: Tree;
 
-  @ViewChild('rootNode') rootNode!: ElementRef;
-
   private _statusChangesSubscription: Subscription = new Subscription();
 
   error = '';
   cvtWidth = '';
-
   isOpened = false;
-
-  optionHighlightedIndex = -1;
-
-  selectedNodes!: TreeNode[];
-
   treeContainerElement!: HTMLElement;
-  firstFocused = false;
+  optionFocused = false;
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
@@ -142,7 +133,7 @@ export class CpsTreeSelectComponent
       return null;
     }
 
-    this.firstFocused = true;
+    this.optionFocused = true;
 
     const parent = event.target.classList.contains('p-treenode-content')
       ? event.target
@@ -197,13 +188,11 @@ export class CpsTreeSelectComponent
       );
   }
 
-  onSelectNode(node: any) {
-    node.expanded = true;
-    console.log('SELECTED', node);
-  }
-
-  onUnselectNode(node: any) {
-    console.log('UNSELECTED', node);
+  onSelectNode(event: any) {
+    if (!event?.node) return;
+    if (!this.multiple) {
+      this._toggleOptions(this.selectContainer?.nativeElement, false);
+    }
   }
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
@@ -214,19 +203,21 @@ export class CpsTreeSelectComponent
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
-    this.firstFocused = false;
+    this.optionFocused = false;
 
-    if (this.isOpened) {
-      this._expandToNodes(this.value);
+    if (this.isOpened && this.value) {
+      this._expandToNodes(this.multiple ? this.value : [this.value]);
 
-      const selected =
-        this.selectContainer.nativeElement.querySelector('.selected');
-      if (selected)
-        selected.scrollIntoView({
-          behavior: 'instant',
-          block: 'nearest',
-          inline: 'start'
-        });
+      setTimeout(() => {
+        const selected =
+          this.selectContainer.nativeElement.querySelector('.p-highlight');
+        if (selected)
+          selected.scrollIntoView({
+            behavior: 'instant',
+            block: 'nearest',
+            inline: 'center'
+          });
+      });
     }
   }
 
@@ -278,84 +269,24 @@ export class CpsTreeSelectComponent
     }
   }
 
-  private _getHTMLOptions() {
-    return (
-      this.selectContainer?.nativeElement?.querySelectorAll(
-        '.cps-select-options-option'
-      ) || []
-    );
-  }
-
-  private _dehighlightOption(el?: HTMLElement) {
-    if (el) el.classList.remove('highlighten');
-    else {
-      if (this.optionHighlightedIndex < 0) return;
-      const optionItems = this._getHTMLOptions();
-      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
-      this.optionHighlightedIndex = -1;
-    }
-  }
-
-  private _highlightOption(el: HTMLElement) {
-    el.classList.add('highlighten');
-    const parent = el.parentElement;
-    if (!parent) return;
-    const parentRect = parent.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
-      el.scrollIntoView({
-        block: 'nearest',
-        inline: 'start'
-      });
-    }
-  }
-
   private _initArrowsNavigaton() {
     if (!this.isOpened) return;
 
-    if (!this.firstFocused) {
+    if (!this.optionFocused) {
       const firstElem = this.treeContainerElement?.querySelector(
         '.p-treenode-content'
       );
       if (firstElem) (firstElem as HTMLElement).focus();
-      this.firstFocused = true;
+      this.optionFocused = true;
     }
-
-    // const optionItems = this._getHTMLOptions();
-    // const len = optionItems.length;
-    // if (len < 1) return;
-
-    // if (len === 1) {
-    //   this._highlightOption(optionItems[0]);
-    //   return;
-    // }
-
-    // if (up) {
-    //   this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-    //   this.optionHighlightedIndex =
-    //     this.optionHighlightedIndex < 1
-    //       ? len - 1
-    //       : this.optionHighlightedIndex - 1;
-    //   this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    // } else {
-    //   this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-    //   this.optionHighlightedIndex = [-1, len - 1].includes(
-    //     this.optionHighlightedIndex
-    //   )
-    //     ? 0
-    //     : this.optionHighlightedIndex + 1;
-    //   this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    // }
   }
 
   onClickOutside(dd: HTMLElement) {
     this._toggleOptions(dd, false);
-    this._dehighlightOption();
   }
 
   onBoxClick(dd: HTMLElement) {
     this._toggleOptions(dd);
-    this._dehighlightOption();
   }
 
   onKeyDown(event: any, dd: HTMLElement) {
@@ -364,20 +295,6 @@ export class CpsTreeSelectComponent
     // escape
     if (code === 27) {
       this._toggleOptions(dd, false);
-      this._dehighlightOption();
-    }
-    // enter
-    else if (code === 13) {
-      let idx = this.optionHighlightedIndex;
-      if (idx < 0) return;
-      if (this.multiple && this.selectAll) {
-        if (idx === 0) {
-          this.toggleAll();
-          return;
-        } else idx--;
-      }
-
-      this._clickOption(this.options[idx], dd);
     }
     // click down arrow
     else if ([40].includes(code)) {
@@ -458,7 +375,7 @@ export class CpsTreeSelectComponent
       const val = this.multiple ? [] : this.returnObject ? undefined : '';
       this.updateValue(val);
     }
-    this._dehighlightOption();
+    this.optionFocused = false;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

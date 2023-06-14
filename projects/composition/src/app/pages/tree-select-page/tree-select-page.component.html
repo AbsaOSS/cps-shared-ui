@@ -1,3 +1,39 @@
-<cps-tree-select
-  [options]="options"
-  [(ngModel)]="selectedItems"></cps-tree-select>
+<form [formGroup]="form">
+  <div class="tree-selects-group">
+    <cps-tree-select
+      label="Required single tree select"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      placeholder="Select element"
+      [clearable]="true"
+      formControlName="requiredTreeSelect">
+    </cps-tree-select>
+
+    <cps-tree-select
+      label="Required single tree select"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      placeholder="Select element"
+      [clearable]="true"
+      [value]="selectedItems"
+      [multiple]="true">
+    </cps-tree-select>
+
+    <div class="sync-val-example">
+      <cps-tree-select
+        width="500"
+        [options]="options"
+        optionInfo="attrType"
+        optionLabel="label"
+        [clearable]="true"
+        [persistentClear]="true"
+        [multiple]="false"
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }">
+      </cps-tree-select>
+      <span class="sync-val">{{ syncVal }}</span>
+    </div>
+  </div>
+</form>

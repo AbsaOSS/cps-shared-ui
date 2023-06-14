@@ -134,7 +134,7 @@ export class CpsSelectComponent
         selected.scrollIntoView({
           behavior: 'instant',
           block: 'nearest',
-          inline: 'start'
+          inline: 'center'
         });
     }
   }
@@ -214,7 +214,7 @@ export class CpsSelectComponent
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
       el.scrollIntoView({
         block: 'nearest',
-        inline: 'start'
+        inline: 'center'
       });
     }
   }
