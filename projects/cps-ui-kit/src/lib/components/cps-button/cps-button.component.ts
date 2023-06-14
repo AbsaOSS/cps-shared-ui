@@ -8,7 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { convertSize, parseSize } from '../../utils/size-utils';
 
 @Component({
@@ -23,7 +23,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() contentColor = 'white'; // works only with solid type
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
   @Input() label = '';
-  @Input() icon = '';
+  @Input() icon: IconType = '';
   @Input() iconPosition: 'before' | 'after' = 'before';
   @Input() size: 'xsmall' | 'small' | 'normal' | 'large' = 'normal';
   @Input() width: number | string = 0;

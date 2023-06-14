@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/size-utils';
 
@@ -20,6 +20,8 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() bordered = true;
   @Input() borderRadius: number | string = '4px';
   @Input() width: number | string = '100%';
+  @Input() prefixIcon: IconType = '';
+
   @Output() afterCollapse: EventEmitter<void> = new EventEmitter<void>();
   @Output() afterExpand: EventEmitter<void> = new EventEmitter<void>();
 

@@ -14,7 +14,7 @@
       margin-left: 6px;
       cursor: pointer;
       &:hover {
-        ::ng-deep .icon {
+        ::ng-deep .cps-icon {
           color: var(--cps-color-calm) !important;
         }
       }
@@ -32,7 +32,7 @@
       }
       .cps-chip-icon,
       .cps-chip-close-icon {
-        ::ng-deep .icon {
+        ::ng-deep .cps-icon {
           color: var(--cps-color-text-light) !important;
         }
       }

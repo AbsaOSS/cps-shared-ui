@@ -14,7 +14,11 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
-import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  IconType,
+  iconSizeType
+} from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
@@ -62,7 +66,7 @@ export class CpsAutocompleteComponent
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
-  @Input() prefixIcon = '';
+  @Input() prefixIcon: IconType = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
 

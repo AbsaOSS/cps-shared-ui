@@ -5,7 +5,7 @@ import {
   OnChanges,
   Output
 } from '@angular/core';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 })
 export class CpsChipComponent implements OnChanges {
   @Input() label = '';
-  @Input() icon = '';
+  @Input() icon: IconType = '';
   @Input() iconPosition: 'before' | 'after' = 'before';
   @Input() closable = false;
   @Input() disabled = false;

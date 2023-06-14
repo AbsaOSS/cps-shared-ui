@@ -14,7 +14,11 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  IconType,
+  iconSizeType
+} from '../cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
@@ -37,7 +41,7 @@ export class CpsInputComponent
   @Input() type: 'text' | 'number' | 'password' = 'text';
   @Input() loading = false;
   @Input() clearable = false;
-  @Input() prefixIcon = '';
+  @Input() prefixIcon: IconType = '';
   @Input() prefixIconClickable = false;
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() prefixText = '';
