@@ -35,11 +35,11 @@
       class="clear-btn">
       <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
     </span>
-    <div *ngIf="!error && !hideDetails" class="cps-textarea-hint-text">
-      {{ hint }}
-    </div>
-    <div *ngIf="error && !hideDetails" class="cps-textarea-error-text">
-      {{ error }}
-    </div>
+  </div>
+  <div *ngIf="!error && !hideDetails" class="cps-textarea-hint-text">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-textarea-error-text">
+    {{ error }}
   </div>
 </div>

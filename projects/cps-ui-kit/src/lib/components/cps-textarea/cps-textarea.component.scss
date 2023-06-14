@@ -41,6 +41,7 @@ $hover-transition-duration: 0.2s;
       }
 
       textarea {
+        display: block;
         font-family: 'Source Sans Pro', sans-serif;
         font-size: 1rem;
         color: $textarea-text-color;
