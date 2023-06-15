@@ -16,9 +16,10 @@ export class TooltipDirective {
 
   private _popup?: HTMLDivElement;
 
+  // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
-  private _createTooltip() {
+  private _createTooltip = () => {
     const { x, y } = this._setTooltipPosition();
     this._popup = document.createElement('div');
 
@@ -26,11 +27,13 @@ export class TooltipDirective {
     this._popup.setAttribute('class', 'cps-tooltip');
     this._popup.style.top = y.toString() + 'px';
     this._popup.style.left = x.toString() + 'px';
-  }
 
-  private _destroyTooltip() {
+    document.body.appendChild(this._popup);
+  };
+
+  private _destroyTooltip = () => {
     this._popup?.remove();
-  }
+  };
 
   private _setTooltipPosition() {
     switch (this.position) {
@@ -79,7 +82,7 @@ export class TooltipDirective {
 
   @HostListener('mouseleave') onMouseLeave() {
     if (this.autoClose) {
-      this._destroyTooltip();
+      setTimeout(this._destroyTooltip, this.closeDelay as number);
     }
   }
 
