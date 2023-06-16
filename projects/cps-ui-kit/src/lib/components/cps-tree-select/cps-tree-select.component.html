@@ -78,7 +78,13 @@
     <div class="cps-treeselect-options">
       <p-tree
         #treeList
+        [virtualScroll]="virtualScroll"
+        [virtualScrollItemSize]="virtualScrollItemSize"
+        [virtualScrollOptions]="{ numToleratedItems: 2 }"
+        [scrollHeight]="virtualListHeight + 'px'"
         (onNodeSelect)="onSelectNode($event)"
+        (onNodeExpand)="recalcVirtualListHeight()"
+        (onNodeCollapse)="recalcVirtualListHeight()"
         [value]="options"
         [(selection)]="value"
         [metaKeySelection]="multiple ? false : true"

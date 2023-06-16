@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -64,7 +65,7 @@ export class CpsTreeSelectComponent
   @Input() prefixIcon = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
-  @Input() virtualScroll = false; // TODO
+  @Input() virtualScroll = false;
 
   @Input('value') _value: any = undefined;
 
@@ -86,13 +87,19 @@ export class CpsTreeSelectComponent
 
   private _statusChangesSubscription: Subscription = new Subscription();
 
+  virtualListHeight = 240;
+  virtualScrollItemSize = 40;
+
   error = '';
   cvtWidth = '';
   isOpened = false;
   treeContainerElement!: HTMLElement;
   optionFocused = false;
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    private cdRef: ChangeDetectorRef
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -113,6 +120,17 @@ export class CpsTreeSelectComponent
 
   ngAfterViewInit() {
     this._initContainerClickListener();
+    this.recalcVirtualListHeight();
+    this.cdRef.detectChanges();
+  }
+
+  recalcVirtualListHeight() {
+    if (!this.virtualScroll) return;
+    const currentLen = this.treeList?.serializedValue?.length || 0;
+    this.virtualListHeight = Math.min(
+      this.virtualScrollItemSize * currentLen,
+      240
+    );
   }
 
   private _handleOnContainerClick(event: any) {
@@ -174,6 +192,10 @@ export class CpsTreeSelectComponent
     if (!treeNode) return;
 
     treeNode.expanded = !treeNode.expanded;
+    this._updateOptions();
+    setTimeout(() => {
+      this.recalcVirtualListHeight();
+    });
   }
 
   ngOnDestroy() {
@@ -188,6 +210,7 @@ export class CpsTreeSelectComponent
   onSelectNode(event: any) {
     if (!event?.node) return;
     if (!this.multiple) {
+      this.valueChanged.emit(this.value);
       this._toggleOptions(this.selectContainer?.nativeElement, false);
     }
   }
@@ -204,16 +227,32 @@ export class CpsTreeSelectComponent
 
     if (this.isOpened && this.value) {
       this._expandToNodes(this.multiple ? this.value : [this.value]);
+      this._updateOptions();
 
       setTimeout(() => {
+        this.recalcVirtualListHeight();
+
         const selected =
           this.selectContainer.nativeElement.querySelector('.p-highlight');
-        if (selected)
+        if (selected) {
           selected.scrollIntoView({
             behavior: 'instant',
             block: 'nearest',
             inline: 'center'
           });
+        } else if (this.virtualScroll && this.value) {
+          let key = '';
+          if (this.multiple) {
+            if (this.value.length > 0) key = this.value[0].key;
+          } else key = this.value.key;
+          if (key) {
+            const idx =
+              this.treeList?.serializedValue?.findIndex(
+                (v) => v.node.key === key
+              ) || -1;
+            if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);
+          }
+        }
       });
     }
   }
@@ -241,6 +280,12 @@ export class CpsTreeSelectComponent
     } else {
       this.updateValue(option);
     }
+  }
+
+  // this is a fix of primeng change detection bug when virtual scroller is enabled
+  private _updateOptions() {
+    if (!this.virtualScroll) return;
+    this.options = [...this.options];
   }
 
   private _initArrowsNavigaton() {

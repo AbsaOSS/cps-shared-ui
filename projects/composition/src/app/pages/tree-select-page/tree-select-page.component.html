@@ -11,13 +11,24 @@
     </cps-tree-select>
 
     <cps-tree-select
-      label="Required single tree select"
+      label="Multiple tree select"
       [options]="options"
       optionLabel="label"
       optionInfo="attrType"
       placeholder="Select element"
       [clearable]="true"
       [value]="selectedItems"
+      [multiple]="true">
+    </cps-tree-select>
+
+    <cps-tree-select
+      label="Multiple tree select with virtual scroller"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      placeholder="Select element"
+      [clearable]="true"
+      [virtualScroll]="true"
       [multiple]="true">
     </cps-tree-select>
 

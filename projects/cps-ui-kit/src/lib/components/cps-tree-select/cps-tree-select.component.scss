@@ -170,7 +170,7 @@ $hover-transition-duration: 0.2s;
       border-radius: 4px;
       overflow-x: hidden;
       display: none;
-      max-height: 240px;
+      max-height: 242px;
       overflow-y: auto;
       box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
         0 1px 10px #0000001f;
@@ -180,7 +180,7 @@ $hover-transition-duration: 0.2s;
           border: 1px solid #dee2e6;
           background: #ffffff;
           color: $treeselect-option-value-color;
-          padding: 0.25rem;
+          padding: 0;
         }
 
         .cps-treeselect-option {
@@ -209,10 +209,6 @@ $hover-transition-duration: 0.2s;
           padding: 0;
           list-style-type: none;
           overflow: auto;
-        }
-
-        .p-tree .p-tree-container .p-treenode {
-          padding: 0.143rem;
         }
 
         .p-tree .p-tree-container .p-treenode .p-treenode-content {
