@@ -16,6 +16,8 @@ export class TooltipDirective {
 
   private _popup?: HTMLDivElement;
 
+  opened = false;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
@@ -93,8 +95,12 @@ export class TooltipDirective {
   }
 
   @HostListener('click') onClick() {
-    if (this.openOn === 'click') {
+    if (this.openOn === 'click' && !this.opened) {
+      this.opened = true;
       setTimeout(this._createTooltip, this.openDelay as number);
+    } else if (this.closeOnContentClick && this.opened) {
+      this.opened = false;
+      setTimeout(this._destroyTooltip, this.closeDelay as number);
     }
   }
 }
