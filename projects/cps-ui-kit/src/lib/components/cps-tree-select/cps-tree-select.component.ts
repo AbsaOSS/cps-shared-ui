@@ -49,18 +49,15 @@ export class CpsTreeSelectComponent
   @Input() label = '';
   @Input() placeholder = 'Please select';
   @Input() hint = '';
-  @Input() returnObject = true; // if false, value will be option[optionValue]
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() width: number | string = '100%';
-  // @Input() selectAll = true;
   @Input() chips = true;
   @Input() closableChips = true;
   @Input() clearable = false;
   @Input() openOnClear = true;
   @Input() options = [] as any[];
   @Input() optionLabel = 'label';
-  @Input() optionValue = 'value'; // needed only if returnObject === false //TODO
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
@@ -221,53 +218,30 @@ export class CpsTreeSelectComponent
     }
   }
 
-  // private _filterOptions() {
-  //   if (!this.optionsFilter || !this.multiple) return;
-  //   this.filteredOptions = this.options.filter((o) => {
-  //     if (this.returnObject) {
-  //       return !this.value.find((v: any) => v === o);
-  //     }
-  //     return !this.value.find((v: any) => v === o[this.optionValue]);
-  //   });
-  // }
-
-  select(option: any, byValue: boolean): void {
+  select(option: any): void {
     function includes(array: any[], val: any): boolean {
       return array ? !!find(array, (item) => isEqual(item, val)) : false;
     }
-    const val = byValue
-      ? option
-      : this.returnObject
-      ? option
-      : option[this.optionValue];
+
     if (this.multiple) {
       let res = [] as any;
-      if (includes(this.value, val)) {
-        res = this.value.filter((v: any) => !isEqual(v, val));
+      if (includes(this.value, option)) {
+        res = this.value.filter((v: any) => !isEqual(v, option));
       } else {
         this.options.forEach((o) => {
-          const ov = this.returnObject ? o : o[this.optionValue];
-          if (this.value.some((v: any) => isEqual(v, ov)) || isEqual(val, ov)) {
-            res.push(ov);
+          if (
+            this.value.some((v: any) => isEqual(v, o)) ||
+            isEqual(option, o)
+          ) {
+            res.push(o);
           }
         });
       }
       this.updateValue(res);
     } else {
-      this.updateValue(val);
+      this.updateValue(option);
     }
   }
-
-  // onOptionClick(option: any, dd: HTMLElement) {
-  //   this._clickOption(option, dd);
-  // }
-
-  // private _clickOption(option: any, dd: HTMLElement) {
-  //   this.select(option, false);
-  //   if (!this.multiple) {
-  //     this._toggleOptions(dd, false);
-  //   }
-  // }
 
   private _initArrowsNavigaton() {
     if (!this.isOpened) return;
@@ -305,13 +279,7 @@ export class CpsTreeSelectComponent
   toggleAll() {
     let res = [];
     if (this.value.length < this.options.length) {
-      if (this.returnObject) {
-        res = this.options;
-      } else {
-        this.options.forEach((o) => {
-          res.push(o[this.optionValue]);
-        });
-      }
+      res = this.options;
     }
     this.updateValue(res);
   }
@@ -373,7 +341,7 @@ export class CpsTreeSelectComponent
       if (this.openOnClear) {
         this._toggleOptions(dd, true);
       }
-      const val = this.multiple ? [] : this.returnObject ? undefined : '';
+      const val = this.multiple ? [] : undefined;
       this.updateValue(val);
     }
     this.optionFocused = false;
