@@ -1,21 +1,21 @@
 <div
   [ngStyle]="{ width: cvtWidth }"
-  class="cps-select"
+  class="cps-treeselect"
   tabindex="0"
   [ngClass]="{ disabled: disabled, error: error }"
   #selectContainer
   (keydown)="onKeyDown($event, selectContainer)"
   (blur)="onBlur()">
-  <label *ngIf="label" class="cps-select-label">{{ label }} </label>
+  <label *ngIf="label" class="cps-treeselect-label">{{ label }} </label>
   <div
-    class="cps-select-container"
+    class="cps-treeselect-container"
     [class.focused]="isOpened"
     [ngClass]="{
       'persistent-clear': persistentClear
     }"
     (clickOutside)="onClickOutside(selectContainer)">
-    <div class="cps-select-box" (click)="onBoxClick(selectContainer)">
-      <div class="cps-select-box-left">
+    <div class="cps-treeselect-box" (click)="onBoxClick(selectContainer)">
+      <div class="cps-treeselect-box-left">
         <cps-icon
           *ngIf="prefixIcon"
           [icon]="prefixIcon"
@@ -23,12 +23,12 @@
           class="prefix-icon">
         </cps-icon>
         <div
-          class="cps-select-box-placeholder"
+          class="cps-treeselect-box-placeholder"
           *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)">
           {{ placeholder }}
         </div>
         <div
-          class="cps-select-box-items"
+          class="cps-treeselect-box-items"
           *ngIf="(value && !multiple) || (value?.length > 0 && multiple)">
           <span *ngIf="!multiple" class="single-item">
             {{ value[optionLabel] }}</span
@@ -50,7 +50,7 @@
           </div>
         </div>
       </div>
-      <span class="cps-select-box-icons">
+      <span class="cps-treeselect-box-icons">
         <span
           *ngIf="clearable && !disabled"
           [style.visibility]="
@@ -60,13 +60,13 @@
               ? 'visible'
               : 'hidden'
           "
-          class="cps-select-box-clear-icon">
+          class="cps-treeselect-box-clear-icon">
           <cps-icon
             icon="delete"
             size="small"
             (click)="clear(selectContainer, $event)"></cps-icon>
         </span>
-        <span class="cps-select-box-chevron">
+        <span class="cps-treeselect-box-chevron">
           <cps-icon
             icon="chevron-down"
             size="small"
@@ -75,7 +75,7 @@
       </span>
     </div>
 
-    <div class="cps-select-options">
+    <div class="cps-treeselect-options">
       <p-tree
         #treeList
         (onNodeSelect)="onSelectNode($event)"
@@ -103,10 +103,14 @@
       height="3"
       radius="4"
       opacity="0.3"
-      class="select-progress-bar"
+      class="treeselect-progress-bar"
       bgColor="transparent">
     </cps-progress-linear>
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-select-hint">{{ hint }}</div>
-  <div *ngIf="error && !hideDetails" class="cps-select-error">{{ error }}</div>
+  <div *ngIf="!error && !hideDetails" class="cps-treeselect-hint">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-treeselect-error">
+    {{ error }}
+  </div>
 </div>
