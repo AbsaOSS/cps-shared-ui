@@ -258,16 +258,16 @@ export class CpsTreeSelectComponent
     }
   }
 
-  onOptionClick(option: any, dd: HTMLElement) {
-    this._clickOption(option, dd);
-  }
+  // onOptionClick(option: any, dd: HTMLElement) {
+  //   this._clickOption(option, dd);
+  // }
 
-  private _clickOption(option: any, dd: HTMLElement) {
-    this.select(option, false);
-    if (!this.multiple) {
-      this._toggleOptions(dd, false);
-    }
-  }
+  // private _clickOption(option: any, dd: HTMLElement) {
+  //   this.select(option, false);
+  //   if (!this.multiple) {
+  //     this._toggleOptions(dd, false);
+  //   }
+  // }
 
   private _initArrowsNavigaton() {
     if (!this.isOpened) return;
@@ -339,8 +339,10 @@ export class CpsTreeSelectComponent
     this.error = message || 'Unknown error';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
+  onChange = (value: any) => {
+    this.valueChanged.emit(value);
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
@@ -359,7 +361,6 @@ export class CpsTreeSelectComponent
   private updateValue(value: any): void {
     this.writeValue(value);
     this.onChange(value);
-    this.valueChanged.emit(value);
   }
 
   clear(dd: HTMLElement, event: any): void {
