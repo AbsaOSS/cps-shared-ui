@@ -197,14 +197,55 @@ export class CpsTreeSelectComponent
     }
   }
 
-  private _getHTMLElementKey(elem: any): string {
-    if (!elem?.classList) return '';
-    const classList = [...elem.classList];
-    const key = classList.find((className: string) => {
-      return className.startsWith('key-');
-    });
-    if (!key) return '';
-    return key.replace('key-', '');
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange = (value: any) => {};
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onTouched = () => {};
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
+  }
+
+  writeValue(value: any) {
+    this.value = value;
+  }
+
+  private updateValue(value: any): void {
+    this.writeValue(value);
+    this.onChange(value);
+    this.valueChanged.emit(value);
+  }
+
+  onSelectNode() {
+    if (!this.multiple) {
+      this._toggleOptions(this.selectContainer?.nativeElement, false);
+    }
+  }
+
+  onClickOutside(dd: HTMLElement) {
+    this._toggleOptions(dd, false);
+  }
+
+  onBoxClick(dd: HTMLElement) {
+    this._toggleOptions(dd);
+  }
+
+  onKeyDown(event: any, dd: HTMLElement) {
+    event.preventDefault();
+    const code = event.keyCode;
+    // escape
+    if (code === 27) {
+      this._toggleOptions(dd, false);
+    }
+    // click down arrow
+    else if ([40].includes(code)) {
+      this._initArrowsNavigaton();
+    }
   }
 
   onClickFullyExpandable(event: any, elem: HTMLElement) {
@@ -221,10 +262,14 @@ export class CpsTreeSelectComponent
     });
   }
 
-  onSelectNode() {
-    if (!this.multiple) {
-      this._toggleOptions(this.selectContainer?.nativeElement, false);
-    }
+  private _getHTMLElementKey(elem: any): string {
+    if (!elem?.classList) return '';
+    const classList = [...elem.classList];
+    const key = classList.find((className: string) => {
+      return className.startsWith('key-');
+    });
+    if (!key) return '';
+    return key.replace('key-', '');
   }
 
   treeSelectionChanged(selection: any) {
@@ -305,25 +350,21 @@ export class CpsTreeSelectComponent
     }
   }
 
-  onClickOutside(dd: HTMLElement) {
-    this._toggleOptions(dd, false);
-  }
+  clear(dd: HTMLElement, event: any): void {
+    event.stopPropagation();
 
-  onBoxClick(dd: HTMLElement) {
-    this._toggleOptions(dd);
-  }
-
-  onKeyDown(event: any, dd: HTMLElement) {
-    event.preventDefault();
-    const code = event.keyCode;
-    // escape
-    if (code === 27) {
-      this._toggleOptions(dd, false);
+    if (
+      (!this.multiple && this.treeSelection) ||
+      (this.multiple && this.treeSelection?.length > 0)
+    ) {
+      if (this.openOnClear) {
+        this._toggleOptions(dd, true);
+      }
+      const val = this.multiple ? [] : undefined;
+      this.treeSelection = val;
+      this.updateValue(val);
     }
-    // click down arrow
-    else if ([40].includes(code)) {
-      this._initArrowsNavigaton();
-    }
+    this.optionFocused = false;
   }
 
   private _checkErrors(): void {
@@ -347,47 +388,6 @@ export class CpsTreeSelectComponent
     const message = errArr.find((msg) => typeof msg === 'string');
 
     this.error = message || 'Unknown error';
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (value: any) => {};
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onTouched = () => {};
-
-  registerOnChange(fn: any) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any) {
-    this.onTouched = fn;
-  }
-
-  writeValue(value: any) {
-    this.value = value;
-  }
-
-  private updateValue(value: any): void {
-    this.writeValue(value);
-    this.onChange(value);
-    this.valueChanged.emit(value);
-  }
-
-  clear(dd: HTMLElement, event: any): void {
-    event.stopPropagation();
-
-    if (
-      (!this.multiple && this.treeSelection) ||
-      (this.multiple && this.treeSelection?.length > 0)
-    ) {
-      if (this.openOnClear) {
-        this._toggleOptions(dd, true);
-      }
-      const val = this.multiple ? [] : undefined;
-      this.treeSelection = val;
-      this.updateValue(val);
-    }
-    this.optionFocused = false;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
