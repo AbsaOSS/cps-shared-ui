@@ -24,20 +24,21 @@ export class TreeSelectPageComponent implements OnInit {
       attrType: 'number'
     },
     {
-      label: 'Untouchables',
-      data: 'Untouchables Movie'
+      label: 'Attr1 A',
+      data: 'attr 1 a data',
+      attrType: 'decimal'
     }
   ];
 
   options = [
     {
       type: 'directory', // RESERVED KEY
-      label: 'Dataset1',
+      label: 'Dataset 1',
       children: [
         {
           label: 'Attr1',
           data: 'This is attribute 1',
-          attrType: 'string',
+          attrType: 'struct',
           children: [
             {
               label: 'AttrA',
@@ -53,63 +54,62 @@ export class TreeSelectPageComponent implements OnInit {
         {
           label: 'Attr2',
           data: 'This is attribute 2',
+          attrType: 'struct',
           children: [
             {
-              label: 'Invoices.txt',
-              data: 'Invoices for this month'
+              label: 'AttrC',
+              desc: 'C'
             }
           ]
         }
       ]
     },
     {
-      type: 'directory',
-      label: 'Events',
-      data: 'Events Folder',
+      type: 'directory', // RESERVED KEY
+      label: 'Dataset 2',
       children: [
         {
-          label: 'Meeting',
-          data: 'Meeting'
+          label: 'Attr1',
+          data: 'attr1 data'
         },
         {
-          label: 'Home',
-          data: 'Product Launch'
+          label: 'Attr2',
+          desc: 'attr2 desc'
         },
         {
-          label: 'Report Review',
-          data: 'Report Review'
+          label: 'Attr3',
+          data: 'attr3 data'
         }
       ]
     },
     {
-      label: 'Movies',
-      data: 'Movies Folder',
+      type: 'directory', // RESERVED KEY
+      label: 'Dataset 3',
       children: [
         {
-          label: 'Al Pacino',
-          data: 'Pacino Movies',
+          label: 'Attr1',
+          data: 'attr1 data',
           children: [
             {
-              label: 'Scarface',
-              data: 'Scarface Movie'
+              label: 'Attr1 A',
+              data: 'attr 1 a data',
+              attrType: 'decimal'
             },
             {
-              label: 'Serpico',
-              data: 'Serpico Movie'
+              label: 'Attr1 B',
+              desc: 'Attr1 b desc'
             }
           ]
         },
         {
-          label: 'Robert De Niro',
+          label: 'Attr2',
           data: 'De Niro Movies',
+          attrType: 'struct',
           children: [
             {
-              label: 'Goodfellas',
-              data: 'Goodfellas Movie'
-            },
-            {
-              label: 'Untouchables',
-              data: 'Untouchables Movie'
+              label: 'Attr2 A',
+              data: 'attr2 a data',
+              description: 'attr2 a description'
             }
           ]
         }
