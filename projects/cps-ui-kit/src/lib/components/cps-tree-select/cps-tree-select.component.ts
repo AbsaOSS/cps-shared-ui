@@ -22,9 +22,9 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 import { Tree, TreeModule } from 'primeng/tree';
-// import { TreeNode } from 'primeng/api';
+import { TreeNode } from 'primeng/api';
 
 @Component({
   standalone: true,
@@ -57,7 +57,6 @@ export class CpsTreeSelectComponent
   @Input() closableChips = true;
   @Input() clearable = false;
   @Input() openOnClear = true;
-  @Input() options = [] as any[];
   @Input() optionLabel = 'label';
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
@@ -66,6 +65,19 @@ export class CpsTreeSelectComponent
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() virtualScroll = false;
+
+  @Input() set options(options: any[]) {
+    if (options?.some((o) => o.inner)) {
+      this._options = options;
+      return;
+    }
+
+    this._options = this._toInnerOptions(options);
+  }
+
+  get options(): TreeNode[] {
+    return this._options;
+  }
 
   @Input('value') _value: any = undefined;
 
@@ -87,6 +99,12 @@ export class CpsTreeSelectComponent
 
   private _statusChangesSubscription: Subscription = new Subscription();
 
+  _options: TreeNode[] = [];
+  optionsMap = new Map<string, TreeNode>();
+  originalOptionsMap = new Map<string, any>();
+
+  treeSelection: any;
+
   virtualListHeight = 240;
   virtualScrollItemSize = 40;
 
@@ -107,8 +125,13 @@ export class CpsTreeSelectComponent
 
   ngOnInit() {
     this.cvtWidth = convertSize(this.width);
-    if (this.multiple && !this._value) {
-      this._value = [];
+    if (!this._value) {
+      if (this.multiple) {
+        this._value = [];
+        this.treeSelection = [];
+      }
+    } else {
+      this.treeSelection = this._valueToTreeSelection(this.value);
     }
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
@@ -124,13 +147,24 @@ export class CpsTreeSelectComponent
     this.cdRef.detectChanges();
   }
 
-  recalcVirtualListHeight() {
-    if (!this.virtualScroll) return;
-    const currentLen = this.treeList?.serializedValue?.length || 0;
-    this.virtualListHeight = Math.min(
-      this.virtualScrollItemSize * currentLen,
-      240
-    );
+  ngOnDestroy() {
+    this._statusChangesSubscription?.unsubscribe();
+    if (this.treeContainerElement)
+      this.treeContainerElement.removeEventListener(
+        'click',
+        this._handleOnContainerClick.bind(this)
+      );
+  }
+
+  private _initContainerClickListener() {
+    this.treeContainerElement =
+      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
+    if (this.treeContainerElement) {
+      this.treeContainerElement.addEventListener(
+        'click',
+        this._handleOnContainerClick.bind(this)
+      );
+    }
   }
 
   private _handleOnContainerClick(event: any) {
@@ -163,17 +197,6 @@ export class CpsTreeSelectComponent
     }
   }
 
-  private _initContainerClickListener() {
-    this.treeContainerElement =
-      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
-    if (this.treeContainerElement) {
-      this.treeContainerElement.addEventListener(
-        'click',
-        this._handleOnContainerClick.bind(this)
-      );
-    }
-  }
-
   private _getHTMLElementKey(elem: any): string {
     if (!elem?.classList) return '';
     const classList = [...elem.classList];
@@ -198,21 +221,23 @@ export class CpsTreeSelectComponent
     });
   }
 
-  ngOnDestroy() {
-    this._statusChangesSubscription?.unsubscribe();
-    if (this.treeContainerElement)
-      this.treeContainerElement.removeEventListener(
-        'click',
-        this._handleOnContainerClick.bind(this)
-      );
-  }
-
-  onSelectNode(event: any) {
-    if (!event?.node) return;
+  onSelectNode() {
     if (!this.multiple) {
-      this.valueChanged.emit(this.value);
       this._toggleOptions(this.selectContainer?.nativeElement, false);
     }
+  }
+
+  treeSelectionChanged(selection: any) {
+    this.updateValue(this._treeSelectionToValue(selection));
+  }
+
+  recalcVirtualListHeight() {
+    if (!this.virtualScroll) return;
+    const currentLen = this.treeList?.serializedValue?.length || 0;
+    this.virtualListHeight = Math.min(
+      this.virtualScrollItemSize * currentLen,
+      240
+    );
   }
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
@@ -225,8 +250,10 @@ export class CpsTreeSelectComponent
     this.isOpened = dd.classList.contains('active');
     this.optionFocused = false;
 
-    if (this.isOpened && this.value) {
-      this._expandToNodes(this.multiple ? this.value : [this.value]);
+    if (this.isOpened && this.treeSelection) {
+      this._expandToNodes(
+        this.multiple ? this.treeSelection : [this.treeSelection]
+      );
       this._updateOptions();
 
       setTimeout(() => {
@@ -240,11 +267,11 @@ export class CpsTreeSelectComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (this.virtualScroll && this.value) {
+        } else if (this.virtualScroll && this.treeSelection) {
           let key = '';
           if (this.multiple) {
-            if (this.value.length > 0) key = this.value[0].key;
-          } else key = this.value.key;
+            if (this.treeSelection.length > 0) key = this.treeSelection[0].key;
+          } else key = this.treeSelection.key;
           if (key) {
             const idx =
               this.treeList?.serializedValue?.findIndex(
@@ -257,35 +284,13 @@ export class CpsTreeSelectComponent
     }
   }
 
-  select(option: any): void {
-    function includes(array: any[], val: any): boolean {
-      return array ? !!find(array, (item) => isEqual(item, val)) : false;
-    }
+  remove(option: TreeNode): void {
+    if (!this.multiple) return;
 
-    if (this.multiple) {
-      let res = [] as any;
-      if (includes(this.value, option)) {
-        res = this.value.filter((v: any) => !isEqual(v, option));
-      } else {
-        this.options.forEach((o) => {
-          if (
-            this.value.some((v: any) => isEqual(v, o)) ||
-            isEqual(option, o)
-          ) {
-            res.push(o);
-          }
-        });
-      }
-      this.updateValue(res);
-    } else {
-      this.updateValue(option);
-    }
-  }
-
-  // this is a fix of primeng change detection bug when virtual scroller is enabled
-  private _updateOptions() {
-    if (!this.virtualScroll) return;
-    this.options = [...this.options];
+    this.treeSelection = this.treeSelection.filter(
+      (v: TreeNode) => !isEqual(v, option)
+    );
+    this.updateValue(this._treeSelectionToValue(this.treeSelection));
   }
 
   private _initArrowsNavigaton() {
@@ -321,14 +326,6 @@ export class CpsTreeSelectComponent
     }
   }
 
-  toggleAll() {
-    let res = [];
-    if (this.value.length < this.options.length) {
-      res = this.options;
-    }
-    this.updateValue(res);
-  }
-
   private _checkErrors(): void {
     const errors = this._control?.errors;
 
@@ -352,9 +349,8 @@ export class CpsTreeSelectComponent
     this.error = message || 'Unknown error';
   }
 
-  onChange = (value: any) => {
-    this.valueChanged.emit(value);
-  };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange = (value: any) => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
@@ -374,19 +370,21 @@ export class CpsTreeSelectComponent
   private updateValue(value: any): void {
     this.writeValue(value);
     this.onChange(value);
+    this.valueChanged.emit(value);
   }
 
   clear(dd: HTMLElement, event: any): void {
     event.stopPropagation();
 
     if (
-      (!this.multiple && this.value) ||
-      (this.multiple && this.value?.length > 0)
+      (!this.multiple && this.treeSelection) ||
+      (this.multiple && this.treeSelection?.length > 0)
     ) {
       if (this.openOnClear) {
         this._toggleOptions(dd, true);
       }
       const val = this.multiple ? [] : undefined;
+      this.treeSelection = val;
       this.updateValue(val);
     }
     this.optionFocused = false;
@@ -405,45 +403,125 @@ export class CpsTreeSelectComponent
     this._toggleOptions(this.selectContainer?.nativeElement, true);
   }
 
-  // TODO
-  // private _assignKeys() {}
-
-  // TODO
-  // getSelectedPath() {}
-
   private _expandToNodes(nodes: any[]) {
-    const nodeMap = this._buildNodeMap(this.options);
-    for (const node of nodes) {
-      const parentNode = this._getParentNode(node.key, nodeMap);
+    function getParentKey(key: string): string {
+      const lastSeparatorIndex = key.lastIndexOf('-');
+      if (lastSeparatorIndex !== -1) {
+        return key.substring(0, lastSeparatorIndex);
+      }
+      return '';
+    }
+
+    nodes.forEach((node) => {
+      const parentNodeKey = getParentKey(node.key);
+      const parentNode = this.optionsMap.get(parentNodeKey) || null;
+
       if (parentNode) {
         parentNode.expanded = true;
         this._expandToNodes([parentNode]);
       }
-    }
+    });
   }
 
-  private _buildNodeMap(options: any[]): Map<string, any> {
+  private _toInnerOptions(_options: any[]): TreeNode[] {
+    function mapOption(
+      o: any,
+      optionLabel: string,
+      optionInfo: string,
+      key: string,
+      originalOptionsMap: any
+    ) {
+      const inner = {
+        inner: true,
+        label: o[optionLabel],
+        info: o[optionInfo],
+        key,
+        styleClass: 'key-' + key
+      } as TreeNode;
+      if (o.type === 'directory') {
+        inner.type = 'directory';
+        inner.selectable = false;
+        inner.styleClass += ' cps-tree-node-fully-expandable';
+      }
+      if (o.children) {
+        inner.children = o.children.map((c: any, index: number) => {
+          return mapOption(
+            c,
+            optionLabel,
+            optionInfo,
+            key + '-' + index,
+            originalOptionsMap
+          );
+        });
+      }
+      originalOptionsMap.set(key, o);
+      return inner;
+    }
+
+    const res = _options.map((option, index) => {
+      return mapOption(
+        option,
+        this.optionLabel,
+        this.optionInfo,
+        '' + index,
+        this.originalOptionsMap
+      );
+    });
+
+    this.optionsMap = this._buildOptionsMap(res);
+
+    return res;
+  }
+
+  private _buildOptionsMap(options: any[]): Map<string, any> {
     const nodeMap = new Map<string, any>();
     for (const option of options) {
       nodeMap.set(option.key, option);
       if (option.children) {
-        const childNodeMap = this._buildNodeMap(option.children);
+        const childNodeMap = this._buildOptionsMap(option.children);
         childNodeMap.forEach((value, key) => nodeMap.set(key, value));
       }
     }
     return nodeMap;
   }
 
-  private _getParentNode(key: string, nodeMap: Map<string, any>): any | null {
-    const parentNodeKey = this._getParentKey(key);
-    return nodeMap.get(parentNodeKey) || null;
+  private _treeSelectionToValue(selection: any) {
+    if (!selection) return this.multiple ? [] : undefined;
+    if (this.multiple) {
+      return selection.map((s: any) => this.originalOptionsMap.get(s.key));
+    } else {
+      return this.originalOptionsMap.get(selection.key);
+    }
   }
 
-  private _getParentKey(key: string): string {
-    const lastSeparatorIndex = key.lastIndexOf('-');
-    if (lastSeparatorIndex !== -1) {
-      return key.substring(0, lastSeparatorIndex);
+  private _valueToTreeSelection(value: any) {
+    function getKey(v: any, map: Map<string, any>): string {
+      for (const [key, val] of map.entries()) {
+        if (isEqual(v, val)) {
+          return key;
+        }
+      }
+      return '';
     }
-    return '';
+
+    if (!value) return this.multiple ? [] : undefined;
+
+    if (this.multiple) {
+      const res = [] as TreeNode[];
+      value.forEach((v: any) => {
+        const key = getKey(v, this.originalOptionsMap);
+        if (key) res.push(this.optionsMap.get(key) as TreeNode);
+      });
+      return res;
+    } else {
+      const key = getKey(value, this.originalOptionsMap);
+      return key ? this.optionsMap.get(key) : undefined;
+    }
+  }
+
+  // this is a fix of primeng change detection bug when virtual scroller is enabled
+  private _updateOptions() {
+    if (!this.virtualScroll) return;
+    this.options = [...this.options];
   }
 }
