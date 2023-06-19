@@ -1,17 +1,17 @@
 <div
   class="cps-progress-linear"
   [ngStyle]="{
-    'max-width': cvtWidth,
-    height: cvtHeight,
-    'border-radius': cvtRadius,
-    background: cvtBgColor
+    'max-width': width,
+    height: height,
+    'border-radius': radius,
+    background: bgColor
   }">
   <div
     class="cps-progress-linear-line inc"
-    [style.background]="cvtColor"
+    [style.background]="color"
     [style.opacity]="opacity"></div>
   <div
     class="cps-progress-linear-line dec"
-    [style.background]="cvtColor"
+    [style.background]="color"
     [style.opacity]="opacity"></div>
 </div>

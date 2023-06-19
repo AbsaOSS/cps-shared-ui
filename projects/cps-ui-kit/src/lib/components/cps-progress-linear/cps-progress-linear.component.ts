@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { convertSize } from '../../utils/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
 
@@ -10,7 +10,7 @@ import { getCSSColor } from '../../utils/colors-utils';
   templateUrl: './cps-progress-linear.component.html',
   styleUrls: ['./cps-progress-linear.component.scss']
 })
-export class CpsProgressLinearComponent {
+export class CpsProgressLinearComponent implements OnInit {
   @Input() width: number | string = '100%';
   @Input() height: number | string = '0.5rem';
   @Input() color = 'calm';
@@ -18,18 +18,12 @@ export class CpsProgressLinearComponent {
   @Input() opacity: number | string = 1;
   @Input() radius: number | string = 0;
 
-  cvtWidth = '';
-  cvtHeight = '';
-  cvtRadius = '';
-  cvtColor = '';
-  cvtBgColor = '';
-
   ngOnInit(): void {
-    this.cvtWidth = convertSize(this.width);
-    this.cvtHeight = convertSize(this.height);
-    this.cvtRadius = convertSize(this.radius);
+    this.width = convertSize(this.width);
+    this.height = convertSize(this.height);
+    this.radius = convertSize(this.radius);
 
-    this.cvtColor = getCSSColor(this.color);
-    this.cvtBgColor = getCSSColor(this.bgColor);
+    this.color = getCSSColor(this.color);
+    this.bgColor = getCSSColor(this.bgColor);
   }
 }
