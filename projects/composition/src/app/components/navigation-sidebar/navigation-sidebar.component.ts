@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { CpsInputComponent } from 'cps-ui-kit';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, CommonModule],
+  imports: [RouterModule, CommonModule, CpsInputComponent, FormsModule],
   selector: 'app-navigation-sidebar',
   templateUrl: './navigation-sidebar.component.html',
   styleUrls: ['./navigation-sidebar.component.scss']
 })
-export class NavigationSidebarComponent {
+export class NavigationSidebarComponent implements OnInit {
   styles = [
     {
       title: 'Color pack',
@@ -18,7 +20,7 @@ export class NavigationSidebarComponent {
     // extend this list
   ];
 
-  components = [
+  private _components = [
     {
       title: 'Autocomplete',
       url: '/autocomplete'
@@ -85,4 +87,36 @@ export class NavigationSidebarComponent {
     }
     // extend this list
   ];
+
+  filteredComponents = [] as {
+    title: string;
+    url: string;
+  }[];
+
+  searchVal = '';
+
+  ngOnInit(): void {
+    this.filteredComponents = [...this._components];
+  }
+
+  onSearchChanged(value: string) {
+    this._filterComponentsList(value);
+  }
+
+  private _filterComponentsList(searchStr: string) {
+    if (!searchStr) {
+      this.filteredComponents = [...this._components];
+      return;
+    }
+    searchStr = searchStr.toLowerCase();
+
+    this.filteredComponents = this._components.filter((c) =>
+      c.title.toLocaleLowerCase().includes(searchStr)
+    );
+  }
+
+  onComponentSelect() {
+    this.searchVal = '';
+    this.filteredComponents = [...this._components];
+  }
 }
