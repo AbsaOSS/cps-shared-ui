@@ -27,7 +27,7 @@ export class TreeSelectPageComponent implements OnInit {
 
   options = [
     {
-      type: 'directory', // RESERVED KEY
+      isDirectory: true, // RESERVED KEY
       label: 'Dataset 1',
       children: [
         {
@@ -60,7 +60,7 @@ export class TreeSelectPageComponent implements OnInit {
       ]
     },
     {
-      type: 'directory', // RESERVED KEY
+      isDirectory: true, // RESERVED KEY
       label: 'Dataset 2',
       children: [
         {
@@ -78,7 +78,7 @@ export class TreeSelectPageComponent implements OnInit {
       ]
     },
     {
-      type: 'directory', // RESERVED KEY
+      isDirectory: true, // RESERVED KEY
       label: 'Dataset 3',
       children: [
         {
