@@ -13,18 +13,19 @@ export class TooltipDirective {
   @Input() disabled = false;
   @Input() openOn: 'hover' | 'focus' | 'click' = 'hover';
   @Input() set closeOnContentClick(value: boolean) {
-    if (!this.autoClose && value) {
+    if (this.autoClose && value) {
       throw new Error(
-        'closeOnContentClick cannot be true when autoClose is false'
+        'closeOnContentClick cannot be true when autoClose is true'
       );
     }
-    this.closeOnContentClick = value;
+    this._closeOnContentClick = value;
   }
 
   get closeOnContentClick() {
-    return this.closeOnContentClick;
+    return this._closeOnContentClick;
   }
 
+  private _closeOnContentClick = false;
   private _popup: HTMLDivElement = document.createElement('div');
   private _opened = false;
 
