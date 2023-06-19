@@ -63,6 +63,7 @@ export const iconNames = [
   'lock',
   'logout',
   'menu-expand',
+  'menu-shrink',
   'minus',
   'multiple_users',
   'open',
