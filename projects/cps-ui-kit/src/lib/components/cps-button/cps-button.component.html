@@ -3,14 +3,24 @@
     type="button"
     [ngClass]="classesList"
     [disabled]="disabled || loading"
-    [class.cps-spinner]="loading"
     (click)="onClick($event)"
+    [class.loading]="loading"
     [ngStyle]="{
     'background-color': type==='solid' ? buttonColor : 'transparent',
     color: textColor,
     height: cvtHeight || 'none',
   }">
-    <div class="cps-button__content">
+    <div class="cps-button__spinner">
+      <cps-progress-circular
+        *ngIf="loading"
+        color="currentColor"
+        [diameter]="cvtIconSize"
+        strokeWidth="2">
+      </cps-progress-circular>
+    </div>
+    <div
+      class="cps-button__content"
+      [style.visibility]="loading ? 'hidden' : 'visible'">
       <cps-icon
         *ngIf="icon"
         class="cps-button__icon"
