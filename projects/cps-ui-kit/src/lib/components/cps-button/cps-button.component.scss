@@ -77,14 +77,16 @@
       .cps-button__text {
         font-size: 20px;
       }
+
+      .cps-button__spinner {
+        ::ng-deep .cps-progress-circular {
+          width: 22px;
+        }
+      }
     }
 
-    &--large.cps-spinner {
+    &--large.loading {
       min-width: 56px;
-      &::after {
-        width: 22px;
-        height: 22px;
-      }
     }
 
     &--normal {
@@ -98,9 +100,15 @@
       .cps-button__text {
         font-size: 16px;
       }
+
+      .cps-button__spinner {
+        ::ng-deep .cps-progress-circular {
+          width: 18px;
+        }
+      }
     }
 
-    &--normal.cps-spinner {
+    &--normal.loading {
       min-width: 48px;
     }
 
@@ -115,14 +123,16 @@
       .cps-button__text {
         font-size: 14px;
       }
+
+      .cps-button__spinner {
+        ::ng-deep .cps-progress-circular {
+          width: 14px;
+        }
+      }
     }
 
-    &--small.cps-spinner {
+    &--small.loading {
       min-width: 40px;
-      &::after {
-        width: 14px;
-        height: 14px;
-      }
     }
 
     &--xsmall {
@@ -136,14 +146,16 @@
       .cps-button__text {
         font-size: 12px;
       }
+
+      .cps-button__spinner {
+        ::ng-deep .cps-progress-circular {
+          width: 10px;
+        }
+      }
     }
 
-    &--xsmall.cps-spinner {
+    &--xsmall.loading {
       min-width: 32px;
-      &::after {
-        width: 10px;
-        height: 10px;
-      }
     }
 
     &.cps-button--icon-before {
@@ -160,34 +172,7 @@
     }
   }
 
-  .cps-spinner {
-    position: relative;
-
-    &::after {
-      content: '';
-      position: absolute;
-      border-radius: 100%;
-      width: 18px;
-      height: 18px;
-      border: 2px solid transparent;
-      border-left-color: currentColor;
-      border-top-color: currentColor;
-      animation: spin 0.75s linear infinite;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: auto;
-    }
-
-    .cps-button__content {
-      visibility: hidden;
-    }
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(1turn);
-    }
+  .cps-button__spinner {
+    position: absolute;
   }
 }
