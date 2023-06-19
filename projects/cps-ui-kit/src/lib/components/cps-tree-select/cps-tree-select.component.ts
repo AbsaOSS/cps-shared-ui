@@ -438,7 +438,7 @@ export class CpsTreeSelectComponent
         key,
         styleClass: 'key-' + key
       } as TreeNode;
-      if (o.type === 'directory') {
+      if (o.isDirectory) {
         inner.type = 'directory';
         inner.selectable = false;
         inner.styleClass += ' cps-tree-node-fully-expandable';
