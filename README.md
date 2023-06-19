@@ -19,6 +19,7 @@ This repository consists of two projects:
 - Icon
 - Input
 - Loader
+- Progress circular (indeterminate)
 - Progress linear (indeterminate)
 - Radio
 - Select

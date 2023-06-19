@@ -14,6 +14,7 @@ export * from './lib/components/cps-tag/cps-tag.component';
 export * from './lib/components/cps-chip/cps-chip.component';
 export * from './lib/components/cps-loader/cps-loader.component';
 export * from './lib/components/cps-expansion-panel/cps-expansion-panel.component';
+export * from './lib/components/cps-progress-circular/cps-progress-circular.component';
 export * from './lib/components/cps-progress-linear/cps-progress-linear.component';
 export * from './lib/components/cps-datepicker/cps-datepicker.component';
 export * from './lib/components/cps-textarea/cps-textarea.component';

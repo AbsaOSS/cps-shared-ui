@@ -17,6 +17,7 @@ import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expans
 import { TreeSelectPageComponent } from './pages/tree-select-page/tree-select-page.component';
 import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
+import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
 
 const routes: Routes = [
   {
@@ -88,6 +89,11 @@ const routes: Routes = [
     path: 'expansion-panel',
     title: 'Expansion panel',
     component: ExpansionPanelPageComponent
+  },
+  {
+    path: 'progress-circular',
+    title: 'Progress circular',
+    component: ProgressCircularPageComponent
   },
   {
     path: 'progress-linear',
