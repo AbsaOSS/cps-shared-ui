@@ -5,6 +5,7 @@
 export * from './lib/components/cps-icon/cps-icon.component';
 export * from './lib/components/cps-input/cps-input.component';
 export * from './lib/components/cps-select/cps-select.component';
+export * from './lib/components/cps-tree-select/cps-tree-select.component';
 export * from './lib/components/cps-autocomplete/cps-autocomplete.component';
 export * from './lib/components/cps-button/cps-button.component';
 export * from './lib/components/cps-checkbox/cps-checkbox.component';
