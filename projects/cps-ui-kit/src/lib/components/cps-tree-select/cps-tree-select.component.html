@@ -89,7 +89,7 @@
         #treeList
         [virtualScroll]="virtualScroll"
         [virtualScrollItemSize]="virtualScrollItemSize"
-        [virtualScrollOptions]="{ numToleratedItems: 2 }"
+        [virtualScrollOptions]="{ numToleratedItems: 3 }"
         [scrollHeight]="virtualListHeight + 'px'"
         (onNodeSelect)="onSelectNode()"
         (onNodeExpand)="recalcVirtualListHeight()"
@@ -104,7 +104,11 @@
         </ng-template>
         <ng-template let-node pTemplate="default">
           <span class="cps-treeselect-option">
-            <span class="cps-treeselect-option-label">{{ node.label }}</span>
+            <span class="cps-treeselect-option-left">
+              <span *ngIf="multiple" class="cps-treeselect-option-check">
+              </span>
+              <span class="cps-treeselect-option-label">{{ node.label }}</span>
+            </span>
             <span class="cps-treeselect-option-info">{{ node.info }}</span>
           </span>
         </ng-template>

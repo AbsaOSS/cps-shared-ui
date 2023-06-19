@@ -9,6 +9,18 @@
       [clearable]="true"
       formControlName="requiredTreeSelect">
     </cps-tree-select>
+    <cps-tree-select
+      label="Loading tree select"
+      [loading]="true"
+      [options]="options"
+      hint="This tree select is currently in a loading state">
+    </cps-tree-select>
+
+    <cps-tree-select
+      label="Disabled tree select"
+      [disabled]="true"
+      hint="This tree select is disabled">
+    </cps-tree-select>
 
     <cps-tree-select
       label="Multiple tree select"
@@ -16,35 +28,59 @@
       optionLabel="label"
       optionInfo="attrType"
       placeholder="Select element"
-      [clearable]="true"
+      [clearable]="false"
       [value]="selectedItems"
+      [chips]="false"
+      hint="This tree select is not clearable"
       [multiple]="true">
     </cps-tree-select>
 
     <cps-tree-select
-      label="Multiple tree select with virtual scroller"
+      label="Multiple tree select with virtual scroll, chips and persistent clear icon"
       [options]="options"
       optionLabel="label"
+      hint="This tree select can handle large amounts of data due to virtual scroll"
       optionInfo="attrType"
-      placeholder="Select element"
+      [value]="[options[1].children[0], options[2].children[0]]"
       [clearable]="true"
+      [persistentClear]="true"
       [virtualScroll]="true"
       [multiple]="true">
+    </cps-tree-select>
+
+    <cps-tree-select
+      label="Multiple tree select with non-closable chips"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [value]="[options[1].children[0], options[2].children[0]]"
+      [closableChips]="false"></cps-tree-select>
+
+    <cps-tree-select
+      label="Multiple tree select with prefix icon"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      prefixIcon="plus"
+      [value]="[options[2].children[0]]">
     </cps-tree-select>
 
     <div class="sync-val-example">
       <cps-tree-select
         width="500"
+        label="Single tree select with two-way binding, select something"
+        hint="This tree select has a fixed width of 500px"
         [options]="options"
         optionInfo="attrType"
         optionLabel="label"
         [clearable]="true"
-        [persistentClear]="true"
-        [multiple]="false"
         [(ngModel)]="syncVal"
         [ngModelOptions]="{ standalone: true }">
       </cps-tree-select>
-      <span class="sync-val">{{ syncVal }}</span>
+      <span class="sync-val">{{ syncVal?.label }}</span>
     </div>
   </div>
 </form>

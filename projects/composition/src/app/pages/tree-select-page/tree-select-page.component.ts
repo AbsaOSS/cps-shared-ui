@@ -22,11 +22,6 @@ export class TreeSelectPageComponent implements OnInit {
       label: 'AttrB',
       info: 'AttrB',
       attrType: 'number'
-    },
-    {
-      label: 'Attr1 A',
-      data: 'attr 1 a data',
-      attrType: 'decimal'
     }
   ];
 
@@ -36,8 +31,8 @@ export class TreeSelectPageComponent implements OnInit {
       label: 'Dataset 1',
       children: [
         {
-          label: 'Attr1',
-          data: 'This is attribute 1',
+          label: 'Attr1_1',
+          data: 'This is attribute 1 1',
           attrType: 'struct',
           children: [
             {
@@ -52,8 +47,8 @@ export class TreeSelectPageComponent implements OnInit {
           ]
         },
         {
-          label: 'Attr2',
-          data: 'This is attribute 2',
+          label: 'Attr2_1',
+          data: 'This is attribute 2 1',
           attrType: 'struct',
           children: [
             {
@@ -69,15 +64,15 @@ export class TreeSelectPageComponent implements OnInit {
       label: 'Dataset 2',
       children: [
         {
-          label: 'Attr1',
+          label: 'Attr1_2',
           data: 'attr1 data'
         },
         {
-          label: 'Attr2',
+          label: 'Attr2_2',
           desc: 'attr2 desc'
         },
         {
-          label: 'Attr3',
+          label: 'Attr3_2',
           data: 'attr3 data'
         }
       ]
@@ -87,7 +82,7 @@ export class TreeSelectPageComponent implements OnInit {
       label: 'Dataset 3',
       children: [
         {
-          label: 'Attr1',
+          label: 'Attr1_3',
           data: 'attr1 data',
           children: [
             {
@@ -102,7 +97,7 @@ export class TreeSelectPageComponent implements OnInit {
           ]
         },
         {
-          label: 'Attr2',
+          label: 'Attr2_3',
           data: 'De Niro Movies',
           attrType: 'struct',
           children: [
