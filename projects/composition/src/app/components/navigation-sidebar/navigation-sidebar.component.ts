@@ -62,6 +62,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/loader'
     },
     {
+      title: 'Progress circular',
+      url: '/progress-circular'
+    },
+    {
       title: 'Progress linear',
       url: '/progress-linear'
     },
