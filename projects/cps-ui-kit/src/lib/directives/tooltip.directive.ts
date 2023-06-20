@@ -122,7 +122,7 @@ export class TooltipDirective {
   }
 
   @HostListener('mouseenter') onMouseEnter() {
-    if (this.openOn === 'hover') {
+    if (this.openOn === 'hover' && this._opened) {
       setTimeout(this._createTooltip, this.openDelay as number);
     }
   }

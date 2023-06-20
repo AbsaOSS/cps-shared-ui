@@ -78,6 +78,10 @@ export class NavigationSidebarComponent {
     {
       title: 'Textarea',
       url: '/textarea'
+    },
+    {
+      title: 'Tooltip',
+      url: '/tooltip'
     }
     // extend this list
   ];
