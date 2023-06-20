@@ -86,6 +86,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/textarea'
     },
     {
+      title: 'Tree autocomplete',
+      url: '/tree-autocomplete'
+    },
+    {
       title: 'Tree select',
       url: '/tree-select'
     }
