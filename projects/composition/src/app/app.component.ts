@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
+import packageJson from 'projects/cps-ui-kit/package.json';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,7 @@ import { filter, map } from 'rxjs/operators';
 })
 export class AppComponent {
   componentTitle = '';
+  version = packageJson?.version;
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute
