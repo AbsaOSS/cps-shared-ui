@@ -38,7 +38,6 @@ export class TooltipDirective {
     this._constructElement();
 
     if (
-      this._popup &&
       !this._checkIfEnoughSpace(
         {
           x: this._popup.getBoundingClientRect().left,
@@ -73,8 +72,8 @@ export class TooltipDirective {
     popup: HTMLDivElement
   ) {
     if (
-      coords.x + popup.getBoundingClientRect().width > window.innerWidth ||
-      coords.x - popup.getBoundingClientRect().width < 0
+      coords.x + popup.getBoundingClientRect().width >= window.innerWidth ||
+      coords.x - popup.getBoundingClientRect().width <= 0
     )
       return false;
 
