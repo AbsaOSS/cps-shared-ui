@@ -20,6 +20,7 @@
 - Select
 - Tag
 - Textarea
+- Tree autocomplete
 - Tree select
 
 ### License
