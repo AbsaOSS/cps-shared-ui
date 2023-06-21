@@ -25,13 +25,14 @@
         <div
           class="cps-treeautocomplete-box-items"
           *ngIf="
-            (value && !multiple) || (value?.length > 0 && multiple);
+            (treeSelection && !multiple) ||
+              (treeSelection?.length > 0 && multiple);
             else treeAutocompleteInput
           ">
           <span *ngIf="!multiple" class="single-item">
             <div class="single-item-selection">
               <span [style.opacity]="activeSingle ? 0 : 1">{{
-                value[optionLabel]
+                treeSelection[optionLabel]
               }}</span>
             </div>
             <ng-container
@@ -47,7 +48,7 @@
 
           <div *ngIf="multiple && !chips" class="text-group">
             <div
-              *ngFor="let val of value; let last = last"
+              *ngFor="let val of treeSelection; let last = last"
               class="text-group-item"
               [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }">
               {{ val[optionLabel] }}{{ !last ? ',' : '' }}
@@ -58,7 +59,7 @@
 
           <div *ngIf="multiple && chips" class="chips-group">
             <cps-chip
-              *ngFor="let val of value; let last = last"
+              *ngFor="let val of treeSelection; let last = last"
               [disabled]="disabled"
               [closable]="closableChips"
               (closed)="remove(val)"
@@ -75,7 +76,8 @@
             [style.visibility]="
               persistentClear ||
               (!persistentClear &&
-                ((multiple && value?.length) || (!multiple && value)))
+                ((multiple && treeSelection?.length) ||
+                  (!multiple && treeSelection)))
                 ? 'visible'
                 : 'hidden'
             "
@@ -103,7 +105,7 @@
         [virtualScrollItemSize]="virtualScrollItemSize"
         [virtualScrollOptions]="{ numToleratedItems: 3 }"
         [scrollHeight]="virtualListHeight + 'px'"
-        (onNodeSelect)="onSelectNode($event)"
+        (onNodeSelect)="onSelectNode()"
         (onNodeExpand)="recalcVirtualListHeight()"
         (onNodeCollapse)="recalcVirtualListHeight()"
         (onFilter)="onFilterOptions()"
@@ -132,43 +134,6 @@
           </span>
         </ng-template>
       </p-tree>
-      <!-- <div
-        class="cps-autocomplete-options-option select-all-option"
-        [class.allselected]="value?.length === options.length"
-        *ngIf="multiple && selectAll"
-        (click)="toggleAll()">
-        <span class="cps-autocomplete-options-option-left">
-          <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
-          </span>
-          <span class="cps-autocomplete-options-option-label">Select all</span>
-        </span>
-      </div>
-      <div
-        class="cps-autocomplete-options-option"
-        *ngFor="let option of filteredOptions"
-        (click)="onOptionClick(option, autocompleteContainer)"
-        [class.selected]="
-          option
-            | checkOptionSelected
-              : value
-              : multiple
-              : returnObject
-              : optionValue
-        ">
-        <span class="cps-autocomplete-options-option-left">
-          <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
-          </span>
-          <span
-            data-cy-id="cps-autocomplete-options"
-            class="cps-autocomplete-options-option-label"
-            >{{ option[optionLabel] }}</span
-          >
-        </span>
-
-        <span class="cps-autocomplete-options-option-right">{{
-          option[optionInfo]
-        }}</span>
-      </div> -->
     </div>
     <cps-progress-linear
       *ngIf="loading"
@@ -197,7 +162,7 @@
     [class]="inputClass"
     [style]="inputStyle"
     [placeholder]="
-      (!value && !multiple) || (value?.length < 1 && multiple)
+      (!treeSelection && !multiple) || (treeSelection?.length < 1 && multiple)
         ? placeholder
         : ''
     "

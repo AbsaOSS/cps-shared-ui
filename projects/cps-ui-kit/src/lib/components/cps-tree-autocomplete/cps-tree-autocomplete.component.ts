@@ -112,7 +112,7 @@ export class CpsTreeAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   treeContainerElement!: HTMLElement;
-  optionFocused = false; // TODO make sure it's changed everywhere where needed
+  optionFocused = false;
 
   inputText = '';
   backspaceClickedOnce = false;
@@ -225,14 +225,9 @@ export class CpsTreeAutocompleteComponent
     this.valueChanged.emit(value);
   }
 
-  onSelectNode(event: any) {
-    // TODO fix
+  onSelectNode() {
     this.backspaceClickedOnce = false;
-    // this._clearInput();
-    // this.focusOptions();
-    // setTimeout(() => {
-    //   this.focusInput();
-    // }, 0);
+    this._clearInput();
 
     if (!this.multiple) {
       this._toggleOptions(this.treeAutocompleteContainer?.nativeElement, false);
@@ -250,7 +245,7 @@ export class CpsTreeAutocompleteComponent
       this.treeList.resetFilter();
     }
     this.focus();
-    // this._dehighlightOption();
+    this.optionFocused = false;
   }
 
   onContainerKeyDown(event: any, dd: HTMLElement) {
@@ -278,10 +273,6 @@ export class CpsTreeAutocompleteComponent
         this._confirmInput(event?.target?.value || '');
         event.stopPropagation();
       }
-    } else if ([38, 40].includes(code)) {
-      event.preventDefault();
-    } else {
-      // this._dehighlightOption();
     }
   }
 
@@ -439,11 +430,10 @@ export class CpsTreeAutocompleteComponent
       this.updateValue(val);
     }
     this._clearInput();
-    // this._dehighlightOption();
+    this.optionFocused = false;
     setTimeout(() => {
       this.focusInput();
     }, 0);
-    this.optionFocused = false;
   }
 
   private _checkErrors(): void {
@@ -639,7 +629,6 @@ export class CpsTreeAutocompleteComponent
   private _closeAndClear(dd: HTMLElement) {
     this._clearInput();
     this._toggleOptions(dd, false);
-    // this._dehighlightOption();
   }
 
   private _confirmInput(searchVal: string) {

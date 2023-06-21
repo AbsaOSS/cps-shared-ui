@@ -194,6 +194,7 @@ export class CpsAutocompleteComponent
     if (!this.isOpened) {
       this._toggleOptions(this.autocompleteContainer?.nativeElement, true);
     }
+    this._dehighlightOption();
     this.backspaceClickedOnce = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
 
@@ -293,8 +294,6 @@ export class CpsAutocompleteComponent
       }
     } else if ([38, 40].includes(code)) {
       event.preventDefault();
-    } else {
-      this._dehighlightOption();
     }
   }
 
