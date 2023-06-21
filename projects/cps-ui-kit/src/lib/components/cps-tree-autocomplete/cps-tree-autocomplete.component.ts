@@ -64,6 +64,7 @@ export class CpsTreeAutocompleteComponent
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() virtualScroll = false;
+  @Input() emptyMessage = 'No results found';
 
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {
@@ -111,13 +112,11 @@ export class CpsTreeAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   treeContainerElement!: HTMLElement;
-  optionFocused = false;
+  optionFocused = false; // TODO make sure it's changed everywhere where needed
 
   inputText = '';
-  filteredOptions = [] as any[];
   backspaceClickedOnce = false;
   activeSingle = false;
-  optionHighlightedIndex = -1;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -129,7 +128,6 @@ export class CpsTreeAutocompleteComponent
   }
 
   ngOnInit() {
-    this.filteredOptions = this.options;
     this.cvtWidth = convertSize(this.width);
     if (!this._value) {
       if (this.multiple) {
@@ -227,11 +225,18 @@ export class CpsTreeAutocompleteComponent
     this.valueChanged.emit(value);
   }
 
-  onSelectNode() {
+  onSelectNode(event: any) {
+    // TODO fix
+    this.backspaceClickedOnce = false;
+    // this._clearInput();
+    // this.focusOptions();
+    // setTimeout(() => {
+    //   this.focusInput();
+    // }, 0);
+
     if (!this.multiple) {
       this._toggleOptions(this.treeAutocompleteContainer?.nativeElement, false);
     }
-    // TODO some additional logic needed
   }
 
   onClickOutside(dd: HTMLElement) {
@@ -242,10 +247,10 @@ export class CpsTreeAutocompleteComponent
     if (!this.multiple) {
       this.activeSingle = true;
       this.inputText = this._getValueLabel();
-      this.filteredOptions = this.options;
+      this.treeList.resetFilter();
     }
     this.focus();
-    this._dehighlightOption();
+    // this._dehighlightOption();
   }
 
   onContainerKeyDown(event: any, dd: HTMLElement) {
@@ -253,11 +258,6 @@ export class CpsTreeAutocompleteComponent
     // escape
     if (code === 27) {
       this._closeAndClear(dd);
-    }
-    // enter
-    else if (code === 13) {
-      const option = this.filteredOptions[this.optionHighlightedIndex];
-      this._clickOption(option, dd);
     }
     // click down arrow
     else if (code === 40) {
@@ -274,14 +274,14 @@ export class CpsTreeAutocompleteComponent
     }
     // enter
     else if (code === 13) {
-      if (this.optionHighlightedIndex < 0) {
+      if (!this.optionFocused) {
         this._confirmInput(event?.target?.value || '');
         event.stopPropagation();
       }
     } else if ([38, 40].includes(code)) {
       event.preventDefault();
     } else {
-      this._dehighlightOption();
+      // this._dehighlightOption();
     }
   }
 
@@ -375,47 +375,52 @@ export class CpsTreeAutocompleteComponent
       (v: TreeNode) => !isEqual(v, option)
     );
     this.updateValue(this._treeSelectionToValue(this.treeSelection));
-  }
 
-  select(option: any): void {
-    function includes(array: any[], val: any): boolean {
-      return array ? !!find(array, (item) => isEqual(item, val)) : false;
-    }
-
-    this.backspaceClickedOnce = false;
-    if (this.multiple) {
-      let res = [] as any;
-      if (includes(this.value, option)) {
-        res = this.value.filter((v: any) => !isEqual(v, option));
-      } else {
-        this.options.forEach((o) => {
-          if (
-            this.value.some((v: any) => isEqual(v, o)) ||
-            isEqual(option, o)
-          ) {
-            res.push(o);
-          }
-        });
-      }
-      this.updateValue(res);
-    } else {
-      this.updateValue(option);
-    }
     this._clearInput();
     setTimeout(() => {
       this.focusInput();
     }, 0);
   }
 
+  private _select(option: TreeNode): void {
+    function includes(array: any[], val: any): boolean {
+      return array ? !!find(array, (item) => isEqual(item, val)) : false;
+    }
+
+    this.backspaceClickedOnce = false;
+
+    if (this.multiple) {
+      if (includes(this.treeSelection, option)) {
+        this.treeSelection = this.treeSelection.filter(
+          (v: TreeNode) => !isEqual(v, option)
+        );
+      } else {
+        this.treeSelection.push(option);
+      }
+    } else {
+      this.treeSelection = option;
+    }
+    this.updateValue(this._treeSelectionToValue(this.treeSelection));
+
+    this._clearInput();
+    setTimeout(() => {
+      this.focusInput();
+    }, 0);
+  }
+
+  focusOptions() {
+    const firstElem = this.treeContainerElement?.querySelector(
+      '.p-treenode-content'
+    );
+    if (firstElem) (firstElem as HTMLElement).focus();
+    this.optionFocused = true;
+  }
+
   private _initArrowsNavigaton() {
     if (!this.isOpened) return;
 
     if (!this.optionFocused) {
-      const firstElem = this.treeContainerElement?.querySelector(
-        '.p-treenode-content'
-      );
-      if (firstElem) (firstElem as HTMLElement).focus();
-      this.optionFocused = true;
+      this.focusOptions();
     }
   }
 
@@ -430,10 +435,11 @@ export class CpsTreeAutocompleteComponent
         this._toggleOptions(dd, true);
       }
       const val = this.multiple ? [] : undefined;
+      this.treeSelection = val;
       this.updateValue(val);
     }
     this._clearInput();
-    this._dehighlightOption();
+    // this._dehighlightOption();
     setTimeout(() => {
       this.focusInput();
     }, 0);
@@ -462,10 +468,6 @@ export class CpsTreeAutocompleteComponent
     console.log('message', message);
     this.error = message || 'Unknown error';
   }
-
-  // onOptionClick(option: any, dd: HTMLElement) {
-  //   this._clickOption(option, dd);
-  // }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
@@ -609,11 +611,8 @@ export class CpsTreeAutocompleteComponent
     this.options = [...this.options];
   }
 
-  private _clickOption(option: any, dd: HTMLElement) {
-    this.select(option);
-    if (!this.multiple) {
-      this._toggleOptions(dd, false);
-    }
+  onFilterOptions() {
+    this.recalcVirtualListHeight();
   }
 
   filterOptions(event: any) {
@@ -623,9 +622,8 @@ export class CpsTreeAutocompleteComponent
     this.backspaceClickedOnce = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
 
-    this.filteredOptions = this.options.filter((o: any) =>
-      o[this.optionLabel].toLowerCase().includes(searchVal)
-    );
+    if (!searchVal) this.treeList.resetFilter();
+    else this.treeList._filter(searchVal);
   }
 
   private _getValueLabel() {
@@ -633,7 +631,7 @@ export class CpsTreeAutocompleteComponent
   }
 
   private _clearInput() {
-    this.filteredOptions = this.options;
+    this.treeList.resetFilter();
     this.inputText = '';
     this.activeSingle = false;
   }
@@ -641,25 +639,7 @@ export class CpsTreeAutocompleteComponent
   private _closeAndClear(dd: HTMLElement) {
     this._clearInput();
     this._toggleOptions(dd, false);
-    this._dehighlightOption();
-  }
-
-  private _getHTMLOptions() {
-    return (
-      this.treeAutocompleteContainer?.nativeElement?.querySelectorAll(
-        '.cps-autocomplete-options-option'
-      ) || []
-    );
-  }
-
-  private _dehighlightOption(el?: HTMLElement) {
-    if (el) el.classList.remove('highlighten');
-    else {
-      if (this.optionHighlightedIndex < 0) return;
-      const optionItems = this._getHTMLOptions();
-      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
-      this.optionHighlightedIndex = -1;
-    }
+    // this._dehighlightOption();
   }
 
   private _confirmInput(searchVal: string) {
@@ -667,16 +647,17 @@ export class CpsTreeAutocompleteComponent
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
       if (this.multiple) return;
+      this.treeSelection = undefined;
       this.updateValue(undefined);
       this._closeAndClear(this.treeAutocompleteContainer?.nativeElement);
       return;
     }
 
-    const found = this.filteredOptions.find(
-      (o: any) => o[this.optionLabel].toLowerCase() === searchVal
+    const found = this.treeList?.serializedValue?.find(
+      (sv: any) => sv?.node?.label?.toLowerCase() === searchVal
     );
     if (found) {
-      this.select(found);
+      this._select(found.node);
       this._toggleOptions(
         this.treeAutocompleteContainer?.nativeElement,
         this.multiple
@@ -684,7 +665,7 @@ export class CpsTreeAutocompleteComponent
     } else {
       if (!this.multiple) {
         this.inputText = this._getValueLabel();
-        this.filteredOptions = this.options;
+        this.treeList.resetFilter();
         return;
       }
     }
@@ -697,11 +678,10 @@ export class CpsTreeAutocompleteComponent
 
     if (this.value?.length) {
       if (this.backspaceClickedOnce) {
-        this.updateValue(
-          this.value.filter(
-            (v: any, index: number) => index !== this.value.length - 1
-          )
+        this.treeSelection = this.treeSelection.filter(
+          (v: any, index: number) => index !== this.value.length - 1
         );
+        this.updateValue(this._treeSelectionToValue(this.treeSelection));
 
         this.backspaceClickedOnce = false;
       } else this.backspaceClickedOnce = true;

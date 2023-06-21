@@ -224,7 +224,7 @@ $hover-transition-duration: 0.2s;
       border-radius: 4px;
       overflow-x: hidden;
       display: none;
-      max-height: 240px;
+      max-height: 242px;
       overflow-y: auto;
       box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
         0 1px 10px #0000001f;
@@ -401,6 +401,12 @@ $hover-transition-duration: 0.2s;
           list-style-type: none;
         }
 
+        .p-tree-empty-message {
+          padding: 11px;
+          font-size: 16px;
+          cursor: default;
+        }
+
         .cps-tree-node-fully-expandable {
           cursor: pointer;
           -webkit-user-select: none; /* Safari */
@@ -538,7 +544,7 @@ $hover-transition-duration: 0.2s;
 
   .about-to-remove {
     color: $treeautocomplete-about-remove-color;
-    ::ng-deep .chip {
+    ::ng-deep .cps-chip {
       background-color: $treeautocomplete-about-remove-background;
     }
   }

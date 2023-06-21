@@ -98,13 +98,15 @@
     <div class="cps-treeautocomplete-options">
       <p-tree
         #treeList
+        [emptyMessage]="emptyMessage"
         [virtualScroll]="virtualScroll"
         [virtualScrollItemSize]="virtualScrollItemSize"
         [virtualScrollOptions]="{ numToleratedItems: 3 }"
         [scrollHeight]="virtualListHeight + 'px'"
-        (onNodeSelect)="onSelectNode()"
+        (onNodeSelect)="onSelectNode($event)"
         (onNodeExpand)="recalcVirtualListHeight()"
         (onNodeCollapse)="recalcVirtualListHeight()"
+        (onFilter)="onFilterOptions()"
         [value]="options"
         [(selection)]="treeSelection"
         (selectionChange)="treeSelectionChanged($event)"
