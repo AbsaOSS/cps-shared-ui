@@ -27,7 +27,6 @@ export class TooltipDirective {
 
   private _closeOnContentClick = false;
   private _popup: HTMLDivElement = document.createElement('div');
-  private _opened = false;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
@@ -36,6 +35,9 @@ export class TooltipDirective {
     const tooltip = document.body.appendChild(this._popup);
 
     this._constructElement();
+
+    if (this.closeOnContentClick)
+      this._popup.addEventListener('click', this._destroyTooltip);
 
     if (
       !this._checkIfEnoughSpace(
@@ -144,12 +146,8 @@ export class TooltipDirective {
   }
 
   @HostListener('click') onClick() {
-    if (this.openOn === 'click' && !this._opened) {
-      this._opened = true;
+    if (this.openOn === 'click') {
       setTimeout(this._createTooltip, this.openDelay as number);
-    } else if (this.closeOnContentClick && this._opened) {
-      this._opened = false;
-      setTimeout(this._destroyTooltip, this.closeDelay as number);
     }
   }
 }

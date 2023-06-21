@@ -1,4 +1,4 @@
-<h3>Tooltip positions</h3>
+<h3 class="title first">Tooltip positions</h3>
 
 <div class="btns-container">
   <cps-button
@@ -23,3 +23,11 @@
     position="right"
     label="Tooltip on right"></cps-button>
 </div>
+
+<h3 class="title">Close on content click tooltip</h3>
+
+<cps-button
+  cpsTooltip
+  label="Click on tooltip to close it"
+  [autoClose]="false"
+  [closeOnContentClick]="true"></cps-button>
