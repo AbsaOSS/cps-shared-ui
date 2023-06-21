@@ -67,6 +67,7 @@ export class CpsAutocompleteComponent
   @Input() prefixIcon: IconType = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
+  @Input() emptyMessage = 'No results found';
 
   @Input('value') _value: any = undefined;
 
