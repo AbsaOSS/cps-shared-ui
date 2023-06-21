@@ -89,7 +89,8 @@ export class TooltipDirective {
             this._elementRef.nativeElement.offsetWidth / 2,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
-            this._elementRef.nativeElement.offsetHeight
+            this._elementRef.nativeElement.offsetHeight +
+            6
         };
       case 'left':
         return {
@@ -116,13 +117,16 @@ export class TooltipDirective {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
             this._elementRef.nativeElement.offsetWidth / 2,
-          y: this._elementRef.nativeElement.getBoundingClientRect().top - 6
+          y:
+            this._elementRef.nativeElement.getBoundingClientRect().top -
+            this._popup.getBoundingClientRect().height -
+            6
         };
     }
   }
 
   @HostListener('mouseenter') onMouseEnter() {
-    if (this.openOn === 'hover' && this._opened) {
+    if (this.openOn === 'hover') {
       setTimeout(this._createTooltip, this.openDelay as number);
     }
   }

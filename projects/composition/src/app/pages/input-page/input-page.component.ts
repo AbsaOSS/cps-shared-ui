@@ -9,16 +9,10 @@ import {
   Validators
 } from '@angular/forms';
 import { CpsInputComponent } from 'cps-ui-kit';
-import { TooltipDirective } from 'projects/cps-ui-kit/src/lib/directives/tooltip.directive';
 
 @Component({
   standalone: true,
-  imports: [
-    CpsInputComponent,
-    ReactiveFormsModule,
-    FormsModule,
-    TooltipDirective
-  ],
+  imports: [CpsInputComponent, ReactiveFormsModule, FormsModule],
   selector: 'app-input-page',
   templateUrl: './input-page.component.html',
   styleUrls: ['./input-page.component.scss'],
