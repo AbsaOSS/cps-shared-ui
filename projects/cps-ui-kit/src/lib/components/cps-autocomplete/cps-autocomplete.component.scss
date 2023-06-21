@@ -360,7 +360,7 @@ $hover-transition-duration: 0.2s;
 
   .about-to-remove {
     color: $autocomplete-about-remove-color;
-    ::ng-deep .chip {
+    ::ng-deep .cps-chip {
       background-color: $autocomplete-about-remove-background;
     }
   }
