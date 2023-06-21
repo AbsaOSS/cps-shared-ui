@@ -10,7 +10,7 @@ export class TooltipDirective {
   @Input() closeDelay: string | number = 300;
   @Input() autoClose = true;
   @Input() position: 'top' | 'bottom' | 'left' | 'right' = 'top';
-  @Input() disabled = false;
+  @Input() tooltipDisabled = false;
   @Input() openOn: 'hover' | 'focus' | 'click' = 'hover';
   @Input() set closeOnContentClick(value: boolean) {
     if (this.autoClose && value) {
@@ -32,6 +32,8 @@ export class TooltipDirective {
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   private _createTooltip = () => {
+    if (this.tooltipDisabled) return;
+
     const tooltip = document.body.appendChild(this._popup);
 
     this._constructElement();
@@ -56,6 +58,8 @@ export class TooltipDirective {
   };
 
   private _destroyTooltip = () => {
+    if (this.tooltipDisabled) return;
+
     this._popup?.remove();
   };
 
