@@ -1,27 +1,28 @@
 $color-calm: var(--cps-color-calm);
 $color-error: #cc3333;
 $error-background: #fef3f2;
-$autocomplete-placeholder-color: var(--cps-color-text-lightest);
-$autocomplete-label-color: var(--cps-color-text-dark);
-$autocomplete-label-disabled-color: var(--cps-color-text-mild);
-$autocomplete-items-disabled-color: var(--cps-color-text-light);
-$autocomplete-hint-color: var(--cps-color-text-mild);
+$treeautocomplete-placeholder-color: var(--cps-color-text-lightest);
+$treeautocomplete-label-color: var(--cps-color-text-dark);
+$treeautocomplete-label-disabled-color: var(--cps-color-text-mild);
+$treeautocomplete-items-disabled-color: var(--cps-color-text-light);
+$treeautocomplete-hint-color: var(--cps-color-text-mild);
 $option-hover-background: #f8f4f5;
 $selected-option-background: #efe4e7;
 $option-highlight-background: #f5eeef;
 $option-highlight-selected-background: #e6d4d9;
-$autocomplete-option-info-color: var(--cps-color-text-light);
-$autocomplete-option-value-color: var(--cps-color-text-dark);
-$autocomplete-about-remove-color: var(--cps-color-text-light);
-$autocomplete-about-remove-background: var(--cps-color-bg-mid);
-$autocomplete-prefix-icon-color: var(--cps-color-text-dark);
+$treeautocomplete-option-info-color: var(--cps-color-text-light);
+$treeautocomplete-option-value-color: var(--cps-color-text-dark);
+$treeautocomplete-about-remove-color: var(--cps-color-text-light);
+$treeautocomplete-about-remove-background: var(--cps-color-bg-mid);
+$treeautocomplete-prefix-icon-color: var(--cps-color-text-dark);
+$treeautocomplete-option-chevron-color: var(--cps-color-text-light);
 
 $hover-transition-duration: 0.2s;
 
 :host {
   display: flex;
 
-  .cps-autocomplete {
+  .cps-treeautocomplete {
     position: relative;
     width: 100%;
     outline: none;
@@ -30,26 +31,26 @@ $hover-transition-duration: 0.2s;
 
     &-container {
       position: relative;
-      .autocomplete-progress-bar {
+      .cps-treeautocomplete-progress-bar {
         position: absolute;
         bottom: 1px;
         padding: 0 1px;
       }
 
       &.focused {
-        .cps-autocomplete-box {
+        .cps-treeautocomplete-box {
           background: white !important;
         }
       }
     }
 
     &.active {
-      .cps-autocomplete-options {
+      .cps-treeautocomplete-options {
         display: block;
       }
-      .cps-autocomplete-box {
+      .cps-treeautocomplete-box {
         border: 1px solid $color-calm;
-        .cps-autocomplete-box-area {
+        .cps-treeautocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
           }
@@ -57,19 +58,19 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    .cps-autocomplete-label {
+    .cps-treeautocomplete-label {
       display: inline-block;
       margin-bottom: 0.2rem;
-      color: $autocomplete-label-color;
+      color: $treeautocomplete-label-color;
       font-size: 0.875rem;
     }
 
     .persistent-clear,
-    .cps-autocomplete-container.focused,
-    .cps-autocomplete-container:hover {
-      .cps-autocomplete-box {
-        .cps-autocomplete-box-icons {
-          .cps-autocomplete-box-clear-icon {
+    .cps-treeautocomplete-container.focused,
+    .cps-treeautocomplete-container:hover {
+      .cps-treeautocomplete-box {
+        .cps-treeautocomplete-box-icons {
+          .cps-treeautocomplete-box-clear-icon {
             cps-icon {
               opacity: 0.5;
             }
@@ -78,7 +79,7 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    .cps-autocomplete-box {
+    .cps-treeautocomplete-box {
       overflow: hidden;
       min-height: 38px;
       width: 100%;
@@ -97,7 +98,7 @@ $hover-transition-duration: 0.2s;
         align-items: center;
         .prefix-icon {
           margin-right: 0.5rem;
-          color: $autocomplete-prefix-icon-color;
+          color: $treeautocomplete-prefix-icon-color;
         }
       }
 
@@ -108,12 +109,12 @@ $hover-transition-duration: 0.2s;
         min-width: 30px;
         flex-grow: 1;
         font-size: 1rem;
-        color: $autocomplete-option-value-color;
+        color: $treeautocomplete-option-value-color;
         border-style: none;
         outline: none;
         font-family: Source Sans Pro, sans-serif;
         &::placeholder {
-          color: $autocomplete-placeholder-color;
+          color: $treeautocomplete-placeholder-color;
           font-style: italic;
           opacity: 1; /* Firefox */
         }
@@ -128,7 +129,7 @@ $hover-transition-duration: 0.2s;
         position: relative;
 
         .single-item {
-          color: $autocomplete-option-value-color;
+          color: $treeautocomplete-option-value-color;
           display: inline-flex;
           &-selection {
             display: inline-flex;
@@ -160,7 +161,7 @@ $hover-transition-duration: 0.2s;
           }
         }
         .text-group {
-          color: $autocomplete-option-value-color;
+          color: $treeautocomplete-option-value-color;
           padding-top: 3px;
           padding-bottom: 3px;
           display: inline-flex;
@@ -176,17 +177,17 @@ $hover-transition-duration: 0.2s;
 
       &:hover {
         border: 1px solid $color-calm;
-        .cps-autocomplete-box-area {
+        .cps-treeautocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
           }
         }
       }
 
-      .cps-autocomplete-box-icons {
+      .cps-treeautocomplete-box-icons {
         display: flex;
 
-        .cps-autocomplete-box-clear-icon {
+        .cps-treeautocomplete-box-clear-icon {
           cursor: pointer;
           display: flex;
           color: $color-calm;
@@ -199,7 +200,7 @@ $hover-transition-duration: 0.2s;
             }
           }
         }
-        .cps-autocomplete-box-chevron {
+        .cps-treeautocomplete-box-chevron {
           display: flex;
           margin-left: 8px;
           transition-duration: $hover-transition-duration;
@@ -208,13 +209,13 @@ $hover-transition-duration: 0.2s;
     }
 
     &.active {
-      .cps-autocomplete-box-chevron {
+      .cps-treeautocomplete-box-chevron {
         top: 22px;
         transform: rotate(180deg);
       }
     }
 
-    .cps-autocomplete-options {
+    .cps-treeautocomplete-options {
       z-index: 1001;
       position: absolute;
       width: 100%;
@@ -228,92 +229,276 @@ $hover-transition-duration: 0.2s;
       box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
         0 1px 10px #0000001f;
 
-      .cps-autocomplete-options-option {
-        padding: 12px;
-        justify-content: space-between;
-        display: flex;
-        cursor: pointer;
+      ::ng-deep {
+        .p-tree {
+          border: 1px solid #dee2e6;
+          background: #ffffff;
+          color: $treeautocomplete-option-value-color;
+          padding: 0;
+        }
 
-        &:hover {
+        .cps-treeautocomplete-option {
+          margin-right: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          &-left {
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+          }
+
+          &-check {
+            background-color: transparent;
+            border: 0;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
+            box-sizing: border-box;
+            position: relative;
+            flex-shrink: 0;
+            transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+              background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+            margin-right: 8px;
+            opacity: 0;
+            &::after {
+              color: $color-calm;
+              top: 4px;
+              left: 1px;
+              width: 8px;
+              height: 3px;
+              border-left: 2px solid currentColor;
+              transform: rotate(-45deg);
+              opacity: 1;
+              box-sizing: content-box;
+              position: absolute;
+              content: '';
+              border-bottom: 2px solid currentColor;
+              transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+            }
+          }
+
+          &-info {
+            margin-left: 6px;
+            color: $treeautocomplete-option-info-color;
+          }
+        }
+
+        .p-component {
+          font-family: 'Source Sans Pro', sans-serif;
+          font-size: 14px;
+          font-weight: normal;
+        }
+
+        .p-tree-wrapper {
+          overflow: auto;
+        }
+
+        .p-tree-container {
+          margin: 0;
+          padding: 0;
+          list-style-type: none;
+          overflow: auto;
+        }
+
+        .p-tree .p-tree-container .p-treenode .p-treenode-content {
+          transition: box-shadow 0.2s;
+          padding: 0.25rem;
+        }
+
+        .p-treenode-content {
+          display: flex;
+          align-items: center;
+          .p-treenode-label {
+            width: 100%;
+          }
+        }
+
+        .p-tree
+          .p-tree-container
+          .p-treenode
+          .p-treenode-content
+          .p-tree-toggler {
+          margin-right: 0.5rem;
+          width: 2rem;
+          height: 2rem;
+          color: $treeautocomplete-option-chevron-color;
+          border: 0 none;
+          background: transparent;
+          border-radius: 50%;
+          transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+        }
+
+        .p-tree
+          .p-tree-container
+          .p-treenode
+          .p-treenode-content:not(.p-highlight):hover {
           background: $option-hover-background;
         }
 
-        &-label {
-          color: $autocomplete-option-value-color;
+        .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
+          outline: 0 none;
+          outline-offset: 0;
         }
 
-        &-left {
-          display: flex;
-          align-items: center;
-          margin-right: 8px;
+        .p-tree
+          .p-tree-container
+          .p-treenode
+          .p-treenode-content:not(.p-highlight):focus {
+          //background-color: $option-highlight-background;
+          background-color: $option-hover-background;
         }
 
-        &-right {
-          color: $autocomplete-option-info-color;
-          text-align: right;
-        }
+        .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
+          background: $selected-option-background;
+          color: $color-calm;
+          font-weight: 600;
 
-        &-check {
-          background-color: transparent;
-          border: 0;
-          width: 16px;
-          height: 16px;
+          .cps-treeautocomplete-option-check {
+            opacity: 1;
+          }
+        }
+        // .p-tree
+        //   .p-tree-container
+        //   .p-treenode
+        //   .p-treenode-content.p-highlight:focus {
+        //   background: $option-highlight-selected-background;
+        // }
+
+        .p-tree-toggler {
+          outline: 0 none;
+          outline-offset: 0;
           cursor: pointer;
-          display: inline-block;
-          vertical-align: middle;
-          box-sizing: border-box;
+          -webkit-user-select: none;
+          user-select: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
           position: relative;
           flex-shrink: 0;
-          transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
-            background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-          margin-right: 8px;
-          opacity: 0;
-          &::after {
-            color: $color-calm;
-            top: 4px;
-            left: 1px;
-            width: 8px;
-            height: 3px;
-            border-left: 2px solid currentColor;
-            transform: rotate(-45deg);
-            opacity: 1;
-            box-sizing: content-box;
-            position: absolute;
-            content: '';
-            border-bottom: 2px solid currentColor;
-            transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
-          }
-        }
-        &.selected,
-        &.allselected {
-          font-weight: 600;
-          .cps-autocomplete-options-option-label {
+          :hover {
             color: $color-calm;
           }
-          .cps-autocomplete-options-option-check {
-            opacity: 1;
+        }
+
+        .cps-tree-node-fully-expandable > .p-treenode-content:hover {
+          .p-tree-toggler {
+            color: $color-calm !important;
           }
         }
-        &.selected {
-          background: $selected-option-background;
+
+        .p-tree .p-treenode-children {
+          padding: 0 0 0 1rem;
         }
-        &.highlighten {
-          background: $option-highlight-background;
+
+        .p-treenode-children {
+          margin: 0;
+          padding: 0;
+          list-style-type: none;
         }
-        &.selected.highlighten {
-          background: $option-highlight-selected-background;
+
+        .cps-tree-node-fully-expandable {
+          cursor: pointer;
+          -webkit-user-select: none; /* Safari */
+          -ms-user-select: none; /* IE 10 and IE 11 */
+          user-select: none; /* Standard syntax */
+        }
+        .cps-treeautocomplete-directory-elem {
+          font-weight: bold;
+          font-size: 16px;
         }
       }
+
+      // .cps-treeautocomplete-options-option {
+      //   padding: 12px;
+      //   justify-content: space-between;
+      //   display: flex;
+      //   cursor: pointer;
+
+      //   &:hover {
+      //     background: $option-hover-background;
+      //   }
+
+      //   &-label {
+      //     color: $treeautocomplete-option-value-color;
+      //   }
+
+      //   &-left {
+      //     display: flex;
+      //     align-items: center;
+      //     margin-right: 8px;
+      //   }
+
+      //   &-right {
+      //     color: $treeautocomplete-option-info-color;
+      //     text-align: right;
+      //   }
+
+      //   &-check {
+      //     background-color: transparent;
+      //     border: 0;
+      //     width: 16px;
+      //     height: 16px;
+      //     cursor: pointer;
+      //     display: inline-block;
+      //     vertical-align: middle;
+      //     box-sizing: border-box;
+      //     position: relative;
+      //     flex-shrink: 0;
+      //     transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+      //       background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      //     margin-right: 8px;
+      //     opacity: 0;
+      //     &::after {
+      //       color: $color-calm;
+      //       top: 4px;
+      //       left: 1px;
+      //       width: 8px;
+      //       height: 3px;
+      //       border-left: 2px solid currentColor;
+      //       transform: rotate(-45deg);
+      //       opacity: 1;
+      //       box-sizing: content-box;
+      //       position: absolute;
+      //       content: '';
+      //       border-bottom: 2px solid currentColor;
+      //       transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      //     }
+      //   }
+      //   &.selected,
+      //   &.allselected {
+      //     font-weight: 600;
+      //     .cps-treeautocomplete-options-option-label {
+      //       color: $color-calm;
+      //     }
+      //     .cps-treeautocomplete-options-option-check {
+      //       opacity: 1;
+      //     }
+      //   }
+      //   &.selected {
+      //     background: $selected-option-background;
+      //   }
+      //   &.highlighten {
+      //     background: $option-highlight-background;
+      //   }
+      //   &.selected.highlighten {
+      //     background: $option-highlight-selected-background;
+      //   }
+      // }
     }
 
-    .cps-autocomplete-hint {
-      color: $autocomplete-hint-color;
+    .cps-treeautocomplete-hint {
+      color: $treeautocomplete-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
       cursor: default;
       margin-top: 0.2rem;
     }
-    .cps-autocomplete-error {
+    .cps-treeautocomplete-error {
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;
@@ -324,22 +509,22 @@ $hover-transition-duration: 0.2s;
 
     &.disabled {
       pointer-events: none;
-      .cps-autocomplete-box {
+      .cps-treeautocomplete-box {
         background: #f7f7f7;
         &-items {
-          color: $autocomplete-items-disabled-color;
+          color: $treeautocomplete-items-disabled-color;
           .text-group,
           .single-item {
-            color: $autocomplete-items-disabled-color;
+            color: $treeautocomplete-items-disabled-color;
           }
         }
       }
-      .cps-autocomplete-label {
-        color: $autocomplete-label-disabled-color;
+      .cps-treeautocomplete-label {
+        color: $treeautocomplete-label-disabled-color;
       }
     }
     &.error {
-      .cps-autocomplete-box {
+      .cps-treeautocomplete-box {
         border-color: $color-error !important;
         background: $error-background;
       }
@@ -352,9 +537,9 @@ $hover-transition-duration: 0.2s;
   }
 
   .about-to-remove {
-    color: $autocomplete-about-remove-color;
+    color: $treeautocomplete-about-remove-color;
     ::ng-deep .chip {
-      background-color: $autocomplete-about-remove-background;
+      background-color: $treeautocomplete-about-remove-background;
     }
   }
 }

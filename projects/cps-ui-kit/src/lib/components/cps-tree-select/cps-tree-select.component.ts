@@ -245,7 +245,7 @@ export class CpsTreeSelectComponent
       this._toggleOptions(dd, false);
     }
     // click down arrow
-    else if ([40].includes(code)) {
+    else if (code === 40) {
       this._initArrowsNavigaton();
     }
   }
