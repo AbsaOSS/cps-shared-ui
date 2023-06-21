@@ -92,7 +92,9 @@ export class TooltipDirective {
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
-            this._elementRef.nativeElement.offsetWidth / 2,
+            (this._elementRef.nativeElement.offsetWidth -
+              this._popup.getBoundingClientRect().width) /
+              2,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
             this._elementRef.nativeElement.offsetHeight +
@@ -106,7 +108,9 @@ export class TooltipDirective {
             6,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
-            this._elementRef.nativeElement.offsetHeight / 2
+            (this._elementRef.nativeElement.offsetHeight -
+              this._popup.getBoundingClientRect().height) /
+              2
         };
       case 'right':
         return {
@@ -116,13 +120,17 @@ export class TooltipDirective {
             6,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
-            this._elementRef.nativeElement.offsetHeight / 2
+            (this._elementRef.nativeElement.offsetHeight -
+              this._popup.getBoundingClientRect().height) /
+              2
         };
       default:
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
-            this._elementRef.nativeElement.offsetWidth / 2,
+            (this._elementRef.nativeElement.offsetWidth -
+              this._popup.getBoundingClientRect().width) /
+              2,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top -
             this._popup.getBoundingClientRect().height -
