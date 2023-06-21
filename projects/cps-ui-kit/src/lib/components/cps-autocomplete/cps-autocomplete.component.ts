@@ -257,13 +257,19 @@ export class CpsAutocompleteComponent
     // enter
     else if (code === 13) {
       let idx = this.optionHighlightedIndex;
-      if (this.multiple && this.selectAll) {
+      if (
+        this.multiple &&
+        this.selectAll &&
+        this.filteredOptions.length === this.options.length
+      ) {
         if (idx === 0) {
           this.toggleAll();
           return;
         } else idx--;
       }
       const option = this.filteredOptions[idx];
+      if (this.filteredOptions.length !== this.options.length)
+        this._dehighlightOption();
       this._clickOption(option, dd);
     }
     // vertical arrows
@@ -304,6 +310,7 @@ export class CpsAutocompleteComponent
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
+
     this.backspaceClickedOnce = false;
     if (typeof show === 'boolean') {
       if (show) dd.classList.add('active');
@@ -425,6 +432,7 @@ export class CpsAutocompleteComponent
     if (len < 1) return;
 
     if (len === 1) {
+      this.optionHighlightedIndex = 0;
       this._highlightOption(optionItems[0]);
       return;
     }
