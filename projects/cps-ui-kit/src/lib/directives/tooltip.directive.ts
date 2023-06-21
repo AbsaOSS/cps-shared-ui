@@ -34,7 +34,7 @@ export class TooltipDirective {
   private _createTooltip = () => {
     if (this.tooltipDisabled) return;
 
-    const tooltip = document.body.appendChild(this._popup);
+    const tooltipEl = document.body.appendChild(this._popup);
 
     this._constructElement();
 
@@ -47,7 +47,7 @@ export class TooltipDirective {
           x: this._popup.getBoundingClientRect().left,
           y: this._popup.getBoundingClientRect().top
         },
-        tooltip
+        tooltipEl
       )
     ) {
       this.position = 'top';
