@@ -3,8 +3,8 @@
   class="cps-treeselect"
   tabindex="0"
   [ngClass]="{ disabled: disabled, error: error }"
-  #selectContainer
-  (keydown)="onKeyDown($event, selectContainer)"
+  #treeSelectContainer
+  (keydown)="onKeyDown($event, treeSelectContainer)"
   (blur)="onBlur()">
   <label *ngIf="label" class="cps-treeselect-label">{{ label }} </label>
   <div
@@ -13,8 +13,8 @@
     [ngClass]="{
       'persistent-clear': persistentClear
     }"
-    (clickOutside)="onClickOutside(selectContainer)">
-    <div class="cps-treeselect-box" (click)="onBoxClick(selectContainer)">
+    (clickOutside)="onClickOutside(treeSelectContainer)">
+    <div class="cps-treeselect-box" (click)="onBoxClick(treeSelectContainer)">
       <div class="cps-treeselect-box-left">
         <cps-icon
           *ngIf="prefixIcon"
@@ -73,7 +73,7 @@
           <cps-icon
             icon="delete"
             size="small"
-            (click)="clear(selectContainer, $event)"></cps-icon>
+            (click)="clear(treeSelectContainer, $event)"></cps-icon>
         </span>
         <span class="cps-treeselect-box-chevron">
           <cps-icon
@@ -119,7 +119,7 @@
       height="3"
       radius="4"
       opacity="0.3"
-      class="treeselect-progress-bar"
+      class="cps-treeselect-progress-bar"
       bgColor="transparent">
     </cps-progress-linear>
   </div>

@@ -92,8 +92,8 @@ export class CpsTreeSelectComponent
 
   @Output() valueChanged = new EventEmitter<any>();
 
-  @ViewChild('selectContainer')
-  selectContainer!: ElementRef;
+  @ViewChild('treeSelectContainer')
+  treeSelectContainer!: ElementRef;
 
   @ViewChild('treeList') treeList!: Tree;
 
@@ -223,7 +223,7 @@ export class CpsTreeSelectComponent
 
   onSelectNode() {
     if (!this.multiple) {
-      this._toggleOptions(this.selectContainer?.nativeElement, false);
+      this._toggleOptions(this.treeSelectContainer?.nativeElement, false);
     }
   }
 
@@ -305,7 +305,7 @@ export class CpsTreeSelectComponent
         this.recalcVirtualListHeight();
 
         const selected =
-          this.selectContainer.nativeElement.querySelector('.p-highlight');
+          this.treeSelectContainer.nativeElement.querySelector('.p-highlight');
         if (selected) {
           selected.scrollIntoView({
             behavior: 'instant',
@@ -399,8 +399,8 @@ export class CpsTreeSelectComponent
   }
 
   focus() {
-    this.selectContainer?.nativeElement?.focus();
-    this._toggleOptions(this.selectContainer?.nativeElement, true);
+    this.treeSelectContainer?.nativeElement?.focus();
+    this._toggleOptions(this.treeSelectContainer?.nativeElement, true);
   }
 
   private _expandToNodes(nodes: any[]) {
