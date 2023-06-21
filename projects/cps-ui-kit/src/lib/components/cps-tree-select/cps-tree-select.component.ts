@@ -16,11 +16,14 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
-import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  IconType,
+  iconSizeType
+} from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
 import { isEqual } from 'lodash-es';
 import { Tree, TreeModule } from 'primeng/tree';
@@ -36,10 +39,9 @@ import { TreeNode } from 'primeng/api';
     CpsIconComponent,
     CpsChipComponent,
     CpsProgressLinearComponent,
-    LabelByValuePipe,
     CombineLabelsPipe
   ],
-  providers: [LabelByValuePipe, CombineLabelsPipe],
+  providers: [CombineLabelsPipe],
   selector: 'cps-tree-select',
   templateUrl: './cps-tree-select.component.html',
   styleUrls: ['./cps-tree-select.component.scss']
@@ -61,7 +63,7 @@ export class CpsTreeSelectComponent
   @Input() optionInfo = 'info';
   @Input() hideDetails = false;
   @Input() persistentClear = false;
-  @Input() prefixIcon = '';
+  @Input() prefixIcon: IconType = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() virtualScroll = false;

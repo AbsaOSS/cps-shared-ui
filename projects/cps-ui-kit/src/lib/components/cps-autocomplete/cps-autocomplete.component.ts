@@ -23,7 +23,6 @@ import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
-import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
 
@@ -37,10 +36,9 @@ import { find, isEqual } from 'lodash-es';
     CpsChipComponent,
     CpsProgressLinearComponent,
     LabelByValuePipe,
-    CombineLabelsPipe,
     CheckOptionSelectedPipe
   ],
-  providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
+  providers: [LabelByValuePipe, CheckOptionSelectedPipe],
   selector: 'cps-autocomplete',
   templateUrl: './cps-autocomplete.component.html',
   styleUrls: ['./cps-autocomplete.component.scss']
