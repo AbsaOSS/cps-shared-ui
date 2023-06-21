@@ -1,40 +1,89 @@
-<h3 class="title first">Tooltip positions</h3>
+<p class="first">Tooltip positions</p>
 
 <div class="btns-container">
   <cps-button
+    class="tooltip-btn"
     cpsTooltip
     tooltip="Tooltip"
     position="top"
     label="Tooltip on top"></cps-button>
   <cps-button
+    class="tooltip-btn"
     cpsTooltip
     tooltip="Tooltip"
     position="bottom"
     label="Tooltip on bottom">
   </cps-button>
   <cps-button
+    class="tooltip-btn"
     cpsTooltip
     tooltip="Tooltip"
     position="left"
     label="Tooltip on left"></cps-button>
   <cps-button
+    class="tooltip-btn"
     cpsTooltip
     tooltip="Tooltip"
     position="right"
     label="Tooltip on right"></cps-button>
 </div>
 
-<h3 class="title">Close on content click tooltip</h3>
+<p class="title">Close on content click tooltip</p>
 
 <cps-button
+  class="tooltip-btn"
   cpsTooltip
   label="Click on tooltip to close it"
   [autoClose]="false"
   [closeOnContentClick]="true"></cps-button>
 
-<h3 class="title">Tooltip with inner HTML</h3>
+<p class="title">Tooltip with inner HTML</p>
 
 <cps-button
+  class="tooltip-btn"
   cpsTooltip
   label="Tooltip with inner HTML"
   tooltip="<span><strong>Some bold text</strong></span>"></cps-button>
+
+<p class="title">Different opening methods</p>
+
+<div class="btns-container">
+  <cps-button
+    class="tooltip-btn"
+    cpsTooltip
+    label="Open on hover"
+    tooltip="Hover"
+    openOn="hover"></cps-button>
+
+  <cps-button
+    class="tooltip-btn"
+    cpsTooltip
+    label="Open on click"
+    tooltip="Click"
+    openOn="click"></cps-button>
+
+  <cps-button
+    class="tooltip-btn"
+    cpsTooltip
+    label="Open on focus"
+    tooltip="Focus"
+    openOn="focus"></cps-button>
+</div>
+
+<p class="title">Long open and close delays</p>
+
+<div class="btns-container">
+  <cps-button
+    class="tooltip-btn"
+    cpsTooltip
+    tooltip="1000 openDelay"
+    label="Open delay"
+    [openDelay]="1000"></cps-button>
+
+  <cps-button
+    class="tooltip-btn"
+    cpsTooltip
+    tooltip="1000 closeDelay"
+    label="Close delay"
+    [closeDelay]="1000"></cps-button>
+</div>

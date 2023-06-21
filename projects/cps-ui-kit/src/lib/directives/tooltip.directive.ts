@@ -149,6 +149,12 @@ export class TooltipDirective {
     }
   }
 
+  @HostListener('blur') oBlur() {
+    if (this.autoClose && this.openOn === 'focus') {
+      setTimeout(this._destroyTooltip, this.closeDelay as number);
+    }
+  }
+
   @HostListener('click') onClick() {
     if (this.openOn === 'click') {
       setTimeout(this._createTooltip, this.openDelay as number);

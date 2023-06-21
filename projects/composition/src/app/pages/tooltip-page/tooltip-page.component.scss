@@ -1,13 +1,15 @@
 .title {
-  margin: 2em 0;
+  padding: 1em;
 }
 
 .first {
-  margin: 0 0 2em 0;
+  padding: 0 0 1em 1em;
 }
 
 .btns-container {
   display: flex;
-  width: 100%;
-  justify-content: space-around;
+}
+
+.tooltip-btn {
+  padding: 0 1em;
 }
