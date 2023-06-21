@@ -1,1 +1,179 @@
-<p>cps-tree-autocomplete works!</p>
+<div
+  data-cy-id="cps-autocomplete"
+  [ngStyle]="{ width: cvtWidth }"
+  class="cps-autocomplete"
+  tabindex="1"
+  [ngClass]="{ disabled: disabled, error: error }"
+  #autocompleteContainer>
+  <label *ngIf="label" class="cps-autocomplete-label">{{ label }}</label>
+  <div
+    (keydown)="onContainerKeyDown($event, autocompleteContainer)"
+    class="cps-autocomplete-container"
+    [class.focused]="isOpened"
+    [ngClass]="{
+      'persistent-clear': persistentClear
+    }"
+    (clickOutside)="onClickOutside(autocompleteContainer)">
+    <div class="cps-autocomplete-box" (click)="onBoxClick()">
+      <div class="cps-autocomplete-box-area">
+        <cps-icon
+          *ngIf="prefixIcon"
+          [icon]="prefixIcon"
+          [size]="prefixIconSize"
+          class="prefix-icon">
+        </cps-icon>
+        <div
+          class="cps-autocomplete-box-items"
+          *ngIf="
+            (value && !multiple) || (value?.length > 0 && multiple);
+            else autocompleteInput
+          ">
+          <span *ngIf="!multiple" class="single-item">
+            <div class="single-item-selection">
+              <span [style.opacity]="activeSingle ? 0 : 1">{{
+                returnObject
+                  ? value[optionLabel]
+                  : (value | labelByValue : options : optionValue : optionLabel)
+              }}</span>
+            </div>
+            <ng-container
+              *ngTemplateOutlet="
+                autocompleteInput;
+                context: {
+                  inputClass: 'single-item-input',
+                  inputStyle: activeSingle ? 'opacity: 1' : null
+                }
+              ">
+            </ng-container>
+          </span>
+
+          <div *ngIf="multiple && !chips" class="text-group">
+            <div
+              *ngFor="let val of value; let last = last"
+              class="text-group-item"
+              [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }">
+              {{
+                returnObject
+                  ? val[optionLabel]
+                  : (val | labelByValue : options : optionValue : optionLabel)
+              }}{{ !last ? ',' : '' }}
+            </div>
+            <ng-container *ngTemplateOutlet="autocompleteInput"></ng-container>
+          </div>
+
+          <div *ngIf="multiple && chips" class="chips-group">
+            <cps-chip
+              *ngFor="let val of value; let last = last"
+              [disabled]="disabled"
+              [closable]="closableChips"
+              (closed)="select(val, true)"
+              [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }"
+              [label]="
+                returnObject
+                  ? val[optionLabel]
+                  : (val | labelByValue : options : optionValue : optionLabel)
+              ">
+            </cps-chip>
+            <ng-container *ngTemplateOutlet="autocompleteInput"></ng-container>
+          </div>
+        </div>
+        <span class="cps-autocomplete-box-icons">
+          <span
+            *ngIf="clearable && !disabled"
+            [style.visibility]="
+              persistentClear ||
+              (!persistentClear &&
+                ((multiple && value?.length) || (!multiple && value)))
+                ? 'visible'
+                : 'hidden'
+            "
+            class="cps-autocomplete-box-clear-icon">
+            <cps-icon
+              icon="delete"
+              size="small"
+              (click)="clear(autocompleteContainer, $event)"></cps-icon>
+          </span>
+          <span class="cps-autocomplete-box-chevron">
+            <cps-icon
+              icon="chevron-down"
+              size="small"
+              color="text-dark"></cps-icon>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="cps-autocomplete-options">
+      <div
+        class="cps-autocomplete-options-option select-all-option"
+        [class.allselected]="value?.length === options.length"
+        *ngIf="multiple && selectAll"
+        (click)="toggleAll()">
+        <span class="cps-autocomplete-options-option-left">
+          <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
+          </span>
+          <span class="cps-autocomplete-options-option-label">Select all</span>
+        </span>
+      </div>
+      <div
+        class="cps-autocomplete-options-option"
+        *ngFor="let option of filteredOptions"
+        (click)="onOptionClick(option, autocompleteContainer)"
+        [class.selected]="
+          option
+            | checkOptionSelected
+              : value
+              : multiple
+              : returnObject
+              : optionValue
+        ">
+        <span class="cps-autocomplete-options-option-left">
+          <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
+          </span>
+          <span
+            data-cy-id="cps-autocomplete-options"
+            class="cps-autocomplete-options-option-label"
+            >{{ option[optionLabel] }}</span
+          >
+        </span>
+
+        <span class="cps-autocomplete-options-option-right">{{
+          option[optionInfo]
+        }}</span>
+      </div>
+    </div>
+    <cps-progress-linear
+      *ngIf="loading"
+      height="3"
+      radius="4"
+      opacity="0.3"
+      class="autocomplete-progress-bar"
+      bgColor="transparent">
+    </cps-progress-linear>
+  </div>
+  <div *ngIf="!error && !hideDetails" class="cps-autocomplete-hint">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-autocomplete-error">
+    {{ error }}
+  </div>
+</div>
+
+<ng-template
+  #autocompleteInput
+  let-inputClass="inputClass"
+  let-inputStyle="inputStyle">
+  <input
+    class="cps-autocomplete-box-input"
+    [class]="inputClass"
+    [style]="inputStyle"
+    [placeholder]="
+      (!value && !multiple) || (value?.length < 1 && multiple)
+        ? placeholder
+        : ''
+    "
+    (input)="filterOptions($event)"
+    (keydown)="onInputKeyDown($event)"
+    [(ngModel)]="inputText"
+    (blur)="onBlur()" />
+</ng-template>
