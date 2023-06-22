@@ -228,6 +228,13 @@ $hover-transition-duration: 0.2s;
       box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
         0 1px 10px #0000001f;
 
+      .cps-autocomplete-options-empty {
+        padding: 11px;
+        font-size: 16px;
+        cursor: default;
+        color: $autocomplete-option-value-color;
+      }
+
       .cps-autocomplete-options-option {
         padding: 12px;
         justify-content: space-between;
@@ -353,7 +360,7 @@ $hover-transition-duration: 0.2s;
 
   .about-to-remove {
     color: $autocomplete-about-remove-color;
-    ::ng-deep .chip {
+    ::ng-deep .cps-chip {
       background-color: $autocomplete-about-remove-background;
     }
   }

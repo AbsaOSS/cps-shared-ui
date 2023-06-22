@@ -25,6 +25,7 @@ This repository consists of two projects:
 - Select
 - Tag
 - Textarea
+- Tree autocomplete
 - Tree select
 
 ## Development server
@@ -56,4 +57,3 @@ Make sure you have 'ng build cps-ui-kit --watch' running, so the library will be
 - go to projects/composition/src/app/components/navigation-sidebar.ts file and extend \_components array (keep alphabetical order!)
 - go to projects/composition/src/app/app-routing.module.ts and add a new route for a new page
 - update available components list in README.md (keep alphabetical order!)
-  

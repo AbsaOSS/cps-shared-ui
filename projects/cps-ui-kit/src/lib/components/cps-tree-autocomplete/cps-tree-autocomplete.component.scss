@@ -1,26 +1,28 @@
 $color-calm: var(--cps-color-calm);
 $color-error: #cc3333;
 $error-background: #fef3f2;
-$treeselect-placeholder-color: var(--cps-color-text-lightest);
-$treeselect-label-color: var(--cps-color-text-dark);
-$treeselect-label-disabled-color: var(--cps-color-text-mild);
-$treeselect-items-disabled-color: var(--cps-color-text-light);
-$treeselect-hint-color: var(--cps-color-text-mild);
+$treeautocomplete-placeholder-color: var(--cps-color-text-lightest);
+$treeautocomplete-label-color: var(--cps-color-text-dark);
+$treeautocomplete-label-disabled-color: var(--cps-color-text-mild);
+$treeautocomplete-items-disabled-color: var(--cps-color-text-light);
+$treeautocomplete-hint-color: var(--cps-color-text-mild);
 $option-hover-background: #f8f4f5;
 $selected-option-background: #efe4e7;
 $option-highlight-background: #f5eeef;
 $option-highlight-selected-background: #e6d4d9;
-$treeselect-option-info-color: var(--cps-color-text-light);
-$treeselect-option-value-color: var(--cps-color-text-dark);
-$treeselect-prefix-icon-color: var(--cps-color-text-dark);
-$treeselect-option-chevron-color: var(--cps-color-text-light);
+$treeautocomplete-option-info-color: var(--cps-color-text-light);
+$treeautocomplete-option-value-color: var(--cps-color-text-dark);
+$treeautocomplete-about-remove-color: var(--cps-color-text-light);
+$treeautocomplete-about-remove-background: var(--cps-color-bg-mid);
+$treeautocomplete-prefix-icon-color: var(--cps-color-text-dark);
+$treeautocomplete-option-chevron-color: var(--cps-color-text-light);
 
 $hover-transition-duration: 0.2s;
 
 :host {
   display: flex;
 
-  .cps-treeselect {
+  .cps-treeautocomplete {
     position: relative;
     width: 100%;
     outline: none;
@@ -29,20 +31,26 @@ $hover-transition-duration: 0.2s;
 
     &-container {
       position: relative;
-      .cps-treeselect-progress-bar {
+      .cps-treeautocomplete-progress-bar {
         position: absolute;
         bottom: 1px;
         padding: 0 1px;
       }
+
+      &.focused {
+        .cps-treeautocomplete-box {
+          background: white !important;
+        }
+      }
     }
 
     &.active {
-      .cps-treeselect-options {
+      .cps-treeautocomplete-options {
         display: block;
       }
-      .cps-treeselect-box {
+      .cps-treeautocomplete-box {
         border: 1px solid $color-calm;
-        .cps-treeselect-box-left {
+        .cps-treeautocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
           }
@@ -50,19 +58,19 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    .cps-treeselect-label {
+    .cps-treeautocomplete-label {
       display: inline-block;
       margin-bottom: 0.2rem;
-      color: $treeselect-label-color;
+      color: $treeautocomplete-label-color;
       font-size: 0.875rem;
     }
 
     .persistent-clear,
-    .cps-treeselect-container.focused,
-    .cps-treeselect-container:hover {
-      .cps-treeselect-box {
-        .cps-treeselect-box-icons {
-          .cps-treeselect-box-clear-icon {
+    .cps-treeautocomplete-container.focused,
+    .cps-treeautocomplete-container:hover {
+      .cps-treeautocomplete-box {
+        .cps-treeautocomplete-box-icons {
+          .cps-treeautocomplete-box-clear-icon {
             cps-icon {
               opacity: 0.5;
             }
@@ -71,70 +79,116 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    .cps-treeselect-box {
+    .cps-treeautocomplete-box {
       overflow: hidden;
-      justify-content: space-between;
       min-height: 38px;
       width: 100%;
-      cursor: pointer;
+      cursor: text;
       background: white;
       font-size: 1rem;
       outline: none;
-      padding: 0 12px;
+      padding: 0 12px 0 12px;
       border-radius: 4px;
-      align-items: center;
-      display: flex;
       border: 1px solid var(--cps-color-text-lightest);
       transition-duration: $hover-transition-duration;
 
-      &-placeholder {
-        color: $treeselect-placeholder-color;
-        font-style: italic;
+      &-area {
+        display: flex;
+        min-height: 36px;
+        align-items: center;
+        .prefix-icon {
+          margin-right: 0.5rem;
+          color: $treeautocomplete-prefix-icon-color;
+        }
+      }
+
+      &-input {
+        padding: 0;
+        background-color: transparent;
+        width: 0;
+        min-width: 30px;
+        flex-grow: 1;
+        font-size: 1rem;
+        color: $treeautocomplete-option-value-color;
+        border-style: none;
+        outline: none;
+        font-family: Source Sans Pro, sans-serif;
+        &::placeholder {
+          color: $treeautocomplete-placeholder-color;
+          font-style: italic;
+          opacity: 1; /* Firefox */
+        }
       }
 
       &-items {
+        display: inline-flex;
+        flex-direction: column;
+        width: 100%;
         margin-top: 3px;
         margin-bottom: 3px;
-        .text-group,
+        position: relative;
+
         .single-item {
-          color: $treeselect-option-value-color;
-          padding-top: 3px;
-          padding-bottom: 3px;
+          color: $treeautocomplete-option-value-color;
+          display: inline-flex;
+          &-selection {
+            display: inline-flex;
+            letter-spacing: inherit;
+            line-height: inherit;
+            max-width: 100%;
+          }
+          &-input {
+            opacity: 0;
+            min-width: 0;
+            align-self: flex-start;
+            flex: 1 1;
+            transition: none;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+            padding-inline-start: inherit;
+            padding-inline-end: inherit;
+          }
         }
         .chips-group {
+          display: inline-flex;
+          flex-wrap: wrap;
           cps-chip {
             padding-bottom: 3px;
             padding-top: 3px;
             padding-right: 4px;
           }
         }
-        .text-group-item {
-          line-height: 1.5;
-        }
-      }
-
-      .cps-treeselect-box-left {
-        display: inline-flex;
-        align-items: center;
-        .prefix-icon {
-          margin-right: 0.5rem;
-          color: $treeselect-prefix-icon-color;
+        .text-group {
+          color: $treeautocomplete-option-value-color;
+          padding-top: 3px;
+          padding-bottom: 3px;
+          display: inline-flex;
+          flex-wrap: wrap;
+          .text-group-item {
+            padding-bottom: 3px;
+            padding-top: 2.5px;
+            padding-right: 4px;
+            height: 24px;
+          }
         }
       }
 
       &:hover {
         border: 1px solid $color-calm;
-        .cps-treeselect-box-left {
+        .cps-treeautocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
           }
         }
       }
 
-      .cps-treeselect-box-icons {
+      .cps-treeautocomplete-box-icons {
         display: flex;
 
-        .cps-treeselect-box-clear-icon {
+        .cps-treeautocomplete-box-clear-icon {
+          cursor: pointer;
           display: flex;
           color: $color-calm;
           margin-left: 8px;
@@ -146,7 +200,7 @@ $hover-transition-duration: 0.2s;
             }
           }
         }
-        .cps-treeselect-box-chevron {
+        .cps-treeautocomplete-box-chevron {
           display: flex;
           margin-left: 8px;
           transition-duration: $hover-transition-duration;
@@ -155,13 +209,13 @@ $hover-transition-duration: 0.2s;
     }
 
     &.active {
-      .cps-treeselect-box-chevron {
+      .cps-treeautocomplete-box-chevron {
         top: 22px;
         transform: rotate(180deg);
       }
     }
 
-    .cps-treeselect-options {
+    .cps-treeautocomplete-options {
       z-index: 1001;
       position: absolute;
       width: 100%;
@@ -179,11 +233,11 @@ $hover-transition-duration: 0.2s;
         .p-tree {
           border: 1px solid #dee2e6;
           background: #ffffff;
-          color: $treeselect-option-value-color;
+          color: $treeautocomplete-option-value-color;
           padding: 0;
         }
 
-        .cps-treeselect-option {
+        .cps-treeautocomplete-option {
           margin-right: 8px;
           display: flex;
           align-items: center;
@@ -229,7 +283,7 @@ $hover-transition-duration: 0.2s;
 
           &-info {
             margin-left: 6px;
-            color: $treeselect-option-info-color;
+            color: $treeautocomplete-option-info-color;
           }
         }
 
@@ -271,7 +325,7 @@ $hover-transition-duration: 0.2s;
           margin-right: 0.5rem;
           width: 2rem;
           height: 2rem;
-          color: $treeselect-option-chevron-color;
+          color: $treeautocomplete-option-chevron-color;
           border: 0 none;
           background: transparent;
           border-radius: 50%;
@@ -303,7 +357,7 @@ $hover-transition-duration: 0.2s;
           color: $color-calm;
           font-weight: 600;
 
-          .cps-treeselect-option-check {
+          .cps-treeautocomplete-option-check {
             opacity: 1;
           }
         }
@@ -347,27 +401,33 @@ $hover-transition-duration: 0.2s;
           list-style-type: none;
         }
 
+        .p-tree-empty-message {
+          padding: 11px;
+          font-size: 16px;
+          cursor: default;
+        }
+
         .cps-tree-node-fully-expandable {
           cursor: pointer;
           -webkit-user-select: none; /* Safari */
           -ms-user-select: none; /* IE 10 and IE 11 */
           user-select: none; /* Standard syntax */
         }
-        .cps-treeselect-directory-elem {
+        .cps-treeautocomplete-directory-elem {
           font-weight: bold;
           font-size: 16px;
         }
       }
     }
 
-    .cps-treeselect-hint {
-      color: $treeselect-hint-color;
+    .cps-treeautocomplete-hint {
+      color: $treeautocomplete-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
       cursor: default;
       margin-top: 0.2rem;
     }
-    .cps-treeselect-error {
+    .cps-treeautocomplete-error {
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;
@@ -378,25 +438,32 @@ $hover-transition-duration: 0.2s;
 
     &.disabled {
       pointer-events: none;
-      .cps-treeselect-box {
+      .cps-treeautocomplete-box {
         background: #f7f7f7;
         &-items {
-          color: $treeselect-items-disabled-color;
+          color: $treeautocomplete-items-disabled-color;
           .text-group,
           .single-item {
-            color: $treeselect-items-disabled-color;
+            color: $treeautocomplete-items-disabled-color;
           }
         }
       }
-      .cps-treeselect-label {
-        color: $treeselect-label-disabled-color;
+      .cps-treeautocomplete-label {
+        color: $treeautocomplete-label-disabled-color;
       }
     }
     &.error {
-      .cps-treeselect-box {
+      .cps-treeautocomplete-box {
         border-color: $color-error !important;
-        background: $error-background !important;
+        background: $error-background;
       }
+    }
+  }
+
+  .about-to-remove {
+    color: $treeautocomplete-about-remove-color;
+    ::ng-deep .cps-chip {
+      background-color: $treeautocomplete-about-remove-background;
     }
   }
 }
