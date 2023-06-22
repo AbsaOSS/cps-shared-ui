@@ -32,6 +32,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() loading = false;
 
   @Output() clicked = new EventEmitter();
+  @Output() focused = new EventEmitter();
 
   buttonColor = '';
   textColor = '';
@@ -122,5 +123,9 @@ export class CpsButtonComponent implements OnInit {
 
   onClick(event: Event) {
     this.clicked.emit(event);
+  }
+
+  onFocus(event: Event) {
+    this.focused.emit(event);
   }
 }

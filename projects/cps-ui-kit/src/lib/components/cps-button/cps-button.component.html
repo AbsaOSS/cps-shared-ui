@@ -5,6 +5,7 @@
     [disabled]="disabled || loading"
     [class.cps-spinner]="loading"
     (click)="onClick($event)"
+    (focus)="onFocus($event)"
     [ngStyle]="{
     'background-color': type==='solid' ? buttonColor : 'transparent',
     color: textColor,
