@@ -6,12 +6,12 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { Subject, tap, throttleTime } from 'rxjs';
+import { Subject, tap, timer, switchMap, merge, Subscription } from 'rxjs';
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
 })
-export class TooltipDirective implements OnInit, OnDestroy {
+export class CpsTooltipDirective implements OnInit, OnDestroy {
   @Input() tooltip = 'Add your text to this tooltip';
   @Input() openDelay: string | number = 300;
   @Input() closeDelay: string | number = 300;
@@ -36,22 +36,18 @@ export class TooltipDirective implements OnInit, OnDestroy {
   private _popup: HTMLDivElement = document.createElement('div');
   private _create$ = new Subject<boolean>();
   private _destroy$ = new Subject<boolean>();
-  private _throttleDelay = Math.max(
-    this.openDelay as number,
-    this.closeDelay as number
-  );
-
+  private _cycle$?: Subscription;
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   ngOnInit(): void {
-    this._handleTrigger();
-    this._handleDestroy();
+    this._cycle$ = this._handleCreationCycle();
   }
 
   ngOnDestroy(): void {
     this._create$.unsubscribe();
     this._destroy$.unsubscribe();
+    this._cycle$?.unsubscribe();
   }
 
   private _createTooltip = () => {
@@ -163,21 +159,21 @@ export class TooltipDirective implements OnInit, OnDestroy {
   }
 
   private _handleTrigger() {
-    this._create$
-      .pipe(
-        throttleTime(this._throttleDelay),
-        tap(() => setTimeout(this._createTooltip, this._throttleDelay))
-      )
-      .subscribe();
+    return this._create$.pipe(
+      switchMap(() => timer(this.openDelay as number)),
+      tap(this._createTooltip)
+    );
   }
 
   private _handleDestroy() {
-    this._destroy$
-      .pipe(
-        throttleTime(this._throttleDelay),
-        tap(() => setTimeout(this._destroyTooltip, this._throttleDelay))
-      )
-      .subscribe();
+    return this._destroy$.pipe(
+      switchMap(() => timer(this.closeDelay as number)),
+      tap(this._destroyTooltip)
+    );
+  }
+
+  private _handleCreationCycle() {
+    return merge(this._handleTrigger(), this._handleDestroy()).subscribe();
   }
 
   @HostListener('mouseenter') onMouseEnter() {
