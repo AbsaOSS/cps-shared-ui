@@ -19,6 +19,7 @@
 - Select
 - Tag
 - Textarea
+- Tooltip
 
 ### License
 

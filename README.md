@@ -24,6 +24,7 @@ This repository consists of two projects:
 - Select
 - Tag
 - Textarea
+- Tooltip
 
 ## Development server
 
