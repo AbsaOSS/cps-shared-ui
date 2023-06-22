@@ -32,7 +32,7 @@
           <span *ngIf="!multiple" class="single-item">
             <div class="single-item-selection">
               <span [style.opacity]="activeSingle ? 0 : 1">{{
-                treeSelection[optionLabel]
+                treeSelection.label
               }}</span>
             </div>
             <ng-container
@@ -51,7 +51,7 @@
               *ngFor="let val of treeSelection; let last = last"
               class="text-group-item"
               [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }">
-              {{ val[optionLabel] }}{{ !last ? ',' : '' }}
+              {{ val.label }}{{ !last ? ',' : '' }}
             </div>
             <ng-container
               *ngTemplateOutlet="treeAutocompleteInput"></ng-container>
@@ -64,7 +64,7 @@
               [closable]="closableChips"
               (closed)="remove(val)"
               [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }"
-              [label]="val[optionLabel]">
+              [label]="val.label">
             </cps-chip>
             <ng-container
               *ngTemplateOutlet="treeAutocompleteInput"></ng-container>
