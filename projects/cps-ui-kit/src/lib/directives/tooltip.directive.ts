@@ -36,6 +36,10 @@ export class TooltipDirective implements OnInit, OnDestroy {
   private _popup: HTMLDivElement = document.createElement('div');
   private _create$ = new Subject<boolean>();
   private _destroy$ = new Subject<boolean>();
+  private _throttleDelay = Math.max(
+    this.openDelay as number,
+    this.closeDelay as number
+  );
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
@@ -161,8 +165,9 @@ export class TooltipDirective implements OnInit, OnDestroy {
   private _handleTrigger() {
     this._create$
       .pipe(
-        throttleTime(this.openDelay as number),
-        tap(() => setTimeout(this._createTooltip, this.openDelay as number))
+        throttleTime(this._throttleDelay),
+        tap(() => setTimeout(this._createTooltip, this.openDelay as number)),
+        tap(() => console.log('Create called'))
       )
       .subscribe();
   }
@@ -170,8 +175,9 @@ export class TooltipDirective implements OnInit, OnDestroy {
   private _handleDestroy() {
     this._destroy$
       .pipe(
-        throttleTime(this.closeDelay as number),
-        tap(() => setTimeout(this._destroyTooltip, this.closeDelay as number))
+        throttleTime(this._throttleDelay),
+        tap(() => setTimeout(this._destroyTooltip, this.closeDelay as number)),
+        tap(() => console.log('Destroy called'))
       )
       .subscribe();
   }
