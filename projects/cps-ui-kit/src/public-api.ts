@@ -17,4 +17,5 @@ export * from './lib/components/cps-progress-linear/cps-progress-linear.componen
 export * from './lib/components/cps-datepicker/cps-datepicker.component';
 export * from './lib/components/cps-textarea/cps-textarea.component';
 export * from './lib/components/cps-button-toggle/cps-button-toggle.component';
+export * from './lib/directives/tooltip.directive';
 export * from './lib/utils/colors-utils';

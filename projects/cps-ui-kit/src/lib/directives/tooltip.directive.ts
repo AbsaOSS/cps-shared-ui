@@ -1,10 +1,17 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
-
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { BehaviorSubject, tap, throttleTime } from 'rxjs';
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
 })
-export class TooltipDirective {
+export class TooltipDirective implements OnInit, OnDestroy {
   @Input() tooltip = 'Add your text to this tooltip';
   @Input() openDelay: string | number = 300;
   @Input() closeDelay: string | number = 300;
@@ -27,9 +34,21 @@ export class TooltipDirective {
 
   private _closeOnContentClick = false;
   private _popup: HTMLDivElement = document.createElement('div');
+  private _create$ = new BehaviorSubject(false);
+  private _destroy$ = new BehaviorSubject(false);
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
+
+  ngOnInit(): void {
+    this._handleTrigger();
+    this._handleDestroy();
+  }
+
+  ngOnDestroy(): void {
+    this._create$.unsubscribe();
+    this._destroy$.unsubscribe();
+  }
 
   private _createTooltip = () => {
     if (this.tooltipDisabled) return;
@@ -139,33 +158,45 @@ export class TooltipDirective {
     }
   }
 
+  private _handleTrigger() {
+    this._create$
+      .pipe(throttleTime(this.openDelay as number), tap(this._createTooltip))
+      .subscribe();
+  }
+
+  private _handleDestroy() {
+    this._destroy$
+      .pipe(throttleTime(this.closeDelay as number), tap(this._destroyTooltip))
+      .subscribe();
+  }
+
   @HostListener('mouseenter') onMouseEnter() {
     if (this.openOn === 'hover') {
-      setTimeout(this._createTooltip, this.openDelay as number);
+      this._create$.next(true);
     }
   }
 
   @HostListener('mouseleave') onMouseLeave() {
     if (this.autoClose) {
-      setTimeout(this._destroyTooltip, this.closeDelay as number);
+      this._destroy$.next(true);
     }
   }
 
   @HostListener('focus') onFocus() {
     if (this.openOn === 'focus') {
-      setTimeout(this._createTooltip, this.openDelay as number);
+      this._create$.next(true);
     }
   }
 
-  @HostListener('blur') oBlur() {
+  @HostListener('blur') onBlur() {
     if (this.autoClose && this.openOn === 'focus') {
-      setTimeout(this._destroyTooltip, this.closeDelay as number);
+      this._destroy$.next(true);
     }
   }
 
   @HostListener('click') onClick() {
     if (this.openOn === 'click') {
-      setTimeout(this._createTooltip, this.openDelay as number);
+      this._create$.next(true);
     }
   }
 }
