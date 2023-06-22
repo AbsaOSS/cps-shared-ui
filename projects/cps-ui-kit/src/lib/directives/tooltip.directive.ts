@@ -6,7 +6,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { BehaviorSubject, tap, throttleTime } from 'rxjs';
+import { Subject, tap, throttleTime } from 'rxjs';
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
@@ -34,8 +34,8 @@ export class TooltipDirective implements OnInit, OnDestroy {
 
   private _closeOnContentClick = false;
   private _popup: HTMLDivElement = document.createElement('div');
-  private _create$ = new BehaviorSubject(false);
-  private _destroy$ = new BehaviorSubject(false);
+  private _create$ = new Subject<boolean>();
+  private _destroy$ = new Subject<boolean>();
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
@@ -160,13 +160,19 @@ export class TooltipDirective implements OnInit, OnDestroy {
 
   private _handleTrigger() {
     this._create$
-      .pipe(throttleTime(this.openDelay as number), tap(this._createTooltip))
+      .pipe(
+        throttleTime(this.openDelay as number),
+        tap(() => setTimeout(this._createTooltip, this.openDelay as number))
+      )
       .subscribe();
   }
 
   private _handleDestroy() {
     this._destroy$
-      .pipe(throttleTime(this.closeDelay as number), tap(this._destroyTooltip))
+      .pipe(
+        throttleTime(this.closeDelay as number),
+        tap(() => setTimeout(this._destroyTooltip, this.closeDelay as number))
+      )
       .subscribe();
   }
 
