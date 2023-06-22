@@ -166,8 +166,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this._create$
       .pipe(
         throttleTime(this._throttleDelay),
-        tap(() => setTimeout(this._createTooltip, this.openDelay as number)),
-        tap(() => console.log('Create called'))
+        tap(() => setTimeout(this._createTooltip, this._throttleDelay))
       )
       .subscribe();
   }
@@ -176,8 +175,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this._destroy$
       .pipe(
         throttleTime(this._throttleDelay),
-        tap(() => setTimeout(this._destroyTooltip, this.closeDelay as number)),
-        tap(() => console.log('Destroy called'))
+        tap(() => setTimeout(this._destroyTooltip, this._throttleDelay))
       )
       .subscribe();
   }
