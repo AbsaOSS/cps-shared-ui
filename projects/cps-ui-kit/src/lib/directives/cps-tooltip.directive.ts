@@ -65,17 +65,10 @@ export class CpsTooltipDirective implements OnDestroy {
       enoughSpc === 'NO_HORIZONTAL'
         ? (this.position = 'top')
         : (this.position = 'left');
-    }
 
-    this._checkIfEnoughSpace(
-      {
-        x: this._popup.getBoundingClientRect().left,
-        y: this._popup.getBoundingClientRect().top
-      },
-      tooltipEl
-    ) === 'NO_VERTICAL'
-      ? (this.position = 'left')
-      : (this.position = 'top');
+      this._destroyTooltip();
+      this._createTooltip();
+    }
   };
 
   private _destroyTooltip = () => {
@@ -104,8 +97,8 @@ export class CpsTooltipDirective implements OnDestroy {
     )
       return 'NO_HORIZONTAL';
     if (
-      coords.x + popup.getBoundingClientRect().height >= window.innerHeight ||
-      coords.x - popup.getBoundingClientRect().height <= 0
+      coords.y + popup.getBoundingClientRect().height >= window.innerHeight ||
+      coords.y - popup.getBoundingClientRect().height <= 0
     )
       return 'NO_VERTICAL';
 
