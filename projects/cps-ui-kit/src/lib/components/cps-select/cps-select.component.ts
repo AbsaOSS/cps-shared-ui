@@ -26,6 +26,10 @@ import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
+import {
+  VirtualScroller,
+  VirtualScrollerModule
+} from 'primeng/virtualscroller';
 
 @Component({
   standalone: true,
@@ -38,7 +42,8 @@ import { find, isEqual } from 'lodash-es';
     CpsProgressLinearComponent,
     LabelByValuePipe,
     CombineLabelsPipe,
-    CheckOptionSelectedPipe
+    CheckOptionSelectedPipe,
+    VirtualScrollerModule
   ],
   providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
   selector: 'cps-select',
@@ -55,7 +60,7 @@ export class CpsSelectComponent
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() width: number | string = '100%';
-  @Input() selectAll = true;
+  @Input() selectAll = true; // doesn't work with virtual scroll
   @Input() chips = true;
   @Input() closableChips = true;
   @Input() clearable = false;
@@ -69,6 +74,7 @@ export class CpsSelectComponent
   @Input() prefixIcon: IconType = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
+  @Input() virtualScroll = true;
 
   @Input('value') _value: any = undefined;
 
@@ -86,6 +92,9 @@ export class CpsSelectComponent
   @ViewChild('selectContainer')
   selectContainer!: ElementRef;
 
+  @ViewChild('virtualList')
+  virtualList!: VirtualScroller;
+
   private _statusChangesSubscription: Subscription = new Subscription();
 
   error = '';
@@ -94,6 +103,9 @@ export class CpsSelectComponent
   isOpened = false;
 
   optionHighlightedIndex = -1;
+
+  virtualListHeight = 240;
+  virtualScrollItemSize = 42;
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
@@ -112,6 +124,8 @@ export class CpsSelectComponent
         this._checkErrors();
       }
     ) as Subscription;
+
+    this._recalcVirtualListHeight();
   }
 
   ngOnDestroy() {
@@ -127,27 +141,36 @@ export class CpsSelectComponent
 
     this.isOpened = dd.classList.contains('active');
 
-    if (this.isOpened) {
+    if (this.isOpened && this.options.length > 0) {
       const selected =
         this.selectContainer.nativeElement.querySelector('.selected');
-      if (selected)
+      if (selected) {
         selected.scrollIntoView({
           behavior: 'instant',
           block: 'nearest',
           inline: 'center'
         });
+      } else if (this.virtualScroll && this.value) {
+        let v: any;
+        if (this.multiple) {
+          if (this.value.length > 0) {
+            v = this.value[0];
+          }
+        } else v = this.value;
+        const idx = this.options.findIndex((o) => isEqual(o, v));
+        if (idx >= 0) this.virtualList.scrollToIndex(idx);
+      }
     }
   }
 
-  // private _filterOptions() {
-  //   if (!this.optionsFilter || !this.multiple) return;
-  //   this.filteredOptions = this.options.filter((o) => {
-  //     if (this.returnObject) {
-  //       return !this.value.find((v: any) => v === o);
-  //     }
-  //     return !this.value.find((v: any) => v === o[this.optionValue]);
-  //   });
-  // }
+  private _recalcVirtualListHeight() {
+    if (!this.virtualScroll) return;
+    const currentLen = this.options?.length || 0;
+    this.virtualListHeight = Math.min(
+      this.virtualScrollItemSize * currentLen,
+      240
+    );
+  }
 
   select(option: any, byValue: boolean): void {
     function includes(array: any[], val: any): boolean {
@@ -271,7 +294,7 @@ export class CpsSelectComponent
     else if (code === 13) {
       let idx = this.optionHighlightedIndex;
       if (idx < 0) return;
-      if (this.multiple && this.selectAll) {
+      if (this.multiple && this.selectAll && !this.virtualScroll) {
         if (idx === 0) {
           this.toggleAll();
           return;
@@ -282,7 +305,8 @@ export class CpsSelectComponent
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
-      this._navigateOptionsByArrows(code === 38);
+      // Arrows navigation doesn't work with virtual scroll
+      if (!this.virtualScroll) this._navigateOptionsByArrows(code === 38);
     }
   }
 

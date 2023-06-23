@@ -169,7 +169,7 @@ $hover-transition-duration: 0.2s;
       border-radius: 4px;
       overflow-x: hidden;
       display: none;
-      max-height: 240px;
+      max-height: 242px;
       overflow-y: auto;
       box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
         0 1px 10px #0000001f;
@@ -249,6 +249,10 @@ $hover-transition-duration: 0.2s;
         &.selected.highlighten {
           background: $option-highlight-selected-background;
         }
+      }
+
+      ::ng-deep .p-virtualscroller-list.p-scroller {
+        overflow-anchor: none;
       }
     }
 
