@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Directive,
   ElementRef,
   HostListener,
   Input,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
-import { Subject, tap, timer, switchMap, merge, Subscription } from 'rxjs';
+
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
 })
-export class CpsTooltipDirective implements OnInit, OnDestroy {
+export class CpsTooltipDirective implements OnDestroy {
   @Input() tooltip = 'Add your text to this tooltip';
   @Input() openDelay: string | number = 300;
   @Input() closeDelay: string | number = 300;
@@ -34,20 +34,13 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   private _closeOnContentClick = false;
   private _popup: HTMLDivElement = document.createElement('div');
-  private _create$ = new Subject<boolean>();
-  private _destroy$ = new Subject<boolean>();
-  private _cycle$?: Subscription;
+  private _showTimeout?: any;
+  private _hideTimeout?: any;
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
-  ngOnInit(): void {
-    this._cycle$ = this._handleCreationCycle();
-  }
-
   ngOnDestroy(): void {
-    this._create$.unsubscribe();
-    this._destroy$.unsubscribe();
-    this._cycle$?.unsubscribe();
+    this._destroyTooltip();
   }
 
   private _createTooltip = () => {
@@ -60,20 +53,29 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     if (this.closeOnContentClick)
       this._popup.addEventListener('click', this._destroyTooltip);
 
-    if (
-      !this._checkIfEnoughSpace(
-        {
-          x: this._popup.getBoundingClientRect().left,
-          y: this._popup.getBoundingClientRect().top
-        },
-        tooltipEl
-      )
-    ) {
-      this.position = 'top';
+    const enoughSpc = this._checkIfEnoughSpace(
+      {
+        x: this._popup.getBoundingClientRect().left,
+        y: this._popup.getBoundingClientRect().top
+      },
+      tooltipEl
+    );
 
-      this._destroyTooltip();
-      this._createTooltip();
+    if (enoughSpc !== 'ENOUGH_SPACE') {
+      enoughSpc === 'NO_HORIZONTAL'
+        ? (this.position = 'top')
+        : (this.position = 'left');
     }
+
+    this._checkIfEnoughSpace(
+      {
+        x: this._popup.getBoundingClientRect().left,
+        y: this._popup.getBoundingClientRect().top
+      },
+      tooltipEl
+    ) === 'NO_VERTICAL'
+      ? (this.position = 'left')
+      : (this.position = 'top');
   };
 
   private _destroyTooltip = () => {
@@ -100,9 +102,14 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       coords.x + popup.getBoundingClientRect().width >= window.innerWidth ||
       coords.x - popup.getBoundingClientRect().width <= 0
     )
-      return false;
+      return 'NO_HORIZONTAL';
+    if (
+      coords.x + popup.getBoundingClientRect().height >= window.innerHeight ||
+      coords.x - popup.getBoundingClientRect().height <= 0
+    )
+      return 'NO_VERTICAL';
 
-    return true;
+    return 'ENOUGH_SPACE';
   }
 
   private _setTooltipPosition() {
@@ -158,51 +165,58 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     }
   }
 
-  private _handleTrigger() {
-    return this._create$.pipe(
-      switchMap(() => timer(this.openDelay as number)),
-      tap(this._createTooltip)
-    );
-  }
-
-  private _handleDestroy() {
-    return this._destroy$.pipe(
-      switchMap(() => timer(this.closeDelay as number)),
-      tap(this._destroyTooltip)
-    );
-  }
-
-  private _handleCreationCycle() {
-    return merge(this._handleTrigger(), this._handleDestroy()).subscribe();
-  }
-
   @HostListener('mouseenter') onMouseEnter() {
     if (this.openOn === 'hover') {
-      this._create$.next(true);
+      clearTimeout(this._hideTimeout);
+
+      this._showTimeout = setTimeout(
+        this._createTooltip,
+        this.openDelay as number
+      );
     }
   }
 
   @HostListener('mouseleave') onMouseLeave() {
     if (this.autoClose) {
-      this._destroy$.next(true);
+      clearTimeout(this._showTimeout);
+
+      this._hideTimeout = setTimeout(
+        this._destroyTooltip,
+        this.closeDelay as number
+      );
     }
   }
 
   @HostListener('focus') onFocus() {
     if (this.openOn === 'focus') {
-      this._create$.next(true);
+      clearTimeout(this._hideTimeout);
+
+      this._showTimeout = setTimeout(
+        this._createTooltip,
+        this.openDelay as number
+      );
     }
   }
 
   @HostListener('blur') onBlur() {
     if (this.autoClose && this.openOn === 'focus') {
-      this._destroy$.next(true);
+      clearTimeout(this._showTimeout);
+
+      this._hideTimeout = setTimeout(
+        this._destroyTooltip,
+        this.closeDelay as number
+      );
     }
   }
 
   @HostListener('click') onClick() {
     if (this.openOn === 'click') {
-      this._create$.next(true);
+      clearTimeout(this._hideTimeout);
+
+      this._showTimeout = setTimeout(
+        this._createTooltip,
+        this.openDelay as number
+      );
     }
   }
 }
