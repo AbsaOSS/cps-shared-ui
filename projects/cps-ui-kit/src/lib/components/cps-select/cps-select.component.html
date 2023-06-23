@@ -156,11 +156,17 @@
     ">
     <span class="cps-select-options-option-left">
       <span *ngIf="multiple" class="cps-select-options-option-check"> </span>
-      <span class="cps-select-options-option-label">{{
-        item[optionLabel]
-      }}</span>
+      <span
+        class="cps-select-options-option-label"
+        [class.virtual-row]="virtualScroll"
+        >{{ item[optionLabel] }}</span
+      >
     </span>
 
-    <span class="cps-select-options-option-right">{{ item[optionInfo] }}</span>
+    <span
+      class="cps-select-options-option-right"
+      [class.virtual-row]="virtualScroll"
+      >{{ item[optionInfo] }}</span
+    >
   </div>
 </ng-template>

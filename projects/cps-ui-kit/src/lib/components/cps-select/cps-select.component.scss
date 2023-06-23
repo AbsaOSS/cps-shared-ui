@@ -254,6 +254,10 @@ $hover-transition-duration: 0.2s;
       ::ng-deep .p-virtualscroller-list.p-scroller {
         overflow-anchor: none;
       }
+
+      .virtual-row {
+        white-space: nowrap;
+      }
     }
 
     .cps-select-hint {

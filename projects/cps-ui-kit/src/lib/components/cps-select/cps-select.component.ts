@@ -74,7 +74,7 @@ export class CpsSelectComponent
   @Input() prefixIcon: IconType = '';
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
-  @Input() virtualScroll = true;
+  @Input() virtualScroll = false;
 
   @Input('value') _value: any = undefined;
 
