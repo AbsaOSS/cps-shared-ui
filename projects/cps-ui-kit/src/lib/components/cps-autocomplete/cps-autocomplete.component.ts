@@ -25,6 +25,10 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
+import {
+  VirtualScroller,
+  VirtualScrollerModule
+} from 'primeng/virtualscroller';
 
 @Component({
   standalone: true,
@@ -36,7 +40,8 @@ import { find, isEqual } from 'lodash-es';
     CpsChipComponent,
     CpsProgressLinearComponent,
     LabelByValuePipe,
-    CheckOptionSelectedPipe
+    CheckOptionSelectedPipe,
+    VirtualScrollerModule
   ],
   providers: [LabelByValuePipe, CheckOptionSelectedPipe],
   selector: 'cps-autocomplete',
@@ -53,7 +58,7 @@ export class CpsAutocompleteComponent
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() width: number | string = '100%';
-  @Input() selectAll = true;
+  @Input() selectAll = true; // doesn't work with virtual scroll
   @Input() chips = true;
   @Input() closableChips = true;
   @Input() clearable = false;
@@ -68,6 +73,7 @@ export class CpsAutocompleteComponent
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() emptyMessage = 'No results found';
+  @Input() virtualScroll = false;
 
   @Input('value') _value: any = undefined;
 
@@ -85,6 +91,11 @@ export class CpsAutocompleteComponent
   @ViewChild('autocompleteContainer')
   autocompleteContainer!: ElementRef;
 
+  @ViewChild('virtualList')
+  virtualList!: VirtualScroller;
+
+  private _statusChangesSubscription: Subscription = new Subscription();
+
   error = '';
   cvtWidth = '';
   isOpened = false;
@@ -93,7 +104,9 @@ export class CpsAutocompleteComponent
   backspaceClickedOnce = false;
   activeSingle = false;
   optionHighlightedIndex = -1;
-  private _statusChangesSubscription: Subscription = new Subscription();
+
+  virtualListHeight = 240;
+  virtualScrollItemSize = 42;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -116,6 +129,8 @@ export class CpsAutocompleteComponent
         this._checkErrors();
       }
     ) as Subscription;
+
+    this.recalcVirtualListHeight();
   }
 
   ngOnDestroy() {
@@ -201,6 +216,10 @@ export class CpsAutocompleteComponent
     this.filteredOptions = this.options.filter((o: any) =>
       o[this.optionLabel].toLowerCase().includes(searchVal)
     );
+
+    setTimeout(() => {
+      this.recalcVirtualListHeight();
+    });
   }
 
   writeValue(value: any) {
@@ -261,7 +280,8 @@ export class CpsAutocompleteComponent
       if (
         this.multiple &&
         this.selectAll &&
-        this.filteredOptions.length === this.options.length
+        this.filteredOptions.length === this.options.length &&
+        !this.virtualScroll
       ) {
         if (idx === 0) {
           this.toggleAll();
@@ -275,7 +295,8 @@ export class CpsAutocompleteComponent
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
-      this._navigateOptionsByArrows(code === 38);
+      // Arrows navigation doesn't work with virtual scroll
+      if (!this.virtualScroll) this._navigateOptionsByArrows(code === 38);
     }
   }
 
@@ -307,6 +328,15 @@ export class CpsAutocompleteComponent
     this._toggleOptions(this.autocompleteContainer?.nativeElement, true);
   }
 
+  recalcVirtualListHeight() {
+    if (!this.virtualScroll) return;
+    const currentLen = this.filteredOptions?.length || 0;
+    this.virtualListHeight = Math.min(
+      this.virtualScrollItemSize * currentLen,
+      240
+    );
+  }
+
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
 
@@ -318,16 +348,30 @@ export class CpsAutocompleteComponent
 
     this.isOpened = dd.classList.contains('active');
 
-    if (this.isOpened) {
-      const selected =
-        this.autocompleteContainer.nativeElement.querySelector('.selected');
-      if (selected)
-        selected.scrollIntoView({
-          behavior: 'instant',
-          block: 'nearest',
-          inline: 'center'
-        });
-    }
+    setTimeout(() => {
+      if (this.isOpened && this.filteredOptions.length > 0) {
+        this.recalcVirtualListHeight();
+
+        const selected =
+          this.autocompleteContainer.nativeElement.querySelector('.selected');
+        if (selected) {
+          selected.scrollIntoView({
+            behavior: 'instant',
+            block: 'nearest',
+            inline: 'center'
+          });
+        } else if (this.virtualScroll && this.value) {
+          let v: any;
+          if (this.multiple) {
+            if (this.value.length > 0) {
+              v = this.value[0];
+            }
+          } else v = this.value;
+          const idx = this.filteredOptions.findIndex((o) => isEqual(o, v));
+          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        }
+      }
+    });
   }
 
   private _clickOption(option: any, dd: HTMLElement) {
@@ -383,6 +427,7 @@ export class CpsAutocompleteComponent
     this.filteredOptions = this.options;
     this.inputText = '';
     this.activeSingle = false;
+    this.recalcVirtualListHeight();
   }
 
   private _closeAndClear(dd: HTMLElement) {

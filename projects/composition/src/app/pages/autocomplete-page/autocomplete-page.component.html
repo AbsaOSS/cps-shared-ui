@@ -35,8 +35,11 @@
       [value]="[{ code: 'CPT' }]"
       hint="This autocomplete is not clearable"></cps-autocomplete>
     <cps-autocomplete
-      label="Multiple autocomplete with chips and persistent clear icon"
+      label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
       [options]="options"
+      hint="This autocomplete doesn't have Select All option"
+      [virtualScroll]="true"
+      [selectAll]="false"
       optionLabel="name"
       optionInfo="info"
       placeholder="Enter a city"
@@ -46,7 +49,6 @@
       [value]="[options[0], options[4]]"></cps-autocomplete>
     <cps-autocomplete
       label="Multiple autocomplete with non-closable chips"
-      hint="This autocomplete doesn't have Select All option"
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
@@ -56,7 +58,6 @@
       [clearable]="true"
       [multiple]="true"
       [closableChips]="false"
-      [selectAll]="false"
       [value]="[options[0].data, options[4].data]"></cps-autocomplete>
     <cps-autocomplete
       label="Multiple autocomplete with prefix icon"

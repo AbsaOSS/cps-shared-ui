@@ -124,13 +124,17 @@
             <span class="cps-treeautocomplete-option-left">
               <span *ngIf="multiple" class="cps-treeautocomplete-option-check">
               </span>
-              <span class="cps-treeautocomplete-option-label">{{
-                node.label
-              }}</span>
+              <span
+                class="cps-treeautocomplete-option-label"
+                [class.virtual-row]="virtualScroll"
+                >{{ node.label }}</span
+              >
             </span>
-            <span class="cps-treeautocomplete-option-info">{{
-              node.info
-            }}</span>
+            <span
+              class="cps-treeautocomplete-option-info"
+              [class.virtual-row]="virtualScroll"
+              >{{ node.info }}</span
+            >
           </span>
         </ng-template>
       </p-tree>

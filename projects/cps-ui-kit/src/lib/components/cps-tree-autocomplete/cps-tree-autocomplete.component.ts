@@ -197,6 +197,10 @@ export class CpsTreeAutocompleteComponent
     this.treeAutocompleteList.resetFilter();
     this.inputText = '';
     this.activeSingle = false;
+    this.updateOptions();
+    setTimeout(() => {
+      this.recalcVirtualListHeight();
+    });
   }
 
   private _closeAndClear(dd: HTMLElement) {

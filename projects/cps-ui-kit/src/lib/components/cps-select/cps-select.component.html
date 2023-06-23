@@ -91,42 +91,49 @@
     </div>
 
     <div class="cps-select-options">
-      <div
-        class="cps-select-options-option select-all-option"
-        [class.allselected]="value?.length === options.length"
-        *ngIf="multiple && selectAll"
-        (click)="toggleAll()">
-        <span class="cps-select-options-option-left">
-          <span *ngIf="multiple" class="cps-select-options-option-check">
+      <ng-container *ngIf="!virtualScroll">
+        <div
+          class="cps-select-options-option select-all-option"
+          [class.allselected]="value?.length === options.length"
+          *ngIf="multiple && selectAll"
+          (click)="toggleAll()">
+          <span class="cps-select-options-option-left">
+            <span *ngIf="multiple" class="cps-select-options-option-check">
+            </span>
+            <span class="cps-select-options-option-label">Select all</span>
           </span>
-          <span class="cps-select-options-option-label">Select all</span>
-        </span>
-      </div>
-      <div
-        class="cps-select-options-option"
-        *ngFor="let option of options"
-        (click)="onOptionClick(option, selectContainer)"
-        [class.selected]="
-          option
-            | checkOptionSelected
-              : value
-              : multiple
-              : returnObject
-              : optionValue
-        ">
-        <span class="cps-select-options-option-left">
-          <span *ngIf="multiple" class="cps-select-options-option-check">
-          </span>
-          <span class="cps-select-options-option-label">{{
-            option[optionLabel]
-          }}</span>
-        </span>
-
-        <span class="cps-select-options-option-right">{{
-          option[optionInfo]
-        }}</span>
-      </div>
+        </div>
+        <ng-container *ngFor="let item of options">
+          <ng-container
+            *ngTemplateOutlet="
+              itemTemplate;
+              context: {
+                item: item
+              }
+            "></ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="virtualScroll">
+        <p-virtualScroller
+          #virtualList
+          [value]="options"
+          [delay]="0"
+          [scrollHeight]="virtualListHeight + 'px'"
+          [options]="{ numToleratedItems: 3 }"
+          [itemSize]="virtualScrollItemSize">
+          <ng-template pTemplate="item" let-item>
+            <ng-container
+              *ngTemplateOutlet="
+                itemTemplate;
+                context: {
+                  item: item
+                }
+              "></ng-container>
+          </ng-template>
+        </p-virtualScroller>
+      </ng-container>
     </div>
+
     <cps-progress-linear
       *ngIf="loading"
       height="3"
@@ -139,3 +146,27 @@
   <div *ngIf="!error && !hideDetails" class="cps-select-hint">{{ hint }}</div>
   <div *ngIf="error && !hideDetails" class="cps-select-error">{{ error }}</div>
 </div>
+
+<ng-template #itemTemplate let-item="item">
+  <div
+    class="cps-select-options-option"
+    (click)="onOptionClick(item, selectContainer)"
+    [class.selected]="
+      item | checkOptionSelected : value : multiple : returnObject : optionValue
+    ">
+    <span class="cps-select-options-option-left">
+      <span *ngIf="multiple" class="cps-select-options-option-check"> </span>
+      <span
+        class="cps-select-options-option-label"
+        [class.virtual-row]="virtualScroll"
+        >{{ item[optionLabel] }}</span
+      >
+    </span>
+
+    <span
+      class="cps-select-options-option-right"
+      [class.virtual-row]="virtualScroll"
+      >{{ item[optionInfo] }}</span
+    >
+  </div>
+</ng-template>

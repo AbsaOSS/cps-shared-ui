@@ -231,6 +231,10 @@ $hover-transition-duration: 0.2s;
             margin-left: 6px;
             color: $treeselect-option-info-color;
           }
+
+          .virtual-row {
+            white-space: nowrap;
+          }
         }
 
         .p-component {
