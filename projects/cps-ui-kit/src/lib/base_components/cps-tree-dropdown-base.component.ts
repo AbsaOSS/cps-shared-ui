@@ -214,7 +214,7 @@ export class CpsTreeDropdownBaseComponent
     if (!treeNode) return;
 
     treeNode.expanded = !treeNode.expanded;
-    this._updateOptions();
+    this.updateOptions();
     setTimeout(() => {
       this.recalcVirtualListHeight();
     });
@@ -257,7 +257,7 @@ export class CpsTreeDropdownBaseComponent
       this._expandToNodes(
         this.multiple ? this.treeSelection : [this.treeSelection]
       );
-      this._updateOptions();
+      this.updateOptions();
 
       setTimeout(() => {
         this.recalcVirtualListHeight();
@@ -478,7 +478,7 @@ export class CpsTreeDropdownBaseComponent
   }
 
   // this is a fix of primeng change detection bug when virtual scroller is enabled
-  private _updateOptions() {
+  updateOptions() {
     if (!this.virtualScroll) return;
     this.options = [...this.options];
   }
