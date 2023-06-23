@@ -285,6 +285,10 @@ $hover-transition-duration: 0.2s;
             margin-left: 6px;
             color: $treeautocomplete-option-info-color;
           }
+
+          .virtual-row {
+            white-space: nowrap;
+          }
         }
 
         .p-component {

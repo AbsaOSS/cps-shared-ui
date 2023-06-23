@@ -107,9 +107,17 @@
             <span class="cps-treeselect-option-left">
               <span *ngIf="multiple" class="cps-treeselect-option-check">
               </span>
-              <span class="cps-treeselect-option-label">{{ node.label }}</span>
+              <span
+                class="cps-treeselect-option-label"
+                [class.virtual-row]="virtualScroll"
+                >{{ node.label }}</span
+              >
             </span>
-            <span class="cps-treeselect-option-info">{{ node.info }}</span>
+            <span
+              class="cps-treeselect-option-info"
+              [class.virtual-row]="virtualScroll"
+              >{{ node.info }}</span
+            >
           </span>
         </ng-template>
       </p-tree>
