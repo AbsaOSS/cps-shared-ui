@@ -83,7 +83,11 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       this._popup
     );
 
-    if (enoughSpc !== 'ENOUGH_SPACE') {
+    if (enoughSpc === 'NO_SPACE') {
+      this._destroyTooltip();
+
+      throw new Error('Not enough space for tooltip!');
+    } else if (enoughSpc !== 'ENOUGH_SPACE') {
       this._handleMissingSpace(enoughSpc);
 
       this._createTooltip();
@@ -114,12 +118,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     coords: { x: number; y: number },
     popup: HTMLDivElement
   ) {
-    if (coords.x + popup.getBoundingClientRect().width >= window.innerWidth)
-      return 'NO_RIGHT';
-    if (coords.x - popup.getBoundingClientRect().width <= 0) return 'NO_LEFT';
-    if (coords.y + popup.getBoundingClientRect().height >= window.innerHeight)
-      return 'NO_BOTTOM';
-    if (coords.y - popup.getBoundingClientRect().height <= 0) return 'NO_TOP';
+    let leftSpace: string;
 
     if (
       coords.x + popup.getBoundingClientRect().width >= window.innerWidth &&
@@ -127,18 +126,28 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       coords.y + popup.getBoundingClientRect().height >= window.innerHeight &&
       coords.y - popup.getBoundingClientRect().height <= 0
     ) {
-      return 'NO_SPACE';
-    }
+      leftSpace = 'NO_SPACE';
+    } else if (
+      coords.x + popup.getBoundingClientRect().width >=
+      window.innerWidth
+    )
+      leftSpace = 'NO_RIGHT';
+    else if (coords.x - popup.getBoundingClientRect().width <= 0)
+      leftSpace = 'NO_LEFT';
+    else if (
+      coords.y + popup.getBoundingClientRect().height >=
+      window.innerHeight
+    )
+      leftSpace = 'NO_BOTTOM';
+    else if (coords.y - popup.getBoundingClientRect().height <= 0)
+      leftSpace = 'NO_TOP';
 
-    return 'ENOUGH_SPACE';
+    leftSpace = 'ENOUGH_SPACE';
+
+    return leftSpace;
   }
 
   private _handleMissingSpace(spaceLeft: string) {
-    if (spaceLeft === 'NO_SPACE') {
-      this._destroyTooltip();
-      return;
-    }
-
     if (spaceLeft === 'NO_TOP') this.position = 'right';
     if (spaceLeft === 'NO_RIGHT') this.position = 'bottom';
     if (spaceLeft === 'NO_BOTTOM') this.position = 'left';
