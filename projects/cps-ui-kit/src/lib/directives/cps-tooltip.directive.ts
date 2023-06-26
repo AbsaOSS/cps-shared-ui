@@ -77,6 +77,8 @@ export class CpsTooltipDirective implements OnDestroy {
     if (this.tooltipDisabled) return;
 
     this._popup?.remove();
+
+    this._popup = undefined;
   };
 
   private _constructElement(popup: HTMLDivElement) {
@@ -118,6 +120,7 @@ export class CpsTooltipDirective implements OnDestroy {
               2,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
+            window.scrollY +
             this._elementRef.nativeElement.offsetHeight +
             6
         };
@@ -129,6 +132,7 @@ export class CpsTooltipDirective implements OnDestroy {
             6,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
+            window.scrollY +
             (this._elementRef.nativeElement.offsetHeight -
               popup.getBoundingClientRect().height) /
               2
@@ -141,6 +145,7 @@ export class CpsTooltipDirective implements OnDestroy {
             6,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
+            window.scrollY -
             (this._elementRef.nativeElement.offsetHeight -
               popup.getBoundingClientRect().height) /
               2
@@ -153,7 +158,8 @@ export class CpsTooltipDirective implements OnDestroy {
               popup.getBoundingClientRect().width) /
               2,
           y:
-            this._elementRef.nativeElement.getBoundingClientRect().top -
+            this._elementRef.nativeElement.getBoundingClientRect().top +
+            window.scrollY -
             popup.getBoundingClientRect().height -
             6
         };
@@ -213,5 +219,9 @@ export class CpsTooltipDirective implements OnDestroy {
         this.openDelay as number
       );
     }
+  }
+
+  @HostListener('document: scroll') onPageScroll() {
+    this._destroyTooltip();
   }
 }
