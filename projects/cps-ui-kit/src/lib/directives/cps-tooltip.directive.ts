@@ -33,7 +33,7 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _closeOnContentClick = false;
-  private _popup: HTMLDivElement = document.createElement('div');
+  private _popup?: HTMLDivElement;
   private _showTimeout?: any;
   private _hideTimeout?: any;
   // eslint-disable-next-line no-useless-constructor
@@ -46,9 +46,11 @@ export class CpsTooltipDirective implements OnDestroy {
   private _createTooltip = () => {
     if (this.tooltipDisabled) return;
 
+    this._popup = document.createElement('div');
+
     const tooltipEl = document.body.appendChild(this._popup);
 
-    this._constructElement();
+    this._constructElement(this._popup);
 
     if (this.closeOnContentClick)
       this._popup.addEventListener('click', this._destroyTooltip);
@@ -77,14 +79,14 @@ export class CpsTooltipDirective implements OnDestroy {
     this._popup?.remove();
   };
 
-  private _constructElement() {
-    this._popup.innerHTML = this.tooltip;
-    this._popup.setAttribute('class', 'cps-tooltip');
+  private _constructElement(popup: HTMLDivElement) {
+    popup.innerHTML = this.tooltip;
+    popup.setAttribute('class', 'cps-tooltip');
 
-    const { x, y } = this._setTooltipPosition();
+    const { x, y } = this._setTooltipPosition(popup);
 
-    this._popup.style.top = y.toString() + 'px';
-    this._popup.style.left = x.toString() + 'px';
+    popup.style.top = y.toString() + 'px';
+    popup.style.left = x.toString() + 'px';
   }
 
   private _checkIfEnoughSpace(
@@ -105,14 +107,14 @@ export class CpsTooltipDirective implements OnDestroy {
     return 'ENOUGH_SPACE';
   }
 
-  private _setTooltipPosition() {
+  private _setTooltipPosition(popup: HTMLDivElement) {
     switch (this.position) {
       case 'bottom':
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
             (this._elementRef.nativeElement.offsetWidth -
-              this._popup.getBoundingClientRect().width) /
+              popup.getBoundingClientRect().width) /
               2,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
@@ -123,12 +125,12 @@ export class CpsTooltipDirective implements OnDestroy {
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left -
-            this._popup.getBoundingClientRect().width -
+            popup.getBoundingClientRect().width -
             6,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
             (this._elementRef.nativeElement.offsetHeight -
-              this._popup.getBoundingClientRect().height) /
+              popup.getBoundingClientRect().height) /
               2
         };
       case 'right':
@@ -140,7 +142,7 @@ export class CpsTooltipDirective implements OnDestroy {
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top +
             (this._elementRef.nativeElement.offsetHeight -
-              this._popup.getBoundingClientRect().height) /
+              popup.getBoundingClientRect().height) /
               2
         };
       default:
@@ -148,11 +150,11 @@ export class CpsTooltipDirective implements OnDestroy {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
             (this._elementRef.nativeElement.offsetWidth -
-              this._popup.getBoundingClientRect().width) /
+              popup.getBoundingClientRect().width) /
               2,
           y:
             this._elementRef.nativeElement.getBoundingClientRect().top -
-            this._popup.getBoundingClientRect().height -
+            popup.getBoundingClientRect().height -
             6
         };
     }
