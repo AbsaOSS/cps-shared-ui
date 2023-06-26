@@ -4,14 +4,15 @@ import {
   ElementRef,
   HostListener,
   Input,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
 })
-export class CpsTooltipDirective implements OnDestroy {
+export class CpsTooltipDirective implements OnInit, OnDestroy {
   @Input() tooltip = 'Add your text to this tooltip';
   @Input() openDelay: string | number = 300;
   @Input() closeDelay: string | number = 300;
@@ -39,12 +40,27 @@ export class CpsTooltipDirective implements OnDestroy {
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
+  ngOnInit(): void {
+    this._elementRef.nativeElement?.parentElement?.addEventListener(
+      'scroll',
+      this._destroyTooltip
+    );
+  }
+
   ngOnDestroy(): void {
+    this._elementRef.nativeElement?.parentElement?.removeEventListener(
+      'scroll',
+      this._destroyTooltip
+    );
+
+    this._popup?.removeEventListener('click', this._destroyTooltip);
+
     this._destroyTooltip();
   }
 
   private _createTooltip = () => {
     if (this.tooltipDisabled) return;
+    if (this._popup) return;
 
     this._popup = document.createElement('div');
 
@@ -115,6 +131,7 @@ export class CpsTooltipDirective implements OnDestroy {
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
+            window.scrollX +
             (this._elementRef.nativeElement.offsetWidth -
               popup.getBoundingClientRect().width) /
               2,
@@ -128,6 +145,7 @@ export class CpsTooltipDirective implements OnDestroy {
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left -
+            window.scrollX -
             popup.getBoundingClientRect().width -
             6,
           y:
@@ -221,7 +239,7 @@ export class CpsTooltipDirective implements OnDestroy {
     }
   }
 
-  @HostListener('document: scroll') onPageScroll() {
+  @HostListener('window:scroll') onPageScroll() {
     this._destroyTooltip();
   }
 }
