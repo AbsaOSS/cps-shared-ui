@@ -63,7 +63,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
     this._popup = document.createElement('div');
 
-    const tooltipEl = document.body.appendChild(this._popup);
+    this._popup = document.body.appendChild(this._popup);
 
     this._constructElement(this._popup);
 
@@ -75,7 +75,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
         x: this._popup.getBoundingClientRect().left,
         y: this._popup.getBoundingClientRect().top
       },
-      tooltipEl
+      this._popup
     );
 
     this._handleMissingSpace(
@@ -83,7 +83,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
         x: this._popup.getBoundingClientRect().left,
         y: this._popup.getBoundingClientRect().top
       },
-      tooltipEl,
+      this._popup,
       enoughSpc
     );
   };
@@ -263,6 +263,10 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   @HostListener('window:scroll') onPageScroll() {
+    this._destroyTooltip();
+  }
+
+  @HostListener('window: resize') onResizePage() {
     this._destroyTooltip();
   }
 }
