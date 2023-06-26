@@ -37,10 +37,13 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   private _popup?: HTMLDivElement;
   private _showTimeout?: any;
   private _hideTimeout?: any;
+  private _initialPosition!: 'top' | 'bottom' | 'left' | 'right';
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   ngOnInit(): void {
+    this._initialPosition = this.position;
+
     this._elementRef.nativeElement?.parentElement?.addEventListener(
       'scroll',
       this._destroyTooltip
@@ -59,7 +62,9 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   private _createTooltip = () => {
-    if (this.tooltipDisabled || this._popup) return;
+    this._destroyTooltip();
+
+    if (this.tooltipDisabled) return;
 
     this._popup = document.createElement('div');
 
@@ -78,14 +83,13 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       this._popup
     );
 
-    this._handleMissingSpace(
-      {
-        x: this._popup.getBoundingClientRect().left,
-        y: this._popup.getBoundingClientRect().top
-      },
-      this._popup,
-      enoughSpc
-    );
+    if (enoughSpc !== 'ENOUGH_SPACE') {
+      this._handleMissingSpace(enoughSpc);
+
+      this._createTooltip();
+    } else {
+      this.position = this._initialPosition;
+    }
   };
 
   private _destroyTooltip = () => {
@@ -129,12 +133,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     return 'ENOUGH_SPACE';
   }
 
-  private _handleMissingSpace(
-    coords: { x: number; y: number },
-    popup: HTMLDivElement,
-    spaceLeft: string
-  ) {
-    if (spaceLeft === 'ENOUGH_SPACE') return;
+  private _handleMissingSpace(spaceLeft: string) {
     if (spaceLeft === 'NO_SPACE') {
       this._destroyTooltip();
       return;
@@ -144,8 +143,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     if (spaceLeft === 'NO_RIGHT') this.position = 'bottom';
     if (spaceLeft === 'NO_BOTTOM') this.position = 'left';
     if (spaceLeft === 'NO_LEFT') this.position = 'top';
-
-    return this._checkIfEnoughSpace(coords, popup);
   }
 
   private _setTooltipPosition(popup: HTMLDivElement) {
@@ -263,10 +260,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   @HostListener('window:scroll') onPageScroll() {
-    this._destroyTooltip();
-  }
-
-  @HostListener('window: resize') onResizePage() {
     this._destroyTooltip();
   }
 }
