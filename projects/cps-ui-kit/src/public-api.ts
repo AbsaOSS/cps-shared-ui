@@ -11,6 +11,7 @@ export * from './lib/components/cps-tree-autocomplete/cps-tree-autocomplete.comp
 export * from './lib/components/cps-button/cps-button.component';
 export * from './lib/components/cps-checkbox/cps-checkbox.component';
 export * from './lib/components/cps-radio/cps-radio.component';
+export * from './lib/components/cps-table/cps-table.component';
 export * from './lib/components/cps-tag/cps-tag.component';
 export * from './lib/components/cps-chip/cps-chip.component';
 export * from './lib/components/cps-loader/cps-loader.component';

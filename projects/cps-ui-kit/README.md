@@ -18,6 +18,7 @@
 - Progress linear (indeterminate)
 - Radio
 - Select
+- Table
 - Tag
 - Textarea
 - Tree autocomplete
