@@ -1,4 +1,45 @@
-<table>
+<p-table
+  [value]="data"
+  #primengTable
+  [resizableColumns]="resizableColumns"
+  [reorderableColumns]="reorderableColumns"
+  withUnsort
+  [styleClass]="styleClass"
+  [rowHover]="rowHover"
+  [scrollable]="true"
+  scrollHeight="flex">
+  <ng-template pTemplate="caption">
+    {{ toolbarTitle }}
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <ng-container *ngIf="headerTemplate">
+      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="!headerTemplate">
+      <tr>
+        <th *ngFor="let h of headers">{{ h }}</th>
+      </tr>
+    </ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+    <ng-container
+      pTemplate="body"
+      *ngTemplateOutlet="
+        bodyTemplate;
+        context: { $implicit: item, rowIndex: rowIndex }
+      "></ng-container>
+  </ng-template>
+  <!-- <ng-template pTemplate="body" [ngTemplateOutlet]="bodyTemplate"></ng-template> -->
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4">{{ emptyMessage }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- <table>
   <thead>
     <tr>
       <th>Month</th>
@@ -21,4 +62,4 @@
       <td>$180</td>
     </tr>
   </tfoot>
-</table>
+</table> -->
