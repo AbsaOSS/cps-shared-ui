@@ -68,31 +68,27 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
     this._popup = document.createElement('div');
 
-    this._popup = document.body.appendChild(this._popup);
+    document.body.appendChild(this._popup);
 
     this._constructElement(this._popup);
 
     if (this.closeOnContentClick)
       this._popup.addEventListener('click', this._destroyTooltip);
 
-    const enoughSpc = this._checkIfEnoughSpace(
-      {
-        x: this._popup.getBoundingClientRect().left,
-        y: this._popup.getBoundingClientRect().top
-      },
-      this._popup
+    const enoughSpc = this._handleMissingSpace(
+      this._checkIfEnoughSpace(
+        {
+          x: this._popup.getBoundingClientRect().left,
+          y: this._popup.getBoundingClientRect().top
+        },
+        this._popup
+      )
     );
 
-    if (enoughSpc === 'NO_SPACE') {
+    if (enoughSpc !== 'ENOUGH_SPACE' && enoughSpc !== 'NO_SPACE') {
       this._destroyTooltip();
 
-      throw new Error('Not enough space for tooltip!');
-    } else if (enoughSpc !== 'ENOUGH_SPACE') {
-      this._handleMissingSpace(enoughSpc);
-
       this._createTooltip();
-    } else {
-      this.position = this._initialPosition;
     }
   };
 
@@ -116,9 +112,10 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   private _checkIfEnoughSpace(
     coords: { x: number; y: number },
-    popup: HTMLDivElement
+    popup: HTMLDivElement,
+    spaceLeft?: string
   ) {
-    let leftSpace: string;
+    let currLeftSpace: string;
 
     if (
       coords.x + popup.getBoundingClientRect().width >= window.innerWidth &&
@@ -126,32 +123,71 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       coords.y + popup.getBoundingClientRect().height >= window.innerHeight &&
       coords.y - popup.getBoundingClientRect().height <= 0
     ) {
-      leftSpace = 'NO_SPACE';
+      currLeftSpace = 'NO_SPACE';
     } else if (
-      coords.x + popup.getBoundingClientRect().width >=
-      window.innerWidth
+      coords.x + popup.getBoundingClientRect().width >= window.innerWidth &&
+      spaceLeft !== 'NO_RIGHT'
     )
-      leftSpace = 'NO_RIGHT';
-    else if (coords.x - popup.getBoundingClientRect().width <= 0)
-      leftSpace = 'NO_LEFT';
+      currLeftSpace = 'NO_RIGHT';
     else if (
-      coords.y + popup.getBoundingClientRect().height >=
-      window.innerHeight
+      coords.x - popup.getBoundingClientRect().width <= 0 &&
+      spaceLeft !== 'NO_LEFT'
     )
-      leftSpace = 'NO_BOTTOM';
-    else if (coords.y - popup.getBoundingClientRect().height <= 0)
-      leftSpace = 'NO_TOP';
-
-    leftSpace = 'ENOUGH_SPACE';
-
-    return leftSpace;
+      currLeftSpace = 'NO_LEFT';
+    else if (
+      coords.y + popup.getBoundingClientRect().height >= window.innerHeight &&
+      spaceLeft !== 'NO_BOTTOM'
+    )
+      currLeftSpace = 'NO_BOTTOM';
+    else if (
+      coords.y - popup.getBoundingClientRect().height <= 0 &&
+      spaceLeft !== 'NO_TOP'
+    )
+      currLeftSpace = 'NO_TOP';
+    else {
+      currLeftSpace = 'ENOUGH_SPACE';
+    }
+    return currLeftSpace;
   }
 
   private _handleMissingSpace(spaceLeft: string) {
-    if (spaceLeft === 'NO_TOP') this.position = 'right';
-    if (spaceLeft === 'NO_RIGHT') this.position = 'bottom';
-    if (spaceLeft === 'NO_BOTTOM') this.position = 'left';
-    if (spaceLeft === 'NO_LEFT') this.position = 'top';
+    switch (spaceLeft) {
+      case 'NO_TOP':
+        this.position = 'right';
+        break;
+      case 'NO_RIGHT':
+        this.position = 'bottom';
+        break;
+      case 'NO_BOTTOM':
+        this.position = 'left';
+        break;
+      case 'NO_LEFT':
+        this.position = 'top';
+        break;
+      case 'NO_SPACE':
+        this._destroyTooltip();
+        return;
+      default:
+        this.position = this._initialPosition;
+        break;
+    }
+
+    this._constructElement(this._popup as HTMLDivElement);
+
+    if (spaceLeft !== 'ENOUGH_SPACE') {
+      spaceLeft = this._checkIfEnoughSpace(
+        {
+          x: (this._popup as HTMLDivElement).getBoundingClientRect().left,
+          y: (this._popup as HTMLDivElement).getBoundingClientRect().top
+        },
+        this._popup as HTMLDivElement,
+        spaceLeft
+      );
+
+      this._handleMissingSpace(spaceLeft);
+    }
+
+    return spaceLeft;
   }
 
   private _setTooltipPosition(popup: HTMLDivElement) {
@@ -188,6 +224,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
+            window.scrollX +
             this._elementRef.nativeElement.offsetWidth +
             6,
           y:
@@ -201,6 +238,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
         return {
           x:
             this._elementRef.nativeElement.getBoundingClientRect().left +
+            window.scrollX +
             (this._elementRef.nativeElement.offsetWidth -
               popup.getBoundingClientRect().width) /
               2,
