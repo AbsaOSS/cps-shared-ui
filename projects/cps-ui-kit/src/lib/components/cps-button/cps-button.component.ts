@@ -9,11 +9,12 @@ import {
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { convertSize, parseSize } from '../../utils/size-utils';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsIconComponent],
+  imports: [CommonModule, CpsIconComponent, CpsProgressCircularComponent],
   selector: 'cps-button',
   templateUrl: './cps-button.component.html',
   styleUrls: ['./cps-button.component.scss']

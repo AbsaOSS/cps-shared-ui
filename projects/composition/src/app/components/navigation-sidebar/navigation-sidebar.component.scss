@@ -7,12 +7,16 @@
 
 .sidebar {
   width: $sidebar-width;
-  overflow-y: auto;
+  height: calc(100vh - $top-tbar-height);
+  overflow: auto;
   .list {
     &-title {
       margin: 0;
       padding: 12px 0 12px 12px;
       color: $color-text;
+    }
+    &-search-bar {
+      margin: 0 8px 8px 8px;
     }
     &-item {
       border-bottom: 1px solid lightgrey;

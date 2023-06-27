@@ -14,9 +14,12 @@ import { ProgressLinearPageComponent } from './pages/progress-linear-page/progre
 import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
 import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
 import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expansion-panel-page.component';
+import { TreeAutocompletePageComponent } from './pages/tree-autocomplete-page/tree-autocomplete-page.component';
+import { TreeSelectPageComponent } from './pages/tree-select-page/tree-select-page.component';
 import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
 import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.component';
+import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
 
 const routes: Routes = [
   {
@@ -40,9 +43,19 @@ const routes: Routes = [
     component: SelectPageComponent
   },
   {
+    path: 'tree-select',
+    title: 'Tree select',
+    component: TreeSelectPageComponent
+  },
+  {
     path: 'autocomplete',
     title: 'Autocomplete',
     component: AutocompletePageComponent
+  },
+  {
+    path: 'tree-autocomplete',
+    title: 'Tree autocomplete',
+    component: TreeAutocompletePageComponent
   },
   {
     path: 'button',
@@ -83,6 +96,11 @@ const routes: Routes = [
     path: 'expansion-panel',
     title: 'Expansion panel',
     component: ExpansionPanelPageComponent
+  },
+  {
+    path: 'progress-circular',
+    title: 'Progress circular',
+    component: ProgressCircularPageComponent
   },
   {
     path: 'progress-linear',

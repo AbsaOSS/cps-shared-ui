@@ -14,12 +14,15 @@
 - Icon
 - Input
 - Loader
+- Progress circular (indeterminate)
 - Progress linear (indeterminate)
 - Radio
 - Select
 - Tag
 - Textarea
 - Tooltip
+- Tree autocomplete
+- Tree select
 
 ### License
 

@@ -11,9 +11,20 @@
   </div>
   <div class="list">
     <h3 class="list-title">Components</h3>
+    <div class="list-search-bar">
+      <cps-input
+        prefixIcon="search"
+        placeholder="Search a component"
+        [(ngModel)]="searchVal"
+        (valueChanged)="onSearchChanged($event)"
+        [clearable]="true"
+        [hideDetails]="true">
+      </cps-input>
+    </div>
     <a
-      *ngFor="let comp of components"
+      *ngFor="let comp of filteredComponents"
       class="list-item"
+      (click)="onComponentSelect()"
       [routerLink]="[comp.url]"
       routerLinkActive="_active"
       >{{ comp.title }}</a

@@ -1,0 +1,18 @@
+:host {
+  display: inline-block;
+
+  .cps-progress-circular {
+    box-sizing: border-box;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border-right-color: transparent !important;
+    border-bottom: unset !important;
+    animation: cps-progress-circular-animation 0.8s linear infinite;
+  }
+
+  @keyframes cps-progress-circular-animation {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
