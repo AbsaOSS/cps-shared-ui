@@ -25,12 +25,9 @@ This repository consists of two projects:
 - Select
 - Tag
 - Textarea
-<<<<<<< HEAD
 - Tooltip
-=======
 - Tree autocomplete
 - Tree select
->>>>>>> master
 
 ## Development server
 
