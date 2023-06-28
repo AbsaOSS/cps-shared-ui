@@ -1,9 +1,13 @@
 <p-table
-  [value]="data"
   #primengTable
+  [value]="data"
+  (onRowSelect)="onSelectionChanged()"
+  (onRowUnselect)="onSelectionChanged()"
+  (selectAllChange)="onSelectionChanged()"
   [resizableColumns]="resizableColumns"
   [reorderableColumns]="reorderableColumns"
   withUnsort
+  [(selection)]="selectedRows"
   [styleClass]="styleClass"
   [rowHover]="rowHover"
   [scrollable]="true"
@@ -14,23 +18,31 @@
   </ng-template>
 
   <ng-template pTemplate="header" let-columns>
-    <ng-container *ngIf="headerTemplate">
-      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="!headerTemplate">
-      <tr>
+    <tr>
+      <th style="width: 4rem" *ngIf="selectable">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <ng-container *ngIf="headerTemplate">
+        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!headerTemplate">
         <th *ngFor="let h of headers">{{ h }}</th>
-      </tr>
-    </ng-container>
+      </ng-container>
+    </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
-    <ng-container
-      pTemplate="body"
-      *ngTemplateOutlet="
-        bodyTemplate;
-        context: { $implicit: item, rowIndex: rowIndex }
-      "></ng-container>
+    <tr>
+      <td *ngIf="selectable">
+        <p-tableCheckbox [value]="item"></p-tableCheckbox>
+      </td>
+      <ng-container
+        pTemplate="body"
+        *ngTemplateOutlet="
+          bodyTemplate;
+          context: { $implicit: item, rowIndex: rowIndex }
+        "></ng-container>
+    </tr>
   </ng-template>
   <!-- <ng-template pTemplate="body" [ngTemplateOutlet]="bodyTemplate"></ng-template> -->
   <ng-template pTemplate="emptymessage">

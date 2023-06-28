@@ -1,27 +1,27 @@
+//TODO directives: columnSortable (fieldname); columnFilter (type date, text,
+boolean, range, categories, numeric)
+
 <cps-table
   [headers]="headers"
   [data]="data"
   toolbarTitle="I am a toolbar title">
   <ng-template #header>
-    <tr>
-      <th pResizableColumn pSortableColumn="a">
-        A <p-sortIcon field="a"></p-sortIcon>
-      </th>
-      <th pResizableColumn pSortableColumn="b">
-        B<p-sortIcon field="b"></p-sortIcon>
-      </th>
-      <th pResizableColumn pSortableColumn="c">
-        C<p-sortIcon field="c"></p-sortIcon>
-      </th>
-      <!-- <th *ngFor="let h of headers">{{ h }}</th> -->
-    </tr>
+    <th pResizableColumn pSortableColumn="a">
+      A <p-sortIcon field="a"></p-sortIcon>
+      <p-columnFilter type="text" field="a" display="menu"></p-columnFilter>
+    </th>
+    <th pResizableColumn pSortableColumn="b">
+      B<p-sortIcon field="b"></p-sortIcon>
+    </th>
+    <th pResizableColumn pSortableColumn="c">
+      C<p-sortIcon field="c"></p-sortIcon>
+    </th>
+    <!-- <th *ngFor="let h of headers">{{ h }}</th> -->
   </ng-template>
 
   <ng-template let-item #body>
-    <tr>
-      <td>{{ item.a }}</td>
-      <td>{{ item.b | uppercase }}</td>
-      <td>{{ item.c | percent }}</td>
-    </tr>
+    <td>{{ item.a }}</td>
+    <td>{{ item.b | uppercase }}</td>
+    <td>{{ item.c | percent }}</td>
   </ng-template>
 </cps-table>

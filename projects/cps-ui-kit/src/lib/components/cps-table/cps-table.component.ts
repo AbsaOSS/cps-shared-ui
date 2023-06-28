@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   Component,
   ContentChild,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -38,7 +40,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() striped = false;
   @Input() bordered = true;
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
-  @Input() selectable = false;
+  @Input() selectable = true;
   @Input() emptyMessage = 'No data';
   @Input() virtualScroll = false;
   @Input() hasToolbar = false;
@@ -52,7 +54,10 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() export = false;
   @Input() rowHover = true;
 
+  @Output() selectionChanged = new EventEmitter<any[]>();
+
   styleClass = '';
+  selectedRows = [];
 
   // @ContentChildren(PrimeTemplate) templates!: QueryList<TemplateRef<any>>;
 
@@ -84,6 +89,10 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     //       break;
     //   }
     // });
+  }
+
+  onSelectionChanged() {
+    this.selectionChanged.emit();
   }
 
   @ContentChild('caption', { static: false })
