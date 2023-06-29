@@ -5,7 +5,6 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Renderer2,
   ViewContainerRef
 } from '@angular/core';
 import { SortIcon, SortableColumn, Table } from 'primeng/table';
@@ -19,28 +18,23 @@ export class CpsTableColumnSortableDirective
   implements OnInit, OnDestroy
 {
   @Input('cpsColSortable') override field = '';
-  sortIconRef!: ComponentRef<SortIcon>;
+  sortIconRef: ComponentRef<SortIcon>;
 
   constructor(
     private elementRef: ElementRef,
     private viewContainerRef: ViewContainerRef,
-    private renderer: Renderer2,
     public override dt: Table
   ) {
     super(dt);
+    this.sortIconRef = this.viewContainerRef.createComponent(SortIcon);
   }
 
   override ngOnInit(): void {
     super.ngOnInit();
-    this.sortIconRef = this.viewContainerRef.createComponent(SortIcon);
     this.sortIconRef.setInput('field', this.field);
-    this.renderer.appendChild(
-      this.elementRef.nativeElement,
+    this.elementRef.nativeElement.firstChild.after(
       this.sortIconRef.location.nativeElement
     );
-    // this.elementRef.nativeElement.appendChild(
-    //   this.sortIconRef.location.nativeElement
-    // );
   }
 
   override ngOnDestroy(): void {
