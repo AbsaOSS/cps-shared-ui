@@ -37,7 +37,7 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() headers: string[] = [];
   @Input() data: any[] = [];
-  @Input() striped = false;
+  @Input() striped = true;
   @Input() bordered = true;
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
   @Input() selectable = true;
