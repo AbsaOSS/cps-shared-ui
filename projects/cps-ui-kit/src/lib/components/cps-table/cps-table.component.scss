@@ -1,10 +1,12 @@
 :host {
   $color-calm: var(--cps-color-calm);
+  $color-surprise: var(--cps-color-surprise);
   $checkbox-border-color: var(--cps-color-text-mild);
   $stripe-color: var(--cps-color-bg-light);
   $table-borders-color: var(--cps-color-line-mid);
-  $body-text-color: var(--cps-color-text-dark);
+  $toolbar-text-color: var(--cps-color-text-dark);
   $header-text-color: var(--cps-color-text-mild);
+  $body-text-color: var(--cps-color-text-dark);
   $row-hover-background: #f8f4f5;
 
   ::ng-deep {
@@ -32,12 +34,19 @@
     }
 
     .p-datatable .p-datatable-header {
-      background: #f8f9fa;
-      color: black;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 72px;
+      padding: 0 10px;
       border: 1px solid $table-borders-color;
-      border-width: 1px 0 1px 0;
-      padding: 1rem 1rem;
-      font-weight: 700;
+      border-left: 4px solid $color-surprise !important;
+      border-radius: 4px 4px 0 0;
+      font-size: 16px;
+      line-height: 150%;
+      background-color: white;
+      color: $toolbar-text-color;
     }
 
     .p-datatable-flex-scrollable > .p-datatable-wrapper {
@@ -80,7 +89,7 @@
       > .p-scroller
       > .p-datatable-table
       > .p-datatable-tfoot {
-      background-color: #f8f9fa;
+      background-color: white;
     }
 
     .p-datatable-scrollable-table > .p-datatable-thead {
@@ -125,6 +134,68 @@
 
     .p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
       color: $color-calm;
+    }
+
+    .p-icon {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .p-sortable-column-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    filtericon {
+      pointer-events: none;
+      .p-icon {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    p-columnfilter {
+      margin-left: 4px;
+    }
+
+    .p-column-filter-menu-button:hover {
+      color: $body-text-color;
+      border-color: transparent;
+    }
+
+    .p-column-filter-menu-button.p-column-filter-menu-button-open,
+    .p-column-filter-menu-button.p-column-filter-menu-button-open:hover {
+      background: transparent;
+      color: $body-text-color;
+    }
+
+    .p-column-filter-menu-button,
+    .p-column-filter-clear-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .p-column-filter-menu-button:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: none;
+    }
+
+    .p-link {
+      text-align: left;
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     .p-datatable .p-sortable-column {
