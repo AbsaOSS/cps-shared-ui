@@ -1,18 +1,14 @@
-//TODO columnFilter directive (type date, text, boolean, range, categories,
-numeric)
+<!-- columnFilter directive (type date, text, boolean, range, categories,
+numeric) -->
 
 <cps-table
   [headers]="headers"
   [data]="data"
   toolbarTitle="I am a toolbar title">
   <ng-template #header>
-    <th pResizableColumn cpsColSortable="a">
-      A
-      <p-columnFilter type="text" field="a" display="menu"></p-columnFilter>
-    </th>
-    <th pResizableColumn cpsColSortable="b">B</th>
-    <th pResizableColumn cpsColSortable="c">C</th>
-    <!-- <th *ngFor="let h of headers">{{ h }}</th> -->
+    <th cpsColSortable="a">A</th>
+    <th>B</th>
+    <th cpsColSortable="c">C</th>
   </ng-template>
 
   <ng-template let-item #body>

@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   EventEmitter,
@@ -11,7 +12,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Table, TableService, TableModule } from 'primeng/table';
-// import { PrimeTemplate } from 'primeng/api';
 import { TableUnsortDirective } from './table-unsort.directive';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
@@ -42,7 +42,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
   @Input() selectable = true;
   @Input() emptyMessage = 'No data';
-  @Input() virtualScroll = false;
+  @Input() virtualScroll = true;
   @Input() hasToolbar = false;
   @Input() toolbarTitle = '';
   @Input() sortMode: 'single' | 'multiple' = 'single';
@@ -53,23 +53,35 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() columnToggles = false;
   @Input() export = false;
   @Input() rowHover = true;
+  @Input() scrollable = true;
+  @Input() toolbarSize: 'small' | 'normal' = 'normal';
 
   @Output() selectionChanged = new EventEmitter<any[]>();
 
   styleClass = '';
   selectedRows = [];
 
-  // @ContentChildren(PrimeTemplate) templates!: QueryList<TemplateRef<any>>;
+  virtualScrollItemSize = 0;
 
-  // bodyTemplate!: TemplateRef<any>;
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    if (!this.scrollable) this.virtualScroll = false;
     switch (this.size) {
       case 'small':
         this.styleClass = 'p-datatable-sm';
         break;
       case 'large':
         this.styleClass = 'p-datatable-lg';
+        break;
+    }
+    switch (this.toolbarSize) {
+      case 'small':
+        this.styleClass += ' cps-tbar-small';
+        break;
+      case 'normal':
+        this.styleClass += ' cps-tbar-normal';
         break;
     }
     if (this.striped) {
@@ -81,14 +93,11 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // debugger;
-    // this.templates.forEach((item) => {
-    //   switch (item.getType()) {
-    //     case 'body':
-    //       this.bodyTemplate = item.template;
-    //       break;
-    //   }
-    // });
+    this.virtualScrollItemSize =
+      this.primengTable?.el?.nativeElement
+        ?.querySelector('.p-datatable-tbody')
+        ?.querySelector('tr')?.clientHeight || 0;
+    this.cdRef.detectChanges();
   }
 
   onSelectionChanged() {

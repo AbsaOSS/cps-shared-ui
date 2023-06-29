@@ -38,7 +38,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      height: 72px;
       padding: 0 10px;
       border: 1px solid $table-borders-color;
       border-left: 4px solid $color-surprise !important;
@@ -47,6 +46,14 @@
       line-height: 150%;
       background-color: white;
       color: $toolbar-text-color;
+    }
+
+    .cps-tbar-small.p-datatable .p-datatable-header {
+      height: 43px;
+    }
+
+    .cps-tbar-normal.p-datatable .p-datatable-header {
+      height: 72px;
     }
 
     .p-datatable-flex-scrollable > .p-datatable-wrapper {
@@ -100,6 +107,14 @@
 
     .p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th:last-child {
       border-width: 1px;
+    }
+
+    .p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
+      padding: 0.5rem 0.5rem;
+    }
+
+    .p-datatable.p-datatable-lg .p-datatable-thead > tr > th {
+      padding: 1.25rem 1.25rem;
     }
 
     .p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
@@ -262,6 +277,14 @@
       padding: 1rem 1rem;
     }
 
+    .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
+      padding: 0.5rem 0.5rem;
+    }
+
+    .p-datatable.p-datatable-lg .p-datatable-tbody > tr > td {
+      padding: 1.25rem 1.25rem;
+    }
+
     .p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(
         .p-datatable-tbody
       )
@@ -289,8 +312,8 @@
       user-select: none;
       vertical-align: bottom;
       position: relative;
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
     }
 
     .p-hidden-accessible {
@@ -311,8 +334,8 @@
 
     .p-checkbox .p-checkbox-box {
       background: #ffffff;
-      width: 22px;
-      height: 22px;
+      width: 18px;
+      height: 18px;
       color: $body-text-color;
       border: 2px solid $checkbox-border-color;
       border-radius: 2px;
