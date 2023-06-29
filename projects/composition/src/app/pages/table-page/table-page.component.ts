@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsTableComponent } from 'cps-ui-kit';
+import { CpsTableColumnSortableDirective, CpsTableComponent } from 'cps-ui-kit';
 import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-table-page',
   standalone: true,
-  imports: [CommonModule, CpsTableComponent, TableModule],
+  imports: [
+    CommonModule,
+    CpsTableComponent,
+    TableModule,
+    CpsTableColumnSortableDirective
+  ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
