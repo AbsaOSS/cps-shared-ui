@@ -8,6 +8,8 @@
   $header-text-color: var(--cps-color-text-mild);
   $body-text-color: var(--cps-color-text-dark);
   $row-hover-background: #f8f4f5;
+  $badge-background-color: #f1eaec;
+  $sorticon-hover-color: var(--cps-color-text-dark);
 
   ::ng-deep {
     .p-component,
@@ -142,6 +144,12 @@
       transition: box-shadow 0.2s;
     }
 
+    .p-datatable
+      .p-sortable-column:not(.p-highlight):hover
+      .p-sortable-column-icon {
+      color: $sorticon-hover-color;
+    }
+
     .p-datatable .p-sortable-column .p-sortable-column-icon {
       color: $header-text-color;
       margin-left: 0.5rem;
@@ -151,6 +159,10 @@
       color: $color-calm;
     }
 
+    .p-icon-wrapper {
+      display: inline-flex;
+    }
+
     .p-icon {
       display: inline-block;
       width: 1rem;
@@ -158,15 +170,37 @@
     }
 
     .p-sortable-column-icon {
-      width: 14px;
-      height: 14px;
+      width: 13px;
+      height: 13px;
+    }
+
+    .p-datatable .p-sortable-column .p-sortable-column-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .p-datatable .p-sortable-column .p-column-title,
+    .p-datatable .p-sortable-column .p-sortable-column-icon,
+    .p-datatable .p-sortable-column .p-sortable-column-badge {
+      vertical-align: unset;
+    }
+
+    .p-datatable .p-sortable-column .p-sortable-column-badge {
+      border-radius: 50%;
+      height: 1.143rem;
+      min-width: 1.143rem;
+      line-height: 1.143rem;
+      color: $color-calm;
+      background: $badge-background-color;
+      margin-left: 0.5rem;
     }
 
     filtericon {
       pointer-events: none;
       .p-icon {
-        width: 14px;
-        height: 14px;
+        width: 13px;
+        height: 13px;
       }
     }
 
@@ -305,6 +339,15 @@
       padding: 1rem 1rem;
     }
 
+    td:has(p-tablecheckbox) {
+      text-align: center !important;
+    }
+
+    th:has(p-tableheadercheckbox) {
+      text-align: center !important;
+      width: 3rem !important;
+    }
+
     .p-checkbox {
       display: inline-flex;
       cursor: pointer;
@@ -360,6 +403,17 @@
     }
     .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
       border-color: $color-calm;
+    }
+
+    .p-checkbox .p-checkbox-box .p-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .p-checkbox .p-checkbox-box .p-checkbox-icon {
+      transition-duration: 0.2s;
+      color: #ffffff;
+      font-size: 14px;
     }
   }
 }

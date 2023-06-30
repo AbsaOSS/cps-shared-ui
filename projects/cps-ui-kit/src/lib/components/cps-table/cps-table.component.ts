@@ -37,29 +37,30 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() headers: string[] = [];
   @Input() data: any[] = [];
+  @Input() columns: { [key: string]: any }[] = []; // combines both headers and data
   @Input() striped = true;
   @Input() bordered = true;
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
   @Input() selectable = true;
   @Input() emptyMessage = 'No data';
-  @Input() virtualScroll = true;
-  @Input() hasToolbar = false;
+  @Input() virtualScroll = false;
+  @Input() hasToolbar = true;
+  @Input() toolbarSize: 'small' | 'normal' = 'normal';
   @Input() toolbarTitle = '';
-  @Input() sortMode: 'single' | 'multiple' = 'single';
-  @Input() frozenRows: string[] = [];
-  @Input() frozenColumns: string[] = [];
-  @Input() resizableColumns = false;
-  @Input() reorderableColumns = true;
-  @Input() columnToggles = false;
-  @Input() export = false;
+  @Input() sortMode: 'single' | 'multiple' = 'multiple';
   @Input() rowHover = true;
   @Input() scrollable = true;
-  @Input() toolbarSize: 'small' | 'normal' = 'normal';
+  // @Input() frozenRows: string[] = []; TODO
+  // @Input() frozenColumns: string[] = []; TODO
+  // @Input() columnToggles = false; TODO
+  // @Input() export = false; TODO
+  /* @Input() */ resizableColumns = false; // TODO
+  /* @Input() */ reorderableColumns = false; // TODO
 
   @Output() selectionChanged = new EventEmitter<any[]>();
 
   styleClass = '';
-  selectedRows = [];
+  selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
 
@@ -100,12 +101,15 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     this.cdRef.detectChanges();
   }
 
-  onSelectionChanged() {
-    this.selectionChanged.emit();
+  onSelectionChanged(selection: any[]) {
+    this.selectionChanged.emit(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      selection.map(({ _defaultSortOrder, ...rest }) => rest)
+    );
   }
 
-  @ContentChild('caption', { static: false })
-  public captionTemplate!: TemplateRef<any>;
+  @ContentChild('toolbar', { static: false })
+  public toolbarTemplate!: TemplateRef<any>;
 
   @ContentChild('header', { static: false })
   public headerTemplate!: TemplateRef<any>;
