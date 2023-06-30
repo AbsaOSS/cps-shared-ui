@@ -24,19 +24,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   @Input() openOn: 'hover' | 'focus' | 'click' = 'hover';
   @Input() closeOnContentClick = false;
 
-  set obtainCloseOnContentClick(value: boolean) {
-    if (this.autoClose && value) {
-      throw new Error(
-        'closeOnContentClick cannot be true when autoClose is true'
-      );
-    }
-    this.closeOnContentClick = value;
-  }
-
-  get obtainCloseOnContentClick() {
-    return this.closeOnContentClick;
-  }
-
   private _popup?: HTMLDivElement;
   private _showTimeout?: any;
   private _hideTimeout?: any;
@@ -45,9 +32,12 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
   ngOnInit(): void {
-    this._initialPosition = this.position;
+    if (this.closeOnContentClick && this.autoClose)
+      throw new Error(
+        'closeOnContentClick cannot be true when autoClose is true'
+      );
 
-    this.obtainCloseOnContentClick = this.closeOnContentClick;
+    this._initialPosition = this.position;
 
     this._elementRef.nativeElement?.parentElement?.addEventListener(
       'scroll',
@@ -157,16 +147,16 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     const top = this._checkSpaceOnTop(coords.y);
 
     if (this._checkSpaceInPosition(coords, this.position) === false) {
-      if (right === false) {
+      if (this.position === 'right' && right === false) {
         enoughSpace = 'NO_RIGHT';
         position = 'bottom';
-      } else if (left === false) {
+      } else if (this.position === 'left' && left === false) {
         enoughSpace = 'NO_LEFT';
         position = 'top';
-      } else if (bottom === false) {
+      } else if (this.position === 'bottom' && bottom === false) {
         enoughSpace = 'NO_BOTTOM';
         position = 'left';
-      } else if (top === false) {
+      } else if (this.position === 'top' && top === false) {
         enoughSpace = 'NO_TOP';
         position = 'right';
       }
@@ -176,10 +166,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
     if (!right && !left && !bottom && !top) {
       enoughSpace = 'NO_SPACE';
-    }
-    if (right || left || bottom || top) {
-      enoughSpace = 'ENOUGH_SPACE';
-    }
+    } else enoughSpace = 'ENOUGH_SPACE';
 
     return [enoughSpace, position];
   }
@@ -188,25 +175,31 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     x: number;
     y: number;
   } {
-    switch (spaceLeft) {
-      case 'NO_TOP':
-        this.position = position;
-        break;
-      case 'NO_RIGHT':
-        this.position = position;
-        break;
-      case 'NO_BOTTOM':
-        this.position = position;
-        break;
-      case 'NO_LEFT':
-        this.position = position;
-        break;
-      case 'NO_SPACE':
-        this._destroyTooltip();
-        break;
-      default:
-        this.position = this._initialPosition;
-        break;
+    while (spaceLeft !== 'ENOUGH_SPACE' && spaceLeft !== 'NO_SPACE') {
+      switch (spaceLeft) {
+        case 'NO_TOP':
+          this.position = position;
+          break;
+        case 'NO_RIGHT':
+          this.position = position;
+          break;
+        case 'NO_BOTTOM':
+          this.position = position;
+          break;
+        case 'NO_LEFT':
+          this.position = position;
+          break;
+        case 'NO_SPACE':
+          this._destroyTooltip();
+          break;
+        default:
+          this.position = this._initialPosition;
+          break;
+      }
+
+      [spaceLeft] = this._checkIfNotEnoughSpace(
+        this._getTooltipPosition(this._popup as HTMLDivElement)
+      );
     }
 
     return this._getTooltipPosition(this._popup as HTMLDivElement);
