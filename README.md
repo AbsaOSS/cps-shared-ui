@@ -23,6 +23,7 @@ This repository consists of two projects:
 - Progress linear (indeterminate)
 - Radio
 - Select
+- Table
 - Tag
 - Textarea
 - Tree autocomplete

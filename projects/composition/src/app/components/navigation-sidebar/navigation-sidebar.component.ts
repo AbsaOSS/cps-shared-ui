@@ -78,6 +78,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/select'
     },
     {
+      title: 'Table',
+      url: '/table'
+    },
+    {
       title: 'Tag',
       url: '/tag'
     },

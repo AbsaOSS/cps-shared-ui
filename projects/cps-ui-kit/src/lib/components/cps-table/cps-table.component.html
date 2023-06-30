@@ -1,0 +1,62 @@
+<p-table
+  #primengTable
+  withUnsort
+  [styleClass]="styleClass"
+  [value]="data"
+  [columns]="columns"
+  (selectionChange)="onSelectionChanged($event)"
+  [resizableColumns]="resizableColumns"
+  [reorderableColumns]="reorderableColumns"
+  [scrollable]="scrollable"
+  scrollHeight="flex"
+  [virtualScroll]="virtualScroll"
+  [virtualScrollItemSize]="virtualScrollItemSize"
+  [virtualScrollOptions]="{ numToleratedItems: 3 }"
+  [(selection)]="selectedRows"
+  [metaKeySelection]="false"
+  [rowHover]="rowHover"
+  [customSort]="customSort"
+  [sortMode]="sortMode"
+  (sortFunction)="onSortFunction($event)">
+  <ng-template pTemplate="caption" *ngIf="hasToolbar">
+    <ng-container *ngIf="toolbarTemplate">
+      <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="!toolbarTemplate">
+      {{ toolbarTitle }}
+    </ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th style="width: 4rem" *ngIf="selectable">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th>
+      <ng-container *ngIf="headerTemplate">
+        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!headerTemplate">
+        <th *ngFor="let h of headers">{{ h }}</th>
+      </ng-container>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+    <tr>
+      <td *ngIf="selectable">
+        <p-tableCheckbox [value]="item"></p-tableCheckbox>
+      </td>
+      <ng-container
+        pTemplate="body"
+        *ngTemplateOutlet="
+          bodyTemplate;
+          context: { $implicit: item, rowIndex: rowIndex }
+        "></ng-container>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4">{{ emptyMessage }}</td>
+    </tr>
+  </ng-template>
+</p-table>

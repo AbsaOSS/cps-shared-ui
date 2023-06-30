@@ -7,6 +7,7 @@ import { ColorsPageComponent } from './pages/colors-page/colors-page/colors-page
 import { CheckboxPageComponent } from './pages/checkbox-page/checkbox-page.component';
 import { RadioPageComponent } from './pages/radio-page/radio-page.component';
 import { ButtonPageComponent } from './pages/button-page/button-page.component';
+import { TablePageComponent } from './pages/table-page/table-page.component';
 import { TagPageComponent } from './pages/tag-page/tag-page.component';
 import { ChipPageComponent } from './pages/chip-page/chip-page.component';
 import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplete-page.component';
@@ -75,6 +76,11 @@ const routes: Routes = [
     path: 'radio',
     title: 'Radio',
     component: RadioPageComponent
+  },
+  {
+    path: 'table',
+    title: 'Table',
+    component: TablePageComponent
   },
   {
     path: 'tag',
