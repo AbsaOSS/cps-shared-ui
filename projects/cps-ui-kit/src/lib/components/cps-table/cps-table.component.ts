@@ -13,6 +13,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { Table, TableService, TableModule } from 'primeng/table';
 import { TableUnsortDirective } from './table-unsort.directive';
+import { SortEvent } from 'primeng/api';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
@@ -43,21 +44,30 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
   @Input() selectable = true;
   @Input() emptyMessage = 'No data';
-  @Input() virtualScroll = false;
   @Input() hasToolbar = true;
   @Input() toolbarSize: 'small' | 'normal' = 'normal';
   @Input() toolbarTitle = '';
   @Input() sortMode: 'single' | 'multiple' = 'multiple';
+  @Input() customSort = false;
   @Input() rowHover = true;
   @Input() scrollable = true;
-  // @Input() frozenRows: string[] = []; TODO
-  // @Input() frozenColumns: string[] = []; TODO
-  // @Input() columnToggles = false; TODO
+  @Input() virtualScroll = false; // works only if scrollable is true
+
+  // @Input() draggableRows = false; TODO
+  // @Input() columnsToggle = false; TODO
   // @Input() export = false; TODO
   /* @Input() */ resizableColumns = false; // TODO
   /* @Input() */ reorderableColumns = false; // TODO
+  // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
 
   @Output() selectionChanged = new EventEmitter<any[]>();
+
+  /**
+   * A function to implement custom sorting. customSort must be true.
+   * @param {any} any - sort meta.
+   * @group Emits
+   */
+  @Output() customSortFunction: EventEmitter<any> = new EventEmitter<any>();
 
   styleClass = '';
   selectedRows: any[] = [];
@@ -106,6 +116,10 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       selection.map(({ _defaultSortOrder, ...rest }) => rest)
     );
+  }
+
+  onSortFunction(event: SortEvent) {
+    this.customSortFunction.emit(event);
   }
 
   @ContentChild('toolbar', { static: false })

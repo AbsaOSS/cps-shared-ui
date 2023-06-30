@@ -1,20 +1,23 @@
 <p-table
   #primengTable
+  withUnsort
+  [styleClass]="styleClass"
   [value]="data"
+  [columns]="columns"
   (selectionChange)="onSelectionChanged($event)"
   [resizableColumns]="resizableColumns"
   [reorderableColumns]="reorderableColumns"
+  [scrollable]="scrollable"
   scrollHeight="flex"
   [virtualScroll]="virtualScroll"
   [virtualScrollItemSize]="virtualScrollItemSize"
   [virtualScrollOptions]="{ numToleratedItems: 3 }"
-  withUnsort
   [(selection)]="selectedRows"
-  [styleClass]="styleClass"
-  [rowHover]="rowHover"
-  [scrollable]="scrollable"
   [metaKeySelection]="false"
-  [sortMode]="sortMode">
+  [rowHover]="rowHover"
+  [customSort]="customSort"
+  [sortMode]="sortMode"
+  (sortFunction)="onSortFunction($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
