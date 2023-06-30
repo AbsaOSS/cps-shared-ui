@@ -20,8 +20,6 @@ export class TableUnsortDirective {
     });
 
     pTable.sort = (event: any) => {
-      const originalEvent = event.originalEvent;
-
       if (pTable.sortMode === 'single') {
         if (pTable.sortField === event.field && pTable.sortOrder === -1) {
           event.field = '_defaultSortOrder';
@@ -35,37 +33,28 @@ export class TableUnsortDirective {
         pTable.sortSingle();
       }
       if (pTable.sortMode === 'multiple') {
-        const metaKey = originalEvent.metaKey || originalEvent.ctrlKey;
+        let resetIndex = false;
         const sortMeta = pTable.getSortMeta(event.field);
 
         if (sortMeta) {
-          if (!metaKey) {
-            if (pTable._multiSortMeta.length > 1) {
-              pTable._multiSortMeta = [
-                { field: event.field, order: pTable.defaultSortOrder }
-              ];
-            } else {
-              if (sortMeta.order === -1) {
-                pTable._multiSortMeta = [];
-              } else {
-                pTable._multiSortMeta = [
-                  { field: event.field, order: sortMeta.order * -1 }
-                ];
-              }
-            }
-          } else {
-            for (let i = 0; i < pTable._multiSortMeta.length; i++) {
-              if (pTable._multiSortMeta[i].field === sortMeta.field) {
-                pTable._multiSortMeta.splice(i, 1);
-              }
-            }
-            if (sortMeta.order === 1) {
-              sortMeta.order = sortMeta.order * -1;
-              pTable.multiSortMeta.push(sortMeta);
+          for (let i = 0; i < pTable._multiSortMeta.length; i++) {
+            if (pTable._multiSortMeta[i].field === sortMeta.field) {
+              pTable._multiSortMeta.splice(i, 1);
             }
           }
+          if (sortMeta.order === 1) {
+            sortMeta.order = sortMeta.order * -1;
+            pTable.multiSortMeta.push(sortMeta);
+          }
+          if (pTable._multiSortMeta?.length === 0) {
+            pTable.multiSortMeta.push({
+              field: '_defaultSortOrder',
+              order: pTable.defaultSortOrder
+            });
+            resetIndex = true;
+          }
         } else {
-          if (!metaKey || !pTable.multiSortMeta) {
+          if (!pTable.multiSortMeta) {
             pTable._multiSortMeta = [];
           }
           pTable.multiSortMeta.push({
@@ -75,6 +64,7 @@ export class TableUnsortDirective {
         }
 
         pTable.sortMultiple();
+        if (resetIndex) pTable._multiSortMeta = [];
       }
 
       if (pTable.isStateful()) {
