@@ -1,15 +1,25 @@
-.title {
-  padding: 1em;
-}
-
-.first {
-  padding: 0 0 1em 1em;
-}
-
-.btns-container {
+.container {
   display: flex;
-}
+  flex-direction: column;
+  align-items: center;
 
-.tooltip-btn {
-  padding: 0 1em;
+  &-title {
+    font-size: 24px;
+    color: var(--cps-color-depth);
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 12px;
+    padding-bottom: 16px;
+    font-weight: 600;
+    width: 100%;
+  }
+
+  .btns-container {
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+
+    &-sm {
+      width: 25%;
+    }
+  }
 }
