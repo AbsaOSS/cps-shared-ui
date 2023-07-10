@@ -4,10 +4,7 @@ import { CpsIconComponent } from 'projects/cps-ui-kit/src/lib/components/cps-ico
 
 @Component({
   standalone: true,
-  imports: [
-    CommonModule,
-    CpsIconComponent,
-  ],
+  imports: [CommonModule, CpsIconComponent],
   selector: 'cps-tab',
   templateUrl: './cps-tab.component.html',
   styleUrls: ['./cps-tab.component.scss']
@@ -15,5 +12,5 @@ import { CpsIconComponent } from 'projects/cps-ui-kit/src/lib/components/cps-ico
 export class CpsTabComponent {
   @Input() label!: string;
   @ViewChild(TemplateRef) content!: TemplateRef<any>;
-  active = false
+  active = false;
 }

@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { getTestBed } from '@angular/core/testing';
-import { mount } from '@cypress/angular';
 import { CpsIconComponent } from 'projects/cps-ui-kit/src/lib/components/cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab.component';
 
@@ -10,18 +9,23 @@ describe('CpsTabComponent', () => {
   });
 
   it('should create', () => {
-    cy.mount(`
+    cy.mount(
+      `
         <cps-tab #tab label="Test Tab">
-            <div id="test-content">This is test content</div>
+            <div id="test-content">This is the test content</div>
         </cps-tab>
-    `, {
-      imports: [CpsTabComponent, CommonModule, CpsIconComponent]
-    }).then(() => {
+    `,
+      {
+        imports: [CpsTabComponent, CommonModule, CpsIconComponent]
+      }
+    ).then(() => {
       cy.get('cps-tab').should('not.contain.text', 'Test Tab');
       cy.get('[label="Test Tab"]').should('exist');
       cy.get('#test-content').should('exist');
-      cy.get('#test-content').should('contain.text', 'This is test content');
+      cy.get('#test-content').should(
+        'contain.text',
+        'This is the test content'
+      );
     });
   });
 });
-

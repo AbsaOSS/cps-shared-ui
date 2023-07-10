@@ -1,13 +1,16 @@
-.selects-group {
-  gap: 24px;
-  display: flex;
-  flex-direction: column;
+:host ::ng-deep .tab-example--center-aligned {
+  .nav-tabs {
+    align-items: center;
+    justify-content: center;
+  }
+  .tab-content {
+    margin: 15px 250px;
+  }
 }
 
-.sync-val-example {
-  display: flex;
-  align-items: center;
-  .sync-val {
-    margin-left: 24px;
+:host ::ng-deep .tab-example--right-aligned {
+  .nav-tabs {
+    align-items: end;
+    justify-content: right;
   }
 }
