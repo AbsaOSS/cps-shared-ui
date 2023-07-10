@@ -1,0 +1,12 @@
+<ul class="nav nav-tabs">
+  <li *ngFor="let tab of tabs; let tabIndex = index" (click)="selectTab(tabIndex)" [ngClass]="{active: tab.active}">
+    <a class="nav-link">{{tab.label}}</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <ng-container *ngFor="let tab of tabs">
+    <div [@slideInOut]="animationState" *ngIf="tab.active">
+      <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
+    </div>
+  </ng-container>
+</div>

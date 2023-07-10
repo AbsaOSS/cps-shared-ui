@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { TabGroupPageComponent } from 'projects/composition/src/app/pages/tab-group-page/tab-group-page.component';
 import { InputPageComponent } from './pages/input-page/input-page.component';
 import { SelectPageComponent } from './pages/select-page/select-page.component';
 import { IconsPageComponent } from './pages/icons-page/icons-page/icons-page.component';
@@ -45,6 +46,11 @@ const routes: Routes = [
     path: 'select',
     title: 'Select',
     component: SelectPageComponent
+  },
+  {
+    path: 'tab-group',
+    title: 'Tab group',
+    component: TabGroupPageComponent
   },
   {
     path: 'tree-select',
