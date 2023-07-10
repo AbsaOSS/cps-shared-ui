@@ -1,74 +1,74 @@
-<div class="container">
-  <p class="container-title">Tooltip positions</p>
-
-  <div class="btns-container">
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">Tooltip positions</div>
+  <div class="tooltip-elems-group-row">
     <cps-button
-      cpsTooltip
-      tooltip="Tooltip"
-      position="top"
-      label="Tooltip on top"></cps-button>
-    <cps-button
-      cpsTooltip
-      tooltip="Tooltip"
-      position="bottom"
+      cpsTooltip="Tooltip"
+      tooltipPosition="bottom"
       label="Tooltip on bottom">
     </cps-button>
     <cps-button
-      cpsTooltip
-      tooltip="Tooltip"
-      position="left"
-      label="Tooltip on left"></cps-button>
+      cpsTooltip="Tooltip"
+      tooltipPosition="left"
+      label="Tooltip on left">
+    </cps-button>
     <cps-button
-      cpsTooltip
-      tooltip="Tooltip"
-      position="right"
-      label="Tooltip on right"></cps-button>
+      cpsTooltip="Tooltip"
+      tooltipPosition="right"
+      label="Tooltip on right">
+    </cps-button>
+    <cps-button
+      cpsTooltip="Tooltip"
+      tooltipPosition="top"
+      label="Tooltip on top">
+    </cps-button>
   </div>
+</div>
 
-  <p class="container-title">Close on content click tooltip</p>
-
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">Persistent tooltip</div>
   <cps-button
     cpsTooltip
+    tooltipPosition="right"
     label="Click on tooltip to close it"
-    [autoClose]="false"
-    [closeOnContentClick]="true"></cps-button>
+    [tooltipPersistent]="true">
+  </cps-button>
+</div>
 
-  <p class="container-title">Tooltip with inner HTML</p>
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">Tooltip with inner HTML</div>
+  <cps-button
+    tooltipPosition="right"
+    label="Tooltip with inner HTML"
+    cpsTooltip="<span><strong>Some bold text</strong></span>"></cps-button>
+</div>
+
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">Different opening methods</div>
+  <div class="tooltip-elems-group-elem-left">
+    <cps-button label="Open on hover" cpsTooltip="Hover" tooltipOpenOn="hover">
+    </cps-button>
+  </div>
+
+  <cps-button label="Open on click" cpsTooltip="Click" tooltipOpenOn="click">
+  </cps-button>
+</div>
+
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">Long open and close delays</div>
+
+  <div class="tooltip-elems-group-elem-left">
+    <cps-button
+      cpsTooltip="1000 openDelay"
+      label="Open delay"
+      tooltipPosition="bottom"
+      [tooltipOpenDelay]="1000">
+    </cps-button>
+  </div>
 
   <cps-button
-    cpsTooltip
-    label="Tooltip with inner HTML"
-    tooltip="<span><strong>Some bold text</strong></span>"></cps-button>
-
-  <p class="container-title">Different opening methods</p>
-
-  <div class="btns-container btns-container-sm">
-    <cps-button
-      cpsTooltip
-      label="Open on hover"
-      tooltip="Hover"
-      openOn="hover"></cps-button>
-
-    <cps-button
-      cpsTooltip
-      label="Open on click"
-      tooltip="Click"
-      openOn="click"></cps-button>
-  </div>
-
-  <p class="container-title">Long open and close delays</p>
-
-  <div class="btns-container btns-container-sm">
-    <cps-button
-      cpsTooltip
-      tooltip="1000 openDelay"
-      label="Open delay"
-      [openDelay]="1000"></cps-button>
-
-    <cps-button
-      cpsTooltip
-      tooltip="1000 closeDelay"
-      label="Close delay"
-      [closeDelay]="1000"></cps-button>
-  </div>
+    cpsTooltip="1000 closeDelay"
+    tooltipPosition="bottom"
+    label="Close delay"
+    [tooltipCloseDelay]="1000">
+  </cps-button>
 </div>

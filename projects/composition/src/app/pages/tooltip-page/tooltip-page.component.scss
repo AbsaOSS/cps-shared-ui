@@ -1,25 +1,25 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.tooltip-elems-group {
+  margin-bottom: 32px;
 
   &-title {
     font-size: 24px;
     color: var(--cps-color-depth);
     border-bottom: 1px solid lightgrey;
     margin-bottom: 12px;
-    padding-bottom: 16px;
+    padding-bottom: 8px;
     font-weight: 600;
+  }
+  &-row {
     width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    align-items: center;
   }
 
-  .btns-container {
-    width: 50%;
-    display: flex;
-    justify-content: space-around;
-
-    &-sm {
-      width: 25%;
-    }
+  &-elem-left {
+    margin-right: 40px;
+    display: inline-flex;
   }
 }
