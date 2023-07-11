@@ -25,7 +25,7 @@
 
     &.cps-tag--selectable {
       cursor: pointer;
-      &:hover:not(:active):not(:disabled) {
+      &:not(:active):not(:disabled) {
         box-shadow: 1px 3px 4px rgb(0 0 0 / 10%);
       }
     }
