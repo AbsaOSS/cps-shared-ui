@@ -53,6 +53,7 @@ export const iconNames = [
   'heart',
   'help-circle',
   'home',
+  'info-circle',
   'insight',
   'issues',
   'jpeg',
