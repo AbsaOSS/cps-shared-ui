@@ -19,6 +19,7 @@ import { TreeAutocompletePageComponent } from './pages/tree-autocomplete-page/tr
 import { TreeSelectPageComponent } from './pages/tree-select-page/tree-select-page.component';
 import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
+import { InfoCirclePageComponent } from './pages/info-circle-page/info-circle-page.component';
 import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.component';
 import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
 
@@ -114,6 +115,11 @@ const routes: Routes = [
     component: ProgressLinearPageComponent
   },
   {
+    path: 'info-circle',
+    title: 'Info circle',
+    component: InfoCirclePageComponent
+  },
+  {
     path: 'datepicker',
     title: 'Datepicker',
     component: DatepickerPageComponent
@@ -125,7 +131,7 @@ const routes: Routes = [
   },
   {
     path: 'tooltip',
-    title: 'Tooltip',
+    title: 'Tooltip directive',
     component: TooltipPageComponent
   },
   { path: '**', redirectTo: 'colors' }

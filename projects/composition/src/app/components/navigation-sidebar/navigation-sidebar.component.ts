@@ -54,6 +54,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/icon'
     },
     {
+      title: 'Info circle',
+      url: '/info-circle'
+    },
+    {
       title: 'Input',
       url: '/input'
     },
@@ -90,7 +94,7 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/textarea'
     },
     {
-      title: 'Tooltip',
+      title: 'Tooltip directive',
       url: '/tooltip'
     },
     {

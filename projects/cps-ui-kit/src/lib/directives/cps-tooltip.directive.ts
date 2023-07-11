@@ -38,7 +38,7 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _createTooltip = () => {
-    if (this._popup) this._destroyTooltip();
+    if (this._popup) return;
 
     if (this.tooltipDisabled) return;
 
@@ -51,11 +51,31 @@ export class CpsTooltipDirective implements OnDestroy {
     window.addEventListener('scroll', this._destroyTooltip, true);
   };
 
-  private _destroyTooltip = () => {
+  private _destroyTooltip = (event: any = undefined) => {
+    const removeFromDOM = () => {
+      this._popup?.remove();
+      this._popup = undefined;
+    };
+
     window.removeEventListener('scroll', this._destroyTooltip, true);
-    this._popup?.removeEventListener('click', this._destroyTooltip);
-    this._popup?.remove();
-    this._popup = undefined;
+    if (!this._popup) return;
+
+    this._popup.removeEventListener('click', this._destroyTooltip);
+
+    const noAnimation = ['scroll', 'resize'].includes(event?.type);
+
+    if (noAnimation) {
+      removeFromDOM();
+    } else {
+      const popup = this._popup as HTMLDivElement;
+      requestAnimationFrame(function () {
+        popup.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        removeFromDOM();
+      }, 200);
+    }
   };
 
   private _constructElement(popup: HTMLDivElement) {
@@ -68,6 +88,9 @@ export class CpsTooltipDirective implements OnDestroy {
     popup.style.maxWidth = convertSize(this.tooltipMaxWidth);
 
     document.body.appendChild(popup);
+    requestAnimationFrame(function () {
+      popup.style.opacity = '1';
+    });
 
     const coords = this._getCoords();
     if (!coords) {
@@ -209,12 +232,8 @@ export class CpsTooltipDirective implements OnDestroy {
     }
   }
 
-  @HostListener('window:resize') onPageResize() {
-    if (this._popup) this._destroyTooltip();
-  }
-
   @HostListener('document:click', ['$event.target'])
-  public onDocumentClick(target: any) {
+  onDocumentClick(target: any) {
     if (this.tooltipPersistent && this._popup) {
       if (!target?.isConnected) {
         return;
@@ -224,5 +243,9 @@ export class CpsTooltipDirective implements OnDestroy {
         this._destroyTooltip();
       }
     }
+  }
+
+  @HostListener('window:resize', ['$event']) onPageResize(event: Event) {
+    if (this._popup) this._destroyTooltip(event);
   }
 }

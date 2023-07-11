@@ -17,6 +17,7 @@ This repository consists of two projects:
 - Datepicker
 - Expansion panel
 - Icon
+- Info circle
 - Input
 - Loader
 - Progress circular (indeterminate)
@@ -26,7 +27,7 @@ This repository consists of two projects:
 - Table
 - Tag
 - Textarea
-- Tooltip
+- Tooltip directive
 - Tree autocomplete
 - Tree select
 
