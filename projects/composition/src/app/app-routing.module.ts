@@ -19,6 +19,7 @@ import { TreeAutocompletePageComponent } from './pages/tree-autocomplete-page/tr
 import { TreeSelectPageComponent } from './pages/tree-select-page/tree-select-page.component';
 import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
 import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
+import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.component';
 import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
 
 const routes: Routes = [
@@ -121,6 +122,11 @@ const routes: Routes = [
     path: 'textarea',
     title: 'Textarea',
     component: TextareaPageComponent
+  },
+  {
+    path: 'tooltip',
+    title: 'Tooltip',
+    component: TooltipPageComponent
   },
   { path: '**', redirectTo: 'colors' }
 ];

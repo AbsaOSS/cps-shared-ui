@@ -21,6 +21,7 @@
 - Table
 - Tag
 - Textarea
+- Tooltip
 - Tree autocomplete
 - Tree select
 

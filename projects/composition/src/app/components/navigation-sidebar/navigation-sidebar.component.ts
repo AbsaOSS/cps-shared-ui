@@ -90,6 +90,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/textarea'
     },
     {
+      title: 'Tooltip',
+      url: '/tooltip'
+    },
+    {
       title: 'Tree autocomplete',
       url: '/tree-autocomplete'
     },

@@ -1,0 +1,37 @@
+:host {
+  .tooltip-elems-group {
+    margin-bottom: 32px;
+
+    &-title {
+      font-size: 24px;
+      color: var(--cps-color-depth);
+      border-bottom: 1px solid lightgrey;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      font-weight: 600;
+    }
+    &-row {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    &-elem-left {
+      margin-right: 40px;
+      display: inline-flex;
+    }
+  }
+}
+
+::ng-deep .cps-tooltip .my-tooltip-content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+  .ttip-hdr {
+    color: var(--cps-color-warmth);
+    font-weight: bold;
+  }
+}
