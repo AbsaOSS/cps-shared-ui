@@ -81,6 +81,8 @@ export const iconNames = [
   'search',
   'settings',
   'smart',
+  'sort-icon-asc',
+  'sort-icon-desc',
   'star',
   'stepper-completed',
   'success',
