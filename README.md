@@ -27,7 +27,7 @@ This repository consists of two projects:
 - Table
 - Tag
 - Textarea
-- Tooltip
+- Tooltip directive
 - Tree autocomplete
 - Tree select
 

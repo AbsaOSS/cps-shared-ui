@@ -94,7 +94,7 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/textarea'
     },
     {
-      title: 'Tooltip',
+      title: 'Tooltip directive',
       url: '/tooltip'
     },
     {

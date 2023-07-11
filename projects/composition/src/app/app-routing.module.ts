@@ -131,7 +131,7 @@ const routes: Routes = [
   },
   {
     path: 'tooltip',
-    title: 'Tooltip',
+    title: 'Tooltip directive',
     component: TooltipPageComponent
   },
   { path: '**', redirectTo: 'colors' }
