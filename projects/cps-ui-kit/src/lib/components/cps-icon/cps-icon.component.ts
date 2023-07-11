@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/size-utils';
+import { getCSSColor } from '../../utils/colors-utils';
 
 export const iconNames = [
   'access',
