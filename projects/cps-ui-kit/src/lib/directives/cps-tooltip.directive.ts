@@ -6,6 +6,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { convertSize } from '../utils/size-utils';
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type TooltipOpenOn = 'hover' | 'click' | 'focus';
@@ -23,13 +24,13 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   @Input() tooltipPosition: TooltipPosition = 'top';
   @Input() tooltipPersistent = false;
   @Input() tooltipDisabled = false;
+  @Input() tooltipMaxWidth: number | string = '100%';
+  @Input() tooltipContentClass = 'cps-tooltip-content';
 
   private _popup?: HTMLDivElement;
   private _showTimeout?: any;
   private _hideTimeout?: any;
 
-  // TODO PERSISTENT STATE (Outside click listener?)
-  // TODO CHECK DISABLED TOOLTIP
   // TODO CHECK IF WE NEED TO DESTROY TOOLTIP ON CREATION
 
   // eslint-disable-next-line no-useless-constructor
@@ -70,18 +71,19 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   };
 
   private _destroyTooltip = () => {
-    if (this.tooltipDisabled) return;
-
-    this._popup?.remove();
-
     this._popup?.removeEventListener('click', this._destroyTooltip);
-
+    this._popup?.remove();
     this._popup = undefined;
   };
 
   private _constructElement(popup: HTMLDivElement) {
-    popup.innerHTML = this.tooltip || 'Add your text to this tooltip';
-    popup.setAttribute('class', 'cps-tooltip');
+    const popupContent = document.createElement('div');
+    popupContent.innerHTML = this.tooltip || 'Add your text to this tooltip';
+    popupContent.classList.add(this.tooltipContentClass);
+    popup.appendChild(popupContent);
+
+    popup.classList.add('cps-tooltip');
+    popup.style.maxWidth = convertSize(this.tooltipMaxWidth);
     document.body.appendChild(popup);
 
     const coords = this._getCoords();
@@ -183,9 +185,9 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   @HostListener('mouseleave') onMouseLeave() {
-    if (!this.tooltipPersistent) {
-      clearTimeout(this._showTimeout);
+    clearTimeout(this._showTimeout);
 
+    if (!this.tooltipPersistent) {
       this._hideTimeout = setTimeout(
         this._destroyTooltip,
         this.tooltipCloseDelay as number
@@ -205,9 +207,8 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   @HostListener('blur') onBlur() {
+    clearTimeout(this._showTimeout);
     if (!this.tooltipPersistent && this.tooltipOpenOn === 'focus') {
-      clearTimeout(this._showTimeout);
-
       this._hideTimeout = setTimeout(
         this._destroyTooltip,
         this.tooltipCloseDelay as number
@@ -225,5 +226,18 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   @HostListener('window:resize') onPageResize() {
     this._destroyTooltip();
+  }
+
+  @HostListener('document:click', ['$event.target'])
+  public onDocumentClick(target: any) {
+    if (this.tooltipPersistent && this._popup) {
+      if (!target?.isConnected) {
+        return;
+      }
+      const clickedInside = this._elementRef?.nativeElement?.contains(target);
+      if (!clickedInside) {
+        this._destroyTooltip();
+      }
+    }
   }
 }

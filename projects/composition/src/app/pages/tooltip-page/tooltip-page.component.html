@@ -1,45 +1,27 @@
 <div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Tooltip positions</div>
+  <div class="tooltip-elems-group-title">Different tooltip positions</div>
   <div class="tooltip-elems-group-row">
     <cps-button
-      cpsTooltip="Tooltip"
+      cpsTooltip="Bottom tooltip"
       tooltipPosition="bottom"
       label="Tooltip on bottom">
     </cps-button>
     <cps-button
-      cpsTooltip="Tooltip"
+      cpsTooltip="Left tooltip"
       tooltipPosition="left"
       label="Tooltip on left">
     </cps-button>
     <cps-button
-      cpsTooltip="Tooltip"
+      cpsTooltip="Right tooltip"
       tooltipPosition="right"
       label="Tooltip on right">
     </cps-button>
     <cps-button
-      cpsTooltip="Tooltip"
+      cpsTooltip="Top tooltip"
       tooltipPosition="top"
       label="Tooltip on top">
     </cps-button>
   </div>
-</div>
-
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Persistent tooltip</div>
-  <cps-button
-    cpsTooltip
-    tooltipPosition="right"
-    label="Click on tooltip to close it"
-    [tooltipPersistent]="true">
-  </cps-button>
-</div>
-
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Tooltip with inner HTML</div>
-  <cps-button
-    tooltipPosition="right"
-    label="Tooltip with inner HTML"
-    cpsTooltip="<span><strong>Some bold text</strong></span>"></cps-button>
 </div>
 
 <div class="tooltip-elems-group">
@@ -58,7 +40,7 @@
 
   <div class="tooltip-elems-group-elem-left">
     <cps-button
-      cpsTooltip="1000 openDelay"
+      cpsTooltip="1 second open delay"
       label="Open delay"
       tooltipPosition="bottom"
       [tooltipOpenDelay]="1000">
@@ -66,9 +48,37 @@
   </div>
 
   <cps-button
-    cpsTooltip="1000 closeDelay"
+    cpsTooltip="1 second close delay"
     tooltipPosition="bottom"
     label="Close delay"
     [tooltipCloseDelay]="1000">
   </cps-button>
+</div>
+
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">
+    Persistent tooltip with inner HTML and custom style
+  </div>
+  <cps-button
+    cpsTooltip="<span class='ttip-hdr'>Follow the link</span> <a href='https://www.google.com/' target=”_blank”>Google</a>"
+    tooltipPosition="right"
+    tooltipContentClass="my-tooltip-content"
+    label="Tooltip with clickable content"
+    [tooltipPersistent]="true">
+  </cps-button>
+</div>
+
+<div class="tooltip-elems-group">
+  <div class="tooltip-elems-group-title">Tooltip disabled state</div>
+  <div class="tooltip-elems-group-elem-left">
+    <cps-button
+      tooltipPosition="bottom"
+      [label]="ttipEnabled ? 'Enabled tooltip' : 'Disabled tooltip'"
+      [tooltipDisabled]="!ttipEnabled"
+      cpsTooltip="<span><strong>Some bold text</strong></span>">
+    </cps-button>
+  </div>
+  <cps-checkbox
+    [(ngModel)]="ttipEnabled"
+    [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
 </div>

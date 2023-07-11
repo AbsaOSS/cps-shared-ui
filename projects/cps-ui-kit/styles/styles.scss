@@ -1,17 +1,3 @@
 @import 'bootstrap-grid';
-@import '_variables.scss';
-
-.cps-tooltip {
-  position: absolute;
-  top: 0;
-  cursor: default;
-  font-size: 14px;
-  background: white;
-  color: var(--cps-color-text-darkest);
-  font-family: 'Source Sans Pro', sans-serif;
-  border: 1px solid #3d3e40;
-  max-width: 400px;
-  overflow-wrap: break-word;
-  border-radius: 4px;
-  padding: 3px;
-}
+@import 'variables.scss';
+@import 'cps-tooltip-style.scss';
