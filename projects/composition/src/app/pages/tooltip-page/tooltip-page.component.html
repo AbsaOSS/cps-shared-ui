@@ -1,5 +1,7 @@
 <div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Different tooltip positions</div>
+  <div class="tooltip-elems-group-title">
+    Different tooltip positions (auto repositioning if doesn't fit the screen)
+  </div>
   <div class="tooltip-elems-group-row">
     <cps-button
       cpsTooltip="Bottom tooltip"
@@ -27,11 +29,19 @@
 <div class="tooltip-elems-group">
   <div class="tooltip-elems-group-title">Different opening methods</div>
   <div class="tooltip-elems-group-elem-left">
-    <cps-button label="Open on hover" cpsTooltip="Hover" tooltipOpenOn="hover">
+    <cps-button
+      label="Open on hover"
+      tooltipPosition="bottom"
+      cpsTooltip="Triggered on hover"
+      tooltipOpenOn="hover">
     </cps-button>
   </div>
 
-  <cps-button label="Open on click" cpsTooltip="Click" tooltipOpenOn="click">
+  <cps-button
+    label="Open on click"
+    tooltipPosition="right"
+    cpsTooltip="Triggered on click"
+    tooltipOpenOn="click">
   </cps-button>
 </div>
 
@@ -49,8 +59,8 @@
 
   <cps-button
     cpsTooltip="1 second close delay"
-    tooltipPosition="bottom"
     label="Close delay"
+    tooltipPosition="right"
     [tooltipCloseDelay]="1000">
   </cps-button>
 </div>
