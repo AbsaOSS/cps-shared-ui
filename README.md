@@ -17,6 +17,7 @@ This repository consists of two projects:
 - Datepicker
 - Expansion panel
 - Icon
+- Info circle
 - Input
 - Loader
 - Progress circular (indeterminate)

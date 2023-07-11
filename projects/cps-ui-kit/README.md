@@ -12,6 +12,7 @@
 - Datepicker
 - Expansion panel
 - Icon
+- Info circle
 - Input
 - Loader
 - Progress circular (indeterminate)
@@ -21,7 +22,7 @@
 - Table
 - Tag
 - Textarea
-- Tooltip
+- Tooltip directive
 - Tree autocomplete
 - Tree select
 
