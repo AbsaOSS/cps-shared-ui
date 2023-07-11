@@ -3,8 +3,7 @@ import {
   ElementRef,
   HostListener,
   Input,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import { convertSize } from '../utils/size-utils';
 
@@ -15,7 +14,7 @@ export type TooltipOpenOn = 'hover' | 'click' | 'focus';
   selector: '[cpsTooltip]',
   standalone: true
 })
-export class CpsTooltipDirective implements OnInit, OnDestroy {
+export class CpsTooltipDirective implements OnDestroy {
   @Input('cpsTooltip') tooltip!: string;
 
   @Input() tooltipOpenDelay: string | number = 300;
@@ -31,46 +30,29 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   private _showTimeout?: any;
   private _hideTimeout?: any;
 
-  // TODO CHECK IF WE NEED TO DESTROY TOOLTIP ON CREATION
-
   // eslint-disable-next-line no-useless-constructor
   constructor(private _elementRef: ElementRef<HTMLElement>) {}
 
-  ngOnInit(): void {
-    // TODO NOT EFFICIENT!!!
-    window.addEventListener('scroll', this._destroyTooltip, true);
-
-    // this._elementRef.nativeElement?.parentElement?.addEventListener(
-    //   'scroll',
-    //   this._destroyTooltip
-    // );
-  }
-
   ngOnDestroy(): void {
-    // TODO NOT EFFICIENT!!!
-    window.removeEventListener('scroll', this._destroyTooltip, true);
-    // this._elementRef.nativeElement?.parentElement?.removeEventListener(
-    //   'scroll',
-    //   this._destroyTooltip
-    // );
-
     this._destroyTooltip();
   }
 
   private _createTooltip = () => {
-    this._destroyTooltip();
+    if (this._popup) this._destroyTooltip();
 
     if (this.tooltipDisabled) return;
 
     this._popup = document.createElement('div');
-
     this._constructElement(this._popup);
 
     if (this.tooltipPersistent)
       this._popup.addEventListener('click', this._destroyTooltip);
+
+    window.addEventListener('scroll', this._destroyTooltip, true);
   };
 
   private _destroyTooltip = () => {
+    window.removeEventListener('scroll', this._destroyTooltip, true);
     this._popup?.removeEventListener('click', this._destroyTooltip);
     this._popup?.remove();
     this._popup = undefined;
@@ -84,6 +66,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
     popup.classList.add('cps-tooltip');
     popup.style.maxWidth = convertSize(this.tooltipMaxWidth);
+
     document.body.appendChild(popup);
 
     const coords = this._getCoords();
@@ -110,12 +93,14 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     positions = positions.filter((item) => item !== this.tooltipPosition);
     positions.unshift(this.tooltipPosition);
 
-    const targetElRect = this._elementRef.nativeElement.getBoundingClientRect();
+    const targetEl = this._elementRef.nativeElement;
+    const targetElRect = targetEl.getBoundingClientRect();
     const popupRect = (this._popup as HTMLDivElement).getBoundingClientRect();
 
     for (const pos of positions) {
       const coords = this._getCoordsForPosition(
         pos as TooltipPosition,
+        targetEl,
         targetElRect,
         popupRect
       );
@@ -130,13 +115,13 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   private _getCoordsForPosition(
     position: TooltipPosition,
+    targetEl: HTMLElement,
     targetElRect: DOMRect,
     popupRect: DOMRect
   ): {
     left: number;
     top: number;
   } {
-    const targetEl = this._elementRef.nativeElement;
     switch (position) {
       case 'bottom':
         return {
@@ -225,7 +210,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   @HostListener('window:resize') onPageResize() {
-    this._destroyTooltip();
+    if (this._popup) this._destroyTooltip();
   }
 
   @HostListener('document:click', ['$event.target'])
