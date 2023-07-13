@@ -23,6 +23,7 @@ export const iconNames = [
   'chevron-down',
   'chevron-down-2',
   'circle',
+  'cleansing',
   'close-x',
   'close-x-2',
   'community',
