@@ -16,4 +16,5 @@ export class CpsInfoCircleComponent {
   @Input() size: iconSizeType = 'small';
   @Input() tooltipText = '';
   @Input() tooltipPosition: TooltipPosition = 'top';
+  @Input() tooltipContentClass = 'cps-tooltip-content';
 }
