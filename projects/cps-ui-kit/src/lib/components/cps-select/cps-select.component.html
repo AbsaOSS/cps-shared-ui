@@ -6,7 +6,19 @@
   #selectContainer
   (keydown)="onKeyDown($event, selectContainer)"
   (blur)="onBlur()">
-  <label *ngIf="label" class="cps-select-label">{{ label }} </label>
+  <div class="cps-select-label" *ngIf="label">
+    <label>{{ label }}</label>
+    <cps-info-circle
+      *ngIf="infoTooltip"
+      class="cps-select-label-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  </div>
   <div
     class="cps-select-container"
     [class.focused]="isOpened"

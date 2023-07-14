@@ -21,6 +21,7 @@ import {
 } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
@@ -29,6 +30,7 @@ import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({
   standalone: true,
@@ -39,6 +41,7 @@ import {
     CpsIconComponent,
     CpsChipComponent,
     CpsProgressLinearComponent,
+    CpsInfoCircleComponent,
     LabelByValuePipe,
     CheckOptionSelectedPipe,
     VirtualScrollerModule
@@ -74,6 +77,11 @@ export class CpsAutocompleteComponent
   @Input() loading = false;
   @Input() emptyMessage = 'No results found';
   @Input() virtualScroll = false;
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input('value') _value: any = undefined;
 

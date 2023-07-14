@@ -1,10 +1,11 @@
 <form [formGroup]="form">
   <div class="autocompletes-group">
     <cps-autocomplete
-      label="Required single autocomplete"
+      label="Required single autocomplete with a tooltip"
       [options]="options"
       optionLabel="name"
       optionInfo="info"
+      infoTooltip="Provide any information here"
       placeholder="Enter a city"
       [clearable]="true"
       formControlName="requiredAutocomplete">

@@ -6,7 +6,19 @@
   #treeSelectContainer
   (keydown)="onKeyDown($event, treeSelectContainer)"
   (blur)="onBlur()">
-  <label *ngIf="label" class="cps-treeselect-label">{{ label }} </label>
+  <div class="cps-treeselect-label" *ngIf="label">
+    <label>{{ label }}</label>
+    <cps-info-circle
+      *ngIf="infoTooltip"
+      class="cps-treeselect-label-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  </div>
   <div
     class="cps-treeselect-container"
     [class.focused]="isOpened"

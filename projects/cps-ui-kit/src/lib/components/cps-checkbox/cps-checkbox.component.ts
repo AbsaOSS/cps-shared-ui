@@ -9,10 +9,12 @@ import {
   Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CpsInfoCircleComponent],
   selector: 'cps-checkbox',
   templateUrl: './cps-checkbox.component.html',
   styleUrls: ['./cps-checkbox.component.scss']
@@ -20,6 +22,12 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 export class CpsCheckboxComponent implements ControlValueAccessor {
   @Input() label = '';
   @Input() disabled = false;
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
+
   @Input() set value(value: boolean) {
     this._value = value;
     this.onChange(value);

@@ -13,6 +13,8 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
 
   .cps-checkbox-container {
     line-height: normal;
+    display: inline-flex;
+    align-items: center;
 
     label.cps-checkbox {
       padding-left: 1.75rem;
@@ -66,6 +68,16 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+      }
+    }
+
+    .cps-checkbox-info-circle {
+      margin-left: 8px;
+      ::ng-deep cps-icon {
+        i {
+          width: 14px;
+          height: 14px;
+        }
       }
     }
   }

@@ -17,4 +17,6 @@ export class CpsInfoCircleComponent {
   @Input() tooltipText = '';
   @Input() tooltipPosition: TooltipPosition = 'top';
   @Input() tooltipContentClass = 'cps-tooltip-content';
+  @Input() tooltipMaxWidth: number | string = '100%';
+  @Input() tooltipPersistent = false;
 }

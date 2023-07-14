@@ -1,9 +1,20 @@
 <div class="cps-input-container" [ngStyle]="{ width: cvtWidth }">
-  <label
-    class="cps-input-label-text"
-    [ngClass]="{ 'cps-input-label-text-disabled': disabled }"
-    >{{ label }}</label
-  >
+  <div
+    class="cps-input-label"
+    [ngClass]="{ 'cps-input-label-disabled': disabled }"
+    *ngIf="label">
+    <label>{{ label }}</label>
+    <cps-info-circle
+      *ngIf="infoTooltip"
+      class="cps-input-label-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  </div>
 
   <div
     class="cps-input-wrap"

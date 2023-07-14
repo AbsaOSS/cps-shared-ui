@@ -1,18 +1,27 @@
 <div class="radiogroups-group">
   <cps-radio
+    groupLabel="Radio group with a tooltip"
+    [options]="options"
+    infoTooltip="Provide any information here"
+    value="second">
+  </cps-radio>
+  <cps-radio
     groupLabel="Disabled vertical radio group"
     [options]="options"
     value="second"
     [disabled]="true"
-    [vertical]="true"></cps-radio>
+    [vertical]="true">
+  </cps-radio>
   <cps-radio
-    groupLabel="Radio group with partially disabled options"
-    [options]="partiallyDisabledOptions"></cps-radio>
+    groupLabel="Radio group with partially disabled options and targeted tooltips"
+    [options]="partiallyDisabledOptions">
+  </cps-radio>
   <div class="sync-val-example">
     <cps-radio
       groupLabel="Radio group with two-way binding"
       [options]="options"
-      [(ngModel)]="syncVal"></cps-radio>
+      [(ngModel)]="syncVal">
+    </cps-radio>
     <div class="sync-val">Selected value: {{ syncVal }}</div>
   </div>
 </div>

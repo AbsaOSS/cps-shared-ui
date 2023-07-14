@@ -13,6 +13,18 @@ $disabled-label-color: var(--cps-color-text-light);
     &-label {
       color: $group-label-color;
       margin-bottom: 0.75rem;
+      align-items: center;
+      display: inline-flex;
+
+      .cps-radio-group-label-info-circle {
+        margin-left: 8px;
+        ::ng-deep cps-icon {
+          i {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
     }
 
     &-content {

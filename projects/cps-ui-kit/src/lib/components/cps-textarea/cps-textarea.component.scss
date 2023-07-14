@@ -124,9 +124,16 @@ $hover-transition-duration: 0.2s;
       cursor: default;
     }
 
-    .cps-textarea-label-text {
+    .cps-textarea-label {
       color: $textarea-label-color;
       font-size: 0.875rem;
+      align-items: center;
+      display: inline-flex;
+
+      .cps-textarea-label-info-circle {
+        margin-left: 8px;
+      }
+
       &-disabled {
         color: $textarea-label-disabled-color;
       }

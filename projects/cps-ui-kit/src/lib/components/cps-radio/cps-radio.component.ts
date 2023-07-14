@@ -8,16 +8,22 @@ import {
   Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import {
+  CpsTooltipDirective,
+  TooltipPosition
+} from '../../directives/cps-tooltip.directive';
 
 export type RadioOption = {
   value: any;
   label: string;
   disabled?: boolean;
+  tooltip?: string;
 };
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CpsInfoCircleComponent, CpsTooltipDirective],
   selector: 'cps-radio',
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss']
@@ -27,6 +33,12 @@ export class CpsRadioComponent implements ControlValueAccessor {
   @Input() groupLabel = '';
   @Input() vertical = false;
   @Input() disabled = false;
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
+
   @Input() set value(value: any) {
     this._value = value;
     this.onChange(value);

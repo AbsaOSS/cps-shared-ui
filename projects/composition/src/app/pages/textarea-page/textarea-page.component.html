@@ -1,9 +1,10 @@
 <form [formGroup]="form">
   <div class="textarea-group">
     <cps-textarea
-      label="Required textarea"
+      label="Required textarea with a tooltip"
       placeholder="Please enter any text"
       hint="Maximum 3 characters are allowed"
+      infoTooltip="Provide any information here"
       [clearable]="true"
       formControlName="requiredTextarea">
     </cps-textarea>

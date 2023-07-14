@@ -14,6 +14,7 @@ import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { find, isEqual } from 'lodash-es';
 import { Tree, TreeModule } from 'primeng/tree';
@@ -29,7 +30,8 @@ import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dro
     ClickOutsideDirective,
     CpsIconComponent,
     CpsChipComponent,
-    CpsProgressLinearComponent
+    CpsProgressLinearComponent,
+    CpsInfoCircleComponent
   ],
   selector: 'cps-tree-autocomplete',
   templateUrl: './cps-tree-autocomplete.component.html',

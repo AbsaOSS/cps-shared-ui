@@ -1,9 +1,20 @@
 <div class="cps-textarea-container" [ngStyle]="{ width: cvtWidth }">
-  <label
-    class="cps-textarea-label-text"
-    [ngClass]="{ 'cps-textarea-label-text-disabled': disabled }"
-    >{{ label }}</label
-  >
+  <div
+    class="cps-textarea-label"
+    [ngClass]="{ 'cps-textarea-label-disabled': disabled }"
+    *ngIf="label">
+    <label>{{ label }}</label>
+    <cps-info-circle
+      *ngIf="infoTooltip"
+      class="cps-textarea-label-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  </div>
 
   <div
     class="cps-textarea-wrap"

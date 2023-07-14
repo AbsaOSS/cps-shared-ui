@@ -9,16 +9,18 @@ import {
   Output,
   Self
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
-import { CommonModule } from '@angular/common';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({
   standalone: true,
   selector: 'cps-textarea',
-  imports: [CommonModule, CpsIconComponent],
+  imports: [CommonModule, CpsIconComponent, CpsInfoCircleComponent],
   templateUrl: './cps-textarea.component.html',
   styleUrls: ['./cps-textarea.component.scss']
 })
@@ -36,6 +38,12 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() persistentClear = false;
   @Input() error = '';
   @Input() resizable: 'vertical' | 'none' = 'vertical';
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
+
   @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);

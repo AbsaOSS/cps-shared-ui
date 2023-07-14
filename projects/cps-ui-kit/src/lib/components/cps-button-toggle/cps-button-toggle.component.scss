@@ -15,6 +15,18 @@ $option-active-background: #f1eaec;
     &-label {
       color: $group-label-color;
       margin-bottom: 0.5rem;
+      align-items: center;
+      display: inline-flex;
+
+      .cps-btn-toggle-label-info-circle {
+        margin-left: 8px;
+        ::ng-deep cps-icon {
+          i {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
     }
     &-content {
       display: flex;
