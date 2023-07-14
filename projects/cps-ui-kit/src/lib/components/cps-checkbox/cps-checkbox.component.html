@@ -15,11 +15,13 @@
     <span class="cps-checkbox-indicator"></span>
   </label>
   <cps-info-circle
-    *ngIf="tooltip && label"
+    *ngIf="infoTooltip && label"
     class="cps-checkbox-info-circle"
     size="xsmall"
     tooltipPosition="top"
-    [tooltipContentClass]="tooltipClass"
-    [tooltipText]="tooltip">
+    [tooltipContentClass]="infoTooltipClass"
+    [tooltipMaxWidth]="infoTooltipMaxWidth"
+    [tooltipPersistent]="infoTooltipPersistent"
+    [tooltipText]="infoTooltip">
   </cps-info-circle>
 </div>

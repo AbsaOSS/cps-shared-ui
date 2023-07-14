@@ -21,8 +21,10 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 export class CpsCheckboxComponent implements ControlValueAccessor {
   @Input() label = '';
   @Input() disabled = false;
-  @Input() tooltip = '';
-  @Input() tooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
 
   @Input() set value(value: boolean) {
     this._value = value;

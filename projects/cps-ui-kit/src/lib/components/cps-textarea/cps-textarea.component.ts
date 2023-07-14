@@ -37,8 +37,10 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() persistentClear = false;
   @Input() error = '';
   @Input() resizable: 'vertical' | 'none' = 'vertical';
-  @Input() tooltip = '';
-  @Input() tooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
 
   @Input() set value(value: string) {
     this._value = value;

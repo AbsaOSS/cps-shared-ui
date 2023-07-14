@@ -2,12 +2,14 @@
   <div class="cps-btn-toggle-label" *ngIf="label">
     <span>{{ label }}</span>
     <cps-info-circle
-      *ngIf="tooltip"
+      *ngIf="infoTooltip"
       class="cps-btn-toggle-label-info-circle"
       size="xsmall"
       tooltipPosition="top"
-      [tooltipContentClass]="tooltipClass"
-      [tooltipText]="tooltip">
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
     </cps-info-circle>
   </div>
   <div class="cps-btn-toggle-content">

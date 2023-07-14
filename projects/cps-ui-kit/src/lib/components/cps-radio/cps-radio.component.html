@@ -2,12 +2,14 @@
   <div class="cps-radio-group-label" *ngIf="groupLabel">
     <span>{{ groupLabel }}</span>
     <cps-info-circle
-      *ngIf="tooltip"
+      *ngIf="infoTooltip"
       class="cps-radio-group-label-info-circle"
       size="xsmall"
       tooltipPosition="top"
-      [tooltipContentClass]="tooltipClass"
-      [tooltipText]="tooltip">
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
     </cps-info-circle>
   </div>
 
