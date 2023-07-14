@@ -5,7 +5,17 @@
   tabindex="1"
   [ngClass]="{ disabled: disabled, error: error }"
   #treeAutocompleteContainer>
-  <label *ngIf="label" class="cps-treeautocomplete-label">{{ label }}</label>
+  <div class="cps-treeautocomplete-label" *ngIf="label">
+    <label>{{ label }}</label>
+    <cps-info-circle
+      *ngIf="tooltip"
+      class="cps-treeautocomplete-label-info-circle"
+      size="xsmall"
+      tooltipPosition="top"
+      [tooltipContentClass]="tooltipClass"
+      [tooltipText]="tooltip">
+    </cps-info-circle>
+  </div>
   <div
     (keydown)="onContainerKeyDown($event, treeAutocompleteContainer)"
     class="cps-treeautocomplete-container"

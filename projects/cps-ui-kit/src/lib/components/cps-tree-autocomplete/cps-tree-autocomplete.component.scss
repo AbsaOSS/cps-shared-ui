@@ -59,10 +59,15 @@ $hover-transition-duration: 0.2s;
     }
 
     .cps-treeautocomplete-label {
-      display: inline-block;
+      align-items: center;
+      display: inline-flex;
       margin-bottom: 0.2rem;
       color: $treeautocomplete-label-color;
       font-size: 0.875rem;
+      .cps-treeautocomplete-label-info-circle {
+        margin-left: 8px;
+        pointer-events: all;
+      }
     }
 
     .persistent-clear,

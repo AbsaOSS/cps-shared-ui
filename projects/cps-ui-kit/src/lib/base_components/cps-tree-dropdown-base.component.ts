@@ -46,6 +46,8 @@ export class CpsTreeDropdownBaseComponent
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() virtualScroll = false;
+  @Input() tooltip = '';
+  @Input() tooltipClass = 'cps-tooltip-content';
 
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {

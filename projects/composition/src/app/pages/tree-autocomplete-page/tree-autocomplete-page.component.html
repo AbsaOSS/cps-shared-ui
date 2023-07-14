@@ -1,11 +1,12 @@
 <form [formGroup]="form">
   <div class="tree-autocompletes-group">
     <cps-tree-autocomplete
-      label="Required single tree autocomplete"
+      label="Required single tree autocomplete with a tooltip"
       [options]="options"
       optionLabel="label"
       optionInfo="attrType"
       placeholder="Select element"
+      tooltip="Provide any information here"
       [clearable]="true"
       formControlName="requiredTreeAutocomplete">
     </cps-tree-autocomplete>
