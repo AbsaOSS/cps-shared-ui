@@ -1,11 +1,12 @@
 <form [formGroup]="form">
   <div class="tree-selects-group">
     <cps-tree-select
-      label="Required single tree select"
+      label="Required single tree select with a tooltip"
       [options]="options"
       optionLabel="label"
       optionInfo="attrType"
       placeholder="Select element"
+      tooltip="Provide any information here"
       [clearable]="true"
       formControlName="requiredTreeSelect">
     </cps-tree-select>
