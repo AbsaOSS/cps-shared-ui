@@ -47,7 +47,7 @@ export class CpsTreeDropdownBaseComponent
   @Input() loading = false;
   @Input() virtualScroll = false;
   @Input() infoTooltip = '';
-  @Input() infooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
 

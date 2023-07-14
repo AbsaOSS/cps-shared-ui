@@ -77,8 +77,10 @@ export class CpsSelectComponent
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() virtualScroll = false;
-  @Input() tooltip = '';
-  @Input() tooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
 
   @Input('value') _value: any = undefined;
 
