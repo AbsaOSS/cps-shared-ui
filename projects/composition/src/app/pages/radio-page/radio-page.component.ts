@@ -18,9 +18,19 @@ export class RadioPageComponent {
   ] as RadioOption[];
 
   partiallyDisabledOptions = [
-    { label: 'Option 1', value: 'first', disabled: true },
+    {
+      label: 'Option 1',
+      value: 'first',
+      disabled: true,
+      tooltip: 'First option is currently unavailable'
+    },
     { label: 'Option 2', value: 'second' },
-    { label: 'Option 3', value: 'third', disabled: true },
+    {
+      label: 'Option 3',
+      value: 'third',
+      disabled: true,
+      tooltip: 'Third option is currently unavailable'
+    },
     { label: 'Option 4', value: 'fourth' }
   ] as RadioOption[];
 

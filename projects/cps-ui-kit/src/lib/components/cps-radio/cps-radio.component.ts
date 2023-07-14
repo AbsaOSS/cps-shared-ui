@@ -9,16 +9,18 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
 
 export type RadioOption = {
   value: any;
   label: string;
   disabled?: boolean;
+  tooltip?: string;
 };
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsInfoCircleComponent],
+  imports: [CommonModule, CpsInfoCircleComponent, CpsTooltipDirective],
   selector: 'cps-radio',
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss']

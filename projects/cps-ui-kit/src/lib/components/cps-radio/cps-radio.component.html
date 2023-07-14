@@ -18,21 +18,58 @@
         ? 'cps-radio-group-content-vertical'
         : 'cps-radio-group-content-horizontal'
     ">
-    <label
-      *ngFor="let option of options"
-      class="cps-radio-group-content-button"
-      [ngStyle]="{
-        cursor: option.disabled || disabled ? 'default' : 'pointer'
-      }">
-      <input
-        type="radio"
-        [disabled]="option.disabled || disabled"
-        [value]="option.value"
-        [checked]="value === option.value"
-        (change)="updateValueEvent($event)" />
-      <span class="cps-radio-group-content-button-label">{{
-        option.label
-      }}</span>
-    </label>
+    <ng-container *ngFor="let option of options">
+      <ng-container
+        *ngTemplateOutlet="
+          optionContainerTemplate;
+          context: {
+            option: option,
+            tooltip: option.tooltip
+          }
+        "></ng-container>
+    </ng-container>
   </div>
 </div>
+
+<ng-template #optionContainerTemplate let-option="option" let-tooltip="tooltip">
+  <label
+    *ngIf="tooltip"
+    class="cps-radio-group-content-button"
+    [cpsTooltip]="option.tooltip"
+    tooltipPosition="bottom"
+    [ngStyle]="{
+      cursor: option.disabled || disabled ? 'default' : 'pointer'
+    }">
+    <ng-container
+      *ngTemplateOutlet="
+        optionRadioTemplate;
+        context: {
+          option: option
+        }
+      "></ng-container>
+  </label>
+  <label
+    *ngIf="!tooltip"
+    class="cps-radio-group-content-button"
+    [ngStyle]="{
+      cursor: option.disabled || disabled ? 'default' : 'pointer'
+    }">
+    <ng-container
+      *ngTemplateOutlet="
+        optionRadioTemplate;
+        context: {
+          option: option
+        }
+      "></ng-container>
+  </label>
+</ng-template>
+
+<ng-template #optionRadioTemplate let-option="option">
+  <input
+    type="radio"
+    [disabled]="option.disabled || disabled"
+    [value]="option.value"
+    [checked]="value === option.value"
+    (change)="updateValueEvent($event)" />
+  <span class="cps-radio-group-content-button-label">{{ option.label }}</span>
+</ng-template>
