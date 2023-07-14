@@ -21,6 +21,7 @@ import {
 } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
@@ -40,6 +41,7 @@ import {
     CpsIconComponent,
     CpsChipComponent,
     CpsProgressLinearComponent,
+    CpsInfoCircleComponent,
     LabelByValuePipe,
     CombineLabelsPipe,
     CheckOptionSelectedPipe,
@@ -75,6 +77,8 @@ export class CpsSelectComponent
   @Input() prefixIconSize: iconSizeType = '18px';
   @Input() loading = false;
   @Input() virtualScroll = false;
+  @Input() tooltip = '';
+  @Input() tooltipClass = 'cps-tooltip-content';
 
   @Input('value') _value: any = undefined;
 

@@ -1,11 +1,12 @@
 <form [formGroup]="form">
   <div class="selects-group">
     <cps-select
-      label="Required single select"
+      label="Required single select with a tooltip"
       [options]="options"
       optionLabel="name"
       optionInfo="info"
       placeholder="Select a city"
+      tooltip="Provide any information here"
       [clearable]="true"
       formControlName="requiredSelect">
     </cps-select>
