@@ -14,4 +14,12 @@
       (change)="updateValueEvent($event)" />
     <span class="cps-checkbox-indicator"></span>
   </label>
+  <cps-info-circle
+    *ngIf="tooltip && label"
+    class="cps-checkbox-info-circle"
+    size="xsmall"
+    tooltipPosition="top"
+    [tooltipContentClass]="tooltipClass"
+    [tooltipText]="tooltip">
+  </cps-info-circle>
 </div>
