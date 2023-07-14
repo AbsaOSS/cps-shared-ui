@@ -22,10 +22,16 @@ import {
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsIconComponent, CpsProgressLinearComponent],
+  imports: [
+    CommonModule,
+    CpsIconComponent,
+    CpsInfoCircleComponent,
+    CpsProgressLinearComponent
+  ],
   selector: 'cps-input',
   templateUrl: './cps-input.component.html',
   styleUrls: ['./cps-input.component.scss']
@@ -48,6 +54,9 @@ export class CpsInputComponent
   @Input() hideDetails = false;
   @Input() persistentClear = false;
   @Input() error = '';
+  @Input() tooltip = '';
+  @Input() tooltipClass = 'cps-tooltip-content';
+
   @Input() set value(value: string) {
     this._value = value;
     this.onChange(value);

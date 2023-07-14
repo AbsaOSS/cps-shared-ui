@@ -190,9 +190,16 @@ $hover-transition-duration: 0.2s;
       min-height: 1.125rem;
       cursor: default;
     }
-    .cps-input-label-text {
+    .cps-input-label {
       color: $input-label-color;
       font-size: 0.875rem;
+      align-items: center;
+      display: inline-flex;
+
+      .cps-input-label-info-circle {
+        margin-left: 8px;
+      }
+
       &-disabled {
         color: $input-label-disabled-color;
       }
