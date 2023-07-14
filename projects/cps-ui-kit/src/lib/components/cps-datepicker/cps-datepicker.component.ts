@@ -15,6 +15,7 @@ import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { ClickOutsideDirective } from '../../directives/click-outside.directive';
 import { convertSize } from '../../utils/size-utils';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({
   standalone: true,
@@ -46,6 +47,7 @@ export class CpsDatepickerComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input()
   minDate!: Date;

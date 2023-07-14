@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({
   standalone: true,
@@ -41,6 +42,7 @@ export class CpsTextareaComponent implements OnInit, OnDestroy {
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input() set value(value: string) {
     this._value = value;

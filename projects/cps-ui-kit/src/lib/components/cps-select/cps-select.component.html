@@ -12,7 +12,7 @@
       *ngIf="infoTooltip"
       class="cps-select-label-info-circle"
       size="xsmall"
-      tooltipPosition="top"
+      [tooltipPosition]="infoTooltipPosition"
       [tooltipContentClass]="infoTooltipClass"
       [tooltipMaxWidth]="infoTooltipMaxWidth"
       [tooltipPersistent]="infoTooltipPersistent"

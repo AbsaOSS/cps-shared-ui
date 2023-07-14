@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../utils/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
+import { TooltipPosition } from '../directives/cps-tooltip.directive';
 
 @Component({
   template: ''
@@ -50,6 +51,7 @@ export class CpsTreeDropdownBaseComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {

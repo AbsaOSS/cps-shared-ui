@@ -18,7 +18,7 @@
     *ngIf="infoTooltip && label"
     class="cps-checkbox-info-circle"
     size="xsmall"
-    tooltipPosition="top"
+    [tooltipPosition]="infoTooltipPosition"
     [tooltipContentClass]="infoTooltipClass"
     [tooltipMaxWidth]="infoTooltipMaxWidth"
     [tooltipPersistent]="infoTooltipPersistent"

@@ -31,6 +31,7 @@ import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({
   standalone: true,
@@ -81,6 +82,7 @@ export class CpsSelectComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input('value') _value: any = undefined;
 

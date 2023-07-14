@@ -12,7 +12,10 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
+import {
+  CpsTooltipDirective,
+  TooltipPosition
+} from '../../directives/cps-tooltip.directive';
 
 export type BtnToggleOption = {
   value: any;
@@ -44,6 +47,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input('value') _value: any = undefined;
 
