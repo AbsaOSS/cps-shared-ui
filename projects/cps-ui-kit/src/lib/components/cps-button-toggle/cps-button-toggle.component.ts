@@ -35,6 +35,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() mandatory = true; // at least one of the options is mandatory
   @Input() tooltip = '';
   @Input() tooltipClass = 'cps-tooltip-content';
+
   @Input('value') _value: any = undefined;
 
   set value(value: any) {

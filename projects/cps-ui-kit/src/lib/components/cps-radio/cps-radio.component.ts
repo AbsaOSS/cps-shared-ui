@@ -8,6 +8,7 @@ import {
   Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 
 export type RadioOption = {
   value: any;
@@ -17,7 +18,7 @@ export type RadioOption = {
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CpsInfoCircleComponent],
   selector: 'cps-radio',
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss']
@@ -27,6 +28,9 @@ export class CpsRadioComponent implements ControlValueAccessor {
   @Input() groupLabel = '';
   @Input() vertical = false;
   @Input() disabled = false;
+  @Input() tooltip = '';
+  @Input() tooltipClass = 'cps-tooltip-content';
+
   @Input() set value(value: any) {
     this._value = value;
     this.onChange(value);
