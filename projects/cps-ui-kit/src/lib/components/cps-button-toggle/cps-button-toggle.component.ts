@@ -12,16 +12,23 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
 
 export type BtnToggleOption = {
   value: any;
   label: string;
   disabled?: boolean;
+  tooltip?: string;
 };
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CheckOptionSelectedPipe, CpsInfoCircleComponent],
+  imports: [
+    CommonModule,
+    CheckOptionSelectedPipe,
+    CpsInfoCircleComponent,
+    CpsTooltipDirective
+  ],
   providers: [CheckOptionSelectedPipe],
   selector: 'cps-button-toggle',
   templateUrl: './cps-button-toggle.component.html',

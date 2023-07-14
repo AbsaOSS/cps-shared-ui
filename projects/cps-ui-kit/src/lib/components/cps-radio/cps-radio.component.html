@@ -36,6 +36,7 @@
     *ngIf="tooltip"
     class="cps-radio-group-content-button"
     [cpsTooltip]="option.tooltip"
+    tooltipCloseDelay="0"
     tooltipPosition="bottom"
     [ngStyle]="{
       cursor: option.disabled || disabled ? 'default' : 'pointer'
