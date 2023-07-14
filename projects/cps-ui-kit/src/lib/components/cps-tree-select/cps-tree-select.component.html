@@ -9,12 +9,14 @@
   <div class="cps-treeselect-label" *ngIf="label">
     <label>{{ label }}</label>
     <cps-info-circle
-      *ngIf="tooltip"
+      *ngIf="infoTooltip"
       class="cps-treeselect-label-info-circle"
       size="xsmall"
       tooltipPosition="top"
-      [tooltipContentClass]="tooltipClass"
-      [tooltipText]="tooltip">
+      [tooltipContentClass]="infooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
     </cps-info-circle>
   </div>
   <div

@@ -77,7 +77,10 @@ export class CpsAutocompleteComponent
   @Input() emptyMessage = 'No results found';
   @Input() virtualScroll = false;
   @Input() tooltip = '';
-  @Input() tooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltip = '';
+  @Input() infooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
 
   @Input('value') _value: any = undefined;
 
