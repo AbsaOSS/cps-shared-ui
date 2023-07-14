@@ -1,6 +1,14 @@
 <div class="cps-btn-toggle">
   <div class="cps-btn-toggle-label" *ngIf="label">
     <span>{{ label }}</span>
+    <cps-info-circle
+      *ngIf="tooltip"
+      class="cps-btn-toggle-label-info-circle"
+      size="xsmall"
+      tooltipPosition="top"
+      [tooltipContentClass]="tooltipClass"
+      [tooltipText]="tooltip">
+    </cps-info-circle>
   </div>
   <div class="cps-btn-toggle-content">
     <label *ngFor="let option of options" class="cps-btn-toggle-content-option">
