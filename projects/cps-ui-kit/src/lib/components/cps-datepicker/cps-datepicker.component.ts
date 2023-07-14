@@ -42,8 +42,10 @@ export class CpsDatepickerComponent
   @Input() persistentClear = false;
   @Input() showTodayButton = true;
   @Input() openOnInputFocus = false;
-  @Input() tooltip = '';
-  @Input() tooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltip = '';
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+  @Input() infoTooltipPersistent = false;
 
   @Input()
   minDate!: Date;

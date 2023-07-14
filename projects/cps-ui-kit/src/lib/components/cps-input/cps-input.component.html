@@ -5,12 +5,14 @@
     *ngIf="label">
     <label>{{ label }}</label>
     <cps-info-circle
-      *ngIf="tooltip"
+      *ngIf="infoTooltip"
       class="cps-input-label-info-circle"
       size="xsmall"
       tooltipPosition="top"
-      [tooltipContentClass]="tooltipClass"
-      [tooltipText]="tooltip">
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
     </cps-info-circle>
   </div>
 
