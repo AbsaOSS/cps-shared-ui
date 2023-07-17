@@ -52,7 +52,10 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
-    <tr>
+    <tr
+      [ngClass]="{
+        'cps-table-row-selected': selectable && primengTable.isSelected(item)
+      }">
       <td *ngIf="selectable">
         <p-tableCheckbox [value]="item"></p-tableCheckbox>
       </td>
