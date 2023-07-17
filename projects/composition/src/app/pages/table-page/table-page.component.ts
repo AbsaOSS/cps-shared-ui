@@ -45,4 +45,8 @@ export class TablePageComponent {
     { a: 'a31', b: 'b31', c: 3.0 },
     { a: 'a32', b: 'b32', c: 3.1 }
   ];
+
+  onActionBtnClicked() {
+    alert('Action button clicked');
+  }
 }

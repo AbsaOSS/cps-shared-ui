@@ -24,15 +24,38 @@
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
     </ng-container>
     <ng-container *ngIf="!toolbarTemplate">
-      <div>{{ toolbarTitle }}</div>
-      <div *ngIf="showGlobalFilter">
-        <cps-input
-          prefixIcon="search"
-          [placeholder]="globalFilterPlaceholder"
-          (valueChanged)="onFilterGlobal($event)"
-          [clearable]="true"
-          [hideDetails]="true">
-        </cps-input>
+      <div class="cps-table-tbar-left">
+        <div>{{ toolbarTitle }}</div>
+        <div *ngIf="showGlobalFilter" class="cps-table-tbar-global-filter">
+          <cps-input
+            prefixIcon="search"
+            [placeholder]="globalFilterPlaceholder"
+            (valueChanged)="onFilterGlobal($event)"
+            [clearable]="true"
+            [hideDetails]="true">
+          </cps-input>
+        </div>
+      </div>
+      <div class="cps-table-tbar-right">
+        <div
+          *ngIf="showRemoveBtnOnSelect && selectedRows.length > 0"
+          class="cps-table-tbar-remove-btn">
+          <cps-button
+            label="Remove"
+            color="prepared"
+            type="borderless"
+            icon="remove"
+            (clicked)="removeSelected()">
+          </cps-button>
+        </div>
+        <div *ngIf="showActionBtn" class="cps-table-tbar-action-btn">
+          <cps-button
+            [label]="actionBtnTitle"
+            color="prepared"
+            type="outlined"
+            (clicked)="onClickActionBtn()">
+          </cps-button>
+        </div>
       </div>
     </ng-container>
   </ng-template>
