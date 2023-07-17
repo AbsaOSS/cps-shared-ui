@@ -67,6 +67,7 @@ export const iconNames = [
   'menu-expand',
   'menu-shrink',
   'minus',
+  'move-grabber',
   'multiple_users',
   'open',
   'path',

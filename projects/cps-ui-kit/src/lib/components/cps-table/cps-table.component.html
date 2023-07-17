@@ -62,6 +62,7 @@
 
   <ng-template pTemplate="header" let-columns>
     <tr>
+      <th style="width: 3rem" *ngIf="reorderableRows"></th>
       <th style="width: 4rem" *ngIf="selectable">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th>
@@ -76,9 +77,13 @@
 
   <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
     <tr
+      [pReorderableRow]="rowIndex"
       [ngClass]="{
         'cps-table-row-selected': selectable && primengTable.isSelected(item)
       }">
+      <td *ngIf="reorderableRows">
+        <span pReorderableRowHandle>☰</span>
+      </td>
       <td *ngIf="selectable">
         <p-tableCheckbox [value]="item"></p-tableCheckbox>
       </td>
