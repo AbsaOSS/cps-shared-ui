@@ -2,8 +2,9 @@
   [headers]="headers"
   [showGlobalFilter]="true"
   [data]="data"
-  toolbarTitle="This is an alpha version of table component, only basic functionality is
-      implemented so far">
+  [showActionBtn]="true"
+  (actionBtnClicked)="onActionBtnClicked()"
+  toolbarTitle="This is an alpha version of table component">
   <ng-template #header>
     <th cpsColSortable="a">A</th>
     <th>B</th>

@@ -15,6 +15,7 @@ import { Table, TableService, TableModule } from 'primeng/table';
 import { TableUnsortDirective } from './table-unsort.directive';
 import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { CpsButtonComponent } from '../cps-button/cps-button.component';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
@@ -23,7 +24,13 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 @Component({
   selector: 'cps-table',
   standalone: true,
-  imports: [CommonModule, TableModule, TableUnsortDirective, CpsInputComponent],
+  imports: [
+    CommonModule,
+    TableModule,
+    TableUnsortDirective,
+    CpsInputComponent,
+    CpsButtonComponent
+  ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
   providers: [
@@ -58,7 +65,9 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() globalFilterPlaceholder = 'Search';
   @Input() globalFilterFields: string[] = [];
 
-  // @Input() showRemoveOnSelect = true; // TODO
+  @Input() showRemoveBtnOnSelect = true;
+  @Input() showActionBtn = false;
+  @Input() actionBtnTitle = 'Action';
 
   // @Input() draggableRows = false; TODO
   // @Input() columnsToggle = false; TODO
@@ -68,6 +77,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
 
   @Output() selectionChanged = new EventEmitter<any[]>();
+  @Output() actionBtnClicked = new EventEmitter<void>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -75,6 +85,18 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
    * @group Emits
    */
   @Output() customSortFunction: EventEmitter<any> = new EventEmitter<any>();
+
+  @ContentChild('toolbar', { static: false })
+  public toolbarTemplate!: TemplateRef<any>;
+
+  @ContentChild('header', { static: false })
+  public headerTemplate!: TemplateRef<any>;
+
+  @ContentChild('body', { static: false })
+  public bodyTemplate!: TemplateRef<any>;
+
+  @ViewChild('primengTable', { static: true })
+  primengTable!: Table;
 
   styleClass = '';
   selectedRows: any[] = [];
@@ -140,15 +162,20 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     this.primengTable.filterGlobal(value, 'contains');
   }
 
-  @ContentChild('toolbar', { static: false })
-  public toolbarTemplate!: TemplateRef<any>;
+  removeSelected() {
+    const indexes: number[] = this.primengTable.selection.map(
+      (s: any) => s._defaultSortOrder
+    );
+    indexes.sort((a, b) => b - a);
 
-  @ContentChild('header', { static: false })
-  public headerTemplate!: TemplateRef<any>;
+    this.data = this.data.filter(
+      (v: any) => !indexes.includes(v._defaultSortOrder)
+    );
 
-  @ContentChild('body', { static: false })
-  public bodyTemplate!: TemplateRef<any>;
+    this.selectedRows = [];
+  }
 
-  @ViewChild('primengTable', { static: true })
-  primengTable!: Table;
+  onClickActionBtn() {
+    this.actionBtnClicked.emit();
+  }
 }
