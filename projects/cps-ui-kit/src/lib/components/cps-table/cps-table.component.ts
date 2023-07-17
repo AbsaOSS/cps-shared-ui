@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 import { Table, TableService, TableModule } from 'primeng/table';
 import { TableUnsortDirective } from './table-unsort.directive';
 import { SortEvent } from 'primeng/api';
+import { CpsInputComponent } from '../cps-input/cps-input.component';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
@@ -22,7 +23,7 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 @Component({
   selector: 'cps-table',
   standalone: true,
-  imports: [CommonModule, TableModule, TableUnsortDirective],
+  imports: [CommonModule, TableModule, TableUnsortDirective, CpsInputComponent],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
   providers: [
@@ -53,6 +54,12 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() scrollable = true;
   @Input() virtualScroll = false; // works only if scrollable is true
 
+  @Input() showGlobalFilter = false;
+  @Input() globalFilterPlaceholder = 'Search';
+  @Input() globalFilterFields: string[] = [];
+
+  // @Input() showRemoveOnSelect = true; // TODO
+
   // @Input() draggableRows = false; TODO
   // @Input() columnsToggle = false; TODO
   // @Input() export = false; TODO
@@ -79,6 +86,13 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (!this.scrollable) this.virtualScroll = false;
+    if (
+      this.showGlobalFilter &&
+      this.globalFilterFields?.length < 1 &&
+      this.data?.length > 0
+    ) {
+      this.globalFilterFields = Object.keys(this.data[0]);
+    }
     switch (this.size) {
       case 'small':
         this.styleClass = 'p-datatable-sm';
@@ -120,6 +134,10 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   onSortFunction(event: SortEvent) {
     this.customSortFunction.emit(event);
+  }
+
+  onFilterGlobal(value: string) {
+    this.primengTable.filterGlobal(value, 'contains');
   }
 
   @ContentChild('toolbar', { static: false })
