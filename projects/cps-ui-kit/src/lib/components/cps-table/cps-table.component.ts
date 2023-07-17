@@ -69,7 +69,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
-  // @Input() draggableRows = false; TODO
+  @Input() reorderableRows = false;
   // @Input() columnsToggle = false; TODO
   // @Input() export = false; TODO
   /* @Input() */ resizableColumns = false; // TODO
