@@ -7,6 +7,7 @@
   (selectionChange)="onSelectionChanged($event)"
   [resizableColumns]="resizableColumns"
   [reorderableColumns]="reorderableColumns"
+  [globalFilterFields]="globalFilterFields"
   [scrollable]="scrollable"
   scrollHeight="flex"
   [virtualScroll]="virtualScroll"
@@ -23,7 +24,16 @@
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
     </ng-container>
     <ng-container *ngIf="!toolbarTemplate">
-      {{ toolbarTitle }}
+      <div>{{ toolbarTitle }}</div>
+      <div *ngIf="showGlobalFilter">
+        <cps-input
+          prefixIcon="search"
+          [placeholder]="globalFilterPlaceholder"
+          (valueChanged)="onFilterGlobal($event)"
+          [clearable]="true"
+          [hideDetails]="true">
+        </cps-input>
+      </div>
     </ng-container>
   </ng-template>
 
@@ -42,7 +52,10 @@
   </ng-template>
 
   <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
-    <tr>
+    <tr
+      [ngClass]="{
+        'cps-table-row-selected': selectable && primengTable.isSelected(item)
+      }">
       <td *ngIf="selectable">
         <p-tableCheckbox [value]="item"></p-tableCheckbox>
       </td>
