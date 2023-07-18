@@ -20,6 +20,7 @@ This repository consists of two projects:
 - Info circle
 - Input
 - Loader
+- Paginator
 - Progress circular (indeterminate)
 - Progress linear (indeterminate)
 - Radio

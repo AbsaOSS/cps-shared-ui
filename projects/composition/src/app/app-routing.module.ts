@@ -22,6 +22,7 @@ import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-tog
 import { InfoCirclePageComponent } from './pages/info-circle-page/info-circle-page.component';
 import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.component';
 import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
+import { PaginatorPageComponent } from './pages/paginator-page/paginator-page.component';
 
 const routes: Routes = [
   {
@@ -123,6 +124,11 @@ const routes: Routes = [
     path: 'datepicker',
     title: 'Datepicker',
     component: DatepickerPageComponent
+  },
+  {
+    path: 'paginator',
+    title: 'Paginator',
+    component: PaginatorPageComponent
   },
   {
     path: 'textarea',

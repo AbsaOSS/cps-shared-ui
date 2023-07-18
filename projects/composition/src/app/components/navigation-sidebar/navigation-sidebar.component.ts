@@ -66,6 +66,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/loader'
     },
     {
+      title: 'Paginator',
+      url: '/paginator'
+    },
+    {
       title: 'Progress circular',
       url: '/progress-circular'
     },
