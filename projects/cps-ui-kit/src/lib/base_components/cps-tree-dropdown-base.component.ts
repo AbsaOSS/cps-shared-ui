@@ -252,10 +252,11 @@ export class CpsTreeDropdownBaseComponent
   }
 
   toggleOptions(dd: HTMLElement, show?: boolean): void {
+    const optionsClassName = this.isAutocomplete
+      ? '.cps-treeautocomplete-options'
+      : '.cps-treeselect-options';
+
     const repositionDropdown = () => {
-      const optionsClassName = this.isAutocomplete
-        ? '.cps-treeautocomplete-options'
-        : '.cps-treeselect-options';
       if (
         this.isOpened &&
         !hasSpaceBelow(this.treeContainer, optionsClassName)
@@ -279,6 +280,9 @@ export class CpsTreeDropdownBaseComponent
     this.optionFocused = false;
 
     if (this.isOpened && this.treeSelection) {
+      const optionsList = dd?.querySelector(optionsClassName) as any;
+      if (optionsList) optionsList.style.opacity = '0';
+
       this._expandToNodes(
         this.multiple ? this.treeSelection : [this.treeSelection]
       );
@@ -287,6 +291,7 @@ export class CpsTreeDropdownBaseComponent
       setTimeout(() => {
         this.recalcVirtualListHeight();
         repositionDropdown();
+        if (optionsList) optionsList.style.opacity = null;
 
         const selected =
           this.treeContainer.nativeElement.querySelector('.p-highlight');
