@@ -17,10 +17,6 @@
   $paginator-elem-active-background: #f1eaec;
 
   ::ng-deep {
-    .p-component,
-    .p-component * {
-      box-sizing: border-box;
-    }
     .p-component {
       font-family: 'Source Sans Pro', sans-serif;
       font-size: 14px;
@@ -631,6 +627,11 @@
     .p-disabled,
     .p-component:disabled {
       opacity: 0.4;
+    }
+
+    .cps-table-empty-message-td {
+      text-align: center !important;
+      font-weight: 600;
     }
   }
 }
