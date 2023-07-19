@@ -11,6 +11,10 @@
   $row-selected-background: #f1ebed;
   $badge-background-color: #f1eaec;
   $sorticon-hover-color: var(--cps-color-text-dark);
+  $paginator-text-color: var(--cps-color-text-dark);
+  $paginator-border-color: var(--cps-color-text-dark);
+  $paginator-elem-hover-background: #f8f4f5;
+  $paginator-elem-active-background: #f1eaec;
 
   ::ng-deep {
     .p-component,
@@ -454,6 +458,172 @@
     }
     .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-bottom > td {
       box-shadow: inset 0 -2px 0 0 $color-calm;
+    }
+
+    .p-datatable.p-datatable-gridlines .p-paginator-bottom {
+      border-width: 0 1px 1px 1px;
+    }
+
+    .p-datatable .p-paginator-bottom {
+      border-width: 0 0 1px 0;
+      border-radius: 0;
+    }
+
+    .p-paginator {
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      color: $paginator-text-color;
+      padding: 1rem;
+      border: solid $table-borders-color;
+    }
+
+    .p-paginator-left-content {
+      margin-right: auto;
+      .cps-table-paginator-itms-per-page {
+        display: inline-flex;
+        align-items: center;
+        .cps-table-paginator-items-per-page-title {
+          font-family: 'Source Sans Pro', sans-serif;
+          font-size: 14px;
+          margin-right: 12px;
+        }
+        .cps-select-box {
+          min-height: 32px !important;
+          background: transparent !important;
+          .cps-select-box-items {
+            font-size: 14px !important;
+          }
+          .cps-select-box-chevron {
+            .cps-icon {
+              width: 14px;
+              height: 14px;
+            }
+          }
+        }
+        .cps-select-options-option {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .p-paginator .p-paginator-current {
+      background-color: transparent;
+      border: 0 none;
+      color: $paginator-text-color;
+      min-width: 3rem;
+      margin: 0.143rem;
+      padding: 0 0.5rem;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 14px;
+    }
+
+    .p-paginator-page,
+    .p-paginator-next,
+    .p-paginator-last,
+    .p-paginator-first,
+    .p-paginator-prev,
+    .p-paginator-current {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      -webkit-user-select: none;
+      user-select: none;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
+    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
+    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
+    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
+      background: $paginator-elem-hover-background;
+    }
+    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):active,
+    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):active,
+    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):active,
+    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):active {
+      background: $paginator-elem-active-background;
+    }
+
+    .p-paginator .p-paginator-first,
+    .p-paginator .p-paginator-prev,
+    .p-paginator .p-paginator-next,
+    .p-paginator .p-paginator-last {
+      background-color: transparent;
+      border: 1px solid $paginator-border-color;
+      border-radius: 4px;
+      color: $paginator-text-color;
+      min-width: 32px;
+      height: 32px;
+      margin: 0.143rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .p-icon-wrapper {
+      display: inline-flex;
+    }
+
+    .p-disabled,
+    .p-disabled * {
+      cursor: default !important;
+      pointer-events: none;
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+      background: $color-calm;
+      border-color: $color-calm;
+      color: white;
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+      background: $paginator-elem-hover-background;
+    }
+    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):active {
+      background: $paginator-elem-active-background;
+    }
+
+    .p-paginator .p-paginator-pages .p-paginator-page {
+      background-color: transparent;
+      border: 1px solid $paginator-border-color;
+      border-radius: 4px;
+      color: $paginator-text-color;
+      min-width: 32px;
+      height: 32px;
+      margin: 0.143rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .p-paginator-element:focus {
+      z-index: 1;
+      position: relative;
+    }
+
+    .p-link:focus {
+      outline: 0 none;
+      outline-offset: 0;
+    }
+
+    .p-link {
+      text-align: left;
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      font-size: 14px;
+      font-family: 'Source Sans Pro', sans-serif;
+    }
+
+    .p-disabled,
+    .p-component:disabled {
+      opacity: 0.4;
     }
   }
 }
