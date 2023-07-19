@@ -10,7 +10,7 @@ import {
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
-import { convertSize, parseSize } from '../../utils/size-utils';
+import { convertSize, parseSize } from '../../utils/internal/size-utils';
 
 @Component({
   standalone: true,

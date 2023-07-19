@@ -10,7 +10,24 @@ $disabled-day-color: var(--cps-color-text-lightest);
   .cps-datepicker {
     position: relative;
     width: 100%;
+
+    &.active {
+      .cps-datepicker-calendar {
+        display: block;
+      }
+    }
+
+    &.top-open {
+      .cps-datepicker-calendar {
+        box-shadow: 0 -2px 4px -1px #0003, 0 1px 5px #00000024,
+          0 1px 10px #0000001f;
+        bottom: 59px;
+        top: unset !important;
+      }
+    }
+
     .cps-datepicker-calendar {
+      display: none;
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10 and IE 11 */
       user-select: none; /* Standard syntax */

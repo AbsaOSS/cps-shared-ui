@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../../utils/size-utils';
+import { convertSize } from '../../utils/internal/size-utils';
 import {
   CpsIconComponent,
   IconType,
@@ -22,15 +22,16 @@ import {
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
-import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
+import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
+import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
 import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { hasSpaceBelow } from '../../utils/internal/position-utils';
 
 @Component({
   standalone: true,
@@ -346,7 +347,7 @@ export class CpsAutocompleteComponent
   }
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
-    if (this.disabled || !dd) return;
+    if (this.disabled || !dd || this.isOpened === show) return;
 
     this.backspaceClickedOnce = false;
     if (typeof show === 'boolean') {
@@ -355,6 +356,14 @@ export class CpsAutocompleteComponent
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
+
+    dd.classList.remove('top-open');
+    if (
+      this.isOpened &&
+      !hasSpaceBelow(this.autocompleteContainer, '.cps-autocomplete-options')
+    ) {
+      dd.classList.add('top-open');
+    }
 
     setTimeout(() => {
       if (this.isOpened && this.filteredOptions.length > 0) {

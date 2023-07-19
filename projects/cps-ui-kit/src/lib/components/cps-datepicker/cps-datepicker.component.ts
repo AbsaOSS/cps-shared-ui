@@ -1,21 +1,24 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-import { convertSize } from '../../utils/size-utils';
+import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
+import { convertSize } from '../../utils/internal/size-utils';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { hasSpaceBelow } from '../../utils/internal/position-utils';
 
 @Component({
   standalone: true,
@@ -67,6 +70,9 @@ export class CpsDatepickerComponent
 
   @Output() valueChanged = new EventEmitter<Date | null>();
 
+  @ViewChild('datepickerContainer')
+  datepickerContainer!: ElementRef;
+
   stringDate = '';
   isOpened = false;
   topPos = '57px';
@@ -83,7 +89,8 @@ export class CpsDatepickerComponent
   }
 
   ngOnInit(): void {
-    if (!this.label) this.topPos = '41px';
+    if (!this.label) this.topPos = '37px';
+
     this.cvtWidth = convertSize(this.width);
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
@@ -244,9 +251,23 @@ export class CpsDatepickerComponent
   toggleCalendar(show?: boolean) {
     if (this.disabled || this.isOpened === show) return;
 
+    const el = this.datepickerContainer?.nativeElement;
+    if (!el) return;
+
     if (typeof show === 'boolean') {
-      this.isOpened = show;
-    } else this.isOpened = !this.isOpened;
+      if (show) el.classList.add('active');
+      else el.classList.remove('active');
+    } else el.classList.toggle('active');
+
+    this.isOpened = el.classList.contains('active');
+
+    el.classList.remove('top-open');
+    if (
+      this.isOpened &&
+      !hasSpaceBelow(this.datepickerContainer, '.cps-datepicker-calendar')
+    ) {
+      el.classList.add('top-open');
+    }
 
     if (!this.isOpened) {
       this._control?.control?.markAsTouched();

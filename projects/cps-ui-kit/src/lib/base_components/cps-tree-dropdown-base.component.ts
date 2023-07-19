@@ -18,10 +18,11 @@ import {
   iconSizeType
 } from '../components/cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../utils/size-utils';
+import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { TooltipPosition } from '../directives/cps-tooltip.directive';
+import { hasSpaceBelow } from '../utils/internal/position-utils';
 
 @Component({
   template: ''
@@ -98,6 +99,7 @@ export class CpsTreeDropdownBaseComponent
   isOpened = false;
   treeContainerElement!: HTMLElement;
   optionFocused = false;
+  isAutocomplete = false;
 
   constructor(
     @Self() @Optional() public control: NgControl,
@@ -250,16 +252,37 @@ export class CpsTreeDropdownBaseComponent
   }
 
   toggleOptions(dd: HTMLElement, show?: boolean): void {
-    if (this.disabled || !dd) return;
+    const optionsClassName = this.isAutocomplete
+      ? '.cps-treeautocomplete-options'
+      : '.cps-treeselect-options';
+
+    const repositionDropdown = () => {
+      if (
+        this.isOpened &&
+        !hasSpaceBelow(this.treeContainer, optionsClassName)
+      ) {
+        dd.classList.add('top-open');
+      }
+    };
+
+    if (this.disabled || !dd || this.isOpened === show) return;
+
     if (typeof show === 'boolean') {
       if (show) dd.classList.add('active');
       else dd.classList.remove('active');
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
+
+    dd.classList.remove('top-open');
+    repositionDropdown();
+
     this.optionFocused = false;
 
     if (this.isOpened && this.treeSelection) {
+      const optionsList = dd?.querySelector(optionsClassName) as any;
+      if (optionsList) optionsList.style.opacity = '0';
+
       this._expandToNodes(
         this.multiple ? this.treeSelection : [this.treeSelection]
       );
@@ -267,6 +290,8 @@ export class CpsTreeDropdownBaseComponent
 
       setTimeout(() => {
         this.recalcVirtualListHeight();
+        repositionDropdown();
+        if (optionsList) optionsList.style.opacity = null;
 
         const selected =
           this.treeContainer.nativeElement.querySelector('.p-highlight');

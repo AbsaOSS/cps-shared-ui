@@ -14,8 +14,8 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-import { CombineLabelsPipe } from '../../pipes/combine-labels.pipe';
+import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
+import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { Tree, TreeModule } from 'primeng/tree';
 import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dropdown-base.component';
 
