@@ -5,7 +5,7 @@ import {
   Input,
   OnDestroy
 } from '@angular/core';
-import { convertSize } from '../utils/size-utils';
+import { convertSize } from '../utils/internal/size-utils';
 
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type TooltipOpenOn = 'hover' | 'click' | 'focus';

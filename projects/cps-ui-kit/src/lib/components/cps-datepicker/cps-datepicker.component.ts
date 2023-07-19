@@ -13,8 +13,8 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-import { convertSize } from '../../utils/size-utils';
+import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
+import { convertSize } from '../../utils/internal/size-utils';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 @Component({

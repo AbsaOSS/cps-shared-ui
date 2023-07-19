@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
-import { convertSize } from '../../utils/size-utils';
+import { convertSize } from '../../utils/internal/size-utils';
 
 @Component({
   standalone: true,

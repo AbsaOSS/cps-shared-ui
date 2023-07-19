@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { convertSize } from '../../utils/size-utils';
+import { convertSize } from '../../utils/internal/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
 
 @Component({

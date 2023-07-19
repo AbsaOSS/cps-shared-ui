@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
-import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import {
   CpsTooltipDirective,

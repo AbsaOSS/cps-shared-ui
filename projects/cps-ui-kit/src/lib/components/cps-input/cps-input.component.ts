@@ -20,7 +20,7 @@ import {
   iconSizeType
 } from '../cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../../utils/size-utils';
+import { convertSize } from '../../utils/internal/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';

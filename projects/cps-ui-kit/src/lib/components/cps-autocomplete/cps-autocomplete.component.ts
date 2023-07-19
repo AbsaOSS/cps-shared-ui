@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../../utils/size-utils';
+import { convertSize } from '../../utils/internal/size-utils';
 import {
   CpsIconComponent,
   IconType,
@@ -22,9 +22,9 @@ import {
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { ClickOutsideDirective } from '../../directives/click-outside.directive';
-import { LabelByValuePipe } from '../../pipes/label-by-value.pipe';
-import { CheckOptionSelectedPipe } from '../../pipes/check-option-selected.pipe';
+import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
+import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
 import {
   VirtualScroller,

@@ -18,7 +18,7 @@ import {
   iconSizeType
 } from '../components/cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../utils/size-utils';
+import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { TooltipPosition } from '../directives/cps-tooltip.directive';
