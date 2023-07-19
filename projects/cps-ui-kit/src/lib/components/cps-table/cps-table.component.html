@@ -9,10 +9,19 @@
   [reorderableColumns]="reorderableColumns"
   [globalFilterFields]="globalFilterFields"
   [scrollable]="scrollable"
-  scrollHeight="flex"
+  [scrollHeight]="scrollHeight"
+  [lazy]="lazy"
+  [lazyLoadOnInit]="lazyLoadOnInit"
   [virtualScroll]="virtualScroll"
   [virtualScrollItemSize]="virtualScrollItemSize"
   [virtualScrollOptions]="{ numToleratedItems: 3 }"
+  [paginator]="paginator"
+  [showCurrentPageReport]="true"
+  [alwaysShowPaginator]="alwaysShowPaginator"
+  [rows]="rows"
+  [first]="first"
+  [totalRecords]="totalRecords"
+  currentPageReportTemplate="{first} - {last} of {totalRecords}"
   [(selection)]="selectedRows"
   [metaKeySelection]="false"
   [rowHover]="rowHover"
@@ -99,5 +108,19 @@
     <tr>
       <td colspan="4">{{ emptyMessage }}</td>
     </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div class="cps-table-paginator-itms-per-page">
+      <span class="cps-table-paginator-items-per-page-title"
+        >Items per page:
+      </span>
+      <cps-select
+        [options]="rowOptions"
+        [hideDetails]="true"
+        [(ngModel)]="rows"
+        (valueChanged)="onRowsPerPageChanged()"
+        [returnObject]="false">
+      </cps-select>
+    </div>
   </ng-template>
 </p-table>

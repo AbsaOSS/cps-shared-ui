@@ -11,11 +11,13 @@ import {
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Table, TableService, TableModule } from 'primeng/table';
 import { TableUnsortDirective } from './table-unsort.directive';
 import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
+import { CpsSelectComponent } from '../cps-select/cps-select.component';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
@@ -25,11 +27,13 @@ export function tableFactory(tableComponent: CpsTableComponent) {
   selector: 'cps-table',
   standalone: true,
   imports: [
+    FormsModule,
     CommonModule,
     TableModule,
     TableUnsortDirective,
     CpsInputComponent,
-    CpsButtonComponent
+    CpsButtonComponent,
+    CpsSelectComponent
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -50,7 +54,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() striped = true;
   @Input() bordered = true;
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
-  @Input() selectable = true;
+  @Input() selectable = false;
   @Input() emptyMessage = 'No data';
   @Input() hasToolbar = true;
   @Input() toolbarSize: 'small' | 'normal' = 'normal';
@@ -59,7 +63,18 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() customSort = false;
   @Input() rowHover = true;
   @Input() scrollable = true;
+  @Input() scrollHeight = '';
   @Input() virtualScroll = false; // works only if scrollable is true
+
+  @Input() paginator = false;
+  @Input() alwaysShowPaginator = true;
+  @Input() rowsPerPageOptions: number[] = [];
+  @Input() first = 0;
+  @Input() rows = 0;
+  @Input() totalRecords = 0;
+
+  @Input() lazy = false;
+  @Input() lazyLoadOnInit = true;
 
   @Input() showGlobalFilter = false;
   @Input() globalFilterPlaceholder = 'Search';
@@ -103,11 +118,31 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   virtualScrollItemSize = 0;
 
+  rowOptions: { label: string; value: number }[] = [];
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     if (!this.scrollable) this.virtualScroll = false;
+
+    if (this.paginator) {
+      if (this.rowsPerPageOptions.length < 1)
+        this.rowsPerPageOptions = [5, 10, 25, 50];
+
+      if (!this.rows) this.rows = this.rowsPerPageOptions[0];
+      else {
+        if (!this.rowsPerPageOptions.includes(this.rows)) {
+          throw new Error('rowsPerPageOptions must include rows');
+        }
+      }
+
+      this.rowOptions = this.rowsPerPageOptions.map((v) => ({
+        label: '' + v,
+        value: v
+      }));
+    }
+
     if (
       this.showGlobalFilter &&
       this.globalFilterFields?.length < 1 &&
@@ -177,5 +212,10 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   onClickActionBtn() {
     this.actionBtnClicked.emit();
+  }
+
+  onRowsPerPageChanged() {
+    this.first = 0;
+    this.primengTable.first = this.first;
   }
 }
