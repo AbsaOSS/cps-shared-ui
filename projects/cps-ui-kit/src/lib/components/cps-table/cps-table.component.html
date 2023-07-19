@@ -79,12 +79,24 @@
         <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
       </ng-container>
       <ng-container *ngIf="!headerTemplate">
-        <th *ngFor="let h of headers">{{ h }}</th>
+        <ng-container *ngIf="columns.length > 0">
+          <th *ngFor="let col of columns">
+            {{ col[colHeaderName] }}
+          </th>
+        </ng-container>
+        <ng-container *ngIf="headers.length > 0 && columns.length < 1">
+          <th *ngFor="let h of headers">{{ h }}</th>
+        </ng-container>
       </ng-container>
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-columns="columns"
+    let-item
+    let-rowIndex="rowIndex">
     <tr
       [pReorderableRow]="rowIndex"
       [ngClass]="{
@@ -96,17 +108,29 @@
       <td *ngIf="selectable">
         <p-tableCheckbox [value]="item"></p-tableCheckbox>
       </td>
-      <ng-container
-        pTemplate="body"
-        *ngTemplateOutlet="
-          bodyTemplate;
-          context: { $implicit: item, rowIndex: rowIndex }
-        "></ng-container>
+      <ng-container *ngIf="bodyTemplate">
+        <ng-container
+          pTemplate="body"
+          *ngTemplateOutlet="
+            bodyTemplate;
+            context: { $implicit: item, rowIndex: rowIndex }
+          ">
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="!bodyTemplate">
+        <ng-container *ngIf="columns.length > 0">
+          <td *ngFor="let col of columns">
+            {{ rowData[col[colFieldName]] }}
+          </td>
+        </ng-container>
+      </ng-container>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="4">{{ emptyMessage }}</td>
+      <td colspan="100" class="cps-table-empty-message-td">
+        {{ emptyMessage }}
+      </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="paginatorleft">

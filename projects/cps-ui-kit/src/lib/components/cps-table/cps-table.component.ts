@@ -50,7 +50,11 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() headers: string[] = [];
   @Input() data: any[] = [];
-  @Input() columns: { [key: string]: any }[] = []; // combines both headers and data
+
+  @Input() columns: { [key: string]: any }[] = [];
+  @Input() colHeaderName = 'header';
+  @Input() colFieldName = 'field';
+
   @Input() striped = true;
   @Input() bordered = true;
   @Input() size: 'small' | 'normal' | 'large' = 'normal';
