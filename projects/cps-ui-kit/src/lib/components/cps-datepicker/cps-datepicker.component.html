@@ -1,5 +1,6 @@
 <div
   class="cps-datepicker"
+  #datepickerContainer
   [ngStyle]="{ width: cvtWidth }"
   [class.focused]="isOpened"
   (clickOutside)="onClickOutside()"
@@ -25,10 +26,7 @@
     [infoTooltipPersistent]="infoTooltipPersistent"
     [persistentClear]="persistentClear"
     [error]="error"></cps-input>
-  <div
-    class="cps-datepicker-calendar"
-    [style.top]="topPos"
-    [style.display]="isOpened ? 'block' : 'none'">
+  <div class="cps-datepicker-calendar" [style.top]="topPos">
     <p-calendar
       [(ngModel)]="value"
       [showIcon]="true"

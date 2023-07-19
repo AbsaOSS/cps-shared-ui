@@ -142,8 +142,7 @@ export class CpsSelectComponent
   }
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
-    if (this.disabled || !dd) return;
-    if (!this.isOpened && show === false) return;
+    if (this.disabled || !dd || this.isOpened === show) return;
 
     if (typeof show === 'boolean') {
       if (show) dd.classList.add('active');
