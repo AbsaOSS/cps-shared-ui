@@ -31,6 +31,7 @@ import {
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { hasSpaceBelow } from '../../utils/internal/position-utils';
 
 @Component({
   standalone: true,
@@ -347,6 +348,7 @@ export class CpsAutocompleteComponent
 
   private _toggleOptions(dd: HTMLElement, show?: boolean): void {
     if (this.disabled || !dd) return;
+    if (!this.isOpened && show === false) return;
 
     this.backspaceClickedOnce = false;
     if (typeof show === 'boolean') {
@@ -355,6 +357,14 @@ export class CpsAutocompleteComponent
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
+
+    dd.classList.remove('top-open');
+    if (
+      this.isOpened &&
+      !hasSpaceBelow(this.autocompleteContainer, '.cps-autocomplete-options')
+    ) {
+      dd.classList.add('top-open');
+    }
 
     setTimeout(() => {
       if (this.isOpened && this.filteredOptions.length > 0) {

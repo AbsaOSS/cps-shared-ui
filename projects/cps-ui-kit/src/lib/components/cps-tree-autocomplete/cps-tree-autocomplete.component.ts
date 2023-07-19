@@ -66,6 +66,7 @@ export class CpsTreeAutocompleteComponent
   override ngAfterViewInit() {
     this.treeContainer = this.treeAutocompleteContainer;
     this.treeList = this.treeAutocompleteList;
+    this.isAutocomplete = true;
     super.ngAfterViewInit();
   }
 

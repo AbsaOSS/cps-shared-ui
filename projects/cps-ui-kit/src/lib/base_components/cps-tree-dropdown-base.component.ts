@@ -22,6 +22,7 @@ import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { TooltipPosition } from '../directives/cps-tooltip.directive';
+import { hasSpaceBelow } from '../utils/internal/position-utils';
 
 @Component({
   template: ''
@@ -98,6 +99,7 @@ export class CpsTreeDropdownBaseComponent
   isOpened = false;
   treeContainerElement!: HTMLElement;
   optionFocused = false;
+  isAutocomplete = false;
 
   constructor(
     @Self() @Optional() public control: NgControl,
@@ -250,13 +252,31 @@ export class CpsTreeDropdownBaseComponent
   }
 
   toggleOptions(dd: HTMLElement, show?: boolean): void {
+    const repositionDropdown = () => {
+      const optionsClassName = this.isAutocomplete
+        ? '.cps-treeautocomplete-options'
+        : '.cps-treeselect-options';
+      if (
+        this.isOpened &&
+        !hasSpaceBelow(this.treeContainer, optionsClassName)
+      ) {
+        dd.classList.add('top-open');
+      }
+    };
+
     if (this.disabled || !dd) return;
+    if (!this.isOpened && show === false) return;
+
     if (typeof show === 'boolean') {
       if (show) dd.classList.add('active');
       else dd.classList.remove('active');
     } else dd.classList.toggle('active');
 
     this.isOpened = dd.classList.contains('active');
+
+    dd.classList.remove('top-open');
+    repositionDropdown();
+
     this.optionFocused = false;
 
     if (this.isOpened && this.treeSelection) {
@@ -267,6 +287,7 @@ export class CpsTreeDropdownBaseComponent
 
       setTimeout(() => {
         this.recalcVirtualListHeight();
+        repositionDropdown();
 
         const selected =
           this.treeContainer.nativeElement.querySelector('.p-highlight');
