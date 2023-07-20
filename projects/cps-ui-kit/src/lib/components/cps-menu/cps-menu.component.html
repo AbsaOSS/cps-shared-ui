@@ -1,1 +1,44 @@
-<p>cps-menu works!</p>
+<!-- <p-overlayPanel
+  #panel
+  [styleClass]="styleClass"
+  (onShow)="onShowPanel()"
+  (onHide)="onHidePanel()">
+  <ng-template pTemplate="content">
+    <ng-container *ngIf="items.length < 1">
+      <ng-content></ng-content>
+    </ng-container>
+    <ng-container *ngIf="items.length > 0">
+      <div class="cps-menu-header">{{ header }}</div>
+      <div
+        *ngFor="let item of items"
+        (click)="(item.action)"
+        class="cps-menu-item">
+        {{ item.label }}
+      </div>
+    </ng-container>
+  </ng-template>
+</p-overlayPanel> -->
+
+<div
+  *ngIf="render"
+  [ngClass]="'cps-menu-container'"
+  [class]="styleClass"
+  (click)="onOverlayClick($event)"
+  [@animation]="{
+    value: overlayVisible ? 'open' : 'close',
+    params: {
+      showTransitionParams: showTransitionOptions,
+      hideTransitionParams: hideTransitionOptions
+    }
+  }"
+  (@animation.start)="onAnimationStart($event)"
+  (@animation.done)="onAnimationEnd($event)">
+  <div
+    class="cps-menu-content"
+    [class]="contentStyleClass"
+    (click)="onContentClick()"
+    (mousedown)="onContentClick()">
+    <ng-content></ng-content>
+    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+  </div>
+</div>

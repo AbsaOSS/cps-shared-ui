@@ -1,1 +1,10 @@
-<cps-menu></cps-menu>
+<cps-menu #mymenu>
+  <img
+    src="https://primefaces.org/cdn/primeng/images/demo/product/bamboo-watch.jpg"
+    alt="product" />
+</cps-menu>
+<div
+  (click)="mymenu.toggle($event)"
+  style="border: 1px solid grey; display: inline-block; padding: 8px">
+  Show
+</div>
