@@ -23,6 +23,7 @@ import { InfoCirclePageComponent } from './pages/info-circle-page/info-circle-pa
 import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.component';
 import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
 import { PaginatorPageComponent } from './pages/paginator-page/paginator-page.component';
+import { MenuPageComponent } from './pages/menu-page/menu-page.component';
 
 const routes: Routes = [
   {
@@ -124,6 +125,11 @@ const routes: Routes = [
     path: 'datepicker',
     title: 'Datepicker',
     component: DatepickerPageComponent
+  },
+  {
+    path: 'menu',
+    title: 'Menu',
+    component: MenuPageComponent
   },
   {
     path: 'paginator',

@@ -66,6 +66,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/loader'
     },
     {
+      title: 'Menu',
+      url: '/menu'
+    },
+    {
       title: 'Paginator',
       url: '/paginator'
     },
