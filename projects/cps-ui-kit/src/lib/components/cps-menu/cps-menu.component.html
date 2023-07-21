@@ -1,28 +1,7 @@
-<!-- <p-overlayPanel
-  #panel
-  [styleClass]="styleClass"
-  (onShow)="onShowPanel()"
-  (onHide)="onHidePanel()">
-  <ng-template pTemplate="content">
-    <ng-container *ngIf="items.length < 1">
-      <ng-content></ng-content>
-    </ng-container>
-    <ng-container *ngIf="items.length > 0">
-      <div class="cps-menu-header">{{ header }}</div>
-      <div
-        *ngFor="let item of items"
-        (click)="(item.action)"
-        class="cps-menu-item">
-        {{ item.label }}
-      </div>
-    </ng-container>
-  </ng-template>
-</p-overlayPanel> -->
-
 <div
   *ngIf="render"
-  [ngClass]="'cps-menu-container'"
-  [class]="styleClass"
+  class="cps-menu-container"
+  [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
   (click)="onOverlayClick($event)"
   [@animation]="{
     value: overlayVisible ? 'open' : 'close',
@@ -34,11 +13,34 @@
   (@animation.start)="onAnimationStart($event)"
   (@animation.done)="onAnimationEnd($event)">
   <div
-    class="cps-menu-content"
     [class]="contentStyleClass"
+    [ngClass]="{ 'cps-menu-content-compressed': compressed }"
     (click)="onContentClick()"
     (mousedown)="onContentClick()">
-    <ng-content></ng-content>
-    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+    <ng-container *ngIf="items.length < 1">
+      <ng-content></ng-content>
+    </ng-container>
+    <ng-container *ngIf="items.length > 0">
+      <div class="cps-menu-header">{{ header }}</div>
+      <div
+        *ngFor="let item of items"
+        (click)="onItemClick($event, item)"
+        [ngClass]="{ 'cps-menu-item-disabled': item.disabled }"
+        class="cps-menu-item">
+        <div class="cps-menu-item-icon">
+          <cps-icon
+            *ngIf="item.icon"
+            [icon]="item.icon"
+            [color]="item.disabled ? 'text-light' : 'text-dark'"
+            size="normal"></cps-icon>
+        </div>
+        <div class="cps-menu-item-content">
+          <span class="cps-menu-item-content-title">{{ item.title }}</span>
+          <span *ngIf="item.desc" class="cps-menu-item-content-desc">{{
+            item.desc
+          }}</span>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>

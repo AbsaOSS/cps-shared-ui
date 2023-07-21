@@ -1,62 +1,3 @@
-// import {
-//   Component,
-//   EventEmitter,
-//   Input,
-//   Output,
-//   ViewChild
-// } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-
-// export type CpsMenuItem = {
-//   label: string;
-//   action?: (event?: any) => void;
-//   icon?: string;
-//   desc?: string;
-//   disabled?: boolean;
-// };
-
-// @Component({
-//   selector: 'cps-menu',
-//   standalone: true,
-//   imports: [CommonModule, OverlayPanelModule],
-//   templateUrl: './cps-menu.component.html',
-//   styleUrls: ['./cps-menu.component.scss']
-// })
-// export class CpsMenuComponent {
-//   @Input() header = '';
-//   @Input() items: CpsMenuItem[] = [];
-//   @Input() withArrow = false;
-//   @Input() styleClass = 'cps-menu-container';
-//   @Input() contentStyleClass = 'cps-menu-content';
-
-//   @Output() menuShown = new EventEmitter();
-//   @Output() menuHidden = new EventEmitter();
-
-//   @ViewChild('panel')
-//   panel!: OverlayPanel;
-
-//   toggle(event: any, target?: any) {
-//     this.panel.toggle(event, target);
-//   }
-
-//   show(event: any, target?: any) {
-//     this.panel.show(event, target);
-//   }
-
-//   hide() {
-//     this.panel.hide();
-//   }
-
-//   onShowPanel() {
-//     this.menuShown.emit();
-//   }
-
-//   onHidePanel() {
-//     this.menuHidden.emit();
-//   }
-// }
-
 import {
   animate,
   AnimationEvent,
@@ -67,11 +8,9 @@ import {
 } from '@angular/animations';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChildren,
   ElementRef,
   EventEmitter,
   Inject,
@@ -80,27 +19,21 @@ import {
   OnDestroy,
   Output,
   PLATFORM_ID,
-  QueryList,
   Renderer2,
-  TemplateRef,
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
-import {
-  OverlayService,
-  PrimeNGConfig,
-  PrimeTemplate,
-  SharedModule
-} from 'primeng/api';
+import { OverlayService, PrimeNGConfig, SharedModule } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
 import { Subscription } from 'rxjs';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
 
 export type CpsMenuItem = {
-  label: string;
+  title: string;
   action?: (event?: any) => void;
   icon?: string;
   desc?: string;
@@ -109,7 +42,7 @@ export type CpsMenuItem = {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, CpsIconComponent],
   selector: 'cps-menu',
   templateUrl: './cps-menu.component.html',
   styleUrls: ['./cps-menu.component.scss'],
@@ -142,20 +75,16 @@ export type CpsMenuItem = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent implements AfterContentInit, OnDestroy {
-  @Input() header = ''; // TODO
-  @Input() items: CpsMenuItem[] = []; // TODO
-  @Input() withArrow = false; // TODO
-  @Input() styleClass = 'cps-menu-container'; // TODO
-  @Input() contentStyleClass = 'cps-menu-content'; // TODO
+export class CpsMenuComponent implements OnDestroy {
+  @Input() header = '';
+  @Input() items: CpsMenuItem[] = [];
+  @Input() withArrow = true;
+  @Input() compressed = false; // prepared-colored, without header and items description
+  @Input() contentStyleClass = 'cps-menu-content';
   @Input() focusOnShow = true;
 
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
-
-  @ContentChildren(PrimeTemplate)
-  templates: // TODO get rid of templates, use items and header or ng-content
-  QueryList<PrimeTemplate> | undefined;
 
   autoZIndex = true;
   baseZIndex = 0;
@@ -168,14 +97,11 @@ export class CpsMenuComponent implements AfterContentInit, OnDestroy {
   isOverlayAnimationInProgress = false;
   selfClick = false;
   target: any;
-  willHide: Nullable<boolean>;
   scrollHandler: Nullable<ConnectedOverlayScrollHandler>;
 
   documentResizeListener!: VoidListener | null;
   overlayEventListener: Nullable<(event?: any) => void>;
   documentClickListener!: VoidListener | null;
-
-  contentTemplate!: TemplateRef<any>;
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   destroyCallback: Nullable<Function>;
@@ -192,22 +118,6 @@ export class CpsMenuComponent implements AfterContentInit, OnDestroy {
     public config: PrimeNGConfig,
     public overlayService: OverlayService
   ) {}
-
-  ngAfterContentInit() {
-    this.templates?.forEach((item) => {
-      switch (item.getType()) {
-        case 'content':
-          this.contentTemplate = item.template;
-          break;
-
-        default:
-          this.contentTemplate = item.template;
-          break;
-      }
-
-      this.cd.markForCheck();
-    });
-  }
 
   toggle(event: any, target?: any) {
     if (this.isOverlayAnimationInProgress) {
@@ -242,6 +152,17 @@ export class CpsMenuComponent implements AfterContentInit, OnDestroy {
   hide() {
     this.overlayVisible = false;
     this.cd.markForCheck();
+  }
+
+  onItemClick(event: any, item: CpsMenuItem) {
+    if (item.disabled) return;
+    if (item.action) {
+      item.action({
+        originalEvent: event,
+        item
+      });
+    }
+    this.hide();
   }
 
   bindDocumentClickListener() {
@@ -328,20 +249,30 @@ export class CpsMenuComponent implements AfterContentInit, OnDestroy {
 
     const containerOffset = DomHandler.getOffset(this.container);
     const targetOffset = DomHandler.getOffset(this.target);
-    const borderRadius = this.document.defaultView
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ?.getComputedStyle(this.container!)
-      .getPropertyValue('border-radius');
-    let arrowLeft = 0;
 
-    if (containerOffset.left < targetOffset.left) {
-      arrowLeft =
-        targetOffset.left -
-        containerOffset.left -
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        parseFloat(borderRadius!) * 2;
+    if (this.withArrow) {
+      const borderRadius =
+        this.document.defaultView
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          ?.getComputedStyle(this.container!)
+          ?.getPropertyValue('border-radius') || '0';
+
+      let arrowLeft = 0;
+
+      if (containerOffset.left < targetOffset.left) {
+        arrowLeft =
+          20 +
+          targetOffset.left -
+          containerOffset.left -
+          parseFloat(borderRadius) * 2;
+      } else {
+        const containerWidth = this.container?.offsetWidth || 0;
+        const targetWidth = this.target?.offsetWidth || 0;
+        arrowLeft = Math.min(targetWidth / 2, containerWidth / 2);
+      }
+      arrowLeft = Math.max(arrowLeft, 8);
+      this.container?.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
     }
-    this.container?.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
 
     if (containerOffset.top < targetOffset.top) {
       DomHandler.addClass(this.container, 'cps-menu-container-flipped');
