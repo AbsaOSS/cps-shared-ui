@@ -12,15 +12,14 @@
   }"
   (@animation.start)="onAnimationStart($event)"
   (@animation.done)="onAnimationEnd($event)">
-  <div
-    [class]="contentStyleClass"
-    [ngClass]="{ 'cps-menu-content-compressed': compressed }"
-    (click)="onContentClick()"
-    (mousedown)="onContentClick()">
+  <div (click)="onContentClick()" (mousedown)="onContentClick()">
     <ng-container *ngIf="items.length < 1">
       <ng-content></ng-content>
     </ng-container>
-    <ng-container *ngIf="items.length > 0">
+    <div
+      *ngIf="items.length > 0"
+      class="cps-menu-content"
+      [ngClass]="{ 'cps-menu-content-compressed': compressed }">
       <div *ngIf="header && !compressed" class="cps-menu-header">
         {{ header }}
       </div>
@@ -49,6 +48,6 @@
           >
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 </div>

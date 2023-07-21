@@ -1,0 +1,15 @@
+.menu-group {
+  gap: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.my-menu-content {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  span {
+    color: red;
+    margin-bottom: 12px;
+  }
+}

@@ -80,7 +80,6 @@ export class CpsMenuComponent implements OnDestroy {
   @Input() items: CpsMenuItem[] = [];
   @Input() withArrow = true;
   @Input() compressed = false; // prepared-colored, without header and items description
-  @Input() contentStyleClass = 'cps-menu-content';
   @Input() focusOnShow = true;
 
   @Output() menuShown = new EventEmitter();
@@ -271,7 +270,7 @@ export class CpsMenuComponent implements OnDestroy {
         const targetWidth = this.target?.offsetWidth || 0;
         arrowLeft = Math.min(targetWidth / 2, containerWidth / 2);
       }
-      arrowLeft = Math.max(arrowLeft, 8);
+      arrowLeft = Math.max(arrowLeft, 12);
       this.container?.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
     }
 

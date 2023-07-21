@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
+import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
 
 @Component({
   selector: 'app-menu-page',
   standalone: true,
-  imports: [CommonModule, CpsMenuComponent],
+  imports: [CommonModule, CpsMenuComponent, CpsButtonComponent],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],
   host: { class: 'composition-page' }
@@ -15,7 +15,7 @@ export class MenuPageComponent {
     {
       title: 'First item',
       desc: 'First item description',
-      icon: 'avatar',
+      icon: 'remove',
       action: (event: any) => {
         this.doConsoleLog(event);
       }
@@ -32,6 +32,43 @@ export class MenuPageComponent {
     {
       title: 'Third item',
       icon: 'browse',
+      action: (event: any) => {
+        this.doConsoleLog(event);
+      }
+    },
+    {
+      title: 'Fourth item',
+      desc: 'Fourth item description',
+      action: (event: any) => {
+        this.doConsoleLog(event);
+      }
+    },
+    {
+      title: 'Fifth item',
+      action: (event: any) => {
+        this.doConsoleLog(event);
+      }
+    }
+  ] as CpsMenuItem[];
+
+  itemsWithoutIcons = [
+    {
+      title: 'First item',
+      desc: 'First item description',
+      action: (event: any) => {
+        this.doConsoleLog(event);
+      }
+    },
+    {
+      title: 'Second item',
+      desc: 'Second item is disabled',
+      disabled: true,
+      action: (event: any) => {
+        this.doConsoleLog(event);
+      }
+    },
+    {
+      title: 'Third item',
       action: (event: any) => {
         this.doConsoleLog(event);
       }
