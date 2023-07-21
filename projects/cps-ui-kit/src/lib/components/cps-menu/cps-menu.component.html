@@ -1,0 +1,53 @@
+<div
+  *ngIf="render"
+  class="cps-menu-container"
+  [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
+  (click)="onOverlayClick($event)"
+  [@animation]="{
+    value: overlayVisible ? 'open' : 'close',
+    params: {
+      showTransitionParams: showTransitionOptions,
+      hideTransitionParams: hideTransitionOptions
+    }
+  }"
+  (@animation.start)="onAnimationStart($event)"
+  (@animation.done)="onAnimationEnd($event)">
+  <div (click)="onContentClick()" (mousedown)="onContentClick()">
+    <ng-container *ngIf="items.length < 1">
+      <ng-content></ng-content>
+    </ng-container>
+    <div
+      *ngIf="items.length > 0"
+      class="cps-menu-content"
+      [ngClass]="{ 'cps-menu-content-compressed': compressed }">
+      <div *ngIf="header && !compressed" class="cps-menu-header">
+        {{ header }}
+      </div>
+      <div
+        *ngFor="let item of items; let i = index"
+        (click)="onItemClick($event, item)"
+        [ngClass]="{
+          'cps-menu-item-disabled': item.disabled,
+          'cps-menu-item-first': i === 0,
+          'cps-menu-item-compressed': compressed
+        }"
+        class="cps-menu-item">
+        <div class="cps-menu-item-icon" *ngIf="withIcons">
+          <cps-icon
+            *ngIf="item.icon"
+            [icon]="item.icon"
+            [color]="item.disabled ? 'text-light' : 'text-dark'"
+            [size]="compressed ? 'small' : 'normal'"></cps-icon>
+        </div>
+        <div class="cps-menu-item-content">
+          <span class="cps-menu-item-content-title">{{ item.title }}</span>
+          <span
+            *ngIf="item.desc && !compressed"
+            class="cps-menu-item-content-desc"
+            >{{ item.desc }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

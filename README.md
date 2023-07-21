@@ -20,6 +20,7 @@ This repository consists of two projects:
 - Info circle
 - Input
 - Loader
+- Menu
 - Paginator
 - Progress circular (indeterminate)
 - Progress linear (indeterminate)
@@ -56,7 +57,7 @@ Make sure you have 'ng build cps-ui-kit --watch' running, so the library will be
 - go to projects/composition/src/app/pages directory
 - run: ng g c componentname-page --standalone
 - we don't want to test composition pages, so manully delete componentname-page.cy.ts file (can't be done automatically with Angular CLI flag, since we use cypress)
-- provide host: { class: 'composition-page' } to @Component decorator
+- provide host: { class: 'composition-page' } into page @Component
 - import the components for the composition page from 'cps-ui-kit', provide them to imports array of @Component
 - go to projects/composition/src/app/components/navigation-sidebar.ts file and extend \_components array (keep alphabetical order!)
 - go to projects/composition/src/app/app-routing.module.ts and add a new route for a new page
