@@ -55,7 +55,7 @@
       padding: 8px 48px 8px 0;
       border-top: 1px solid #0000001f;
       cursor: pointer;
-      min-height: 56px;
+      min-height: 58px;
 
       .cps-menu-item-icon {
         width: 48px;
@@ -71,7 +71,7 @@
         flex-direction: column;
         .cps-menu-item-content-title {
           font-weight: 600;
-          font-size: 14px;
+          font-size: 15px;
           line-height: 150%;
           color: var(--cps-color-text-dark);
         }
@@ -134,7 +134,6 @@
       }
       .cps-menu-item-content {
         .cps-menu-item-content-title {
-          font-size: 16px;
           font-weight: 500;
         }
       }
