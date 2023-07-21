@@ -2,6 +2,7 @@
   *ngIf="render"
   class="cps-menu-container"
   [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
+  [class]="containerClass"
   (click)="onOverlayClick($event)"
   [@animation]="{
     value: overlayVisible ? 'open' : 'close',
