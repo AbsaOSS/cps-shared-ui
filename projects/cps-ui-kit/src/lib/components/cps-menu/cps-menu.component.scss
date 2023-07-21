@@ -28,12 +28,18 @@
 }
 
 .cps-menu-container {
-  .cps-menu-content:not(.cps-menu-content-compressed) {
+  .cps-menu-content {
     padding: 0.75rem;
+  }
+  .cps-menu-content.cps-menu-content-compressed {
+    padding: 0;
   }
   .cps-menu-content {
     display: flex;
     flex-direction: column;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
     .cps-menu-header {
       display: flex;
       align-items: center;
@@ -47,7 +53,7 @@
       display: flex;
       align-items: center;
       padding: 8px 48px 8px 0;
-      border-top: 1px solid rgba(151, 151, 151, 0.4392156863);
+      border-top: 1px solid #0000001f;
       cursor: pointer;
       min-height: 56px;
 
@@ -90,13 +96,6 @@
     }
     .cps-menu-item:not(.cps-menu-item-disabled):hover {
       background: #f8f4f5;
-      .cps-menu-item-icon {
-        cps-icon {
-          i {
-            color: var(--cps-color-calm) !important;
-          }
-        }
-      }
       .cps-menu-item-content {
         .cps-menu-item-content-title {
           color: var(--cps-color-calm);
@@ -106,8 +105,53 @@
         }
       }
     }
+    .cps-menu-item:not(.cps-menu-item-disabled):not(
+        .cps-menu-item-compressed
+      ):hover {
+      .cps-menu-item-icon {
+        cps-icon {
+          i {
+            color: var(--cps-color-calm) !important;
+          }
+        }
+      }
+    }
     .cps-menu-item:not(.cps-menu-item-disabled):active {
       background: #f1eaec;
+    }
+
+    .cps-menu-item.cps-menu-item-first {
+      border-top: none;
+    }
+  }
+  .cps-menu-content.cps-menu-content-compressed {
+    padding: 0;
+    .cps-menu-item {
+      padding: 0 16px 0 16px;
+      min-height: 40px;
+      .cps-menu-item-icon {
+        width: 36px;
+      }
+      .cps-menu-item-content {
+        .cps-menu-item-content-title {
+          font-size: 16px;
+          font-weight: 500;
+        }
+      }
+    }
+    .cps-menu-item:not(.cps-menu-item-disabled) {
+      .cps-menu-item-icon {
+        cps-icon {
+          i {
+            color: var(--cps-color-prepared) !important;
+          }
+        }
+      }
+      .cps-menu-item-content {
+        .cps-menu-item-content-title {
+          color: var(--cps-color-prepared);
+        }
+      }
     }
   }
 }

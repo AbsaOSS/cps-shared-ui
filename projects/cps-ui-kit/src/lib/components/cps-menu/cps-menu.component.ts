@@ -86,6 +86,7 @@ export class CpsMenuComponent implements OnDestroy {
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
 
+  withIcons = true;
   autoZIndex = true;
   baseZIndex = 0;
   showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
@@ -281,6 +282,7 @@ export class CpsMenuComponent implements OnDestroy {
 
   onAnimationStart(event: AnimationEvent) {
     if (event.toState === 'open') {
+      if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
       this.container = event.element;
       this.appendContainer();
       this.align();

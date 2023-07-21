@@ -21,24 +21,32 @@
       <ng-content></ng-content>
     </ng-container>
     <ng-container *ngIf="items.length > 0">
-      <div class="cps-menu-header">{{ header }}</div>
+      <div *ngIf="header && !compressed" class="cps-menu-header">
+        {{ header }}
+      </div>
       <div
-        *ngFor="let item of items"
+        *ngFor="let item of items; let i = index"
         (click)="onItemClick($event, item)"
-        [ngClass]="{ 'cps-menu-item-disabled': item.disabled }"
+        [ngClass]="{
+          'cps-menu-item-disabled': item.disabled,
+          'cps-menu-item-first': i === 0,
+          'cps-menu-item-compressed': compressed
+        }"
         class="cps-menu-item">
-        <div class="cps-menu-item-icon">
+        <div class="cps-menu-item-icon" *ngIf="withIcons">
           <cps-icon
             *ngIf="item.icon"
             [icon]="item.icon"
             [color]="item.disabled ? 'text-light' : 'text-dark'"
-            size="normal"></cps-icon>
+            [size]="compressed ? 'small' : 'normal'"></cps-icon>
         </div>
         <div class="cps-menu-item-content">
           <span class="cps-menu-item-content-title">{{ item.title }}</span>
-          <span *ngIf="item.desc" class="cps-menu-item-content-desc">{{
-            item.desc
-          }}</span>
+          <span
+            *ngIf="item.desc && !compressed"
+            class="cps-menu-item-content-desc"
+            >{{ item.desc }}</span
+          >
         </div>
       </div>
     </ng-container>
