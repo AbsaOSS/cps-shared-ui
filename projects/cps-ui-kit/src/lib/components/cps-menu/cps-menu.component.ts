@@ -81,6 +81,7 @@ export class CpsMenuComponent implements OnDestroy {
   @Input() withArrow = true;
   @Input() compressed = false; // prepared-colored, without header and items description
   @Input() focusOnShow = true;
+  @Input() containerClass = '';
 
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
