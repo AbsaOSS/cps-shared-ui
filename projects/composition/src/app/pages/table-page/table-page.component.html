@@ -2,15 +2,13 @@
   [headers]="headers"
   [showGlobalFilter]="true"
   [data]="data"
-  [columns]="cols"
   [showActionBtn]="true"
   [reorderableRows]="true"
-  [showColumnsToggle]="true"
   [selectable]="true"
   [paginator]="true"
   (actionBtnClicked)="onActionBtnClicked()"
   toolbarTitle="This is an alpha version of table component">
-  <!-- <ng-template #header>
+  <ng-template #header>
     <th cpsColSortable="a">A</th>
     <th>B</th>
     <th cpsColSortable="c">C</th>
@@ -20,5 +18,5 @@
     <td>{{ item.a }}</td>
     <td>{{ item.b | uppercase }}</td>
     <td>{{ item.c | percent }}</td>
-  </ng-template> -->
+  </ng-template>
 </cps-table>

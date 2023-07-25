@@ -113,7 +113,13 @@
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th>
       <ng-container *ngIf="headerTemplate">
-        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            headerTemplate;
+            context: {
+              $implicit: columns,
+            }
+          "></ng-container>
       </ng-container>
       <ng-container *ngIf="!headerTemplate">
         <ng-container *ngIf="columns.length > 0">
@@ -150,7 +156,12 @@
           pTemplate="body"
           *ngTemplateOutlet="
             bodyTemplate;
-            context: { $implicit: item, rowIndex: rowIndex }
+            context: {
+              $implicit: item,
+              rowIndex: rowIndex,
+              columns: columns,
+              rowData: rowData
+            }
           ">
         </ng-container>
       </ng-container>

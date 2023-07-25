@@ -244,9 +244,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   }
 
   isColumnSelected(col: any) {
-    return this.selectedColumns
-      ? !!find(this.selectedColumns, (item) => isEqual(item, col))
-      : false;
+    return !!find(this.selectedColumns, (item) => isEqual(item, col));
   }
 
   onSelectColumn(col: any) {
