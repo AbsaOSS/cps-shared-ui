@@ -46,6 +46,12 @@ export class TablePageComponent {
     { a: 'a32', b: 'b32', c: 3.1 }
   ];
 
+  cols = [
+    { field: 'a', header: 'A' },
+    { field: 'b', header: 'B' },
+    { field: 'c', header: 'C' }
+  ];
+
   onActionBtnClicked() {
     alert('Action button clicked');
   }

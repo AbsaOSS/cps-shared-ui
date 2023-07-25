@@ -18,6 +18,9 @@ import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { find, isEqual } from 'lodash-es';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
@@ -33,7 +36,9 @@ export function tableFactory(tableComponent: CpsTableComponent) {
     TableUnsortDirective,
     CpsInputComponent,
     CpsButtonComponent,
-    CpsSelectComponent
+    CpsSelectComponent,
+    CpsIconComponent,
+    CpsMenuComponent
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -89,7 +94,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() actionBtnTitle = 'Action';
 
   @Input() reorderableRows = false;
-  // @Input() columnsToggle = false; TODO
+
+  @Input() showColumnsToggle = false;
   // @Input() export = false; TODO
   /* @Input() */ resizableColumns = false; // TODO
   /* @Input() */ reorderableColumns = false; // TODO
@@ -97,6 +103,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
+  @Output() pageChanged = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -123,6 +130,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   virtualScrollItemSize = 0;
 
   rowOptions: { label: string; value: number }[] = [];
+
+  selectedColumns: { [key: string]: any }[] = [];
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
@@ -176,6 +185,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     if (this.bordered) {
       this.styleClass += ' p-datatable-gridlines';
     }
+
+    this.selectedColumns = this.columns;
   }
 
   ngAfterViewInit() {
@@ -221,5 +232,37 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   onRowsPerPageChanged() {
     this.first = 0;
     this.primengTable.first = this.first;
+  }
+
+  onPageChange(event: any) {
+    this.pageChanged.emit(event);
+  }
+
+  toggleAllColumns() {
+    this.selectedColumns =
+      this.selectedColumns.length < this.columns.length ? this.columns : [];
+  }
+
+  isColumnSelected(col: any) {
+    return this.selectedColumns
+      ? !!find(this.selectedColumns, (item) => isEqual(item, col))
+      : false;
+  }
+
+  onSelectColumn(col: any) {
+    let res = [] as any;
+    if (this.isColumnSelected(col)) {
+      res = this.selectedColumns.filter((v: any) => !isEqual(v, col));
+    } else {
+      this.columns.forEach((o) => {
+        if (
+          this.selectedColumns.some((v: any) => isEqual(v, o)) ||
+          isEqual(col, o)
+        ) {
+          res.push(o);
+        }
+      });
+    }
+    this.selectedColumns = res;
   }
 }
