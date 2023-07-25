@@ -3,7 +3,7 @@
   withUnsort
   [styleClass]="styleClass"
   [value]="data"
-  [columns]="columns"
+  [columns]="selectedColumns"
   (selectionChange)="onSelectionChanged($event)"
   [resizableColumns]="resizableColumns"
   [reorderableColumns]="reorderableColumns"
@@ -27,6 +27,7 @@
   [rowHover]="rowHover"
   [customSort]="customSort"
   [sortMode]="sortMode"
+  (onPage)="onPageChange($event)"
   (sortFunction)="onSortFunction($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
@@ -65,6 +66,42 @@
             (clicked)="onClickActionBtn()">
           </cps-button>
         </div>
+        <div
+          *ngIf="showColumnsToggle && columns.length > 0"
+          class="cps-table-tbar-coltoggle-btn">
+          <cps-icon
+            icon="columns"
+            size="normal"
+            color="prepared-lighten1"
+            (click)="colToggleMenu.toggle($event)"></cps-icon>
+          <cps-menu #colToggleMenu [withArrow]="false">
+            <div class="cps-table-coltoggle-menu">
+              <div
+                class="cps-table-coltoggle-menu-item select-all-option"
+                [class.allselected]="selectedColumns.length === columns.length"
+                (click)="toggleAllColumns()">
+                <span class="cps-table-coltoggle-menu-item-left">
+                  <span class="cps-table-coltoggle-menu-item-check"> </span>
+                  <span class="cps-table-coltoggle-menu-item-label"
+                    >Show all columns</span
+                  >
+                </span>
+              </div>
+              <div
+                *ngFor="let col of columns"
+                class="cps-table-coltoggle-menu-item"
+                (click)="onSelectColumn(col)"
+                [class.selected]="isColumnSelected(col)">
+                <span class="cps-table-coltoggle-menu-item-left">
+                  <span class="cps-table-coltoggle-menu-item-check"></span>
+                  <span class="cps-table-coltoggle-menu-item-label">{{
+                    col[colHeaderName]
+                  }}</span>
+                </span>
+              </div>
+            </div>
+          </cps-menu>
+        </div>
       </div>
     </ng-container>
   </ng-template>
@@ -76,7 +113,13 @@
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th>
       <ng-container *ngIf="headerTemplate">
-        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            headerTemplate;
+            context: {
+              $implicit: columns,
+            }
+          "></ng-container>
       </ng-container>
       <ng-container *ngIf="!headerTemplate">
         <ng-container *ngIf="columns.length > 0">
@@ -113,7 +156,12 @@
           pTemplate="body"
           *ngTemplateOutlet="
             bodyTemplate;
-            context: { $implicit: item, rowIndex: rowIndex }
+            context: {
+              $implicit: item,
+              rowIndex: rowIndex,
+              columns: columns,
+              rowData: rowData
+            }
           ">
         </ng-container>
       </ng-container>
@@ -136,7 +184,7 @@
   <ng-template pTemplate="paginatorleft">
     <div class="cps-table-paginator-itms-per-page">
       <span class="cps-table-paginator-items-per-page-title"
-        >Items per page:
+        >Rows per page:
       </span>
       <cps-select
         [options]="rowOptions"

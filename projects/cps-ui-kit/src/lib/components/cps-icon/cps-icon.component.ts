@@ -26,6 +26,7 @@ export const iconNames = [
   'cleansing',
   'close-x',
   'close-x-2',
+  'columns',
   'community',
   'construction',
   'controls',
