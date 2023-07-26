@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -19,16 +20,21 @@ import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { find, isEqual } from 'lodash-es';
+// import jsPDF from 'jspdf';
+// import 'jspdf-autotable';
 
 export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
 }
 
+export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
+
 @Component({
   selector: 'cps-table',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     CommonModule,
@@ -53,9 +59,7 @@ export function tableFactory(tableComponent: CpsTableComponent) {
   ]
 })
 export class CpsTableComponent implements OnInit, AfterViewInit {
-  @Input() headers: string[] = [];
   @Input() data: any[] = [];
-
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
   @Input() colFieldName = 'field';
@@ -96,7 +100,11 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() reorderableRows = false;
 
   @Input() showColumnsToggle = false;
-  // @Input() export = false; TODO
+
+  @Input() showExportBtn = false;
+  @Input() exportFilename = 'download';
+  @Input() csvSeparator = ',';
+
   /* @Input() */ resizableColumns = false; // TODO
   /* @Input() */ reorderableColumns = false; // TODO
   // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
@@ -132,6 +140,30 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   rowOptions: { label: string; value: number }[] = [];
 
   selectedColumns: { [key: string]: any }[] = [];
+
+  exportMenuItems = [
+    {
+      title: 'CSV',
+      icon: 'csv',
+      action: () => {
+        this.exportTable('csv');
+      }
+    },
+    {
+      title: 'XLSX',
+      icon: 'xls',
+      action: () => {
+        this.exportTable('xlsx');
+      }
+    }
+    // {
+    //   title: 'PDF',
+    //   icon: 'pdf',
+    //   action: () => {
+    //     this.exportTable('pdf');
+    //   }
+    // }
+  ] as CpsMenuItem[];
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
@@ -263,4 +295,80 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     }
     this.selectedColumns = res;
   }
+
+  exportTable(format: CpsTableExportFormat) {
+    if (this.columns.length < 1) throw new Error('Columns must be defined!');
+    if (this.selectedColumns.length < 1) throw new Error('Nothing to export!');
+
+    switch (format) {
+      case 'csv':
+        this.primengTable.exportCSV();
+        break;
+
+      case 'xlsx':
+        this.exportXLSX();
+        break;
+
+      // case 'pdf':
+      //   this.exportPDF();
+      //   break;
+    }
+  }
+
+  exportXLSX() {
+    import('xlsx').then((xlsx) => {
+      const sheetData = [
+        this.selectedColumns.map(
+          (c: { [key: string]: any }) => c[this.colHeaderName]
+        ),
+        ...this.data.map((item: any) =>
+          this.selectedColumns.map(
+            (c: { [key: string]: any }) => item[c[this.colFieldName]]
+          )
+        )
+      ];
+
+      const worksheet = xlsx.utils.json_to_sheet(sheetData, {
+        skipHeader: true
+      });
+      const workbook = {
+        Sheets: { [this.exportFilename]: worksheet },
+        SheetNames: [this.exportFilename]
+      };
+      const xlsxBuffer: any = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array'
+      });
+
+      const EXCEL_TYPE =
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+      const blob: Blob = new Blob([xlsxBuffer], {
+        type: EXCEL_TYPE
+      });
+
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = `${this.exportFilename}.xlsx`;
+      downloadLink.click();
+    });
+  }
+
+  // exportPDF() {
+  //   const exportColumns = this.selectedColumns.map((col) => ({
+  //     title: col[this.colHeaderName],
+  //     dataKey: col[this.colFieldName]
+  //   }));
+  //   // eslint-disable-next-line new-cap
+  //   const doc = new jsPDF({
+  //     orientation: this.selectedColumns.length > 3 ? 'l' : 'p',
+  //     unit: 'px',
+  //     format: 'a4'
+  //   });
+  //   (doc as any).autoTable({
+  //     headStyles: { fillColor: '#870a3c' },
+  //     columns: exportColumns,
+  //     body: this.data
+  //   });
+  //   doc.save(`${this.exportFilename}.pdf`);
+  // }
 }

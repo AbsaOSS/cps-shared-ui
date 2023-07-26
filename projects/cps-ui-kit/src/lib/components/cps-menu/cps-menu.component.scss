@@ -138,6 +138,11 @@
         }
       }
     }
+
+    .cps-menu-item.cps-menu-item-compressed.cps-menu-item-compressed-with-icons {
+      padding: 0 26px 0 16px;
+    }
+
     .cps-menu-item:not(.cps-menu-item-disabled) {
       .cps-menu-item-icon {
         cps-icon {
