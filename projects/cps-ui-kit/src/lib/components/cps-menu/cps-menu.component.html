@@ -30,7 +30,8 @@
         [ngClass]="{
           'cps-menu-item-disabled': item.disabled,
           'cps-menu-item-first': i === 0,
-          'cps-menu-item-compressed': compressed
+          'cps-menu-item-compressed': compressed,
+          'cps-menu-item-compressed-with-icons': compressed && withIcons
         }"
         class="cps-menu-item">
         <div class="cps-menu-item-icon" *ngIf="withIcons">

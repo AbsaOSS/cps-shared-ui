@@ -10,7 +10,6 @@ import { CpsTableColumnSortableDirective, CpsTableComponent } from 'cps-ui-kit';
   host: { class: 'composition-page' }
 })
 export class TablePageComponent {
-  headers = ['A', 'B', 'C'];
   data = [
     { a: 'a1', b: 'b1', c: 0.0 },
     { a: 'a2', b: 'b2', c: 0.1 },

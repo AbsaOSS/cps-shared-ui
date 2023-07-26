@@ -27,6 +27,8 @@
   [rowHover]="rowHover"
   [customSort]="customSort"
   [sortMode]="sortMode"
+  [exportFilename]="exportFilename"
+  [csvSeparator]="csvSeparator"
   (onPage)="onPageChange($event)"
   (sortFunction)="onSortFunction($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
@@ -102,6 +104,19 @@
             </div>
           </cps-menu>
         </div>
+        <div *ngIf="showExportBtn" class="cps-table-tbar-coltoggle-btn">
+          <cps-icon
+            icon="export"
+            size="normal"
+            color="prepared"
+            (click)="exportMenu.toggle($event)"></cps-icon>
+          <cps-menu
+            #exportMenu
+            [items]="exportMenuItems"
+            [compressed]="true"
+            [withArrow]="false">
+          </cps-menu>
+        </div>
       </div>
     </ng-container>
   </ng-template>
@@ -126,9 +141,6 @@
           <th *ngFor="let col of columns">
             {{ col[colHeaderName] }}
           </th>
-        </ng-container>
-        <ng-container *ngIf="headers.length > 0 && columns.length < 1">
-          <th *ngFor="let h of headers">{{ h }}</th>
         </ng-container>
       </ng-container>
     </tr>
