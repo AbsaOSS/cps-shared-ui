@@ -297,7 +297,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   }
 
   exportTable(format: CpsTableExportFormat) {
-    if (this.columns.length < 1) throw new Error('columns must be defined!');
+    if (this.columns.length < 1) throw new Error('Columns must be defined!');
+    if (this.selectedColumns.length < 1) throw new Error('Nothing to export!');
 
     switch (format) {
       case 'csv':
@@ -353,15 +354,13 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   }
 
   // exportPDF() {
-  //   const colNum = this.selectedColumns.length;
-  //   if (colNum < 1) throw new Error('Nothing to export!');
   //   const exportColumns = this.selectedColumns.map((col) => ({
   //     title: col[this.colHeaderName],
   //     dataKey: col[this.colFieldName]
   //   }));
   //   // eslint-disable-next-line new-cap
   //   const doc = new jsPDF({
-  //     orientation: colNum > 3 ? 'l' : 'p',
+  //     orientation: this.selectedColumns.length > 3 ? 'l' : 'p',
   //     unit: 'px',
   //     format: 'a4'
   //   });
