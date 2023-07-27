@@ -21,6 +21,7 @@ import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
+import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { find, isEqual } from 'lodash-es';
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -44,7 +45,8 @@ export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
     CpsButtonComponent,
     CpsSelectComponent,
     CpsIconComponent,
-    CpsMenuComponent
+    CpsMenuComponent,
+    CpsLoaderComponent
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -75,6 +77,9 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() sortMode: 'single' | 'multiple' = 'multiple';
   @Input() customSort = false;
   @Input() rowHover = true;
+
+  @Input() loading = false;
+
   @Input() scrollable = true;
   @Input() scrollHeight = '';
   @Input() virtualScroll = false; // works only if scrollable is true
@@ -107,8 +112,6 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
 
-  /* @Input() */ resizableColumns = false; // TODO
-  /* @Input() */ reorderableColumns = false; // TODO
   // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
 
   @Output() selectionChanged = new EventEmitter<any[]>();

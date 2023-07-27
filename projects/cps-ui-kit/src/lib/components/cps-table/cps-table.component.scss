@@ -15,11 +15,14 @@ $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
 $paginator-elem-hover-background: #f8f4f5;
 $paginator-elem-active-background: #f1eaec;
+$input-border-color: var(--cps-color-text-lightest);
 $colitem-hover-background: #f8f4f5;
 $colitem-value-color: var(--cps-color-text-dark);
 $selected-colitem-background: #efe4e7;
 $colitem-highlight-background: #f5eeef;
 $colitem-highlight-selected-background: #e6d4d9;
+$tbar-small-height: 43px;
+$tbar-normal-height: 72px;
 
 :host {
   ::ng-deep {
@@ -99,11 +102,11 @@ $colitem-highlight-selected-background: #e6d4d9;
     }
 
     .cps-tbar-small.p-datatable .p-datatable-header {
-      height: 43px;
+      height: $tbar-small-height;
     }
 
     .cps-tbar-normal.p-datatable .p-datatable-header {
-      height: 72px;
+      height: $tbar-normal-height;
     }
 
     .p-datatable-flex-scrollable > .p-datatable-wrapper {
@@ -676,6 +679,56 @@ $colitem-highlight-selected-background: #e6d4d9;
     }
     .cps-table-row-chevron-expanded {
       transform: rotate(180deg);
+    }
+
+    .p-datatable .p-datatable-loading-overlay {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      transition-duration: 0.2s;
+      border: 1px solid $table-borders-color;
+    }
+    .p-datatable.cps-tbar-small .p-datatable-loading-overlay {
+      top: $tbar-small-height;
+      height: calc(100% - $tbar-small-height);
+    }
+
+    .p-datatable.cps-tbar-normal .p-datatable-loading-overlay {
+      top: $tbar-normal-height;
+      height: calc(100% - $tbar-normal-height);
+    }
+
+    .cps-table-loading {
+      .p-datatable {
+        min-height: 200px;
+      }
+      .p-datatable.cps-tbar-normal {
+        min-height: 272px;
+      }
+      .p-datatable.cps-tbar-small {
+        min-height: 243px;
+      }
+    }
+    .p-datatable.cps-tbar-small .p-datatable-header {
+      .cps-table-tbar-left {
+        .cps-table-tbar-global-filter {
+          cps-input {
+            .cps-input-container .cps-input-wrap input {
+              line-height: 1;
+              border: none;
+              border-bottom: 1px solid $input-border-color;
+              border-radius: 0;
+            }
+          }
+        }
+      }
     }
   }
 }

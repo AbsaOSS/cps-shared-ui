@@ -1,17 +1,17 @@
 <p-table
   #primengTable
   withUnsort
+  [ngClass]="{ 'cps-table-loading': loading }"
   [styleClass]="styleClass"
   [value]="data"
   [dataKey]="dataKey"
   [columns]="selectedColumns"
   (selectionChange)="onSelectionChanged($event)"
-  [resizableColumns]="resizableColumns"
-  [reorderableColumns]="reorderableColumns"
   [globalFilterFields]="globalFilterFields"
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"
   [lazy]="lazy"
+  [loading]="loading"
   [lazyLoadOnInit]="lazyLoadOnInit"
   [virtualScroll]="virtualScroll"
   [virtualScrollItemSize]="virtualScrollItemSize"
@@ -58,6 +58,7 @@
             color="prepared"
             type="borderless"
             icon="remove"
+            [size]="toolbarSize"
             (clicked)="removeSelected()">
           </cps-button>
         </div>
@@ -66,6 +67,7 @@
             [label]="actionBtnTitle"
             color="prepared"
             type="outlined"
+            [size]="toolbarSize"
             (clicked)="onClickActionBtn()">
           </cps-button>
         </div>
@@ -220,6 +222,9 @@
         {{ emptyMessage }}
       </td>
     </tr>
+  </ng-template>
+  <ng-template pTemplate="loadingicon">
+    <cps-loader [fullScreen]="false" opacity="0"></cps-loader>
   </ng-template>
   <ng-template pTemplate="paginatorleft">
     <div class="cps-table-paginator-itms-per-page">
