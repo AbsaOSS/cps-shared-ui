@@ -1,6 +1,7 @@
 <cps-table
   [showGlobalFilter]="true"
   [data]="data"
+  dataKey="a"
   [showActionBtn]="true"
   [reorderableRows]="true"
   [selectable]="true"
@@ -17,5 +18,12 @@
     <td>{{ item.a }}</td>
     <td>{{ item.b | uppercase }}</td>
     <td>{{ item.c | percent }}</td>
+  </ng-template>
+
+  <ng-template let-item #rowexpansion>
+    <div class="expanded-row-contents">
+      <div>id: {{ item.d.id }}</div>
+      <div>desc: {{ item.d.desc }}</div>
+    </div>
   </ng-template>
 </cps-table>

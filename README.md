@@ -50,13 +50,13 @@ https://www.figma.com/file/JAlfp4zwZIONMWYPbLY4aM/Consumer-products-design-syste
 - modify projects/cps-ui-kit/src/public-api.ts to export the component from the library
 - update available components list in projects/cps-ui-kit/README.md (keep alphabetical order!)
 
-Make sure you have 'ng build cps-ui-kit --watch' running, so the library will be rebuilt on each change of its contents due to --watch flag
+Make sure 'ng build cps-ui-kit --watch' is running, so the library will be rebuilt on each change of its contents due to --watch flag
 
 #### Create a composition page
 
 - go to projects/composition/src/app/pages directory
 - run: ng g c componentname-page --standalone
-- we don't want to test composition pages, so manully delete componentname-page.cy.ts file (can't be done automatically with Angular CLI flag, since we use cypress)
+- there is no need to test composition pages, so manually delete componentname-page.cy.ts file (can't be done automatically with Angular CLI flag, since cypress is used)
 - provide host: { class: 'composition-page' } into page @Component
 - import the components for the composition page from 'cps-ui-kit', provide them to imports array of @Component
 - go to projects/composition/src/app/components/navigation-sidebar.ts file and extend \_components array (keep alphabetical order!)
