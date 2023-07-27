@@ -3,6 +3,7 @@
   withUnsort
   [styleClass]="styleClass"
   [value]="data"
+  [dataKey]="dataKey"
   [columns]="selectedColumns"
   (selectionChange)="onSelectionChanged($event)"
   [resizableColumns]="resizableColumns"
@@ -104,7 +105,7 @@
             </div>
           </cps-menu>
         </div>
-        <div *ngIf="showExportBtn" class="cps-table-tbar-coltoggle-btn">
+        <div *ngIf="showExportBtn" class="cps-table-tbar-export-btn">
           <cps-icon
             icon="export"
             size="normal"
@@ -123,6 +124,7 @@
 
   <ng-template pTemplate="header" let-columns>
     <tr>
+      <th style="width: 3rem" *ngIf="rowExpansionTemplate"></th>
       <th style="width: 3rem" *ngIf="reorderableRows"></th>
       <th style="width: 4rem" *ngIf="selectable">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
@@ -151,14 +153,27 @@
     let-rowData
     let-columns="columns"
     let-item
-    let-rowIndex="rowIndex">
+    let-rowIndex="rowIndex"
+    let-expanded="expanded">
     <tr
       [pReorderableRow]="rowIndex"
       [ngClass]="{
         'cps-table-row-selected': selectable && primengTable.isSelected(item)
       }">
+      <td *ngIf="rowExpansionTemplate">
+        <div
+          class="cps-table-row-chevron"
+          [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }">
+          <cps-icon
+            icon="chevron-down"
+            size="small"
+            color="text-dark"
+            [pRowToggler]="item">
+          </cps-icon>
+        </div>
+      </td>
       <td *ngIf="reorderableRows">
-        <span pReorderableRowHandle>☰</span>
+        <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td>
       <td *ngIf="selectable">
         <p-tableCheckbox [value]="item"></p-tableCheckbox>
@@ -184,6 +199,19 @@
           </td>
         </ng-container>
       </ng-container>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="rowexpansion" *ngIf="rowExpansionTemplate" let-item>
+    <tr class="cps-table-row-expanded-content">
+      <td colspan="100">
+        <ng-container
+          *ngTemplateOutlet="
+            rowExpansionTemplate;
+            context: {
+              $implicit: item
+            }
+          "></ng-container>
+      </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="emptymessage">

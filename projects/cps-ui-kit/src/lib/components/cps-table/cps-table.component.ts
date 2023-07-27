@@ -105,6 +105,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() exportFilename = 'download';
   @Input() csvSeparator = ',';
 
+  @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
+
   /* @Input() */ resizableColumns = false; // TODO
   /* @Input() */ reorderableColumns = false; // TODO
   // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
@@ -128,6 +130,9 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @ContentChild('body', { static: false })
   public bodyTemplate!: TemplateRef<any>;
+
+  @ContentChild('rowexpansion', { static: false })
+  public rowExpansionTemplate!: TemplateRef<any>;
 
   @ViewChild('primengTable', { static: true })
   primengTable!: Table;
