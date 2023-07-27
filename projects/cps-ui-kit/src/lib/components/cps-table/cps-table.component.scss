@@ -73,7 +73,8 @@ $colitem-highlight-selected-background: #e6d4d9;
           margin-right: 4px;
           margin-left: 8px;
         }
-        .cps-table-tbar-coltoggle-btn {
+        .cps-table-tbar-coltoggle-btn,
+        .cps-table-tbar-export-btn {
           display: contents;
           cps-icon {
             margin-left: 8px;
@@ -83,6 +84,14 @@ $colitem-highlight-selected-background: #e6d4d9;
           cps-icon:hover {
             .cps-icon {
               color: $color-prepared !important;
+            }
+          }
+        }
+        .cps-table-tbar-export-btn {
+          cps-icon {
+            .cps-icon {
+              width: 22px;
+              height: 22px;
             }
           }
         }
