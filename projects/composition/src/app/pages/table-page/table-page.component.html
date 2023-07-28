@@ -7,6 +7,7 @@
   [selectable]="true"
   [paginator]="true"
   [showRowMenu]="true"
+  (editRowBtnClicked)="onEditRowButtonClicked($event)"
   (actionBtnClicked)="onActionBtnClicked()"
   toolbarTitle="This is an alpha version of table component">
   <ng-template #header>

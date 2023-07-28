@@ -214,4 +214,8 @@ export class TablePageComponent {
   onActionBtnClicked() {
     alert('Action button clicked');
   }
+
+  onEditRowButtonClicked(item: any) {
+    alert(`Edit row button clicked. Item: ${JSON.stringify(item)}`);
+  }
 }
