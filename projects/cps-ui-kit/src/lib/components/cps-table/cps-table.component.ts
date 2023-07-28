@@ -22,6 +22,7 @@ import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
+import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
 import { find, isEqual } from 'lodash-es';
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -46,7 +47,8 @@ export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
     CpsSelectComponent,
     CpsIconComponent,
     CpsMenuComponent,
-    CpsLoaderComponent
+    CpsLoaderComponent,
+    TableRowMenuComponent
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -68,7 +70,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @Input() striped = true;
   @Input() bordered = true;
-  @Input() size: 'small' | 'normal' | 'large' = 'normal';
+  @Input() size: 'small' | 'normal' | 'large' = 'small';
   @Input() selectable = false;
   @Input() emptyMessage = 'No data';
   @Input() hasToolbar = true;
@@ -77,8 +79,11 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() sortMode: 'single' | 'multiple' = 'multiple';
   @Input() customSort = false;
   @Input() rowHover = true;
-
+  @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
+  @Input() showRowMenu = false;
   @Input() loading = false;
+  @Input() reorderableRows = false;
+  @Input() showColumnsToggle = false;
 
   @Input() scrollable = true;
   @Input() scrollHeight = '';
@@ -102,21 +107,18 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
-  @Input() reorderableRows = false;
-
-  @Input() showColumnsToggle = false;
-
   @Input() showExportBtn = false;
   @Input() exportFilename = 'download';
   @Input() csvSeparator = ',';
-
-  @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
 
   // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
+  @Output() editRowBtnClicked = new EventEmitter<any>();
   @Output() pageChanged = new EventEmitter<any>();
+  @Output() sorted = new EventEmitter<any>();
+  @Output() rowsReordered = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -302,6 +304,25 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
       });
     }
     this.selectedColumns = res;
+  }
+
+  onEditRowClicked(item: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _defaultSortOrder, ...rest } = item;
+    this.editRowBtnClicked.emit(rest);
+  }
+
+  onRemoveRowClicked(item: any) {
+    this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
+    this.data = this.data.filter((v: any) => v !== item);
+  }
+
+  onSort(event: any) {
+    this.sorted.emit(event);
+  }
+
+  onRowReorder(event: any) {
+    this.rowsReordered.emit(event);
   }
 
   exportTable(format: CpsTableExportFormat) {

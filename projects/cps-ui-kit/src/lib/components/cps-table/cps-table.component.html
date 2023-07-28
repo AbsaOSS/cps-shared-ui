@@ -31,7 +31,9 @@
   [exportFilename]="exportFilename"
   [csvSeparator]="csvSeparator"
   (onPage)="onPageChange($event)"
-  (sortFunction)="onSortFunction($event)">
+  (sortFunction)="onSortFunction($event)"
+  (onSort)="onSort($event)"
+  (onRowReorder)="onRowReorder($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
@@ -147,6 +149,10 @@
           </th>
         </ng-container>
       </ng-container>
+      <th
+        style="width: 2rem"
+        class="cps-table-row-menu-cell"
+        *ngIf="showRowMenu"></th>
     </tr>
   </ng-template>
 
@@ -201,6 +207,11 @@
           </td>
         </ng-container>
       </ng-container>
+      <td *ngIf="showRowMenu" class="cps-table-row-menu-cell">
+        <table-row-menu
+          (editRowBtnClicked)="onEditRowClicked(item)"
+          (removeRowBtnClicked)="onRemoveRowClicked(item)"></table-row-menu>
+      </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="rowexpansion" *ngIf="rowExpansionTemplate" let-item>

@@ -677,8 +677,17 @@ $tbar-normal-height: 72px;
       cursor: pointer;
       display: flex;
     }
+    .cps-table-row-chevron:hover {
+      cps-icon .cps-icon {
+        color: $color-calm !important;
+      }
+    }
     .cps-table-row-chevron-expanded {
       transform: rotate(180deg);
+    }
+
+    .cps-table-row-menu-cell {
+      border-left: none !important;
     }
 
     .p-datatable .p-datatable-loading-overlay {
