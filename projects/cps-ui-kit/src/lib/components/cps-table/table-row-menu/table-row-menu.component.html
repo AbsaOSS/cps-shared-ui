@@ -1,0 +1,8 @@
+<cps-menu #rowMenu [items]="items" [compressed]="true" [withArrow]="false">
+</cps-menu>
+<cps-icon
+  icon="dropdown-menu"
+  size="22"
+  (click)="rowMenu.toggle($event)"
+  class="cps-table-row-menu-icon">
+</cps-icon>
