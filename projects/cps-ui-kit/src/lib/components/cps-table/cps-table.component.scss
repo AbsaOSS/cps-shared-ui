@@ -665,25 +665,31 @@ $tbar-normal-height: 72px;
       font-weight: 600;
     }
 
-    .cps-table-row-drag-handle {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    .cps-table-row-chevron {
-      transition-duration: 0.2s;
-      cursor: pointer;
-      display: flex;
-    }
-    .cps-table-row-chevron:hover {
-      cps-icon .cps-icon {
-        color: $color-calm !important;
+    .cps-table-row-drag-handle-cell {
+      text-align: center !important;
+      .cps-table-row-drag-handle {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
     }
-    .cps-table-row-chevron-expanded {
-      transform: rotate(180deg);
+
+    .cps-table-row-chevron-cell {
+      text-align: center !important;
+      .cps-table-row-chevron {
+        transition-duration: 0.2s;
+        cursor: pointer;
+        display: inline-flex;
+      }
+      .cps-table-row-chevron:hover {
+        cps-icon .cps-icon {
+          color: $color-calm !important;
+        }
+      }
+      .cps-table-row-chevron-expanded {
+        transform: rotate(180deg);
+      }
     }
 
     .cps-table-row-menu-cell {

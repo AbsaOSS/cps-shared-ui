@@ -70,7 +70,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @Input() striped = true;
   @Input() bordered = true;
-  @Input() size: 'small' | 'normal' | 'large' = 'small';
+  @Input() size: 'small' | 'normal' | 'large' = 'normal';
   @Input() selectable = false;
   @Input() emptyMessage = 'No data';
   @Input() hasToolbar = true;

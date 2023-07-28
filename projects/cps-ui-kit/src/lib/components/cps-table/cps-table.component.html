@@ -168,7 +168,7 @@
       [ngClass]="{
         'cps-table-row-selected': selectable && primengTable.isSelected(item)
       }">
-      <td *ngIf="rowExpansionTemplate">
+      <td *ngIf="rowExpansionTemplate" class="cps-table-row-chevron-cell">
         <div
           class="cps-table-row-chevron"
           [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }">
@@ -180,7 +180,7 @@
           </cps-icon>
         </div>
       </td>
-      <td *ngIf="reorderableRows">
+      <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td>
       <td *ngIf="selectable">
