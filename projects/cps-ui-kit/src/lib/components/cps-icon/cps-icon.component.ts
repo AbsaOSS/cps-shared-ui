@@ -46,6 +46,7 @@ export const iconNames = [
   'eye',
   'filter',
   'filter_2',
+  'filter-funnel',
   'follow',
   'glossary',
   'graph',
