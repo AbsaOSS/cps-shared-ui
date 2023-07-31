@@ -23,6 +23,7 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
+import { CpsTableColumnSortableDirective } from './cps-table-column-sortable.directive';
 import { find, isEqual } from 'lodash-es';
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -48,7 +49,8 @@ export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
     CpsIconComponent,
     CpsMenuComponent,
     CpsLoaderComponent,
-    TableRowMenuComponent
+    TableRowMenuComponent,
+    CpsTableColumnSortableDirective
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -84,6 +86,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() loading = false;
   @Input() reorderableRows = false;
   @Input() showColumnsToggle = false;
+  @Input() sortable = false; // makes all sortable if columns are provided
 
   @Input() scrollable = true;
   @Input() scrollHeight = '';
