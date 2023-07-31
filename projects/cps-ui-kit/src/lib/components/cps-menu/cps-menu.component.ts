@@ -103,6 +103,7 @@ export class CpsMenuComponent implements OnDestroy {
   documentResizeListener!: VoidListener | null;
   overlayEventListener: Nullable<(event?: any) => void>;
   documentClickListener!: VoidListener | null;
+  documentKeydownListener!: VoidListener | null;
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   destroyCallback: Nullable<Function>;
@@ -164,6 +165,39 @@ export class CpsMenuComponent implements OnDestroy {
       });
     }
     this.hide();
+  }
+
+  bindDocumentKeydownListener() {
+    if (DomHandler.isTouchDevice()) return;
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.documentKeydownListener && this.dismissable) {
+        this.zone.runOutsideAngular(() => {
+          const documentTarget: any = this.el
+            ? this.el.nativeElement.ownerDocument
+            : this.document;
+
+          this.documentKeydownListener = this.renderer.listen(
+            documentTarget,
+            'keydown',
+            (event) => {
+              // escape
+              if (event.keyCode === 27) {
+                this.zone.run(() => {
+                  if (this.overlayVisible) this.hide();
+                });
+              }
+            }
+          );
+        });
+      }
+    }
+  }
+
+  unbindDocumentKeydownListener() {
+    if (this.documentKeydownListener) {
+      this.documentKeydownListener();
+      this.documentKeydownListener = null;
+    }
   }
 
   bindDocumentClickListener() {
@@ -287,6 +321,7 @@ export class CpsMenuComponent implements OnDestroy {
       this.appendContainer();
       this.align();
       this.bindDocumentClickListener();
+      this.bindDocumentKeydownListener();
       this.bindDocumentResizeListener();
       this.bindScrollListener();
 
@@ -404,6 +439,7 @@ export class CpsMenuComponent implements OnDestroy {
     }
 
     this.unbindDocumentClickListener();
+    this.unbindDocumentKeydownListener();
     this.unbindDocumentResizeListener();
     this.unbindScrollListener();
   }
