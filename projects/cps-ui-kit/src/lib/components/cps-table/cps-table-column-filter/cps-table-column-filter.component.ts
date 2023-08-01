@@ -12,13 +12,14 @@ import { CpsButtonComponent } from '../../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
+import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 
 export type CpsTableColumnType =
   | 'text'
-  | 'numeric'
+  | 'number'
   | 'date'
-  | 'category'
-  | 'boolean';
+  | 'boolean'
+  | 'category';
 
 @Component({
   selector: 'cps-table-column-filter',
@@ -29,7 +30,8 @@ export type CpsTableColumnType =
     CpsButtonComponent,
     CpsMenuComponent,
     CpsIconComponent,
-    CpsSelectComponent
+    CpsSelectComponent,
+    TableColumnFilterConstraintComponent
   ],
   templateUrl: './cps-table-column-filter.component.html',
   styleUrls: ['./cps-table-column-filter.component.scss']
@@ -38,8 +40,6 @@ export class CpsTableColumnFilterComponent {
   @Input() field: string | undefined;
 
   @Input() type = 'text';
-
-  @Input() matchMode: string | undefined;
 
   @Input() operator: string = FilterOperator.AND;
 
@@ -59,38 +59,20 @@ export class CpsTableColumnFilterComponent {
 
   @Input() maxConstraints = 2;
 
-  @Input() minFractionDigits: number | undefined;
-
-  @Input() maxFractionDigits: number | undefined;
-
-  @Input() prefix: string | undefined;
-
-  @Input() suffix: string | undefined;
-
-  @Input() locale: string | undefined;
-
-  @Input() localeMatcher: string | undefined;
-
-  @Input() currency: string | undefined;
-
-  @Input() currencyDisplay: string | undefined;
-
-  @Input() useGrouping = true;
-
-  @Input() showButtons = true;
+  @Input() categoryOptions: string[] = [];
 
   operatorOptions = [
     { label: 'Match All', value: FilterOperator.AND, info: 'AND' },
     { label: 'Match Any', value: FilterOperator.OR, info: 'OR' }
   ];
 
-  private labels = {
+  private matchModeLabels = {
     startsWith: 'Starts with',
     contains: 'Contains',
-    notContains: 'Does Not contain',
+    notContains: 'Does not contain',
     endsWith: 'Ends with',
     equals: 'Equals',
-    notEquals: 'Does Not equal',
+    notEquals: 'Does not equal',
     lt: 'Less than',
     lte: 'Less than or equal to',
     gt: 'Greater than',
@@ -110,7 +92,7 @@ export class CpsTableColumnFilterComponent {
       FilterMatchMode.EQUALS,
       FilterMatchMode.NOT_EQUALS
     ],
-    numeric: [
+    number: [
       FilterMatchMode.EQUALS,
       FilterMatchMode.NOT_EQUALS,
       FilterMatchMode.LESS_THAN,
@@ -123,8 +105,7 @@ export class CpsTableColumnFilterComponent {
       FilterMatchMode.DATE_IS_NOT,
       FilterMatchMode.DATE_BEFORE,
       FilterMatchMode.DATE_AFTER
-    ],
-    category: [FilterMatchMode.EQUALS, FilterMatchMode.NOT_EQUALS]
+    ]
   } as { [key: string]: string[] };
 
   matchModes: SelectItem[] | undefined;
@@ -142,7 +123,7 @@ export class CpsTableColumnFilterComponent {
 
     this.matchModes = this.filterMatchModeOptions[this.type]?.map(
       (key: string) => {
-        return { label: this.labels[key], value: key };
+        return { label: this.matchModeLabels[key], value: key };
       }
     );
   }
@@ -195,14 +176,11 @@ export class CpsTableColumnFilterComponent {
   }
 
   getDefaultMatchMode(): string {
-    if (this.matchMode) {
-      return this.matchMode;
-    } else {
-      if (this.type === 'text') return FilterMatchMode.STARTS_WITH;
-      else if (this.type === 'numeric') return FilterMatchMode.EQUALS;
-      else if (this.type === 'date') return FilterMatchMode.DATE_IS;
-      else return FilterMatchMode.CONTAINS;
-    }
+    if (this.type === 'text') return FilterMatchMode.STARTS_WITH;
+    else if (this.type === 'number') return FilterMatchMode.EQUALS;
+    else if (this.type === 'date') return FilterMatchMode.DATE_IS;
+    else if (this.type === 'category') return FilterMatchMode.IN;
+    else return FilterMatchMode.CONTAINS;
   }
 
   getDefaultOperator(): string | undefined {
@@ -224,14 +202,16 @@ export class CpsTableColumnFilterComponent {
 
   get isShowOperator(): boolean {
     return (
-      this.showOperator && this.maxConstraints > 1 && this.type !== 'boolean'
+      this.showOperator &&
+      this.maxConstraints > 1 &&
+      !['boolean', 'category'].includes(this.type)
     );
   }
 
   get isShowAddConstraint(): boolean | undefined | null {
     return (
       this.showAddButton &&
-      this.type !== 'boolean' &&
+      !['boolean', 'category'].includes(this.type) &&
       this.fieldConstraints &&
       this.fieldConstraints.length < this.maxConstraints
     );

@@ -27,21 +27,13 @@
             (valueChanged)="
               onMenuMatchModeChange($event, fieldConstraint)
             "></cps-select>
-          <!-- <p-columnFilterFormElement
-          [type]="type"
-          [field]="field"
-          [filterConstraint]="fieldConstraint"
-          [filterTemplate]="filterTemplate"
-          [placeholder]="placeholder"
-          [minFractionDigits]="minFractionDigits"
-          [maxFractionDigits]="maxFractionDigits"
-          [prefix]="prefix"
-          [suffix]="suffix"
-          [locale]="locale"
-          [localeMatcher]="localeMatcher"
-          [currency]="currency"
-          [currencyDisplay]="currencyDisplay"
-          [useGrouping]="useGrouping"></p-columnFilterFormElement> -->
+          <table-column-filter-constraint
+            [type]="type"
+            [field]="field"
+            [categoryOptions]="categoryOptions"
+            [filterConstraint]="fieldConstraint"
+            [placeholder]="placeholder">
+          </table-column-filter-constraint>
           <div>
             <cps-button
               *ngIf="showRemoveIcon"

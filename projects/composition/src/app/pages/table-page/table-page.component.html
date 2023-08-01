@@ -14,25 +14,46 @@
   <ng-template #header>
     <th cpsColSortable="a">
       A
-      <cps-table-column-filter
-        type="text"
-        field="name"
-        display="menu"></cps-table-column-filter>
+      <cps-table-column-filter type="text" field="a"></cps-table-column-filter>
     </th>
-    <th>B</th>
-    <th cpsColSortable="c">C</th>
+    <th>
+      B
+      <cps-table-column-filter type="date" field="b"></cps-table-column-filter>
+    </th>
+    <th cpsColSortable="c">
+      C
+      <cps-table-column-filter
+        type="number"
+        field="c"></cps-table-column-filter>
+    </th>
+    <th>
+      D
+      <cps-table-column-filter
+        type="boolean"
+        field="d"></cps-table-column-filter>
+    </th>
+    <th cpsColSortable="e">
+      E
+      <cps-table-column-filter
+        type="category"
+        field="e"></cps-table-column-filter>
+    </th>
   </ng-template>
 
   <ng-template let-item #body>
-    <td>{{ item.a }}</td>
-    <td>{{ item.b | uppercase }}</td>
+    <td>{{ item.a | uppercase }}</td>
+    <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
     <td>{{ item.c | percent }}</td>
+    <td [style.color]="item.d ? 'green' : 'red'">
+      {{ item.d ? '&#10004;' : '&#10008;' }}
+    </td>
+    <td>{{ item.e }}</td>
   </ng-template>
 
   <ng-template let-item #rowexpansion>
     <div class="expanded-row-contents">
-      <div>id: {{ item.d.id }}</div>
-      <div>desc: {{ item.d.desc }}</div>
+      <div>id: {{ item.f.id }}</div>
+      <div>desc: {{ item.f.desc }}</div>
     </div>
   </ng-template>
 </cps-table>
