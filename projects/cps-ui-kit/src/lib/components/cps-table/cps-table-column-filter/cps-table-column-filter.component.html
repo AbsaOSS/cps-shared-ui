@@ -18,12 +18,15 @@
         <div
           *ngFor="let fieldConstraint of fieldConstraints; let i = index"
           class="p-column-filter-constraint">
-          <!-- <p-dropdown
-          *ngIf="showMatchModes && matchModes"
-          [options]="matchModes"
-          [ngModel]="fieldConstraint.matchMode"
-          (ngModelChange)="onMenuMatchModeChange($event, fieldConstraint)"
-          styleClass="p-column-filter-matchmode-dropdown"></p-dropdown> -->
+          <cps-select
+            *ngIf="showMatchModes && matchModes"
+            [hideDetails]="true"
+            [returnObject]="false"
+            [options]="matchModes"
+            [ngModel]="fieldConstraint.matchMode"
+            (valueChanged)="
+              onMenuMatchModeChange($event, fieldConstraint)
+            "></cps-select>
           <!-- <p-columnFilterFormElement
           [type]="type"
           [field]="field"
