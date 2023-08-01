@@ -1,0 +1,82 @@
+<div class="p-column-filter p-column-filter-menu">
+  <cps-menu
+    #columnFilterMenu
+    [withArrow]="false"
+    (menuShown)="onMenuShown()"
+    (menuHidden)="onMenuHidden()">
+    <div class="my-menu-content">
+      <div class="p-column-filter-operator" *ngIf="isShowOperator">
+        <cps-select
+          [hideDetails]="true"
+          [disabled]="!fieldConstraints || fieldConstraints.length < 2"
+          [returnObject]="false"
+          [options]="operatorOptions"
+          [ngModel]="operator"
+          (valueChanged)="onOperatorChange($event)"></cps-select>
+      </div>
+      <div class="p-column-filter-constraints">
+        <div
+          *ngFor="let fieldConstraint of fieldConstraints; let i = index"
+          class="p-column-filter-constraint">
+          <!-- <p-dropdown
+          *ngIf="showMatchModes && matchModes"
+          [options]="matchModes"
+          [ngModel]="fieldConstraint.matchMode"
+          (ngModelChange)="onMenuMatchModeChange($event, fieldConstraint)"
+          styleClass="p-column-filter-matchmode-dropdown"></p-dropdown> -->
+          <!-- <p-columnFilterFormElement
+          [type]="type"
+          [field]="field"
+          [filterConstraint]="fieldConstraint"
+          [filterTemplate]="filterTemplate"
+          [placeholder]="placeholder"
+          [minFractionDigits]="minFractionDigits"
+          [maxFractionDigits]="maxFractionDigits"
+          [prefix]="prefix"
+          [suffix]="suffix"
+          [locale]="locale"
+          [localeMatcher]="localeMatcher"
+          [currency]="currency"
+          [currencyDisplay]="currencyDisplay"
+          [useGrouping]="useGrouping"></p-columnFilterFormElement> -->
+          <div>
+            <cps-button
+              *ngIf="showRemoveIcon"
+              class="p-column-filter-remove-button p-button-text p-button-danger p-button-sm"
+              (clicked)="removeConstraint(fieldConstraint)"
+              label="Remove Rule">
+            </cps-button>
+          </div>
+        </div>
+      </div>
+      <div class="p-column-filter-add-rule" *ngIf="isShowAddConstraint">
+        <cps-button
+          label="Add Rule"
+          class="p-column-filter-add-button p-button-text p-button-sm"
+          (clicked)="addConstraint()">
+        </cps-button>
+      </div>
+      <div class="p-column-filter-buttonbar">
+        <cps-button
+          *ngIf="showClearButton"
+          class="p-button-outlined p-button-sm"
+          (clicked)="clearFilter()"
+          label="Clear"></cps-button>
+        <cps-button
+          *ngIf="showApplyButton"
+          (clicked)="applyFilter()"
+          class="p-button-sm"
+          label="Apply"></cps-button>
+      </div>
+    </div>
+  </cps-menu>
+  <cps-icon
+    icon="filter-funnel"
+    (click)="columnFilterMenu.toggle($event)"
+    class="p-column-filter-menu-button"
+    [ngClass]="{
+      'p-column-filter-menu-button-active': hasFilter()
+    }"
+    >>
+  </cps-icon>
+</div>

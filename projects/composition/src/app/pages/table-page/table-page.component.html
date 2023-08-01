@@ -1,6 +1,7 @@
 <cps-table
   [showGlobalFilter]="true"
   [data]="data"
+  [columns]="cols"
   dataKey="a"
   [showActionBtn]="true"
   [reorderableRows]="true"
@@ -11,7 +12,13 @@
   (actionBtnClicked)="onActionBtnClicked()"
   toolbarTitle="This is an alpha version of table component">
   <ng-template #header>
-    <th cpsColSortable="a">A</th>
+    <th cpsColSortable="a">
+      A
+      <cps-table-column-filter
+        type="text"
+        field="name"
+        display="menu"></cps-table-column-filter>
+    </th>
     <th>B</th>
     <th cpsColSortable="c">C</th>
   </ng-template>

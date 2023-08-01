@@ -1,10 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsTableColumnSortableDirective, CpsTableComponent } from 'cps-ui-kit';
+import {
+  CpsTableColumnFilterComponent,
+  CpsTableColumnSortableDirective,
+  CpsTableComponent
+} from 'cps-ui-kit';
 @Component({
   selector: 'app-table-page',
   standalone: true,
-  imports: [CommonModule, CpsTableComponent, CpsTableColumnSortableDirective],
+  imports: [
+    CommonModule,
+    CpsTableComponent,
+    CpsTableColumnSortableDirective,
+    CpsTableColumnFilterComponent
+  ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
