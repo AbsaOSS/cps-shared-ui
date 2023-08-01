@@ -114,8 +114,6 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() exportFilename = 'download';
   @Input() csvSeparator = ',';
 
-  // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
-
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
