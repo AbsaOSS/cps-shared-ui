@@ -17,13 +17,15 @@
     (valueChanged)="onValueChange($event)"
     type="number"></cps-input>
 
-  <cps-button-toggle
-    *ngSwitchCase="'boolean'"
-    [options]="booleanOptions"
-    [value]="filterConstraint?.value"
-    (valueChanged)="onValueChange($event)"
-    [mandatory]="false">
-  </cps-button-toggle>
+  <div class="cps-table-col-filter-constraint-boolean">
+    <cps-button-toggle
+      *ngSwitchCase="'boolean'"
+      [options]="booleanOptions"
+      [value]="filterConstraint?.value"
+      (valueChanged)="onValueChange($event)"
+      [mandatory]="false">
+    </cps-button-toggle>
+  </div>
 
   <cps-datepicker
     *ngSwitchCase="'date'"
