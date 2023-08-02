@@ -194,6 +194,11 @@ $tbar-normal-height: 72px;
       background: white;
       transition: box-shadow 0.2s;
     }
+    .p-datatable .p-datatable-thead > tr > th:hover {
+      sortalticon {
+        opacity: 1;
+      }
+    }
 
     .p-datatable
       .p-sortable-column:not(.p-highlight):hover
@@ -714,6 +719,15 @@ $tbar-normal-height: 72px;
       .cps-table-col-filter-menu-button {
         color: $body-text-color;
       }
+    }
+
+    sortalticon {
+      opacity: 0;
+    }
+
+    p-sorticon {
+      display: inline-flex;
+      align-items: baseline;
     }
   }
 }
