@@ -27,14 +27,11 @@ import {
 })
 export class TableColumnFilterConstraintComponent implements OnInit {
   @Input() type: string | undefined;
-
   @Input() field: string | undefined;
-
   @Input() filterConstraint: FilterMetadata | undefined;
-
-  @Input() placeholder: string | undefined;
-
   @Input() categoryOptions: string[] = [];
+  @Input() placeholder = '';
+  @Input() hasApplyButton = true;
 
   booleanOptions = [
     { label: 'True', value: 'true' },
@@ -68,7 +65,7 @@ export class TableColumnFilterConstraintComponent implements OnInit {
   onValueChange(value: any) {
     (<any>this.filterConstraint).value = value;
 
-    if (this.type === 'boolean' || value === '') {
+    if (value === '' || !this.hasApplyButton) {
       this.dt._filter();
     }
   }
@@ -76,10 +73,5 @@ export class TableColumnFilterConstraintComponent implements OnInit {
   onInputEnterKeyDown(event: any) {
     this.dt._filter();
     event.preventDefault();
-  }
-
-  changeValueAndApply(value: any) {
-    (<any>this.filterConstraint).value = value;
-    this.dt._filter();
   }
 }

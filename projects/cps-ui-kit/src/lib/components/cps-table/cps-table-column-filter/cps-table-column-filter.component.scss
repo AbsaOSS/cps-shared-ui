@@ -33,6 +33,8 @@ $operator-bg-color: var(--cps-color-bg-light);
 
 .cps-table-col-filter-menu-content {
   padding-bottom: 12px;
+  // max-height: 500px;
+  // overflow: auto;
   & &-operator {
     padding: 12px;
     border-bottom: 1px solid $line-color;

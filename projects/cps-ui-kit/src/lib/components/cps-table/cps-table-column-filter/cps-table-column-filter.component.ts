@@ -38,28 +38,17 @@ export type CpsTableColumnType =
 })
 export class CpsTableColumnFilterComponent {
   @Input() field: string | undefined;
-
-  @Input() type = 'text';
-
-  @Input() operator: string = FilterOperator.AND;
-
-  @Input() showOperator = true;
-
+  @Input() type: CpsTableColumnType = 'text';
   @Input() showClearButton = true;
-
   @Input() showApplyButton = true;
-
-  @Input() showMatchModes = true;
-
-  @Input() showAddButton = true;
-
   @Input() hideOnClear = false;
-
-  @Input() placeholder: string | undefined;
-
   @Input() maxConstraints = 2;
-
   @Input() categoryOptions: string[] = [];
+  @Input() placeholder = '';
+
+  operator: string = FilterOperator.AND;
+  showMatchModes = true;
+  showOperator = true;
 
   operatorOptions = [
     { label: 'Match All', value: FilterOperator.AND, info: 'AND' },
@@ -119,6 +108,13 @@ export class CpsTableColumnFilterComponent {
   ngOnInit() {
     if (!this.dt.filters[<string>this.field]) {
       this.initFieldFilterConstraint();
+    }
+
+    if (this.type === 'boolean') {
+      this.showApplyButton = false;
+    }
+    if (this.maxConstraints > 1) {
+      this.showApplyButton = true;
     }
 
     this.matchModes = this.filterMatchModeOptions[this.type]?.map(
@@ -210,7 +206,6 @@ export class CpsTableColumnFilterComponent {
 
   get isShowAddConstraint(): boolean | undefined | null {
     return (
-      this.showAddButton &&
       !['boolean', 'category'].includes(this.type) &&
       this.fieldConstraints &&
       this.fieldConstraints.length < this.maxConstraints
