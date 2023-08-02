@@ -327,6 +327,16 @@ export class CpsAutocompleteComponent
     }
   }
 
+  onChevronClick(event: any, dd: HTMLElement) {
+    event.stopPropagation();
+
+    if (this.isOpened) {
+      this._closeAndClear(dd);
+    } else {
+      this.onBoxClick();
+    }
+  }
+
   focusInput() {
     this.autocompleteContainer?.nativeElement?.querySelector('input')?.focus();
   }

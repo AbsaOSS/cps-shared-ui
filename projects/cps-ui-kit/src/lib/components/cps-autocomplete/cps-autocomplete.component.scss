@@ -217,6 +217,14 @@ $hover-transition-duration: 0.2s;
           display: flex;
           margin-left: 8px;
           transition-duration: $hover-transition-duration;
+          cursor: pointer;
+          &:hover {
+            ::ng-deep cps-icon {
+              .cps-icon {
+                color: $color-calm !important;
+              }
+            }
+          }
         }
       }
     }
