@@ -1,0 +1,67 @@
+$color-calm: var(--cps-color-calm);
+$dark-text-color: var(--cps-color-text-dark);
+$line-color: var(--cps-color-line-mid);
+$operator-bg-color: var(--cps-color-bg-light);
+
+:host {
+  .cps-table-col-filter {
+    display: inline-flex;
+    .cps-table-col-filter-menu-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      text-decoration: none;
+      overflow: hidden;
+      position: relative;
+      margin-left: 8px;
+    }
+
+    .cps-table-col-filter-menu-button:not(
+        .cps-table-col-filter-menu-button-active
+      ) {
+      &:hover {
+        color: $dark-text-color;
+      }
+    }
+
+    .cps-table-col-filter-menu-button-active {
+      color: $color-calm;
+    }
+  }
+}
+
+.cps-table-col-filter-menu-content {
+  padding-bottom: 12px;
+  & &-operator {
+    padding: 12px;
+    border-bottom: 1px solid $line-color;
+    background: $operator-bg-color;
+  }
+  & &-constraints {
+    .cps-table-col-filter-menu-content-constraint {
+      border-bottom: 1px solid $line-color;
+      padding: 12px;
+      .cps-table-col-filter-match-mode-select {
+        margin-bottom: 8px;
+      }
+    }
+    .cps-table-col-filter-menu-content-constraint:last-child {
+      border-bottom: none;
+    }
+
+    .cps-table-col-filter-remove-rule-btn {
+      padding-top: 8px;
+    }
+  }
+  .cps-table-col-filter-add-rule-btn {
+    padding: 8px 12px;
+  }
+  .cps-table-col-filter-buttonbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    padding-top: 12px;
+  }
+}

@@ -2,6 +2,7 @@
   <cps-input
     *ngSwitchCase="'text'"
     [placeholder]="placeholder || ''"
+    [hideDetails]="true"
     (keydown.enter)="onInputEnterKeyDown($event)"
     [value]="filterConstraint?.value"
     (valueChanged)="onValueChange($event)"
@@ -9,6 +10,7 @@
 
   <cps-input
     *ngSwitchCase="'number'"
+    [hideDetails]="true"
     [placeholder]="placeholder || ''"
     (keydown.enter)="onInputEnterKeyDown($event)"
     [value]="filterConstraint?.value"
@@ -26,6 +28,7 @@
   <cps-datepicker
     *ngSwitchCase="'date'"
     [openOnInputFocus]="true"
+    [hideDetails]="true"
     [placeholder]="placeholder || ''"
     [value]="filterConstraint?.value"
     (keydown.enter)="onInputEnterKeyDown($event)"
@@ -36,6 +39,7 @@
     *ngSwitchCase="'category'"
     [placeholder]="placeholder || ''"
     [options]="categories"
+    [hideDetails]="true"
     [clearable]="true"
     [value]="filterConstraint?.value"
     (valueChanged)="changeValueAndApply($event)"
