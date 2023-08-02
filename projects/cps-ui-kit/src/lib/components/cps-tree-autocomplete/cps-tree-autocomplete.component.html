@@ -99,7 +99,9 @@
               size="small"
               (click)="clear(treeAutocompleteContainer, $event)"></cps-icon>
           </span>
-          <span class="cps-treeautocomplete-box-chevron">
+          <span
+            class="cps-treeautocomplete-box-chevron"
+            (click)="onChevronClick($event, treeAutocompleteContainer)">
             <cps-icon
               icon="chevron-down"
               size="small"

@@ -122,6 +122,16 @@ export class CpsTreeAutocompleteComponent
     }
   }
 
+  onChevronClick(event: any, dd: HTMLElement) {
+    event.stopPropagation();
+
+    if (this.isOpened) {
+      this._closeAndClear(dd);
+    } else {
+      this.onBoxClick();
+    }
+  }
+
   override remove(option: TreeNode): void {
     super.remove(option);
 

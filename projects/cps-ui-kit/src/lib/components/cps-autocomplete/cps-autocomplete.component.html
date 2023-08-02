@@ -105,7 +105,9 @@
               size="small"
               (click)="clear(autocompleteContainer, $event)"></cps-icon>
           </span>
-          <span class="cps-autocomplete-box-chevron">
+          <span
+            class="cps-autocomplete-box-chevron"
+            (click)="onChevronClick($event, autocompleteContainer)">
             <cps-icon
               icon="chevron-down"
               size="small"
