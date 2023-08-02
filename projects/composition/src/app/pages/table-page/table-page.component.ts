@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  CpsTableColumnFilterComponent,
+  CpsTableColumnFilterDirective,
   CpsTableColumnSortableDirective,
   CpsTableComponent
 } from 'cps-ui-kit';
@@ -12,7 +12,7 @@ import {
     CommonModule,
     CpsTableComponent,
     CpsTableColumnSortableDirective,
-    CpsTableColumnFilterComponent
+    CpsTableColumnFilterDirective
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],

@@ -14,7 +14,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Table, TableService, TableModule } from 'primeng/table';
-import { TableUnsortDirective } from './table-unsort.directive';
 import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
@@ -23,7 +22,8 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
-import { CpsTableColumnSortableDirective } from './cps-table-column-sortable.directive';
+import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
+import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
 import { find, isEqual } from 'lodash-es';
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';

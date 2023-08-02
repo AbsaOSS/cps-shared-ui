@@ -14,15 +14,8 @@ import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 
-export type CpsTableColumnType =
-  | 'text'
-  | 'number'
-  | 'date'
-  | 'boolean'
-  | 'category';
-
 @Component({
-  selector: 'cps-table-column-filter',
+  selector: 'table-column-filter',
   standalone: true,
   imports: [
     CommonModule,
@@ -33,12 +26,12 @@ export type CpsTableColumnType =
     CpsSelectComponent,
     TableColumnFilterConstraintComponent
   ],
-  templateUrl: './cps-table-column-filter.component.html',
-  styleUrls: ['./cps-table-column-filter.component.scss']
+  templateUrl: './table-column-filter.component.html',
+  styleUrls: ['./table-column-filter.component.scss']
 })
-export class CpsTableColumnFilterComponent {
+export class TableColumnFilterComponent {
   @Input() field: string | undefined;
-  @Input() type: CpsTableColumnType = 'text';
+  @Input() type = 'text';
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
   @Input() hideOnClear = false;

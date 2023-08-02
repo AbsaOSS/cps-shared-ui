@@ -12,32 +12,11 @@
   (actionBtnClicked)="onActionBtnClicked()"
   toolbarTitle="This is an alpha version of table component">
   <ng-template #header>
-    <th cpsColSortable="a">
-      A
-      <cps-table-column-filter type="text" field="a"></cps-table-column-filter>
-    </th>
-    <th>
-      B
-      <cps-table-column-filter type="date" field="b"></cps-table-column-filter>
-    </th>
-    <th cpsColSortable="c">
-      C
-      <cps-table-column-filter
-        type="number"
-        field="c"></cps-table-column-filter>
-    </th>
-    <th>
-      D
-      <cps-table-column-filter
-        type="boolean"
-        field="d"></cps-table-column-filter>
-    </th>
-    <th cpsColSortable="e">
-      E
-      <cps-table-column-filter
-        type="category"
-        field="e"></cps-table-column-filter>
-    </th>
+    <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+    <th cpsColFilter="b" filterType="date">B</th>
+    <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+    <th cpsColFilter="d" filterType="boolean">D</th>
+    <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
   </ng-template>
 
   <ng-template let-item #body>
