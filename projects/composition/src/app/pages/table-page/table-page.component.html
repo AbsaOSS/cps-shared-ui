@@ -7,15 +7,16 @@
   [reorderableRows]="true"
   [selectable]="true"
   [paginator]="true"
+  sortMode="multiple"
   [showRowMenu]="true"
   (editRowBtnClicked)="onEditRowButtonClicked($event)"
   (actionBtnClicked)="onActionBtnClicked()"
   toolbarTitle="This is an alpha version of table component">
   <ng-template #header>
     <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-    <th cpsColFilter="b" filterType="date">B</th>
+    <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
     <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-    <th cpsColFilter="d" filterType="boolean">D</th>
+    <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
     <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
   </ng-template>
 

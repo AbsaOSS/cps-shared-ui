@@ -78,7 +78,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() hasToolbar = true;
   @Input() toolbarSize: 'small' | 'normal' = 'normal';
   @Input() toolbarTitle = '';
-  @Input() sortMode: 'single' | 'multiple' = 'multiple';
+  @Input() sortMode: 'single' | 'multiple' = 'single';
   @Input() customSort = false;
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
