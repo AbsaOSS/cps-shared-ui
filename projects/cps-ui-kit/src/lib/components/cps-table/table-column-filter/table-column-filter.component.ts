@@ -103,11 +103,12 @@ export class TableColumnFilterComponent {
       this.initFieldFilterConstraint();
     }
 
+    if (this.maxConstraints > 1 && this.type !== 'category') {
+      this.showApplyButton = true;
+    }
+
     if (this.type === 'boolean') {
       this.showApplyButton = false;
-    }
-    if (this.maxConstraints > 1) {
-      this.showApplyButton = true;
     }
 
     this.matchModes = this.filterMatchModeOptions[this.type]?.map(
