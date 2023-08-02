@@ -19,6 +19,7 @@
   [paginator]="paginator"
   [showCurrentPageReport]="true"
   [alwaysShowPaginator]="alwaysShowPaginator"
+  [showInitialSortBadge]="false"
   [rows]="rows"
   [first]="first"
   [totalRecords]="totalRecords"
@@ -142,8 +143,13 @@
             }
           "></ng-container>
       </ng-container>
-      <ng-container *ngIf="!headerTemplate">
-        <ng-container *ngIf="columns.length > 0">
+      <ng-container *ngIf="!headerTemplate && columns.length > 0">
+        <ng-container *ngIf="sortable">
+          <th *ngFor="let col of columns" [cpsColSortable]="col[colFieldName]">
+            {{ col[colHeaderName] }}
+          </th>
+        </ng-container>
+        <ng-container *ngIf="!sortable">
           <th *ngFor="let col of columns">
             {{ col[colHeaderName] }}
           </th>

@@ -103,6 +103,7 @@ export class CpsMenuComponent implements OnDestroy {
   documentResizeListener!: VoidListener | null;
   overlayEventListener: Nullable<(event?: any) => void>;
   documentClickListener!: VoidListener | null;
+  documentKeydownListener!: VoidListener | null;
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   destroyCallback: Nullable<Function>;
@@ -120,7 +121,7 @@ export class CpsMenuComponent implements OnDestroy {
     public overlayService: OverlayService
   ) {}
 
-  toggle(event: any, target?: any) {
+  toggle(event?: any, target?: any) {
     if (this.isOverlayAnimationInProgress) {
       return;
     }
@@ -128,7 +129,7 @@ export class CpsMenuComponent implements OnDestroy {
     if (this.overlayVisible) {
       if (this.hasTargetChanged(event, target)) {
         this.destroyCallback = () => {
-          this.show(null, target || event.currentTarget || event.target);
+          this.show(null, target || event?.currentTarget || event?.target);
         };
       }
 
@@ -138,13 +139,13 @@ export class CpsMenuComponent implements OnDestroy {
     }
   }
 
-  show(event: any, target?: any) {
+  show(event?: any, target?: any) {
     target && event && event.stopPropagation();
     if (this.isOverlayAnimationInProgress) {
       return;
     }
 
-    this.target = target || event.currentTarget || event.target;
+    this.target = target || event?.currentTarget || event?.target;
     this.overlayVisible = true;
     this.render = true;
     this.cd.markForCheck();
@@ -164,6 +165,39 @@ export class CpsMenuComponent implements OnDestroy {
       });
     }
     this.hide();
+  }
+
+  bindDocumentKeydownListener() {
+    if (DomHandler.isTouchDevice()) return;
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.documentKeydownListener && this.dismissable) {
+        this.zone.runOutsideAngular(() => {
+          const documentTarget: any = this.el
+            ? this.el.nativeElement.ownerDocument
+            : this.document;
+
+          this.documentKeydownListener = this.renderer.listen(
+            documentTarget,
+            'keydown',
+            (event) => {
+              // escape
+              if (event.keyCode === 27) {
+                this.zone.run(() => {
+                  if (this.overlayVisible) this.hide();
+                });
+              }
+            }
+          );
+        });
+      }
+    }
+  }
+
+  unbindDocumentKeydownListener() {
+    if (this.documentKeydownListener) {
+      this.documentKeydownListener();
+      this.documentKeydownListener = null;
+    }
   }
 
   bindDocumentClickListener() {
@@ -220,10 +254,10 @@ export class CpsMenuComponent implements OnDestroy {
     this.selfClick = true;
   }
 
-  hasTargetChanged(event: any, target: any) {
+  hasTargetChanged(event?: any, target?: any) {
     return (
-      this.target != null &&
-      this.target !== (target || event.currentTarget || event.target)
+      this.target &&
+      this.target !== (target || event?.currentTarget || event?.target)
     );
   }
 
@@ -287,6 +321,7 @@ export class CpsMenuComponent implements OnDestroy {
       this.appendContainer();
       this.align();
       this.bindDocumentClickListener();
+      this.bindDocumentKeydownListener();
       this.bindDocumentResizeListener();
       this.bindScrollListener();
 
@@ -404,6 +439,7 @@ export class CpsMenuComponent implements OnDestroy {
     }
 
     this.unbindDocumentClickListener();
+    this.unbindDocumentKeydownListener();
     this.unbindDocumentResizeListener();
     this.unbindScrollListener();
   }

@@ -32,7 +32,7 @@ export class CpsTableColumnSortableDirective
   override ngOnInit(): void {
     super.ngOnInit();
     this.sortIconRef.setInput('field', this.field);
-    this.elementRef.nativeElement.firstChild.after(
+    this.elementRef.nativeElement.appendChild(
       this.sortIconRef.location.nativeElement
     );
   }
@@ -41,5 +41,15 @@ export class CpsTableColumnSortableDirective
     super.ngOnDestroy();
     this.sortIconRef.destroy();
     this.viewContainerRef.clear();
+  }
+
+  override onClick(event: MouseEvent): void {
+    if (
+      !this.elementRef?.nativeElement?.classList?.contains(
+        'cps-table-col-filter-menu-open'
+      )
+    ) {
+      super.onClick(event);
+    }
   }
 }

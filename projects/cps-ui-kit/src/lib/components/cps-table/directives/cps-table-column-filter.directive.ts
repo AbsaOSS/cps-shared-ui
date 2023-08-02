@@ -1,0 +1,63 @@
+import {
+  ComponentRef,
+  Directive,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewContainerRef
+} from '@angular/core';
+import { TableColumnFilterComponent } from '../table-column-filter/table-column-filter.component';
+
+export type CpsTableColumnFilterType =
+  | 'text'
+  | 'number'
+  | 'date'
+  | 'boolean'
+  | 'category';
+
+@Directive({
+  standalone: true,
+  selector: '[cpsColFilter]'
+})
+export class CpsTableColumnFilterDirective implements OnInit, OnDestroy {
+  @Input('cpsColFilter') field: string | undefined;
+  @Input() filterType: CpsTableColumnFilterType = 'text';
+  @Input() filterShowClearButton = true;
+  @Input() filterShowApplyButton = true;
+  @Input() filterHideOnClear = false;
+  @Input() filterMaxConstraints = 2;
+  @Input() filterCategoryOptions: string[] = [];
+  @Input() filterPlaceholder = '';
+
+  filterCompRef: ComponentRef<TableColumnFilterComponent>;
+
+  constructor(
+    private elementRef: ElementRef,
+    private viewContainerRef: ViewContainerRef
+  ) {
+    this.filterCompRef = this.viewContainerRef.createComponent(
+      TableColumnFilterComponent
+    );
+  }
+
+  ngOnInit(): void {
+    this.filterCompRef.setInput('field', this.field);
+    this.filterCompRef.setInput('type', this.filterType);
+    this.filterCompRef.setInput('showClearButton', this.filterShowClearButton);
+    this.filterCompRef.setInput('showApplyButton', this.filterShowApplyButton);
+    this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
+    this.filterCompRef.setInput('maxConstraints', this.filterMaxConstraints);
+    this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);
+    this.filterCompRef.setInput('placeholder', this.filterPlaceholder);
+
+    this.elementRef.nativeElement.firstChild.after(
+      this.filterCompRef.location.nativeElement
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.filterCompRef.destroy();
+    this.viewContainerRef.clear();
+  }
+}

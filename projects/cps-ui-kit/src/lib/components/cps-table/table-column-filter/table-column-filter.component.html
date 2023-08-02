@@ -1,0 +1,96 @@
+<div class="cps-table-col-filter">
+  <cps-menu
+    #columnFilterMenu
+    [withArrow]="false"
+    (menuShown)="onMenuShown()"
+    (menuHidden)="onMenuHidden()">
+    <div class="cps-table-col-filter-menu-content">
+      <div
+        class="cps-table-col-filter-menu-content-operator"
+        *ngIf="isShowOperator">
+        <cps-select
+          [hideDetails]="true"
+          [disabled]="!fieldConstraints || fieldConstraints.length < 2"
+          [returnObject]="false"
+          [options]="operatorOptions"
+          [ngModel]="operator"
+          (valueChanged)="onOperatorChange($event)"></cps-select>
+      </div>
+      <div class="cps-table-col-filter-menu-content-constraints">
+        <div
+          *ngFor="let fieldConstraint of fieldConstraints; let i = index"
+          class="cps-table-col-filter-menu-content-constraint">
+          <cps-select
+            *ngIf="showMatchModes && matchModes"
+            class="cps-table-col-filter-match-mode-select"
+            [hideDetails]="true"
+            [returnObject]="false"
+            [options]="matchModes"
+            [ngModel]="fieldConstraint.matchMode"
+            (valueChanged)="
+              onMenuMatchModeChange($event, fieldConstraint)
+            "></cps-select>
+          <table-column-filter-constraint
+            [type]="type"
+            [field]="field"
+            [categoryOptions]="categoryOptions"
+            [filterConstraint]="fieldConstraint"
+            [hasApplyButton]="showApplyButton"
+            [placeholder]="placeholder">
+          </table-column-filter-constraint>
+          <div
+            class="cps-table-col-filter-remove-rule-btn"
+            *ngIf="showRemoveIcon">
+            <cps-button
+              type="borderless"
+              width="100%"
+              size="small"
+              color="prepared"
+              icon="delete"
+              (clicked)="removeConstraint(fieldConstraint)"
+              label="Remove condition">
+            </cps-button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="cps-table-col-filter-add-rule-btn"
+        *ngIf="isShowAddConstraint">
+        <cps-button
+          label="Add condition"
+          type="borderless"
+          width="100%"
+          size="small"
+          color="surprise"
+          icon="add"
+          (clicked)="addConstraint()">
+        </cps-button>
+      </div>
+      <div class="cps-table-col-filter-buttonbar">
+        <cps-button
+          *ngIf="showClearButton"
+          (clicked)="clearFilter()"
+          type="borderless"
+          color="prepared"
+          size="small"
+          label="Clear"></cps-button>
+        <cps-button
+          *ngIf="showApplyButton"
+          (clicked)="applyFilter()"
+          color="prepared"
+          size="small"
+          label="Apply"></cps-button>
+      </div>
+    </div>
+  </cps-menu>
+  <cps-icon
+    icon="filter-funnel"
+    size="13"
+    (click)="columnFilterMenu.toggle($event)"
+    class="cps-table-col-filter-menu-button"
+    [ngClass]="{
+      'cps-table-col-filter-menu-button-active': hasFilter()
+    }"
+    >>
+  </cps-icon>
+</div>

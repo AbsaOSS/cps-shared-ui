@@ -14,7 +14,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Table, TableService, TableModule } from 'primeng/table';
-import { TableUnsortDirective } from './table-unsort.directive';
 import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
@@ -23,6 +22,8 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
+import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
+import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
 import { find, isEqual } from 'lodash-es';
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -48,7 +49,8 @@ export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
     CpsIconComponent,
     CpsMenuComponent,
     CpsLoaderComponent,
-    TableRowMenuComponent
+    TableRowMenuComponent,
+    CpsTableColumnSortableDirective
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -76,7 +78,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() hasToolbar = true;
   @Input() toolbarSize: 'small' | 'normal' = 'normal';
   @Input() toolbarTitle = '';
-  @Input() sortMode: 'single' | 'multiple' = 'multiple';
+  @Input() sortMode: 'single' | 'multiple' = 'single';
   @Input() customSort = false;
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
@@ -84,6 +86,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() loading = false;
   @Input() reorderableRows = false;
   @Input() showColumnsToggle = false;
+  @Input() sortable = false; // makes all sortable if columns are provided
 
   @Input() scrollable = true;
   @Input() scrollHeight = '';
@@ -110,8 +113,6 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() showExportBtn = false;
   @Input() exportFilename = 'download';
   @Input() csvSeparator = ',';
-
-  // TODO CpsTableColumnFilterDirective (type date, text, boolean, range, categories, numeric)
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();

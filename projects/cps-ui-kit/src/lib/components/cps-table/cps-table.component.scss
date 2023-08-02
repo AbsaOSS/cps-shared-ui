@@ -194,6 +194,11 @@ $tbar-normal-height: 72px;
       background: white;
       transition: box-shadow 0.2s;
     }
+    .p-datatable .p-datatable-thead > tr > th:hover {
+      sortalticon {
+        opacity: 1;
+      }
+    }
 
     .p-datatable
       .p-sortable-column:not(.p-highlight):hover
@@ -245,46 +250,6 @@ $tbar-normal-height: 72px;
       color: $color-calm;
       background: $badge-background-color;
       margin-left: 0.5rem;
-    }
-
-    filtericon {
-      pointer-events: none;
-      .p-icon {
-        width: 13px;
-        height: 13px;
-      }
-    }
-
-    p-columnfilter {
-      margin-left: 4px;
-    }
-
-    .p-column-filter-menu-button:hover {
-      color: $body-text-color;
-      border-color: transparent;
-    }
-
-    .p-column-filter-menu-button.p-column-filter-menu-button-open,
-    .p-column-filter-menu-button.p-column-filter-menu-button-open:hover {
-      background: transparent;
-      color: $body-text-color;
-    }
-
-    .p-column-filter-menu-button,
-    .p-column-filter-clear-button {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      text-decoration: none;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .p-column-filter-menu-button:focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: none;
     }
 
     .p-link {
@@ -744,6 +709,25 @@ $tbar-normal-height: 72px;
           }
         }
       }
+    }
+
+    .p-sortable-column.cps-table-col-filter-menu-open {
+      cursor: default;
+    }
+
+    .cps-table-col-filter-menu-open {
+      .cps-table-col-filter-menu-button {
+        color: $body-text-color;
+      }
+    }
+
+    sortalticon {
+      opacity: 0;
+    }
+
+    p-sorticon {
+      display: inline-flex;
+      align-items: baseline;
     }
   }
 }

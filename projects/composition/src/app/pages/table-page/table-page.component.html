@@ -1,31 +1,39 @@
 <cps-table
   [showGlobalFilter]="true"
   [data]="data"
+  [columns]="cols"
   dataKey="a"
   [showActionBtn]="true"
   [reorderableRows]="true"
   [selectable]="true"
   [paginator]="true"
+  sortMode="multiple"
   [showRowMenu]="true"
   (editRowBtnClicked)="onEditRowButtonClicked($event)"
   (actionBtnClicked)="onActionBtnClicked()"
   toolbarTitle="This is an alpha version of table component">
   <ng-template #header>
-    <th cpsColSortable="a">A</th>
-    <th>B</th>
-    <th cpsColSortable="c">C</th>
+    <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+    <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
+    <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+    <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
+    <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
   </ng-template>
 
   <ng-template let-item #body>
-    <td>{{ item.a }}</td>
-    <td>{{ item.b | uppercase }}</td>
+    <td>{{ item.a | uppercase }}</td>
+    <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
     <td>{{ item.c | percent }}</td>
+    <td [style.color]="item.d ? 'green' : 'red'">
+      {{ item.d ? '&#10004;' : '&#10008;' }}
+    </td>
+    <td>{{ item.e }}</td>
   </ng-template>
 
   <ng-template let-item #rowexpansion>
     <div class="expanded-row-contents">
-      <div>id: {{ item.d.id }}</div>
-      <div>desc: {{ item.d.desc }}</div>
+      <div>id: {{ item.f.id }}</div>
+      <div>desc: {{ item.f.desc }}</div>
     </div>
   </ng-template>
 </cps-table>

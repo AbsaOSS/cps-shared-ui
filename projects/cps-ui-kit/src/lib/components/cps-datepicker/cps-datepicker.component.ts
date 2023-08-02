@@ -41,7 +41,7 @@ export class CpsDatepickerComponent
   @Input() width: number | string = '100%';
   @Input() placeholder = 'MM/DD/YYYY';
   @Input() hint = '';
-  @Input() clearable = true;
+  @Input() clearable = false;
   @Input() hideDetails = false;
   @Input() persistentClear = false;
   @Input() showTodayButton = true;
@@ -223,6 +223,10 @@ export class CpsDatepickerComponent
   onSelectCalendarDate(dateVal: Date) {
     this.toggleCalendar(false);
     this._dateToString(dateVal);
+
+    this.writeValue(dateVal);
+    this.onChange(dateVal);
+    this.valueChanged.emit(dateVal);
   }
 
   onInputBlur() {

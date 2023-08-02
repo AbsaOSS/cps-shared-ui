@@ -1,0 +1,48 @@
+<ng-container [ngSwitch]="type">
+  <cps-input
+    *ngSwitchCase="'text'"
+    [placeholder]="placeholder"
+    [hideDetails]="true"
+    (keydown.enter)="onInputEnterKeyDown($event)"
+    [value]="filterConstraint?.value"
+    (valueChanged)="onValueChange($event)"
+    type="text"></cps-input>
+
+  <cps-input
+    *ngSwitchCase="'number'"
+    [hideDetails]="true"
+    [placeholder]="placeholder"
+    (keydown.enter)="onInputEnterKeyDown($event)"
+    [value]="filterConstraint?.value"
+    (valueChanged)="onValueChange($event)"
+    type="number"></cps-input>
+
+  <cps-button-toggle
+    *ngSwitchCase="'boolean'"
+    [options]="booleanOptions"
+    [value]="filterConstraint?.value"
+    (valueChanged)="onValueChange($event)"
+    [mandatory]="false">
+  </cps-button-toggle>
+
+  <cps-datepicker
+    *ngSwitchCase="'date'"
+    [openOnInputFocus]="true"
+    [hideDetails]="true"
+    [placeholder]="placeholder"
+    [value]="filterConstraint?.value"
+    (keydown.enter)="onInputEnterKeyDown($event)"
+    (valueChanged)="onValueChange($event)">
+  </cps-datepicker>
+
+  <cps-autocomplete
+    *ngSwitchCase="'category'"
+    [placeholder]="placeholder"
+    [options]="categories"
+    [hideDetails]="true"
+    [clearable]="true"
+    [value]="filterConstraint?.value"
+    (valueChanged)="onValueChange($event)"
+    [returnObject]="false"
+    [multiple]="true"></cps-autocomplete>
+</ng-container>
