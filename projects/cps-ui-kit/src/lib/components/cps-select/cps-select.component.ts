@@ -111,6 +111,9 @@ export class CpsSelectComponent
   @ViewChild('optionsMenu')
   optionsMenu!: CpsMenuComponent;
 
+  @ViewChild('optionsList')
+  optionsList!: ElementRef;
+
   private _statusChangesSubscription: Subscription = new Subscription();
 
   error = '';
@@ -179,26 +182,28 @@ export class CpsSelectComponent
 
     this.isOpened = this.optionsMenu.isVisible();
 
-    if (this.isOpened && this.options.length > 0) {
-      const selected =
-        this.selectContainer.nativeElement.querySelector('.selected');
-      if (selected) {
-        selected.scrollIntoView({
-          behavior: 'instant',
-          block: 'nearest',
-          inline: 'center'
-        });
-      } else if (this.virtualScroll && this.value) {
-        let v: any;
-        if (this.multiple) {
-          if (this.value.length > 0) {
-            v = this.value[0];
-          }
-        } else v = this.value;
-        const idx = this.options.findIndex((o) => isEqual(o, v));
-        if (idx >= 0) this.virtualList.scrollToIndex(idx);
+    setTimeout(() => {
+      if (this.isOpened && this.options.length > 0) {
+        const selected =
+          this.optionsList.nativeElement.querySelector('.selected');
+        if (selected) {
+          selected.scrollIntoView({
+            behavior: 'instant',
+            block: 'nearest',
+            inline: 'center'
+          });
+        } else if (this.virtualScroll && this.value) {
+          let v: any;
+          if (this.multiple) {
+            if (this.value.length > 0) {
+              v = this.value[0];
+            }
+          } else v = this.value;
+          const idx = this.options.findIndex((o) => isEqual(o, v));
+          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        }
       }
-    }
+    });
   }
 
   private _recalcVirtualListHeight() {
@@ -249,8 +254,9 @@ export class CpsSelectComponent
   }
 
   private _getHTMLOptions() {
-    return (document.body.querySelectorAll('.cps-select-options-option') ||
-      []) as any;
+    return (this.optionsList.nativeElement.querySelectorAll(
+      '.cps-select-options-option'
+    ) || []) as any;
   }
 
   private _dehighlightOption(el?: HTMLElement) {
@@ -285,6 +291,7 @@ export class CpsSelectComponent
     if (len < 1) return;
 
     if (len === 1) {
+      this.optionHighlightedIndex = 0;
       this._highlightOption(optionItems[0]);
       return;
     }

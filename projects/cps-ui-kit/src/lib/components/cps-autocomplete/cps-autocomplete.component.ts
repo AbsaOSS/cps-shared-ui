@@ -109,6 +109,9 @@ export class CpsAutocompleteComponent
   @ViewChild('optionsMenu')
   optionsMenu!: CpsMenuComponent;
 
+  @ViewChild('optionsList')
+  optionsList!: ElementRef;
+
   private _statusChangesSubscription: Subscription = new Subscription();
 
   error = '';
@@ -401,7 +404,7 @@ export class CpsAutocompleteComponent
         this.recalcVirtualListHeight();
 
         const selected =
-          this.autocompleteContainer.nativeElement.querySelector('.selected');
+          this.optionsList.nativeElement.querySelector('.selected');
         if (selected) {
           selected.scrollIntoView({
             behavior: 'instant',
@@ -485,7 +488,7 @@ export class CpsAutocompleteComponent
   }
 
   private _getHTMLOptions() {
-    return (document.body.querySelectorAll(
+    return (this.optionsList.nativeElement.querySelectorAll(
       '.cps-autocomplete-options-option'
     ) || []) as any;
   }
