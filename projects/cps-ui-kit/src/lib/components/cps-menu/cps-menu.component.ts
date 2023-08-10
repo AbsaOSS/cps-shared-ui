@@ -87,12 +87,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
 
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
+  @Output() beforeMenuHidden = new EventEmitter();
 
   withIcons = true;
   autoZIndex = true;
   baseZIndex = 0;
   showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
-  hideTransitionOptions = '.1s linear';
+  hideTransitionOptions = '.0s linear';
   dismissable = true;
   container: Nullable<HTMLDivElement>;
   overlayVisible = false;
@@ -160,6 +161,10 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   hide() {
     this.overlayVisible = false;
     this.cd.markForCheck();
+  }
+
+  isVisible() {
+    return this.overlayVisible;
   }
 
   onItemClick(event: any, item: CpsMenuItem) {
@@ -321,7 +326,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   }
 
   onAnimationStart(event: AnimationEvent) {
-    if (event.toState === 'open') {
+    if (event.toState === 'close') {
+      this.beforeMenuHidden.emit(null);
+    } else if (event.toState === 'open') {
       if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
       this.container = event.element;
       this.appendContainer();

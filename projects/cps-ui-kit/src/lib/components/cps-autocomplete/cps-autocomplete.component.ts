@@ -22,7 +22,6 @@ import {
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { find, isEqual } from 'lodash-es';
@@ -31,21 +30,21 @@ import {
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
-import { hasSpaceBelow } from '../../utils/internal/position-utils';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    ClickOutsideDirective,
     CpsIconComponent,
     CpsChipComponent,
     CpsProgressLinearComponent,
     CpsInfoCircleComponent,
     LabelByValuePipe,
     CheckOptionSelectedPipe,
-    VirtualScrollerModule
+    VirtualScrollerModule,
+    CpsMenuComponent
   ],
   providers: [LabelByValuePipe, CheckOptionSelectedPipe],
   selector: 'cps-autocomplete',
@@ -97,11 +96,17 @@ export class CpsAutocompleteComponent
 
   @Output() valueChanged = new EventEmitter<any>();
 
+  @ViewChild('autocompleteBox')
+  autocompleteBox!: ElementRef;
+
   @ViewChild('autocompleteContainer')
   autocompleteContainer!: ElementRef;
 
   @ViewChild('virtualList')
   virtualList!: VirtualScroller;
+
+  @ViewChild('optionsMenu')
+  optionsMenu!: CpsMenuComponent;
 
   private _statusChangesSubscription: Subscription = new Subscription();
 
@@ -179,8 +184,8 @@ export class CpsAutocompleteComponent
     }, 0);
   }
 
-  onOptionClick(option: any, dd: HTMLElement) {
-    this._clickOption(option, dd);
+  onOptionClick(option: any) {
+    this._clickOption(option);
   }
 
   toggleAll() {
@@ -216,7 +221,7 @@ export class CpsAutocompleteComponent
 
   filterOptions(event: any) {
     if (!this.isOpened) {
-      this._toggleOptions(this.autocompleteContainer?.nativeElement, true);
+      this._toggleOptions(true);
     }
     this._dehighlightOption();
     this.backspaceClickedOnce = false;
@@ -235,7 +240,7 @@ export class CpsAutocompleteComponent
     this.value = value;
   }
 
-  clear(dd: HTMLElement, event: any): void {
+  clear(event: any): void {
     event.stopPropagation();
 
     if (
@@ -243,7 +248,7 @@ export class CpsAutocompleteComponent
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
-        this._toggleOptions(dd, true);
+        this._toggleOptions(true);
       }
       const val = this.multiple ? [] : this.returnObject ? undefined : '';
       this.updateValue(val);
@@ -263,8 +268,8 @@ export class CpsAutocompleteComponent
     this._checkErrors();
   }
 
-  onClickOutside(dd: HTMLElement) {
-    this._closeAndClear(dd);
+  onBeforeOptionsHidden() {
+    this._closeAndClear();
   }
 
   onBoxClick() {
@@ -277,11 +282,11 @@ export class CpsAutocompleteComponent
     this._dehighlightOption();
   }
 
-  onContainerKeyDown(event: any, dd: HTMLElement) {
+  onContainerKeyDown(event: any) {
     const code = event.keyCode;
     // escape
     if (code === 27) {
-      this._closeAndClear(dd);
+      this._closeAndClear();
     }
     // enter
     else if (code === 13) {
@@ -300,7 +305,7 @@ export class CpsAutocompleteComponent
       const option = this.filteredOptions[idx];
       if (this.filteredOptions.length !== this.options.length)
         this._dehighlightOption();
-      this._clickOption(option, dd);
+      this._clickOption(option);
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
@@ -327,11 +332,11 @@ export class CpsAutocompleteComponent
     }
   }
 
-  onChevronClick(event: any, dd: HTMLElement) {
+  onChevronClick(event: any) {
     event.stopPropagation();
 
     if (this.isOpened) {
-      this._closeAndClear(dd);
+      this._closeAndClear();
     } else {
       this.onBoxClick();
     }
@@ -344,7 +349,7 @@ export class CpsAutocompleteComponent
   focus() {
     this.autocompleteContainer?.nativeElement?.focus();
     this.focusInput();
-    this._toggleOptions(this.autocompleteContainer?.nativeElement, true);
+    this._toggleOptions(true);
   }
 
   recalcVirtualListHeight() {
@@ -356,24 +361,25 @@ export class CpsAutocompleteComponent
     );
   }
 
-  private _toggleOptions(dd: HTMLElement, show?: boolean): void {
-    if (this.disabled || !dd || this.isOpened === show) return;
+  private _toggleOptions(show?: boolean): void {
+    if (this.disabled || this.isOpened === show) return;
 
     this.backspaceClickedOnce = false;
     if (typeof show === 'boolean') {
-      if (show) dd.classList.add('active');
-      else dd.classList.remove('active');
-    } else dd.classList.toggle('active');
-
-    this.isOpened = dd.classList.contains('active');
-
-    dd.classList.remove('top-open');
-    if (
-      this.isOpened &&
-      !hasSpaceBelow(this.autocompleteContainer, '.cps-autocomplete-options')
-    ) {
-      dd.classList.add('top-open');
+      if (show) {
+        this.optionsMenu.show({
+          target: this.autocompleteBox.nativeElement
+        });
+      } else {
+        this.optionsMenu.hide();
+      }
+    } else {
+      this.optionsMenu.toggle({
+        target: this.autocompleteBox.nativeElement
+      });
     }
+
+    this.isOpened = this.optionsMenu.isVisible();
 
     setTimeout(() => {
       if (this.isOpened && this.filteredOptions.length > 0) {
@@ -401,10 +407,10 @@ export class CpsAutocompleteComponent
     });
   }
 
-  private _clickOption(option: any, dd: HTMLElement) {
+  private _clickOption(option: any) {
     this.select(option, false);
     if (!this.multiple) {
-      this._toggleOptions(dd, false);
+      this._toggleOptions(false);
     }
   }
 
@@ -457,18 +463,16 @@ export class CpsAutocompleteComponent
     this.recalcVirtualListHeight();
   }
 
-  private _closeAndClear(dd: HTMLElement) {
+  private _closeAndClear() {
     this._clearInput();
-    this._toggleOptions(dd, false);
+    this._toggleOptions(false);
     this._dehighlightOption();
   }
 
   private _getHTMLOptions() {
-    return (
-      this.autocompleteContainer?.nativeElement?.querySelectorAll(
-        '.cps-autocomplete-options-option'
-      ) || []
-    );
+    return (document.body.querySelectorAll(
+      '.cps-autocomplete-options-option'
+    ) || []) as any;
   }
 
   private _dehighlightOption(el?: HTMLElement) {
@@ -533,7 +537,7 @@ export class CpsAutocompleteComponent
       if (this.multiple) return;
       const val = this.returnObject ? undefined : '';
       this.updateValue(val);
-      this._closeAndClear(this.autocompleteContainer?.nativeElement);
+      this._closeAndClear();
       return;
     }
 
@@ -542,10 +546,7 @@ export class CpsAutocompleteComponent
     );
     if (found) {
       this.select(found, false);
-      this._toggleOptions(
-        this.autocompleteContainer?.nativeElement,
-        this.multiple
-      );
+      this._toggleOptions(this.multiple);
     } else {
       if (!this.multiple) {
         this.inputText = this._getValueLabel();

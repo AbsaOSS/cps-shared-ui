@@ -3,7 +3,7 @@
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
   tabindex="1"
-  [ngClass]="{ disabled: disabled, error: error }"
+  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
   #autocompleteContainer>
   <div class="cps-autocomplete-label" *ngIf="label">
     <label>{{ label }}</label>
@@ -19,14 +19,13 @@
     </cps-info-circle>
   </div>
   <div
-    (keydown)="onContainerKeyDown($event, autocompleteContainer)"
+    (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
     [class.focused]="isOpened"
     [ngClass]="{
       'persistent-clear': persistentClear
-    }"
-    (clickOutside)="onClickOutside(autocompleteContainer)">
-    <div class="cps-autocomplete-box" (click)="onBoxClick()">
+    }">
+    <div class="cps-autocomplete-box" #autocompleteBox (click)="onBoxClick()">
       <div class="cps-autocomplete-box-area">
         <cps-icon
           *ngIf="prefixIcon"
@@ -103,11 +102,11 @@
             <cps-icon
               icon="delete"
               size="small"
-              (click)="clear(autocompleteContainer, $event)"></cps-icon>
+              (click)="clear($event)"></cps-icon>
           </span>
           <span
             class="cps-autocomplete-box-chevron"
-            (click)="onChevronClick($event, autocompleteContainer)">
+            (click)="onChevronClick($event)">
             <cps-icon
               icon="chevron-down"
               size="small"
@@ -117,49 +116,40 @@
       </div>
     </div>
 
-    <div class="cps-autocomplete-options">
+    <cps-menu
+      #optionsMenu
+      [withArrow]="false"
+      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      containerClass="cps-autocomplete-options-menu">
       <div
-        *ngIf="filteredOptions.length < 1"
-        class="cps-autocomplete-options-empty">
-        {{ emptyMessage }}
-      </div>
-      <ng-container *ngIf="!virtualScroll">
+        class="cps-autocomplete-options"
+        [ngStyle]="{
+          width: autocompleteBox.offsetWidth + 'px'
+        }">
         <div
-          class="cps-autocomplete-options-option select-all-option"
-          [class.allselected]="value?.length === options.length"
-          *ngIf="
-            multiple && selectAll && filteredOptions.length === options.length
-          "
-          (click)="toggleAll()">
-          <span class="cps-autocomplete-options-option-left">
-            <span
-              *ngIf="multiple"
-              class="cps-autocomplete-options-option-check">
-            </span>
-            <span class="cps-autocomplete-options-option-label"
-              >Select all</span
-            >
-          </span>
+          *ngIf="filteredOptions.length < 1"
+          class="cps-autocomplete-options-empty">
+          {{ emptyMessage }}
         </div>
-        <ng-container *ngFor="let item of filteredOptions">
-          <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="virtualScroll">
-        <p-virtualScroller
-          #virtualList
-          [value]="filteredOptions"
-          [delay]="0"
-          [scrollHeight]="virtualListHeight + 'px'"
-          [options]="{ numToleratedItems: 3 }"
-          [itemSize]="virtualScrollItemSize">
-          <ng-template pTemplate="item" let-item>
+        <ng-container *ngIf="!virtualScroll">
+          <div
+            class="cps-autocomplete-options-option select-all-option"
+            [class.allselected]="value?.length === options.length"
+            *ngIf="
+              multiple && selectAll && filteredOptions.length === options.length
+            "
+            (click)="toggleAll()">
+            <span class="cps-autocomplete-options-option-left">
+              <span
+                *ngIf="multiple"
+                class="cps-autocomplete-options-option-check">
+              </span>
+              <span class="cps-autocomplete-options-option-label"
+                >Select all</span
+              >
+            </span>
+          </div>
+          <ng-container *ngFor="let item of filteredOptions">
             <ng-container
               *ngTemplateOutlet="
                 itemTemplate;
@@ -167,10 +157,29 @@
                   item: item
                 }
               "></ng-container>
-          </ng-template>
-        </p-virtualScroller>
-      </ng-container>
-    </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="virtualScroll">
+          <p-virtualScroller
+            #virtualList
+            [value]="filteredOptions"
+            [delay]="0"
+            [scrollHeight]="virtualListHeight + 'px'"
+            [options]="{ numToleratedItems: 3 }"
+            [itemSize]="virtualScrollItemSize">
+            <ng-template pTemplate="item" let-item>
+              <ng-container
+                *ngTemplateOutlet="
+                  itemTemplate;
+                  context: {
+                    item: item
+                  }
+                "></ng-container>
+            </ng-template>
+          </p-virtualScroller>
+        </ng-container>
+      </div>
+    </cps-menu>
     <cps-progress-linear
       *ngIf="loading"
       height="3"
@@ -211,7 +220,7 @@
 <ng-template #itemTemplate let-item="item">
   <div
     class="cps-autocomplete-options-option"
-    (click)="onOptionClick(item, autocompleteContainer)"
+    (click)="onOptionClick(item)"
     [class.selected]="
       item | checkOptionSelected : value : multiple : returnObject : optionValue
     ">
