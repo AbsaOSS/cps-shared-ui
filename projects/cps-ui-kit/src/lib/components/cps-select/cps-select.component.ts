@@ -84,6 +84,7 @@ export class CpsSelectComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() optionsClass = '';
 
   @Input('value') _value: any = undefined;
 

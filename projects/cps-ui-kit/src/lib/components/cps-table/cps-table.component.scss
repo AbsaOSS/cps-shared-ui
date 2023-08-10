@@ -496,9 +496,6 @@ $tbar-normal-height: 72px;
             }
           }
         }
-        .cps-select-options-option {
-          font-size: 14px;
-        }
       }
     }
 
@@ -807,5 +804,11 @@ $tbar-normal-height: 72px;
   .select-all-option {
     border-bottom: 1px solid lightgrey;
     font-weight: 600;
+  }
+}
+
+::ng-deep .cps-select-options-menu.cps-paginator-page-options {
+  .cps-select-options-option {
+    font-size: 14px;
   }
 }

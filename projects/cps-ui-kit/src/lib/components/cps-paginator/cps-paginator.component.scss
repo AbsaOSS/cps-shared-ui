@@ -39,9 +39,6 @@ $elem-active-background: #f1eaec;
             }
           }
         }
-        .cps-select-options-option {
-          font-size: 14px;
-        }
       }
     }
 
@@ -161,5 +158,11 @@ $elem-active-background: #f1eaec;
     .p-component:disabled {
       opacity: 0.4;
     }
+  }
+}
+
+::ng-deep .cps-select-options-menu.cps-paginator-page-options {
+  .cps-select-options-option {
+    font-size: 14px;
   }
 }

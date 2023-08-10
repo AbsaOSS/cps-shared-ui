@@ -106,7 +106,7 @@
       [withArrow]="false"
       (beforeMenuHidden)="onBeforeOptionsHidden()"
       hideTransitionOptions="0s linear"
-      containerClass="cps-select-options-menu">
+      [containerClass]="'cps-select-options-menu ' + optionsClass">
       <div
         class="cps-select-options"
         [ngStyle]="{
