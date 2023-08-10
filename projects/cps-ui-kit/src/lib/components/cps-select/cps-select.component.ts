@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -22,7 +23,6 @@ import {
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
@@ -32,14 +32,13 @@ import {
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
-import { hasSpaceBelow } from '../../utils/internal/position-utils';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    ClickOutsideDirective,
     CpsIconComponent,
     CpsChipComponent,
     CpsProgressLinearComponent,
@@ -47,7 +46,8 @@ import { hasSpaceBelow } from '../../utils/internal/position-utils';
     LabelByValuePipe,
     CombineLabelsPipe,
     CheckOptionSelectedPipe,
-    VirtualScrollerModule
+    VirtualScrollerModule,
+    CpsMenuComponent
   ],
   providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
   selector: 'cps-select',
@@ -55,7 +55,7 @@ import { hasSpaceBelow } from '../../utils/internal/position-utils';
   styleUrls: ['./cps-select.component.scss']
 })
 export class CpsSelectComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
   @Input() placeholder = 'Please select';
@@ -98,28 +98,41 @@ export class CpsSelectComponent
 
   @Output() valueChanged = new EventEmitter<any>();
 
+  @ViewChild('selectBox')
+  selectBox!: ElementRef;
+
   @ViewChild('selectContainer')
   selectContainer!: ElementRef;
 
   @ViewChild('virtualList')
   virtualList!: VirtualScroller;
 
+  @ViewChild('optionsMenu')
+  optionsMenu!: CpsMenuComponent;
+
   private _statusChangesSubscription: Subscription = new Subscription();
 
   error = '';
   cvtWidth = '';
-
   isOpened = false;
-
   optionHighlightedIndex = -1;
 
   virtualListHeight = 240;
   virtualScrollItemSize = 42;
 
+  selectBoxWidth = 0;
+  resizeObserver: ResizeObserver;
+
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
+    this.resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry?.target)
+          this.selectBoxWidth = (entry.target as any).offsetWidth;
+      });
+    });
   }
 
   ngOnInit() {
@@ -137,27 +150,33 @@ export class CpsSelectComponent
     this._recalcVirtualListHeight();
   }
 
-  ngOnDestroy() {
-    this._statusChangesSubscription?.unsubscribe();
+  ngAfterViewInit(): void {
+    this.resizeObserver.observe(this.selectBox.nativeElement);
   }
 
-  private _toggleOptions(dd: HTMLElement, show?: boolean): void {
-    if (this.disabled || !dd || this.isOpened === show) return;
+  ngOnDestroy() {
+    this._statusChangesSubscription?.unsubscribe();
+    this.resizeObserver?.disconnect();
+  }
+
+  private _toggleOptions(show?: boolean): void {
+    if (this.disabled || this.isOpened === show) return;
 
     if (typeof show === 'boolean') {
-      if (show) dd.classList.add('active');
-      else dd.classList.remove('active');
-    } else dd.classList.toggle('active');
-
-    this.isOpened = dd.classList.contains('active');
-
-    dd.classList.remove('top-open');
-    if (
-      this.isOpened &&
-      !hasSpaceBelow(this.selectContainer, '.cps-select-options')
-    ) {
-      dd.classList.add('top-open');
+      if (show) {
+        this.optionsMenu.show({
+          target: this.selectBox.nativeElement
+        });
+      } else {
+        this.optionsMenu.hide();
+      }
+    } else {
+      this.optionsMenu.toggle({
+        target: this.selectBox.nativeElement
+      });
     }
+
+    this.isOpened = this.optionsMenu.isVisible();
 
     if (this.isOpened && this.options.length > 0) {
       const selected =
@@ -217,23 +236,20 @@ export class CpsSelectComponent
     }
   }
 
-  onOptionClick(option: any, dd: HTMLElement) {
-    this._clickOption(option, dd);
+  onOptionClick(option: any) {
+    this._clickOption(option);
   }
 
-  private _clickOption(option: any, dd: HTMLElement) {
+  private _clickOption(option: any) {
     this.select(option, false);
     if (!this.multiple) {
-      this._toggleOptions(dd, false);
+      this._toggleOptions(false);
     }
   }
 
   private _getHTMLOptions() {
-    return (
-      this.selectContainer?.nativeElement?.querySelectorAll(
-        '.cps-select-options-option'
-      ) || []
-    );
+    return (document.body.querySelectorAll('.cps-select-options-option') ||
+      []) as any;
   }
 
   private _dehighlightOption(el?: HTMLElement) {
@@ -290,22 +306,22 @@ export class CpsSelectComponent
     }
   }
 
-  onClickOutside(dd: HTMLElement) {
-    this._toggleOptions(dd, false);
+  onBeforeOptionsHidden() {
+    this._toggleOptions(false);
     this._dehighlightOption();
   }
 
-  onBoxClick(dd: HTMLElement) {
-    this._toggleOptions(dd);
+  onBoxClick() {
+    this._toggleOptions();
     this._dehighlightOption();
   }
 
-  onKeyDown(event: any, dd: HTMLElement) {
+  onKeyDown(event: any) {
     event.preventDefault();
     const code = event.keyCode;
     // escape
     if (code === 27) {
-      this._toggleOptions(dd, false);
+      this._toggleOptions(false);
       this._dehighlightOption();
     }
     // enter
@@ -319,7 +335,7 @@ export class CpsSelectComponent
         } else idx--;
       }
 
-      this._clickOption(this.options[idx], dd);
+      this._clickOption(this.options[idx]);
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
@@ -388,7 +404,7 @@ export class CpsSelectComponent
     this.valueChanged.emit(value);
   }
 
-  clear(dd: HTMLElement, event: any): void {
+  clear(event: any): void {
     event.stopPropagation();
 
     if (
@@ -396,7 +412,7 @@ export class CpsSelectComponent
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
-        this._toggleOptions(dd, true);
+        this._toggleOptions(true);
       }
       const val = this.multiple ? [] : this.returnObject ? undefined : '';
       this.updateValue(val);
@@ -414,6 +430,6 @@ export class CpsSelectComponent
 
   focus() {
     this.selectContainer?.nativeElement?.focus();
-    this._toggleOptions(this.selectContainer?.nativeElement, true);
+    this._toggleOptions(true);
   }
 }

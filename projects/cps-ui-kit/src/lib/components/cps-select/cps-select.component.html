@@ -2,9 +2,9 @@
   [ngStyle]="{ width: cvtWidth }"
   class="cps-select"
   tabindex="0"
-  [ngClass]="{ disabled: disabled, error: error }"
+  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
   #selectContainer
-  (keydown)="onKeyDown($event, selectContainer)"
+  (keydown)="onKeyDown($event)"
   (blur)="onBlur()">
   <div class="cps-select-label" *ngIf="label">
     <label>{{ label }}</label>
@@ -24,9 +24,8 @@
     [class.focused]="isOpened"
     [ngClass]="{
       'persistent-clear': persistentClear
-    }"
-    (clickOutside)="onClickOutside(selectContainer)">
-    <div class="cps-select-box" (click)="onBoxClick(selectContainer)">
+    }">
+    <div class="cps-select-box" #selectBox (click)="onBoxClick()">
       <div class="cps-select-box-left">
         <cps-icon
           *ngIf="prefixIcon"
@@ -91,7 +90,7 @@
           <cps-icon
             icon="delete"
             size="small"
-            (click)="clear(selectContainer, $event)"></cps-icon>
+            (click)="clear($event)"></cps-icon>
         </span>
         <span class="cps-select-box-chevron">
           <cps-icon
@@ -102,38 +101,30 @@
       </span>
     </div>
 
-    <div class="cps-select-options">
-      <ng-container *ngIf="!virtualScroll">
-        <div
-          class="cps-select-options-option select-all-option"
-          [class.allselected]="value?.length === options.length"
-          *ngIf="multiple && selectAll"
-          (click)="toggleAll()">
-          <span class="cps-select-options-option-left">
-            <span *ngIf="multiple" class="cps-select-options-option-check">
+    <cps-menu
+      #optionsMenu
+      [withArrow]="false"
+      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      hideTransitionOptions="0s linear"
+      containerClass="cps-select-options-menu">
+      <div
+        class="cps-select-options"
+        [ngStyle]="{
+          width: selectBoxWidth + 'px'
+        }">
+        <ng-container *ngIf="!virtualScroll">
+          <div
+            class="cps-select-options-option select-all-option"
+            [class.allselected]="value?.length === options.length"
+            *ngIf="multiple && selectAll"
+            (click)="toggleAll()">
+            <span class="cps-select-options-option-left">
+              <span *ngIf="multiple" class="cps-select-options-option-check">
+              </span>
+              <span class="cps-select-options-option-label">Select all</span>
             </span>
-            <span class="cps-select-options-option-label">Select all</span>
-          </span>
-        </div>
-        <ng-container *ngFor="let item of options">
-          <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="virtualScroll">
-        <p-virtualScroller
-          #virtualList
-          [value]="options"
-          [delay]="0"
-          [scrollHeight]="virtualListHeight + 'px'"
-          [options]="{ numToleratedItems: 3 }"
-          [itemSize]="virtualScrollItemSize">
-          <ng-template pTemplate="item" let-item>
+          </div>
+          <ng-container *ngFor="let item of options">
             <ng-container
               *ngTemplateOutlet="
                 itemTemplate;
@@ -141,10 +132,29 @@
                   item: item
                 }
               "></ng-container>
-          </ng-template>
-        </p-virtualScroller>
-      </ng-container>
-    </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="virtualScroll">
+          <p-virtualScroller
+            #virtualList
+            [value]="options"
+            [delay]="0"
+            [scrollHeight]="virtualListHeight + 'px'"
+            [options]="{ numToleratedItems: 3 }"
+            [itemSize]="virtualScrollItemSize">
+            <ng-template pTemplate="item" let-item>
+              <ng-container
+                *ngTemplateOutlet="
+                  itemTemplate;
+                  context: {
+                    item: item
+                  }
+                "></ng-container>
+            </ng-template>
+          </p-virtualScroller>
+        </ng-container>
+      </div>
+    </cps-menu>
 
     <cps-progress-linear
       *ngIf="loading"
@@ -162,7 +172,7 @@
 <ng-template #itemTemplate let-item="item">
   <div
     class="cps-select-options-option"
-    (click)="onOptionClick(item, selectContainer)"
+    (click)="onOptionClick(item)"
     [class.selected]="
       item | checkOptionSelected : value : multiple : returnObject : optionValue
     ">

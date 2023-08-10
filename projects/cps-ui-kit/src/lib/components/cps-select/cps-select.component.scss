@@ -36,9 +36,6 @@ $hover-transition-duration: 0.2s;
     }
 
     &.active {
-      .cps-select-options {
-        display: block;
-      }
       .cps-select-box {
         border: 1px solid $color-calm;
         .cps-select-box-left {
@@ -46,14 +43,10 @@ $hover-transition-duration: 0.2s;
             color: $color-calm;
           }
         }
-      }
-    }
-
-    &.top-open {
-      .cps-select-options {
-        box-shadow: 0 -2px 4px -1px #0003, 0 1px 5px #00000024,
-          0 1px 10px #0000001f;
-        bottom: 39px;
+        .cps-select-box-chevron {
+          top: 22px;
+          transform: rotate(180deg);
+        }
       }
     }
 
@@ -166,113 +159,6 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    &.active {
-      .cps-select-box-chevron {
-        top: 22px;
-        transform: rotate(180deg);
-      }
-    }
-
-    .cps-select-options {
-      z-index: 1001;
-      position: absolute;
-      width: 100%;
-      background: white;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-      border-radius: 4px;
-      overflow-x: hidden;
-      display: none;
-      max-height: 242px;
-      overflow-y: auto;
-      box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
-        0 1px 10px #0000001f;
-
-      .cps-select-options-option {
-        padding: 12px;
-        justify-content: space-between;
-        display: flex;
-        cursor: pointer;
-
-        &:hover {
-          background: $option-hover-background;
-        }
-
-        &-label {
-          color: $select-option-value-color;
-        }
-
-        &-left {
-          display: flex;
-          align-items: center;
-          margin-right: 8px;
-        }
-
-        &-right {
-          color: $select-option-info-color;
-          text-align: right;
-        }
-
-        &-check {
-          background-color: transparent;
-          border: 0;
-          width: 16px;
-          height: 16px;
-          cursor: pointer;
-          display: inline-block;
-          vertical-align: middle;
-          box-sizing: border-box;
-          position: relative;
-          flex-shrink: 0;
-          transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
-            background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-          margin-right: 8px;
-          opacity: 0;
-          &::after {
-            color: $color-calm;
-            top: 4px;
-            left: 1px;
-            width: 8px;
-            height: 3px;
-            border-left: 2px solid currentColor;
-            transform: rotate(-45deg);
-            opacity: 1;
-            box-sizing: content-box;
-            position: absolute;
-            content: '';
-            border-bottom: 2px solid currentColor;
-            transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
-          }
-        }
-        &.selected,
-        &.allselected {
-          font-weight: 600;
-          .cps-select-options-option-label {
-            color: $color-calm;
-          }
-          .cps-select-options-option-check {
-            opacity: 1;
-          }
-        }
-        &.selected {
-          background: $selected-option-background;
-        }
-        &.highlighten {
-          background: $option-highlight-background;
-        }
-        &.selected.highlighten {
-          background: $option-highlight-selected-background;
-        }
-      }
-
-      ::ng-deep .p-virtualscroller-list.p-scroller {
-        overflow-anchor: none;
-      }
-
-      .virtual-row {
-        white-space: nowrap;
-      }
-    }
-
     .cps-select-hint {
       color: $select-hint-color;
       font-size: 0.75rem;
@@ -311,10 +197,102 @@ $hover-transition-duration: 0.2s;
         background: $error-background !important;
       }
     }
+  }
+}
 
-    .select-all-option {
-      border-bottom: 1px solid lightgrey;
-      font-weight: 600;
+.cps-select-options {
+  background: white;
+  overflow-x: hidden;
+  max-height: 242px;
+  overflow-y: auto;
+
+  .cps-select-options-option {
+    padding: 12px;
+    justify-content: space-between;
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+      background: $option-hover-background;
     }
+
+    &-label {
+      color: $select-option-value-color;
+    }
+
+    &-left {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+    }
+
+    &-right {
+      color: $select-option-info-color;
+      text-align: right;
+    }
+
+    &-check {
+      background-color: transparent;
+      border: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: middle;
+      box-sizing: border-box;
+      position: relative;
+      flex-shrink: 0;
+      transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+        background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      margin-right: 8px;
+      opacity: 0;
+      &::after {
+        color: $color-calm;
+        top: 4px;
+        left: 1px;
+        width: 8px;
+        height: 3px;
+        border-left: 2px solid currentColor;
+        transform: rotate(-45deg);
+        opacity: 1;
+        box-sizing: content-box;
+        position: absolute;
+        content: '';
+        border-bottom: 2px solid currentColor;
+        transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      }
+    }
+    &.selected,
+    &.allselected {
+      font-weight: 600;
+      .cps-select-options-option-label {
+        color: $color-calm;
+      }
+      .cps-select-options-option-check {
+        opacity: 1;
+      }
+    }
+    &.selected {
+      background: $selected-option-background;
+    }
+    &.highlighten {
+      background: $option-highlight-background;
+    }
+    &.selected.highlighten {
+      background: $option-highlight-selected-background;
+    }
+  }
+
+  .select-all-option {
+    border-bottom: 1px solid lightgrey;
+    font-weight: 600;
+  }
+
+  ::ng-deep .p-virtualscroller-list.p-scroller {
+    overflow-anchor: none;
+  }
+
+  .virtual-row {
+    white-space: nowrap;
   }
 }
