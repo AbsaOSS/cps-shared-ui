@@ -84,6 +84,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   @Input() compressed = false; // prepared-colored, without header and items description
   @Input() focusOnShow = true;
   @Input() containerClass = '';
+  @Input() showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
+  @Input() hideTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
 
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
@@ -92,8 +94,6 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   withIcons = true;
   autoZIndex = true;
   baseZIndex = 0;
-  showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
-  hideTransitionOptions = '.0s linear';
   dismissable = true;
   container: Nullable<HTMLDivElement>;
   overlayVisible = false;
