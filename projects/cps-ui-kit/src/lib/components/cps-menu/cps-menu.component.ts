@@ -112,6 +112,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   destroyCallback: Nullable<Function>;
   overlaySubscription: Subscription | undefined;
 
+  targetResizeObserver: ResizeObserver;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -122,7 +124,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     private zone: NgZone,
     public config: PrimeNGConfig,
     public overlayService: OverlayService
-  ) {}
+  ) {
+    this.targetResizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (this.target && entry) this.align();
+      });
+    });
+  }
 
   ngAfterViewInit(): void {
     this.renderer.setStyle(this.el.nativeElement, 'display', 'none');
@@ -153,6 +161,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     this.target = target || event?.currentTarget || event?.target;
+    if (this.target) this.targetResizeObserver.observe(this.target);
     this.overlayVisible = true;
     this.render = true;
     this.cd.markForCheck();
@@ -477,8 +486,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
       this.onContainerDestroy();
     }
 
-    if (this.overlaySubscription) {
-      this.overlaySubscription.unsubscribe();
-    }
+    this.overlaySubscription?.unsubscribe();
+
+    this.targetResizeObserver?.disconnect();
   }
 }

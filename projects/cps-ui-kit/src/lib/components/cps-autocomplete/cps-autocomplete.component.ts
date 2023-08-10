@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -52,7 +53,7 @@ import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
   styleUrls: ['./cps-autocomplete.component.scss']
 })
 export class CpsAutocompleteComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
   @Input() placeholder = 'Please enter';
@@ -122,6 +123,9 @@ export class CpsAutocompleteComponent
   virtualListHeight = 240;
   virtualScrollItemSize = 42;
 
+  autocompleteBoxWidth = 0;
+  resizeObserver: ResizeObserver;
+
   constructor(
     @Self() @Optional() private _control: NgControl,
     private _labelByValue: LabelByValuePipe
@@ -129,6 +133,12 @@ export class CpsAutocompleteComponent
     if (this._control) {
       this._control.valueAccessor = this;
     }
+    this.resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry?.target)
+          this.autocompleteBoxWidth = (entry.target as any).offsetWidth;
+      });
+    });
   }
 
   ngOnInit() {
@@ -147,8 +157,13 @@ export class CpsAutocompleteComponent
     this.recalcVirtualListHeight();
   }
 
+  ngAfterViewInit(): void {
+    this.resizeObserver.observe(this.autocompleteBox.nativeElement);
+  }
+
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
+    this.resizeObserver?.disconnect();
   }
 
   select(option: any, byValue: boolean): void {
