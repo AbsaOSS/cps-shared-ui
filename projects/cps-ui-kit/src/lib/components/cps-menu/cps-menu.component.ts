@@ -8,6 +8,7 @@ import {
 } from '@angular/animations';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -58,6 +59,7 @@ export type CpsMenuItem = {
       state(
         'close',
         style({
+          transform: 'scaleY(0.8)',
           opacity: 0
         })
       ),
@@ -75,7 +77,7 @@ export type CpsMenuItem = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent implements OnDestroy {
+export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   @Input() header = '';
   @Input() items: CpsMenuItem[] = [];
   @Input() withArrow = true;
@@ -120,6 +122,10 @@ export class CpsMenuComponent implements OnDestroy {
     public config: PrimeNGConfig,
     public overlayService: OverlayService
   ) {}
+
+  ngAfterViewInit(): void {
+    this.renderer.setStyle(this.el.nativeElement, 'display', 'none');
+  }
 
   toggle(event?: any, target?: any) {
     if (this.isOverlayAnimationInProgress) {
