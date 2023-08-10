@@ -15,10 +15,9 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
-import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
 import { convertSize } from '../../utils/internal/size-utils';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
-import { hasSpaceBelow } from '../../utils/internal/position-utils';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 @Component({
   standalone: true,
@@ -27,7 +26,7 @@ import { hasSpaceBelow } from '../../utils/internal/position-utils';
     CalendarModule,
     CommonModule,
     FormsModule,
-    ClickOutsideDirective
+    CpsMenuComponent
   ],
   selector: 'cps-datepicker',
   templateUrl: './cps-datepicker.component.html',
@@ -73,9 +72,11 @@ export class CpsDatepickerComponent
   @ViewChild('datepickerContainer')
   datepickerContainer!: ElementRef;
 
+  @ViewChild('calendarMenu')
+  calendarMenu!: CpsMenuComponent;
+
   stringDate = '';
   isOpened = false;
-  topPos = '57px';
   error = '';
   cvtWidth = '';
 
@@ -89,8 +90,6 @@ export class CpsDatepickerComponent
   }
 
   ngOnInit(): void {
-    if (!this.label) this.topPos = '37px';
-
     this.cvtWidth = convertSize(this.width);
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
@@ -242,7 +241,7 @@ export class CpsDatepickerComponent
     this.toggleCalendar();
   }
 
-  onClickOutside() {
+  onBeforeCalendarHidden() {
     if (this.disabled || !this.isOpened) return;
     this._updateValueFromInputString();
     this.toggleCalendar(false);
@@ -255,23 +254,24 @@ export class CpsDatepickerComponent
   toggleCalendar(show?: boolean) {
     if (this.disabled || this.isOpened === show) return;
 
-    const el = this.datepickerContainer?.nativeElement;
-    if (!el) return;
+    const target =
+      this.datepickerContainer.nativeElement.querySelector('.cps-input-wrap');
 
     if (typeof show === 'boolean') {
-      if (show) el.classList.add('active');
-      else el.classList.remove('active');
-    } else el.classList.toggle('active');
-
-    this.isOpened = el.classList.contains('active');
-
-    el.classList.remove('top-open');
-    if (
-      this.isOpened &&
-      !hasSpaceBelow(this.datepickerContainer, '.cps-datepicker-calendar')
-    ) {
-      el.classList.add('top-open');
+      if (show) {
+        this.calendarMenu.show({
+          target
+        });
+      } else {
+        this.calendarMenu.hide();
+      }
+    } else {
+      this.calendarMenu.toggle({
+        target
+      });
     }
+
+    this.isOpened = this.calendarMenu.isVisible();
 
     if (!this.isOpened) {
       this._control?.control?.markAsTouched();

@@ -2,9 +2,7 @@
   class="cps-datepicker"
   #datepickerContainer
   [ngStyle]="{ width: cvtWidth }"
-  [class.focused]="isOpened"
-  (clickOutside)="onClickOutside()"
-  [skipTargets]="['label-text', 'error-text', 'hint-text']">
+  [class.focused]="isOpened">
   <cps-input
     [disabled]="disabled"
     [value]="stringDate"
@@ -26,16 +24,23 @@
     [infoTooltipPersistent]="infoTooltipPersistent"
     [persistentClear]="persistentClear"
     [error]="error"></cps-input>
-  <div class="cps-datepicker-calendar" [style.top]="topPos">
-    <p-calendar
-      [(ngModel)]="value"
-      [showIcon]="true"
-      [showButtonBar]="showTodayButton"
-      [inline]="true"
-      (onSelect)="onSelectCalendarDate($event)"
-      [showOtherMonths]="false"
-      [minDate]="minDate"
-      [maxDate]="maxDate">
-    </p-calendar>
-  </div>
+  <cps-menu
+    #calendarMenu
+    [withArrow]="false"
+    (beforeMenuHidden)="onBeforeCalendarHidden()"
+    hideTransitionOptions="0s linear"
+    containerClass="cps-datepicker-calendar-menu">
+    <div class="cps-datepicker-calendar">
+      <p-calendar
+        [(ngModel)]="value"
+        [showIcon]="true"
+        [showButtonBar]="showTodayButton"
+        [inline]="true"
+        (onSelect)="onSelectCalendarDate($event)"
+        [showOtherMonths]="false"
+        [minDate]="minDate"
+        [maxDate]="maxDate">
+      </p-calendar>
+    </div>
+  </cps-menu>
 </div>
