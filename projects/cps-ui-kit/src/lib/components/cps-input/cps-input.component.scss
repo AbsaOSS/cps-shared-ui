@@ -39,6 +39,9 @@ $hover-transition-duration: 0.2s;
             background: $error-background !important;
           }
         }
+        .cps-input-prefix-icon {
+          color: $color-error !important;
+        }
       }
 
       input {

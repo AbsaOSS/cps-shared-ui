@@ -451,7 +451,7 @@ export class CpsAutocompleteComponent
       return;
     }
     const message = errArr.find((msg) => typeof msg === 'string');
-    console.log('message', message);
+
     this.error = message || 'Unknown error';
   }
 

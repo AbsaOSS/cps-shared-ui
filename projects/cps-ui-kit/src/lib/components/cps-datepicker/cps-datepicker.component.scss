@@ -10,6 +10,21 @@ $disabled-day-color: var(--cps-color-text-lightest);
   .cps-datepicker {
     position: relative;
     width: 100%;
+    &.focused {
+      ::ng-deep {
+        input {
+          border: 1px solid $color-calm !important;
+        }
+        .cps-input-prefix-icon {
+          color: $color-calm !important;
+        }
+        .clear-btn {
+          cps-icon {
+            opacity: 0.5 !important;
+          }
+        }
+      }
+    }
   }
 }
 

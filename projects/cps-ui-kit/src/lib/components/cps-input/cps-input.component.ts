@@ -74,6 +74,8 @@ export class CpsInputComponent
   @Output() focused = new EventEmitter();
   @Output() prefixIconClicked = new EventEmitter();
   @Output() blurred = new EventEmitter();
+  @Output() cleared = new EventEmitter();
+  @Output() enterClicked = new EventEmitter();
 
   @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
 
@@ -86,7 +88,7 @@ export class CpsInputComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    private _elementRef: ElementRef<HTMLElement>,
+    public elementRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef
   ) {
     if (this._control) {
@@ -162,6 +164,11 @@ export class CpsInputComponent
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
+  onInputEnterKeyDown() {
+    this.elementRef?.nativeElement?.querySelector('input')?.blur();
+    this.enterClicked.emit();
+  }
+
   registerOnChange(fn: any) {
     this.onChange = fn;
   }
@@ -183,6 +190,11 @@ export class CpsInputComponent
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
+  }
+
+  onClear() {
+    this.clear();
+    this.cleared.emit();
   }
 
   clear() {
@@ -212,6 +224,6 @@ export class CpsInputComponent
   }
 
   focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
+    this.elementRef?.nativeElement?.querySelector('input')?.focus();
   }
 }

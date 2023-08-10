@@ -13,7 +13,7 @@
   }"
   (@animation.start)="onAnimationStart($event)"
   (@animation.done)="onAnimationEnd($event)">
-  <div (click)="onContentClick()" (mousedown)="onContentClick()">
+  <div (mouseup)="onContentClick()" (touchend)="onContentClick()">
     <ng-container *ngIf="items.length < 1">
       <ng-content></ng-content>
     </ng-container>

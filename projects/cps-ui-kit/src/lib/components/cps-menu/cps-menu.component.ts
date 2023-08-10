@@ -90,6 +90,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
   @Output() beforeMenuHidden = new EventEmitter();
+  @Output() contentClicked = new EventEmitter();
 
   withIcons = true;
   autoZIndex = true;
@@ -272,6 +273,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
 
   onContentClick() {
     this.selfClick = true;
+    setTimeout(() => {
+      this.contentClicked.emit();
+    }, 100);
   }
 
   hasTargetChanged(event?: any, target?: any) {

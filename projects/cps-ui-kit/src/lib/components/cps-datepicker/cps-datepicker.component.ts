@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
@@ -69,8 +68,8 @@ export class CpsDatepickerComponent
 
   @Output() valueChanged = new EventEmitter<Date | null>();
 
-  @ViewChild('datepickerContainer')
-  datepickerContainer!: ElementRef;
+  @ViewChild('datepickerInput')
+  datepickerInput!: CpsInputComponent;
 
   @ViewChild('calendarMenu')
   calendarMenu!: CpsMenuComponent;
@@ -235,6 +234,14 @@ export class CpsDatepickerComponent
     this._checkErrors();
   }
 
+  onInputEnterClicked() {
+    if (!this.isOpened) return;
+    this._control?.control?.markAsTouched();
+    this._updateValueFromInputString();
+    this._checkErrors();
+    this.toggleCalendar(false);
+  }
+
   onClickCalendarIcon() {
     if (this.disabled) return;
     if (this.isOpened) this._updateValueFromInputString();
@@ -251,11 +258,25 @@ export class CpsDatepickerComponent
     if (this.openOnInputFocus) this.toggleCalendar(true);
   }
 
+  onInputClear() {
+    if (this.isOpened) this.focusInput();
+  }
+
+  onCalendarContentClick() {
+    if (this.isOpened) this.focusInput();
+  }
+
+  focusInput() {
+    this.datepickerInput.focus();
+  }
+
   toggleCalendar(show?: boolean) {
     if (this.disabled || this.isOpened === show) return;
 
     const target =
-      this.datepickerContainer.nativeElement.querySelector('.cps-input-wrap');
+      this.datepickerInput.elementRef.nativeElement.querySelector(
+        '.cps-input-wrap'
+      );
 
     if (typeof show === 'boolean') {
       if (show) {
@@ -276,6 +297,8 @@ export class CpsDatepickerComponent
     if (!this.isOpened) {
       this._control?.control?.markAsTouched();
       this._checkErrors();
+    } else {
+      this.focusInput();
     }
   }
 }

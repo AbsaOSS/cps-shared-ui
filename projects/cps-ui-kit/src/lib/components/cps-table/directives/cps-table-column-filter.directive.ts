@@ -49,11 +49,29 @@ export class CpsTableColumnFilterDirective implements OnInit, OnDestroy {
     this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
     this.filterCompRef.setInput('maxConstraints', this.filterMaxConstraints);
     this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);
-    this.filterCompRef.setInput('placeholder', this.filterPlaceholder);
+    this.filterCompRef.setInput(
+      'placeholder',
+      this.filterPlaceholder || this._getDefaultPlaceholder()
+    );
 
     this.elementRef.nativeElement.firstChild.after(
       this.filterCompRef.location.nativeElement
     );
+  }
+
+  private _getDefaultPlaceholder() {
+    switch (this.filterType) {
+      case 'text':
+        return 'Please enter';
+      case 'number':
+        return 'Enter value';
+      case 'date':
+        return 'Select date';
+      case 'category':
+        return 'Please select';
+      default:
+        return '';
+    }
   }
 
   ngOnDestroy(): void {
