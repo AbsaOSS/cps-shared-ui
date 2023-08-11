@@ -84,15 +84,17 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   @Input() compressed = false; // prepared-colored, without header and items description
   @Input() focusOnShow = true;
   @Input() containerClass = '';
+  @Input() showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
+  @Input() hideTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
 
   @Output() menuShown = new EventEmitter();
   @Output() menuHidden = new EventEmitter();
+  @Output() beforeMenuHidden = new EventEmitter();
+  @Output() contentClicked = new EventEmitter();
 
   withIcons = true;
   autoZIndex = true;
   baseZIndex = 0;
-  showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
-  hideTransitionOptions = '.1s linear';
   dismissable = true;
   container: Nullable<HTMLDivElement>;
   overlayVisible = false;
@@ -111,6 +113,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   destroyCallback: Nullable<Function>;
   overlaySubscription: Subscription | undefined;
 
+  targetResizeObserver: ResizeObserver;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -121,7 +125,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     private zone: NgZone,
     public config: PrimeNGConfig,
     public overlayService: OverlayService
-  ) {}
+  ) {
+    this.targetResizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (this.target && entry) this.align();
+      });
+    });
+  }
 
   ngAfterViewInit(): void {
     this.renderer.setStyle(this.el.nativeElement, 'display', 'none');
@@ -152,6 +162,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     }
 
     this.target = target || event?.currentTarget || event?.target;
+    if (this.target) this.targetResizeObserver.observe(this.target);
     this.overlayVisible = true;
     this.render = true;
     this.cd.markForCheck();
@@ -160,6 +171,10 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   hide() {
     this.overlayVisible = false;
     this.cd.markForCheck();
+  }
+
+  isVisible() {
+    return this.overlayVisible;
   }
 
   onItemClick(event: any, item: CpsMenuItem) {
@@ -258,6 +273,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
 
   onContentClick() {
     this.selfClick = true;
+    setTimeout(() => {
+      this.contentClicked.emit();
+    }, 100);
   }
 
   hasTargetChanged(event?: any, target?: any) {
@@ -321,7 +339,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   }
 
   onAnimationStart(event: AnimationEvent) {
-    if (event.toState === 'open') {
+    if (event.toState === 'close') {
+      this.beforeMenuHidden.emit(null);
+    } else if (event.toState === 'open') {
       if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
       this.container = event.element;
       this.appendContainer();
@@ -470,8 +490,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
       this.onContainerDestroy();
     }
 
-    if (this.overlaySubscription) {
-      this.overlaySubscription.unsubscribe();
-    }
+    this.overlaySubscription?.unsubscribe();
+
+    this.targetResizeObserver?.disconnect();
   }
 }

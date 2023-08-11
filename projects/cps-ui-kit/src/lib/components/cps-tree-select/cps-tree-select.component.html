@@ -2,9 +2,9 @@
   [ngStyle]="{ width: cvtWidth }"
   class="cps-treeselect"
   tabindex="0"
-  [ngClass]="{ disabled: disabled, error: error }"
-  #treeSelectContainer
-  (keydown)="onKeyDown($event, treeSelectContainer)"
+  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
+  #componentContainer
+  (keydown)="onKeyDown($event)"
   (blur)="onBlur()">
   <div class="cps-treeselect-label" *ngIf="label">
     <label>{{ label }}</label>
@@ -24,9 +24,8 @@
     [class.focused]="isOpened"
     [ngClass]="{
       'persistent-clear': persistentClear
-    }"
-    (clickOutside)="onClickOutside(treeSelectContainer)">
-    <div class="cps-treeselect-box" (click)="onBoxClick(treeSelectContainer)">
+    }">
+    <div class="cps-treeselect-box" #boxEl (click)="onBoxClick()">
       <div class="cps-treeselect-box-left">
         <cps-icon
           *ngIf="prefixIcon"
@@ -85,7 +84,7 @@
           <cps-icon
             icon="delete"
             size="small"
-            (click)="clear(treeSelectContainer, $event)"></cps-icon>
+            (click)="clear($event)"></cps-icon>
         </span>
         <span class="cps-treeselect-box-chevron">
           <cps-icon
@@ -96,44 +95,55 @@
       </span>
     </div>
 
-    <div class="cps-treeselect-options">
-      <p-tree
-        #treeSelectList
-        [virtualScroll]="virtualScroll"
-        [virtualScrollItemSize]="virtualScrollItemSize"
-        [virtualScrollOptions]="{ numToleratedItems: 3 }"
-        [scrollHeight]="virtualListHeight + 'px'"
-        (onNodeSelect)="onSelectNode()"
-        (onNodeExpand)="recalcVirtualListHeight()"
-        (onNodeCollapse)="recalcVirtualListHeight()"
-        [value]="options"
-        [(selection)]="treeSelection"
-        (selectionChange)="treeSelectionChanged($event)"
-        [metaKeySelection]="multiple ? false : true"
-        [selectionMode]="multiple ? 'multiple' : 'single'">
-        <ng-template let-node pTemplate="directory">
-          <span class="cps-treeselect-directory-elem">{{ node.label }}</span>
-        </ng-template>
-        <ng-template let-node pTemplate="default">
-          <span class="cps-treeselect-option">
-            <span class="cps-treeselect-option-left">
-              <span *ngIf="multiple" class="cps-treeselect-option-check">
+    <cps-menu
+      #optionsMenu
+      [withArrow]="false"
+      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      hideTransitionOptions="0s linear"
+      containerClass="cps-treeselect-options-menu">
+      <div
+        class="cps-treeselect-options"
+        [ngStyle]="{
+          width: boxWidth + 'px'
+        }">
+        <p-tree
+          #treeList
+          [virtualScroll]="virtualScroll"
+          [virtualScrollItemSize]="virtualScrollItemSize"
+          [virtualScrollOptions]="{ numToleratedItems: 3 }"
+          [scrollHeight]="virtualListHeight + 'px'"
+          (onNodeSelect)="onSelectNode()"
+          (onNodeExpand)="onNodeExpand($event)"
+          (onNodeCollapse)="onNodeCollapse($event)"
+          [value]="options"
+          [(selection)]="treeSelection"
+          (selectionChange)="treeSelectionChanged($event)"
+          [metaKeySelection]="multiple ? false : true"
+          [selectionMode]="multiple ? 'multiple' : 'single'">
+          <ng-template let-node pTemplate="directory">
+            <span class="cps-treeselect-directory-elem">{{ node.label }}</span>
+          </ng-template>
+          <ng-template let-node pTemplate="default">
+            <span class="cps-treeselect-option">
+              <span class="cps-treeselect-option-left">
+                <span *ngIf="multiple" class="cps-treeselect-option-check">
+                </span>
+                <span
+                  class="cps-treeselect-option-label"
+                  [class.virtual-row]="virtualScroll"
+                  >{{ node.label }}</span
+                >
               </span>
               <span
-                class="cps-treeselect-option-label"
+                class="cps-treeselect-option-info"
                 [class.virtual-row]="virtualScroll"
-                >{{ node.label }}</span
+                >{{ node.info }}</span
               >
             </span>
-            <span
-              class="cps-treeselect-option-info"
-              [class.virtual-row]="virtualScroll"
-              >{{ node.info }}</span
-            >
-          </span>
-        </ng-template>
-      </p-tree>
-    </div>
+          </ng-template>
+        </p-tree>
+      </div>
+    </cps-menu>
     <cps-progress-linear
       *ngIf="loading"
       height="3"

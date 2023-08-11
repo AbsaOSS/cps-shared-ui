@@ -26,12 +26,6 @@ $elem-active-background: #f1eaec;
           margin-right: 12px;
         }
 
-        .cps-select.top-open {
-          .cps-select-options {
-            bottom: 33px !important;
-          }
-        }
-
         .cps-select-box {
           min-height: 32px !important;
           background: transparent !important;
@@ -44,9 +38,6 @@ $elem-active-background: #f1eaec;
               height: 14px;
             }
           }
-        }
-        .cps-select-options-option {
-          font-size: 14px;
         }
       }
     }
@@ -167,5 +158,11 @@ $elem-active-background: #f1eaec;
     .p-component:disabled {
       opacity: 0.4;
     }
+  }
+}
+
+::ng-deep .cps-select-options-menu.cps-paginator-page-options {
+  .cps-select-options-option {
+    font-size: 14px;
   }
 }

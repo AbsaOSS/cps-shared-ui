@@ -31,6 +31,7 @@
       (input)="updateValueEvent($event)"
       [placeholder]="placeholder"
       [disabled]="disabled"
+      (keydown.enter)="onInputEnterKeyDown()"
       [ngStyle]="{
         width: cvtWidth,
         'padding-left': prefixWidth || 'none'
@@ -62,7 +63,7 @@
           persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
         "
         class="clear-btn">
-        <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+        <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
       </span>
 
       <span

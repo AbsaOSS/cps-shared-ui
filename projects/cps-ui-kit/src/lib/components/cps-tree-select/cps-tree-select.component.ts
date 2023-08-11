@@ -3,21 +3,19 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   OnDestroy,
   OnInit,
-  Optional,
-  ViewChild
+  Optional
 } from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { ClickOutsideDirective } from '../../directives/internal/click-outside.directive';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
-import { Tree, TreeModule } from 'primeng/tree';
+import { TreeModule } from 'primeng/tree';
 import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dropdown-base.component';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 @Component({
   standalone: true,
@@ -25,12 +23,12 @@ import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dro
     CommonModule,
     FormsModule,
     TreeModule,
-    ClickOutsideDirective,
     CpsIconComponent,
     CpsChipComponent,
     CpsProgressLinearComponent,
     CpsInfoCircleComponent,
-    CombineLabelsPipe
+    CombineLabelsPipe,
+    CpsMenuComponent
   ],
   providers: [CombineLabelsPipe],
   selector: 'cps-tree-select',
@@ -41,11 +39,6 @@ export class CpsTreeSelectComponent
   extends CpsTreeDropdownBaseComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  @ViewChild('treeSelectContainer')
-  treeSelectContainer!: ElementRef;
-
-  @ViewChild('treeSelectList') treeSelectList!: Tree;
-
   constructor(
     @Optional() public override control: NgControl,
     public override cdRef: ChangeDetectorRef
@@ -58,8 +51,6 @@ export class CpsTreeSelectComponent
   }
 
   override ngAfterViewInit() {
-    this.treeContainer = this.treeSelectContainer;
-    this.treeList = this.treeSelectList;
     super.ngAfterViewInit();
   }
 
@@ -67,20 +58,20 @@ export class CpsTreeSelectComponent
     super.ngOnDestroy();
   }
 
-  onClickOutside(dd: HTMLElement) {
-    this.toggleOptions(dd, false);
+  onBeforeOptionsHidden() {
+    this.toggleOptions(false);
   }
 
-  onBoxClick(dd: HTMLElement) {
-    this.toggleOptions(dd);
+  onBoxClick() {
+    this.toggleOptions();
   }
 
-  onKeyDown(event: any, dd: HTMLElement) {
+  onKeyDown(event: any) {
     event.preventDefault();
     const code = event.keyCode;
     // escape
     if (code === 27) {
-      this.toggleOptions(dd, false);
+      this.toggleOptions(false);
     }
     // click down arrow
     else if (code === 40) {

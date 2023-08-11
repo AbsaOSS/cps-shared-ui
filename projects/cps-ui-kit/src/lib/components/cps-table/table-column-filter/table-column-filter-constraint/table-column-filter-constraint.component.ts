@@ -70,7 +70,7 @@ export class TableColumnFilterConstraintComponent implements OnInit {
     }
   }
 
-  onInputEnterKeyDown(event: any) {
+  onEnterKeyDown(event: any) {
     this.dt._filter();
     event.preventDefault();
   }

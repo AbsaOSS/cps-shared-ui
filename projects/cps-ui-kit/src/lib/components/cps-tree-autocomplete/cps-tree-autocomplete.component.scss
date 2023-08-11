@@ -45,9 +45,6 @@ $hover-transition-duration: 0.2s;
     }
 
     &.active {
-      .cps-treeautocomplete-options {
-        display: block;
-      }
       .cps-treeautocomplete-box {
         border: 1px solid $color-calm;
         .cps-treeautocomplete-box-area {
@@ -55,14 +52,10 @@ $hover-transition-duration: 0.2s;
             color: $color-calm;
           }
         }
-      }
-    }
-
-    &.top-open {
-      .cps-treeautocomplete-options {
-        box-shadow: 0 -2px 4px -1px #0003, 0 1px 5px #00000024,
-          0 1px 10px #0000001f;
-        bottom: 39px;
+        .cps-treeautocomplete-box-chevron {
+          top: 22px;
+          transform: rotate(180deg);
+        }
       }
     }
 
@@ -229,222 +222,6 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    &.active {
-      .cps-treeautocomplete-box-chevron {
-        top: 22px;
-        transform: rotate(180deg);
-      }
-    }
-
-    .cps-treeautocomplete-options {
-      z-index: 1001;
-      position: absolute;
-      width: 100%;
-      background: white;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-      border-radius: 4px;
-      overflow-x: hidden;
-      display: none;
-      max-height: 242px;
-      overflow-y: auto;
-      box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024,
-        0 1px 10px #0000001f;
-
-      ::ng-deep {
-        .p-tree {
-          border: 1px solid #dee2e6;
-          background: #ffffff;
-          color: $treeautocomplete-option-value-color;
-          padding: 0;
-        }
-
-        .cps-treeautocomplete-option {
-          margin-right: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          &-left {
-            display: flex;
-            align-items: center;
-            margin-right: 8px;
-          }
-
-          &-check {
-            background-color: transparent;
-            border: 0;
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-            display: inline-block;
-            vertical-align: middle;
-            box-sizing: border-box;
-            position: relative;
-            flex-shrink: 0;
-            transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
-              background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-            margin-right: 8px;
-            opacity: 0;
-            &::after {
-              color: $color-calm;
-              top: 4px;
-              left: 1px;
-              width: 8px;
-              height: 3px;
-              border-left: 2px solid currentColor;
-              transform: rotate(-45deg);
-              opacity: 1;
-              box-sizing: content-box;
-              position: absolute;
-              content: '';
-              border-bottom: 2px solid currentColor;
-              transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
-            }
-          }
-
-          &-info {
-            margin-left: 6px;
-            color: $treeautocomplete-option-info-color;
-          }
-
-          .virtual-row {
-            white-space: nowrap;
-          }
-        }
-
-        .p-component {
-          font-family: 'Source Sans Pro', sans-serif;
-          font-size: 14px;
-          font-weight: normal;
-        }
-
-        .p-tree-wrapper {
-          overflow: auto;
-        }
-
-        .p-tree-container {
-          margin: 0;
-          padding: 0;
-          list-style-type: none;
-          overflow: auto;
-        }
-
-        .p-tree .p-tree-container .p-treenode .p-treenode-content {
-          transition: box-shadow 0.2s;
-          padding: 0.25rem;
-        }
-
-        .p-treenode-content {
-          display: flex;
-          align-items: center;
-          .p-treenode-label {
-            width: 100%;
-          }
-        }
-
-        .p-tree
-          .p-tree-container
-          .p-treenode
-          .p-treenode-content
-          .p-tree-toggler {
-          margin-right: 0.5rem;
-          width: 2rem;
-          height: 2rem;
-          color: $treeautocomplete-option-chevron-color;
-          border: 0 none;
-          background: transparent;
-          border-radius: 50%;
-          transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
-        }
-
-        .p-tree
-          .p-tree-container
-          .p-treenode
-          .p-treenode-content:not(.p-highlight):hover {
-          background: $option-hover-background;
-        }
-
-        .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
-          outline: 0 none;
-          outline-offset: 0;
-        }
-
-        .p-tree
-          .p-tree-container
-          .p-treenode
-          .p-treenode-content:not(.p-highlight):focus {
-          //background-color: $option-highlight-background;
-          background-color: $option-hover-background;
-        }
-
-        .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
-          background: $selected-option-background;
-          color: $color-calm;
-          font-weight: 600;
-
-          .cps-treeautocomplete-option-check {
-            opacity: 1;
-          }
-        }
-        // .p-tree
-        //   .p-tree-container
-        //   .p-treenode
-        //   .p-treenode-content.p-highlight:focus {
-        //   background: $option-highlight-selected-background;
-        // }
-
-        .p-tree-toggler {
-          outline: 0 none;
-          outline-offset: 0;
-          cursor: pointer;
-          -webkit-user-select: none;
-          user-select: none;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          position: relative;
-          flex-shrink: 0;
-          :hover {
-            color: $color-calm;
-          }
-        }
-
-        .cps-tree-node-fully-expandable > .p-treenode-content:hover {
-          .p-tree-toggler {
-            color: $color-calm !important;
-          }
-        }
-
-        .p-tree .p-treenode-children {
-          padding: 0 0 0 1rem;
-        }
-
-        .p-treenode-children {
-          margin: 0;
-          padding: 0;
-          list-style-type: none;
-        }
-
-        .p-tree-empty-message {
-          padding: 11px;
-          font-size: 16px;
-          cursor: default;
-        }
-
-        .cps-tree-node-fully-expandable {
-          cursor: pointer;
-          -webkit-user-select: none; /* Safari */
-          -ms-user-select: none; /* IE 10 and IE 11 */
-          user-select: none; /* Standard syntax */
-        }
-        .cps-treeautocomplete-directory-elem {
-          font-weight: bold;
-          font-size: 16px;
-        }
-      }
-    }
-
     .cps-treeautocomplete-hint {
       color: $treeautocomplete-hint-color;
       font-size: 0.75rem;
@@ -489,6 +266,202 @@ $hover-transition-duration: 0.2s;
     color: $treeautocomplete-about-remove-color;
     ::ng-deep .cps-chip {
       background-color: $treeautocomplete-about-remove-background;
+    }
+  }
+}
+
+.cps-treeautocomplete-options {
+  background: white;
+  overflow-x: hidden;
+  max-height: 242px;
+  overflow-y: auto;
+
+  ::ng-deep {
+    .p-tree {
+      background: #ffffff;
+      color: $treeautocomplete-option-value-color;
+      padding: 0;
+    }
+
+    .cps-treeautocomplete-option {
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &-left {
+        display: flex;
+        align-items: center;
+        margin-right: 8px;
+      }
+
+      &-check {
+        background-color: transparent;
+        border: 0;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: middle;
+        box-sizing: border-box;
+        position: relative;
+        flex-shrink: 0;
+        transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+          background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+        margin-right: 8px;
+        opacity: 0;
+        &::after {
+          color: $color-calm;
+          top: 4px;
+          left: 1px;
+          width: 8px;
+          height: 3px;
+          border-left: 2px solid currentColor;
+          transform: rotate(-45deg);
+          opacity: 1;
+          box-sizing: content-box;
+          position: absolute;
+          content: '';
+          border-bottom: 2px solid currentColor;
+          transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+        }
+      }
+
+      &-info {
+        margin-left: 6px;
+        color: $treeautocomplete-option-info-color;
+      }
+
+      .virtual-row {
+        white-space: nowrap;
+      }
+    }
+
+    .p-component {
+      font-family: 'Source Sans Pro', sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .p-tree-wrapper {
+      overflow: auto;
+    }
+
+    .p-tree-container {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      overflow: auto;
+    }
+
+    .p-tree .p-tree-container .p-treenode .p-treenode-content {
+      transition: box-shadow 0.2s;
+      padding: 0.25rem;
+    }
+
+    .p-treenode-content {
+      display: flex;
+      align-items: center;
+      .p-treenode-label {
+        width: 100%;
+      }
+    }
+
+    .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
+      margin-right: 0.5rem;
+      width: 2rem;
+      height: 2rem;
+      color: $treeautocomplete-option-chevron-color;
+      border: 0 none;
+      background: transparent;
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+
+    .p-tree
+      .p-tree-container
+      .p-treenode
+      .p-treenode-content:not(.p-highlight):hover {
+      background: $option-hover-background;
+    }
+
+    .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
+      outline: 0 none;
+      outline-offset: 0;
+    }
+
+    .p-tree
+      .p-tree-container
+      .p-treenode
+      .p-treenode-content:not(.p-highlight):focus {
+      //background-color: $option-highlight-background;
+      background-color: $option-hover-background;
+    }
+
+    .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
+      background: $selected-option-background;
+      color: $color-calm;
+      font-weight: 600;
+
+      .cps-treeautocomplete-option-check {
+        opacity: 1;
+      }
+    }
+    // .p-tree
+    //   .p-tree-container
+    //   .p-treenode
+    //   .p-treenode-content.p-highlight:focus {
+    //   background: $option-highlight-selected-background;
+    // }
+
+    .p-tree-toggler {
+      outline: 0 none;
+      outline-offset: 0;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      :hover {
+        color: $color-calm;
+      }
+    }
+
+    .cps-tree-node-fully-expandable > .p-treenode-content:hover {
+      .p-tree-toggler {
+        color: $color-calm !important;
+      }
+    }
+
+    .p-tree .p-treenode-children {
+      padding: 0 0 0 1rem;
+    }
+
+    .p-treenode-children {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    .p-tree-empty-message {
+      padding: 11px;
+      font-size: 16px;
+      cursor: default;
+    }
+
+    .cps-tree-node-fully-expandable {
+      cursor: pointer;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+    }
+    .cps-treeautocomplete-directory-elem {
+      font-weight: bold;
+      font-size: 16px;
     }
   }
 }
