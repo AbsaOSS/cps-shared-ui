@@ -191,16 +191,14 @@ export class CpsTreeDropdownBaseComponent
 
     this.optionFocused = true;
 
-    const parent = event.target.classList.contains('p-treenode-content')
+    const elem = event.target.classList.contains('p-treenode-content')
       ? event.target
       : getParentWithClass(event.target, 'p-treenode-content');
 
     if (
-      parent?.parentElement?.classList?.contains(
-        'cps-tree-node-fully-expandable'
-      )
+      elem?.parentElement?.classList?.contains('cps-tree-node-fully-expandable')
     ) {
-      this.onClickFullyExpandable(event, parent.parentElement);
+      this.onClickFullyExpandable(elem);
     }
   }
 
@@ -234,8 +232,9 @@ export class CpsTreeDropdownBaseComponent
     }
   }
 
-  onClickFullyExpandable(event: any, elem: HTMLElement) {
-    const key = this._getHTMLElementKey(elem);
+  onClickFullyExpandable(elem: HTMLElement) {
+    const parent = elem.parentElement;
+    const key = this._getHTMLElementKey(parent);
     if (!key) return;
 
     const treeNode = this.options.find((o) => o.key === key);
@@ -244,7 +243,7 @@ export class CpsTreeDropdownBaseComponent
     treeNode.expanded = !treeNode.expanded;
     this.updateOptions();
     setTimeout(() => {
-      this._nodeToggled();
+      this._nodeToggled(elem);
     });
   }
 
@@ -345,25 +344,30 @@ export class CpsTreeDropdownBaseComponent
     }
   }
 
-  private _nodeToggled() {
+  private _nodeToggled(elem: HTMLElement) {
     this.recalcVirtualListHeight();
     setTimeout(() => {
       this.optionsMenu.align();
     });
+    elem?.focus();
   }
 
-  private _nodeToggledWithChevron() {
-    this._nodeToggled();
+  private _nodeToggledWithChevron(elem: HTMLElement) {
+    this._nodeToggled(elem);
     // fix primeng tree event stop propagation
     this.optionsMenu.selfClick = false;
   }
 
-  onNodeExpand() {
-    this._nodeToggledWithChevron();
+  onNodeExpand(event: any) {
+    this._nodeToggledWithChevron(
+      event?.originalEvent?.currentTarget?.parentElement
+    );
   }
 
-  onNodeCollapse() {
-    this._nodeToggledWithChevron();
+  onNodeCollapse(event: any) {
+    this._nodeToggledWithChevron(
+      event?.originalEvent?.currentTarget?.parentElement
+    );
   }
 
   clear(event: any): void {
