@@ -3,8 +3,8 @@
   [ngStyle]="{ width: cvtWidth }"
   class="cps-treeautocomplete"
   tabindex="1"
-  [ngClass]="{ disabled: disabled, error: error }"
-  #treeAutocompleteContainer>
+  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
+  #componentContainer>
   <div class="cps-treeautocomplete-label" *ngIf="label">
     <label>{{ label }}</label>
     <cps-info-circle
@@ -19,14 +19,13 @@
     </cps-info-circle>
   </div>
   <div
-    (keydown)="onContainerKeyDown($event, treeAutocompleteContainer)"
+    (keydown)="onContainerKeyDown($event)"
     class="cps-treeautocomplete-container"
     [class.focused]="isOpened"
     [ngClass]="{
       'persistent-clear': persistentClear
-    }"
-    (clickOutside)="onClickOutside(treeAutocompleteContainer)">
-    <div class="cps-treeautocomplete-box" (click)="onBoxClick()">
+    }">
+    <div class="cps-treeautocomplete-box" #boxEl (click)="onBoxClick()">
       <div class="cps-treeautocomplete-box-area">
         <cps-icon
           *ngIf="prefixIcon"
@@ -97,11 +96,11 @@
             <cps-icon
               icon="delete"
               size="small"
-              (click)="clear(treeAutocompleteContainer, $event)"></cps-icon>
+              (click)="clear($event)"></cps-icon>
           </span>
           <span
             class="cps-treeautocomplete-box-chevron"
-            (click)="onChevronClick($event, treeAutocompleteContainer)">
+            (click)="onChevronClick($event)">
             <cps-icon
               icon="chevron-down"
               size="small"
@@ -111,48 +110,61 @@
       </div>
     </div>
 
-    <div class="cps-treeautocomplete-options">
-      <p-tree
-        #treeAutocompleteList
-        [emptyMessage]="emptyMessage"
-        [virtualScroll]="virtualScroll"
-        [virtualScrollItemSize]="virtualScrollItemSize"
-        [virtualScrollOptions]="{ numToleratedItems: 3 }"
-        [scrollHeight]="virtualListHeight + 'px'"
-        (onNodeSelect)="onSelectNode()"
-        (onNodeExpand)="recalcVirtualListHeight()"
-        (onNodeCollapse)="recalcVirtualListHeight()"
-        (onFilter)="onFilterOptions()"
-        [value]="options"
-        [(selection)]="treeSelection"
-        (selectionChange)="treeSelectionChanged($event)"
-        [metaKeySelection]="multiple ? false : true"
-        [selectionMode]="multiple ? 'multiple' : 'single'">
-        <ng-template let-node pTemplate="directory">
-          <span class="cps-treeautocomplete-directory-elem">{{
-            node.label
-          }}</span>
-        </ng-template>
-        <ng-template let-node pTemplate="default">
-          <span class="cps-treeautocomplete-option">
-            <span class="cps-treeautocomplete-option-left">
-              <span *ngIf="multiple" class="cps-treeautocomplete-option-check">
+    <cps-menu
+      #optionsMenu
+      [withArrow]="false"
+      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      hideTransitionOptions="0s linear"
+      containerClass="cps-treeautocomplete-options-menu">
+      <div
+        class="cps-treeautocomplete-options"
+        [ngStyle]="{
+          width: boxWidth + 'px'
+        }">
+        <p-tree
+          #treeList
+          [emptyMessage]="emptyMessage"
+          [virtualScroll]="virtualScroll"
+          [virtualScrollItemSize]="virtualScrollItemSize"
+          [virtualScrollOptions]="{ numToleratedItems: 3 }"
+          [scrollHeight]="virtualListHeight + 'px'"
+          (onNodeSelect)="onSelectNode()"
+          (onNodeExpand)="onNodeExpand()"
+          (onNodeCollapse)="onNodeCollapse()"
+          (onFilter)="onFilterOptions()"
+          [value]="options"
+          [(selection)]="treeSelection"
+          (selectionChange)="treeSelectionChanged($event)"
+          [metaKeySelection]="multiple ? false : true"
+          [selectionMode]="multiple ? 'multiple' : 'single'">
+          <ng-template let-node pTemplate="directory">
+            <span class="cps-treeautocomplete-directory-elem">{{
+              node.label
+            }}</span>
+          </ng-template>
+          <ng-template let-node pTemplate="default">
+            <span class="cps-treeautocomplete-option">
+              <span class="cps-treeautocomplete-option-left">
+                <span
+                  *ngIf="multiple"
+                  class="cps-treeautocomplete-option-check">
+                </span>
+                <span
+                  class="cps-treeautocomplete-option-label"
+                  [class.virtual-row]="virtualScroll"
+                  >{{ node.label }}</span
+                >
               </span>
               <span
-                class="cps-treeautocomplete-option-label"
+                class="cps-treeautocomplete-option-info"
                 [class.virtual-row]="virtualScroll"
-                >{{ node.label }}</span
+                >{{ node.info }}</span
               >
             </span>
-            <span
-              class="cps-treeautocomplete-option-info"
-              [class.virtual-row]="virtualScroll"
-              >{{ node.info }}</span
-            >
-          </span>
-        </ng-template>
-      </p-tree>
-    </div>
+          </ng-template>
+        </p-tree>
+      </div>
+    </cps-menu>
     <cps-progress-linear
       *ngIf="loading"
       height="3"

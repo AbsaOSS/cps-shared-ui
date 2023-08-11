@@ -9,7 +9,8 @@ import {
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { TreeNode } from 'primeng/api';
@@ -22,7 +23,7 @@ import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { TooltipPosition } from '../directives/cps-tooltip.directive';
-import { hasSpaceBelow } from '../utils/internal/position-utils';
+import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
 
 @Component({
   template: ''
@@ -80,16 +81,22 @@ export class CpsTreeDropdownBaseComponent
 
   @Output() valueChanged = new EventEmitter<any>();
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  @ViewChild('componentContainer')
+  componentContainer!: ElementRef;
 
-  treeContainer!: ElementRef;
-  treeList!: Tree;
+  @ViewChild('optionsMenu')
+  optionsMenu!: CpsMenuComponent;
+
+  @ViewChild('treeList') treeList!: Tree;
+
+  @ViewChild('boxEl')
+  boxEl!: ElementRef;
+
+  private _statusChangesSubscription: Subscription = new Subscription();
 
   _options: TreeNode[] = [];
   optionsMap = new Map<string, TreeNode>();
   originalOptionsMap = new Map<string, any>();
-
-  treeSelection: any;
 
   virtualListHeight = 240;
   virtualScrollItemSize = 40;
@@ -97,9 +104,14 @@ export class CpsTreeDropdownBaseComponent
   error = '';
   cvtWidth = '';
   isOpened = false;
-  treeContainerElement!: HTMLElement;
   optionFocused = false;
   isAutocomplete = false;
+
+  treeContainerElement!: HTMLElement;
+  treeSelection: any;
+
+  boxWidth = 0;
+  resizeObserver: ResizeObserver;
 
   constructor(
     @Self() @Optional() public control: NgControl,
@@ -108,6 +120,11 @@ export class CpsTreeDropdownBaseComponent
     if (this.control) {
       this.control.valueAccessor = this;
     }
+    this.resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry?.target) this.boxWidth = (entry.target as any).offsetWidth;
+      });
+    });
   }
 
   ngOnInit() {
@@ -131,16 +148,19 @@ export class CpsTreeDropdownBaseComponent
   ngAfterViewInit() {
     this._initContainerClickListener();
     this.recalcVirtualListHeight();
+    this.resizeObserver.observe(this.boxEl.nativeElement);
     this.cdRef.detectChanges();
   }
 
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
-    if (this.treeContainerElement)
-      this.treeContainerElement.removeEventListener(
-        'click',
-        this._handleOnContainerClick.bind(this)
-      );
+
+    this.treeContainerElement?.removeEventListener(
+      'click',
+      this._handleOnContainerClick.bind(this)
+    );
+
+    this.resizeObserver?.disconnect();
   }
 
   private _initContainerClickListener() {
@@ -210,7 +230,7 @@ export class CpsTreeDropdownBaseComponent
 
   onSelectNode() {
     if (!this.multiple) {
-      this.toggleOptions(this.treeContainer?.nativeElement, false);
+      this.toggleOptions(false);
     }
   }
 
@@ -224,7 +244,7 @@ export class CpsTreeDropdownBaseComponent
     treeNode.expanded = !treeNode.expanded;
     this.updateOptions();
     setTimeout(() => {
-      this.recalcVirtualListHeight();
+      this._nodeToggled();
     });
   }
 
@@ -251,50 +271,36 @@ export class CpsTreeDropdownBaseComponent
     );
   }
 
-  toggleOptions(dd: HTMLElement, show?: boolean): void {
-    const optionsClassName = this.isAutocomplete
-      ? '.cps-treeautocomplete-options'
-      : '.cps-treeselect-options';
-
-    const repositionDropdown = () => {
-      if (
-        this.isOpened &&
-        !hasSpaceBelow(this.treeContainer, optionsClassName)
-      ) {
-        dd.classList.add('top-open');
-      }
-    };
-
-    if (this.disabled || !dd || this.isOpened === show) return;
+  toggleOptions(show?: boolean): void {
+    if (this.disabled || this.isOpened === show) return;
 
     if (typeof show === 'boolean') {
-      if (show) dd.classList.add('active');
-      else dd.classList.remove('active');
-    } else dd.classList.toggle('active');
+      if (show) {
+        this.optionsMenu.show({
+          target: this.boxEl.nativeElement
+        });
+      } else {
+        this.optionsMenu.hide();
+      }
+    } else {
+      this.optionsMenu.toggle({
+        target: this.boxEl.nativeElement
+      });
+    }
 
-    this.isOpened = dd.classList.contains('active');
-
-    dd.classList.remove('top-open');
-    repositionDropdown();
+    this.isOpened = this.optionsMenu.isVisible();
 
     this.optionFocused = false;
-
     if (this.isOpened && this.treeSelection) {
-      const optionsList = dd?.querySelector(optionsClassName) as any;
-      if (optionsList) optionsList.style.opacity = '0';
-
       this._expandToNodes(
         this.multiple ? this.treeSelection : [this.treeSelection]
       );
       this.updateOptions();
-
       setTimeout(() => {
         this.recalcVirtualListHeight();
-        repositionDropdown();
-        if (optionsList) optionsList.style.opacity = null;
-
-        const selected =
-          this.treeContainer.nativeElement.querySelector('.p-highlight');
+        const selected = this.treeContainerElement.querySelector(
+          '.p-highlight'
+        ) as any;
         if (selected) {
           selected.scrollIntoView({
             behavior: 'instant',
@@ -339,7 +345,28 @@ export class CpsTreeDropdownBaseComponent
     }
   }
 
-  clear(dd: HTMLElement, event: any): void {
+  private _nodeToggled() {
+    this.recalcVirtualListHeight();
+    setTimeout(() => {
+      this.optionsMenu.align();
+    });
+  }
+
+  private _nodeToggledWithChevron() {
+    this._nodeToggled();
+    // fix primeng tree event stop propagation
+    this.optionsMenu.selfClick = false;
+  }
+
+  onNodeExpand() {
+    this._nodeToggledWithChevron();
+  }
+
+  onNodeCollapse() {
+    this._nodeToggledWithChevron();
+  }
+
+  clear(event: any): void {
     event.stopPropagation();
 
     if (
@@ -347,7 +374,7 @@ export class CpsTreeDropdownBaseComponent
       (this.multiple && this.treeSelection?.length > 0)
     ) {
       if (this.openOnClear) {
-        this.toggleOptions(dd, true);
+        this.toggleOptions(true);
       }
       const val = this.multiple ? [] : undefined;
       this.treeSelection = val;
@@ -388,8 +415,8 @@ export class CpsTreeDropdownBaseComponent
   }
 
   focus() {
-    this.treeContainer?.nativeElement?.focus();
-    this.toggleOptions(this.treeContainer?.nativeElement, true);
+    this.componentContainer?.nativeElement?.focus();
+    this.toggleOptions(true);
   }
 
   private _expandToNodes(nodes: any[]) {
