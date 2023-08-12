@@ -78,6 +78,9 @@ export class CpsTabGroupComponent implements AfterContentInit, AfterViewInit {
     currentSelectedTab && (currentSelectedTab.active = false);
     const newSelectedTab = _tabs && _tabs[newSelectedIndex];
     newSelectedTab && (newSelectedTab.active = true);
+    if (newSelectedIndex === this.selectedIndex) {
+      return;
+    }
     this.animationState =
       newSelectedIndex < this.selectedIndex ? 'left' : 'right';
     this.selectedIndex = newSelectedIndex;

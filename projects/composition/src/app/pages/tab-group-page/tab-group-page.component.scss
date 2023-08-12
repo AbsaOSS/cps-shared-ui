@@ -4,7 +4,7 @@
     justify-content: center;
   }
   .tab-content {
-    margin: 15px 250px;
+    margin: 15px 20%;
   }
 }
 
@@ -13,4 +13,8 @@
     align-items: end;
     justify-content: right;
   }
+}
+
+:host {
+  overflow: hidden;
 }

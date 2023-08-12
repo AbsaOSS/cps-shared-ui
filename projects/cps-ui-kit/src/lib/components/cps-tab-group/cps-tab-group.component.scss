@@ -4,17 +4,6 @@
     min-height: 100px;
   }
 
-  .tab-pane {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    transform: translateX(-100%);
-    &.active {
-      transform: translateX(0);
-    }
-  }
-
   .nav-tabs {
     display: flex;
     //border-bottom: 1px solid #ccc;
