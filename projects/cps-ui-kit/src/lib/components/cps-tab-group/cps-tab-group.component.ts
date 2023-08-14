@@ -39,15 +39,26 @@ export interface TabChangeEvent {
   styleUrls: ['./cps-tab-group.component.scss'],
   animations: [
     trigger('slideInOut', [
-      state('left', style({ transform: 'translateX(0)' })),
-      state('right', style({ transform: 'translateX(0)' })),
-      transition('* => left', [
+      state('slideLeft', style({ transform: 'translateX(0)' })),
+      state('slideRight', style({ transform: 'translateX(0)' })),
+      transition('* => slideLeft', [
         style({ transform: 'translateX(-100%)' }),
         animate('200ms ease-in')
       ]),
-      transition('* => right', [
+      transition('* => slideRight', [
         style({ transform: 'translateX(100%)' }),
         animate('200ms ease-in')
+      ])
+    ]),
+    trigger('fadeInOut', [
+      state('fadeIn', style({ opacity: 1 })),
+      state('fadeOut', style({ opacity: 0 })),
+      transition('fadeOut => fadeIn', [
+        style({ opacity: 0 }),
+        animate('100ms ease-in')
+      ]),
+      transition('fadeIn => fadeOut', [
+        animate('0ms ease-out', style({ opacity: 0 }))
       ])
     ])
   ]
@@ -57,8 +68,11 @@ export class CpsTabGroupComponent implements AfterContentInit, AfterViewInit {
 
   @Input() selectedIndex = 0;
   @Input() isSubTabs = false; // applies an alternative styling to tabs
+  @Input() animationType: 'slide' | 'fade' = 'slide';
+  @Input() initAllTabsContent = false;
 
-  animationState: 'left' | 'right' = 'left';
+  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' =
+    'slideLeft';
 
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
   @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
@@ -89,13 +103,25 @@ export class CpsTabGroupComponent implements AfterContentInit, AfterViewInit {
     if (newSelectedIndex === this.selectedIndex) {
       return;
     }
-    this.animationState =
-      newSelectedIndex < this.selectedIndex ? 'left' : 'right';
-    this.selectedIndex = newSelectedIndex;
 
-    this.afterTabChanged.emit({
-      currentTabIndex: newSelectedIndex
-    });
+    if (this.animationType === 'slide') {
+      this.animationState =
+        newSelectedIndex < this.selectedIndex ? 'slideLeft' : 'slideRight';
+      this.selectedIndex = newSelectedIndex;
+
+      this.afterTabChanged.emit({
+        currentTabIndex: newSelectedIndex
+      });
+    } else if (this.animationType === 'fade') {
+      this.animationState = 'fadeOut';
+      setTimeout(() => {
+        this.animationState = 'fadeIn';
+        this.selectedIndex = newSelectedIndex;
+        this.afterTabChanged.emit({
+          currentTabIndex: newSelectedIndex
+        });
+      }, 100);
+    }
   }
 
   get selectedTab(): CpsTabComponent | undefined {
