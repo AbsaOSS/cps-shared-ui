@@ -48,8 +48,8 @@ const routes: Routes = [
     component: SelectPageComponent
   },
   {
-    path: 'tab-group',
-    title: 'Tab group',
+    path: 'tabs',
+    title: 'Tabs',
     component: TabGroupPageComponent
   },
   {

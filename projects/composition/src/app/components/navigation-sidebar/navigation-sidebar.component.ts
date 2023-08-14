@@ -94,8 +94,8 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/table'
     },
     {
-      title: 'Tab group',
-      url: '/tab-group'
+      title: 'Tabs',
+      url: '/tabs'
     },
     {
       title: 'Tag',

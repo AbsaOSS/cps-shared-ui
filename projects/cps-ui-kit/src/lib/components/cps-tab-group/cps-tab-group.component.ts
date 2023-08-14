@@ -17,7 +17,7 @@ import {
   Output,
   QueryList
 } from '@angular/core';
-import { CpsIconComponent } from 'projects/cps-ui-kit/src/lib/components/cps-icon/cps-icon.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
 
 export interface TabChangeEvent {
