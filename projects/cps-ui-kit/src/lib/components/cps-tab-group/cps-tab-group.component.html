@@ -1,4 +1,4 @@
-<ul class="cps-tabs">
+<ul class="cps-tabs" [ngClass]="{ 'cps-tabs-subtabs': isSubTabs }">
   <ng-container *ngFor="let tab of tabs; let tabIndex = index">
     <li
       *ngIf="tab.tooltipText"
@@ -27,7 +27,9 @@
     </li>
   </ng-container>
 </ul>
-<div class="cps-tab-content">
+<div
+  class="cps-tab-content"
+  [ngClass]="{ 'cps-tab-content-subtabs': isSubTabs }">
   <ng-container *ngFor="let tab of tabs">
     <div [@slideInOut]="animationState" *ngIf="tab.active">
       <ng-container [ngTemplateOutlet]="tab.content"></ng-container>

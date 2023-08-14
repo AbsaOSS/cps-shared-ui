@@ -56,6 +56,8 @@ export class CpsTabGroupComponent implements AfterContentInit, AfterViewInit {
   @ContentChildren(CpsTabComponent) tabs!: QueryList<CpsTabComponent>;
 
   @Input() selectedIndex = 0;
+  @Input() isSubTabs = false; // applies an alternative styling to tabs
+
   animationState: 'left' | 'right' = 'left';
 
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();

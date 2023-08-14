@@ -1,11 +1,7 @@
 <cps-tab-group
   class="tab-example--left-aligned"
   (afterTabChanged)="changeTab($event)">
-  <cps-tab
-    label="Basic Title"
-    icon="avatar"
-    id="tab1"
-    tooltipText="I am a first tab tooltip"
+  <cps-tab label="Basic Title" icon="survivorship" id="tab1"
     >Basic content</cps-tab
   >
   <cps-tab label="Basic Title 1">Basic content 1</cps-tab>
@@ -24,6 +20,21 @@
   class="tab-example--right-aligned"
   (afterTabChanged)="changeTab($event)">
   <cps-tab label="Basic Title" id="tab3">Basic content</cps-tab>
+  <cps-tab label="Basic Title 1">Basic content 1</cps-tab>
+  <cps-tab label="Basic Title 2">Basic content 2</cps-tab>
+</cps-tab-group>
+
+<cps-tab-group
+  class="tab-example--left-aligned"
+  [isSubTabs]="true"
+  (afterTabChanged)="changeTab($event)">
+  <cps-tab
+    label="Tab with tooltip"
+    icon="avatar"
+    id="tab1"
+    tooltipText="I'm the first tab tooltip"
+    >Basic content</cps-tab
+  >
   <cps-tab label="Basic Title 1">Basic content 1</cps-tab>
   <cps-tab label="Basic Title 2">Basic content 2</cps-tab>
 </cps-tab-group>

@@ -7,7 +7,6 @@
 
   .cps-tabs {
     display: flex;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     list-style: none;
     padding: 0;
     margin: 0;
@@ -30,11 +29,6 @@
 
       &.active {
         color: var(--cps-color-calm);
-        border-bottom: 3px solid var(--cps-color-surprise) !important;
-      }
-
-      &:hover {
-        border-bottom: 3px solid var(--cps-color-line-light);
       }
     }
 
@@ -44,5 +38,34 @@
       color: inherit;
       transition: border-bottom-color 0.3s;
     }
+  }
+
+  .cps-tabs:not(.cps-tabs-subtabs) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    .cps-tab {
+      &.active {
+        color: var(--cps-color-calm);
+        border-bottom: 3px solid var(--cps-color-surprise);
+      }
+
+      &:hover:not(.active) {
+        border-bottom: 3px solid var(--cps-color-line-light);
+      }
+    }
+  }
+
+  .cps-tabs.cps-tabs-subtabs {
+    .cps-tab {
+      height: 33px;
+      background-color: #d7d7d759;
+
+      &.active {
+        background-color: #fff;
+      }
+    }
+  }
+
+  .cps-tab-content.cps-tab-content-subtabs {
+    background-color: #fff;
   }
 }
