@@ -9,8 +9,12 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
   styleUrls: ['./cps-tab.component.scss']
 })
 export class CpsTabComponent {
-  @Input() label!: string;
-  @Input() icon?: string;
+  @Input() label = '';
+  @Input() icon = '';
+  @Input() tooltipText = '';
+  @Input() tooltipContentClass = 'cps-tooltip-content';
+  @Input() tooltipMaxWidth: number | string = '100%';
+  @Input() tooltipPersistent = false;
   @ViewChild(TemplateRef) content!: TemplateRef<any>;
   active = false;
 }

@@ -1,7 +1,13 @@
 <cps-tab-group
   class="tab-example--left-aligned"
   (afterTabChanged)="changeTab($event)">
-  <cps-tab label="Basic Title" icon="avatar" id="tab1">Basic content</cps-tab>
+  <cps-tab
+    label="Basic Title"
+    icon="avatar"
+    id="tab1"
+    tooltipText="I am a first tab tooltip"
+    >Basic content</cps-tab
+  >
   <cps-tab label="Basic Title 1">Basic content 1</cps-tab>
   <cps-tab label="Basic Title 2">Basic content 2</cps-tab>
 </cps-tab-group>

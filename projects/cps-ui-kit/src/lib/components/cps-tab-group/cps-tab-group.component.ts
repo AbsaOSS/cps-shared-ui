@@ -19,6 +19,7 @@ import {
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
+import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
 
 export interface TabChangeEvent {
   currentTabIndex: number;
@@ -27,7 +28,12 @@ export interface TabChangeEvent {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsIconComponent, CpsTabComponent],
+  imports: [
+    CommonModule,
+    CpsIconComponent,
+    CpsTabComponent,
+    CpsTooltipDirective
+  ],
   selector: 'cps-tab-group',
   templateUrl: './cps-tab-group.component.html',
   styleUrls: ['./cps-tab-group.component.scss'],

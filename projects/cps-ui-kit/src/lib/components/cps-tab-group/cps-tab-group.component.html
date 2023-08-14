@@ -1,13 +1,31 @@
 <ul class="cps-tabs">
-  <li
-    class="cps-tab"
-    *ngFor="let tab of tabs; let tabIndex = index"
-    (click)="selectTab(tabIndex)"
-    [ngClass]="{ active: tab.active }">
-    <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
-    </cps-icon>
-    <a class="cps-tab-link">{{ tab.label }}</a>
-  </li>
+  <ng-container *ngFor="let tab of tabs; let tabIndex = index">
+    <li
+      *ngIf="tab.tooltipText"
+      class="cps-tab"
+      (click)="selectTab(tabIndex)"
+      [ngClass]="{ active: tab.active }"
+      [cpsTooltip]="tab.tooltipText"
+      tooltipOpenDelay="1000"
+      tooltipCloseDelay="0"
+      tooltipPosition="bottom"
+      [tooltipMaxWidth]="tab.tooltipMaxWidth"
+      [tooltipPersistent]="tab.tooltipPersistent"
+      [tooltipContentClass]="tab.tooltipContentClass">
+      <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
+      </cps-icon>
+      <a class="cps-tab-link">{{ tab.label }}</a>
+    </li>
+    <li
+      *ngIf="!tab.tooltipText"
+      class="cps-tab"
+      (click)="selectTab(tabIndex)"
+      [ngClass]="{ active: tab.active }">
+      <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
+      </cps-icon>
+      <a class="cps-tab-link">{{ tab.label }}</a>
+    </li>
+  </ng-container>
 </ul>
 <div class="cps-tab-content">
   <ng-container *ngFor="let tab of tabs">
