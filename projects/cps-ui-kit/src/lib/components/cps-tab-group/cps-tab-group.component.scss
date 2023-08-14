@@ -1,17 +1,18 @@
 :host {
-  .tab-content {
+  .cps-tab-content {
     position: relative;
     min-height: 100px;
+    padding: 10px;
   }
 
-  .nav-tabs {
+  .cps-tabs {
     display: flex;
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     list-style: none;
     padding: 0;
     margin: 0;
 
-    li {
+    .cps-tab {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -29,7 +30,7 @@
 
       &.active {
         color: var(--cps-color-calm);
-        border-bottom: 3px solid var(--cps-color-calm) !important;
+        border-bottom: 3px solid var(--cps-color-surprise) !important;
       }
 
       &:hover {
@@ -37,15 +38,11 @@
       }
     }
 
-    .nav-link {
+    .cps-tab-link {
       text-decoration: none;
       padding: 10px;
       color: inherit;
       transition: border-bottom-color 0.3s;
     }
-  }
-
-  .tab-content {
-    padding: 10px;
   }
 }

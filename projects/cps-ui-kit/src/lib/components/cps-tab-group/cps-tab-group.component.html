@@ -1,9 +1,15 @@
-<ul class="nav nav-tabs">
-  <li *ngFor="let tab of tabs; let tabIndex = index" (click)="selectTab(tabIndex)" [ngClass]="{active: tab.active}">
-    <a class="nav-link">{{tab.label}}</a>
+<ul class="cps-tabs">
+  <li
+    class="cps-tab"
+    *ngFor="let tab of tabs; let tabIndex = index"
+    (click)="selectTab(tabIndex)"
+    [ngClass]="{ active: tab.active }">
+    <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
+    </cps-icon>
+    <a class="cps-tab-link">{{ tab.label }}</a>
   </li>
 </ul>
-<div class="tab-content">
+<div class="cps-tab-content">
   <ng-container *ngFor="let tab of tabs">
     <div [@slideInOut]="animationState" *ngIf="tab.active">
       <ng-container [ngTemplateOutlet]="tab.content"></ng-container>

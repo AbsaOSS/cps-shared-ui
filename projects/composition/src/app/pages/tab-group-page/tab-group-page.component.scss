@@ -1,15 +1,15 @@
 :host ::ng-deep .tab-example--center-aligned {
-  .nav-tabs {
+  .cps-tabs {
     align-items: center;
     justify-content: center;
   }
-  .tab-content {
+  .cps-tab-content {
     margin: 15px 20%;
   }
 }
 
 :host ::ng-deep .tab-example--right-aligned {
-  .nav-tabs {
+  .cps-tabs {
     align-items: end;
     justify-content: right;
   }
