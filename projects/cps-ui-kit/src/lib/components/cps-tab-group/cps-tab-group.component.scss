@@ -62,6 +62,9 @@
       &.active {
         background-color: #fff;
       }
+      &:hover {
+        color: var(--cps-color-calm);
+      }
     }
   }
 
