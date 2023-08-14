@@ -27,6 +27,7 @@ This repository consists of two projects:
 - Radio
 - Select
 - Table
+- Tabs
 - Tag
 - Textarea
 - Tooltip directive
