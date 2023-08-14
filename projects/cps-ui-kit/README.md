@@ -22,6 +22,7 @@
 - Radio
 - Select
 - Table
+- Tabs
 - Tag
 - Textarea
 - Tooltip directive

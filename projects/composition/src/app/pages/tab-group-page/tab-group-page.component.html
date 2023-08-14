@@ -1,0 +1,63 @@
+<div class="tabs-elems-group">
+  <div class="tabs-elems-group-title">
+    Center-aligned tabs with slide transition
+  </div>
+  <cps-tab-group
+    class="tab-example--center-aligned"
+    (afterTabChanged)="changeTab($event)">
+    <cps-tab label="Tab 1" id="tab1">Content of tab 1</cps-tab>
+    <cps-tab label="Tab 2">Content of tab 2</cps-tab>
+    <cps-tab label="Tab 3">Content of tab 3</cps-tab>
+  </cps-tab-group>
+</div>
+
+<div class="tabs-elems-group">
+  <div class="tabs-elems-group-title">
+    Left-aligned tabs with fade transition and tooltips
+  </div>
+  <cps-tab-group
+    class="tab-example--left-aligned"
+    animationType="fade"
+    (afterTabChanged)="changeTab($event)">
+    <cps-tab label="Tab 1" tooltipText="Tooltip of tab 1" id="tab1"
+      >Content of tab 1</cps-tab
+    >
+    <cps-tab label="Tab 2" tooltipText="Tooltip of tab 2"
+      >Content of tab 2</cps-tab
+    >
+    <cps-tab label="Tab 3" tooltipText="Tooltip of tab 3"
+      >Content of tab 3</cps-tab
+    >
+  </cps-tab-group>
+</div>
+
+<div class="tabs-elems-group">
+  <div class="tabs-elems-group-title">
+    Right-aligned tabs with icons and all contents inited
+  </div>
+  <cps-tab-group
+    class="tab-example--right-aligned"
+    (afterTabChanged)="changeTab($event)"
+    [initAllTabsContent]="true">
+    <cps-tab label="Tab 1" icon="survivorship" id="tab1"
+      >Content of tab 1</cps-tab
+    >
+    <cps-tab label="Tab 2" icon="kris">Content of tab 2</cps-tab>
+    <cps-tab label="Tab 3" icon="dq">Content of tab 3</cps-tab>
+  </cps-tab-group>
+</div>
+
+<div class="tabs-elems-group">
+  <div class="tabs-elems-group-title">
+    Tabs styled as subtabs out of the box
+  </div>
+  <cps-tab-group
+    class="tab-example--left-aligned"
+    [isSubTabs]="true"
+    animationType="fade"
+    (afterTabChanged)="changeTab($event)">
+    <cps-tab label="Tab 1" icon="avatar" id="tab1">Content of tab 1</cps-tab>
+    <cps-tab label="Tab 2">Content of tab 2</cps-tab>
+    <cps-tab label="Tab 3">Content of tab 3</cps-tab>
+  </cps-tab-group>
+</div>

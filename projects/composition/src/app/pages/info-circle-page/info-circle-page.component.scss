@@ -10,18 +10,5 @@
       padding-bottom: 8px;
       font-weight: 600;
     }
-    &-row {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      align-items: center;
-    }
-
-    &-elem-left {
-      margin-right: 40px;
-      display: inline-flex;
-    }
   }
 }
