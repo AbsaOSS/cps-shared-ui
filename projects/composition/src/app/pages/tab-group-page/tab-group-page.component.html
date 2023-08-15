@@ -1,13 +1,23 @@
 <div class="tabs-elems-group">
   <div class="tabs-elems-group-title">
-    Center-aligned tabs with slide transition
+    Center-aligned tabs with slide transition, tooltips and disabled last tab
   </div>
   <cps-tab-group
+    tabsBackground="bg-light"
     class="tab-example--center-aligned"
     (afterTabChanged)="changeTab($event)">
-    <cps-tab label="Tab 1" id="tab1">Content of tab 1</cps-tab>
-    <cps-tab label="Tab 2">Content of tab 2</cps-tab>
-    <cps-tab label="Tab 3">Content of tab 3</cps-tab>
+    <cps-tab label="Tab 1" tooltipText="Tooltip of tab 1"
+      >Content of tab 1</cps-tab
+    >
+    <cps-tab label="Tab 2" tooltipText="Tooltip of tab 2"
+      >Content of tab 2</cps-tab
+    >
+    <cps-tab label="Tab 3" tooltipText="Tooltip of tab 3"
+      >Content of tab 3</cps-tab
+    >
+    <cps-tab label="Tab 4" tooltipText="Tooltip of tab 4" [disabled]="true"
+      >Content of tab 4</cps-tab
+    >
   </cps-tab-group>
 </div>
 
@@ -18,16 +28,23 @@
   <cps-tab-group
     class="tab-example--left-aligned"
     animationType="fade"
+    tabsBackground="bg-light"
     (afterTabChanged)="changeTab($event)">
-    <cps-tab label="Tab 1" tooltipText="Tooltip of tab 1" id="tab1"
-      >Content of tab 1</cps-tab
-    >
-    <cps-tab label="Tab 2" tooltipText="Tooltip of tab 2"
-      >Content of tab 2</cps-tab
-    >
-    <cps-tab label="Tab 3" tooltipText="Tooltip of tab 3"
-      >Content of tab 3</cps-tab
-    >
+    <cps-tab label="Tab 1">Content of tab 1</cps-tab>
+    <cps-tab label="Tab 2">Content of tab 2</cps-tab>
+    <cps-tab label="Tab 3">Content of tab 3</cps-tab>
+    <cps-tab label="Tab 4">Content of tab 4</cps-tab>
+    <cps-tab label="Tab 5">Content of tab 5</cps-tab>
+    <cps-tab label="Tab 6">Content of tab 6</cps-tab>
+    <cps-tab label="Tab 7">Content of tab 7</cps-tab>
+    <cps-tab label="Tab 8">Content of tab 8</cps-tab>
+    <cps-tab label="Tab 9">Content of tab 9</cps-tab>
+    <cps-tab label="Tab 10">Content of tab 10</cps-tab>
+    <cps-tab label="Tab 11">Content of tab 11</cps-tab>
+    <cps-tab label="Tab 12">Content of tab 12</cps-tab>
+    <cps-tab label="Tab 13">Content of tab 13</cps-tab>
+    <cps-tab label="Tab 14">Content of tab 14</cps-tab>
+    <cps-tab label="Tab 15">Content of tab 15</cps-tab>
   </cps-tab-group>
 </div>
 
@@ -38,6 +55,7 @@
   <cps-tab-group
     class="tab-example--right-aligned"
     (afterTabChanged)="changeTab($event)"
+    tabsBackground="bg-light"
     [initAllTabsContent]="true">
     <cps-tab label="Tab 1" icon="survivorship" id="tab1"
       >Content of tab 1</cps-tab
@@ -54,6 +72,7 @@
   <cps-tab-group
     class="tab-example--left-aligned"
     [isSubTabs]="true"
+    tabsBackground="bg-light"
     animationType="fade"
     (afterTabChanged)="changeTab($event)">
     <cps-tab label="Tab 1" icon="avatar" id="tab1">Content of tab 1</cps-tab>

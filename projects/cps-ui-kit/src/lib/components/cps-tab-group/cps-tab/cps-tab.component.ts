@@ -11,6 +11,7 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 export class CpsTabComponent {
   @Input() label = '';
   @Input() icon = '';
+  @Input() disabled = false;
   @Input() tooltipText = '';
   @Input() tooltipContentClass = 'cps-tooltip-content';
   @Input() tooltipMaxWidth: number | string = '100%';

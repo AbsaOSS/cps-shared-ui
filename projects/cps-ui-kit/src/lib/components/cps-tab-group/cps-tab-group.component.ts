@@ -12,14 +12,25 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
+  OnInit,
   Output,
-  QueryList
+  QueryList,
+  ViewChild
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
 import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
+import { getCSSColor } from '../../utils/colors-utils';
+import {
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+  fromEvent
+} from 'rxjs';
 
 export interface TabChangeEvent {
   currentTabIndex: number;
@@ -63,29 +74,64 @@ export interface TabChangeEvent {
     ])
   ]
 })
-export class CpsTabGroupComponent implements AfterContentInit, AfterViewInit {
-  @ContentChildren(CpsTabComponent) tabs!: QueryList<CpsTabComponent>;
-
+export class CpsTabGroupComponent
+  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
+{
   @Input() selectedIndex = 0;
   @Input() isSubTabs = false; // applies an alternative styling to tabs
   @Input() animationType: 'slide' | 'fade' = 'slide';
   @Input() initAllTabsContent = false;
-
-  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' =
-    'slideLeft';
+  @Input() tabsBackground = 'inherit';
 
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
   @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
 
+  @ViewChild('tabsList') tabsList!: ElementRef;
+  @ViewChild('backBtn') backBtn?: ElementRef;
+  @ViewChild('forwardBtn') forwardBtn?: ElementRef;
+
+  @ContentChildren(CpsTabComponent) tabs!: QueryList<CpsTabComponent>;
+
+  backBtnVisible = false;
+  forwardBtnVisible = false;
+  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' =
+    'slideLeft';
+
+  windowResize$: Subscription = Subscription.EMPTY;
+  listScroll$: Subscription = Subscription.EMPTY;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.tabsBackground = getCSSColor(this.tabsBackground);
+
+    this.windowResize$ = fromEvent(window, 'resize')
+      .pipe(debounceTime(50), distinctUntilChanged())
+      .subscribe(() => this.onResize());
+  }
 
   ngAfterContentInit() {
     this.selectTab(this.selectedIndex);
   }
 
   ngAfterViewInit() {
+    this._updateNavBtnsState();
+
+    this.listScroll$ = fromEvent(this.tabsList.nativeElement, 'scroll')
+      .pipe(debounceTime(50), distinctUntilChanged())
+      .subscribe((event: any) => this.onScroll(event));
+
     this.cdRef.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.windowResize$?.unsubscribe();
+    this.listScroll$?.unsubscribe();
+  }
+
+  get selectedTab(): CpsTabComponent | undefined {
+    return this.tabs.find((t) => t.active);
   }
 
   selectTab(newSelectedIndex: number) {
@@ -124,7 +170,57 @@ export class CpsTabGroupComponent implements AfterContentInit, AfterViewInit {
     }
   }
 
-  get selectedTab(): CpsTabComponent | undefined {
-    return this.tabs.find((t) => t.active);
+  onScroll(event: any) {
+    this._updateNavBtnsState();
+    event.preventDefault();
+  }
+
+  onResize() {
+    this._updateNavBtnsState();
+  }
+
+  navBackward() {
+    const content = this.tabsList.nativeElement;
+    const width = this._getWidth(content) - this._getVisibleButtonWidths();
+    const pos = content.scrollLeft - width;
+    content.scrollLeft = pos <= 0 ? 0 : pos;
+  }
+
+  navForward() {
+    const content = this.tabsList.nativeElement;
+    const width = this._getWidth(content) - this._getVisibleButtonWidths();
+    const pos = content.scrollLeft + width;
+    const lastPos = content.scrollWidth - width;
+    content.scrollLeft = pos >= lastPos ? lastPos : pos;
+  }
+
+  private _updateNavBtnsState() {
+    const content = this.tabsList.nativeElement;
+    const { scrollLeft, scrollWidth } = content;
+
+    const width = this._getWidth(content);
+
+    this.backBtnVisible = scrollLeft === 0;
+    this.forwardBtnVisible = Math.abs(scrollLeft - scrollWidth + width) < 2;
+  }
+
+  private _getVisibleButtonWidths() {
+    return [this.backBtn?.nativeElement, this.forwardBtn?.nativeElement].reduce(
+      (acc, el) => (el ? acc + this._getWidth(el) : acc),
+      0
+    );
+  }
+
+  private _getWidth(el: any): number {
+    let width = el.offsetWidth;
+    const style = getComputedStyle(el);
+
+    width -=
+      parseFloat(style.paddingLeft) +
+      parseFloat(style.paddingRight) +
+      parseFloat(style.borderLeftWidth) +
+      parseFloat(style.borderRightWidth);
+
+    return width;
   }
 }
