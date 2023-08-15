@@ -3,8 +3,8 @@
     <li
       *ngIf="tab.tooltipText"
       class="cps-tab"
-      (click)="selectTab(tabIndex)"
-      [ngClass]="{ active: tab.active }"
+      (click)="!tab.disabled ? selectTab(tabIndex) : ''"
+      [ngClass]="{ active: tab.active, disabled: tab.disabled }"
       [cpsTooltip]="tab.tooltipText"
       tooltipOpenDelay="1000"
       tooltipCloseDelay="0"
@@ -19,8 +19,8 @@
     <li
       *ngIf="!tab.tooltipText"
       class="cps-tab"
-      (click)="selectTab(tabIndex)"
-      [ngClass]="{ active: tab.active }">
+      (click)="!tab.disabled ? selectTab(tabIndex) : ''"
+      [ngClass]="{ active: tab.active, disabled: tab.disabled }">
       <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
       </cps-icon>
       <a class="cps-tab-link">{{ tab.label }}</a>

@@ -27,8 +27,12 @@
       cursor: pointer;
       border-bottom: 3px solid transparent;
 
-      &.active {
+      &.active:not(.disabled) {
         color: var(--cps-color-calm);
+      }
+      &.disabled {
+        cursor: default;
+        color: var(--cps-color-text-light);
       }
     }
 
@@ -43,13 +47,19 @@
   .cps-tabs:not(.cps-tabs-subtabs) {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     .cps-tab {
-      &.active {
-        color: var(--cps-color-calm);
+      &.active:not(.disabled) {
         border-bottom: 3px solid var(--cps-color-surprise);
       }
+      &.active.disabled {
+        border-bottom: 3px solid var(--cps-color-line-dark);
+      }
 
-      &:hover:not(.active) {
+      &:hover:not(:active, .active, .disabled) {
         border-bottom: 3px solid var(--cps-color-line-light);
+      }
+
+      &:active:not(.disabled) {
+        border-bottom: 3px solid var(--cps-color-line-mid);
       }
     }
   }
@@ -62,7 +72,7 @@
       &.active {
         background-color: #fff;
       }
-      &:hover {
+      &:hover:not(.disabled) {
         color: var(--cps-color-calm);
       }
     }
