@@ -9,11 +9,7 @@
     (click)="navBackward()">
     <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
   </div>
-  <ul
-    #tabsList
-    (window:resize)="onResize()"
-    (scroll)="onScroll($event)"
-    class="cps-tabs-list">
+  <ul #tabsList (scroll)="onScroll($event)" class="cps-tabs-list">
     <ng-container *ngFor="let tab of tabs; let tabIndex = index">
       <li
         *ngIf="tab.tooltipText"

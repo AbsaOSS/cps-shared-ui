@@ -15,6 +15,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   QueryList,
@@ -24,6 +25,12 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
 import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
 import { getCSSColor } from '../../utils/colors-utils';
+import {
+  Subscription,
+  debounceTime,
+  distinctUntilChanged,
+  fromEvent
+} from 'rxjs';
 
 export interface TabChangeEvent {
   currentTabIndex: number;
@@ -68,7 +75,7 @@ export interface TabChangeEvent {
   ]
 })
 export class CpsTabGroupComponent
-  implements OnInit, AfterContentInit, AfterViewInit
+  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
 {
   @ContentChildren(CpsTabComponent) tabs!: QueryList<CpsTabComponent>;
 
@@ -91,11 +98,16 @@ export class CpsTabGroupComponent
   backBtnVisible = false;
   forwardBtnVisible = false;
 
+  windowResize$: Subscription = Subscription.EMPTY;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.tabsBackground = getCSSColor(this.tabsBackground);
+    this.windowResize$ = fromEvent(window, 'resize')
+      .pipe(debounceTime(50), distinctUntilChanged())
+      .subscribe(() => this.onResize());
   }
 
   ngAfterContentInit() {
@@ -105,6 +117,10 @@ export class CpsTabGroupComponent
   ngAfterViewInit() {
     this._updateNavBtnsState();
     this.cdRef.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.windowResize$.unsubscribe();
   }
 
   selectTab(newSelectedIndex: number) {
