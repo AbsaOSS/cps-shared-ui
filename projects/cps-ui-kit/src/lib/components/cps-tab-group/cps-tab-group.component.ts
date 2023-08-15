@@ -99,12 +99,14 @@ export class CpsTabGroupComponent
   forwardBtnVisible = false;
 
   windowResize$: Subscription = Subscription.EMPTY;
+  listScroll$: Subscription = Subscription.EMPTY;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.tabsBackground = getCSSColor(this.tabsBackground);
+
     this.windowResize$ = fromEvent(window, 'resize')
       .pipe(debounceTime(50), distinctUntilChanged())
       .subscribe(() => this.onResize());
@@ -116,11 +118,17 @@ export class CpsTabGroupComponent
 
   ngAfterViewInit() {
     this._updateNavBtnsState();
+
+    this.listScroll$ = fromEvent(this.tabsList.nativeElement, 'scroll')
+      .pipe(debounceTime(50), distinctUntilChanged())
+      .subscribe((event: any) => this.onScroll(event));
+
     this.cdRef.detectChanges();
   }
 
   ngOnDestroy(): void {
-    this.windowResize$.unsubscribe();
+    this.windowResize$?.unsubscribe();
+    this.listScroll$?.unsubscribe();
   }
 
   selectTab(newSelectedIndex: number) {
