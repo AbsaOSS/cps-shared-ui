@@ -1,32 +1,55 @@
-<ul class="cps-tabs" [ngClass]="{ 'cps-tabs-subtabs': isSubTabs }">
-  <ng-container *ngFor="let tab of tabs; let tabIndex = index">
-    <li
-      *ngIf="tab.tooltipText"
-      class="cps-tab"
-      (click)="!tab.disabled ? selectTab(tabIndex) : ''"
-      [ngClass]="{ active: tab.active, disabled: tab.disabled }"
-      [cpsTooltip]="tab.tooltipText"
-      tooltipOpenDelay="1000"
-      tooltipCloseDelay="0"
-      tooltipPosition="bottom"
-      [tooltipMaxWidth]="tab.tooltipMaxWidth"
-      [tooltipPersistent]="tab.tooltipPersistent"
-      [tooltipContentClass]="tab.tooltipContentClass">
-      <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
-      </cps-icon>
-      <a class="cps-tab-link">{{ tab.label }}</a>
-    </li>
-    <li
-      *ngIf="!tab.tooltipText"
-      class="cps-tab"
-      (click)="!tab.disabled ? selectTab(tabIndex) : ''"
-      [ngClass]="{ active: tab.active, disabled: tab.disabled }">
-      <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
-      </cps-icon>
-      <a class="cps-tab-link">{{ tab.label }}</a>
-    </li>
-  </ng-container>
-</ul>
+<div
+  class="cps-tabs"
+  [ngClass]="{ 'cps-tabs-subtabs': isSubTabs }"
+  [ngStyle]="{ 'background-color': tabsBackground }">
+  <div
+    class="nav-btn nav-btn-back"
+    *ngIf="!backBtnVisible"
+    #backBtn
+    (click)="navBackward()">
+    <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
+  </div>
+  <ul
+    #tabsList
+    (window:resize)="onResize()"
+    (scroll)="onScroll($event)"
+    class="cps-tabs-list">
+    <ng-container *ngFor="let tab of tabs; let tabIndex = index">
+      <li
+        *ngIf="tab.tooltipText"
+        class="cps-tab"
+        (click)="!tab.disabled ? selectTab(tabIndex) : ''"
+        [ngClass]="{ active: tab.active, disabled: tab.disabled }"
+        [cpsTooltip]="tab.tooltipText"
+        tooltipOpenDelay="1000"
+        tooltipCloseDelay="0"
+        tooltipPosition="bottom"
+        [tooltipMaxWidth]="tab.tooltipMaxWidth"
+        [tooltipPersistent]="tab.tooltipPersistent"
+        [tooltipContentClass]="tab.tooltipContentClass">
+        <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
+        </cps-icon>
+        <a class="cps-tab-link">{{ tab.label }}</a>
+      </li>
+      <li
+        *ngIf="!tab.tooltipText"
+        class="cps-tab"
+        (click)="!tab.disabled ? selectTab(tabIndex) : ''"
+        [ngClass]="{ active: tab.active, disabled: tab.disabled }">
+        <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
+        </cps-icon>
+        <a class="cps-tab-link">{{ tab.label }}</a>
+      </li>
+    </ng-container>
+  </ul>
+  <div
+    class="nav-btn nav-btn-forward"
+    *ngIf="!forwardBtnVisible"
+    #forwardBtn
+    (click)="navForward()">
+    <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
+  </div>
+</div>
 <div
   class="cps-tab-content"
   [ngClass]="{ 'cps-tab-content-subtabs': isSubTabs }">

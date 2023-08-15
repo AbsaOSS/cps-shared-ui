@@ -10,9 +10,9 @@
       padding-bottom: 8px;
       font-weight: 600;
     }
+
     ::ng-deep .tab-example--center-aligned {
       .cps-tabs {
-        align-items: center;
         justify-content: center;
       }
       .cps-tab-content {
@@ -22,7 +22,6 @@
 
     ::ng-deep .tab-example--right-aligned {
       .cps-tabs {
-        align-items: end;
         justify-content: right;
       }
     }
