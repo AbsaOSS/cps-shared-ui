@@ -77,8 +77,6 @@ export interface TabChangeEvent {
 export class CpsTabGroupComponent
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
 {
-  @ContentChildren(CpsTabComponent) tabs!: QueryList<CpsTabComponent>;
-
   @Input() selectedIndex = 0;
   @Input() isSubTabs = false; // applies an alternative styling to tabs
   @Input() animationType: 'slide' | 'fade' = 'slide';
@@ -92,11 +90,12 @@ export class CpsTabGroupComponent
   @ViewChild('backBtn') backBtn?: ElementRef;
   @ViewChild('forwardBtn') forwardBtn?: ElementRef;
 
-  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' =
-    'slideLeft';
+  @ContentChildren(CpsTabComponent) tabs!: QueryList<CpsTabComponent>;
 
   backBtnVisible = false;
   forwardBtnVisible = false;
+  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' =
+    'slideLeft';
 
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
@@ -129,6 +128,10 @@ export class CpsTabGroupComponent
   ngOnDestroy(): void {
     this.windowResize$?.unsubscribe();
     this.listScroll$?.unsubscribe();
+  }
+
+  get selectedTab(): CpsTabComponent | undefined {
+    return this.tabs.find((t) => t.active);
   }
 
   selectTab(newSelectedIndex: number) {
@@ -165,10 +168,6 @@ export class CpsTabGroupComponent
         });
       }, 100);
     }
-  }
-
-  get selectedTab(): CpsTabComponent | undefined {
-    return this.tabs.find((t) => t.active);
   }
 
   onScroll(event: any) {
