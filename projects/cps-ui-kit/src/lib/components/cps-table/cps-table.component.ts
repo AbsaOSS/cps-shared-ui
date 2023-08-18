@@ -24,7 +24,9 @@ import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
 import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
+import { convertSize } from '../../utils/internal/size-utils';
 import { find, isEqual } from 'lodash-es';
+
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
 
@@ -86,10 +88,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
   @Input() showRowMenu = false;
-  @Input() loading = false;
   @Input() reorderableRows = false;
-  @Input() showColumnsToggle = false;
+  @Input() showColumnsToggle = false; // doesn't work with external body template, only with internal columns. potential TODO
   @Input() sortable = false; // makes all sortable if columns are provided
+  @Input() loading = false;
 
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
@@ -101,6 +103,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() first = 0;
   @Input() rows = 0;
   @Input() totalRecords = 0;
+
+  @Input() emptyBodyHeight = '';
 
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
@@ -185,6 +189,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
 
     if (this.paginator) {

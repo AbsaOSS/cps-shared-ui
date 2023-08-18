@@ -34,8 +34,9 @@
       [columns]="colsVirtual"
       [sortable]="true"
       [virtualScroll]="true"
+      [showColumnsToggle]="true"
       scrollHeight="500px"
-      toolbarTitle="Sortable table with virtual scroller, dynamic columns and global filter">
+      toolbarTitle="Sortable table with virtual scroller, global filter and columns toggle">
     </cps-table>
   </cps-tab>
   <cps-tab label="Table 3">
@@ -106,7 +107,6 @@
   <cps-tab label="Table 5">
     <cps-table
       [data]="data"
-      [sortable]="true"
       [selectable]="true"
       toolbarSize="small"
       scrollHeight="calc(100vh - 300px)"
@@ -196,43 +196,23 @@
     </cps-table>
   </cps-tab>
   <cps-tab label="Table 8">
-    <cps-table
-      [showGlobalFilter]="true"
-      [data]="data"
-      [columns]="cols"
-      dataKey="a"
-      [showActionBtn]="true"
-      [reorderableRows]="true"
-      [selectable]="true"
-      sortMode="multiple"
-      [showRowMenu]="true"
-      (editRowBtnClicked)="onEditRowButtonClicked($event)"
-      (actionBtnClicked)="onActionBtnClicked()"
-      toolbarTitle="Something else">
+    <cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="400px">
       <ng-template #header>
-        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
-        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
-        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+        <th cpsColSortable="a">A</th>
+        <th cpsColSortable="b">B</th>
+        <th cpsColSortable="c">C</th>
+        <th cpsColSortable="d">D</th>
+        <th cpsColSortable="e">E</th>
       </ng-template>
-
-      <ng-template let-item #body>
-        <td>{{ item.a | uppercase }}</td>
-        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
-        <td>{{ item.c | percent }}</td>
-        <td [style.color]="item.d ? 'green' : 'red'">
-          {{ item.d ? '&#10004;' : '&#10008;' }}
-        </td>
-        <td>{{ item.e }}</td>
-      </ng-template>
-
-      <ng-template let-item #rowexpansion>
-        <div class="expanded-row-contents">
-          <div>id: {{ item.f.id }}</div>
-          <div>desc: {{ item.f.desc }}</div>
-        </div>
-      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 9">
+    <cps-table
+      [data]="data"
+      [loading]="true"
+      scrollHeight="400px"
+      [columns]="cols"
+      toolbarTitle="Table in data loading state">
     </cps-table>
   </cps-tab>
 </cps-tab-group>

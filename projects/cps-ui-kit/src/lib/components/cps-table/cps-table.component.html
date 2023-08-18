@@ -245,7 +245,10 @@
   </ng-template>
   <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="100" class="cps-table-empty-message-td">
+      <td
+        colspan="100"
+        class="cps-table-empty-message-td"
+        [ngStyle]="{ height: emptyBodyHeight }">
         {{ emptyMessage }}
       </td>
     </tr>
