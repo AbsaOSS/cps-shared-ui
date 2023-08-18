@@ -33,6 +33,9 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 }
 
 export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
+export type CpsTableSize = 'small' | 'normal' | 'large';
+export type CpsTableToolbarSize = 'small' | 'normal';
+export type CpsTableSortMode = 'single' | 'multiple';
 
 @Component({
   selector: 'cps-table',
@@ -72,13 +75,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
 
   @Input() striped = true;
   @Input() bordered = true;
-  @Input() size: 'small' | 'normal' | 'large' = 'normal';
+  @Input() size: CpsTableSize = 'normal';
   @Input() selectable = false;
   @Input() emptyMessage = 'No data';
   @Input() hasToolbar = true;
-  @Input() toolbarSize: 'small' | 'normal' = 'normal';
+  @Input() toolbarSize: CpsTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
-  @Input() sortMode: 'single' | 'multiple' = 'single';
+  @Input() sortMode: CpsTableSortMode = 'single';
   @Input() customSort = false;
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
@@ -146,7 +149,6 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @ViewChild('primengTable', { static: true })
   primengTable!: Table;
 
-  styleClass = '';
   selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
@@ -209,30 +211,36 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
     ) {
       this.globalFilterFields = Object.keys(this.data[0]);
     }
+
+    this.selectedColumns = this.columns;
+  }
+
+  get styleClass() {
+    const classesList = [];
     switch (this.size) {
       case 'small':
-        this.styleClass = 'p-datatable-sm';
+        classesList.push('p-datatable-sm');
         break;
       case 'large':
-        this.styleClass = 'p-datatable-lg';
+        classesList.push('p-datatable-lg');
         break;
     }
     switch (this.toolbarSize) {
       case 'small':
-        this.styleClass += ' cps-tbar-small';
+        classesList.push('cps-tbar-small');
         break;
       case 'normal':
-        this.styleClass += ' cps-tbar-normal';
+        classesList.push('cps-tbar-normal');
         break;
     }
     if (this.striped) {
-      this.styleClass += ' p-datatable-striped';
+      classesList.push('p-datatable-striped');
     }
     if (this.bordered) {
-      this.styleClass += ' p-datatable-gridlines';
+      classesList.push('p-datatable-gridlines');
     }
 
-    this.selectedColumns = this.columns;
+    return classesList.join(' ');
   }
 
   ngAfterViewChecked() {
