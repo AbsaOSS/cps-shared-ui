@@ -37,6 +37,8 @@ export interface TabChangeEvent {
   newTabIndex?: number;
 }
 
+export type CpsTabsAnimationType = 'slide' | 'fade';
+
 @Component({
   standalone: true,
   imports: [
@@ -79,7 +81,7 @@ export class CpsTabGroupComponent
 {
   @Input() selectedIndex = 0;
   @Input() isSubTabs = false; // applies an alternative styling to tabs
-  @Input() animationType: 'slide' | 'fade' = 'slide';
+  @Input() animationType: CpsTabsAnimationType = 'slide';
   @Input() tabsBackground = 'inherit';
 
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
