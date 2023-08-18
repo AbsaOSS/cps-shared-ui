@@ -40,13 +40,76 @@
   </cps-tab>
   <cps-tab label="Table 3">
     <cps-table
-      [showGlobalFilter]="true"
+      [data]="data"
+      [reorderableRows]="true"
+      [showActionBtn]="true"
+      [showRowMenu]="true"
+      (editRowBtnClicked)="onEditRowButtonClicked($event)"
+      (actionBtnClicked)="onActionBtnClicked()"
+      toolbarTitle="Table with draggable rows, row menus and action button">
+      <ng-template #header>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+      </ng-template>
+
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 4">
+    <cps-table
+      [data]="data"
+      dataKey="a"
+      [selectable]="true"
+      sortMode="multiple"
+      [striped]="false"
+      [showRowMenu]="true"
+      (editRowBtnClicked)="onEditRowButtonClicked($event)"
+      toolbarTitle="Table with selectable, expandable rows and no stripes">
+      <ng-template #header>
+        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
+        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
+        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+      </ng-template>
+
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+
+      <ng-template let-item #rowexpansion>
+        <div class="expanded-row-contents">
+          <div>id: {{ item.f.id }}</div>
+          <div>desc: {{ item.f.desc }}</div>
+        </div>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 5">
+    <cps-table
       [data]="data"
       [sortable]="true"
       [selectable]="true"
-      [virtualScroll]="true"
-      scrollHeight="500px"
-      toolbarTitle="Table with nested header">
+      toolbarSize="small"
+      scrollHeight="calc(100vh - 300px)"
+      toolbarTitle="Table with nested header and small toolbar ">
       <ng-template #nestedHeader>
         <tr>
           <!-- MANUALLY ADD FIRST EMPTY HEADER, SINCE THE TABLE IS SELECTABLE -->
@@ -74,7 +137,7 @@
       </ng-template>
     </cps-table>
   </cps-tab>
-  <cps-tab label="Table 4">
+  <cps-tab label="Table 6">
     <cps-table
       [showGlobalFilter]="true"
       [data]="data"
@@ -87,7 +150,7 @@
       [showRowMenu]="true"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (actionBtnClicked)="onActionBtnClicked()"
-      toolbarTitle="Table with draggable rows and rows menu">
+      toolbarTitle="Something else">
       <ng-template #header>
         <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
         <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
