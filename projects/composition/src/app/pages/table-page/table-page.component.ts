@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  CpsTabComponent,
-  CpsTabGroupComponent,
+  CpsTableComponent,
   CpsTableColumnFilterDirective,
   CpsTableColumnSortableDirective,
-  CpsTableComponent,
+  CpsTableHeaderSelectableDirective,
+  CpsTabGroupComponent,
+  CpsTabComponent,
   TabChangeEvent
 } from 'cps-ui-kit';
 @Component({
@@ -16,6 +17,7 @@ import {
     CpsTableComponent,
     CpsTableColumnSortableDirective,
     CpsTableColumnFilterDirective,
+    CpsTableHeaderSelectableDirective,
     CpsTabGroupComponent,
     CpsTabComponent
   ],

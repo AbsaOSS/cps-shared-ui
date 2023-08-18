@@ -112,9 +112,9 @@
       toolbarTitle="Table with nested header and small toolbar ">
       <ng-template #nestedHeader>
         <tr>
-          <!-- MANUALLY ADD FIRST EMPTY HEADER, SINCE THE TABLE IS SELECTABLE -->
+          <!-- MANUALLY ADD FIRST HEADER WITH CHECKBOX, SINCE THE TABLE IS SELECTABLE -->
           <!-- FOR SIMPLE HEADER THIS IS DONE AUTOMATICALLY -->
-          <th style="width: 4rem" rowspan="2"></th>
+          <th style="width: 4rem" rowspan="2" cpsHdrSelectable></th>
           <th colspan="2">AB</th>
           <th colspan="3">CDE</th>
         </tr>
