@@ -52,24 +52,12 @@
   <ng-container *ngFor="let tab of tabs">
     <div
       [@slideInOut]="animationState"
-      *ngIf="tab.active && !initAllTabsContent && animationType === 'slide'">
+      *ngIf="tab.active && animationType === 'slide'">
       <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
     </div>
     <div
       [@fadeInOut]="animationState"
-      *ngIf="tab.active && !initAllTabsContent && animationType === 'fade'">
-      <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
-    </div>
-    <div
-      *ngIf="initAllTabsContent && animationType === 'slide'"
-      [@slideInOut]="animationState"
-      [ngStyle]="{ display: tab.active ? null : 'none' }">
-      <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
-    </div>
-    <div
-      *ngIf="initAllTabsContent && animationType === 'fade'"
-      [@fadeInOut]="animationState"
-      [ngStyle]="{ display: tab.active ? null : 'none' }">
+      *ngIf="tab.active && animationType === 'fade'">
       <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
     </div>
   </ng-container>

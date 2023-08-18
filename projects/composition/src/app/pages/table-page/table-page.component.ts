@@ -1,24 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
+  CpsTableComponent,
   CpsTableColumnFilterDirective,
   CpsTableColumnSortableDirective,
-  CpsTableComponent
+  CpsTableHeaderSelectableDirective,
+  CpsTabGroupComponent,
+  CpsTabComponent,
+  CpsButtonToggleComponent,
+  BtnToggleOption,
+  CpsTableSize
 } from 'cps-ui-kit';
+
 @Component({
   selector: 'app-table-page',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     CpsTableComponent,
     CpsTableColumnSortableDirective,
-    CpsTableColumnFilterDirective
+    CpsTableColumnFilterDirective,
+    CpsTableHeaderSelectableDirective,
+    CpsTabGroupComponent,
+    CpsTabComponent,
+    CpsButtonToggleComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class TablePageComponent {
+export class TablePageComponent implements OnInit {
+  sizesOptions = [
+    { label: 'Small', value: 'small' },
+    { label: 'Normal', value: 'normal' },
+    { label: 'Large', value: 'large' }
+  ] as BtnToggleOption[];
+
+  selSize: CpsTableSize = 'small';
+
   data = [
     {
       a: 'a1',
@@ -286,11 +307,36 @@ export class TablePageComponent {
     { field: 'e', header: 'E' } // category
   ];
 
+  dataVirtual: { a: string; b: string; c: number }[] = [];
+
+  colsVirtual = [
+    { field: 'a', header: 'A' },
+    { field: 'b', header: 'B' },
+    { field: 'c', header: 'C' }
+  ];
+
+  ngOnInit(): void {
+    this._genVirtualData();
+  }
+
+  private _genVirtualData() {
+    let c = 0.0;
+    for (let i = 0; i <= 1000; i++) {
+      this.dataVirtual.push({ a: 'a' + i, b: 'b' + i, c });
+
+      c = parseFloat((c += 0.1).toFixed(1));
+    }
+  }
+
   onActionBtnClicked() {
     alert('Action button clicked');
   }
 
   onEditRowButtonClicked(item: any) {
     alert(`Edit row button clicked. Item: ${JSON.stringify(item)}`);
+  }
+
+  onRowsSelectionChanged(rows: any) {
+    console.log(rows);
   }
 }

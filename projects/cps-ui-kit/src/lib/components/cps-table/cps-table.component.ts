@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -24,7 +24,9 @@ import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
 import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
+import { convertSize } from '../../utils/internal/size-utils';
 import { find, isEqual } from 'lodash-es';
+
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
 
@@ -33,6 +35,9 @@ export function tableFactory(tableComponent: CpsTableComponent) {
 }
 
 export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
+export type CpsTableSize = 'small' | 'normal' | 'large';
+export type CpsTableToolbarSize = 'small' | 'normal';
+export type CpsTableSortMode = 'single' | 'multiple';
 
 @Component({
   selector: 'cps-table',
@@ -64,7 +69,7 @@ export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
     }
   ]
 })
-export class CpsTableComponent implements OnInit, AfterViewInit {
+export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() data: any[] = [];
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
@@ -72,24 +77,24 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @Input() striped = true;
   @Input() bordered = true;
-  @Input() size: 'small' | 'normal' | 'large' = 'normal';
+  @Input() size: CpsTableSize = 'normal';
   @Input() selectable = false;
   @Input() emptyMessage = 'No data';
   @Input() hasToolbar = true;
-  @Input() toolbarSize: 'small' | 'normal' = 'normal';
+  @Input() toolbarSize: CpsTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
-  @Input() sortMode: 'single' | 'multiple' = 'single';
+  @Input() sortMode: CpsTableSortMode = 'single';
   @Input() customSort = false;
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
   @Input() showRowMenu = false;
-  @Input() loading = false;
   @Input() reorderableRows = false;
-  @Input() showColumnsToggle = false;
+  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
   @Input() sortable = false; // makes all sortable if columns are provided
+  @Input() loading = false;
 
   @Input() scrollable = true;
-  @Input() scrollHeight = '';
+  @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
 
   @Input() paginator = false;
@@ -98,6 +103,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() first = 0;
   @Input() rows = 0;
   @Input() totalRecords = 0;
+
+  @Input() emptyBodyHeight = '';
 
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
@@ -117,9 +124,11 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
+  @Output() rowsRemoved = new EventEmitter<any[]>();
   @Output() pageChanged = new EventEmitter<any>();
   @Output() sorted = new EventEmitter<any>();
   @Output() rowsReordered = new EventEmitter<any>();
+  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -134,6 +143,9 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @ContentChild('header', { static: false })
   public headerTemplate!: TemplateRef<any>;
 
+  @ContentChild('nestedHeader', { static: false })
+  public nestedHeaderTemplate!: TemplateRef<any>;
+
   @ContentChild('body', { static: false })
   public bodyTemplate!: TemplateRef<any>;
 
@@ -143,7 +155,6 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @ViewChild('primengTable', { static: true })
   primengTable!: Table;
 
-  styleClass = '';
   selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
@@ -180,6 +191,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
 
     if (this.paginator) {
@@ -206,33 +218,40 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     ) {
       this.globalFilterFields = Object.keys(this.data[0]);
     }
-    switch (this.size) {
-      case 'small':
-        this.styleClass = 'p-datatable-sm';
-        break;
-      case 'large':
-        this.styleClass = 'p-datatable-lg';
-        break;
-    }
-    switch (this.toolbarSize) {
-      case 'small':
-        this.styleClass += ' cps-tbar-small';
-        break;
-      case 'normal':
-        this.styleClass += ' cps-tbar-normal';
-        break;
-    }
-    if (this.striped) {
-      this.styleClass += ' p-datatable-striped';
-    }
-    if (this.bordered) {
-      this.styleClass += ' p-datatable-gridlines';
-    }
 
     this.selectedColumns = this.columns;
   }
 
-  ngAfterViewInit() {
+  get styleClass() {
+    const classesList = [];
+    switch (this.size) {
+      case 'small':
+        classesList.push('p-datatable-sm');
+        break;
+      case 'large':
+        classesList.push('p-datatable-lg');
+        break;
+    }
+    switch (this.toolbarSize) {
+      case 'small':
+        classesList.push('cps-tbar-small');
+        break;
+      case 'normal':
+        classesList.push('cps-tbar-normal');
+        break;
+    }
+    if (this.striped) {
+      classesList.push('p-datatable-striped');
+    }
+    if (this.bordered) {
+      classesList.push('p-datatable-gridlines');
+    }
+
+    return classesList.join(' ');
+  }
+
+  ngAfterViewChecked() {
+    if (!this.virtualScroll || this.virtualScrollItemSize) return;
     this.virtualScrollItemSize =
       this.primengTable?.el?.nativeElement
         ?.querySelector('.p-datatable-tbody')
@@ -265,6 +284,10 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
       (v: any) => !indexes.includes(v._defaultSortOrder)
     );
 
+    this.rowsRemoved.emit(
+      this.selectedRows.map(({ _defaultSortOrder, ...rest }) => rest)
+    );
+
     this.selectedRows = [];
   }
 
@@ -284,6 +307,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   toggleAllColumns() {
     this.selectedColumns =
       this.selectedColumns.length < this.columns.length ? this.columns : [];
+    this.columnsSelected.emit(this.selectedColumns);
   }
 
   isColumnSelected(col: any) {
@@ -305,6 +329,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
       });
     }
     this.selectedColumns = res;
+    this.columnsSelected.emit(this.selectedColumns);
   }
 
   onEditRowClicked(item: any) {
@@ -316,6 +341,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   onRemoveRowClicked(item: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
     this.data = this.data.filter((v: any) => v !== item);
+    const { _defaultSortOrder, ...rest } = item;
+    this.rowsRemoved.emit([rest]);
   }
 
   onSort(event: any) {

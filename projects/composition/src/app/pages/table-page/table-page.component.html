@@ -1,39 +1,215 @@
-<cps-table
-  [showGlobalFilter]="true"
-  [data]="data"
-  [columns]="cols"
-  dataKey="a"
-  [showActionBtn]="true"
-  [reorderableRows]="true"
-  [selectable]="true"
-  [paginator]="true"
-  sortMode="multiple"
-  [showRowMenu]="true"
-  (editRowBtnClicked)="onEditRowButtonClicked($event)"
-  (actionBtnClicked)="onActionBtnClicked()"
-  toolbarTitle="This is an alpha version of table component">
-  <ng-template #header>
-    <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-    <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
-    <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-    <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
-    <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
-  </ng-template>
+<cps-tab-group tabsBackground="bg-light">
+  <cps-tab label="Table 1">
+    <cps-table
+      [data]="data"
+      [paginator]="true"
+      sortMode="multiple"
+      toolbarTitle="Table with a paginator, multiple sorting and individual filtering">
+      <ng-template #header>
+        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
+        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
+        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+      </ng-template>
 
-  <ng-template let-item #body>
-    <td>{{ item.a | uppercase }}</td>
-    <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
-    <td>{{ item.c | percent }}</td>
-    <td [style.color]="item.d ? 'green' : 'red'">
-      {{ item.d ? '&#10004;' : '&#10008;' }}
-    </td>
-    <td>{{ item.e }}</td>
-  </ng-template>
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 2">
+    <cps-table
+      [showGlobalFilter]="true"
+      [data]="dataVirtual"
+      [columns]="colsVirtual"
+      [sortable]="true"
+      [virtualScroll]="true"
+      [showColumnsToggle]="true"
+      scrollHeight="500px"
+      toolbarTitle="Sortable table with virtual scroller, global filter and columns toggle">
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 3">
+    <cps-table
+      [data]="data"
+      [reorderableRows]="true"
+      [showActionBtn]="true"
+      [showRowMenu]="true"
+      (editRowBtnClicked)="onEditRowButtonClicked($event)"
+      (actionBtnClicked)="onActionBtnClicked()"
+      toolbarTitle="Table with draggable rows, rows menus and action button">
+      <ng-template #header>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+        <th>E</th>
+      </ng-template>
 
-  <ng-template let-item #rowexpansion>
-    <div class="expanded-row-contents">
-      <div>id: {{ item.f.id }}</div>
-      <div>desc: {{ item.f.desc }}</div>
-    </div>
-  </ng-template>
-</cps-table>
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 4">
+    <cps-table
+      [data]="data"
+      dataKey="a"
+      [selectable]="true"
+      sortMode="multiple"
+      [striped]="false"
+      [showRowMenu]="true"
+      (editRowBtnClicked)="onEditRowButtonClicked($event)"
+      (selectionChanged)="onRowsSelectionChanged($event)"
+      toolbarTitle="Table with selectable, expandable rows and no stripes">
+      <ng-template #header>
+        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
+        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
+        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+      </ng-template>
+
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+
+      <ng-template let-item #rowexpansion>
+        <div class="expanded-row-contents">
+          <div>id: {{ item.f.id }}</div>
+          <div>desc: {{ item.f.desc }}</div>
+        </div>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 5">
+    <cps-table
+      [data]="data"
+      [selectable]="true"
+      toolbarSize="small"
+      scrollHeight="calc(100vh - 300px)"
+      toolbarTitle="Table with nested header and small toolbar ">
+      <ng-template #nestedHeader>
+        <tr>
+          <!-- MANUALLY ADD FIRST HEADER WITH CHECKBOX, SINCE THE TABLE IS SELECTABLE -->
+          <!-- FOR SIMPLE HEADER THIS IS DONE AUTOMATICALLY -->
+          <th rowspan="2" cpsHdrSelectable></th>
+          <th colspan="2">AB</th>
+          <th colspan="3">CDE</th>
+        </tr>
+        <tr>
+          <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+          <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
+          <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+          <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
+          <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+        </tr>
+      </ng-template>
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 6">
+    <cps-table
+      [data]="data"
+      [columns]="cols"
+      [rowHover]="false"
+      [bordered]="false"
+      [sortable]="true"
+      [showExportBtn]="true"
+      exportFilename="table_6"
+      toolbarTitle="Unbordered table with export button, without highlightning on rows hover">
+      <ng-template #header>
+        <th cpsColSortable="a">A</th>
+        <th cpsColSortable="b">B</th>
+        <th cpsColSortable="c">C</th>
+        <th cpsColSortable="d">D</th>
+        <th cpsColSortable="e">E</th>
+      </ng-template>
+
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 7">
+    <cps-table [data]="data" [size]="selSize">
+      <ng-template #toolbar>
+        <span
+          >Table with custom toolbar, different table sizes are available</span
+        >
+        <cps-button-toggle [options]="sizesOptions" [(ngModel)]="selSize">
+        </cps-button-toggle>
+      </ng-template>
+      <ng-template #header>
+        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
+        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
+        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
+        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
+        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+      </ng-template>
+
+      <ng-template let-item #body>
+        <td>{{ item.a | uppercase }}</td>
+        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+        <td>{{ item.c | percent }}</td>
+        <td [style.color]="item.d ? 'green' : 'red'">
+          {{ item.d ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ item.e }}</td>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 8">
+    <cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="400px">
+      <ng-template #header>
+        <th cpsColSortable="a">A</th>
+        <th cpsColSortable="b">B</th>
+        <th cpsColSortable="c">C</th>
+        <th cpsColSortable="d">D</th>
+        <th cpsColSortable="e">E</th>
+      </ng-template>
+    </cps-table>
+  </cps-tab>
+  <cps-tab label="Table 9">
+    <cps-table
+      [data]="data"
+      [loading]="true"
+      scrollHeight="400px"
+      [columns]="cols"
+      toolbarTitle="Table in data loading state">
+    </cps-table>
+  </cps-tab>
+</cps-tab-group>

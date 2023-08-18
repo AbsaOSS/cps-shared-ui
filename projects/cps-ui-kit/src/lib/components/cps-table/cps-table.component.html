@@ -127,7 +127,17 @@
     </ng-container>
   </ng-template>
 
-  <ng-template pTemplate="header" let-columns>
+  <ng-template pTemplate="header" *ngIf="nestedHeaderTemplate" let-columns>
+    <ng-container
+      *ngTemplateOutlet="
+      nestedHeaderTemplate;
+        context: {
+          $implicit: columns,
+        }
+      "></ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
       <th style="width: 3rem" *ngIf="rowExpansionTemplate"></th>
       <th style="width: 3rem" *ngIf="reorderableRows"></th>
@@ -235,7 +245,10 @@
   </ng-template>
   <ng-template pTemplate="emptymessage">
     <tr>
-      <td colspan="100" class="cps-table-empty-message-td">
+      <td
+        colspan="100"
+        class="cps-table-empty-message-td"
+        [ngStyle]="{ height: emptyBodyHeight }">
         {{ emptyMessage }}
       </td>
     </tr>
