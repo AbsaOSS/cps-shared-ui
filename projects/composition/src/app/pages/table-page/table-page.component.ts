@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  CpsTabComponent,
+  CpsTabGroupComponent,
   CpsTableColumnFilterDirective,
   CpsTableColumnSortableDirective,
-  CpsTableComponent
+  CpsTableComponent,
+  TabChangeEvent
 } from 'cps-ui-kit';
 @Component({
   selector: 'app-table-page',
@@ -12,13 +15,17 @@ import {
     CommonModule,
     CpsTableComponent,
     CpsTableColumnSortableDirective,
-    CpsTableColumnFilterDirective
+    CpsTableColumnFilterDirective,
+    CpsTabGroupComponent,
+    CpsTabComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class TablePageComponent {
+export class TablePageComponent implements OnInit {
+  selectedTabIndex = 0;
+
   data = [
     {
       a: 'a1',
@@ -286,11 +293,37 @@ export class TablePageComponent {
     { field: 'e', header: 'E' } // category
   ];
 
+  dataVirtual: { a: string; b: string; c: number }[] = [];
+
+  colsVirtual = [
+    { field: 'a', header: 'A' },
+    { field: 'b', header: 'B' },
+    { field: 'c', header: 'C' }
+  ];
+
+  ngOnInit(): void {
+    this._genVirtualData();
+  }
+
+  private _genVirtualData() {
+    let c = 0.0;
+    for (let i = 0; i <= 1000; i++) {
+      this.dataVirtual.push({ a: 'a' + i, b: 'b' + i, c });
+
+      c = parseFloat((c += 0.1).toFixed(1));
+    }
+  }
+
   onActionBtnClicked() {
     alert('Action button clicked');
   }
 
   onEditRowButtonClicked(item: any) {
     alert(`Edit row button clicked. Item: ${JSON.stringify(item)}`);
+  }
+
+  changeTab({ currentTabIndex }: TabChangeEvent) {
+    this.selectedTabIndex = currentTabIndex;
+    console.log('Tab changed to: ' + currentTabIndex);
   }
 }

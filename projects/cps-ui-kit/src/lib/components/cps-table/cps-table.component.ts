@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterViewChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -64,7 +64,7 @@ export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
     }
   ]
 })
-export class CpsTableComponent implements OnInit, AfterViewInit {
+export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() data: any[] = [];
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
@@ -89,7 +89,7 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
   @Input() sortable = false; // makes all sortable if columns are provided
 
   @Input() scrollable = true;
-  @Input() scrollHeight = '';
+  @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
 
   @Input() paginator = false;
@@ -133,6 +133,9 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
 
   @ContentChild('header', { static: false })
   public headerTemplate!: TemplateRef<any>;
+
+  @ContentChild('nestedHeader', { static: false })
+  public nestedHeaderTemplate!: TemplateRef<any>;
 
   @ContentChild('body', { static: false })
   public bodyTemplate!: TemplateRef<any>;
@@ -232,7 +235,8 @@ export class CpsTableComponent implements OnInit, AfterViewInit {
     this.selectedColumns = this.columns;
   }
 
-  ngAfterViewInit() {
+  ngAfterViewChecked() {
+    if (!this.virtualScroll || this.virtualScrollItemSize) return;
     this.virtualScrollItemSize =
       this.primengTable?.el?.nativeElement
         ?.querySelector('.p-datatable-tbody')
