@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   CpsTableComponent,
   CpsTableColumnFilterDirective,
@@ -7,19 +8,25 @@ import {
   CpsTableHeaderSelectableDirective,
   CpsTabGroupComponent,
   CpsTabComponent,
-  TabChangeEvent
+  TabChangeEvent,
+  CpsButtonToggleComponent,
+  BtnToggleOption,
+  CpsTableSize
 } from 'cps-ui-kit';
+
 @Component({
   selector: 'app-table-page',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     CpsTableComponent,
     CpsTableColumnSortableDirective,
     CpsTableColumnFilterDirective,
     CpsTableHeaderSelectableDirective,
     CpsTabGroupComponent,
-    CpsTabComponent
+    CpsTabComponent,
+    CpsButtonToggleComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
@@ -27,6 +34,14 @@ import {
 })
 export class TablePageComponent implements OnInit {
   selectedTabIndex = 0;
+
+  sizesOptions = [
+    { label: 'Small', value: 'small' },
+    { label: 'Normal', value: 'normal' },
+    { label: 'Large', value: 'large' }
+  ] as BtnToggleOption[];
+
+  selSize: CpsTableSize = 'small';
 
   data = [
     {
@@ -322,6 +337,10 @@ export class TablePageComponent implements OnInit {
 
   onEditRowButtonClicked(item: any) {
     alert(`Edit row button clicked. Item: ${JSON.stringify(item)}`);
+  }
+
+  onRowsSelectionChanged(rows: any) {
+    console.log(rows);
   }
 
   changeTab({ currentTabIndex }: TabChangeEvent) {
