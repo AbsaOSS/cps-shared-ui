@@ -8,7 +8,6 @@ import {
   CpsTableHeaderSelectableDirective,
   CpsTabGroupComponent,
   CpsTabComponent,
-  TabChangeEvent,
   CpsButtonToggleComponent,
   BtnToggleOption,
   CpsTableSize
@@ -33,8 +32,6 @@ import {
   host: { class: 'composition-page' }
 })
 export class TablePageComponent implements OnInit {
-  selectedTabIndex = 0;
-
   sizesOptions = [
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
@@ -341,10 +338,5 @@ export class TablePageComponent implements OnInit {
 
   onRowsSelectionChanged(rows: any) {
     console.log(rows);
-  }
-
-  changeTab({ currentTabIndex }: TabChangeEvent) {
-    this.selectedTabIndex = currentTabIndex;
-    console.log('Tab changed to: ' + currentTabIndex);
   }
 }
