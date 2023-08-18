@@ -89,7 +89,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
   @Input() showRowMenu = false;
   @Input() reorderableRows = false;
-  @Input() showColumnsToggle = false; // doesn't work with external body template, only with internal columns. potential TODO
+  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
   @Input() sortable = false; // makes all sortable if columns are provided
   @Input() loading = false;
 
@@ -124,9 +124,11 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
+  @Output() rowsRemoved = new EventEmitter<any[]>();
   @Output() pageChanged = new EventEmitter<any>();
   @Output() sorted = new EventEmitter<any>();
   @Output() rowsReordered = new EventEmitter<any>();
+  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -282,6 +284,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
       (v: any) => !indexes.includes(v._defaultSortOrder)
     );
 
+    this.rowsRemoved.emit(
+      this.selectedRows.map(({ _defaultSortOrder, ...rest }) => rest)
+    );
+
     this.selectedRows = [];
   }
 
@@ -301,6 +307,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   toggleAllColumns() {
     this.selectedColumns =
       this.selectedColumns.length < this.columns.length ? this.columns : [];
+    this.columnsSelected.emit(this.selectedColumns);
   }
 
   isColumnSelected(col: any) {
@@ -322,6 +329,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
       });
     }
     this.selectedColumns = res;
+    this.columnsSelected.emit(this.selectedColumns);
   }
 
   onEditRowClicked(item: any) {
@@ -333,6 +341,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   onRemoveRowClicked(item: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
     this.data = this.data.filter((v: any) => v !== item);
+    const { _defaultSortOrder, ...rest } = item;
+    this.rowsRemoved.emit([rest]);
   }
 
   onSort(event: any) {
