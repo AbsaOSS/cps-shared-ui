@@ -48,8 +48,11 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
       }
 
       .cps-checkbox-label {
-        top: 1px;
-        position: relative;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1rem;
         color: $label-color;
         &-disabled {
           color: $disabled-label-color;

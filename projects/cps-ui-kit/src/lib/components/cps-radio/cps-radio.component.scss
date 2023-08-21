@@ -10,7 +10,11 @@ $disabled-label-color: var(--cps-color-text-light);
   display: inline-block;
 
   .cps-radio-group {
+    font-family: 'Source Sans Pro', sans-serif;
     &-label {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 1rem;
       color: $group-label-color;
       margin-bottom: 0.75rem;
       align-items: center;
@@ -46,8 +50,10 @@ $disabled-label-color: var(--cps-color-text-light);
         gap: 0.75em;
         &-label {
           font-size: 1rem;
-          align-self: center;
           color: $label-color;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 1rem;
         }
         input[type='radio'] {
           -webkit-appearance: none;

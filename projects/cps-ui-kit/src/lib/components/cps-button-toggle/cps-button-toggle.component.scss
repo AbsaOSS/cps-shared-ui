@@ -17,6 +17,9 @@ $option-active-background: #f1eaec;
       margin-bottom: 0.5rem;
       align-items: center;
       display: inline-flex;
+      font-weight: normal;
+      font-size: 16px;
+      font-family: 'Source Sans Pro', sans-serif;
 
       .cps-btn-toggle-label-info-circle {
         margin-left: 8px;
@@ -75,7 +78,7 @@ $option-active-background: #f1eaec;
           border-right: 0;
           font-weight: normal;
           font-size: 16px;
-          font-family: Source Sans Pro, sans-serif;
+          font-family: 'Source Sans Pro', sans-serif;
           letter-spacing: 0.05em;
           color: $option-label-color;
           text-align: center;
