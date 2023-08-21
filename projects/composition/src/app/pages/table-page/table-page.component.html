@@ -33,7 +33,7 @@
       [virtualScroll]="true"
       [showColumnsToggle]="true"
       scrollHeight="500px"
-      toolbarTitle="Sortable table with virtual scroller, global filter and columns toggle">
+      toolbarTitle="Sortable table with virtual scroller, global filter and internal columns toggle">
     </cps-table>
   </cps-tab>
   <cps-tab label="Table 3">
@@ -68,29 +68,36 @@
     <cps-table
       [data]="data"
       dataKey="a"
+      [columns]="colsWithFilterType"
       [selectable]="true"
       sortMode="multiple"
       [striped]="false"
       [showRowMenu]="true"
+      [showColumnsToggle]="true"
+      (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (selectionChanged)="onRowsSelectionChanged($event)"
-      toolbarTitle="Table with selectable, expandable rows and no stripes">
+      toolbarTitle="Table with external columns toggle and unstriped selectable and expandable rows">
       <ng-template #header>
-        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
-        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
-        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+        <th
+          *ngFor="let scol of selCols"
+          [cpsColSortable]="scol.field"
+          [cpsColFilter]="scol.field"
+          [filterType]="scol.filterType">
+          {{ scol.header }}
+        </th>
       </ng-template>
 
       <ng-template let-item #body>
-        <td>{{ item.a | uppercase }}</td>
-        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
-        <td>{{ item.c | percent }}</td>
-        <td [style.color]="item.d ? 'green' : 'red'">
-          {{ item.d ? '&#10004;' : '&#10008;' }}
-        </td>
-        <td>{{ item.e }}</td>
+        <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
+          <td *ngSwitchCase="'a'">{{ item.a | uppercase }}</td>
+          <td *ngSwitchCase="'b'">{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td *ngSwitchCase="'c'">{{ item.c | percent }}</td>
+          <td *ngSwitchCase="'d'" [style.color]="item.d ? 'green' : 'red'">
+            {{ item.d ? '&#10004;' : '&#10008;' }}
+          </td>
+          <td *ngSwitchCase="'e'">{{ item.e }}</td>
+        </ng-container>
       </ng-template>
 
       <ng-template let-item #rowexpansion>
