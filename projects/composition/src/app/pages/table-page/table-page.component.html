@@ -33,7 +33,7 @@
       [virtualScroll]="true"
       [showColumnsToggle]="true"
       scrollHeight="500px"
-      toolbarTitle="Sortable table with virtual scroller, global filter and columns toggle">
+      toolbarTitle="Sortable table with virtual scroller, global filter and internal columns toggle">
     </cps-table>
   </cps-tab>
   <cps-tab label="Table 3">
@@ -77,7 +77,7 @@
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (selectionChanged)="onRowsSelectionChanged($event)"
-      toolbarTitle="Table with selectable, expandable rows without stripes and columns toggle">
+      toolbarTitle="Table with external columns toggle and unstriped selectable and expandable rows">
       <ng-template #header>
         <th
           *ngFor="let scol of selCols"
