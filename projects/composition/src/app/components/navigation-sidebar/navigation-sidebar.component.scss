@@ -1,39 +1,44 @@
 @import '../../../variables.scss';
 
 :host {
+  $item-hover-background: #f8f4f5;
+  $item-active-background: #f1eaec;
+
   border-right: 1px solid lightgrey;
   background-color: white;
-}
-
-.sidebar {
-  width: $sidebar-width;
-  height: calc(100vh - $top-tbar-height);
-  overflow: auto;
-  .list {
-    &-title {
-      margin: 0;
-      padding: 12px 0 12px 12px;
-      color: $color-text;
-    }
-    &-search-bar {
-      margin: 0 8px 8px 8px;
-    }
-    &-item {
-      border-bottom: 1px solid lightgrey;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      padding-left: 30px;
-      text-decoration: none;
-      color: $color-text;
-      &:hover {
-        background: $highlight-color;
+  .sidebar {
+    width: $sidebar-width;
+    height: calc(100vh - $top-tbar-height);
+    overflow: auto;
+    .list {
+      &-title {
+        margin: 0;
+        padding: 12px 0 12px 12px;
+        color: $color-text;
       }
-    }
-    ._active {
-      color: white;
-      font-weight: bold;
-      background: $color-calm;
+      &-search-bar {
+        margin: 0 8px 8px 8px;
+      }
+      &-item {
+        border-bottom: 1px solid lightgrey;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        padding-left: 30px;
+        text-decoration: none;
+        color: $color-text;
+        &:hover {
+          background: $item-hover-background;
+        }
+        &:active {
+          background: $item-active-background;
+        }
+      }
+      ._active {
+        color: white;
+        font-weight: bold;
+        background: $color-calm;
+      }
     }
   }
 }
