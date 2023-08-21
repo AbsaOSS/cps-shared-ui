@@ -26,7 +26,7 @@ $hover-transition-duration: 0.2s;
     position: relative;
     width: 100%;
     outline: none;
-    font-family: Source Sans Pro, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     display: grid;
 
     &-container {
@@ -65,6 +65,7 @@ $hover-transition-duration: 0.2s;
       margin-bottom: 0.2rem;
       color: $treeautocomplete-label-color;
       font-size: 0.875rem;
+      font-weight: 600;
       .cps-treeautocomplete-label-info-circle {
         margin-left: 8px;
         pointer-events: all;
@@ -118,7 +119,7 @@ $hover-transition-duration: 0.2s;
         color: $treeautocomplete-option-value-color;
         border-style: none;
         outline: none;
-        font-family: Source Sans Pro, sans-serif;
+        font-family: 'Source Sans Pro', sans-serif;
         &::placeholder {
           color: $treeautocomplete-placeholder-color;
           font-style: italic;

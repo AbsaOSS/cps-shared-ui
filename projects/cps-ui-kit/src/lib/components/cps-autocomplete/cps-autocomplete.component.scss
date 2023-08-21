@@ -25,7 +25,7 @@ $hover-transition-duration: 0.2s;
     position: relative;
     width: 100%;
     outline: none;
-    font-family: Source Sans Pro, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     display: grid;
 
     &-container {
@@ -64,6 +64,7 @@ $hover-transition-duration: 0.2s;
       margin-bottom: 0.2rem;
       color: $autocomplete-label-color;
       font-size: 0.875rem;
+      font-weight: 600;
       .cps-autocomplete-label-info-circle {
         margin-left: 8px;
         pointer-events: all;
@@ -117,7 +118,7 @@ $hover-transition-duration: 0.2s;
         color: $autocomplete-option-value-color;
         border-style: none;
         outline: none;
-        font-family: Source Sans Pro, sans-serif;
+        font-family: 'Source Sans Pro', sans-serif;
         &::placeholder {
           color: $autocomplete-placeholder-color;
           font-style: italic;
@@ -173,10 +174,9 @@ $hover-transition-duration: 0.2s;
           flex-wrap: wrap;
           .text-group-item {
             padding-bottom: 3px;
-            padding-top: 2.5px;
+            padding-top: 2px;
             padding-right: 4px;
             height: 24px;
-            display: table;
           }
         }
       }
@@ -271,6 +271,7 @@ $hover-transition-duration: 0.2s;
 }
 
 .cps-autocomplete-options {
+  font-family: 'Source Sans Pro', sans-serif;
   background: white;
   overflow-x: hidden;
   max-height: 242px;

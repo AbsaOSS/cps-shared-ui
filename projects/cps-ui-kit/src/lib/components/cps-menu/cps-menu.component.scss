@@ -6,6 +6,7 @@
   margin-top: 14px;
   top: 0;
   left: 0;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 .cps-menu-container:not(.cps-menu-no-arrow):before {
@@ -35,6 +36,7 @@
     padding: 0;
   }
   .cps-menu-content {
+    font-family: 'Source Sans Pro', sans-serif;
     display: flex;
     flex-direction: column;
     -webkit-user-select: none; /* Safari */

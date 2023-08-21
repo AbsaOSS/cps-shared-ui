@@ -35,6 +35,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
 
   ::ng-deep {
     .p-datepicker {
+      font-family: 'Source Sans Pro', sans-serif;
       width: auto !important;
       padding: 0.5rem;
       background: #ffffff;
@@ -287,13 +288,12 @@ $disabled-day-color: var(--cps-color-text-lightest);
       -webkit-user-select: none;
       user-select: none;
       font-size: 1rem;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol';
+      font-family: 'Source Sans Pro', sans-serif;
       border-radius: 6px;
     }
 
     .p-button {
+      font-family: 'Source Sans Pro', sans-serif;
       background-color: transparent;
       color: $color-calm;
       border-color: transparent;
