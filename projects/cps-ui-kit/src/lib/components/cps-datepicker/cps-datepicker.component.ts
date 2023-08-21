@@ -18,6 +18,11 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+export type CpsDatepickerAppearanceType =
+  | 'outlined'
+  | 'underlined'
+  | 'unbordered';
+
 @Component({
   standalone: true,
   imports: [
@@ -49,6 +54,7 @@ export class CpsDatepickerComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
 
   @Input()
   minDate!: Date;
