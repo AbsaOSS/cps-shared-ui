@@ -38,6 +38,8 @@ export type CpsMenuItem = {
   action?: (event?: any) => void;
   icon?: string;
   desc?: string;
+  url?: string;
+  target?: string;
   disabled?: boolean;
 };
 

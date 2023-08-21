@@ -48,6 +48,11 @@ export class MenuPageComponent {
       action: (event: any) => {
         this.doConsoleLog(event);
       }
+    },
+    {
+      title: 'Go google',
+      url: 'https://google.com',
+      target: '_blank'
     }
   ] as CpsMenuItem[];
 
@@ -85,6 +90,11 @@ export class MenuPageComponent {
       action: (event: any) => {
         this.doConsoleLog(event);
       }
+    },
+    {
+      title: 'Go google',
+      url: 'https://google.com',
+      target: '_blank'
     }
   ] as CpsMenuItem[];
 
