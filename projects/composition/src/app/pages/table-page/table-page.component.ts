@@ -307,6 +307,16 @@ export class TablePageComponent implements OnInit {
     { field: 'e', header: 'E' } // category
   ];
 
+  colsWithFilterType = [
+    { field: 'a', header: 'A', filterType: 'text' },
+    { field: 'b', header: 'B', filterType: 'date' },
+    { field: 'c', header: 'C', filterType: 'number' },
+    { field: 'd', header: 'D', filterType: 'boolean' },
+    { field: 'e', header: 'E', filterType: 'category' }
+  ];
+
+  selCols: { [key: string]: any }[] = [];
+
   dataVirtual: { a: string; b: string; c: number }[] = [];
 
   colsVirtual = [
@@ -317,6 +327,7 @@ export class TablePageComponent implements OnInit {
 
   ngOnInit(): void {
     this._genVirtualData();
+    this.selCols = this.colsWithFilterType;
   }
 
   private _genVirtualData() {
@@ -338,5 +349,9 @@ export class TablePageComponent implements OnInit {
 
   onRowsSelectionChanged(rows: any) {
     console.log(rows);
+  }
+
+  onColumnsSelected(columns: any) {
+    this.selCols = columns;
   }
 }
