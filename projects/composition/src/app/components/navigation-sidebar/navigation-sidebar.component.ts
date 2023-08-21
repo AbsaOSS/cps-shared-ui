@@ -90,6 +90,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/select'
     },
     {
+      title: 'Sidebar menu',
+      url: '/sidebar-menu'
+    },
+    {
       title: 'Table',
       url: '/table'
     },

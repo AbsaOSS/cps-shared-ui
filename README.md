@@ -26,6 +26,7 @@ This repository consists of two projects:
 - Progress linear (indeterminate)
 - Radio
 - Select
+- Sidebar menu
 - Table
 - Tabs
 - Tag
@@ -60,6 +61,6 @@ Make sure 'ng build cps-ui-kit --watch' is running, so the library will be rebui
 - there is no need to test composition pages, so manually delete componentname-page.cy.ts file (can't be done automatically with Angular CLI flag, since cypress is used)
 - provide host: { class: 'composition-page' } into page @Component
 - import the components for the composition page from 'cps-ui-kit', provide them to imports array of @Component
-- go to projects/composition/src/app/components/navigation-sidebar.ts file and extend \_components array (keep alphabetical order!)
+- go to projects/composition/src/app/components/navigation-sidebar.component.ts file and extend \_components array (keep alphabetical order!)
 - go to projects/composition/src/app/app-routing.module.ts and add a new route for a new page
 - update available components list in README.md (keep alphabetical order!)
