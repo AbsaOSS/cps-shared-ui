@@ -307,23 +307,41 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
       switch (this.position) {
         case 'bl':
           return {
-            top: targetOffset.top + target.offsetHeight - element.offsetHeight,
-            left: targetOffset.left - element.offsetWidth - 1
+            top: Math.max(
+              targetOffset.top + target.offsetHeight - element.offsetHeight,
+              0
+            ),
+            left: Math.max(0, targetOffset.left - element.offsetWidth - 1)
           };
         case 'br':
           return {
-            top: targetOffset.top + target.offsetHeight - element.offsetHeight,
-            left: targetOffset.left + target.offsetWidth + 1
+            top: Math.max(
+              targetOffset.top + target.offsetHeight - element.offsetHeight,
+              0
+            ),
+            left: Math.min(
+              targetOffset.left + target.offsetWidth + 1,
+              window.innerWidth - element.offsetWidth
+            )
           };
         case 'tl':
           return {
-            top: targetOffset.top,
-            left: targetOffset.left - element.offsetWidth - 1
+            top: Math.min(
+              targetOffset.top,
+              window.innerHeight - element.offsetHeight
+            ),
+            left: Math.max(0, targetOffset.left - element.offsetWidth - 1)
           };
         case 'tr':
           return {
-            top: targetOffset.top,
-            left: targetOffset.left + target.offsetWidth + 1
+            top: Math.min(
+              targetOffset.top,
+              window.innerHeight - element.offsetHeight
+            ),
+            left: Math.min(
+              targetOffset.left + target.offsetWidth + 1,
+              window.innerWidth - element.offsetWidth
+            )
           };
         case 'default':
         default:
