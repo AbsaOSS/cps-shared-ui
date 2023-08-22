@@ -82,5 +82,25 @@
       </cps-tree-select>
       <span class="sync-val">{{ syncVal?.label }}</span>
     </div>
+
+    <cps-tree-select
+      label="Underlined tree select"
+      appearance="underlined"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false">
+    </cps-tree-select>
+
+    <cps-tree-select
+      label="Unbordered tree select"
+      appearance="unbordered"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false">
+    </cps-tree-select>
   </div>
 </form>

@@ -23,7 +23,9 @@
     class="cps-treeselect-container"
     [class.focused]="isOpened"
     [ngClass]="{
-      'persistent-clear': persistentClear
+      'persistent-clear': persistentClear,
+      unbordered: appearance === 'unbordered',
+      underlined: appearance === 'underlined'
     }">
     <div class="cps-treeselect-box" #boxEl (click)="onBoxClick()">
       <div class="cps-treeselect-box-left">
