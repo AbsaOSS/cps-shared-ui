@@ -43,6 +43,8 @@ export type CpsMenuItem = {
   disabled?: boolean;
 };
 
+export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
+
 @Component({
   standalone: true,
   imports: [CommonModule, SharedModule, CpsIconComponent],
@@ -105,6 +107,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   selfClick = false;
   target: any;
   scrollHandler: Nullable<ConnectedOverlayScrollHandler>;
+  position: CpsMenuAttachPosition = 'default';
 
   documentResizeListener!: VoidListener | null;
   overlayEventListener: Nullable<(event?: any) => void>;
@@ -139,7 +142,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     this.renderer.setStyle(this.el.nativeElement, 'display', 'none');
   }
 
-  toggle(event?: any, target?: any) {
+  toggle(event?: any, target?: any, pos?: CpsMenuAttachPosition) {
     if (this.isOverlayAnimationInProgress) {
       return;
     }
@@ -147,17 +150,17 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     if (this.overlayVisible) {
       if (this.hasTargetChanged(event, target)) {
         this.destroyCallback = () => {
-          this.show(null, target || event?.currentTarget || event?.target);
+          this.show(null, target || event?.currentTarget || event?.target, pos);
         };
       }
 
       this.hide();
     } else {
-      this.show(event, target);
+      this.show(event, target, pos);
     }
   }
 
-  show(event?: any, target?: any) {
+  show(event?: any, target?: any, pos?: CpsMenuAttachPosition) {
     target && event && event.stopPropagation();
     if (this.isOverlayAnimationInProgress) {
       return;
@@ -167,6 +170,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     if (this.target) this.targetResizeObserver.observe(this.target);
     this.overlayVisible = true;
     this.render = true;
+    this.position = pos || 'default';
     this.cd.markForCheck();
   }
 
@@ -297,6 +301,45 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  private _setPosition(element: any, target: any) {
+    const getPos = () => {
+      const targetOffset = DomHandler.getOffset(target);
+      switch (this.position) {
+        case 'bl':
+          return {
+            top: targetOffset.top + target.offsetHeight - element.offsetHeight,
+            left: targetOffset.left - element.offsetWidth
+          };
+        case 'br':
+          return {
+            top: targetOffset.top + target.offsetHeight - element.offsetHeight,
+            left: targetOffset.left + target.offsetWidth + 1
+          };
+        case 'tl':
+          return {
+            top: targetOffset.top,
+            left: targetOffset.left - element.offsetWidth
+          };
+        case 'tr':
+          return {
+            top: targetOffset.top,
+            left: targetOffset.left + target.offsetWidth + 1
+          };
+        case 'default':
+        default:
+          DomHandler.absolutePosition(element, target);
+          return undefined;
+      }
+    };
+
+    if (!element || !target) return;
+    const pos = getPos();
+    if (pos) {
+      element.style.top = (pos.top || 0) + 'px';
+      element.style.left = (pos.left || 0) + 'px';
+    }
+  }
+
   align() {
     if (this.autoZIndex) {
       ZIndexUtils.set(
@@ -306,7 +349,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
       );
     }
 
-    DomHandler.absolutePosition(this.container, this.target);
+    this._setPosition(this.container, this.target);
 
     const containerOffset = DomHandler.getOffset(this.container);
     const targetOffset = DomHandler.getOffset(this.target);
