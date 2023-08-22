@@ -34,6 +34,8 @@ import {
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
+
 @Component({
   standalone: true,
   imports: [
@@ -85,6 +87,7 @@ export class CpsSelectComponent
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
   @Input() optionsClass = '';
+  @Input() appearance: CpsSelectAppearanceType = 'outlined';
 
   @Input('value') _value: any = undefined;
 

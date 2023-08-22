@@ -25,6 +25,7 @@ import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.componen
 import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
 import { PaginatorPageComponent } from './pages/paginator-page/paginator-page.component';
 import { MenuPageComponent } from './pages/menu-page/menu-page.component';
+import { SidebarMenuPageComponent } from './pages/sidebar-menu-page/sidebar-menu-page.component';
 
 const routes: Routes = [
   {
@@ -46,6 +47,11 @@ const routes: Routes = [
     path: 'select',
     title: 'Select',
     component: SelectPageComponent
+  },
+  {
+    path: 'sidebar-menu',
+    title: 'Sidebar menu',
+    component: SidebarMenuPageComponent
   },
   {
     path: 'tabs',

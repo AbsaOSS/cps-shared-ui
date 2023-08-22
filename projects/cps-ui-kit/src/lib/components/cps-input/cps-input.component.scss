@@ -45,6 +45,7 @@ $hover-transition-duration: 0.2s;
       }
 
       input {
+        min-height: 38px;
         font-family: 'Source Sans Pro', sans-serif;
         font-size: 1rem;
         color: $input-text-color;
@@ -159,6 +160,20 @@ $hover-transition-duration: 0.2s;
         bottom: 1px;
         padding: 0 1px;
         display: block;
+      }
+
+      &.borderless,
+      &.underlined {
+        input {
+          line-height: 1;
+          border: none !important;
+          border-radius: 0;
+        }
+      }
+      &.underlined {
+        input {
+          border-bottom: 1px solid $input-border-color !important;
+        }
       }
     }
 

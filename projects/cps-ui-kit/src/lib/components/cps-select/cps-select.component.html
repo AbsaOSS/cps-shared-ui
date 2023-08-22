@@ -23,7 +23,9 @@
     class="cps-select-container"
     [class.focused]="isOpened"
     [ngClass]="{
-      'persistent-clear': persistentClear
+      'persistent-clear': persistentClear,
+      borderless: appearance === 'borderless',
+      underlined: appearance === 'underlined'
     }">
     <div class="cps-select-box" #selectBox (click)="onBoxClick()">
       <div class="cps-select-box-left">

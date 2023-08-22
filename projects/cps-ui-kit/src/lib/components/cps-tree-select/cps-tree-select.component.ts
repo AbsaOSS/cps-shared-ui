@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  Input,
   OnDestroy,
   OnInit,
   Optional
@@ -16,6 +17,11 @@ import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { TreeModule } from 'primeng/tree';
 import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dropdown-base.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+
+export type CpsTreeSelectAppearanceType =
+  | 'outlined'
+  | 'underlined'
+  | 'borderless';
 
 @Component({
   standalone: true,
@@ -39,6 +45,8 @@ export class CpsTreeSelectComponent
   extends CpsTreeDropdownBaseComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  @Input() appearance: CpsTreeSelectAppearanceType = 'outlined';
+
   constructor(
     @Optional() public override control: NgControl,
     public override cdRef: ChangeDetectorRef

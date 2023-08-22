@@ -14,6 +14,7 @@ $treeselect-option-info-color: var(--cps-color-text-light);
 $treeselect-option-value-color: var(--cps-color-text-dark);
 $treeselect-prefix-icon-color: var(--cps-color-text-dark);
 $treeselect-option-chevron-color: var(--cps-color-text-light);
+$treeselect-border-color: var(--cps-color-text-lightest);
 
 $hover-transition-duration: 0.2s;
 
@@ -27,12 +28,26 @@ $hover-transition-duration: 0.2s;
     font-family: 'Source Sans Pro', sans-serif;
     display: grid;
 
-    &-container {
+    .cps-treeselect-container {
       position: relative;
       .cps-treeselect-progress-bar {
         position: absolute;
         bottom: 1px;
         padding: 0 1px;
+      }
+
+      &.borderless,
+      &.underlined {
+        .cps-treeselect-box {
+          line-height: 1;
+          border: none !important;
+          border-radius: 0;
+        }
+      }
+      &.underlined {
+        .cps-treeselect-box {
+          border-bottom: 1px solid $treeselect-border-color !important;
+        }
       }
     }
 
@@ -91,7 +106,7 @@ $hover-transition-duration: 0.2s;
       border-radius: 4px;
       align-items: center;
       display: flex;
-      border: 1px solid var(--cps-color-text-lightest);
+      border: 1px solid $treeselect-border-color;
       transition-duration: $hover-transition-duration;
 
       &-placeholder {

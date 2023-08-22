@@ -22,7 +22,9 @@
     class="cps-treeautocomplete-container"
     [class.focused]="isOpened"
     [ngClass]="{
-      'persistent-clear': persistentClear
+      'persistent-clear': persistentClear,
+      borderless: appearance === 'borderless',
+      underlined: appearance === 'underlined'
     }">
     <div class="cps-treeautocomplete-box" #boxEl (click)="onBoxClick()">
       <div class="cps-treeautocomplete-box-area">

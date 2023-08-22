@@ -21,6 +21,7 @@
 - Progress linear (indeterminate)
 - Radio
 - Select
+- Sidebar menu
 - Table
 - Tabs
 - Tag

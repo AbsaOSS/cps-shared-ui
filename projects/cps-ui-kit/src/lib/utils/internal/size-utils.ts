@@ -3,6 +3,9 @@ export const convertSize = (size: number | string): string => {
   if (!res) {
     return '';
   }
+
+  if (res.startsWith('calc(') && res.endsWith(')')) return res;
+
   if (/^\d+(\.\d+)?$/i.test(res)) {
     return res + 'px';
   }

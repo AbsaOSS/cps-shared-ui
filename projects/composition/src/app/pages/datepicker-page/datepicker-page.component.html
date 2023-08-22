@@ -46,5 +46,23 @@
       </cps-datepicker>
       <div class="sync-val">{{ syncVal }}</div>
     </div>
+
+    <cps-datepicker
+      label="Underlined datepicker"
+      hint="This datepicker shows a calendar when input field is focused"
+      [value]="today"
+      appearance="underlined"
+      [clearable]="true"
+      [openOnInputFocus]="true">
+    </cps-datepicker>
+
+    <cps-datepicker
+      label="Borderless datepicker"
+      hint="This datepicker shows a calendar when input field is focused"
+      [value]="today"
+      appearance="borderless"
+      [clearable]="true"
+      [openOnInputFocus]="true">
+    </cps-datepicker>
   </div>
 </form>

@@ -69,7 +69,7 @@
       [clearable]="true"
       [multiple]="true"
       [chips]="false"
-      prefixIcon="plus"
+      prefixIcon="search"
       [value]="[options[5]]">
     </cps-autocomplete>
     <div class="sync-val-example">
@@ -90,5 +90,29 @@
         [ngModelOptions]="{ standalone: true }"></cps-autocomplete>
       <span class="sync-val">{{ syncVal }}</span>
     </div>
+    <cps-autocomplete
+      label="Underlined autocomplete"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      prefixIcon="search"
+      appearance="underlined">
+    </cps-autocomplete>
+    <cps-autocomplete
+      label="Borderless autocomplete"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Enter a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      prefixIcon="search"
+      appearance="borderless">
+    </cps-autocomplete>
   </div>
 </form>

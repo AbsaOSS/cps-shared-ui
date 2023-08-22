@@ -19,6 +19,11 @@ import { TreeNode } from 'primeng/api';
 import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dropdown-base.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+export type CpsTreeAutocompleteAppearanceType =
+  | 'outlined'
+  | 'underlined'
+  | 'borderless';
+
 @Component({
   standalone: true,
   imports: [
@@ -40,6 +45,7 @@ export class CpsTreeAutocompleteComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @Input() emptyMessage = 'No results found';
+  @Input() appearance: CpsTreeAutocompleteAppearanceType = 'outlined';
 
   inputText = '';
   backspaceClickedOnce = false;

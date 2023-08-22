@@ -24,9 +24,11 @@
       <div *ngIf="header && !compressed" class="cps-menu-header">
         {{ header }}
       </div>
-      <div
+      <a
         *ngFor="let item of items; let i = index"
         (click)="onItemClick($event, item)"
+        [attr.href]="item.url ? item.url : null"
+        [attr.target]="item.url ? item.target : null"
         [ngClass]="{
           'cps-menu-item-disabled': item.disabled,
           'cps-menu-item-first': i === 0,
@@ -49,7 +51,7 @@
             >{{ item.desc }}</span
           >
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </div>

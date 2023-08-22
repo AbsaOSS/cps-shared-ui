@@ -1,0 +1,108 @@
+:host {
+  $sidebar-menu-width: 80px;
+  $sidebar-menu-width-collapsed: 40px;
+  $sidebar-menu-item-height: 80px;
+  $sidebar-menu-item-hover-background: #f8f4f5;
+  $sidebar-menu-item-active-background: #f1eaec;
+  $sidebar-menu-item-content-color: var(--cps-color-text-darkest);
+  $sidebar-menu-item-content-disabled-color: var(--cps-color-text-light);
+  $sidebar-menu-border-color: var(--cps-color-line-mid);
+  $color-calm: var(--cps-color-calm);
+  $transition-duration: 0.2s;
+
+  .cps-sidebar-menu {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.1);
+    width: $sidebar-menu-width;
+    transition-duration: $transition-duration;
+    overflow: hidden;
+    position: relative;
+
+    .expand-area {
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      height: 24px;
+      position: absolute;
+      bottom: 5%;
+      transition-duration: $transition-duration;
+      &:hover {
+        color: $color-calm;
+      }
+    }
+
+    .cps-sidebar-menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: $sidebar-menu-item-height;
+      text-decoration: none;
+      color: $sidebar-menu-item-content-color;
+      border-bottom: 1px solid $sidebar-menu-border-color;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+
+      .cps-sidebar-menu-item-label {
+        margin-top: 6px;
+        font-weight: 600;
+        font-size: 11px;
+        line-height: 13px;
+        color: $sidebar-menu-item-content-color;
+        text-align: center;
+      }
+
+      &:hover:not(.active) {
+        background: $sidebar-menu-item-hover-background;
+        color: $color-calm;
+        .cps-sidebar-menu-item-label {
+          color: $color-calm;
+        }
+      }
+
+      &:active:not(.active) {
+        background: $sidebar-menu-item-active-background;
+      }
+
+      &.active {
+        background: $color-calm;
+        color: white;
+        .cps-sidebar-menu-item-label {
+          color: white;
+        }
+      }
+
+      &.menu-open:not(.active) {
+        background: $sidebar-menu-item-active-background;
+        color: $color-calm;
+        .cps-sidebar-menu-item-label {
+          color: $color-calm;
+        }
+      }
+
+      &.menu-trigger {
+        cursor: pointer;
+      }
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+        color: $sidebar-menu-item-content-disabled-color;
+        .cps-sidebar-menu-item-label {
+          color: $sidebar-menu-item-content-disabled-color;
+        }
+      }
+    }
+  }
+  .cps-sidebar-menu.cps-sidebar-menu-collapsed {
+    width: $sidebar-menu-width-collapsed;
+    .expand-area {
+      transform: rotate(180deg);
+    }
+  }
+}

@@ -25,6 +25,8 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
+export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
+
 @Component({
   standalone: true,
   imports: [
@@ -60,6 +62,7 @@ export class CpsInputComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() appearance: CpsInputAppearanceType = 'outlined';
 
   @Input() set value(value: string) {
     this._value = value;
