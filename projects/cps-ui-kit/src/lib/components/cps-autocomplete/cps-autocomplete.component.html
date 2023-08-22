@@ -23,7 +23,9 @@
     class="cps-autocomplete-container"
     [class.focused]="isOpened"
     [ngClass]="{
-      'persistent-clear': persistentClear
+      'persistent-clear': persistentClear,
+      unbordered: appearance === 'unbordered',
+      underlined: appearance === 'underlined'
     }">
     <div class="cps-autocomplete-box" #autocompleteBox (click)="onBoxClick()">
       <div class="cps-autocomplete-box-area">

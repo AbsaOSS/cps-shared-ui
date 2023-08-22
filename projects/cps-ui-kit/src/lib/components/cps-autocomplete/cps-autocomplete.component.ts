@@ -33,6 +33,11 @@ import {
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+export type CpsAutocompleteAppearanceType =
+  | 'outlined'
+  | 'underlined'
+  | 'unbordered';
+
 @Component({
   standalone: true,
   imports: [
@@ -83,6 +88,7 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() appearance: CpsAutocompleteAppearanceType = 'outlined';
 
   @Input('value') _value: any = undefined;
 
