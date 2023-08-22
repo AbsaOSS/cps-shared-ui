@@ -5,6 +5,7 @@
   $sidebar-menu-item-hover-background: #f8f4f5;
   $sidebar-menu-item-active-background: #f1eaec;
   $sidebar-menu-item-content-color: var(--cps-color-text-darkest);
+  $sidebar-menu-item-content-disabled-color: var(--cps-color-text-light);
   $sidebar-menu-border-color: var(--cps-color-line-mid);
   $color-calm: var(--cps-color-calm);
   $transition-duration: 0.2s;
@@ -86,6 +87,15 @@
 
       &.menu-trigger {
         cursor: pointer;
+      }
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+        color: $sidebar-menu-item-content-disabled-color;
+        .cps-sidebar-menu-item-label {
+          color: $sidebar-menu-item-content-disabled-color;
+        }
       }
     }
   }

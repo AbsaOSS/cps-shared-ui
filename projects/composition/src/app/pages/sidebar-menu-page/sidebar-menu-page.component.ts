@@ -28,7 +28,7 @@ export class SidebarMenuPageComponent {
       disabled: true
     },
     {
-      title: 'Access',
+      title: 'Access menu',
       icon: 'access-menu',
       items: [
         { title: 'Requests', desc: 'Apply for access', url: '/jkl' },
@@ -40,12 +40,12 @@ export class SidebarMenuPageComponent {
       ]
     },
     {
-      title: 'Community',
+      title: 'Community menu',
       icon: 'multiple_users',
       items: [{ title: 'Questions', desc: 'See all questions', url: '/pqr' }]
     },
     {
-      title: 'Bookmarks disabled',
+      title: 'Bookmarks menu disabled',
       icon: 'bookmark',
       disabled: true,
       items: [

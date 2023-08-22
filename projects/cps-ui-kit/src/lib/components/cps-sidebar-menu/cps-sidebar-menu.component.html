@@ -9,7 +9,7 @@
       [routerLink]="[item.url]"
       routerLinkActive="active"
       #rla="routerLinkActive"
-      [ngClass]="{ active: rla.isActive }">
+      [ngClass]="{ active: rla.isActive, disabled: item.disabled }">
       <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
       <span *ngIf="showLabel" class="cps-sidebar-menu-item-label">
         {{ item.title }}
@@ -29,7 +29,8 @@
         class="cps-sidebar-menu-item menu-trigger"
         [ngClass]="{
           active: isActive(item),
-          'menu-open': popupMenu.isVisible()
+          'menu-open': popupMenu.isVisible(),
+          disabled: item.disabled
         }">
         <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
         <span *ngIf="showLabel" class="cps-sidebar-menu-item-label">
