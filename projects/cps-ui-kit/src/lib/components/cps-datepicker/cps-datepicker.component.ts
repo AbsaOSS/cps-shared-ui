@@ -21,7 +21,7 @@ import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 export type CpsDatepickerAppearanceType =
   | 'outlined'
   | 'underlined'
-  | 'unbordered';
+  | 'borderless';
 
 @Component({
   standalone: true,

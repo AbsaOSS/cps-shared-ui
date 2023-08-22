@@ -22,7 +22,7 @@ import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 export type CpsTreeAutocompleteAppearanceType =
   | 'outlined'
   | 'underlined'
-  | 'unbordered';
+  | 'borderless';
 
 @Component({
   standalone: true,

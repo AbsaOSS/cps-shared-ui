@@ -34,7 +34,7 @@ import {
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
-export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'unbordered';
+export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
 @Component({
   standalone: true,

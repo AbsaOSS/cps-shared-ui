@@ -36,7 +36,7 @@ import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 export type CpsAutocompleteAppearanceType =
   | 'outlined'
   | 'underlined'
-  | 'unbordered';
+  | 'borderless';
 
 @Component({
   standalone: true,

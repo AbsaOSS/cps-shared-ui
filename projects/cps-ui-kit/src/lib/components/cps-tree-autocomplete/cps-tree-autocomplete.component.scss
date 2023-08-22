@@ -44,7 +44,7 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      &.unbordered,
+      &.borderless,
       &.underlined {
         .cps-treeautocomplete-box {
           line-height: 1;

@@ -25,7 +25,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
-export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'unbordered';
+export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
 @Component({
   standalone: true,
