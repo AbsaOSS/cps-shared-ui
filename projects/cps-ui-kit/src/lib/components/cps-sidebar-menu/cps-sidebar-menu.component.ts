@@ -41,10 +41,10 @@ export class CpsSidebarMenuComponent implements OnInit {
     this.height = convertSize(this.height);
   }
 
-  toggleMenu(event: any, menu: CpsMenuComponent, sidebar: any) {
+  toggleMenu(event: any, menu: CpsMenuComponent) {
     const isVisible = menu.isVisible();
     this.allMenus?.forEach((m) => m.hide());
-    if (!isVisible) menu.toggle(event, sidebar, 'tr');
+    if (!isVisible) menu.toggle(event, event.currentTarget, 'tr');
   }
 
   isActive(item: CpsSidebarMenuItem) {

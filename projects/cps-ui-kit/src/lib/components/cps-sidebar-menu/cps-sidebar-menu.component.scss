@@ -31,6 +31,9 @@ $aside-menu-height: 80px;
     text-decoration: none;
     color: var(--cps-color-graphite-darken4);
     border-bottom: 1px solid $color-aside-menu-border;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
 
     &-label {
       margin-top: 6px;

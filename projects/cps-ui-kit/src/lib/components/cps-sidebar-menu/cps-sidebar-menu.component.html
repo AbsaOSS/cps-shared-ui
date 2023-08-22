@@ -1,8 +1,7 @@
 <div
   class="aside-menu"
   [style.height]="height"
-  [ngClass]="{ 'aside-menu--collapsed': !expanded }"
-  #sidebar>
+  [ngClass]="{ 'aside-menu--collapsed': !expanded }">
   <ng-container *ngFor="let item of items; let i = index">
     <a
       *ngIf="item.url"
@@ -26,7 +25,7 @@
         [withArrow]="false">
       </cps-menu>
       <div
-        (click)="toggleMenu($event, popupMenu, sidebar)"
+        (click)="toggleMenu($event, popupMenu)"
         class="aside-menu__item menu-trigger"
         [ngClass]="{
           _active: isActive(item),
