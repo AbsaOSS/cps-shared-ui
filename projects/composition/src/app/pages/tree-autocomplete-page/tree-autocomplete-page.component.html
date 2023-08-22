@@ -10,6 +10,7 @@
       [clearable]="true"
       formControlName="requiredTreeAutocomplete">
     </cps-tree-autocomplete>
+
     <cps-tree-autocomplete
       label="Loading tree autocomplete"
       [loading]="true"
@@ -64,7 +65,7 @@
       [clearable]="true"
       [multiple]="true"
       [chips]="false"
-      prefixIcon="plus"
+      prefixIcon="search"
       [value]="[options[2].children[0]]">
     </cps-tree-autocomplete>
 
@@ -82,5 +83,27 @@
       </cps-tree-autocomplete>
       <span class="sync-val">{{ syncVal?.label }}</span>
     </div>
+
+    <cps-tree-autocomplete
+      label="Underlined tree autocomplete"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="underlined"
+      prefixIcon="search">
+    </cps-tree-autocomplete>
+
+    <cps-tree-autocomplete
+      label="Unbordered tree autocomplete"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="unbordered"
+      prefixIcon="search">
+    </cps-tree-autocomplete>
   </div>
 </form>

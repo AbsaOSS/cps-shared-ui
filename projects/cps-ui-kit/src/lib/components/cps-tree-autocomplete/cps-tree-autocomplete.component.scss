@@ -16,6 +16,7 @@ $treeautocomplete-about-remove-color: var(--cps-color-text-light);
 $treeautocomplete-about-remove-background: var(--cps-color-bg-mid);
 $treeautocomplete-prefix-icon-color: var(--cps-color-text-dark);
 $treeautocomplete-option-chevron-color: var(--cps-color-text-light);
+$treeautocomplete-border-color: var(--cps-color-text-lightest);
 
 $hover-transition-duration: 0.2s;
 
@@ -29,7 +30,7 @@ $hover-transition-duration: 0.2s;
     font-family: 'Source Sans Pro', sans-serif;
     display: grid;
 
-    &-container {
+    .cps-treeautocomplete-container {
       position: relative;
       .cps-treeautocomplete-progress-bar {
         position: absolute;
@@ -40,6 +41,20 @@ $hover-transition-duration: 0.2s;
       &.focused {
         .cps-treeautocomplete-box {
           background: white !important;
+        }
+      }
+
+      &.unbordered,
+      &.underlined {
+        .cps-treeautocomplete-box {
+          line-height: 1;
+          border: none !important;
+          border-radius: 0;
+        }
+      }
+      &.underlined {
+        .cps-treeautocomplete-box {
+          border-bottom: 1px solid $treeautocomplete-border-color !important;
         }
       }
     }
@@ -96,7 +111,7 @@ $hover-transition-duration: 0.2s;
       outline: none;
       padding: 0 12px 0 12px;
       border-radius: 4px;
-      border: 1px solid var(--cps-color-text-lightest);
+      border: 1px solid $treeautocomplete-border-color;
       transition-duration: $hover-transition-duration;
 
       &-area {
