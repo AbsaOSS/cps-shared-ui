@@ -90,5 +90,27 @@
         [ngModelOptions]="{ standalone: true }"></cps-select>
       <span class="sync-val">{{ syncVal }}</span>
     </div>
+    <cps-select
+      label="Underlined select"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="underlined">
+    </cps-select>
+    <cps-select
+      label="Unbordered select"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="unbordered">
+    </cps-select>
   </div>
 </form>

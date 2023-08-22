@@ -13,6 +13,7 @@ $option-highlight-selected-background: #e6d4d9;
 $select-option-info-color: var(--cps-color-text-light);
 $select-option-value-color: var(--cps-color-text-dark);
 $select-prefix-icon-color: var(--cps-color-text-dark);
+$select-border-color: var(--cps-color-text-lightest);
 
 $hover-transition-duration: 0.2s;
 
@@ -26,12 +27,26 @@ $hover-transition-duration: 0.2s;
     font-family: 'Source Sans Pro', sans-serif;
     display: grid;
 
-    &-container {
+    .cps-select-container {
       position: relative;
       .select-progress-bar {
         position: absolute;
         bottom: 1px;
         padding: 0 1px;
+      }
+
+      &.unbordered,
+      &.underlined {
+        .cps-select-box {
+          line-height: 1;
+          border: none !important;
+          border-radius: 0;
+        }
+      }
+      &.underlined {
+        .cps-select-box {
+          border-bottom: 1px solid $select-border-color !important;
+        }
       }
     }
 
@@ -90,7 +105,7 @@ $hover-transition-duration: 0.2s;
       border-radius: 4px;
       align-items: center;
       display: flex;
-      border: 1px solid var(--cps-color-text-lightest);
+      border: 1px solid $select-border-color;
       transition-duration: $hover-transition-duration;
 
       &-placeholder {

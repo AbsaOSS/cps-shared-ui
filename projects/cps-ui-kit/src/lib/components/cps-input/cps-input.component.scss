@@ -45,6 +45,7 @@ $hover-transition-duration: 0.2s;
       }
 
       input {
+        min-height: 38px;
         font-family: 'Source Sans Pro', sans-serif;
         font-size: 1rem;
         color: $input-text-color;
