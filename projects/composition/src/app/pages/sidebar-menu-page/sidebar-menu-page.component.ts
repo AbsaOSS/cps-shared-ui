@@ -14,7 +14,7 @@ export class SidebarMenuPageComponent {
     {
       title: 'Dashboard',
       icon: 'grid',
-      url: '/abc'
+      url: '/sidebar-menu'
     },
     {
       title: 'Favourites',

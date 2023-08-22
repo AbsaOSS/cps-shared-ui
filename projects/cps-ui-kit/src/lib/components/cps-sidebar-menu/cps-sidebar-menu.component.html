@@ -29,7 +29,7 @@
         class="cps-sidebar-menu-item menu-trigger"
         [ngClass]="{
           active: isActive(item),
-          'menu-open': !isActive(item) && popupMenu.isVisible
+          'menu-open': popupMenu.isVisible()
         }">
         <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
         <span *ngIf="expanded" class="cps-sidebar-menu-item-label">

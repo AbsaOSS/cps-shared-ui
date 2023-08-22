@@ -1,8 +1,12 @@
 :host {
-  $sidebar-menu-border-color: var(--cps-color-line-mid);
   $sidebar-menu-width: 80px;
   $sidebar-menu-width-collapsed: 40px;
   $sidebar-menu-item-height: 80px;
+  $sidebar-menu-item-hover-background: #f8f4f5;
+  $sidebar-menu-item-active-background: #f1eaec;
+  $sidebar-menu-item-content-color: var(--cps-color-text-darkest);
+  $sidebar-menu-border-color: var(--cps-color-line-mid);
+  $color-calm: var(--cps-color-calm);
 
   .cps-sidebar-menu {
     display: inline-flex;
@@ -11,6 +15,8 @@
     align-items: center;
     box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.1);
     width: $sidebar-menu-width;
+    transition-duration: 0.2s;
+    overflow: hidden;
 
     .expand-area {
       cursor: pointer;
@@ -19,6 +25,7 @@
       height: 24px;
       position: absolute;
       bottom: 5%;
+      transition-duration: 0.2s;
     }
 
     .cps-sidebar-menu-item {
@@ -30,45 +37,45 @@
       width: 100%;
       height: $sidebar-menu-item-height;
       text-decoration: none;
-      color: var(--cps-color-graphite-darken4);
+      color: $sidebar-menu-item-content-color;
       border-bottom: 1px solid $sidebar-menu-border-color;
       -webkit-user-select: none; /* Safari */
       -ms-user-select: none; /* IE 10 and IE 11 */
       user-select: none; /* Standard syntax */
 
-      &-label {
+      .cps-sidebar-menu-item-label {
         margin-top: 6px;
         font-weight: 600;
         font-size: 11px;
         line-height: 13px;
-        color: var(--cps-color-graphite-darken4);
+        color: $sidebar-menu-item-content-color;
+      }
+
+      &:hover:not(.active) {
+        background: $sidebar-menu-item-hover-background;
+        color: $color-calm;
+        .cps-sidebar-menu-item-label {
+          color: $color-calm;
+        }
+      }
+
+      &:active:not(.active) {
+        background: $sidebar-menu-item-active-background;
       }
 
       &.active {
-        cps-icon {
-          .cps-icon {
-            color: white !important;
-          }
-        }
-
-        background-color: var(--cps-color-calm) !important;
-
-        span {
-          color: white !important;
+        background: $color-calm;
+        color: white;
+        .cps-sidebar-menu-item-label {
+          color: white;
         }
       }
 
-      &.menu-open {
-        cps-icon {
-          .cps-icon {
-            color: var(--cps-color-calm) !important;
-          }
-        }
-
-        background-color: var(--cps-color-line-light) !important;
-
-        span {
-          color: var(--cps-color-calm);
+      &.menu-open:not(.active) {
+        background: $sidebar-menu-item-active-background;
+        color: $color-calm;
+        .cps-sidebar-menu-item-label {
+          color: $color-calm;
         }
       }
 
@@ -79,11 +86,8 @@
 
     &-collapsed {
       width: $sidebar-menu-width-collapsed;
-
       .expand-area {
-        cps-icon {
-          transform: rotate(180deg);
-        }
+        transform: rotate(180deg);
       }
     }
   }
