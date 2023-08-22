@@ -308,7 +308,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
         case 'bl':
           return {
             top: targetOffset.top + target.offsetHeight - element.offsetHeight,
-            left: targetOffset.left - element.offsetWidth
+            left: targetOffset.left - element.offsetWidth - 1
           };
         case 'br':
           return {
@@ -318,7 +318,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
         case 'tl':
           return {
             top: targetOffset.top,
-            left: targetOffset.left - element.offsetWidth
+            left: targetOffset.left - element.offsetWidth - 1
           };
         case 'tr':
           return {

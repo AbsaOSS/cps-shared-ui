@@ -1,1 +1,45 @@
-<p>cps-sidebar-menu works!</p>
+<div
+  class="aside-menu"
+  [style.height]="height"
+  [ngClass]="{ 'aside-menu--collapsed': !expanded }"
+  #sidebar>
+  <ng-container *ngFor="let item of items; let i = index">
+    <a
+      *ngIf="item.url"
+      class="aside-menu__item"
+      [routerLink]="[item.url]"
+      routerLinkActive="_active"
+      #rla="routerLinkActive"
+      [ngClass]="{ active: rla.isActive }">
+      <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
+      <span *ngIf="expanded" class="aside-menu__item-label">
+        {{ item.title }}
+      </span>
+    </a>
+    <ng-container *ngIf="!item.url">
+      <cps-menu
+        #popupMenu
+        [items]="item.items || []"
+        [header]="item.title"
+        showTransitionOptions="0s"
+        hideTransitionOptions="0s"
+        [withArrow]="false">
+      </cps-menu>
+      <div
+        (click)="toggleMenu($event, popupMenu, sidebar)"
+        class="aside-menu__item menu-trigger"
+        [ngClass]="{
+          _active: isActive(item),
+          '_menu-open': !isActive(item) && popupMenu.isVisible
+        }">
+        <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
+        <span *ngIf="expanded" class="aside-menu__item-label">
+          {{ item.title }}
+        </span>
+      </div>
+    </ng-container>
+  </ng-container>
+  <div class="expand-area" (click)="expanded = !expanded">
+    <cps-icon icon="menu-shrink" size="fill"> </cps-icon>
+  </div>
+</div>
