@@ -7,6 +7,7 @@
   $sidebar-menu-item-content-color: var(--cps-color-text-darkest);
   $sidebar-menu-border-color: var(--cps-color-line-mid);
   $color-calm: var(--cps-color-calm);
+  $transition-duration: 0.2s;
 
   .cps-sidebar-menu {
     display: inline-flex;
@@ -15,8 +16,9 @@
     align-items: center;
     box-shadow: 0 0 60px 0 rgba(0, 0, 0, 0.1);
     width: $sidebar-menu-width;
-    transition-duration: 0.2s;
+    transition-duration: $transition-duration;
     overflow: hidden;
+    position: relative;
 
     .expand-area {
       cursor: pointer;
@@ -25,11 +27,10 @@
       height: 24px;
       position: absolute;
       bottom: 5%;
-      transition-duration: 0.2s;
+      transition-duration: $transition-duration;
     }
 
     .cps-sidebar-menu-item {
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -49,6 +50,7 @@
         font-size: 11px;
         line-height: 13px;
         color: $sidebar-menu-item-content-color;
+        text-align: center;
       }
 
       &:hover:not(.active) {
@@ -83,12 +85,11 @@
         cursor: pointer;
       }
     }
-
-    &-collapsed {
-      width: $sidebar-menu-width-collapsed;
-      .expand-area {
-        transform: rotate(180deg);
-      }
+  }
+  .cps-sidebar-menu.cps-sidebar-menu-collapsed {
+    width: $sidebar-menu-width-collapsed;
+    .expand-area {
+      transform: rotate(180deg);
     }
   }
 }

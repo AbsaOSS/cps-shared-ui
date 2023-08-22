@@ -34,11 +34,14 @@ export class CpsSidebarMenuComponent implements OnInit {
 
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;
 
+  showLabel = true;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _router: Router) {}
 
   ngOnInit(): void {
     this.height = convertSize(this.height);
+    this.showLabel = this.expanded;
   }
 
   toggleMenu(event: any, menu: CpsMenuComponent) {
@@ -51,5 +54,14 @@ export class CpsSidebarMenuComponent implements OnInit {
     if (!item.items) return false;
     const urls = item.items.map((i) => i.url);
     return urls.includes(this._router.url);
+  }
+
+  toggleSidebar() {
+    this.expanded = !this.expanded;
+    if (!this.expanded) this.showLabel = false;
+    else
+      setTimeout(() => {
+        this.showLabel = this.expanded;
+      }, 200);
   }
 }

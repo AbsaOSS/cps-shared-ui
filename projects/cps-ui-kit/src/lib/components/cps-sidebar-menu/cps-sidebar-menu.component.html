@@ -11,7 +11,7 @@
       #rla="routerLinkActive"
       [ngClass]="{ active: rla.isActive }">
       <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-      <span *ngIf="expanded" class="cps-sidebar-menu-item-label">
+      <span *ngIf="showLabel" class="cps-sidebar-menu-item-label">
         {{ item.title }}
       </span>
     </a>
@@ -32,13 +32,13 @@
           'menu-open': popupMenu.isVisible()
         }">
         <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-        <span *ngIf="expanded" class="cps-sidebar-menu-item-label">
+        <span *ngIf="showLabel" class="cps-sidebar-menu-item-label">
           {{ item.title }}
         </span>
       </div>
     </ng-container>
   </ng-container>
-  <div class="expand-area" (click)="expanded = !expanded">
+  <div class="expand-area" (click)="toggleSidebar()">
     <cps-icon icon="menu-shrink" size="fill"> </cps-icon>
   </div>
 </div>
