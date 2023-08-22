@@ -1,17 +1,17 @@
 <div
-  class="aside-menu"
+  class="cps-sidebar-menu"
   [style.height]="height"
-  [ngClass]="{ 'aside-menu--collapsed': !expanded }">
-  <ng-container *ngFor="let item of items; let i = index">
+  [ngClass]="{ 'cps-sidebar-menu-collapsed': !expanded }">
+  <ng-container *ngFor="let item of items">
     <a
       *ngIf="item.url"
-      class="aside-menu__item"
+      class="cps-sidebar-menu-item"
       [routerLink]="[item.url]"
-      routerLinkActive="_active"
+      routerLinkActive="active"
       #rla="routerLinkActive"
       [ngClass]="{ active: rla.isActive }">
       <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-      <span *ngIf="expanded" class="aside-menu__item-label">
+      <span *ngIf="expanded" class="cps-sidebar-menu-item-label">
         {{ item.title }}
       </span>
     </a>
@@ -26,13 +26,13 @@
       </cps-menu>
       <div
         (click)="toggleMenu($event, popupMenu)"
-        class="aside-menu__item menu-trigger"
+        class="cps-sidebar-menu-item menu-trigger"
         [ngClass]="{
-          _active: isActive(item),
-          '_menu-open': !isActive(item) && popupMenu.isVisible
+          active: isActive(item),
+          'menu-open': !isActive(item) && popupMenu.isVisible
         }">
         <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-        <span *ngIf="expanded" class="aside-menu__item-label">
+        <span *ngIf="expanded" class="cps-sidebar-menu-item-label">
           {{ item.title }}
         </span>
       </div>
