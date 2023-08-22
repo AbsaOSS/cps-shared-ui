@@ -28,6 +28,9 @@
       position: absolute;
       bottom: 5%;
       transition-duration: $transition-duration;
+      &:hover {
+        color: $color-calm;
+      }
     }
 
     .cps-sidebar-menu-item {

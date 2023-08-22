@@ -14,27 +14,27 @@ export class SidebarMenuPageComponent {
     {
       title: 'Dashboard',
       icon: 'grid',
-      url: '/sidebar-menu'
+      url: '/abc'
     },
     {
       title: 'Favourites',
       icon: 'star',
-      url: '/def',
+      url: '/sidebar-menu'
+    },
+    {
+      title: 'Categories disabled',
+      icon: 'book',
+      url: '/ghi',
       disabled: true
     },
     {
-      title: 'Domains',
-      icon: 'book',
-      url: '/ghi'
-    },
-    {
-      title: 'Domain Access',
+      title: 'Access',
       icon: 'access-menu',
       items: [
-        { title: 'Requests', desc: 'Apply for access to domains', url: '/jkl' },
+        { title: 'Requests', desc: 'Apply for access', url: '/jkl' },
         {
           title: 'Approval',
-          desc: 'Approve or reject domain requests',
+          desc: 'Approve or reject access requests',
           url: '/mno'
         }
       ]
@@ -42,18 +42,16 @@ export class SidebarMenuPageComponent {
     {
       title: 'Community',
       icon: 'multiple_users',
-      items: [
-        { title: 'Questions', desc: 'Questions about all domains', url: '/pqr' }
-      ]
+      items: [{ title: 'Questions', desc: 'See all questions', url: '/pqr' }]
     },
     {
-      title: 'Disabled',
-      icon: 'multiple_users',
+      title: 'Bookmarks disabled',
+      icon: 'bookmark',
       disabled: true,
       items: [
         {
           title: 'Disabled cat',
-          desc: 'Questions about all domains',
+          desc: 'This is not visible',
           url: '/stu'
         }
       ]
