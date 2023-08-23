@@ -66,27 +66,20 @@ $header-active-background: #f1eaec;
     }
 
     &-content {
-      max-height: 0;
       overflow: hidden;
-      display: none;
-      padding: 16px;
-      transition: max-height 0.3s ease;
       color: $header-text-color;
       font-size: 16px;
-    }
-
-    &.expanded.bordered {
-      .cps-expansion-panel-header {
-        border-bottom: 1px solid $border-color;
+      &-inner {
+        padding: 16px;
       }
     }
 
     &.expanded {
       .cps-expansion-panel-content {
-        overflow: auto;
-        padding: 16px;
         max-height: 500px;
-        display: block;
+      }
+      .cps-expansion-panel-content:not(.ng-animating) {
+        overflow: auto;
       }
       .cps-expansion-panel-chevron {
         transform: rotate(180deg);
