@@ -49,10 +49,10 @@
       user-select: none; /* Standard syntax */
 
       .cps-sidebar-menu-item-label {
-        margin-top: 6px;
         font-weight: 600;
         font-size: 11px;
         line-height: 13px;
+        width: 80px;
         color: $sidebar-menu-item-content-color;
         text-align: center;
       }

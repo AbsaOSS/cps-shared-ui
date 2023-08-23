@@ -1,7 +1,7 @@
 <div
   class="cps-sidebar-menu"
   [style.height]="height"
-  [ngClass]="{ 'cps-sidebar-menu-collapsed': !expanded }">
+  [ngClass]="{ 'cps-sidebar-menu-collapsed': !isExpanded }">
   <ng-container *ngFor="let item of items">
     <a
       *ngIf="item.url"
@@ -11,7 +11,9 @@
       #rla="routerLinkActive"
       [ngClass]="{ active: rla.isActive, disabled: item.disabled }">
       <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-      <span *ngIf="showLabel" class="cps-sidebar-menu-item-label">
+      <span
+        class="cps-sidebar-menu-item-label"
+        [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
         {{ item.title }}
       </span>
     </a>
@@ -33,7 +35,9 @@
           disabled: item.disabled
         }">
         <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-        <span *ngIf="showLabel" class="cps-sidebar-menu-item-label">
+        <span
+          class="cps-sidebar-menu-item-label"
+          [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
           {{ item.title }}
         </span>
       </div>
