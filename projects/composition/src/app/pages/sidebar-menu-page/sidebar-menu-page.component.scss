@@ -1,5 +1,12 @@
+@import '../../../variables.scss';
 :host {
+  display: flex;
+  position: absolute;
+  width: calc(100% - $sidebar-width - 1px);
+  height: calc(100% - $top-tbar-height - $inner-tbar-height);
+  overflow: auto;
   .desc {
+    margin-top: 24px;
     color: var(--cps-color-text-dark);
     margin-left: 24px;
     font-size: 18px;
