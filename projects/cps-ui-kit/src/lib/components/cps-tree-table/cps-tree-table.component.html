@@ -1,1 +1,23 @@
-<p>cps-tree-table works!</p>
+<p-treeTable
+  #primengTreeTable
+  [value]="files"
+  [scrollable]="true"
+  [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Size</th>
+      <th>Type</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+    <tr [ttRow]="rowNode">
+      <td>
+        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+        {{ rowData.name }}
+      </td>
+      <td>{{ rowData.size }}</td>
+      <td>{{ rowData.type }}</td>
+    </tr>
+  </ng-template>
+</p-treeTable>
