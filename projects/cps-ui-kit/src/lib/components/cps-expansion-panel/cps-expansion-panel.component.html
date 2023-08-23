@@ -9,6 +9,14 @@
   }">
   <div
     class="cps-expansion-panel-header"
+    [@panelHeader]="
+      isExpanded
+        ? {
+            value: 'visible',
+            params: { borderStyle: bordered ? '1px solid #b5b2b2' : '0' }
+          }
+        : 'hidden'
+    "
     [ngClass]="{ disabled: disabled }"
     [style.cursor]="disabled ? 'default' : 'pointer'"
     (click)="toggleExpansion()">
@@ -24,7 +32,11 @@
       <cps-icon icon="chevron-down" size="small" color="text-dark"> </cps-icon>
     </span>
   </div>
-  <div class="cps-expansion-panel-content">
-    <ng-content></ng-content>
+  <div
+    class="cps-expansion-panel-content"
+    [@panelContent]="isExpanded ? 'visible' : 'hidden'">
+    <div class="cps-expansion-panel-content-inner">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>

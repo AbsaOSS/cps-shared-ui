@@ -10,6 +10,13 @@ import { Router, RouterModule } from '@angular/router';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { convertSize } from '../../utils/internal/size-utils';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 
 export type CpsSidebarMenuItem = {
   title: string;
@@ -25,23 +32,43 @@ export type CpsSidebarMenuItem = {
   standalone: true,
   imports: [CommonModule, CpsMenuComponent, CpsIconComponent, RouterModule],
   templateUrl: './cps-sidebar-menu.component.html',
-  styleUrls: ['./cps-sidebar-menu.component.scss']
+  styleUrls: ['./cps-sidebar-menu.component.scss'],
+  animations: [
+    trigger('onExpand', [
+      state(
+        'collapsed',
+        style({
+          marginTop: '0',
+          opacity: '0',
+          height: '0',
+          visibility: 'hidden'
+        })
+      ),
+      state(
+        'expanded',
+        style({
+          marginTop: '6px',
+          opacity: '1'
+        })
+      ),
+      transition('expanded <=> collapsed', [
+        animate('0.2s cubic-bezier(0.4, 0, 0.2, 1)')
+      ])
+    ])
+  ]
 })
 export class CpsSidebarMenuComponent implements OnInit {
   @Input() items: CpsSidebarMenuItem[] = [];
-  @Input() expanded = true;
+  @Input() isExpanded = true;
   @Input() height = '100%';
 
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;
-
-  showLabel = true;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _router: Router) {}
 
   ngOnInit(): void {
     this.height = convertSize(this.height);
-    this.showLabel = this.expanded;
   }
 
   toggleMenu(event: any, menu: CpsMenuComponent) {
@@ -57,11 +84,6 @@ export class CpsSidebarMenuComponent implements OnInit {
   }
 
   toggleSidebar() {
-    this.expanded = !this.expanded;
-    if (!this.expanded) this.showLabel = false;
-    else
-      setTimeout(() => {
-        this.showLabel = this.expanded;
-      }, 200);
+    this.isExpanded = !this.isExpanded;
   }
 }
