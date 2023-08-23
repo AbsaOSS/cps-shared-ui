@@ -26,6 +26,7 @@ import { ProgressCircularPageComponent } from './pages/progress-circular-page/pr
 import { PaginatorPageComponent } from './pages/paginator-page/paginator-page.component';
 import { MenuPageComponent } from './pages/menu-page/menu-page.component';
 import { SidebarMenuPageComponent } from './pages/sidebar-menu-page/sidebar-menu-page.component';
+import { TreeTablePageComponent } from './pages/tree-table-page/tree-table-page.component';
 
 const routes: Routes = [
   {
@@ -97,6 +98,11 @@ const routes: Routes = [
     path: 'table',
     title: 'Table',
     component: TablePageComponent
+  },
+  {
+    path: 'tree-table',
+    title: 'Tree table',
+    component: TreeTablePageComponent
   },
   {
     path: 'tag',

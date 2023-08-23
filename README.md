@@ -34,6 +34,7 @@ This repository consists of two projects:
 - Tooltip directive
 - Tree autocomplete
 - Tree select
+- Tree table
 
 ## Development server
 

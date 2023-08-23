@@ -120,6 +120,10 @@ export class NavigationSidebarComponent implements OnInit {
     {
       title: 'Tree select',
       url: '/tree-select'
+    },
+    {
+      title: 'Tree table',
+      url: '/tree-table'
     }
     // extend this list
   ];
