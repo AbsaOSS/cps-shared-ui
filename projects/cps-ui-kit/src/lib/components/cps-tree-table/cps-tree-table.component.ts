@@ -66,6 +66,8 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
 
+  @Input() rowHover = true;
+
   @Input() showGlobalFilter = true;
   @Input() globalFilterPlaceholder = 'Search';
   @Input() globalFilterFields: string[] = [];

@@ -4,10 +4,11 @@ $color-surprise: var(--cps-color-surprise);
 $toolbar-text-color: var(--cps-color-text-darkest);
 $treetable-borders-color: var(--cps-color-line-mid);
 $stripe-color: var(--cps-color-bg-light);
-$tbar-small-height: 43px;
-$tbar-normal-height: 72px;
+$row-hover-background: #f8f4f5;
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
+$tbar-small-height: 43px;
+$tbar-normal-height: 72px;
 
 :host {
   ::ng-deep {
@@ -243,8 +244,7 @@ $body-text-color: var(--cps-color-text-dark);
       margin-left: 0.5rem;
     }
     .p-treetable .p-sortable-column:not(.p-highlight):hover {
-      background: #e9ecef;
-      color: #343a40;
+      background: $row-hover-background;
     }
     .p-treetable
       .p-sortable-column:not(.p-highlight):hover
@@ -293,14 +293,16 @@ $body-text-color: var(--cps-color-text-dark);
     .p-treetable.p-treetable-hoverable-rows
       .p-treetable-tbody
       > tr:not(.p-highlight):hover {
-      background: #e9ecef;
-      color: $body-text-color;
+      background: $row-hover-background;
     }
     .p-treetable.p-treetable-hoverable-rows
       .p-treetable-tbody
       > tr:not(.p-highlight):hover
       .p-treetable-toggler {
       color: $body-text-color;
+    }
+    .p-treetable-hoverable-rows .p-treetable-tbody > tr {
+      cursor: default;
     }
     .p-treetable .p-column-resizer-helper {
       background: #3b82f6;
