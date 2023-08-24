@@ -163,7 +163,7 @@ export class CpsTreeTableComponent implements OnInit {
     }
 
     if (this.scrollHeight && !this.loading && this.data.length > 0) {
-      classesList.push('cps-table-bottom-bordered');
+      classesList.push('cps-treetable-bottom-bordered');
     }
 
     return classesList.join(' ');

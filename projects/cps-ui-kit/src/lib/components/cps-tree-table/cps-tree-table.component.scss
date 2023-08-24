@@ -7,6 +7,12 @@ $stripe-color: var(--cps-color-bg-light);
 $row-hover-background: #f8f4f5;
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
+$colitem-hover-background: #f8f4f5;
+$colitem-value-color: var(--cps-color-text-dark);
+$selected-colitem-background: #efe4e7;
+$colitem-highlight-background: #f5eeef;
+$colitem-highlight-selected-background: #e6d4d9;
+
 $tbar-small-height: 43px;
 $tbar-normal-height: 72px;
 
@@ -27,6 +33,10 @@ $tbar-normal-height: 72px;
     .p-treetable-scrollable-wrapper {
       position: relative;
     }
+    .cps-treetable-bottom-bordered > .p-treetable-scrollable-wrapper {
+      border-bottom: 1px solid $treetable-borders-color;
+    }
+
     .p-treetable .p-treetable-scrollable-header,
     .p-treetable .p-treetable-scrollable-footer {
       background: white;
@@ -171,21 +181,21 @@ $tbar-normal-height: 72px;
       background-color: white;
       color: $toolbar-text-color;
       overflow: auto;
-      .cps-table-tbar-left {
+      .cps-treetable-tbar-left {
         display: flex;
         align-items: center;
-        .cps-table-tbar-global-filter {
+        .cps-treetable-tbar-global-filter {
           margin-left: 12px;
         }
       }
-      .cps-table-tbar-right {
+      .cps-treetable-tbar-right {
         display: flex;
         align-items: center;
-        .cps-table-tbar-action-btn {
+        .cps-treetable-tbar-action-btn {
           margin-right: 4px;
           margin-left: 8px;
         }
-        .cps-table-tbar-coltoggle-btn {
+        .cps-treetable-tbar-coltoggle-btn {
           display: contents;
           cps-icon {
             margin-left: 8px;
@@ -372,5 +382,89 @@ $tbar-normal-height: 72px;
     //   .p-row-toggler:hover {
     //   color: #1d4ed8;
     // }
+  }
+}
+
+.cps-treetable-coltoggle-menu {
+  display: block;
+  max-height: 242px;
+  overflow-x: hidden;
+  background: white;
+
+  .cps-treetable-coltoggle-menu-item {
+    padding: 12px;
+    justify-content: space-between;
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+      background: $colitem-hover-background;
+    }
+
+    &-label {
+      color: $colitem-value-color;
+    }
+
+    &-left {
+      display: flex;
+      align-items: center;
+      margin-right: 8px;
+    }
+
+    &-check {
+      background-color: transparent;
+      border: 0;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: middle;
+      box-sizing: border-box;
+      position: relative;
+      flex-shrink: 0;
+      transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+        background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      margin-right: 8px;
+      opacity: 0;
+      &::after {
+        color: $color-calm;
+        top: 4px;
+        left: 1px;
+        width: 8px;
+        height: 3px;
+        border-left: 2px solid currentColor;
+        transform: rotate(-45deg);
+        opacity: 1;
+        box-sizing: content-box;
+        position: absolute;
+        content: '';
+        border-bottom: 2px solid currentColor;
+        transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      }
+    }
+    &.selected,
+    &.allselected {
+      font-weight: 600;
+      .cps-treetable-coltoggle-menu-item-label {
+        color: $color-calm;
+      }
+      .cps-treetable-coltoggle-menu-item-check {
+        opacity: 1;
+      }
+    }
+    &.selected {
+      background: $selected-colitem-background;
+    }
+    &.highlighten {
+      background: $colitem-highlight-background;
+    }
+    &.selected.highlighten {
+      background: $colitem-highlight-selected-background;
+    }
+  }
+
+  .select-all-option {
+    border-bottom: 1px solid lightgrey;
+    font-weight: 600;
   }
 }

@@ -14,9 +14,9 @@
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
     </ng-container>
     <ng-container *ngIf="!toolbarTemplate">
-      <div class="cps-table-tbar-left">
+      <div class="cps-treetable-tbar-left">
         <div>{{ toolbarTitle }}</div>
-        <div *ngIf="showGlobalFilter" class="cps-table-tbar-global-filter">
+        <div *ngIf="showGlobalFilter" class="cps-treetable-tbar-global-filter">
           <cps-input
             prefixIcon="search"
             [placeholder]="globalFilterPlaceholder"
@@ -27,8 +27,8 @@
           </cps-input>
         </div>
       </div>
-      <div class="cps-table-tbar-right">
-        <div *ngIf="showActionBtn" class="cps-table-tbar-action-btn">
+      <div class="cps-treetable-tbar-right">
+        <div *ngIf="showActionBtn" class="cps-treetable-tbar-action-btn">
           <cps-button
             [label]="actionBtnTitle"
             color="prepared"
@@ -39,33 +39,33 @@
         </div>
         <div
           *ngIf="showColumnsToggle && columns.length > 0"
-          class="cps-table-tbar-coltoggle-btn">
+          class="cps-treetable-tbar-coltoggle-btn">
           <cps-icon
             icon="columns"
             size="normal"
             color="prepared-lighten1"
             (click)="colToggleMenu.toggle($event)"></cps-icon>
           <cps-menu #colToggleMenu [withArrow]="false">
-            <div class="cps-table-coltoggle-menu">
+            <div class="cps-treetable-coltoggle-menu">
               <div
-                class="cps-table-coltoggle-menu-item select-all-option"
+                class="cps-treetable-coltoggle-menu-item select-all-option"
                 [class.allselected]="selectedColumns.length === columns.length"
                 (click)="toggleAllColumns()">
-                <span class="cps-table-coltoggle-menu-item-left">
-                  <span class="cps-table-coltoggle-menu-item-check"> </span>
-                  <span class="cps-table-coltoggle-menu-item-label"
+                <span class="cps-treetable-coltoggle-menu-item-left">
+                  <span class="cps-treetable-coltoggle-menu-item-check"> </span>
+                  <span class="cps-treetable-coltoggle-menu-item-label"
                     >Show all columns</span
                   >
                 </span>
               </div>
               <div
                 *ngFor="let col of columns"
-                class="cps-table-coltoggle-menu-item"
+                class="cps-treetable-coltoggle-menu-item"
                 (click)="onSelectColumn(col)"
                 [class.selected]="isColumnSelected(col)">
-                <span class="cps-table-coltoggle-menu-item-left">
-                  <span class="cps-table-coltoggle-menu-item-check"></span>
-                  <span class="cps-table-coltoggle-menu-item-label">{{
+                <span class="cps-treetable-coltoggle-menu-item-left">
+                  <span class="cps-treetable-coltoggle-menu-item-check"></span>
+                  <span class="cps-treetable-coltoggle-menu-item-label">{{
                     col[colHeaderName]
                   }}</span>
                 </span>
