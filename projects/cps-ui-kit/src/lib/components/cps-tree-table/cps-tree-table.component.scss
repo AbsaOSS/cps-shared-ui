@@ -81,7 +81,6 @@ $tbar-normal-height: 72px;
       border: 0 none;
       background: transparent;
       border-radius: 50%;
-      // transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
       margin-right: 0.5rem;
     }
     .p-treetable-toggler {
@@ -281,26 +280,13 @@ $tbar-normal-height: 72px;
       background: #eff6ff;
       color: #1d4ed8;
     }
-    .p-treetable .p-treetable-tbody > tr.p-highlight .p-treetable-toggler {
-      color: #1d4ed8;
-    }
-    .p-treetable
-      .p-treetable-tbody
-      > tr.p-highlight
-      .p-treetable-toggler:hover {
-      color: #1d4ed8;
-    }
+
     .p-treetable.p-treetable-hoverable-rows
       .p-treetable-tbody
       > tr:not(.p-highlight):hover {
       background: $row-hover-background;
     }
-    .p-treetable.p-treetable-hoverable-rows
-      .p-treetable-tbody
-      > tr:not(.p-highlight):hover
-      .p-treetable-toggler {
-      color: $body-text-color;
-    }
+
     .p-treetable-hoverable-rows .p-treetable-tbody > tr {
       cursor: auto;
     }
