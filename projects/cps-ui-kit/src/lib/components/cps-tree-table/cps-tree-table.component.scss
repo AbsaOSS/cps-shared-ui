@@ -1,0 +1,161 @@
+:host {
+  ::ng-deep {
+    .p-treetable {
+      position: relative;
+    }
+    .p-component,
+    .p-component * {
+      box-sizing: border-box;
+    }
+    .p-component {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+      font-size: 1rem;
+      font-weight: normal;
+    }
+    .p-treetable-scrollable-wrapper {
+      position: relative;
+    }
+    .p-treetable .p-treetable-scrollable-header,
+    .p-treetable .p-treetable-scrollable-footer {
+      background: #f8f9fa;
+    }
+    .p-treetable-scrollable-header,
+    .p-treetable-scrollable-footer {
+      overflow: hidden;
+    }
+    .p-treetable table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+    }
+    .p-treetable .p-treetable-thead > tr > th {
+      text-align: left;
+      padding: 1rem 1rem;
+      border: 1px solid #dee2e6;
+      border-width: 0 0 1px 0;
+      font-weight: 700;
+      color: #343a40;
+      background: #f8f9fa;
+      transition: box-shadow 0.2s;
+    }
+    .p-treetable-scrollable-body {
+      overflow: auto;
+      position: relative;
+    }
+    .p-treetable table {
+      border-collapse: collapse;
+      width: 100%;
+      table-layout: fixed;
+    }
+    .p-treetable .p-treetable-tbody > tr {
+      background: #ffffff;
+      color: #495057;
+      transition: box-shadow 0.2s;
+    }
+    .p-treetable-scrollable-body
+      > table
+      > .p-treetable-tbody
+      > tr:first-child
+      > td {
+      border-top: 0 none;
+    }
+    .p-treetable .p-treetable-tbody > tr > td {
+      text-align: left;
+      border: 1px solid #dee2e6;
+      border-width: 0 0 1px 0;
+      padding: 1rem 1rem;
+    }
+    .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler {
+      width: 2rem;
+      height: 2rem;
+      color: #6c757d;
+      border: 0 none;
+      background: transparent;
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+      margin-right: 0.5rem;
+    }
+    .p-treetable-toggler {
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      overflow: hidden;
+      position: relative;
+    }
+    .p-ripple {
+      overflow: hidden;
+      position: relative;
+    }
+    .p-link {
+      text-align: left;
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .p-link {
+      font-size: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+      border-radius: 6px;
+    }
+    input[type='button'],
+    input[type='submit'],
+    input[type='reset'],
+    input[type='file']::-webkit-file-upload-button,
+    button {
+      border-radius: 0;
+    }
+    .p-icon-wrapper {
+      display: inline-flex;
+    }
+    .p-icon {
+      display: inline-block;
+    }
+    .p-icon {
+      width: 1rem;
+      height: 1rem;
+    }
+    .p-treetable-scrollable-body
+      > table
+      > .p-treetable-tbody
+      > tr:first-child
+      > td {
+      border-top: 0 none;
+    }
+    .p-treetable .p-treetable-tbody > tr > td {
+      text-align: left;
+      border: 1px solid #dee2e6;
+      border-width: 0 0 1px 0;
+      padding: 1rem 1rem;
+    }
+    .p-treetable .p-treetable-tbody > tr:focus {
+      outline: 0.15rem solid #bfdbfe;
+      outline-offset: -0.15rem;
+    }
+    .p-treetable
+      .p-treetable-tbody
+      > tr
+      > td
+      .p-treetable-toggler:enabled:hover {
+      color: #343a40;
+      border-color: transparent;
+      background: #e9ecef;
+    }
+    .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: 0 0 0 0.2rem #bfdbfe;
+    }
+  }
+}
