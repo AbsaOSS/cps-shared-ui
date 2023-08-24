@@ -302,7 +302,7 @@ $tbar-normal-height: 72px;
       color: $body-text-color;
     }
     .p-treetable-hoverable-rows .p-treetable-tbody > tr {
-      cursor: default;
+      cursor: auto;
     }
     .p-treetable .p-column-resizer-helper {
       background: #3b82f6;
