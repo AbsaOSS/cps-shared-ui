@@ -123,6 +123,10 @@ $tbar-normal-height: 72px;
       overflow: auto;
     }
 
+    .cps-table-bottom-bordered > .p-datatable-wrapper {
+      border-bottom: 1px solid $table-borders-color;
+    }
+
     .p-datatable-table {
       border-spacing: 0px;
       width: 100%;
@@ -187,12 +191,17 @@ $tbar-normal-height: 72px;
       text-align: left;
       padding: 1rem 1rem;
       border: 1px solid $table-borders-color;
-      border-width: 0 0 1px 0;
+      border-width: 0 0 1px 1px;
       font-weight: normal;
       color: $header-text-color;
       background: white;
       transition: box-shadow 0.2s;
     }
+
+    .p-datatable .p-datatable-thead > tr > th:last-child {
+      border-width: 0 1px 1px 1px;
+    }
+
     .p-datatable .p-datatable-thead > tr > th:hover {
       sortalticon {
         opacity: 1;
@@ -335,32 +344,19 @@ $tbar-normal-height: 72px;
       padding: 1rem 1rem;
     }
 
+    .p-datatable .p-datatable-tbody > tr > td:first-child {
+      border-width: 0 0 1px 1px;
+    }
+    .p-datatable .p-datatable-tbody > tr > td:last-child {
+      border-width: 0 1px 1px 0;
+    }
+
     .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
       padding: 0.5rem 0.5rem;
     }
 
     .p-datatable.p-datatable-lg .p-datatable-tbody > tr > td {
       padding: 1.25rem 1.25rem;
-    }
-
-    .p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(
-        .p-datatable-tbody
-      )
-      .p-datatable-tbody
-      > tr
-      > td {
-      border-width: 0 0 1px 1px;
-    }
-
-    .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
-      border-width: 1px 0 0 1px;
-    }
-
-    .p-datatable .p-datatable-tbody > tr > td {
-      text-align: left;
-      border: 1px solid $table-borders-color;
-      border-width: 0 0 1px 0;
-      padding: 1rem 1rem;
     }
 
     td:has(p-tablecheckbox) {
