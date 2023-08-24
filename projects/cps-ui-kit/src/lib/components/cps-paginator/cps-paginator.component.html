@@ -1,4 +1,5 @@
 <p-paginator
+  #paginator
   (onPageChange)="onPageChange($event)"
   [first]="first"
   [rows]="rows"
@@ -18,7 +19,7 @@
       [options]="rowOptions"
       [hideDetails]="true"
       [(ngModel)]="rows"
-      (valueChanged)="first = 0"
+      (valueChanged)="onRowsPerPageChange($event)"
       [returnObject]="false"
       optionsClass="cps-paginator-page-options"></cps-select>
   </div>

@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PaginatorModule } from 'primeng/paginator';
+import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
@@ -18,8 +25,12 @@ export class CpsPaginatorComponent implements OnInit {
   @Input() rowsPerPageOptions: number[] = [];
   @Input() alwaysShow = true;
   @Input() backgroundColor = 'transparent';
+  @Input() goFirstOnRowsPerPageChange = false;
 
   @Output() pageChanged = new EventEmitter<any>();
+
+  @ViewChild('paginator')
+  paginator!: Paginator;
 
   rowOptions: { label: string; value: number }[] = [];
 
@@ -45,5 +56,13 @@ export class CpsPaginatorComponent implements OnInit {
     this.first = event.first;
     this.rows = event.rows;
     this.pageChanged.emit(event);
+  }
+
+  onRowsPerPageChange(event: any) {
+    if (this.goFirstOnRowsPerPageChange) {
+      this.first = 0;
+      this.paginator.first = 0;
+    }
+    this.paginator.onRppChange(event);
   }
 }
