@@ -10,7 +10,8 @@ import {
   CpsTabComponent,
   CpsButtonToggleComponent,
   BtnToggleOption,
-  CpsTableSize
+  CpsTableSize,
+  TabChangeEvent
 } from 'cps-ui-kit';
 
 @Component({
@@ -32,6 +33,8 @@ import {
   host: { class: 'composition-page' }
 })
 export class TablePageComponent implements OnInit {
+  selectedTabIndex = 0;
+
   sizesOptions = [
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
@@ -353,5 +356,9 @@ export class TablePageComponent implements OnInit {
 
   onColumnsSelected(columns: any) {
     this.selCols = columns;
+  }
+
+  changeTab({ currentTabIndex }: TabChangeEvent) {
+    this.selectedTabIndex = currentTabIndex;
   }
 }

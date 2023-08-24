@@ -1,4 +1,4 @@
-<cps-tab-group tabsBackground="bg-light">
+<cps-tab-group tabsBackground="bg-light" (afterTabChanged)="changeTab($event)">
   <cps-tab label="Table 1">
     <cps-table
       [data]="data"
@@ -26,6 +26,7 @@
   </cps-tab>
   <cps-tab label="Table 2">
     <cps-table
+      *ngIf="selectedTabIndex === 1"
       [showGlobalFilter]="true"
       [data]="dataVirtual"
       [columns]="colsVirtual"
