@@ -1,20 +1,45 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ContentChild,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   TreeTable,
   TreeTableService,
   TreeTableModule
 } from 'primeng/treetable';
+import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { CpsButtonComponent } from '../cps-button/cps-button.component';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { find, isEqual } from 'lodash-es';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
 }
 
+export type CpsTreeTableSize = 'small' | 'normal' | 'large';
+export type CpsTreeTableToolbarSize = 'small' | 'normal';
 @Component({
   selector: 'cps-tree-table',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TreeTableModule],
+  imports: [
+    CommonModule,
+    TreeTableModule,
+    CpsInputComponent,
+    CpsButtonComponent,
+    CpsMenuComponent,
+    CpsIconComponent
+  ],
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],
   providers: [
@@ -27,318 +52,157 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
     }
   ]
 })
-export class CpsTreeTableComponent {
+export class CpsTreeTableComponent implements OnInit {
+  @Input() data: any[] = [];
+  @Input() columns: { [key: string]: any }[] = [];
+  @Input() colHeaderName = 'header';
+  @Input() colFieldName = 'field';
+
+  @Input() size: CpsTreeTableSize = 'normal';
+  @Input() striped = true;
+  @Input() bordered = true;
+
+  @Input() hasToolbar = true;
+  @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
+  @Input() toolbarTitle = '';
+
+  @Input() showGlobalFilter = true;
+  @Input() globalFilterPlaceholder = 'Search';
+  @Input() globalFilterFields: string[] = [];
+
+  @Input() loading = false;
+
+  @Input() scrollable = true;
+  @Input() scrollHeight = ''; // 'flex' or value+'px'
+
+  @Input() showActionBtn = false;
+  @Input() actionBtnTitle = 'Action';
+
+  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
+
+  @Output() actionBtnClicked = new EventEmitter<void>();
+  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+
+  @ContentChild('toolbar', { static: false })
+  public toolbarTemplate!: TemplateRef<any>;
+
+  @ContentChild('header', { static: false })
+  public headerTemplate!: TemplateRef<any>;
+
+  @ContentChild('nestedHeader', { static: false })
+  public nestedHeaderTemplate!: TemplateRef<any>;
+
+  @ContentChild('body', { static: false })
+  public bodyTemplate!: TemplateRef<any>;
+
   @ViewChild('primengTreeTable', { static: true })
   primengTreeTable!: TreeTable;
 
-  files = [
-    {
-      data: {
-        name: 'Applications',
-        size: '200mb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'Angular',
-            size: '25mb',
-            type: 'Folder'
-          },
-          children: [
-            {
-              data: {
-                name: 'angular.app',
-                size: '10mb',
-                type: 'Application'
-              }
-            },
-            {
-              data: {
-                name: 'cli.app',
-                size: '10mb',
-                type: 'Application'
-              }
-            },
-            {
-              data: {
-                name: 'mobile.app',
-                size: '5mb',
-                type: 'Application'
-              }
-            }
-          ]
-        },
-        {
-          data: {
-            name: 'editor.app',
-            size: '25mb',
-            type: 'Application'
-          }
-        },
-        {
-          data: {
-            name: 'settings.app',
-            size: '50mb',
-            type: 'Application'
-          }
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Cloud',
-        size: '20mb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'backup-1.zip',
-            size: '10mb',
-            type: 'Zip'
-          }
-        },
-        {
-          data: {
-            name: 'backup-2.zip',
-            size: '10mb',
-            type: 'Zip'
-          }
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Desktop',
-        size: '150kb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'note-meeting.txt',
-            size: '50kb',
-            type: 'Text'
-          }
-        },
-        {
-          data: {
-            name: 'note-todo.txt',
-            size: '100kb',
-            type: 'Text'
-          }
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Documents',
-        size: '75kb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'Work',
-            size: '55kb',
-            type: 'Folder'
-          },
-          children: [
-            {
-              data: {
-                name: 'Expenses.doc',
-                size: '30kb',
-                type: 'Document'
-              }
-            },
-            {
-              data: {
-                name: 'Resume.doc',
-                size: '25kb',
-                type: 'Resume'
-              }
-            }
-          ]
-        },
-        {
-          data: {
-            name: 'Home',
-            size: '20kb',
-            type: 'Folder'
-          },
-          children: [
-            {
-              data: {
-                name: 'Invoices',
-                size: '20kb',
-                type: 'Text'
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Downloads',
-        size: '25mb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'Spanish',
-            size: '10mb',
-            type: 'Folder'
-          },
-          children: [
-            {
-              data: {
-                name: 'tutorial-a1.txt',
-                size: '5mb',
-                type: 'Text'
-              }
-            },
-            {
-              data: {
-                name: 'tutorial-a2.txt',
-                size: '5mb',
-                type: 'Text'
-              }
-            }
-          ]
-        },
-        {
-          data: {
-            name: 'Travel',
-            size: '15mb',
-            type: 'Text'
-          },
-          children: [
-            {
-              data: {
-                name: 'Hotel.pdf',
-                size: '10mb',
-                type: 'PDF'
-              }
-            },
-            {
-              data: {
-                name: 'Flight.pdf',
-                size: '5mb',
-                type: 'PDF'
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Main',
-        size: '50mb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'bin',
-            size: '50kb',
-            type: 'Link'
-          }
-        },
-        {
-          data: {
-            name: 'etc',
-            size: '100kb',
-            type: 'Link'
-          }
-        },
-        {
-          data: {
-            name: 'var',
-            size: '100kb',
-            type: 'Link'
-          }
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Other',
-        size: '5mb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'todo.txt',
-            size: '3mb',
-            type: 'Text'
-          }
-        },
-        {
-          data: {
-            name: 'logo.png',
-            size: '2mb',
-            type: 'Picture'
-          }
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Pictures',
-        size: '150kb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'barcelona.jpg',
-            size: '90kb',
-            type: 'Picture'
-          }
-        },
-        {
-          data: {
-            name: 'primeng.png',
-            size: '30kb',
-            type: 'Picture'
-          }
-        },
-        {
-          data: {
-            name: 'prime.jpg',
-            size: '30kb',
-            type: 'Picture'
-          }
-        }
-      ]
-    },
-    {
-      data: {
-        name: 'Videos',
-        size: '1500mb',
-        type: 'Folder'
-      },
-      children: [
-        {
-          data: {
-            name: 'primefaces.mkv',
-            size: '1000mb',
-            type: 'Video'
-          }
-        },
-        {
-          data: {
-            name: 'intro.avi',
-            size: '500mb',
-            type: 'Video'
-          }
-        }
-      ]
+  selectedColumns: { [key: string]: any }[] = [];
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private cdRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    // this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
+    // if (!this.scrollable) this.virtualScroll = false;
+
+    // if (this.paginator) {
+    //   if (this.rowsPerPageOptions.length < 1)
+    //     this.rowsPerPageOptions = [5, 10, 25, 50];
+
+    //   if (!this.rows) this.rows = this.rowsPerPageOptions[0];
+    //   else {
+    //     if (!this.rowsPerPageOptions.includes(this.rows)) {
+    //       throw new Error('rowsPerPageOptions must include rows');
+    //     }
+    //   }
+
+    //   this.rowOptions = this.rowsPerPageOptions.map((v) => ({
+    //     label: '' + v,
+    //     value: v
+    //   }));
+    // }
+
+    if (
+      this.showGlobalFilter &&
+      this.globalFilterFields?.length < 1 &&
+      this.data?.length > 0
+    ) {
+      this.globalFilterFields = Object.keys(this.data[0].data);
     }
-  ];
+
+    this.selectedColumns = this.columns;
+  }
+
+  get styleClass() {
+    const classesList = [];
+    switch (this.size) {
+      case 'small':
+        classesList.push('p-treetable-sm');
+        break;
+      case 'large':
+        classesList.push('p-treetable-lg');
+        break;
+    }
+    switch (this.toolbarSize) {
+      case 'small':
+        classesList.push('cps-tbar-small');
+        break;
+      case 'normal':
+        classesList.push('cps-tbar-normal');
+        break;
+    }
+    if (this.striped) {
+      classesList.push('p-treetable-striped');
+    }
+    if (this.bordered) {
+      classesList.push('p-treetable-gridlines');
+    }
+
+    if (this.scrollHeight && !this.loading && this.data.length > 0) {
+      classesList.push('cps-table-bottom-bordered');
+    }
+
+    return classesList.join(' ');
+  }
+
+  onFilterGlobal(value: string) {
+    this.primengTreeTable.filterGlobal(value, 'contains');
+    setTimeout(() => {
+      this.cdRef.markForCheck();
+    }, 300);
+  }
+
+  onClickActionBtn() {
+    this.actionBtnClicked.emit();
+  }
+
+  toggleAllColumns() {
+    this.selectedColumns =
+      this.selectedColumns.length < this.columns.length ? this.columns : [];
+    this.columnsSelected.emit(this.selectedColumns);
+  }
+
+  isColumnSelected(col: any) {
+    return !!find(this.selectedColumns, (item) => isEqual(item, col));
+  }
+
+  onSelectColumn(col: any) {
+    let res = [] as any;
+    if (this.isColumnSelected(col)) {
+      res = this.selectedColumns.filter((v: any) => !isEqual(v, col));
+    } else {
+      this.columns.forEach((o) => {
+        if (
+          this.selectedColumns.some((v: any) => isEqual(v, o)) ||
+          isEqual(col, o)
+        ) {
+          res.push(o);
+        }
+      });
+    }
+    this.selectedColumns = res;
+    this.columnsSelected.emit(this.selectedColumns);
+  }
 }
