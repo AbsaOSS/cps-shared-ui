@@ -17,6 +17,7 @@ export * from './lib/components/cps-table/directives/cps-table-column-sortable.d
 export * from './lib/components/cps-table/directives/cps-table-column-filter.directive';
 export * from './lib/components/cps-table/directives/cps-table-header-selectable.directive';
 export * from './lib/components/cps-tree-table/cps-tree-table.component';
+export * from './lib/components/cps-tree-table/directives/cps-treetable-row-toggler.directive';
 export * from './lib/components/cps-tag/cps-tag.component';
 export * from './lib/components/cps-chip/cps-chip.component';
 export * from './lib/components/cps-menu/cps-menu.component';

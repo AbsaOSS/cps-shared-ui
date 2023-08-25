@@ -77,10 +77,19 @@
     </ng-container>
   </ng-template>
 
-  <ng-template pTemplate="header" let-columns>
+  <ng-template pTemplate="header" *ngIf="nestedHeaderTemplate" let-columns>
+    <ng-container
+      *ngTemplateOutlet="
+      nestedHeaderTemplate;
+        context: {
+          $implicit: columns,
+        }
+      "></ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
-      <!-- <th style="width: 3rem" *ngIf="rowExpansionTemplate"></th>
-      <th style="width: 3rem" *ngIf="reorderableRows"></th>
+      <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th>
       <th style="width: 4rem" *ngIf="selectable">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th> -->
@@ -112,14 +121,46 @@
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+  <ng-template
+    pTemplate="body"
+    let-rowData="rowData"
+    let-columns="columns"
+    let-rowNode
+    let-rowIndex="rowIndex">
     <tr [ttRow]="rowNode">
-      <td>
-        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-        {{ rowData.name }}
+      <!-- <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
+        <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td>
-      <td>{{ rowData.size }}</td>
-      <td>{{ rowData.type }}</td>
+      <td *ngIf="selectable">
+        <p-tableCheckbox [value]="item"></p-tableCheckbox>
+      </td> -->
+      <ng-container *ngIf="bodyTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            bodyTemplate;
+            context: {
+              $implicit: rowNode,
+              rowIndex: rowIndex,
+              columns: columns,
+              rowData: rowData
+            }
+          ">
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="!bodyTemplate">
+        <ng-container *ngIf="columns.length > 0">
+          <td *ngFor="let col of columns; let i = index">
+            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0">
+            </p-treeTableToggler>
+            {{ rowData[col[colFieldName]] }}
+          </td>
+        </ng-container>
+      </ng-container>
+      <!-- <td *ngIf="showRowMenu" class="cps-table-row-menu-cell">
+        <table-row-menu
+          (editRowBtnClicked)="onEditRowClicked(item)"
+          (removeRowBtnClicked)="onRemoveRowClicked(item)"></table-row-menu>
+      </td> -->
     </tr>
   </ng-template>
 </p-treeTable>

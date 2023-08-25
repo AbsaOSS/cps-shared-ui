@@ -1,17 +1,25 @@
 <cps-tree-table [data]="data" toolbarTitle="Tree table" [columns]="cols">
+  <!-- <ng-template #nestedHeader>
+    <tr>
+      <th colspan="2">AB</th>
+      <th colspan="1">C</th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th>Size</th>
+      <th>Type</th>
+    </tr>
+  </ng-template> -->
   <ng-template #header>
     <th>Name</th>
     <th>Size</th>
     <th>Type</th>
   </ng-template>
-  <!-- <ng-template #body let-rowNode let-rowData="rowData">
-    <tr [ttRow]="rowNode">
-      <td>
-        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-        {{ rowData.name }}
-      </td>
-      <td>{{ rowData.size }}</td>
-      <td>{{ rowData.type }}</td>
-    </tr>
-  </ng-template> -->
+  <ng-template #body let-rowNode let-rowData="rowData">
+    <td [cpsRowToggler]="rowNode">
+      {{ rowData.name }}
+    </td>
+    <td>{{ rowData.size }}</td>
+    <td>{{ rowData.type }}</td>
+  </ng-template>
 </cps-tree-table>

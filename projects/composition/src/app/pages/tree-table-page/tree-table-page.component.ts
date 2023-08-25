@@ -1,11 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsTreeTableComponent } from 'cps-ui-kit';
+import {
+  CpsTreeTableComponent,
+  CpsTreetableRowTogglerDirective
+} from 'cps-ui-kit';
 
 @Component({
   selector: 'app-tree-table-page',
   standalone: true,
-  imports: [CommonModule, CpsTreeTableComponent],
+  imports: [
+    CommonModule,
+    CpsTreeTableComponent,
+    CpsTreetableRowTogglerDirective
+  ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
   host: { class: 'composition-page' }
