@@ -310,13 +310,40 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
 
   onRowsPerPageChanged() {
     if (this.resetPageOnRowsChange) {
-      this.first = 0;
-      this.primengTable.first = this.first;
+      this.primengTable.first = 0;
+    }
+    this.changePage(this.getPage());
+  }
+
+  getPageCount() {
+    return Math.ceil(this.primengTable.totalRecords / this.rows);
+  }
+
+  getPage(): number {
+    return Math.floor(this.primengTable.first / this.rows);
+  }
+
+  changePage(p: number) {
+    const pc = Math.ceil(this.getPageCount());
+
+    if (p >= 0 && p < pc) {
+      this.first = this.rows * p;
+      this.primengTable.onPageChange({ first: this.first, rows: this.rows });
     }
   }
 
   onPageChange(event: any) {
-    this.pageChanged.emit(event);
+    this.first = event.first;
+    this.rows = event.rows;
+
+    const state = {
+      page: this.getPage(),
+      first: this.first,
+      rows: this.rows,
+      pageCount: Math.ceil(this.getPageCount())
+    };
+
+    this.pageChanged.emit(state);
   }
 
   toggleAllColumns() {
