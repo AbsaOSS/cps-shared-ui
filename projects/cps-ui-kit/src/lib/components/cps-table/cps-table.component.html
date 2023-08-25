@@ -48,6 +48,7 @@
             [placeholder]="globalFilterPlaceholder"
             (valueChanged)="onFilterGlobal($event)"
             [clearable]="true"
+            [disabled]="loading"
             [appearance]="toolbarSize === 'small' ? 'underlined' : 'outlined'"
             [hideDetails]="true">
           </cps-input>

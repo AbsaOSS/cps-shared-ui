@@ -235,14 +235,17 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
         classesList.push('p-datatable-lg');
         break;
     }
-    switch (this.toolbarSize) {
-      case 'small':
-        classesList.push('cps-tbar-small');
-        break;
-      case 'normal':
-        classesList.push('cps-tbar-normal');
-        break;
+    if (this.hasToolbar) {
+      switch (this.toolbarSize) {
+        case 'small':
+          classesList.push('cps-tbar-small');
+          break;
+        case 'normal':
+          classesList.push('cps-tbar-normal');
+          break;
+      }
     }
+
     if (this.striped) {
       classesList.push('p-datatable-striped');
     }

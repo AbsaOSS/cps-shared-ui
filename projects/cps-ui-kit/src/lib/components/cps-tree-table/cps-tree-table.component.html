@@ -1,6 +1,6 @@
 <p-treeTable
   #primengTreeTable
-  [tableStyle]="{ 'min-width': '50rem' }"
+  [ngClass]="{ 'cps-treetable-loading': loading }"
   [value]="data"
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"
@@ -30,6 +30,7 @@
             [placeholder]="globalFilterPlaceholder"
             (valueChanged)="onFilterGlobal($event)"
             [clearable]="true"
+            [disabled]="loading"
             [appearance]="toolbarSize === 'small' ? 'underlined' : 'outlined'"
             [hideDetails]="true">
           </cps-input>
@@ -180,6 +181,9 @@
         {{ emptyMessage }}
       </td>
     </tr>
+  </ng-template>
+  <ng-template pTemplate="loadingicon">
+    <cps-loader [fullScreen]="false" opacity="0"></cps-loader>
   </ng-template>
   <ng-template pTemplate="paginatorleft">
     <div class="cps-table-paginator-itms-per-page">

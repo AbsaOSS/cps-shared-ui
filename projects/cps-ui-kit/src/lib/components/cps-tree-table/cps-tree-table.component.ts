@@ -28,6 +28,7 @@ import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 import { convertSize } from '../../utils/internal/size-utils';
+import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -48,6 +49,7 @@ export type CpsTreeTableToolbarSize = 'small' | 'normal';
     CpsMenuComponent,
     CpsIconComponent,
     CpsSelectComponent,
+    CpsLoaderComponent,
     AngleDoubleLeftIcon,
     AngleLeftIcon,
     AngleRightIcon,
@@ -175,13 +177,15 @@ export class CpsTreeTableComponent implements OnInit {
         classesList.push('p-treetable-lg');
         break;
     }
-    switch (this.toolbarSize) {
-      case 'small':
-        classesList.push('cps-tbar-small');
-        break;
-      case 'normal':
-        classesList.push('cps-tbar-normal');
-        break;
+    if (this.hasToolbar) {
+      switch (this.toolbarSize) {
+        case 'small':
+          classesList.push('cps-tbar-small');
+          break;
+        case 'normal':
+          classesList.push('cps-tbar-normal');
+          break;
+      }
     }
     if (this.striped) {
       classesList.push('p-treetable-striped');
