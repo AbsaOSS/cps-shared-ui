@@ -31,6 +31,7 @@
         <cps-icon
           *ngIf="prefixIcon"
           [icon]="prefixIcon"
+          [style.color]="disabled ? '#9a9595' : null"
           [size]="prefixIconSize"
           class="prefix-icon">
         </cps-icon>
@@ -105,7 +106,7 @@
             <cps-icon
               icon="chevron-down"
               size="small"
-              color="text-dark"></cps-icon>
+              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
           </span>
         </span>
       </div>
