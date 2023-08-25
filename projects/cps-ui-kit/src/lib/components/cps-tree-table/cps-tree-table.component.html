@@ -1,5 +1,6 @@
 <p-treeTable
   #primengTreeTable
+  [tableStyle]="{ 'min-width': '50rem' }"
   [value]="data"
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"
@@ -8,7 +9,14 @@
   [rowHover]="rowHover"
   [styleClass]="styleClass"
   [globalFilterFields]="globalFilterFields"
-  [tableStyle]="{ 'min-width': '50rem' }">
+  [paginator]="paginator"
+  [showCurrentPageReport]="true"
+  [alwaysShowPaginator]="alwaysShowPaginator"
+  [rows]="rows"
+  [first]="first"
+  [resetPageOnSort]="resetPageOnSort"
+  currentPageReportTemplate="{first} - {last} of {totalRecords}"
+  (onPage)="onPageChange($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
@@ -162,5 +170,33 @@
           (removeRowBtnClicked)="onRemoveRowClicked(item)"></table-row-menu>
       </td> -->
     </tr>
+  </ng-template>
+  <ng-template pTemplate="paginatorleft">
+    <div class="cps-table-paginator-itms-per-page">
+      <span class="cps-table-paginator-items-per-page-title"
+        >Rows per page:
+      </span>
+      <cps-select
+        [options]="rowOptions"
+        [hideDetails]="true"
+        [(ngModel)]="rows"
+        (valueChanged)="onRowsPerPageChanged()"
+        [returnObject]="false"
+        optionsClass="cps-paginator-page-options">
+      </cps-select>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="paginatorfirstpagelinkicon">
+    <AngleDoubleLeftIcon />
+  </ng-template>
+  <ng-template pTemplate="paginatorpreviouspagelinkicon">
+    <AngleLeftIcon />
+  </ng-template>
+  <ng-template pTemplate="paginatornextpagelinkicon">
+    <AngleRightIcon />
+  </ng-template>
+  <ng-template pTemplate="paginatorlastpagelinkicon">
+    <AngleDoubleRightIcon />
   </ng-template>
 </p-treeTable>

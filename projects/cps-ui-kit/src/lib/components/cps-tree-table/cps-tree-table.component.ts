@@ -21,6 +21,12 @@ import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { find, isEqual } from 'lodash-es';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsSelectComponent } from '../cps-select/cps-select.component';
+import { FormsModule } from '@angular/forms';
+import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
+import { AngleLeftIcon } from 'primeng/icons/angleleft';
+import { AngleRightIcon } from 'primeng/icons/angleright';
+import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -31,14 +37,20 @@ export type CpsTreeTableToolbarSize = 'small' | 'normal';
 @Component({
   selector: 'cps-tree-table',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    FormsModule,
     CommonModule,
     TreeTableModule,
     CpsInputComponent,
     CpsButtonComponent,
     CpsMenuComponent,
-    CpsIconComponent
+    CpsIconComponent,
+    CpsSelectComponent,
+    AngleDoubleLeftIcon,
+    AngleLeftIcon,
+    AngleRightIcon,
+    AngleDoubleRightIcon
   ],
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],
@@ -73,6 +85,14 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() globalFilterPlaceholder = 'Search';
   @Input() globalFilterFields: string[] = [];
 
+  @Input() paginator = false;
+  @Input() alwaysShowPaginator = true;
+  @Input() rowsPerPageOptions: number[] = [];
+  @Input() first = 0;
+  @Input() rows = 0;
+  @Input() resetPageOnRowsChange = false;
+  @Input() resetPageOnSort = true;
+
   @Input() loading = false;
 
   @Input() scrollable = true;
@@ -84,7 +104,8 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
 
   @Output() actionBtnClicked = new EventEmitter<void>();
-  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>(); // TODO
+  @Output() pageChanged = new EventEmitter<any>();
 
   @ContentChild('toolbar', { static: false })
   public toolbarTemplate!: TemplateRef<any>;
@@ -103,6 +124,8 @@ export class CpsTreeTableComponent implements OnInit {
 
   selectedColumns: { [key: string]: any }[] = [];
 
+  rowOptions: { label: string; value: number }[] = [];
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -110,22 +133,22 @@ export class CpsTreeTableComponent implements OnInit {
     // this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     // if (!this.scrollable) this.virtualScroll = false;
 
-    // if (this.paginator) {
-    //   if (this.rowsPerPageOptions.length < 1)
-    //     this.rowsPerPageOptions = [5, 10, 25, 50];
+    if (this.paginator) {
+      if (this.rowsPerPageOptions.length < 1)
+        this.rowsPerPageOptions = [5, 10, 25, 50];
 
-    //   if (!this.rows) this.rows = this.rowsPerPageOptions[0];
-    //   else {
-    //     if (!this.rowsPerPageOptions.includes(this.rows)) {
-    //       throw new Error('rowsPerPageOptions must include rows');
-    //     }
-    //   }
+      if (!this.rows) this.rows = this.rowsPerPageOptions[0];
+      else {
+        if (!this.rowsPerPageOptions.includes(this.rows)) {
+          throw new Error('rowsPerPageOptions must include rows');
+        }
+      }
 
-    //   this.rowOptions = this.rowsPerPageOptions.map((v) => ({
-    //     label: '' + v,
-    //     value: v
-    //   }));
-    // }
+      this.rowOptions = this.rowsPerPageOptions.map((v) => ({
+        label: '' + v,
+        value: v
+      }));
+    }
 
     if (
       this.showGlobalFilter &&
@@ -189,6 +212,21 @@ export class CpsTreeTableComponent implements OnInit {
 
   isColumnSelected(col: any) {
     return !!find(this.selectedColumns, (item) => isEqual(item, col));
+  }
+
+  onRowsPerPageChanged() {
+    if (this.resetPageOnRowsChange) {
+      this.first = 0;
+    } else this.first = this.primengTreeTable.first;
+
+    this.primengTreeTable.onPageChange({
+      first: this.first,
+      rows: this.rows
+    });
+  }
+
+  onPageChange(event: any) {
+    this.pageChanged.emit(event);
   }
 
   onSelectColumn(col: any) {

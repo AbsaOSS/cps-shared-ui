@@ -102,7 +102,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() rowsPerPageOptions: number[] = [];
   @Input() first = 0;
   @Input() rows = 0;
-  @Input() goFirstOnRowsPerPageChange = false;
+  @Input() resetPageOnRowsChange = false;
   @Input() resetPageOnSort = true;
 
   @Input() emptyBodyHeight = '';
@@ -301,7 +301,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   }
 
   onRowsPerPageChanged() {
-    if (this.goFirstOnRowsPerPageChange) {
+    if (this.resetPageOnRowsChange) {
       this.first = 0;
       this.primengTable.first = this.first;
     }

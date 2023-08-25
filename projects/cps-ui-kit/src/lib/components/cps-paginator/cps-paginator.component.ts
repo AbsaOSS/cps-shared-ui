@@ -25,7 +25,7 @@ export class CpsPaginatorComponent implements OnInit {
   @Input() rowsPerPageOptions: number[] = [];
   @Input() alwaysShow = true;
   @Input() backgroundColor = 'transparent';
-  @Input() goFirstOnRowsPerPageChange = false;
+  @Input() resetPageOnRowsChange = false;
 
   @Output() pageChanged = new EventEmitter<any>();
 
@@ -59,7 +59,7 @@ export class CpsPaginatorComponent implements OnInit {
   }
 
   onRowsPerPageChange(event: any) {
-    if (this.goFirstOnRowsPerPageChange) {
+    if (this.resetPageOnRowsChange) {
       this.first = 0;
       this.paginator.first = 0;
     }
