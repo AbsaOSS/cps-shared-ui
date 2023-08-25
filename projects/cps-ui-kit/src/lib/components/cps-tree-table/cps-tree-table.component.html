@@ -171,6 +171,16 @@
       </td> -->
     </tr>
   </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td
+        colspan="100"
+        class="cps-treetable-empty-message-td"
+        [ngStyle]="{ height: emptyBodyHeight }">
+        {{ emptyMessage }}
+      </td>
+    </tr>
+  </ng-template>
   <ng-template pTemplate="paginatorleft">
     <div class="cps-table-paginator-itms-per-page">
       <span class="cps-table-paginator-items-per-page-title"

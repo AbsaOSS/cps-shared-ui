@@ -27,6 +27,7 @@ import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
 import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
+import { convertSize } from '../../utils/internal/size-utils';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -37,7 +38,7 @@ export type CpsTreeTableToolbarSize = 'small' | 'normal';
 @Component({
   selector: 'cps-tree-table',
   standalone: true,
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     CommonModule,
@@ -93,6 +94,9 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() resetPageOnRowsChange = false;
   @Input() resetPageOnSort = true;
 
+  @Input() emptyMessage = 'No data';
+  @Input() emptyBodyHeight = '';
+
   @Input() loading = false;
 
   @Input() scrollable = true;
@@ -130,7 +134,7 @@ export class CpsTreeTableComponent implements OnInit {
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    // this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
+    this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     // if (!this.scrollable) this.virtualScroll = false;
 
     if (this.paginator) {

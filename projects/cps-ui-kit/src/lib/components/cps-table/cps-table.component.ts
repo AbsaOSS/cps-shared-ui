@@ -79,19 +79,20 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() bordered = true;
   @Input() size: CpsTableSize = 'normal';
   @Input() selectable = false;
-  @Input() emptyMessage = 'No data';
-  @Input() hasToolbar = true;
-  @Input() toolbarSize: CpsTableToolbarSize = 'normal';
-  @Input() toolbarTitle = '';
-  @Input() sortMode: CpsTableSortMode = 'single';
-  @Input() customSort = false;
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
   @Input() showRowMenu = false;
   @Input() reorderableRows = false;
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
-  @Input() sortable = false; // makes all sortable if columns are provided
   @Input() loading = false;
+
+  @Input() sortable = false; // makes all sortable if columns are provided
+  @Input() sortMode: CpsTableSortMode = 'single';
+  @Input() customSort = false;
+
+  @Input() hasToolbar = true;
+  @Input() toolbarSize: CpsTableToolbarSize = 'normal';
+  @Input() toolbarTitle = '';
 
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
@@ -105,6 +106,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() resetPageOnRowsChange = false;
   @Input() resetPageOnSort = true;
 
+  @Input() emptyMessage = 'No data';
   @Input() emptyBodyHeight = '';
 
   @Input() lazy = false;

@@ -309,6 +309,12 @@ $tbar-normal-height: 72px;
       opacity: 0.4;
     }
 
+    .cps-treetable-empty-message-td {
+      text-align: center !important;
+      font-weight: 600;
+      background: white;
+    }
+
     .p-treetable.p-treetable-gridlines .p-treetable-header {
       border-width: 1px 1px 0 1px;
     }
