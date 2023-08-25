@@ -102,8 +102,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() rowsPerPageOptions: number[] = [];
   @Input() first = 0;
   @Input() rows = 0;
-  @Input() totalRecords = 0;
   @Input() goFirstOnRowsPerPageChange = false;
+  @Input() resetPageOnSort = true;
 
   @Input() emptyBodyHeight = '';
 
