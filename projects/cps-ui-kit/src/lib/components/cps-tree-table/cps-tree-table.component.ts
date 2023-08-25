@@ -29,6 +29,7 @@ import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
+import { SortEvent } from 'primeng/api';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -36,6 +37,7 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
 
 export type CpsTreeTableSize = 'small' | 'normal' | 'large';
 export type CpsTreeTableToolbarSize = 'small' | 'normal';
+export type CpsTreeTableSortMode = 'single' | 'multiple';
 @Component({
   selector: 'cps-tree-table',
   standalone: true,
@@ -76,7 +78,12 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() size: CpsTreeTableSize = 'normal';
   @Input() striped = true;
   @Input() bordered = true;
+  @Input() tableStyle = undefined;
+  @Input() tableStyleClass = '';
+
   @Input() sortable = false; // makes all sortable if columns are provided
+  @Input() sortMode: CpsTreeTableSortMode = 'single';
+  @Input() customSort = false;
 
   @Input() hasToolbar = true;
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
@@ -99,6 +106,9 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() emptyMessage = 'No data';
   @Input() emptyBodyHeight = '';
 
+  @Input() lazy = false;
+  @Input() lazyLoadOnInit = true;
+
   @Input() loading = false;
 
   @Input() scrollable = true;
@@ -112,6 +122,18 @@ export class CpsTreeTableComponent implements OnInit {
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>(); // TODO
   @Output() pageChanged = new EventEmitter<any>();
+  @Output() lazyLoaded = new EventEmitter<any>();
+  @Output() nodeExpanded = new EventEmitter<any>();
+  @Output() nodeCollapsed = new EventEmitter<any>();
+  @Output() nodeSelected = new EventEmitter<any>();
+  @Output() nodeUnselected = new EventEmitter<any>();
+
+  /**
+   * A function to implement custom sorting. customSort must be true.
+   * @param {any} any - sort meta.
+   * @group Emits
+   */
+  @Output() customSortFunction: EventEmitter<any> = new EventEmitter<any>();
 
   @ContentChild('toolbar', { static: false })
   public toolbarTemplate!: TemplateRef<any>;
@@ -201,6 +223,10 @@ export class CpsTreeTableComponent implements OnInit {
     return classesList.join(' ');
   }
 
+  onSortFunction(event: SortEvent) {
+    this.customSortFunction.emit(event);
+  }
+
   onFilterGlobal(value: string) {
     this.primengTreeTable.filterGlobal(value, 'contains');
     setTimeout(() => {
@@ -235,6 +261,26 @@ export class CpsTreeTableComponent implements OnInit {
 
   onPageChange(event: any) {
     this.pageChanged.emit(event);
+  }
+
+  onLazyLoaded(event: any) {
+    this.lazyLoaded.emit(event);
+  }
+
+  onNodeExpanded(event: any) {
+    this.nodeExpanded.emit(event);
+  }
+
+  onNodeCollapsed(event: any) {
+    this.nodeCollapsed.emit(event);
+  }
+
+  onNodeSelected(event: any) {
+    this.nodeSelected.emit(event);
+  }
+
+  onNodeUnselected(event: any) {
+    this.nodeUnselected.emit(event);
   }
 
   onSelectColumn(col: any) {

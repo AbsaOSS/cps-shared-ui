@@ -7,7 +7,13 @@
   [columns]="selectedColumns"
   [loading]="loading"
   [rowHover]="rowHover"
+  [lazy]="lazy"
+  [lazyLoadOnInit]="lazyLoadOnInit"
   [styleClass]="styleClass"
+  [tableStyle]="tableStyle"
+  [tableStyleClass]="tableStyleClass"
+  [customSort]="customSort"
+  [sortMode]="sortMode"
   [globalFilterFields]="globalFilterFields"
   [paginator]="paginator"
   [showCurrentPageReport]="true"
@@ -16,7 +22,13 @@
   [first]="first"
   [resetPageOnSort]="resetPageOnSort"
   currentPageReportTemplate="{first} - {last} of {totalRecords}"
-  (onPage)="onPageChange($event)">
+  (onPage)="onPageChange($event)"
+  (onLazyLoad)="onLazyLoaded($event)"
+  (sortFunction)="onSortFunction($event)"
+  (onNodeExpand)="onNodeExpanded($event)"
+  (onNodeCollapse)="onNodeCollapsed($event)"
+  (onNodeSelect)="onNodeSelected($event)"
+  (onNodeUnselect)="onNodeUnselected($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>

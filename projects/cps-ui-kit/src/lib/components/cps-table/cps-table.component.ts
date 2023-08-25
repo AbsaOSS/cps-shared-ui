@@ -85,6 +85,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() reorderableRows = false;
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
   @Input() loading = false;
+  @Input() tableStyle = undefined;
+  @Input() tableStyleClass = '';
 
   @Input() sortable = false; // makes all sortable if columns are provided
   @Input() sortMode: CpsTableSortMode = 'single';
@@ -132,6 +134,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Output() sorted = new EventEmitter<any>();
   @Output() rowsReordered = new EventEmitter<any>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+  @Output() lazyLoaded = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -363,6 +366,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
 
   onRowReorder(event: any) {
     this.rowsReordered.emit(event);
+  }
+
+  onLazyLoaded(event: any) {
+    this.lazyLoaded.emit(event);
   }
 
   exportTable(format: CpsTableExportFormat) {
