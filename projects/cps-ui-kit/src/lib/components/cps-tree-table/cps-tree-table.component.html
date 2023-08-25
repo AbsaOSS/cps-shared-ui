@@ -77,13 +77,41 @@
     </ng-container>
   </ng-template>
 
-  <ng-template pTemplate="header">
+  <ng-template pTemplate="header" let-columns>
     <tr>
-      <th>Name</th>
-      <th>Size</th>
-      <th>Type</th>
+      <!-- <th style="width: 3rem" *ngIf="rowExpansionTemplate"></th>
+      <th style="width: 3rem" *ngIf="reorderableRows"></th>
+      <th style="width: 4rem" *ngIf="selectable">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+      </th> -->
+      <ng-container *ngIf="headerTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            headerTemplate;
+            context: {
+              $implicit: columns,
+            }
+          "></ng-container>
+      </ng-container>
+      <ng-container *ngIf="!headerTemplate && columns.length > 0">
+        <!-- <ng-container *ngIf="sortable">
+          <th *ngFor="let col of columns" [cpsColSortable]="col[colFieldName]">
+            {{ col[colHeaderName] }}
+          </th>
+        </ng-container> -->
+        <ng-container *ngIf="!sortable">
+          <th *ngFor="let col of columns">
+            {{ col[colHeaderName] }}
+          </th>
+        </ng-container>
+      </ng-container>
+      <!-- <th
+        style="width: 2rem"
+        class="cps-table-row-menu-cell"
+        *ngIf="showRowMenu"></th> -->
     </tr>
   </ng-template>
+
   <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
     <tr [ttRow]="rowNode">
       <td>

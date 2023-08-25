@@ -1,12 +1,10 @@
 <cps-tree-table [data]="data" toolbarTitle="Tree table" [columns]="cols">
-  <!-- <ng-template #header>
-    <tr>
-      <th>Name</th>
-      <th>Size</th>
-      <th>Type</th>
-    </tr>
+  <ng-template #header>
+    <th>Name</th>
+    <th>Size</th>
+    <th>Type</th>
   </ng-template>
-  <ng-template #body let-rowNode let-rowData="rowData">
+  <!-- <ng-template #body let-rowNode let-rowData="rowData">
     <tr [ttRow]="rowNode">
       <td>
         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>

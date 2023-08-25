@@ -61,6 +61,7 @@ export class CpsTreeTableComponent implements OnInit {
   @Input() size: CpsTreeTableSize = 'normal';
   @Input() striped = true;
   @Input() bordered = true;
+  @Input() sortable = false; // makes all sortable if columns are provided
 
   @Input() hasToolbar = true;
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
