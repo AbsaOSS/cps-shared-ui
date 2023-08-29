@@ -3,7 +3,7 @@ import { Table } from 'primeng/table';
 
 @Directive({
   standalone: true,
-  selector: '[withUnsort]'
+  selector: '[tWithUnsort]'
 })
 export class TableUnsortDirective {
   defaultSortOrderInitialized = false;

@@ -31,6 +31,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { SortEvent } from 'primeng/api';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
+import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -57,7 +58,8 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     AngleLeftIcon,
     AngleRightIcon,
     AngleDoubleRightIcon,
-    CpsTreeTableColumnSortableDirective
+    CpsTreeTableColumnSortableDirective,
+    TreeTableUnsortDirective
   ],
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],
