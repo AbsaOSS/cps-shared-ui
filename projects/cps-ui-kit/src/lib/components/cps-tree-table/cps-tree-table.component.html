@@ -24,6 +24,7 @@
   [resetPageOnSort]="resetPageOnSort"
   currentPageReportTemplate="{first} - {last} of {totalRecords}"
   (onPage)="onPageChange($event)"
+  (onSort)="onSort($event)"
   (onLazyLoad)="onLazyLoaded($event)"
   (sortFunction)="onSortFunction($event)"
   (onNodeExpand)="onNodeExpanded($event)"

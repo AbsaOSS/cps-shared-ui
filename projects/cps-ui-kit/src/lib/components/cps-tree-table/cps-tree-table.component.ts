@@ -131,6 +131,7 @@ export class CpsTreeTableComponent implements OnInit {
   @Output() nodeCollapsed = new EventEmitter<any>();
   @Output() nodeSelected = new EventEmitter<any>();
   @Output() nodeUnselected = new EventEmitter<any>();
+  @Output() sorted = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -311,6 +312,10 @@ export class CpsTreeTableComponent implements OnInit {
 
   onNodeUnselected(event: any) {
     this.nodeUnselected.emit(event);
+  }
+
+  onSort(event: any) {
+    this.sorted.emit(event);
   }
 
   onSelectColumn(col: any) {
