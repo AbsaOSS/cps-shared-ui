@@ -58,11 +58,12 @@ export class CpsPaginatorComponent implements OnInit {
     this.pageChanged.emit(event);
   }
 
-  onRowsPerPageChange(event: any) {
+  onRowsPerPageChange(rows: number) {
     if (this.resetPageOnRowsChange) {
       this.first = 0;
       this.paginator.first = 0;
     }
-    this.paginator.onRppChange(event);
+    this.paginator.rows = rows;
+    this.paginator.onRppChange(rows);
   }
 }
