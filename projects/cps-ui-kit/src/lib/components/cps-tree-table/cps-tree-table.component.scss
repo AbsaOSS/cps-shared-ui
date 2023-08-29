@@ -16,6 +16,8 @@ $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
 $paginator-elem-hover-background: #f8f4f5;
 $paginator-elem-active-background: #f1eaec;
+$sorticon-hover-color: var(--cps-color-text-dark);
+$badge-background-color: #f1eaec;
 
 $tbar-small-height: 43px;
 $tbar-normal-height: 72px;
@@ -398,36 +400,95 @@ $tbar-normal-height: 72px;
       color: #343a40;
       background: white;
     }
-    .p-treetable .p-sortable-column {
-      outline-color: #bfdbfe;
+
+    .p-treetable .p-treetable-thead > tr > th:hover {
+      sortalticon {
+        opacity: 1;
+      }
     }
-    .p-treetable .p-sortable-column .p-sortable-column-icon {
-      color: #343a40;
-      margin-left: 0.5rem;
-    }
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
-      border-radius: 50%;
-      height: 1.143rem;
-      min-width: 1.143rem;
-      line-height: 1.143rem;
-      color: #1d4ed8;
-      background: #eff6ff;
-      margin-left: 0.5rem;
-    }
+
     .p-treetable .p-sortable-column:not(.p-highlight):hover {
-      background: $row-hover-background;
+      background: white;
+      color: $header-text-color;
     }
+
+    .p-treetable .p-sortable-column.p-highlight:hover {
+      background: white;
+      color: $header-text-color;
+    }
+
     .p-treetable
       .p-sortable-column:not(.p-highlight):hover
       .p-sortable-column-icon {
-      color: #343a40;
+      color: $sorticon-hover-color;
     }
-    .p-treetable .p-sortable-column.p-highlight {
-      background: #eff6ff;
-      color: #1d4ed8;
+
+    .p-treetable .p-sortable-column .p-sortable-column-icon {
+      color: $header-text-color;
+      margin-left: 0.5rem;
     }
+
     .p-treetable .p-sortable-column.p-highlight .p-sortable-column-icon {
-      color: #1d4ed8;
+      color: $color-calm;
+    }
+
+    .p-icon-wrapper {
+      display: inline-flex;
+    }
+
+    .p-icon {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .p-sortable-column-icon {
+      width: 13px;
+      height: 13px;
+    }
+
+    .p-treetable .p-sortable-column .p-sortable-column-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .p-treetable .p-sortable-column .p-column-title,
+    .p-treetable .p-sortable-column .p-sortable-column-icon,
+    .p-treetable .p-sortable-column .p-sortable-column-badge {
+      vertical-align: unset;
+    }
+
+    .p-treetable .p-sortable-column .p-sortable-column-badge {
+      border-radius: 50%;
+      height: 1.125rem;
+      min-width: 1.125rem;
+      line-height: 1.125rem;
+      color: $color-calm;
+      background: $badge-background-color;
+      margin-left: 0.5rem;
+    }
+
+    .p-link {
+      text-align: left;
+      background-color: transparent;
+      margin: 0;
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .p-treetable .p-sortable-column {
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .p-treetable .p-sortable-column:focus {
+      box-shadow: none;
+      outline: 0 none;
     }
 
     .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler.p-icon {
@@ -508,6 +569,27 @@ $tbar-normal-height: 72px;
       .p-treetable.cps-tbar-small {
         min-height: 243px;
       }
+    }
+
+    //TODO
+    .p-sortable-column.cps-treetable-col-filter-menu-open {
+      cursor: default;
+    }
+
+    //TODO
+    .cps-treetable-col-filter-menu-open {
+      .cps-treetable-col-filter-menu-button {
+        color: $body-text-color;
+      }
+    }
+
+    sortalticon {
+      opacity: 0;
+    }
+
+    p-treetablesorticon {
+      display: inline-flex;
+      align-items: baseline;
     }
 
     .p-treetable.p-treetable-gridlines .p-treetable-footer {

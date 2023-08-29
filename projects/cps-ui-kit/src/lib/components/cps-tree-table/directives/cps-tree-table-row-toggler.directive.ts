@@ -11,10 +11,10 @@ import { TreeTableToggler } from 'primeng/treetable';
 
 @Directive({
   standalone: true,
-  selector: '[cpsRowToggler]'
+  selector: '[cpsTTRowToggler]'
 })
 export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
-  @Input('cpsRowToggler') rowNode: any;
+  @Input('cpsTTRowToggler') rowNode: any;
   togglerCompRef: ComponentRef<TreeTableToggler>;
 
   constructor(

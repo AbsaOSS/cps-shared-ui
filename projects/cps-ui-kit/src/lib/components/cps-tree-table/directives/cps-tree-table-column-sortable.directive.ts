@@ -7,26 +7,26 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { SortIcon, SortableColumn, Table } from 'primeng/table';
+import { TTSortIcon, TTSortableColumn, TreeTable } from 'primeng/treetable';
 
 @Directive({
   standalone: true,
-  selector: '[cpsTColSortable]'
+  selector: '[cpsTTColSortable]'
 })
-export class CpsTableColumnSortableDirective
-  extends SortableColumn
+export class CpsTreeTableColumnSortableDirective
+  extends TTSortableColumn
   implements OnInit, OnDestroy
 {
-  @Input('cpsTColSortable') override field = '';
-  sortIconRef: ComponentRef<SortIcon>;
+  @Input('cpsTTColSortable') override field = '';
+  sortIconRef: ComponentRef<TTSortIcon>;
 
   constructor(
     private elementRef: ElementRef,
     private viewContainerRef: ViewContainerRef,
-    public override dt: Table
+    public override tt: TreeTable
   ) {
-    super(dt);
-    this.sortIconRef = this.viewContainerRef.createComponent(SortIcon);
+    super(tt);
+    this.sortIconRef = this.viewContainerRef.createComponent(TTSortIcon);
   }
 
   override ngOnInit(): void {
@@ -46,7 +46,7 @@ export class CpsTableColumnSortableDirective
   override onClick(event: MouseEvent): void {
     if (
       !this.elementRef?.nativeElement?.classList?.contains(
-        'cps-table-col-filter-menu-open'
+        'cps-treetable-col-filter-menu-open'
       )
     ) {
       super.onClick(event);

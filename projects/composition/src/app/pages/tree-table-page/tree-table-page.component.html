@@ -15,12 +15,12 @@
     </tr>
   </ng-template> -->
   <ng-template #header>
-    <th>Name</th>
-    <th>Size</th>
-    <th>Type</th>
+    <th cpsTTColSortable="name">Name</th>
+    <th cpsTTColSortable="size">Size</th>
+    <th cpsTTColSortable="type">Type</th>
   </ng-template>
   <ng-template #body let-rowNode let-rowData="rowData">
-    <td [cpsRowToggler]="rowNode">
+    <td [cpsTTRowToggler]="rowNode">
       {{ rowData.name }}
     </td>
     <td>{{ rowData.size }}</td>

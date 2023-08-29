@@ -30,6 +30,7 @@ import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { SortEvent } from 'primeng/api';
+import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -55,7 +56,8 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     AngleDoubleLeftIcon,
     AngleLeftIcon,
     AngleRightIcon,
-    AngleDoubleRightIcon
+    AngleDoubleRightIcon,
+    CpsTreeTableColumnSortableDirective
   ],
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],

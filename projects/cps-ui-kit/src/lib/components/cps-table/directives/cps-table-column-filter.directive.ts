@@ -18,10 +18,10 @@ export type CpsTableColumnFilterType =
 
 @Directive({
   standalone: true,
-  selector: '[cpsColFilter]'
+  selector: '[cpsTColFilter]'
 })
 export class CpsTableColumnFilterDirective implements OnInit, OnDestroy {
-  @Input('cpsColFilter') field: string | undefined;
+  @Input('cpsTColFilter') field: string | undefined;
   @Input() filterType: CpsTableColumnFilterType = 'text';
   @Input() filterShowClearButton = true;
   @Input() filterShowApplyButton = true;
