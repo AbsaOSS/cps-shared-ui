@@ -23,6 +23,7 @@ export * from './lib/components/cps-tag/cps-tag.component';
 export * from './lib/components/cps-chip/cps-chip.component';
 export * from './lib/components/cps-menu/cps-menu.component';
 export * from './lib/components/cps-paginator/cps-paginator.component';
+export * from './lib/components/cps-paginator/pipes/cps-paginate.pipe';
 export * from './lib/components/cps-loader/cps-loader.component';
 export * from './lib/components/cps-expansion-panel/cps-expansion-panel.component';
 export * from './lib/components/cps-progress-circular/cps-progress-circular.component';
