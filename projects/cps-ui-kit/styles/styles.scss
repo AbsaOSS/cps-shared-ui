@@ -2,3 +2,9 @@
 @import 'variables.scss';
 @import 'fonts.scss';
 @import 'cps-tooltip-style.scss';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
