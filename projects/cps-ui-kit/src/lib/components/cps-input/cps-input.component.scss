@@ -104,6 +104,7 @@ $hover-transition-duration: 0.2s;
         margin-top: -0.5rem;
 
         .clear-btn {
+          display: flex;
           cursor: pointer;
           color: $color-calm;
           cps-icon {
