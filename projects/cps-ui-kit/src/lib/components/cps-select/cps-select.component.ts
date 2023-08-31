@@ -243,9 +243,6 @@ export class CpsSelectComponent
     } else {
       this.updateValue(val);
     }
-    setTimeout(() => {
-      this.selectContainer?.nativeElement?.focus();
-    }, 0);
   }
 
   onOptionClick(option: any) {

@@ -5,6 +5,7 @@
   -ms-user-select: none;
   user-select: none;
   .cps-chip {
+    align-items: center;
     display: inline-flex;
     background-color: var(--cps-color-bg-dark);
     border-radius: 14px;

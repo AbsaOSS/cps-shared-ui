@@ -171,8 +171,13 @@
       }
     }
 
+    .cps-button__text {
+      line-height: 1;
+    }
+
     .cps-button__spinner {
       position: absolute;
+      display: flex;
     }
   }
 }
