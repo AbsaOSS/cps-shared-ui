@@ -5,20 +5,18 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'cpsPaginate'
 })
 export class CpsPaginatePipe implements PipeTransform {
-  transform(
-    items: any[],
-    config: { currentPage: number; itemsPerPage: number }
-  ): any[] {
-    if (!items || items.length < 1) {
+  transform(items: any[], config: { first: number; rows: number }): any[] {
+    if (!items) {
       return [];
     }
+    if (items.length < 1) {
+      return items;
+    }
 
-    const currentPage = config.currentPage || 0;
-    const itemsPerPage = config.itemsPerPage || 5;
+    const first = config.first || 0;
+    const rows = config.rows || 5;
+    const last = first + rows;
 
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    return items.slice(startIndex, endIndex);
+    return items.slice(first, last);
   }
 }
