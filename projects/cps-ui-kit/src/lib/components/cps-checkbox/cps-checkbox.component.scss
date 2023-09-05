@@ -10,7 +10,7 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
 
 :host {
   min-width: max-content;
-  display: inline-block;
+  display: inline-flex;
 
   .cps-checkbox-container {
     line-height: normal;
