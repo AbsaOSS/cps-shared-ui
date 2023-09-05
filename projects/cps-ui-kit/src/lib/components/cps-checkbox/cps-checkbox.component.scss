@@ -1,9 +1,10 @@
-$color: var(--cps-color-calm);
+$color-calm: var(--cps-color-calm);
 $border-color: var(--cps-color-text-dark);
 $label-color: var(--cps-color-text-dark);
 $disabled-label-color: var(--cps-color-text-light);
-$disabled-border-color-unchecked: var(--cps-color-text-light);
 $disabled-background-checked: var(--cps-color-text-lightest);
+$disabled-border-color-checked: var(--cps-color-text-lightest);
+$disabled-border-color-unchecked: var(--cps-color-text-light);
 $border-radius: 2px;
 $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+);
 
@@ -13,66 +14,67 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
 
   .cps-checkbox-container {
     line-height: normal;
-    display: inline-flex;
+    display: flex;
     align-items: center;
 
-    label.cps-checkbox {
-      padding-left: 1.75rem;
-      position: relative;
+    .cps-checkbox {
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      color: $label-color;
+      cursor: pointer;
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
-      display: flex;
+    }
+    .cps-checkbox-disabled {
+      cursor: default;
+      color: $disabled-label-color;
+    }
 
-      input[type='checkbox'] {
-        display: none;
+    .cps-checkbox input[type='checkbox'] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
 
-        &:hover:not(:disabled) ~ .cps-checkbox-indicator {
-          border-color: $color;
-        }
+    .cps-checkbox-indicator {
+      position: relative;
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: 10px;
+      border: 2px solid $border-color;
+      border-radius: $border-radius;
+    }
 
-        &:checked ~ .cps-checkbox-indicator {
-          color: white;
-          background: $color $tick-image 50% 40% no-repeat;
-          border: 2px solid $color;
-        }
+    .cps-checkbox-no-label .cps-checkbox-indicator {
+      margin-right: 0;
+    }
 
-        &:disabled:checked ~ .cps-checkbox-indicator {
-          background: $disabled-background-checked $tick-image 50% 40% no-repeat;
-          border-color: $disabled-background-checked;
-        }
+    .cps-checkbox input[type='checkbox']:checked ~ .cps-checkbox-indicator {
+      color: white;
+      background: $color-calm $tick-image 50% 40% no-repeat;
+      border-color: $color-calm;
+    }
 
-        &:disabled ~ .cps-checkbox-indicator {
-          border-color: $disabled-border-color-unchecked;
-        }
-      }
+    .cps-checkbox input[type='checkbox']:disabled ~ .cps-checkbox-indicator {
+      border-color: $disabled-border-color-unchecked;
+    }
 
-      .cps-checkbox-label {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        font-size: 1rem;
-        line-height: 1rem;
-        color: $label-color;
-        &-disabled {
-          color: $disabled-label-color;
-        }
-      }
+    .cps-checkbox
+      input[type='checkbox']:checked:disabled
+      ~ .cps-checkbox-indicator {
+      background: $disabled-background-checked $tick-image 50% 40% no-repeat;
+      border-color: $disabled-border-color-checked;
+    }
 
-      .cps-checkbox-indicator {
-        border-radius: $border-radius;
-        position: absolute;
-        left: 0;
-        width: 18px;
-        height: 18px;
-        border: 2px solid $border-color;
-        pointer-events: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
+    .cps-checkbox
+      input[type='checkbox']:not(:disabled):hover
+      ~ .cps-checkbox-indicator {
+      border-color: $color-calm;
     }
 
     .cps-checkbox-info-circle {
