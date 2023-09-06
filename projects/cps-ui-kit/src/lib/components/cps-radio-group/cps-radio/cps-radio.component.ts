@@ -29,7 +29,7 @@ export class CpsRadioComponent {
     @Optional() @Inject(CPS_RADIO_GROUP) radioGroup: CpsRadioGroupComponent
   ) {
     this.radioGroup = radioGroup;
-    this.groupDisabled = radioGroup.disabled;
+    this.groupDisabled = radioGroup?.disabled ?? false;
   }
 
   updateValueEvent(event: Event): void {
