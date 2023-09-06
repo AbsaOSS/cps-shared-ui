@@ -244,6 +244,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
                 !this.container?.contains(event.target) &&
                 this.target !== event.target &&
                 !this.target.contains(event.target) &&
+                (event.target.type !== 'radio' ||
+                  event.target.closest('label') !==
+                    this.target.closest('label')) &&
                 !this.selfClick
               ) {
                 this.zone.run(() => {

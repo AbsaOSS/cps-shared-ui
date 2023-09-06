@@ -1,0 +1,43 @@
+<div class="cps-radio-group">
+  <div class="cps-radio-group-label" *ngIf="groupLabel">
+    <span>{{ groupLabel }}</span>
+    <cps-info-circle
+      *ngIf="infoTooltip"
+      class="cps-radio-group-label-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  </div>
+
+  <div
+    #contentRef
+    class="cps-radio-group-content"
+    [ngClass]="
+      vertical
+        ? 'cps-radio-group-content-vertical'
+        : 'cps-radio-group-content-horizontal'
+    ">
+    <ng-content></ng-content>
+  </div>
+
+  <div
+    *ngIf="!contentRef.innerHTML.trim()"
+    class="cps-radio-group-content"
+    [ngClass]="
+      vertical
+        ? 'cps-radio-group-content-vertical'
+        : 'cps-radio-group-content-horizontal'
+    ">
+    <cps-radio-button
+      *ngFor="let option of options"
+      [option]="option"
+      [checked]="option.value === value"
+      [groupDisabled]="disabled"
+      (updateValueEvent)="updateValueEvent($event)">
+    </cps-radio-button>
+  </div>
+</div>
