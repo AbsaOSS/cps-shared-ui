@@ -1,27 +1,66 @@
 <div class="radiogroups-group">
-  <cps-radio
+  <cps-radio-group
     groupLabel="Radio group with a tooltip"
     [options]="options"
     infoTooltip="Provide any information here"
     value="second">
-  </cps-radio>
-  <cps-radio
+  </cps-radio-group>
+  <cps-radio-group
     groupLabel="Disabled vertical radio group"
     [options]="options"
     value="second"
     [disabled]="true"
     [vertical]="true">
-  </cps-radio>
-  <cps-radio
+  </cps-radio-group>
+  <cps-radio-group
     groupLabel="Radio group with partially disabled options and targeted tooltips"
     [options]="partiallyDisabledOptions">
-  </cps-radio>
+  </cps-radio-group>
   <div class="sync-val-example">
-    <cps-radio
+    <cps-radio-group
       groupLabel="Radio group with two-way binding"
       [options]="options"
       [(ngModel)]="syncVal">
-    </cps-radio>
+    </cps-radio-group>
     <div class="sync-val">Selected value: {{ syncVal }}</div>
   </div>
+  <cps-radio-group
+    groupLabel="Radio group with custom content"
+    class="custom-content-example"
+    [value]="2"
+    [vertical]="true">
+    <cps-radio [option]="{ value: 1 }">
+      <div class="inline-radio-form">
+        <span>On the</span>
+        <cps-select
+          [options]="dayOptions"
+          optionLabel="name"
+          [value]="dayOptions[0]">
+        </cps-select>
+        <span>of every</span>
+        <cps-select
+          [options]="monthOptions"
+          optionLabel="name"
+          [value]="monthOptions[0]">
+        </cps-select>
+        <span>month(s) at</span>
+        <cps-select
+          [options]="hourOptions"
+          optionLabel="name"
+          [value]="hourOptions[0]">
+        </cps-select>
+        <span>:</span>
+        <cps-select
+          [options]="minuteOptions"
+          optionLabel="name"
+          [value]="minuteOptions[0]">
+        </cps-select>
+        <cps-checkbox
+          class="weekday-checkbox"
+          label="During the nearest weekday"
+          [value]="false"></cps-checkbox>
+      </div>
+    </cps-radio>
+    <cps-radio [option]="{ label: 'Simple option', value: 2 }"></cps-radio>
+  </cps-radio-group>
 </div>

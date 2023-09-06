@@ -9,3 +9,15 @@
     margin-top: 16px;
   }
 }
+
+.custom-content-example {
+  .inline-radio-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .weekday-checkbox {
+    margin-left: 15px;
+  }
+}
