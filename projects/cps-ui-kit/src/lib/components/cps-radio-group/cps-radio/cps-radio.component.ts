@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, Input, Optional } from '@angular/core';
+import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import {
   CPS_RADIO_GROUP,
   CpsRadioGroupComponent,
@@ -20,7 +20,7 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss']
 })
-export class CpsRadioComponent {
+export class CpsRadioComponent implements OnInit {
   @Input() option!: RadioOption;
   radioGroup?: CpsRadioGroupComponent;
   groupDisabled = false;
@@ -29,7 +29,10 @@ export class CpsRadioComponent {
     @Optional() @Inject(CPS_RADIO_GROUP) radioGroup: CpsRadioGroupComponent
   ) {
     this.radioGroup = radioGroup;
-    this.groupDisabled = radioGroup?.disabled ?? false;
+  }
+
+  ngOnInit(): void {
+    this.groupDisabled = this.radioGroup?.disabled ?? false;
   }
 
   updateValueEvent(event: Event): void {

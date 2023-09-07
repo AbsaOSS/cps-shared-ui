@@ -67,6 +67,10 @@ $disabled-label-color: var(--cps-color-text-light);
     }
   }
 
+  .cps-radio-group-content-button-label {
+    user-select: none;
+  }
+
   .content:empty {
     display: none;
   }

@@ -1,12 +1,9 @@
-<label
+<div
   *ngIf="option.tooltip"
   class="cps-radio-group-content-button"
   [cpsTooltip]="option.tooltip"
   tooltipCloseDelay="0"
-  tooltipPosition="bottom"
-  [ngStyle]="{
-    cursor: option.disabled || groupDisabled ? 'default' : 'pointer'
-  }">
+  tooltipPosition="bottom">
   <ng-container
     *ngTemplateOutlet="
       optionRadioTemplate;
@@ -14,13 +11,8 @@
         option: option
       }
     "></ng-container>
-</label>
-<label
-  *ngIf="!option?.tooltip"
-  class="cps-radio-group-content-button"
-  [ngStyle]="{
-    cursor: option.disabled || groupDisabled ? 'default' : 'pointer'
-  }">
+</div>
+<div *ngIf="!option?.tooltip" class="cps-radio-group-content-button">
   <ng-container
     *ngTemplateOutlet="
       optionRadioTemplate;
@@ -28,10 +20,11 @@
         option: option
       }
     "></ng-container>
-</label>
+</div>
 
 <ng-template #optionRadioTemplate let-option="option">
   <input
+    [id]="inputId"
     type="radio"
     [disabled]="option.disabled || groupDisabled"
     [value]="option.value"
@@ -40,9 +33,13 @@
   <div #contentRef class="content">
     <ng-content></ng-content>
   </div>
-  <span
+  <label
     *ngIf="!contentRef.innerHTML.trim()"
+    [for]="inputId"
     class="cps-radio-group-content-button-label"
-    >{{ option.label }}</span
-  >
+    [ngStyle]="{
+      cursor: option.disabled || groupDisabled ? 'default' : 'pointer'
+    }"
+    >{{ option.label }}
+  </label>
 </ng-template>
