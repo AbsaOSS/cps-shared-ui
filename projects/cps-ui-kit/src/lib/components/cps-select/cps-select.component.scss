@@ -181,10 +181,6 @@ $hover-transition-duration: 0.2s;
       min-height: 1.125rem;
       cursor: default;
       margin-top: 0.2rem;
-
-      &:empty {
-        display: none;
-      }
     }
     .cps-select-error {
       color: $color-error;
