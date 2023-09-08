@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CpsTreeTableComponent,
@@ -19,7 +19,7 @@ import {
   styleUrls: ['./tree-table-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class TreeTablePageComponent {
+export class TreeTablePageComponent implements OnInit {
   data = [
     {
       data: {
@@ -320,4 +320,38 @@ export class TreeTablePageComponent {
     { field: 'size', header: 'Size' },
     { field: 'type', header: 'Type' }
   ];
+
+  dataVirtual: any[] = [];
+
+  ngOnInit(): void {
+    this._genVirtualData();
+  }
+
+  private _genVirtualData() {
+    for (let i = 0; i <= 1000; i++) {
+      this.dataVirtual.push({
+        data: {
+          name: `Data${i}`,
+          size: `${i}mb`,
+          type: `${i}Folder`
+        },
+        children: [
+          {
+            data: {
+              name: 'primefaces.mkv',
+              size: '1000mb',
+              type: 'Video'
+            }
+          },
+          {
+            data: {
+              name: 'intro.avi',
+              size: '500mb',
+              type: 'Video'
+            }
+          }
+        ]
+      });
+    }
+  }
 }

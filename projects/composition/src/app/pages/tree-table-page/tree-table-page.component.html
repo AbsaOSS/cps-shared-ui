@@ -1,9 +1,10 @@
 <cps-tree-table
-  [data]="data"
+  [data]="dataVirtual"
   toolbarTitle="Tree table"
   [columns]="cols"
-  sortMode="multiple"
-  [paginator]="true">
+  [virtualScroll]="true"
+  scrollHeight="500px"
+  sortMode="multiple">
   <!-- <ng-template #nestedHeader>
     <tr>
       <th colspan="2">AB</th>

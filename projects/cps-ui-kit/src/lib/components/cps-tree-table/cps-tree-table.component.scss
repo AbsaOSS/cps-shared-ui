@@ -47,6 +47,7 @@ $tbar-normal-height: 72px;
     .p-treetable .p-treetable-scrollable-footer {
       background: white;
     }
+
     .p-treetable-scrollable-header,
     .p-treetable-scrollable-footer {
       overflow: hidden;
@@ -644,6 +645,7 @@ $tbar-normal-height: 72px;
     .p-treetable.p-treetable-striped .p-treetable-tbody > tr:nth-child(even) {
       background: #ffffff;
     }
+
     // .p-treetable.p-treetable-striped
     //   .p-treetable-tbody
     //   > tr:nth-child(even).p-highlight {
@@ -663,6 +665,14 @@ $tbar-normal-height: 72px;
     //   color: #1d4ed8;
     // }
   }
+}
+
+::ng-deep .p-scrollbar-measure {
+  width: 100px;
+  height: 100px;
+  overflow: scroll;
+  position: absolute;
+  top: -9999px;
 }
 
 .cps-treetable-coltoggle-menu {

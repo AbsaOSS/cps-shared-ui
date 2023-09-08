@@ -1,4 +1,6 @@
 import {
+  AfterViewChecked,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -32,6 +34,7 @@ import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { SortEvent } from 'primeng/api';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
+import { DomHandler } from 'primeng/dom';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -73,7 +76,9 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     }
   ]
 })
-export class CpsTreeTableComponent implements OnInit {
+export class CpsTreeTableComponent
+  implements OnInit, AfterViewInit, AfterViewChecked
+{
   @Input() data: any[] = [];
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
@@ -117,6 +122,7 @@ export class CpsTreeTableComponent implements OnInit {
 
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
+  @Input() virtualScroll = false; // works only if scrollable is true
 
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
@@ -159,12 +165,14 @@ export class CpsTreeTableComponent implements OnInit {
 
   rowOptions: { label: string; value: number }[] = [];
 
+  virtualScrollItemSize = 0;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
-    // if (!this.scrollable) this.virtualScroll = false;
+    if (!this.scrollable) this.virtualScroll = false;
 
     if (this.paginator) {
       if (this.rowsPerPageOptions.length < 1)
@@ -192,6 +200,41 @@ export class CpsTreeTableComponent implements OnInit {
     }
 
     this.selectedColumns = this.columns;
+  }
+
+  ngAfterViewInit(): void {
+    let scrollBarWidth = 0;
+
+    const scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
+      '.p-treetable-scrollable-body'
+    );
+
+    if (scrollableBody) {
+      const sbarVisible =
+        scrollableBody.scrollHeight > scrollableBody.clientHeight;
+
+      scrollBarWidth = sbarVisible ? DomHandler.calculateScrollbarWidth() : 0;
+    }
+
+    if (scrollBarWidth > 0) scrollBarWidth -= 1;
+
+    const headerBox = this.primengTreeTable.el.nativeElement.querySelector(
+      '.p-treetable-scrollable-header-box'
+    );
+
+    if (headerBox) {
+      headerBox.style.paddingRight = `${scrollBarWidth}px`;
+      if (scrollBarWidth > 0) headerBox.style.borderRight = '1px solid #d7d5d5';
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (!this.virtualScroll || this.virtualScrollItemSize) return;
+    this.virtualScrollItemSize =
+      this.primengTreeTable?.el?.nativeElement
+        ?.querySelector('.p-treetable-tbody')
+        ?.querySelector('tr')?.clientHeight || 0;
+    this.cdRef.detectChanges();
   }
 
   get styleClass() {
