@@ -48,13 +48,13 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
       display: inline-block;
       width: 18px;
       height: 18px;
-      margin-right: 10px;
       border: 2px solid $border-color;
       border-radius: $border-radius;
     }
 
-    .cps-checkbox-no-label .cps-checkbox-indicator {
-      margin-right: 0;
+    .cps-checkbox-label,
+    .cps-checkbox-icon {
+      margin-left: 10px;
     }
 
     .cps-checkbox input[type='checkbox']:checked ~ .cps-checkbox-indicator {
