@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnInit,
   Optional,
   Output,
   Self
@@ -11,15 +12,17 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import { getCSSColor } from '../../utils/colors-utils';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsInfoCircleComponent],
+  imports: [CommonModule, CpsInfoCircleComponent, CpsIconComponent],
   selector: 'cps-checkbox',
   templateUrl: './cps-checkbox.component.html',
   styleUrls: ['./cps-checkbox.component.scss']
 })
-export class CpsCheckboxComponent implements ControlValueAccessor {
+export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() label = '';
   @Input() disabled = false;
   @Input() infoTooltip = '';
@@ -27,6 +30,8 @@ export class CpsCheckboxComponent implements ControlValueAccessor {
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() icon: IconType = '';
+  @Input() iconColor = 'text-dark';
 
   @Input() set value(value: boolean) {
     this._value = value;
@@ -48,6 +53,10 @@ export class CpsCheckboxComponent implements ControlValueAccessor {
     if (this._control) {
       this._control.valueAccessor = this;
     }
+  }
+
+  ngOnInit(): void {
+    this.iconColor = getCSSColor(this.iconColor);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
