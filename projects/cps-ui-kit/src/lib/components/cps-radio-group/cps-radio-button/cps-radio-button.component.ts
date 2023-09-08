@@ -18,11 +18,10 @@ export class CpsRadioButtonComponent {
   @Input() option!: RadioOption;
   @Input() checked = false;
   @Input() groupDisabled = false;
-  @Input() id: string = this._uniqueId;
   @Output() updateValueEvent = new EventEmitter<Event>();
 
   get inputId(): string {
-    return `${this.id || this._uniqueId}-input`;
+    return `${this._uniqueId}-input`;
   }
 
   updateValue(event: Event): void {
