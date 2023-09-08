@@ -1,0 +1,7 @@
+<cps-radio-button
+  [option]="option"
+  [groupDisabled]="groupDisabled"
+  [checked]="radioGroup?.value == option.value"
+  (updateValueEvent)="updateValueEvent($event)">
+  <ng-content></ng-content>
+</cps-radio-button>

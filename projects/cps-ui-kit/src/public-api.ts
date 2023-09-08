@@ -11,7 +11,8 @@ export * from './lib/components/cps-tree-autocomplete/cps-tree-autocomplete.comp
 export * from './lib/components/cps-info-circle/cps-info-circle.component';
 export * from './lib/components/cps-button/cps-button.component';
 export * from './lib/components/cps-checkbox/cps-checkbox.component';
-export * from './lib/components/cps-radio/cps-radio.component';
+export * from './lib/components/cps-radio-group/cps-radio/cps-radio.component';
+export * from './lib/components/cps-radio-group/cps-radio-group.component';
 export * from './lib/components/cps-table/cps-table.component';
 export * from './lib/components/cps-table/directives/cps-table-column-sortable.directive';
 export * from './lib/components/cps-table/directives/cps-table-column-filter.directive';

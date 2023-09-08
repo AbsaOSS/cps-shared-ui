@@ -1,0 +1,48 @@
+$group-label-color: var(--cps-color-text-dark);
+
+:host {
+  width: fit-content;
+  display: inline-block;
+
+  .cps-radio-group {
+    font-family: 'Source Sans Pro', sans-serif;
+    &-label {
+      font-style: normal;
+      font-weight: 400;
+      font-size: 1rem;
+      color: $group-label-color;
+      margin-bottom: 0.75rem;
+      align-items: center;
+      display: inline-flex;
+
+      .cps-radio-group-label-info-circle {
+        margin-left: 8px;
+        ::ng-deep cps-icon {
+          i {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
+    }
+
+    &-content {
+      margin-left: 0.5rem;
+      gap: 1.25rem;
+
+      &-vertical {
+        display: grid;
+        grid-auto-rows: 1fr;
+      }
+      &-horizontal {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .content:empty {
+        display: none;
+      }
+    }
+  }
+}

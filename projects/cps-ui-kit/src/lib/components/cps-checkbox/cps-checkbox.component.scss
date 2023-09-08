@@ -1,5 +1,5 @@
 $color-calm: var(--cps-color-calm);
-$border-color: var(--cps-color-text-dark);
+$border-color: var(--cps-color-text-mild);
 $label-color: var(--cps-color-text-dark);
 $disabled-label-color: var(--cps-color-text-light);
 $disabled-background-checked: var(--cps-color-text-lightest);
@@ -20,7 +20,10 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
     .cps-checkbox {
       display: flex;
       align-items: center;
-      font-size: 16px;
+      font-size: 1rem;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-style: normal;
+      font-weight: 400;
       color: $label-color;
       cursor: pointer;
       -webkit-user-select: none;

@@ -1,6 +1,6 @@
 import { CpsRadioComponent } from './cps-radio.component';
 
-describe('CpsRadioGroupComponent', () => {
+describe('CpsRadioComponent', () => {
   it('should mount', () => {
     cy.mount(CpsRadioComponent);
   });
