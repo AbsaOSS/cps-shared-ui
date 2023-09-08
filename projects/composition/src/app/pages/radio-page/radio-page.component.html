@@ -35,24 +35,28 @@
         <cps-select
           [options]="dayOptions"
           optionLabel="name"
+          [hideDetails]="true"
           [value]="dayOptions[0]">
         </cps-select>
         <span>of every</span>
         <cps-select
           [options]="monthOptions"
           optionLabel="name"
+          [hideDetails]="true"
           [value]="monthOptions[0]">
         </cps-select>
         <span>month(s) at</span>
         <cps-select
           [options]="hourOptions"
           optionLabel="name"
+          [hideDetails]="true"
           [value]="hourOptions[0]">
         </cps-select>
         <span>:</span>
         <cps-select
           [options]="minuteOptions"
           optionLabel="name"
+          [hideDetails]="true"
           [value]="minuteOptions[0]">
         </cps-select>
         <cps-checkbox
