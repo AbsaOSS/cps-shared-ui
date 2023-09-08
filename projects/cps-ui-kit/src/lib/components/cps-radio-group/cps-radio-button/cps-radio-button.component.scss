@@ -4,74 +4,76 @@ $disabled-color: var(--cps-color-text-lightest);
 $label-color: var(--cps-color-text-dark);
 $disabled-label-color: var(--cps-color-text-light);
 
-.cps-radio-group-content-button {
-  display: grid;
-  grid-template-columns: 1em auto;
-  align-items: center;
-  gap: 0.75em;
-  &-label {
-    font-size: 1rem;
-    color: $label-color;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1rem;
-  }
-  input[type='radio'] {
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: transparent;
-    margin: 0;
-    cursor: pointer;
-
-    font: inherit;
-    color: $border-color;
-    width: 1.25em;
-    height: 1.25em;
-    border: 0.15em solid currentColor;
-    border-radius: 50%;
-
+:host {
+  .cps-radio-group-content-button {
     display: grid;
-    place-content: center;
-
-    &:hover,
-    &:checked {
-      color: $color;
+    grid-template-columns: 1em auto;
+    align-items: center;
+    gap: 0.75em;
+    &-label {
+      font-size: 1rem;
+      color: $label-color;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1rem;
     }
+    input[type='radio'] {
+      -webkit-appearance: none;
+      appearance: none;
+      background-color: transparent;
+      margin: 0;
+      cursor: pointer;
 
-    &:disabled {
-      color: $disabled-color;
-      cursor: default;
-    }
-
-    &::before {
-      content: '';
-      width: 0.625em;
-      height: 0.625em;
+      font: inherit;
+      color: $border-color;
+      width: 1.25em;
+      height: 1.25em;
+      border: 0.15em solid currentColor;
       border-radius: 50%;
-      transform: scale(0);
-      transition: 120ms transform ease-in-out;
-      box-shadow: inset 1em 1em $color;
-      background-color: CanvasText;
+
+      display: grid;
+      place-content: center;
+
+      &:hover,
+      &:checked {
+        color: $color;
+      }
+
+      &:disabled {
+        color: $disabled-color;
+        cursor: default;
+      }
+
+      &::before {
+        content: '';
+        width: 0.625em;
+        height: 0.625em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em $color;
+        background-color: CanvasText;
+      }
+
+      &[disabled]::before {
+        box-shadow: inset 1em 1em $disabled-color;
+      }
+
+      &:disabled + .cps-radio-group-content-button-label {
+        color: $disabled-label-color;
+      }
+
+      &:checked::before {
+        transform: scale(1);
+      }
     }
 
-    &[disabled]::before {
-      box-shadow: inset 1em 1em $disabled-color;
+    .cps-radio-group-content-button-label {
+      user-select: none;
     }
 
-    &:disabled + .cps-radio-group-content-button-label {
-      color: $disabled-label-color;
+    .content:empty {
+      display: none;
     }
-
-    &:checked::before {
-      transform: scale(1);
-    }
-  }
-
-  .cps-radio-group-content-button-label {
-    user-select: none;
-  }
-
-  .content:empty {
-    display: none;
   }
 }
