@@ -2,8 +2,7 @@
   <label
     class="cps-checkbox"
     [ngClass]="{
-      'cps-checkbox-disabled': disabled,
-      'cps-checkbox-no-label': !label
+      'cps-checkbox-disabled': disabled
     }">
     <input
       type="checkbox"
@@ -11,7 +10,14 @@
       [checked]="value"
       (change)="updateValueEvent($event)" />
     <span class="cps-checkbox-indicator"></span>
-    {{ label }}
+    <cps-icon
+      class="cps-checkbox-icon"
+      *ngIf="icon"
+      [icon]="icon"
+      size="small"
+      [color]="disabled ? 'text-light' : iconColor">
+    </cps-icon>
+    <span *ngIf="label" class="cps-checkbox-label">{{ label }}</span>
   </label>
   <cps-info-circle
     *ngIf="infoTooltip"

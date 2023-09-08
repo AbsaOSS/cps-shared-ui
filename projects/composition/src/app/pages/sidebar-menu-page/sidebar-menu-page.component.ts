@@ -41,7 +41,7 @@ export class SidebarMenuPageComponent {
     },
     {
       title: 'Community menu',
-      icon: 'multiple_users',
+      icon: 'users',
       items: [{ title: 'Questions', desc: 'See all questions', url: '/pqr' }]
     },
     {
