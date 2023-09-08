@@ -1,0 +1,21 @@
+<ng-container *ngIf="!tt.sortIconTemplate">
+  <SortAltIcon
+    [styleClass]="'p-sortable-column-icon'"
+    *ngIf="sortOrder === 0" />
+  <SortAmountUpAltIcon
+    [styleClass]="'p-sortable-column-icon'"
+    *ngIf="sortOrder === 1" />
+  <SortAmountDownIcon
+    [styleClass]="'p-sortable-column-icon'"
+    *ngIf="sortOrder === -1" />
+</ng-container>
+<span *ngIf="tt.sortIconTemplate" class="p-sortable-column-icon">
+  <ng-template
+    *ngTemplateOutlet="
+      tt.sortIconTemplate;
+      context: { $implicit: sortOrder }
+    "></ng-template>
+</span>
+<span *ngIf="isMultiSorted()" class="p-sortable-column-badge">{{
+  getBadgeValue()
+}}</span>

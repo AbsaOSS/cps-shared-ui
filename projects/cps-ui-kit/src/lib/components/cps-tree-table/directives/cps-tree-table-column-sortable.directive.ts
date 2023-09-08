@@ -7,7 +7,8 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TTSortIcon, TTSortableColumn, TreeTable } from 'primeng/treetable';
+import { TTSortableColumn, TreeTable } from 'primeng/treetable';
+import { TreeTableSortIconComponent } from '../tree-table-sort-icon/tree-table-sort-icon.component';
 
 @Directive({
   standalone: true,
@@ -18,7 +19,7 @@ export class CpsTreeTableColumnSortableDirective
   implements OnInit, OnDestroy
 {
   @Input('cpsTTColSortable') override field = '';
-  sortIconRef: ComponentRef<TTSortIcon>;
+  sortIconRef: ComponentRef<TreeTableSortIconComponent>;
 
   constructor(
     private elementRef: ElementRef,
@@ -26,7 +27,9 @@ export class CpsTreeTableColumnSortableDirective
     public override tt: TreeTable
   ) {
     super(tt);
-    this.sortIconRef = this.viewContainerRef.createComponent(TTSortIcon);
+    this.sortIconRef = this.viewContainerRef.createComponent(
+      TreeTableSortIconComponent
+    );
   }
 
   override ngOnInit(): void {
