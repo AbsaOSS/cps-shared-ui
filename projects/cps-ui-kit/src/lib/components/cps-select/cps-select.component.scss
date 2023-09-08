@@ -13,7 +13,7 @@ $option-highlight-selected-background: #e6d4d9;
 $select-option-info-color: var(--cps-color-text-light);
 $select-option-value-color: var(--cps-color-text-dark);
 $select-prefix-icon-color: var(--cps-color-text-dark);
-$select-border-color: var(--cps-color-text-lightest);
+$select-border-color: var(--cps-color-line-light);
 
 $hover-transition-duration: 0.2s;
 
@@ -181,10 +181,6 @@ $hover-transition-duration: 0.2s;
       min-height: 1.125rem;
       cursor: default;
       margin-top: 0.2rem;
-
-      &:empty {
-        display: none;
-      }
     }
     .cps-select-error {
       color: $color-error;
