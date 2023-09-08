@@ -1,10 +1,23 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CpsRadioComponent, RadioOption } from 'cps-ui-kit';
+import {
+  CpsCheckboxComponent,
+  CpsRadioComponent,
+  CpsRadioGroupComponent,
+  CpsSelectComponent,
+  RadioOption
+} from 'cps-ui-kit';
 
 @Component({
   standalone: true,
-  imports: [CpsRadioComponent, ReactiveFormsModule, FormsModule],
+  imports: [
+    CpsRadioGroupComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    CpsRadioComponent,
+    CpsSelectComponent,
+    CpsCheckboxComponent
+  ],
   selector: 'app-radio-page',
   templateUrl: './radio-page.component.html',
   styleUrls: ['./radio-page.component.scss'],
@@ -35,4 +48,25 @@ export class RadioPageComponent {
   ] as RadioOption[];
 
   syncVal = 'first';
+
+  dayOptions = [
+    { name: '1st day', data: { code: '1' } },
+    { name: '2nd day', data: { code: '2' } },
+    { name: '3rd day', data: { code: '3' } }
+  ];
+
+  monthOptions = [...Array(12).keys()].map((n) => ({
+    name: n + 1,
+    data: { code: n + 1 }
+  }));
+
+  hourOptions = [...Array(24).keys()].map((n) => ({
+    name: n,
+    data: { code: n }
+  }));
+
+  minuteOptions = [...Array(60).keys()].map((n) => ({
+    name: n,
+    data: { code: n }
+  }));
 }

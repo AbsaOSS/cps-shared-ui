@@ -1,7 +1,9 @@
+/* eslint-disable no-use-before-define */
 import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
+  InjectionToken,
   Input,
   Optional,
   Output,
@@ -13,22 +15,38 @@ import {
   CpsTooltipDirective,
   TooltipPosition
 } from '../../directives/cps-tooltip.directive';
+import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 
 export type RadioOption = {
   value: any;
-  label: string;
+  label?: string;
   disabled?: boolean;
   tooltip?: string;
 };
 
+export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
+  'CpsRadioGroupComponent'
+);
+
 @Component({
   standalone: true,
-  imports: [CommonModule, CpsInfoCircleComponent, CpsTooltipDirective],
-  selector: 'cps-radio',
-  templateUrl: './cps-radio.component.html',
-  styleUrls: ['./cps-radio.component.scss']
+  imports: [
+    CommonModule,
+    CpsInfoCircleComponent,
+    CpsTooltipDirective,
+    CpsRadioButtonComponent
+  ],
+  selector: 'cps-radio-group',
+  templateUrl: './cps-radio-group.component.html',
+  styleUrls: ['./cps-radio-group.component.scss'],
+  providers: [
+    {
+      provide: CPS_RADIO_GROUP,
+      useExisting: CpsRadioGroupComponent
+    }
+  ]
 })
-export class CpsRadioComponent implements ControlValueAccessor {
+export class CpsRadioGroupComponent implements ControlValueAccessor {
   @Input() options = [] as RadioOption[];
   @Input() groupLabel = '';
   @Input() vertical = false;

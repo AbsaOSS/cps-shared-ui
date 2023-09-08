@@ -9,3 +9,19 @@
     margin-top: 16px;
   }
 }
+
+.custom-content-example {
+  .inline-radio-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    span {
+      color: var(--cps-color-text-dark);
+    }
+  }
+
+  .weekday-checkbox {
+    margin-left: 15px;
+  }
+}

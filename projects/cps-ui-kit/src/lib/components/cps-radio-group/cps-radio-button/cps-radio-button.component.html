@@ -1,0 +1,45 @@
+<div
+  *ngIf="option.tooltip"
+  class="cps-radio-group-content-button"
+  [cpsTooltip]="option.tooltip"
+  tooltipCloseDelay="0"
+  tooltipPosition="bottom">
+  <ng-container
+    *ngTemplateOutlet="
+      optionRadioTemplate;
+      context: {
+        option: option
+      }
+    "></ng-container>
+</div>
+<div *ngIf="!option?.tooltip" class="cps-radio-group-content-button">
+  <ng-container
+    *ngTemplateOutlet="
+      optionRadioTemplate;
+      context: {
+        option: option
+      }
+    "></ng-container>
+</div>
+
+<ng-template #optionRadioTemplate let-option="option">
+  <input
+    [id]="inputId"
+    type="radio"
+    [disabled]="option.disabled || groupDisabled"
+    [value]="option.value"
+    [checked]="checked"
+    (change)="updateValue($event)" />
+  <div #contentRef class="content">
+    <ng-content></ng-content>
+  </div>
+  <label
+    *ngIf="!contentRef.innerHTML.trim()"
+    [for]="inputId"
+    class="cps-radio-group-content-button-label"
+    [ngStyle]="{
+      cursor: option.disabled || groupDisabled ? 'default' : 'pointer'
+    }"
+    >{{ option.label }}
+  </label>
+</ng-template>
