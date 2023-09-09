@@ -7,7 +7,10 @@
   [scrollHeight]="scrollHeight"
   [virtualScroll]="virtualScroll"
   [virtualScrollItemSize]="virtualScrollItemSize"
-  [virtualScrollOptions]="{ numToleratedItems: 3, autoSize: true }"
+  [virtualScrollOptions]="{
+    numToleratedItems: numToleratedItems,
+    autoSize: scrollHeight === 'flex'
+  }"
   [columns]="selectedColumns"
   [loading]="loading"
   [rowHover]="rowHover"

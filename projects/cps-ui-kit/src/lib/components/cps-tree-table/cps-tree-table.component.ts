@@ -124,6 +124,7 @@ export class CpsTreeTableComponent
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() numToleratedItems = 10;
 
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
@@ -167,9 +168,8 @@ export class CpsTreeTableComponent
   rowOptions: { label: string; value: number }[] = [];
 
   virtualScrollItemSize = 0;
-
+  defScrollHeight = 0;
   resizeObserver: ResizeObserver;
-
   headerBox: any;
   scrollbarWidth = 0;
 
@@ -195,6 +195,8 @@ export class CpsTreeTableComponent
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
+
+    this.defScrollHeight = parseInt(this.scrollHeight, 10);
 
     if (this.paginator) {
       if (this.rowsPerPageOptions.length < 1)
@@ -294,6 +296,15 @@ export class CpsTreeTableComponent
   onFilterGlobal(value: string) {
     this.primengTreeTable.filterGlobal(value, 'contains');
     setTimeout(() => {
+      if (this.scrollHeight !== 'flex') {
+        this.scrollHeight =
+          Math.min(
+            this.defScrollHeight,
+            this.virtualScrollItemSize *
+              (this.primengTreeTable.serializedValue.length || 1) +
+              1
+          ) + 'px';
+      }
       this.cdRef.markForCheck();
     }, 300);
   }
