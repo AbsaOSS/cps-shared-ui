@@ -114,7 +114,7 @@ export class CpsTreeTableComponent
   @Input() resetPageOnSort = true;
 
   @Input() emptyMessage = 'No data';
-  @Input() emptyBodyHeight = '';
+  @Input() emptyBodyHeight: number | string = '';
 
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
@@ -196,7 +196,8 @@ export class CpsTreeTableComponent
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
 
-    this.defScrollHeight = parseInt(this.scrollHeight, 10);
+    if (this.virtualScroll && this.scrollHeight && this.scrollHeight !== 'flex')
+      this.defScrollHeight = parseInt(this.scrollHeight, 10);
 
     if (this.paginator) {
       if (this.rowsPerPageOptions.length < 1)
@@ -293,18 +294,31 @@ export class CpsTreeTableComponent
     this.customSortFunction.emit(event);
   }
 
-  onFilterGlobal(value: string) {
-    this.primengTreeTable.filterGlobal(value, 'contains');
-    setTimeout(() => {
-      if (this.scrollHeight !== 'flex') {
+  private _recalcVirtualHeight() {
+    if (
+      this.virtualScroll &&
+      this.scrollHeight &&
+      this.scrollHeight !== 'flex'
+    ) {
+      const itemsLen = this.primengTreeTable.serializedValue.length;
+      if (itemsLen < 1) {
+        this.scrollHeight = this.emptyBodyHeight
+          ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
+          : this.virtualScrollItemSize + 1 + 'px';
+      } else {
         this.scrollHeight =
           Math.min(
             this.defScrollHeight,
-            this.virtualScrollItemSize *
-              (this.primengTreeTable.serializedValue.length || 1) +
-              1
+            this.virtualScrollItemSize * itemsLen + 1
           ) + 'px';
       }
+    }
+  }
+
+  onFilterGlobal(value: string) {
+    this.primengTreeTable.filterGlobal(value, 'contains');
+    setTimeout(() => {
+      this._recalcVirtualHeight();
       this.cdRef.markForCheck();
     }, 300);
   }

@@ -110,7 +110,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() resetPageOnSort = true;
 
   @Input() emptyMessage = 'No data';
-  @Input() emptyBodyHeight = '';
+  @Input() emptyBodyHeight: number | string = '';
 
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
