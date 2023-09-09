@@ -321,9 +321,12 @@ export class TreeTablePageComponent implements OnInit {
     { field: 'type', header: 'Type' }
   ];
 
+  selCols: { [key: string]: any }[] = [];
+
   dataVirtual: any[] = [];
 
   ngOnInit(): void {
+    this.selCols = this.cols;
     this._genVirtualData();
   }
 
@@ -353,5 +356,9 @@ export class TreeTablePageComponent implements OnInit {
         ]
       });
     }
+  }
+
+  onColumnsSelected(columns: any) {
+    this.selCols = columns;
   }
 }

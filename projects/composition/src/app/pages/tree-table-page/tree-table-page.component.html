@@ -3,6 +3,8 @@
   toolbarTitle="Tree table"
   [columns]="cols"
   [virtualScroll]="true"
+  [showColumnsToggle]="true"
+  (columnsSelected)="onColumnsSelected($event)"
   scrollHeight="500px"
   sortMode="multiple">
   <!-- <ng-template #nestedHeader>
@@ -16,7 +18,7 @@
       <th>Type</th>
     </tr>
   </ng-template> -->
-  <ng-template #header>
+  <!-- <ng-template #header>
     <th cpsTTColSortable="name">Name</th>
     <th cpsTTColSortable="size">Size</th>
     <th cpsTTColSortable="type">Type</th>
@@ -27,5 +29,20 @@
     </td>
     <td>{{ rowData.size }}</td>
     <td>{{ rowData.type }}</td>
+  </ng-template> -->
+
+  <ng-template #header>
+    <th *ngFor="let scol of selCols" [cpsTTColSortable]="scol.field">
+      {{ scol.header }}
+    </th>
+  </ng-template>
+  <ng-template #body let-rowNode let-rowData="rowData">
+    <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
+      <td *ngSwitchCase="'name'" [cpsTTRowToggler]="rowNode">
+        {{ rowData.name }}
+      </td>
+      <td *ngSwitchCase="'size'">{{ rowData.size }}</td>
+      <td *ngSwitchCase="'type'">{{ rowData.type }}</td>
+    </ng-container>
   </ng-template>
 </cps-tree-table>
