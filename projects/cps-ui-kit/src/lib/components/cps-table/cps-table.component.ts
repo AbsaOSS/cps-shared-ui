@@ -99,6 +99,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
   @Input() alwaysShowPaginator = true;
