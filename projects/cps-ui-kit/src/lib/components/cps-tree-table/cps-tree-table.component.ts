@@ -7,6 +7,7 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -77,7 +78,7 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
   ]
 })
 export class CpsTreeTableComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
+  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked
 {
   @Input() data: any[] = [];
   @Input() columns: { [key: string]: any }[] = [];
@@ -167,8 +168,29 @@ export class CpsTreeTableComponent
 
   virtualScrollItemSize = 0;
 
+  resizeObserver: ResizeObserver;
+
+  headerBox: any;
+  scrollbarWidth = 0;
+
   // eslint-disable-next-line no-useless-constructor
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private cdRef: ChangeDetectorRef) {
+    this.resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        const scrollableBody = entry.target;
+
+        const sbarVisible =
+          scrollableBody.scrollHeight > scrollableBody.clientHeight;
+
+        let wScroll = sbarVisible ? this.scrollbarWidth : 0;
+        if (wScroll > 0) wScroll -= 1;
+
+        this.headerBox.style.paddingRight = `${wScroll}px`;
+        this.headerBox.style.borderRight =
+          wScroll > 0 ? '1px solid #d7d5d5' : 'unset';
+      });
+    });
+  }
 
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
@@ -203,28 +225,18 @@ export class CpsTreeTableComponent
   }
 
   ngAfterViewInit(): void {
-    let scrollBarWidth = 0;
-
-    const scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
-      '.p-treetable-scrollable-body'
-    );
-
-    if (scrollableBody) {
-      const sbarVisible =
-        scrollableBody.scrollHeight > scrollableBody.clientHeight;
-
-      scrollBarWidth = sbarVisible ? DomHandler.calculateScrollbarWidth() : 0;
-    }
-
-    if (scrollBarWidth > 0) scrollBarWidth -= 1;
-
-    const headerBox = this.primengTreeTable.el.nativeElement.querySelector(
+    this.headerBox = this.primengTreeTable.el.nativeElement.querySelector(
       '.p-treetable-scrollable-header-box'
     );
-
-    if (headerBox) {
-      headerBox.style.paddingRight = `${scrollBarWidth}px`;
-      if (scrollBarWidth > 0) headerBox.style.borderRight = '1px solid #d7d5d5';
+    if (this.headerBox) {
+      const scrollableBody =
+        this.primengTreeTable.el.nativeElement.querySelector(
+          '.p-treetable-scrollable-body'
+        );
+      if (scrollableBody) {
+        this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
+        this.resizeObserver.observe(scrollableBody);
+      }
     }
   }
 
@@ -235,6 +247,10 @@ export class CpsTreeTableComponent
         ?.querySelector('.p-treetable-tbody')
         ?.querySelector('tr')?.clientHeight || 0;
     this.cdRef.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
   }
 
   get styleClass() {
