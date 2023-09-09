@@ -69,7 +69,7 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable-scrollable-body {
-      overflow: auto;
+      overflow: auto !important;
       position: relative;
     }
 
@@ -78,13 +78,13 @@ $tbar-normal-height: 72px;
       color: $body-text-color;
       transition: box-shadow 0.2s;
     }
-    .p-treetable-scrollable-body
-      > table
-      > .p-treetable-tbody
-      > tr:first-child
-      > td {
-      border-top: 0 none;
-    }
+    // .p-treetable-scrollable-body
+    //   > table
+    //   > .p-treetable-tbody
+    //   > tr:first-child
+    //   > td {
+    //   border-top: 0 none;
+    // }
 
     .p-treetable .p-treetable-tbody > tr > td {
       text-align: left;
@@ -97,7 +97,7 @@ $tbar-normal-height: 72px;
       border-width: 0 0 1px 1px;
     }
     .p-treetable .p-treetable-tbody > tr > td:last-child {
-      border-width: 0 1px 1px 0;
+      border-width: 0 1px 1px 1px;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:only-child {
@@ -603,13 +603,26 @@ $tbar-normal-height: 72px;
       border-width: 0 1px 1px 1px;
     }
     .p-treetable .p-treetable-thead > tr > th {
+      border-width: 1px 0 1px 1px;
+    }
+
+    .p-treetable .p-treetable-thead > tr > th:last-child {
       border-width: 1px;
     }
+
     .p-treetable.p-treetable-gridlines .p-treetable-tbody > tr > td {
-      border-width: 1px;
+      border-width: 0 0 1px 1px;
     }
     .p-treetable.p-treetable-gridlines .p-treetable-tfoot > tr > td {
       border-width: 1px;
+    }
+
+    .p-treetable .p-treetable-tbody > tr > td:last-child {
+      border-width: 0 1px 1px 1px;
+    }
+
+    .p-treetable .p-treetable-tbody > tr > td:only-child {
+      border-width: 0 1px 1px 1px;
     }
 
     .p-treetable.p-treetable-sm .p-treetable-thead > tr > th {
@@ -644,6 +657,11 @@ $tbar-normal-height: 72px;
 
     .p-treetable.p-treetable-striped .p-treetable-tbody > tr:nth-child(even) {
       background: #ffffff;
+    }
+
+    .cps-treetable-row-menu-cell {
+      width: 55px;
+      border-left: none !important;
     }
 
     // .p-treetable.p-treetable-striped

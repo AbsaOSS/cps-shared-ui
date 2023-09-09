@@ -19,6 +19,7 @@ import {
   TreeTableService,
   TreeTableModule
 } from 'primeng/treetable';
+import { DomHandler } from 'primeng/dom';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
@@ -35,7 +36,7 @@ import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { SortEvent } from 'primeng/api';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
-import { DomHandler } from 'primeng/dom';
+import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -63,7 +64,8 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     AngleRightIcon,
     AngleDoubleRightIcon,
     CpsTreeTableColumnSortableDirective,
-    TreeTableUnsortDirective
+    TreeTableUnsortDirective,
+    TableRowMenuComponent
   ],
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],
@@ -119,6 +121,8 @@ export class CpsTreeTableComponent
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
 
+  @Input() showRowMenu = false;
+
   @Input() loading = false;
 
   @Input() scrollable = true;
@@ -132,7 +136,7 @@ export class CpsTreeTableComponent
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
 
   @Output() actionBtnClicked = new EventEmitter<void>();
-  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>(); // TODO
+  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
   @Output() pageChanged = new EventEmitter<any>();
   @Output() lazyLoaded = new EventEmitter<any>();
   @Output() nodeExpanded = new EventEmitter<any>();
@@ -326,6 +330,19 @@ export class CpsTreeTableComponent
 
   onClickActionBtn() {
     this.actionBtnClicked.emit();
+  }
+
+  onEditRowClicked(rowNode: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const { _defaultSortOrder, ...rest } = rowNode;
+    // this.editRowBtnClicked.emit(rest);
+  }
+
+  onRemoveRowClicked(rowNode: any) {
+    // this.selectedRows = this.selectedRows.filter((v: any) => v !== rowNode);
+    // this.data = this.data.filter((v: any) => v !== rowNode);
+    // const { _defaultSortOrder, ...rest } = rowNode;
+    // this.rowsRemoved.emit([rest]);
   }
 
   toggleAllColumns() {
