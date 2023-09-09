@@ -168,7 +168,8 @@ export class CpsTreeTableComponent
   rowOptions: { label: string; value: number }[] = [];
 
   virtualScrollItemSize = 0;
-  defScrollHeight = 0;
+  // defScrollHeight = 0;
+
   resizeObserver: ResizeObserver;
   headerBox: any;
   scrollbarWidth = 0;
@@ -196,8 +197,8 @@ export class CpsTreeTableComponent
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
 
-    if (this.virtualScroll && this.scrollHeight && this.scrollHeight !== 'flex')
-      this.defScrollHeight = parseInt(this.scrollHeight, 10);
+    // if (this.virtualScroll && this.scrollHeight && this.scrollHeight !== 'flex')
+    //   this.defScrollHeight = parseInt(this.scrollHeight, 10);
 
     if (this.paginator) {
       if (this.rowsPerPageOptions.length < 1)
@@ -294,31 +295,31 @@ export class CpsTreeTableComponent
     this.customSortFunction.emit(event);
   }
 
-  private _recalcVirtualHeight() {
-    if (
-      this.virtualScroll &&
-      this.scrollHeight &&
-      this.scrollHeight !== 'flex'
-    ) {
-      const itemsLen = this.primengTreeTable.serializedValue.length;
-      if (itemsLen < 1) {
-        this.scrollHeight = this.emptyBodyHeight
-          ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
-          : this.virtualScrollItemSize + 1 + 'px';
-      } else {
-        this.scrollHeight =
-          Math.min(
-            this.defScrollHeight,
-            this.virtualScrollItemSize * itemsLen + 1
-          ) + 'px';
-      }
-    }
-  }
+  // private _recalcVirtualHeight() {
+  //   if (
+  //     this.virtualScroll &&
+  //     this.scrollHeight &&
+  //     this.scrollHeight !== 'flex'
+  //   ) {
+  //     const itemsLen = this.primengTreeTable.serializedValue.length;
+  //     if (itemsLen < 1) {
+  //       this.scrollHeight = this.emptyBodyHeight
+  //         ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
+  //         : this.virtualScrollItemSize + 1 + 'px';
+  //     } else {
+  //       this.scrollHeight =
+  //         Math.min(
+  //           this.defScrollHeight,
+  //           this.virtualScrollItemSize * itemsLen + 1
+  //         ) + 'px';
+  //     }
+  //   }
+  // }
 
   onFilterGlobal(value: string) {
     this.primengTreeTable.filterGlobal(value, 'contains');
     setTimeout(() => {
-      this._recalcVirtualHeight();
+      // this._recalcVirtualHeight();
       this.cdRef.markForCheck();
     }, 300);
   }
