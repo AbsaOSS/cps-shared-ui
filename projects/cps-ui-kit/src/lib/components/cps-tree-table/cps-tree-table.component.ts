@@ -355,7 +355,7 @@ export class CpsTreeTableComponent
 
   onEditRowClicked(node: any) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, expanded, ...rest } = node;
+    const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
     this.editRowBtnClicked.emit(rest);
   }
 
@@ -367,7 +367,7 @@ export class CpsTreeTableComponent
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
     this.data = this.data.filter((v: any) => v !== node);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, expanded, ...rest } = node;
+    const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
     this.rowsRemoved.emit([rest]);
   }
 

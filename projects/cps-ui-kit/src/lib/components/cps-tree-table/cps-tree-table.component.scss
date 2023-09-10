@@ -5,6 +5,7 @@ $toolbar-text-color: var(--cps-color-text-darkest);
 $treetable-borders-color: var(--cps-color-line-mid);
 $stripe-color: var(--cps-color-bg-light);
 $row-hover-background: #f8f4f5;
+$row-selected-background: #f1ebed;
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
 $colitem-hover-background: #f8f4f5;
@@ -78,6 +79,9 @@ $tbar-normal-height: 72px;
       background: #ffffff;
       color: $body-text-color;
       transition: box-shadow 0.2s;
+      &.cps-treetable-row-selected {
+        background-color: $row-selected-background !important;
+      }
     }
     // .p-treetable-scrollable-body
     //   > table

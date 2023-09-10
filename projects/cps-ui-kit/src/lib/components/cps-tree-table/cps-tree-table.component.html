@@ -169,7 +169,12 @@
     let-columns="columns"
     let-rowNode
     let-rowIndex="rowIndex">
-    <tr [ttRow]="rowNode">
+    <tr
+      [ttRow]="rowNode"
+      [ngClass]="{
+        'cps-treetable-row-selected':
+          selectable && primengTreeTable.isSelected(rowNode.node)
+      }">
       <!-- <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td> -->
