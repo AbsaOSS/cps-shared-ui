@@ -361,6 +361,9 @@ export class CpsTreeTableComponent
 
   onRemoveRowClicked(node: any) {
     // TODO remove children of nodes
+
+    // find by default sort order in object itself or in nested parent
+    // then find the node itself
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
     this.data = this.data.filter((v: any) => v !== node);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
