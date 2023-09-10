@@ -8,7 +8,7 @@
   background-color: white;
   .sidebar {
     width: $sidebar-width;
-    height: calc(100vh - $top-tbar-height);
+    height: calc(100vh - $top-tbar-height - 20px);
     overflow: auto;
     .list {
       &-title {

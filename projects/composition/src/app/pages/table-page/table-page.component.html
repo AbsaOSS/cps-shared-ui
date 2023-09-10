@@ -6,11 +6,11 @@
       sortMode="multiple"
       toolbarTitle="Table with a paginator, multiple sorting and individual filtering">
       <ng-template #header>
-        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
-        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
-        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+        <th cpsTColSortable="a" cpsTColFilter="a" filterType="text">A</th>
+        <th cpsTColSortable="b" cpsTColFilter="b" filterType="date">B</th>
+        <th cpsTColSortable="c" cpsTColFilter="c" filterType="number">C</th>
+        <th cpsTColSortable="d" cpsTColFilter="d" filterType="boolean">D</th>
+        <th cpsTColSortable="e" cpsTColFilter="e" filterType="category">E</th>
       </ng-template>
 
       <ng-template let-item #body>
@@ -82,8 +82,8 @@
       <ng-template #header>
         <th
           *ngFor="let scol of selCols"
-          [cpsColSortable]="scol.field"
-          [cpsColFilter]="scol.field"
+          [cpsTColSortable]="scol.field"
+          [cpsTColFilter]="scol.field"
           [filterType]="scol.filterType">
           {{ scol.header }}
         </th>
@@ -120,16 +120,16 @@
         <tr>
           <!-- MANUALLY ADD FIRST HEADER WITH CHECKBOX, SINCE THE TABLE IS SELECTABLE -->
           <!-- FOR SIMPLE HEADER THIS IS DONE AUTOMATICALLY -->
-          <th rowspan="2" cpsHdrSelectable></th>
+          <th rowspan="2" cpsTHdrSelectable></th>
           <th colspan="2">AB</th>
           <th colspan="3">CDE</th>
         </tr>
         <tr>
-          <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-          <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
-          <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-          <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
-          <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+          <th cpsTColSortable="a" cpsTColFilter="a" filterType="text">A</th>
+          <th cpsTColSortable="b" cpsTColFilter="b" filterType="date">B</th>
+          <th cpsTColSortable="c" cpsTColFilter="c" filterType="number">C</th>
+          <th cpsTColSortable="d" cpsTColFilter="d" filterType="boolean">D</th>
+          <th cpsTColSortable="e" cpsTColFilter="e" filterType="category">E</th>
         </tr>
       </ng-template>
       <ng-template let-item #body>
@@ -154,11 +154,11 @@
       exportFilename="table_6"
       toolbarTitle="Borderless table with export button, without highlightning on rows hover">
       <ng-template #header>
-        <th cpsColSortable="a">A</th>
-        <th cpsColSortable="b">B</th>
-        <th cpsColSortable="c">C</th>
-        <th cpsColSortable="d">D</th>
-        <th cpsColSortable="e">E</th>
+        <th cpsTColSortable="a">A</th>
+        <th cpsTColSortable="b">B</th>
+        <th cpsTColSortable="c">C</th>
+        <th cpsTColSortable="d">D</th>
+        <th cpsTColSortable="e">E</th>
       </ng-template>
 
       <ng-template let-item #body>
@@ -182,11 +182,11 @@
         </cps-button-toggle>
       </ng-template>
       <ng-template #header>
-        <th cpsColSortable="a" cpsColFilter="a" filterType="text">A</th>
-        <th cpsColSortable="b" cpsColFilter="b" filterType="date">B</th>
-        <th cpsColSortable="c" cpsColFilter="c" filterType="number">C</th>
-        <th cpsColSortable="d" cpsColFilter="d" filterType="boolean">D</th>
-        <th cpsColSortable="e" cpsColFilter="e" filterType="category">E</th>
+        <th cpsTColSortable="a" cpsTColFilter="a" filterType="text">A</th>
+        <th cpsTColSortable="b" cpsTColFilter="b" filterType="date">B</th>
+        <th cpsTColSortable="c" cpsTColFilter="c" filterType="number">C</th>
+        <th cpsTColSortable="d" cpsTColFilter="d" filterType="boolean">D</th>
+        <th cpsTColSortable="e" cpsTColFilter="e" filterType="category">E</th>
       </ng-template>
 
       <ng-template let-item #body>
@@ -203,11 +203,11 @@
   <cps-tab label="Table 8">
     <cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="400px">
       <ng-template #header>
-        <th cpsColSortable="a">A</th>
-        <th cpsColSortable="b">B</th>
-        <th cpsColSortable="c">C</th>
-        <th cpsColSortable="d">D</th>
-        <th cpsColSortable="e">E</th>
+        <th cpsTColSortable="a">A</th>
+        <th cpsTColSortable="b">B</th>
+        <th cpsTColSortable="c">C</th>
+        <th cpsTColSortable="d">D</th>
+        <th cpsTColSortable="e">E</th>
       </ng-template>
     </cps-table>
   </cps-tab>

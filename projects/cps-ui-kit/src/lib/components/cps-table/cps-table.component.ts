@@ -79,33 +79,38 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() bordered = true;
   @Input() size: CpsTableSize = 'normal';
   @Input() selectable = false;
-  @Input() emptyMessage = 'No data';
-  @Input() hasToolbar = true;
-  @Input() toolbarSize: CpsTableToolbarSize = 'normal';
-  @Input() toolbarTitle = '';
-  @Input() sortMode: CpsTableSortMode = 'single';
-  @Input() customSort = false;
   @Input() rowHover = true;
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
   @Input() showRowMenu = false;
   @Input() reorderableRows = false;
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
-  @Input() sortable = false; // makes all sortable if columns are provided
   @Input() loading = false;
+  @Input() tableStyle = undefined;
+  @Input() tableStyleClass = '';
+
+  @Input() sortable = false; // makes all sortable if columns are provided
+  @Input() sortMode: CpsTableSortMode = 'single';
+  @Input() customSort = false;
+
+  @Input() hasToolbar = true;
+  @Input() toolbarSize: CpsTableToolbarSize = 'normal';
+  @Input() toolbarTitle = '';
 
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
   @Input() alwaysShowPaginator = true;
   @Input() rowsPerPageOptions: number[] = [];
   @Input() first = 0;
   @Input() rows = 0;
-  @Input() totalRecords = 0;
-  @Input() goFirstOnRowsPerPageChange = false;
+  @Input() resetPageOnRowsChange = false;
+  @Input() resetPageOnSort = true;
 
-  @Input() emptyBodyHeight = '';
+  @Input() emptyMessage = 'No data';
+  @Input() emptyBodyHeight: number | string = '';
 
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
@@ -130,6 +135,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Output() sorted = new EventEmitter<any>();
   @Output() rowsReordered = new EventEmitter<any>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+  @Output() lazyLoaded = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -233,14 +239,17 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
         classesList.push('p-datatable-lg');
         break;
     }
-    switch (this.toolbarSize) {
-      case 'small':
-        classesList.push('cps-tbar-small');
-        break;
-      case 'normal':
-        classesList.push('cps-tbar-normal');
-        break;
+    if (this.hasToolbar) {
+      switch (this.toolbarSize) {
+        case 'small':
+          classesList.push('cps-tbar-small');
+          break;
+        case 'normal':
+          classesList.push('cps-tbar-normal');
+          break;
+      }
     }
+
     if (this.striped) {
       classesList.push('p-datatable-striped');
     }
@@ -301,14 +310,41 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   }
 
   onRowsPerPageChanged() {
-    if (this.goFirstOnRowsPerPageChange) {
-      this.first = 0;
-      this.primengTable.first = this.first;
+    if (this.resetPageOnRowsChange) {
+      this.primengTable.first = 0;
+    }
+    this.changePage(this.getPage());
+  }
+
+  getPageCount() {
+    return Math.ceil(this.primengTable.totalRecords / this.rows);
+  }
+
+  getPage(): number {
+    return Math.floor(this.primengTable.first / this.rows);
+  }
+
+  changePage(p: number) {
+    const pc = Math.ceil(this.getPageCount());
+
+    if (p >= 0 && p < pc) {
+      this.first = this.rows * p;
+      this.primengTable.onPageChange({ first: this.first, rows: this.rows });
     }
   }
 
   onPageChange(event: any) {
-    this.pageChanged.emit(event);
+    this.first = event.first;
+    this.rows = event.rows;
+
+    const state = {
+      page: this.getPage(),
+      first: this.first,
+      rows: this.rows,
+      pageCount: Math.ceil(this.getPageCount())
+    };
+
+    this.pageChanged.emit(state);
   }
 
   toggleAllColumns() {
@@ -348,6 +384,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   onRemoveRowClicked(item: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
     this.data = this.data.filter((v: any) => v !== item);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _defaultSortOrder, ...rest } = item;
     this.rowsRemoved.emit([rest]);
   }
@@ -358,6 +395,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
 
   onRowReorder(event: any) {
     this.rowsReordered.emit(event);
+  }
+
+  onLazyLoaded(event: any) {
+    this.lazyLoaded.emit(event);
   }
 
   exportTable(format: CpsTableExportFormat) {

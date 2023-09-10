@@ -46,6 +46,7 @@
         <cps-icon
           [icon]="prefixIcon"
           [size]="prefixIconSize"
+          [style.color]="disabled ? '#9a9595' : null"
           [style.cursor]="
             prefixIconClickable && !disabled ? 'pointer' : 'default'
           "

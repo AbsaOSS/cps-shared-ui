@@ -6,21 +6,23 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TableHeaderCheckbox } from 'primeng/table';
+import { TTHeaderCheckbox } from 'primeng/treetable';
 
 @Directive({
   standalone: true,
-  selector: '[cpsTHdrSelectable]'
+  selector: '[cpsTTHdrSelectable]'
 })
-export class CpsTableHeaderSelectableDirective implements OnInit, OnDestroy {
-  checkboxCompRef: ComponentRef<TableHeaderCheckbox>;
+export class CpsTreeTableHeaderSelectableDirective
+  implements OnInit, OnDestroy
+{
+  checkboxCompRef: ComponentRef<TTHeaderCheckbox>;
 
   constructor(
     private elementRef: ElementRef,
     private viewContainerRef: ViewContainerRef
   ) {
     this.checkboxCompRef =
-      this.viewContainerRef.createComponent(TableHeaderCheckbox);
+      this.viewContainerRef.createComponent(TTHeaderCheckbox);
   }
 
   ngOnInit(): void {

@@ -29,6 +29,7 @@
 - Tooltip directive
 - Tree autocomplete
 - Tree select
+- Tree table
 
 ### License
 

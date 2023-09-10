@@ -1,0 +1,49 @@
+<cps-tree-table
+  [data]="dataVirtual"
+  toolbarTitle="Tree table alpha version"
+  [columns]="cols"
+  [virtualScroll]="true"
+  [showColumnsToggle]="true"
+  [selectable]="true"
+  (columnsSelected)="onColumnsSelected($event)"
+  scrollHeight="500px"
+  sortMode="multiple">
+  <!-- <ng-template #nestedHeader>
+    <tr>
+      <th colspan="2">AB</th>
+      <th colspan="1">C</th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th>Size</th>
+      <th>Type</th>
+    </tr>
+  </ng-template> -->
+  <!-- <ng-template #header>
+    <th cpsTTColSortable="name">Name</th>
+    <th cpsTTColSortable="size">Size</th>
+    <th cpsTTColSortable="type">Type</th>
+  </ng-template>
+  <ng-template #body let-rowNode let-rowData="rowData">
+    <td [cpsTTRowToggler]="rowNode">
+      {{ rowData.name }}
+    </td>
+    <td>{{ rowData.size }}</td>
+    <td>{{ rowData.type }}</td>
+  </ng-template> -->
+
+  <ng-template #header>
+    <th *ngFor="let scol of selCols" [cpsTTColSortable]="scol.field">
+      {{ scol.header }}
+    </th>
+  </ng-template>
+  <ng-template #body let-rowNode let-rowData="rowData">
+    <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
+      <td *ngSwitchCase="'name'" [cpsTTRowToggler]="rowNode">
+        {{ rowData.name }}
+      </td>
+      <td *ngSwitchCase="'size'">{{ rowData.size }}</td>
+      <td *ngSwitchCase="'type'">{{ rowData.type }}</td>
+    </ng-container>
+  </ng-template>
+</cps-tree-table>
