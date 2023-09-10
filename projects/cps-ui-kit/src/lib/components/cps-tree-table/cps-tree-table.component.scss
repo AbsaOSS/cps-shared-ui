@@ -83,13 +83,6 @@ $tbar-normal-height: 72px;
         background-color: $row-selected-background !important;
       }
     }
-    // .p-treetable-scrollable-body
-    //   > table
-    //   > .p-treetable-tbody
-    //   > tr:first-child
-    //   > td {
-    //   border-top: 0 none;
-    // }
 
     .p-treetable .p-treetable-tbody > tr > td {
       text-align: left;
@@ -523,14 +516,6 @@ $tbar-normal-height: 72px;
       background: #3b82f6;
     }
 
-    // .p-treetable .p-treetable-loading-icon {
-    //   font-size: 2rem;
-    // }
-    // .p-treetable .p-treetable-loading-icon.p-icon {
-    //   width: 2rem;
-    //   height: 2rem;
-    // }
-
     .p-treetable .p-treetable-loading-overlay {
       position: absolute;
       display: flex;
@@ -744,25 +729,6 @@ $tbar-normal-height: 72px;
     .p-treetable .p-treetable-tbody > tr > td p-treetablecheckbox .p-checkbox {
       margin-right: 0;
     }
-
-    // .p-treetable.p-treetable-striped
-    //   .p-treetable-tbody
-    //   > tr:nth-child(even).p-highlight {
-    //   background: #eff6ff;
-    //   color: #1d4ed8;
-    // }
-    // .p-treetable.p-treetable-striped
-    //   .p-treetable-tbody
-    //   > tr:nth-child(even).p-highlight
-    //   .p-row-toggler {
-    //   color: #1d4ed8;
-    // }
-    // .p-treetable.p-treetable-striped
-    //   .p-treetable-tbody
-    //   > tr:nth-child(even).p-highlight
-    //   .p-row-toggler:hover {
-    //   color: #1d4ed8;
-    // }
   }
 }
 

@@ -122,7 +122,8 @@ export class CpsTreeTableComponent
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
 
-  @Input() showRowMenu = false;
+  // @Input() showRowMenu = false; // TODO
+  showRowMenu = false; // TODO
 
   @Input() loading = false;
 
@@ -131,7 +132,9 @@ export class CpsTreeTableComponent
   @Input() virtualScroll = false; // works only if scrollable is true
   @Input() numToleratedItems = 10;
 
-  @Input() showRemoveBtnOnSelect = true;
+  // @Input() showRemoveBtnOnSelect = false; // TODO
+  showRemoveBtnOnSelect = false; // TODO
+
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
