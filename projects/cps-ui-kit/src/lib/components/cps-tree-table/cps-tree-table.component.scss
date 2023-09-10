@@ -18,6 +18,7 @@ $paginator-elem-hover-background: #f8f4f5;
 $paginator-elem-active-background: #f1eaec;
 $sorticon-hover-color: var(--cps-color-text-dark);
 $badge-background-color: #f1eaec;
+$checkbox-border-color: var(--cps-color-text-mild);
 
 $tbar-small-height: 43px;
 $tbar-normal-height: 72px;
@@ -356,6 +357,9 @@ $tbar-normal-height: 72px;
       .cps-treetable-tbar-right {
         display: flex;
         align-items: center;
+        .cps-treetable-tbar-remove-btn {
+          margin-right: 4px;
+        }
         .cps-treetable-tbar-action-btn {
           margin-right: 4px;
           margin-left: 8px;
@@ -495,19 +499,6 @@ $tbar-normal-height: 72px;
     .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler.p-icon {
       width: 2rem;
       height: 2rem;
-    }
-    .p-treetable .p-treetable-tbody > tr > td p-treetablecheckbox .p-checkbox {
-      margin-right: 0.5rem;
-    }
-    .p-treetable
-      .p-treetable-tbody
-      > tr
-      > td
-      p-treetablecheckbox
-      .p-checkbox
-      .p-indeterminate
-      .p-checkbox-icon {
-      color: $body-text-color;
     }
 
     .p-treetable .p-treetable-tbody > tr.p-highlight {
@@ -662,6 +653,92 @@ $tbar-normal-height: 72px;
     .cps-treetable-row-menu-cell {
       width: 55px;
       border-left: none !important;
+    }
+
+    td:has(p-treetablecheckbox) {
+      text-align: center !important;
+    }
+
+    th:has(p-treetableheadercheckbox) {
+      text-align: center !important;
+      width: 55px !important;
+    }
+
+    .p-checkbox {
+      display: inline-flex;
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+      vertical-align: bottom;
+      position: relative;
+      width: 18px;
+      height: 18px;
+    }
+
+    .p-hidden-accessible {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    .p-hidden-accessible input,
+    .p-hidden-accessible select {
+      transform: scale(0);
+    }
+
+    .p-checkbox .p-checkbox-box {
+      background: #ffffff;
+      width: 18px;
+      height: 18px;
+      color: $body-text-color;
+      border: 2px solid $checkbox-border-color;
+      border-radius: 2px;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+        box-shadow 0.2s;
+    }
+
+    .p-checkbox-box {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .p-checkbox .p-checkbox-box.p-highlight {
+      border-color: $color-calm;
+      background: $color-calm;
+    }
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+      border-color: $color-calm;
+      background: $color-calm;
+      color: #ffffff;
+    }
+    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+      border-color: $color-calm;
+    }
+
+    .p-checkbox .p-checkbox-box .p-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    .p-checkbox .p-checkbox-box .p-checkbox-icon {
+      transition-duration: 0.2s;
+      color: #ffffff;
+      font-size: 14px;
+    }
+
+    .p-checkbox .p-checkbox-box minusicon .p-checkbox-icon {
+      color: $color-calm;
+      width: 12px;
+    }
+
+    .p-treetable .p-treetable-tbody > tr > td p-treetablecheckbox .p-checkbox {
+      margin-right: 0;
     }
 
     // .p-treetable.p-treetable-striped

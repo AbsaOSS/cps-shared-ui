@@ -15,6 +15,8 @@
   [loading]="loading"
   [rowHover]="rowHover"
   [lazy]="lazy"
+  [(selection)]="selectedRows"
+  compareSelectionBy="equals"
   [lazyLoadOnInit]="lazyLoadOnInit"
   [styleClass]="styleClass"
   [tableStyle]="tableStyle"
@@ -57,6 +59,18 @@
         </div>
       </div>
       <div class="cps-treetable-tbar-right">
+        <div
+          *ngIf="showRemoveBtnOnSelect && selectedRows.length > 0"
+          class="cps-treetable-tbar-remove-btn">
+          <cps-button
+            label="Remove"
+            color="prepared"
+            type="borderless"
+            icon="remove"
+            [size]="toolbarSize"
+            (clicked)="removeSelected()">
+          </cps-button>
+        </div>
         <div *ngIf="showActionBtn" class="cps-treetable-tbar-action-btn">
           <cps-button
             [label]="actionBtnTitle"
@@ -118,10 +132,10 @@
 
   <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
-      <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th>
-      <th style="width: 4rem" *ngIf="selectable">
-        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-      </th> -->
+      <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th> -->
+      <th style="width: 55px" *ngIf="selectable">
+        <p-treeTableHeaderCheckbox></p-treeTableHeaderCheckbox>
+      </th>
       <ng-container *ngIf="headerTemplate">
         <ng-container
           *ngTemplateOutlet="
@@ -158,10 +172,10 @@
     <tr [ttRow]="rowNode">
       <!-- <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
-      </td>
-      <td *ngIf="selectable">
-        <p-tableCheckbox [value]="item"></p-tableCheckbox>
       </td> -->
+      <td style="width: 55px" *ngIf="selectable">
+        <p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
+      </td>
       <ng-container *ngIf="bodyTemplate">
         <ng-container
           *ngTemplateOutlet="
@@ -186,8 +200,8 @@
       </ng-container>
       <td *ngIf="showRowMenu" class="cps-treetable-row-menu-cell">
         <table-row-menu
-          (editRowBtnClicked)="onEditRowClicked(rowNode)"
-          (removeRowBtnClicked)="onRemoveRowClicked(rowNode)">
+          (editRowBtnClicked)="onEditRowClicked(rowNode.node)"
+          (removeRowBtnClicked)="onRemoveRowClicked(rowNode.node)">
         </table-row-menu>
       </td>
     </tr>

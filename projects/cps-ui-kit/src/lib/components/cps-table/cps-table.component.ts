@@ -384,6 +384,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   onRemoveRowClicked(item: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
     this.data = this.data.filter((v: any) => v !== item);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _defaultSortOrder, ...rest } = item;
     this.rowsRemoved.emit([rest]);
   }

@@ -92,6 +92,7 @@ export class CpsTreeTableComponent
   @Input() bordered = true;
   @Input() tableStyle = undefined;
   @Input() tableStyleClass = '';
+  @Input() selectable = false;
 
   @Input() sortable = false; // makes all sortable if columns are provided
   @Input() sortMode: CpsTreeTableSortMode = 'single';
@@ -130,6 +131,7 @@ export class CpsTreeTableComponent
   @Input() virtualScroll = false; // works only if scrollable is true
   @Input() numToleratedItems = 10;
 
+  @Input() showRemoveBtnOnSelect = true;
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
@@ -144,6 +146,8 @@ export class CpsTreeTableComponent
   @Output() nodeSelected = new EventEmitter<any>();
   @Output() nodeUnselected = new EventEmitter<any>();
   @Output() sorted = new EventEmitter<any>();
+  @Output() editRowBtnClicked = new EventEmitter<any>();
+  @Output() rowsRemoved = new EventEmitter<any[]>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -170,6 +174,8 @@ export class CpsTreeTableComponent
   selectedColumns: { [key: string]: any }[] = [];
 
   rowOptions: { label: string; value: number }[] = [];
+
+  selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
   // defScrollHeight = 0;
@@ -332,17 +338,34 @@ export class CpsTreeTableComponent
     this.actionBtnClicked.emit();
   }
 
-  onEditRowClicked(rowNode: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const { _defaultSortOrder, ...rest } = rowNode;
-    // this.editRowBtnClicked.emit(rest);
+  removeSelected() {
+    // TODO
+    // const indexes: number[] = this.primengTreeTable.selection.map(
+    //   (s: any) => s._defaultSortOrder
+    // );
+    // indexes.sort((a, b) => b - a);
+    // this.data = this.data.filter(
+    //   (v: any) => !indexes.includes(v._defaultSortOrder)
+    // );
+    // this.rowsRemoved.emit(
+    //   this.selectedRows.map(({ _defaultSortOrder, ...rest }) => rest)
+    // );
+    // this.selectedRows = [];
   }
 
-  onRemoveRowClicked(rowNode: any) {
-    // this.selectedRows = this.selectedRows.filter((v: any) => v !== rowNode);
-    // this.data = this.data.filter((v: any) => v !== rowNode);
-    // const { _defaultSortOrder, ...rest } = rowNode;
-    // this.rowsRemoved.emit([rest]);
+  onEditRowClicked(node: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _defaultSortOrder, expanded, ...rest } = node;
+    this.editRowBtnClicked.emit(rest);
+  }
+
+  onRemoveRowClicked(node: any) {
+    // TODO remove children of nodes
+    this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
+    this.data = this.data.filter((v: any) => v !== node);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _defaultSortOrder, expanded, ...rest } = node;
+    this.rowsRemoved.emit([rest]);
   }
 
   toggleAllColumns() {
