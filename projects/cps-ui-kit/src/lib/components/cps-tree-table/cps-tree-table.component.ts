@@ -207,13 +207,19 @@ export class CpsTreeTableComponent
   }
 
   ngOnInit(): void {
-    if (this.virtualScroll)
-      window.addEventListener('resize', this._onWindowResize.bind(this));
-
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
 
-    if (this.virtualScroll) this.defScrollHeight = this.scrollHeight;
+    if (this.virtualScroll) {
+      this.defScrollHeight = this.scrollHeight;
+
+      if (this.defScrollHeight === 'flex')
+        window.addEventListener('resize', this._onWindowResize.bind(this));
+
+      if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
+        this.defScrollHeightPx = parseInt(this.scrollHeight, 10);
+      }
+    }
 
     if (this.paginator) {
       if (this.rowsPerPageOptions.length < 1)
@@ -251,7 +257,9 @@ export class CpsTreeTableComponent
       this.headerBox = this.primengTreeTable.el.nativeElement.querySelector(
         '.p-treetable-scrollable-header-box'
       );
-      this.defScrollHeightPx = this.scrollableBody.clientHeight;
+      if (this.virtualScroll && this.defScrollHeight === 'flex')
+        this.defScrollHeightPx = this.scrollableBody.clientHeight;
+
       if (this.headerBox) {
         this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
         this.resizeObserver.observe(this.scrollableBody);
@@ -270,7 +278,7 @@ export class CpsTreeTableComponent
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
-    if (this.virtualScroll)
+    if (this.virtualScroll && this.defScrollHeight === 'flex')
       window.removeEventListener('resize', this._onWindowResize.bind(this));
   }
 
@@ -324,7 +332,7 @@ export class CpsTreeTableComponent
           ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
           : this.virtualScrollItemSize + 1 + 'px';
       } else {
-        const curHeight = this.virtualScrollItemSize * itemsLen + 1;
+        const curHeight = this.virtualScrollItemSize * itemsLen + 2;
         if (this.defScrollHeight === 'flex') {
           if (curHeight >= this.defScrollHeightPx) {
             this.scrollHeight = 'flex';
