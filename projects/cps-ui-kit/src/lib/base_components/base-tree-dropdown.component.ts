@@ -28,7 +28,7 @@ import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
 @Component({
   template: ''
 })
-export class CpsTreeDropdownBaseComponent
+export class BaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
