@@ -14,29 +14,29 @@ import {
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   TreeTable,
   TreeTableService,
   TreeTableModule
 } from 'primeng/treetable';
 import { DomHandler } from 'primeng/dom';
-import { CpsInputComponent } from '../cps-input/cps-input.component';
-import { CpsButtonComponent } from '../cps-button/cps-button.component';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
-import { find, isEqual } from 'lodash-es';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
-import { CpsSelectComponent } from '../cps-select/cps-select.component';
-import { FormsModule } from '@angular/forms';
 import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
 import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
-import { convertSize } from '../../utils/internal/size-utils';
-import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { SortEvent } from 'primeng/api';
+import { find, isEqual } from 'lodash-es';
+import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { CpsButtonComponent } from '../cps-button/cps-button.component';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsSelectComponent } from '../cps-select/cps-select.component';
+import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
 import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
+import { convertSize } from '../../utils/internal/size-utils';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
