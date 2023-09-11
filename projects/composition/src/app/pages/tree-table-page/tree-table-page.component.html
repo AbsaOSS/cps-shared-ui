@@ -1,5 +1,5 @@
 <cps-tree-table
-  [data]="dataVirtual"
+  [data]="data"
   toolbarTitle="Tree table alpha version"
   [columns]="cols"
   [virtualScroll]="true"
@@ -34,7 +34,11 @@
   </ng-template> -->
 
   <ng-template #header>
-    <th *ngFor="let scol of selCols" [cpsTTColSortable]="scol.field">
+    <th
+      *ngFor="let scol of selCols"
+      [cpsTTColSortable]="scol.field"
+      [cpsTTColFilter]="scol.field"
+      filterType="text">
       {{ scol.header }}
     </th>
   </ng-template>
@@ -48,3 +52,9 @@
     </ng-container>
   </ng-template>
 </cps-tree-table>
+
+<!-- <th cpsTColSortable="a" cpsTColFilter="a" filterType="text">A</th>
+<th cpsTColSortable="b" cpsTColFilter="b" filterType="date">B</th>
+<th cpsTColSortable="c" cpsTColFilter="c" filterType="number">C</th>
+<th cpsTColSortable="d" cpsTColFilter="d" filterType="boolean">D</th>
+<th cpsTColSortable="e" cpsTColFilter="e" filterType="category">E</th> -->

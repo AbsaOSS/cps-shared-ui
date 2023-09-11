@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata } from 'primeng/api';
@@ -10,6 +10,7 @@ import {
   BtnToggleOption,
   CpsButtonToggleComponent
 } from '../../../cps-button-toggle/cps-button-toggle.component';
+import { TreeTable } from 'primeng/treetable';
 
 @Component({
   selector: 'table-column-filter-constraint',
@@ -40,8 +41,11 @@ export class TableColumnFilterConstraintComponent implements OnInit {
 
   categories: { label: string; value: string }[] = [];
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(public dt: Table) {}
+  _tableInstance: Table | TreeTable;
+
+  constructor(@Optional() public dt: Table, @Optional() public tt: TreeTable) {
+    this._tableInstance = dt || tt;
+  }
 
   ngOnInit(): void {
     if (this.type === 'category') {
@@ -53,7 +57,10 @@ export class TableColumnFilterConstraintComponent implements OnInit {
       } else {
         this.categories =
           Array.from(
-            new Set(this.dt.value?.map((v) => v[this.field as string]) || [])
+            new Set(
+              this._tableInstance.value?.map((v) => v[this.field as string]) ||
+                []
+            )
           )?.map((c) => ({
             label: c,
             value: c
@@ -66,12 +73,12 @@ export class TableColumnFilterConstraintComponent implements OnInit {
     (<any>this.filterConstraint).value = value;
 
     if (value === '' || !this.hasApplyButton) {
-      this.dt._filter();
+      this._tableInstance._filter();
     }
   }
 
   onEnterKeyDown(event: any) {
-    this.dt._filter();
+    this._tableInstance._filter();
     event.preventDefault();
   }
 }

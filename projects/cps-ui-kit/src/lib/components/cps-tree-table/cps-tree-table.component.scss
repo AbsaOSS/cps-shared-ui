@@ -552,14 +552,12 @@ $tbar-normal-height: 72px;
       }
     }
 
-    //TODO
-    .p-sortable-column.cps-treetable-col-filter-menu-open {
+    .p-sortable-column.cps-table-col-filter-menu-open {
       cursor: default;
     }
 
-    //TODO
-    .cps-treetable-col-filter-menu-open {
-      .cps-treetable-col-filter-menu-button {
+    .cps-table-col-filter-menu-open {
+      .cps-table-col-filter-menu-button {
         color: $body-text-color;
       }
     }

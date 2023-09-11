@@ -49,7 +49,7 @@ export class CpsTreeTableColumnSortableDirective
   override onClick(event: MouseEvent): void {
     if (
       !this.elementRef?.nativeElement?.classList?.contains(
-        'cps-treetable-col-filter-menu-open'
+        'cps-table-col-filter-menu-open'
       )
     ) {
       super.onClick(event);

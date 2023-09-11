@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   CpsTreeTableComponent,
   CpsTreetableRowTogglerDirective,
-  CpsTreeTableColumnSortableDirective
+  CpsTreeTableColumnSortableDirective,
+  CpsTreeTableColumnFilterDirective
 } from 'cps-ui-kit';
 
 @Component({
@@ -13,7 +14,8 @@ import {
     CommonModule,
     CpsTreeTableComponent,
     CpsTreetableRowTogglerDirective,
-    CpsTreeTableColumnSortableDirective
+    CpsTreeTableColumnSortableDirective,
+    CpsTreeTableColumnFilterDirective
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
