@@ -122,8 +122,7 @@ export class CpsTreeTableComponent
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
 
-  // @Input() showRowMenu = false; // TODO
-  showRowMenu = false; // TODO
+  @Input() showRowMenu = false;
 
   @Input() loading = false;
 
@@ -132,9 +131,7 @@ export class CpsTreeTableComponent
   @Input() virtualScroll = false; // works only if scrollable is true
   @Input() numToleratedItems = 10;
 
-  // @Input() showRemoveBtnOnSelect = false; // TODO
-  showRemoveBtnOnSelect = false; // TODO
-
+  @Input() showRemoveBtnOnSelect = true;
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
@@ -361,18 +358,19 @@ export class CpsTreeTableComponent
   }
 
   removeSelected() {
-    // TODO
-    // const indexes: number[] = this.primengTreeTable.selection.map(
-    //   (s: any) => s._defaultSortOrder
-    // );
-    // indexes.sort((a, b) => b - a);
-    // this.data = this.data.filter(
-    //   (v: any) => !indexes.includes(v._defaultSortOrder)
-    // );
-    // this.rowsRemoved.emit(
-    //   this.selectedRows.map(({ _defaultSortOrder, ...rest }) => rest)
-    // );
-    // this.selectedRows = [];
+    this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
+    this.data = [...this.data];
+    this.rowsRemoved.emit(
+      this.selectedRows.map(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ({ _defaultSortOrder, expanded, partialSelected, ...rest }) => rest
+      )
+    );
+    this.selectedRows = [];
+    setTimeout(() => {
+      this._recalcVirtualHeight();
+      this.cdRef.markForCheck();
+    });
   }
 
   onEditRowClicked(node: any) {
@@ -382,15 +380,57 @@ export class CpsTreeTableComponent
   }
 
   onRemoveRowClicked(node: any) {
-    // TODO remove children of nodes
-
-    // find by default sort order in object itself or in nested parent
-    // then find the node itself
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
-    this.data = this.data.filter((v: any) => v !== node);
+    this._removeNodeFromData(node);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
     this.rowsRemoved.emit([rest]);
+    setTimeout(() => {
+      this._recalcVirtualHeight();
+      this.cdRef.markForCheck();
+    });
+  }
+
+  private _removeNodeFromData(nodeToRemove: any, single = true): void {
+    const _findTopSortOrder = (_node: any): any => {
+      if (!_node) return undefined;
+      if (typeof _node._defaultSortOrder === 'number')
+        return _node._defaultSortOrder;
+      return _findTopSortOrder(_node.parent);
+    };
+
+    const _removeFromChildren = (_node: any) => {
+      if (!_node?.children) return false;
+      const idx = _node.children.indexOf(nodeToRemove);
+      if (idx >= 0) {
+        _node.children.splice(idx, 1);
+        if (_node.children.length === 0) {
+          delete _node.children;
+        }
+        return true;
+      } else {
+        for (const child of _node.children) {
+          if (_removeFromChildren(child)) return true;
+        }
+        return false;
+      }
+    };
+
+    // locate top level node
+    const sortOrder = _findTopSortOrder(nodeToRemove);
+    if (sortOrder === undefined) return;
+    const node = this.data.find((n) => n._defaultSortOrder === sortOrder);
+    if (!node) return;
+
+    // remove the node itself or remove its child
+    if (nodeToRemove === node) {
+      this.data = this.data.filter((v: any) => v !== nodeToRemove);
+    } else {
+      if (node.children) {
+        _removeFromChildren(node);
+        if (single) this.data = [...this.data];
+      }
+    }
   }
 
   toggleAllColumns() {

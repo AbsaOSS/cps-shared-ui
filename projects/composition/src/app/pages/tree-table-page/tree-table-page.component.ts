@@ -39,7 +39,30 @@ export class TreeTablePageComponent implements OnInit {
               data: {
                 name: 'angular.app',
                 size: '10mb',
-                type: 'Application'
+                type: 'Application',
+                children: [
+                  {
+                    data: {
+                      name: 'angular.app',
+                      size: '10mb',
+                      type: 'Application'
+                    }
+                  },
+                  {
+                    data: {
+                      name: 'cli.app',
+                      size: '10mb',
+                      type: 'Application'
+                    }
+                  },
+                  {
+                    data: {
+                      name: 'mobile.app',
+                      size: '5mb',
+                      type: 'Application'
+                    }
+                  }
+                ]
               }
             },
             {
