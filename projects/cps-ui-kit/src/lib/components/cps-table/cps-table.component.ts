@@ -133,6 +133,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Output() rowsRemoved = new EventEmitter<any[]>();
   @Output() pageChanged = new EventEmitter<any>();
   @Output() sorted = new EventEmitter<any>();
+  @Output() filtered = new EventEmitter<any>();
   @Output() rowsReordered = new EventEmitter<any>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
   @Output() lazyLoaded = new EventEmitter<any>();
@@ -391,6 +392,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
 
   onSort(event: any) {
     this.sorted.emit(event);
+  }
+
+  onFilter(event: any) {
+    this.filtered.emit(event);
   }
 
   onRowReorder(event: any) {

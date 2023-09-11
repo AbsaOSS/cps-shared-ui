@@ -146,6 +146,7 @@ export class CpsTreeTableComponent
   @Output() nodeSelected = new EventEmitter<any>();
   @Output() nodeUnselected = new EventEmitter<any>();
   @Output() sorted = new EventEmitter<any>();
+  @Output() filtered = new EventEmitter<any>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
   @Output() rowsRemoved = new EventEmitter<any[]>();
 
@@ -514,6 +515,10 @@ export class CpsTreeTableComponent
 
   onSort(event: any) {
     this.sorted.emit(event);
+  }
+
+  onFilter(event: any) {
+    this.filtered.emit(event);
   }
 
   onSelectColumn(col: any) {

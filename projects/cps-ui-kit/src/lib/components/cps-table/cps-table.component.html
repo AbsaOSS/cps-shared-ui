@@ -37,6 +37,7 @@
   (onLazyLoad)="onLazyLoaded($event)"
   (sortFunction)="onSortFunction($event)"
   (onSort)="onSort($event)"
+  (onFilter)="onFilter($event)"
   (onRowReorder)="onRowReorder($event)">
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
