@@ -1,4 +1,11 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  Optional,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -13,6 +20,7 @@ import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
+import { TreeTable } from 'primeng/treetable';
 
 @Component({
   selector: 'table-column-filter',
@@ -95,11 +103,18 @@ export class TableColumnFilterComponent {
   @ViewChild('columnFilterMenu')
   columnFilterMenu!: CpsMenuComponent;
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(public elementRef: ElementRef, public dt: Table) {}
+  _tableInstance: Table | TreeTable;
+
+  constructor(
+    public elementRef: ElementRef,
+    @Optional() public dt: Table,
+    @Optional() public tt: TreeTable
+  ) {
+    this._tableInstance = dt || tt;
+  }
 
   ngOnInit() {
-    if (!this.dt.filters[<string>this.field]) {
+    if (!this._tableInstance.filters[<string>this.field]) {
       this.initFieldFilterConstraint();
     }
 
@@ -120,25 +135,32 @@ export class TableColumnFilterComponent {
 
   initFieldFilterConstraint() {
     const defaultMatchMode = this.getDefaultMatchMode();
-    this.dt.filters[<string>this.field] = [
-      {
+    if (this._tableInstance instanceof Table) {
+      this._tableInstance.filters[<string>this.field] = [
+        {
+          value: null,
+          matchMode: defaultMatchMode,
+          operator: this.operator
+        }
+      ];
+    } else {
+      this._tableInstance.filters[<string>this.field] = {
         value: null,
-        matchMode: defaultMatchMode,
-        operator: this.operator
-      }
-    ];
+        matchMode: defaultMatchMode
+      };
+    }
   }
 
   onMenuMatchModeChange(value: any, filterMeta: FilterMetadata) {
     filterMeta.matchMode = value;
 
     if (!this.showApplyButton) {
-      this.dt._filter();
+      this._tableInstance._filter();
     }
   }
 
   addConstraint() {
-    (<FilterMetadata[]>this.dt.filters[<string>this.field]).push({
+    (<FilterMetadata[]>this._tableInstance.filters[<string>this.field]).push({
       value: null,
       matchMode: this.getDefaultMatchMode(),
       operator: this.getDefaultOperator()
@@ -146,14 +168,14 @@ export class TableColumnFilterComponent {
   }
 
   removeConstraint(filterMeta: FilterMetadata) {
-    this.dt.filters[<string>this.field] = (<FilterMetadata[]>(
-      this.dt.filters[<string>this.field]
+    this._tableInstance.filters[<string>this.field] = (<FilterMetadata[]>(
+      this._tableInstance.filters[<string>this.field]
     )).filter((meta) => meta !== filterMeta);
-    this.dt._filter();
+    this._tableInstance._filter();
   }
 
   onOperatorChange(value: any) {
-    (<FilterMetadata[]>this.dt.filters[<string>this.field]).forEach(
+    (<FilterMetadata[]>this._tableInstance.filters[<string>this.field]).forEach(
       (filterMeta) => {
         filterMeta.operator = value;
         this.operator = value;
@@ -161,7 +183,7 @@ export class TableColumnFilterComponent {
     );
 
     if (!this.showApplyButton) {
-      this.dt._filter();
+      this._tableInstance._filter();
     }
   }
 
@@ -174,16 +196,23 @@ export class TableColumnFilterComponent {
   }
 
   getDefaultOperator(): string | undefined {
-    return this.dt.filters
-      ? (<FilterMetadata[]>this.dt.filters[<string>(<string>this.field)])[0]
-          .operator
+    return this._tableInstance.filters
+      ? (<FilterMetadata[]>(
+          this._tableInstance.filters[<string>(<string>this.field)]
+        ))[0].operator
       : this.operator;
   }
 
   get fieldConstraints(): FilterMetadata[] | undefined | null {
-    return this.dt.filters
-      ? <FilterMetadata[]>this.dt.filters[<string>this.field]
-      : null;
+    if (this._tableInstance instanceof Table) {
+      return this._tableInstance.filters
+        ? <FilterMetadata[]>this._tableInstance.filters[<string>this.field]
+        : null;
+    } else {
+      return this._tableInstance.filters
+        ? <FilterMetadata[]>[this._tableInstance.filters[<string>this.field]]
+        : null;
+    }
   }
 
   get showRemoveIcon(): boolean {
@@ -207,11 +236,13 @@ export class TableColumnFilterComponent {
   }
 
   hasFilter(): boolean {
-    const fieldFilter = this.dt.filters[<string>this.field];
+    const fieldFilter = this._tableInstance.filters[<string>this.field];
     if (fieldFilter) {
       if (Array.isArray(fieldFilter))
-        return !this.dt.isFilterBlank((<FilterMetadata[]>fieldFilter)[0].value);
-      else return !this.dt.isFilterBlank(fieldFilter.value);
+        return !this._tableInstance.isFilterBlank(
+          (<FilterMetadata[]>fieldFilter)[0].value
+        );
+      else return !this._tableInstance.isFilterBlank(fieldFilter.value);
     }
 
     return false;
@@ -223,12 +254,12 @@ export class TableColumnFilterComponent {
 
   clearFilter() {
     this.initFieldFilterConstraint();
-    this.dt._filter();
+    this._tableInstance._filter();
     if (this.hideOnClear) this.hide();
   }
 
   applyFilter() {
-    this.dt._filter();
+    this._tableInstance._filter();
     this.hide();
   }
 
@@ -242,5 +273,10 @@ export class TableColumnFilterComponent {
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
     parent.classList.remove(className);
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: any) {
+    event.stopPropagation();
   }
 }

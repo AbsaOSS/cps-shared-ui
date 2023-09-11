@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import {
   CpsTreeTableComponent,
   CpsTreetableRowTogglerDirective,
-  CpsTreeTableColumnSortableDirective
+  CpsTreeTableColumnSortableDirective,
+  CpsTreeTableColumnFilterDirective
 } from 'cps-ui-kit';
 
 @Component({
@@ -13,7 +14,8 @@ import {
     CommonModule,
     CpsTreeTableComponent,
     CpsTreetableRowTogglerDirective,
-    CpsTreeTableColumnSortableDirective
+    CpsTreeTableColumnSortableDirective,
+    CpsTreeTableColumnFilterDirective
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
@@ -317,21 +319,21 @@ export class TreeTablePageComponent implements OnInit {
       data: {
         name: 'Videos',
         size: '1500mb',
-        type: 'Folder'
+        type: 'Directory'
       },
       children: [
         {
           data: {
             name: 'primefaces.mkv',
             size: '1000mb',
-            type: 'Video'
+            type: 'Directory'
           }
         },
         {
           data: {
             name: 'intro.avi',
             size: '500mb',
-            type: 'Video'
+            type: 'Directory'
           }
         }
       ]

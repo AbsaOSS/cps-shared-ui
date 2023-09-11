@@ -14,29 +14,29 @@ import {
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   TreeTable,
   TreeTableService,
   TreeTableModule
 } from 'primeng/treetable';
 import { DomHandler } from 'primeng/dom';
-import { CpsInputComponent } from '../cps-input/cps-input.component';
-import { CpsButtonComponent } from '../cps-button/cps-button.component';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
-import { find, isEqual } from 'lodash-es';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
-import { CpsSelectComponent } from '../cps-select/cps-select.component';
-import { FormsModule } from '@angular/forms';
 import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
 import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
-import { convertSize } from '../../utils/internal/size-utils';
-import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { SortEvent } from 'primeng/api';
+import { find, isEqual } from 'lodash-es';
+import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { CpsButtonComponent } from '../cps-button/cps-button.component';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsSelectComponent } from '../cps-select/cps-select.component';
+import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
 import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
+import { convertSize } from '../../utils/internal/size-utils';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -87,12 +87,17 @@ export class CpsTreeTableComponent
   @Input() colHeaderName = 'header';
   @Input() colFieldName = 'field';
 
-  @Input() size: CpsTreeTableSize = 'normal';
   @Input() striped = true;
   @Input() bordered = true;
+  @Input() size: CpsTreeTableSize = 'normal';
+  @Input() selectable = false;
+  @Input() rowHover = true;
+  @Input() showRowMenu = false;
+  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
+  @Input() loading = false;
+
   @Input() tableStyle = undefined;
   @Input() tableStyleClass = '';
-  @Input() selectable = false;
 
   @Input() sortable = false; // makes all sortable if columns are provided
   @Input() sortMode: CpsTreeTableSortMode = 'single';
@@ -102,11 +107,10 @@ export class CpsTreeTableComponent
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
 
-  @Input() rowHover = true;
-
-  @Input() showGlobalFilter = true;
-  @Input() globalFilterPlaceholder = 'Search';
-  @Input() globalFilterFields: string[] = [];
+  @Input() scrollable = true;
+  @Input() scrollHeight = ''; // 'flex' or value+'px'
+  @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
   @Input() alwaysShowPaginator = true;
@@ -122,20 +126,13 @@ export class CpsTreeTableComponent
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
 
-  @Input() showRowMenu = false;
-
-  @Input() loading = false;
-
-  @Input() scrollable = true;
-  @Input() scrollHeight = ''; // 'flex' or value+'px'
-  @Input() virtualScroll = false; // works only if scrollable is true
-  @Input() numToleratedItems = 10;
+  @Input() showGlobalFilter = false;
+  @Input() globalFilterPlaceholder = 'Search';
+  @Input() globalFilterFields: string[] = [];
 
   @Input() showRemoveBtnOnSelect = true;
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
-
-  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
 
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
@@ -146,6 +143,7 @@ export class CpsTreeTableComponent
   @Output() nodeSelected = new EventEmitter<any>();
   @Output() nodeUnselected = new EventEmitter<any>();
   @Output() sorted = new EventEmitter<any>();
+  @Output() filtered = new EventEmitter<any>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
   @Output() rowsRemoved = new EventEmitter<any[]>();
 
@@ -347,10 +345,6 @@ export class CpsTreeTableComponent
 
   onFilterGlobal(value: string) {
     this.primengTreeTable.filterGlobal(value, 'contains');
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    }, 300);
   }
 
   onClickActionBtn() {
@@ -514,6 +508,14 @@ export class CpsTreeTableComponent
 
   onSort(event: any) {
     this.sorted.emit(event);
+  }
+
+  onFilter(event: any) {
+    this.filtered.emit(event);
+    setTimeout(() => {
+      this._recalcVirtualHeight();
+      this.cdRef.markForCheck();
+    });
   }
 
   onSelectColumn(col: any) {

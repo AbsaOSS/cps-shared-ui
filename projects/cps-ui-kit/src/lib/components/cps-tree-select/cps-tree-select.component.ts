@@ -15,7 +15,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { TreeModule } from 'primeng/tree';
-import { CpsTreeDropdownBaseComponent } from '../../base_components/cps-tree-dropdown-base.component';
+import { BaseTreeDropdownComponent } from '../../base_components/base-tree-dropdown.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsTreeSelectAppearanceType =
@@ -42,7 +42,7 @@ export type CpsTreeSelectAppearanceType =
   styleUrls: ['./cps-tree-select.component.scss']
 })
 export class CpsTreeSelectComponent
-  extends CpsTreeDropdownBaseComponent
+  extends BaseTreeDropdownComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @Input() appearance: CpsTreeSelectAppearanceType = 'outlined';
