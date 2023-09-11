@@ -85,6 +85,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() reorderableRows = false;
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
   @Input() loading = false;
+
   @Input() tableStyle = undefined;
   @Input() tableStyleClass = '';
 

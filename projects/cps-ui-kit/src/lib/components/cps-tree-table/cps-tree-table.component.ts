@@ -87,12 +87,17 @@ export class CpsTreeTableComponent
   @Input() colHeaderName = 'header';
   @Input() colFieldName = 'field';
 
-  @Input() size: CpsTreeTableSize = 'normal';
   @Input() striped = true;
   @Input() bordered = true;
+  @Input() size: CpsTreeTableSize = 'normal';
+  @Input() selectable = false;
+  @Input() rowHover = true;
+  @Input() showRowMenu = false;
+  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
+  @Input() loading = false;
+
   @Input() tableStyle = undefined;
   @Input() tableStyleClass = '';
-  @Input() selectable = false;
 
   @Input() sortable = false; // makes all sortable if columns are provided
   @Input() sortMode: CpsTreeTableSortMode = 'single';
@@ -102,11 +107,10 @@ export class CpsTreeTableComponent
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
 
-  @Input() rowHover = true;
-
-  @Input() showGlobalFilter = true;
-  @Input() globalFilterPlaceholder = 'Search';
-  @Input() globalFilterFields: string[] = [];
+  @Input() scrollable = true;
+  @Input() scrollHeight = ''; // 'flex' or value+'px'
+  @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
   @Input() alwaysShowPaginator = true;
@@ -122,20 +126,13 @@ export class CpsTreeTableComponent
   @Input() lazy = false;
   @Input() lazyLoadOnInit = true;
 
-  @Input() showRowMenu = false;
-
-  @Input() loading = false;
-
-  @Input() scrollable = true;
-  @Input() scrollHeight = ''; // 'flex' or value+'px'
-  @Input() virtualScroll = false; // works only if scrollable is true
-  @Input() numToleratedItems = 10;
+  @Input() showGlobalFilter = false;
+  @Input() globalFilterPlaceholder = 'Search';
+  @Input() globalFilterFields: string[] = [];
 
   @Input() showRemoveBtnOnSelect = true;
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
-
-  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
 
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
