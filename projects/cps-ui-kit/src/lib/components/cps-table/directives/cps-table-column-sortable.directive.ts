@@ -42,14 +42,4 @@ export class CpsTableColumnSortableDirective
     this.sortIconRef.destroy();
     this.viewContainerRef.clear();
   }
-
-  override onClick(event: MouseEvent): void {
-    if (
-      !this.elementRef?.nativeElement?.classList?.contains(
-        'cps-table-col-filter-menu-open'
-      )
-    ) {
-      super.onClick(event);
-    }
-  }
 }

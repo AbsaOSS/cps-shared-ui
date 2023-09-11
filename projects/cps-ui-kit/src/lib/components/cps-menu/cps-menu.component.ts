@@ -87,6 +87,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   @Input() withArrow = true;
   @Input() compressed = false; // prepared-colored, without header and items description
   @Input() focusOnShow = true;
+  @Input() persistent = false;
   @Input() containerClass = '';
   @Input() showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
   @Input() hideTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
@@ -241,6 +242,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
             documentEvent,
             (event) => {
               if (
+                !this.persistent &&
                 !this.container?.contains(event.target) &&
                 this.target !== event.target &&
                 !this.target.contains(event.target) &&

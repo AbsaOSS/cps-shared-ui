@@ -319,21 +319,21 @@ export class TreeTablePageComponent implements OnInit {
       data: {
         name: 'Videos',
         size: '1500mb',
-        type: 'Folder'
+        type: 'Directory'
       },
       children: [
         {
           data: {
             name: 'primefaces.mkv',
             size: '1000mb',
-            type: 'Video'
+            type: 'Directory'
           }
         },
         {
           data: {
             name: 'intro.avi',
             size: '500mb',
-            type: 'Video'
+            type: 'Directory'
           }
         }
       ]

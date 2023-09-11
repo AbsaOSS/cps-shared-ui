@@ -348,10 +348,6 @@ export class CpsTreeTableComponent
 
   onFilterGlobal(value: string) {
     this.primengTreeTable.filterGlobal(value, 'contains');
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    }, 300);
   }
 
   onClickActionBtn() {
@@ -519,6 +515,10 @@ export class CpsTreeTableComponent
 
   onFilter(event: any) {
     this.filtered.emit(event);
+    setTimeout(() => {
+      this._recalcVirtualHeight();
+      this.cdRef.markForCheck();
+    });
   }
 
   onSelectColumn(col: any) {

@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   Input,
   Optional,
   ViewChild
@@ -145,8 +146,7 @@ export class TableColumnFilterComponent {
     } else {
       this._tableInstance.filters[<string>this.field] = {
         value: null,
-        matchMode: defaultMatchMode,
-        operator: this.operator
+        matchMode: defaultMatchMode
       };
     }
   }
@@ -273,5 +273,10 @@ export class TableColumnFilterComponent {
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
     parent.classList.remove(className);
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: any) {
+    event.stopPropagation();
   }
 }
