@@ -141,7 +141,10 @@
             class="cps-autocomplete-options-option select-all-option"
             [class.allselected]="value?.length === options.length"
             *ngIf="
-              multiple && selectAll && filteredOptions.length === options.length
+              multiple &&
+              selectAll &&
+              filteredOptions.length === options.length &&
+              options.length > 1
             "
             (click)="toggleAll()">
             <span class="cps-autocomplete-options-option-left">

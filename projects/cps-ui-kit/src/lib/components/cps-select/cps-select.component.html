@@ -120,7 +120,7 @@
           <div
             class="cps-select-options-option select-all-option"
             [class.allselected]="value?.length === options.length"
-            *ngIf="multiple && selectAll"
+            *ngIf="multiple && selectAll && options.length > 1"
             (click)="toggleAll()">
             <span class="cps-select-options-option-left">
               <span *ngIf="multiple" class="cps-select-options-option-check">
