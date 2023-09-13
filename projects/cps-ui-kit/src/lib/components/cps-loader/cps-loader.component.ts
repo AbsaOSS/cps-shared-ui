@@ -10,7 +10,7 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-loader.component.scss']
 })
 export class CpsLoaderComponent implements OnInit {
-  @Input() fullScreen = true;
+  @Input() fullScreen = false;
   @Input() opacity: number | string = 0.1;
   @Input() labelColor = 'depth';
   @Input() showLabel = true;
