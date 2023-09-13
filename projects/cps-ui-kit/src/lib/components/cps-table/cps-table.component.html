@@ -119,8 +119,8 @@
         <div *ngIf="showExportBtn" class="cps-table-tbar-export-btn">
           <cps-icon
             icon="export"
-            size="normal"
-            color="prepared"
+            size="20"
+            color="prepared-lighten1"
             (click)="exportMenu.toggle($event)"></cps-icon>
           <cps-menu
             #exportMenu
@@ -128,6 +128,14 @@
             [compressed]="true"
             [withArrow]="false">
           </cps-menu>
+        </div>
+        <div *ngIf="showDataReloadBtn" class="cps-table-tbar-reload-btn">
+          <cps-icon
+            icon="refresh"
+            size="18"
+            color="prepared-lighten1"
+            (click)="onReloadData()">
+          </cps-icon>
         </div>
       </div>
     </ng-container>

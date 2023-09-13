@@ -128,6 +128,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() exportFilename = 'download';
   @Input() csvSeparator = ',';
 
+  @Input() showDataReloadBtn = false;
+
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
@@ -138,7 +140,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Output() rowsReordered = new EventEmitter<any>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
   @Output() lazyLoaded = new EventEmitter<any>();
-
+  @Output() dataReloadBtnClicked = new EventEmitter<any>();
   /**
    * A function to implement custom sorting. customSort must be true.
    * @param {any} any - sort meta.
@@ -405,6 +407,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
 
   onLazyLoaded(event: any) {
     this.lazyLoaded.emit(event);
+  }
+
+  onReloadData() {
+    this.dataReloadBtnClicked.emit();
   }
 
   exportTable(format: CpsTableExportFormat) {

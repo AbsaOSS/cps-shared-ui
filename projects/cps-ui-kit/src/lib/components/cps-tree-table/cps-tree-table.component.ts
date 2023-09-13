@@ -134,6 +134,8 @@ export class CpsTreeTableComponent
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
+  @Input() showDataReloadBtn = false;
+
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
   @Output() pageChanged = new EventEmitter<any>();
@@ -146,6 +148,7 @@ export class CpsTreeTableComponent
   @Output() filtered = new EventEmitter<any>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
   @Output() rowsRemoved = new EventEmitter<any[]>();
+  @Output() dataReloadBtnClicked = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -349,6 +352,10 @@ export class CpsTreeTableComponent
 
   onClickActionBtn() {
     this.actionBtnClicked.emit();
+  }
+
+  onReloadData() {
+    this.dataReloadBtnClicked.emit();
   }
 
   removeSelected() {

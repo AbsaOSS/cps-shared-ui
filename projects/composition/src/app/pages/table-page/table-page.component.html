@@ -43,9 +43,11 @@
       [reorderableRows]="true"
       [showActionBtn]="true"
       [showRowMenu]="true"
+      [showDataReloadBtn]="true"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (actionBtnClicked)="onActionBtnClicked()"
-      toolbarTitle="Table with draggable rows, rows menus and action button">
+      (dataReloadBtnClicked)="onReloadBtnClicked()"
+      toolbarTitle="Table with draggable rows, rows menus, action and data reload buttons">
       <ng-template #header>
         <th>A</th>
         <th>B</th>

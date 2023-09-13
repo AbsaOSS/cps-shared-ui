@@ -346,6 +346,10 @@ export class TablePageComponent implements OnInit {
     alert('Action button clicked');
   }
 
+  onReloadBtnClicked() {
+    alert('Data reload button clicked');
+  }
+
   onEditRowButtonClicked(item: any) {
     alert(`Edit row button clicked. Item: ${JSON.stringify(item)}`);
   }
