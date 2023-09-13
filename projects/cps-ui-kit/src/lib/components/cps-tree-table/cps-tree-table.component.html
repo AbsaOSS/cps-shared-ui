@@ -117,6 +117,14 @@
             </div>
           </cps-menu>
         </div>
+        <div *ngIf="showDataReloadBtn" class="cps-treetable-tbar-reload-btn">
+          <cps-icon
+            icon="refresh"
+            size="18"
+            color="prepared-lighten1"
+            (click)="onReloadData()">
+          </cps-icon>
+        </div>
       </div>
     </ng-container>
   </ng-template>

@@ -361,7 +361,8 @@ $tbar-normal-height: 72px;
           margin-right: 4px;
           margin-left: 8px;
         }
-        .cps-treetable-tbar-coltoggle-btn {
+        .cps-treetable-tbar-coltoggle-btn,
+        .cps-treetable-tbar-reload-btn {
           display: contents;
           cps-icon {
             margin-left: 8px;
