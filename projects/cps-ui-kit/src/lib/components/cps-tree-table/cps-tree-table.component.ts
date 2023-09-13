@@ -134,7 +134,7 @@ export class CpsTreeTableComponent
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
-  @Input() showDataReloadBtn = true;
+  @Input() showDataReloadBtn = false;
 
   @Output() actionBtnClicked = new EventEmitter<void>();
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
