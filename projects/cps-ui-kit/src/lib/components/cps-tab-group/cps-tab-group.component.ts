@@ -95,8 +95,7 @@ export class CpsTabGroupComponent
 
   backBtnVisible = false;
   forwardBtnVisible = false;
-  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' =
-    'slideLeft';
+  animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' = 'fadeIn';
 
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
