@@ -78,7 +78,7 @@ export const iconNames = [
   'question',
   'questions',
   'rectangle-rounded',
-  'refresh-browse',
+  'refresh',
   'remove',
   'right',
   'schema_filter',
