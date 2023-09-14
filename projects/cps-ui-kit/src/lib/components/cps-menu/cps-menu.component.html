@@ -24,34 +24,65 @@
       <div *ngIf="header && !compressed" class="cps-menu-header">
         {{ header }}
       </div>
-      <a
-        *ngFor="let item of items; let i = index"
-        (click)="onItemClick($event, item)"
-        [attr.href]="item.url ? item.url : null"
-        [attr.target]="item.url ? item.target : null"
-        [ngClass]="{
-          'cps-menu-item-disabled': item.disabled,
-          'cps-menu-item-first': i === 0,
-          'cps-menu-item-compressed': compressed,
-          'cps-menu-item-compressed-with-icons': compressed && withIcons
-        }"
-        class="cps-menu-item">
-        <div class="cps-menu-item-icon" *ngIf="withIcons">
-          <cps-icon
-            *ngIf="item.icon"
-            [icon]="item.icon"
-            [color]="item.disabled ? 'text-light' : 'text-dark'"
-            [size]="compressed ? 'small' : 'normal'"></cps-icon>
-        </div>
-        <div class="cps-menu-item-content">
-          <span class="cps-menu-item-content-title">{{ item.title }}</span>
-          <span
-            *ngIf="item.desc && !compressed"
-            class="cps-menu-item-content-desc"
-            >{{ item.desc }}</span
-          >
-        </div>
-      </a>
+
+      <ng-container *ngFor="let item of items; let i = index">
+        <a
+          *ngIf="!item.url"
+          (click)="onItemClick($event, item)"
+          [ngClass]="itemsClasses[i]">
+          <ng-container
+            *ngTemplateOutlet="
+              itemTemplate;
+              context: {
+                item: item
+              }
+            "></ng-container>
+        </a>
+        <a
+          *ngIf="item.url && item.url.startsWith('/')"
+          (click)="onItemClick($event, item)"
+          [routerLink]="item.url"
+          [target]="item.target"
+          [ngClass]="itemsClasses[i]">
+          <ng-container
+            *ngTemplateOutlet="
+              itemTemplate;
+              context: {
+                item: item
+              }
+            "></ng-container>
+        </a>
+        <a
+          *ngIf="item.url && !item.url.startsWith('/')"
+          (click)="onItemClick($event, item)"
+          [href]="item.url"
+          [attr.target]="item.target"
+          [ngClass]="itemsClasses[i]">
+          <ng-container
+            *ngTemplateOutlet="
+              itemTemplate;
+              context: {
+                item: item
+              }
+            "></ng-container>
+        </a>
+      </ng-container>
     </div>
   </div>
 </div>
+
+<ng-template #itemTemplate let-item="item">
+  <div class="cps-menu-item-icon" *ngIf="withIcons">
+    <cps-icon
+      *ngIf="item.icon"
+      [icon]="item.icon"
+      [color]="item.disabled ? 'text-light' : 'text-dark'"
+      [size]="compressed ? 'small' : 'normal'"></cps-icon>
+  </div>
+  <div class="cps-menu-item-content">
+    <span class="cps-menu-item-content-title">{{ item.title }}</span>
+    <span *ngIf="item.desc && !compressed" class="cps-menu-item-content-desc">{{
+      item.desc
+    }}</span>
+  </div>
+</ng-template>
