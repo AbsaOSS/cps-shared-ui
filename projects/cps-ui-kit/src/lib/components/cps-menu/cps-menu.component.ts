@@ -7,6 +7,7 @@ import {
   trigger
 } from '@angular/animations';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -18,6 +19,7 @@ import {
   Input,
   NgZone,
   OnDestroy,
+  OnInit,
   Output,
   PLATFORM_ID,
   Renderer2,
@@ -47,7 +49,7 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, SharedModule, CpsIconComponent],
+  imports: [CommonModule, SharedModule, CpsIconComponent, RouterModule],
   selector: 'cps-menu',
   templateUrl: './cps-menu.component.html',
   styleUrls: ['./cps-menu.component.scss'],
@@ -81,7 +83,7 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent implements AfterViewInit, OnDestroy {
+export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() header = '';
   @Input() items: CpsMenuItem[] = [];
   @Input() withArrow = true;
@@ -121,6 +123,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
 
   targetResizeObserver: ResizeObserver;
 
+  itemsClasses: string[] = [];
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -139,8 +143,28 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
+    this._setItemsClasses();
+  }
+
   ngAfterViewInit(): void {
     this.renderer.setStyle(this.el.nativeElement, 'display', 'none');
+  }
+
+  private _setItemsClasses() {
+    if (this.items.length < 1) return;
+
+    this.itemsClasses = this.items.map((item, index) => {
+      const res = ['cps-menu-item'];
+      if (item.disabled) res.push('cps-menu-item-disabled');
+      if (index === 0) res.push('cps-menu-item-first');
+      if (this.compressed) res.push('cps-menu-item-compressed');
+      if (this.compressed && this.withIcons)
+        res.push('cps-menu-item-compressed-with-icons');
+
+      return res.join(' ');
+    });
   }
 
   toggle(event?: any, target?: any, pos?: CpsMenuAttachPosition) {
@@ -407,7 +431,6 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
     if (event.toState === 'close') {
       this.beforeMenuHidden.emit(null);
     } else if (event.toState === 'open') {
-      if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
       this.container = event.element;
       this.appendContainer();
       this.align();

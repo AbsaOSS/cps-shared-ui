@@ -8,8 +8,7 @@
       class="cps-sidebar-menu-item"
       [routerLink]="[item.url]"
       routerLinkActive="active"
-      #rla="routerLinkActive"
-      [ngClass]="{ active: rla.isActive, disabled: item.disabled }">
+      [ngClass]="{ disabled: item.disabled }">
       <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
       <span
         class="cps-sidebar-menu-item-label"
