@@ -89,6 +89,40 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
+  <cps-tab label="Table 4">
+    <cps-tree-table
+      [data]="data"
+      [columns]="colsWithFilterType"
+      [selectable]="true"
+      sortMode="multiple"
+      [striped]="false"
+      [showRowMenu]="true"
+      [showColumnsToggle]="true"
+      (columnsSelected)="onColumnsSelected($event)"
+      (editRowBtnClicked)="onEditRowButtonClicked()"
+      (selectionChanged)="onRowsSelectionChanged($event)"
+      toolbarTitle="Treetable with external columns toggle and unstriped selectable rows">
+      <ng-template #header>
+        <th
+          *ngFor="let scol of selCols"
+          [cpsTTColSortable]="scol.field"
+          [cpsTTColFilter]="scol.field"
+          [filterType]="scol.filterType">
+          {{ scol.header }}
+        </th>
+      </ng-template>
+
+      <ng-template #body let-rowNode let-rowData="rowData">
+        <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
+          <td *ngSwitchCase="'name'" [cpsTTRowToggler]="rowNode">
+            {{ rowData.name }}
+          </td>
+          <td *ngSwitchCase="'size'">{{ rowData.size }}</td>
+          <td *ngSwitchCase="'type'">{{ rowData.type }}</td>
+        </ng-container>
+      </ng-template>
+    </cps-tree-table>
+  </cps-tab>
 </cps-tab-group>
 
 <!-- <cps-tree-table

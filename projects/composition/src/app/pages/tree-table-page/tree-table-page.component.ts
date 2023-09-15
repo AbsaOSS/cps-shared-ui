@@ -506,6 +506,10 @@ export class TreeTablePageComponent implements OnInit {
     alert('Edit row button clicked');
   }
 
+  onRowsSelectionChanged(rows: any) {
+    console.log(rows);
+  }
+
   changeTab({ currentTabIndex }: TabChangeEvent) {
     this.selectedTabIndex = currentTabIndex;
   }
