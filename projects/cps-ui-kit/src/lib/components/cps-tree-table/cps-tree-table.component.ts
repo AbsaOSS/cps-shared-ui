@@ -136,19 +136,20 @@ export class CpsTreeTableComponent
 
   @Input() showDataReloadBtn = false;
 
+  @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
-  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+  @Output() editRowBtnClicked = new EventEmitter<any>();
+  @Output() rowsRemoved = new EventEmitter<any[]>();
   @Output() pageChanged = new EventEmitter<any>();
+  @Output() sorted = new EventEmitter<any>();
+  @Output() filtered = new EventEmitter<any>();
+  @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
   @Output() lazyLoaded = new EventEmitter<any>();
+  @Output() dataReloadBtnClicked = new EventEmitter<any>();
   @Output() nodeExpanded = new EventEmitter<any>();
   @Output() nodeCollapsed = new EventEmitter<any>();
   @Output() nodeSelected = new EventEmitter<any>();
   @Output() nodeUnselected = new EventEmitter<any>();
-  @Output() sorted = new EventEmitter<any>();
-  @Output() filtered = new EventEmitter<any>();
-  @Output() editRowBtnClicked = new EventEmitter<any>();
-  @Output() rowsRemoved = new EventEmitter<any[]>();
-  @Output() dataReloadBtnClicked = new EventEmitter<any>();
 
   /**
    * A function to implement custom sorting. customSort must be true.
@@ -541,5 +542,15 @@ export class CpsTreeTableComponent
     }
     this.selectedColumns = res;
     this.columnsSelected.emit(this.selectedColumns);
+  }
+
+  onSelectionChanged(selection: any[]) {
+    this.selectionChanged.emit(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      selection.map(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ({ _defaultSortOrder, expanded, partialSelected, ...rest }) => rest
+      )
+    );
   }
 }

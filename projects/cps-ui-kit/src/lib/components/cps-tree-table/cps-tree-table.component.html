@@ -16,6 +16,7 @@
   [rowHover]="rowHover"
   [lazy]="lazy"
   [(selection)]="selectedRows"
+  (selectionChange)="onSelectionChanged($event)"
   compareSelectionBy="equals"
   [lazyLoadOnInit]="lazyLoadOnInit"
   [styleClass]="styleClass"

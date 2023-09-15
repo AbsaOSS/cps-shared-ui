@@ -1,4 +1,97 @@
-<cps-tree-table
+<cps-tab-group tabsBackground="bg-light" (afterTabChanged)="changeTab($event)">
+  <cps-tab label="Table 1">
+    <cps-tree-table
+      [data]="data"
+      [paginator]="true"
+      sortMode="multiple"
+      toolbarTitle="Treetable with a paginator, multiple sorting and individual filtering">
+      <ng-template #header>
+        <th cpsTTColSortable="name" cpsTTColFilter="name" filterType="text">
+          Name
+        </th>
+        <th cpsTTColSortable="size" cpsTTColFilter="size" filterType="number">
+          Size
+        </th>
+        <th
+          cpsTTColSortable="modified"
+          cpsTTColFilter="modified"
+          filterType="date">
+          Modified
+        </th>
+        <th
+          cpsTTColSortable="encrypted"
+          cpsTTColFilter="encrypted"
+          filterType="boolean">
+          Encrypted
+        </th>
+        <th
+          cpsTTColSortable="importance"
+          cpsTTColFilter="importance"
+          filterType="category">
+          Importance
+        </th>
+      </ng-template>
+
+      <ng-template #body let-rowNode let-rowData="rowData">
+        <td [cpsTTRowToggler]="rowNode">
+          {{ rowData.name }}
+        </td>
+        <td>{{ rowData.size }}</td>
+        <td>{{ rowData.modified | date }}</td>
+        <td [style.color]="rowData.encrypted ? 'green' : 'red'">
+          {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ rowData.importance }}</td>
+      </ng-template>
+    </cps-tree-table>
+  </cps-tab>
+  <cps-tab label="Table 2">
+    <cps-tree-table
+      *ngIf="selectedTabIndex === 1"
+      [showGlobalFilter]="true"
+      [data]="dataVirtual"
+      [columns]="colsVirtual"
+      [sortable]="true"
+      [virtualScroll]="true"
+      [showColumnsToggle]="true"
+      scrollHeight="500px"
+      toolbarTitle="Sortable treetable with virtual scroller, global filter and internal columns toggle">
+    </cps-tree-table>
+  </cps-tab>
+  <cps-tab label="Table 3">
+    <cps-tree-table
+      [data]="data"
+      [showActionBtn]="true"
+      [showRowMenu]="true"
+      [showDataReloadBtn]="true"
+      (editRowBtnClicked)="onEditRowButtonClicked()"
+      (actionBtnClicked)="onActionBtnClicked()"
+      (dataReloadBtnClicked)="onReloadBtnClicked()"
+      toolbarTitle="Treetable with rows menus, action and data reload buttons">
+      <ng-template #header>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Modified</th>
+        <th>Encrypted</th>
+        <th>Importance</th>
+      </ng-template>
+
+      <ng-template #body let-rowNode let-rowData="rowData">
+        <td [cpsTTRowToggler]="rowNode">
+          {{ rowData.name }}
+        </td>
+        <td>{{ rowData.size }}</td>
+        <td>{{ rowData.modified | date }}</td>
+        <td [style.color]="rowData.encrypted ? 'green' : 'red'">
+          {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ rowData.importance }}</td>
+      </ng-template>
+    </cps-tree-table>
+  </cps-tab>
+</cps-tab-group>
+
+<!-- <cps-tree-table
   [data]="data"
   toolbarTitle="Tree table alpha version"
   [columns]="cols"
@@ -9,8 +102,8 @@
   [showGlobalFilter]="true"
   (columnsSelected)="onColumnsSelected($event)"
   scrollHeight="500px"
-  sortMode="multiple">
-  <!-- <ng-template #nestedHeader>
+  sortMode="multiple"> -->
+<!-- <ng-template #nestedHeader>
     <tr>
       <th colspan="2">AB</th>
       <th colspan="1">C</th>
@@ -21,7 +114,7 @@
       <th>Type</th>
     </tr>
   </ng-template> -->
-  <!-- <ng-template #header>
+<!-- <ng-template #header>
     <th cpsTTColSortable="name">Name</th>
     <th cpsTTColSortable="size">Size</th>
     <th cpsTTColSortable="type">Type</th>
@@ -34,7 +127,7 @@
     <td>{{ rowData.type }}</td>
   </ng-template> -->
 
-  <ng-template #header>
+<!-- <ng-template #header>
     <th
       *ngFor="let scol of selCols"
       [cpsTTColSortable]="scol.field"
@@ -52,7 +145,7 @@
       <td *ngSwitchCase="'type'">{{ rowData.type }}</td>
     </ng-container>
   </ng-template>
-</cps-tree-table>
+</cps-tree-table> -->
 
 <!-- <th cpsTColSortable="a" cpsTColFilter="a" filterType="text">A</th>
 <th cpsTColSortable="b" cpsTColFilter="b" filterType="date">B</th>
