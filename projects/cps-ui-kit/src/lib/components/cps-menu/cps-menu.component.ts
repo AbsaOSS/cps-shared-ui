@@ -337,7 +337,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
               targetOffset.top + target.offsetHeight - element.offsetHeight,
               0
             ),
-            left: Math.max(0, targetOffset.left - element.offsetWidth - 1)
+            left: Math.max(0, targetOffset.left - element.offsetWidth)
           };
         case 'br':
           return {
@@ -346,7 +346,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
               0
             ),
             left: Math.min(
-              targetOffset.left + target.offsetWidth + 1,
+              targetOffset.left + target.offsetWidth,
               window.innerWidth - element.offsetWidth
             )
           };
@@ -356,7 +356,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
               targetOffset.top,
               window.innerHeight - element.offsetHeight
             ),
-            left: Math.max(0, targetOffset.left - element.offsetWidth - 1)
+            left: Math.max(0, targetOffset.left - element.offsetWidth)
           };
         case 'tr':
           return {
@@ -365,7 +365,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
               window.innerHeight - element.offsetHeight
             ),
             left: Math.min(
-              targetOffset.left + target.offsetWidth + 1,
+              targetOffset.left + target.offsetWidth,
               window.innerWidth - element.offsetWidth
             )
           };

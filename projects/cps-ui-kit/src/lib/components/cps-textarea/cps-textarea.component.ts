@@ -10,7 +10,7 @@ import {
   Self
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -24,7 +24,9 @@ import { TooltipPosition } from '../../directives/cps-tooltip.directive';
   templateUrl: './cps-textarea.component.html',
   styleUrls: ['./cps-textarea.component.scss']
 })
-export class CpsTextareaComponent implements OnInit, OnDestroy {
+export class CpsTextareaComponent
+  implements ControlValueAccessor, OnInit, OnDestroy
+{
   @Input() label = '';
   @Input() placeholder = 'Please enter';
   @Input() rows = 5;

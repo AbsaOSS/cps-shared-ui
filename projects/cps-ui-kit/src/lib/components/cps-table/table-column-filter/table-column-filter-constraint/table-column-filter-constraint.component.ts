@@ -48,24 +48,35 @@ export class TableColumnFilterConstraintComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.type === 'category') {
-      if (this.categoryOptions.length > 0) {
-        this.categories = this.categoryOptions.map((o) => ({
-          label: o,
-          value: o
-        }));
+    this._initCategories();
+  }
+
+  private _initCategories() {
+    if (this.type !== 'category') return;
+    if (this.categoryOptions.length > 0) {
+      this.categories = this.categoryOptions.map((o) => ({
+        label: o,
+        value: o
+      }));
+    } else {
+      let cats = [];
+      if (this._tableInstance instanceof Table) {
+        cats =
+          this._tableInstance.value?.map((v) => v[this.field as string]) || [];
       } else {
-        this.categories =
-          Array.from(
-            new Set(
-              this._tableInstance.value?.map((v) => v[this.field as string]) ||
-                []
-            )
-          )?.map((c) => ({
-            label: c,
-            value: c
-          })) || [];
+        const fillCats = (nodes: any[]) => {
+          nodes?.forEach((v) => {
+            cats.push(v.data[this.field as string]);
+            fillCats(v.children);
+          });
+        };
+        fillCats(this._tableInstance.value);
       }
+      this.categories =
+        Array.from(new Set(cats))?.map((c) => ({
+          label: c,
+          value: c
+        })) || [];
     }
   }
 
