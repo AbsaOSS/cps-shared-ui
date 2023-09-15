@@ -458,7 +458,7 @@ export class TreeTablePageComponent implements OnInit {
   dataVirtual: any[] = [];
 
   ngOnInit(): void {
-    this.selCols = this.cols;
+    this.selCols = this.colsWithFilterType;
     this._genVirtualData();
   }
 

@@ -118,7 +118,13 @@
             {{ rowData.name }}
           </td>
           <td *ngSwitchCase="'size'">{{ rowData.size }}</td>
-          <td *ngSwitchCase="'type'">{{ rowData.type }}</td>
+          <td *ngSwitchCase="'modified'">{{ rowData.modified | date }}</td>
+          <td
+            *ngSwitchCase="'encrypted'"
+            [style.color]="rowData.encrypted ? 'green' : 'red'">
+            {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+          </td>
+          <td *ngSwitchCase="'importance'">{{ rowData.importance }}</td>
         </ng-container>
       </ng-template>
     </cps-tree-table>
