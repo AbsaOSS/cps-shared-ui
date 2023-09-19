@@ -213,6 +213,56 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
+  <cps-tab label="Treetable 7">
+    <cps-tree-table [data]="data" [size]="selSize">
+      <ng-template #toolbar>
+        <span
+          >Treetable with custom toolbar, different table sizes are
+          available</span
+        >
+        <cps-button-toggle [options]="sizesOptions" [(ngModel)]="selSize">
+        </cps-button-toggle>
+      </ng-template>
+      <ng-template #header>
+        <th cpsTTColSortable="name" cpsTTColFilter="name" filterType="text">
+          Name
+        </th>
+        <th cpsTTColSortable="size" cpsTTColFilter="size" filterType="number">
+          Size
+        </th>
+        <th
+          cpsTTColSortable="modified"
+          cpsTTColFilter="modified"
+          filterType="date">
+          Modified
+        </th>
+        <th
+          cpsTTColSortable="encrypted"
+          cpsTTColFilter="encrypted"
+          filterType="boolean">
+          Encrypted
+        </th>
+        <th
+          cpsTTColSortable="importance"
+          cpsTTColFilter="importance"
+          filterType="category">
+          Importance
+        </th>
+      </ng-template>
+
+      <ng-template #body let-rowNode let-rowData="rowData">
+        <td [cpsTTRowToggler]="rowNode">
+          {{ rowData.name }}
+        </td>
+        <td>{{ rowData.size }}</td>
+        <td>{{ rowData.modified | date }}</td>
+        <td [style.color]="rowData.encrypted ? 'green' : 'red'">
+          {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+        </td>
+        <td>{{ rowData.importance }}</td>
+      </ng-template>
+    </cps-tree-table>
+  </cps-tab>
 </cps-tab-group>
 
 <!-- <cps-tree-table

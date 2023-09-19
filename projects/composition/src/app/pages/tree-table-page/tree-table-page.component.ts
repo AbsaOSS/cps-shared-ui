@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   CpsTreeTableComponent,
   CpsTreetableRowTogglerDirective,
@@ -9,7 +10,9 @@ import {
   CpsTabComponent,
   CpsTabGroupComponent,
   CpsButtonToggleComponent,
-  CpsTreeTableHeaderSelectableDirective
+  CpsTreeTableHeaderSelectableDirective,
+  BtnToggleOption,
+  CpsTreeTableSize
 } from 'cps-ui-kit';
 
 @Component({
@@ -17,6 +20,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     CpsTreeTableComponent,
     CpsTreetableRowTogglerDirective,
     CpsTreeTableColumnSortableDirective,
@@ -32,6 +36,14 @@ import {
 })
 export class TreeTablePageComponent implements OnInit {
   selectedTabIndex = 0;
+
+  sizesOptions = [
+    { label: 'Small', value: 'small' },
+    { label: 'Normal', value: 'normal' },
+    { label: 'Large', value: 'large' }
+  ] as BtnToggleOption[];
+
+  selSize: CpsTreeTableSize = 'small';
 
   data = [
     {
