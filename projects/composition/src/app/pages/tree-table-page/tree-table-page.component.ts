@@ -8,7 +8,8 @@ import {
   TabChangeEvent,
   CpsTabComponent,
   CpsTabGroupComponent,
-  CpsButtonToggleComponent
+  CpsButtonToggleComponent,
+  CpsTreeTableHeaderSelectableDirective
 } from 'cps-ui-kit';
 
 @Component({
@@ -20,6 +21,7 @@ import {
     CpsTreetableRowTogglerDirective,
     CpsTreeTableColumnSortableDirective,
     CpsTreeTableColumnFilterDirective,
+    CpsTreeTableHeaderSelectableDirective,
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent

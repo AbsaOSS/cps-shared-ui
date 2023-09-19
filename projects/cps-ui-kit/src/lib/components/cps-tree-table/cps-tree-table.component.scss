@@ -95,7 +95,7 @@ $tbar-normal-height: 72px;
       border-width: 0 0 1px 1px;
     }
     .p-treetable .p-treetable-tbody > tr > td:last-child {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 1px 1px 0;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:only-child {
@@ -592,7 +592,7 @@ $tbar-normal-height: 72px;
       border-width: 1px;
     }
 
-    .p-treetable .p-treetable-tbody > tr > td:last-child {
+    .p-treetable.p-treetable-gridlines .p-treetable-tbody > tr > td:last-child {
       border-width: 0 1px 1px 1px;
     }
 
