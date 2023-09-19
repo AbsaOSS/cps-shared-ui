@@ -1,10 +1,10 @@
 <cps-tab-group tabsBackground="bg-light" (afterTabChanged)="changeTab($event)">
-  <cps-tab label="Treetable 1">
+  <cps-tab label="Tree table 1">
     <cps-tree-table
       [data]="data"
       [paginator]="true"
       sortMode="multiple"
-      toolbarTitle="Treetable with a paginator, multiple sorting and individual filtering">
+      toolbarTitle="Tree table with a paginator, multiple sorting and individual filtering">
       <ng-template #header>
         <th cpsTTColSortable="name" cpsTTColFilter="name" filterType="text">
           Name
@@ -45,7 +45,7 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 2">
+  <cps-tab label="Tree table 2">
     <cps-tree-table
       *ngIf="selectedTabIndex === 1"
       [showGlobalFilter]="true"
@@ -55,10 +55,10 @@
       [virtualScroll]="true"
       [showColumnsToggle]="true"
       scrollHeight="500px"
-      toolbarTitle="Sortable treetable with virtual scroller, global filter and internal columns toggle">
+      toolbarTitle="Sortable tree table with virtual scroller, global filter and internal columns toggle">
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 3">
+  <cps-tab label="Tree table 3">
     <cps-tree-table
       [data]="data"
       [showActionBtn]="true"
@@ -67,7 +67,7 @@
       (editRowBtnClicked)="onEditRowButtonClicked()"
       (actionBtnClicked)="onActionBtnClicked()"
       (dataReloadBtnClicked)="onReloadBtnClicked()"
-      toolbarTitle="Treetable with rows menus, action and data reload buttons">
+      toolbarTitle="Tree table with rows menus, action and data reload buttons">
       <ng-template #header>
         <th>Name</th>
         <th>Size</th>
@@ -89,7 +89,7 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 4">
+  <cps-tab label="Tree table 4">
     <cps-tree-table
       [data]="data"
       [columns]="colsWithFilterType"
@@ -101,7 +101,7 @@
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked()"
       (selectionChanged)="onRowsSelectionChanged($event)"
-      toolbarTitle="Treetable with external columns toggle and unstriped selectable rows">
+      toolbarTitle="Tree table with external columns toggle and unstriped selectable rows">
       <ng-template #header>
         <th
           *ngFor="let scol of selCols"
@@ -129,13 +129,13 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 5">
+  <cps-tab label="Tree table 5">
     <cps-tree-table
       [data]="data"
       [selectable]="true"
       toolbarSize="small"
       scrollHeight="calc(100vh - 300px)"
-      toolbarTitle="Treetable with nested header and small toolbar">
+      toolbarTitle="Tree table with nested header and small toolbar">
       <ng-template #nestedHeader>
         <tr>
           <!-- MANUALLY ADD FIRST HEADER WITH CHECKBOX, SINCE THE TABLE IS SELECTABLE -->
@@ -184,14 +184,14 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 6">
+  <cps-tab label="Tree table 6">
     <cps-tree-table
       [data]="data"
       [columns]="cols"
       [rowHover]="false"
       [bordered]="false"
       [sortable]="true"
-      toolbarTitle="Borderless treetable without highlightning on rows hover">
+      toolbarTitle="Borderless tree table without highlightning on rows hover">
       <ng-template #header>
         <th cpsTTColSortable="name">Name</th>
         <th cpsTTColSortable="size">Size</th>
@@ -213,13 +213,10 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 7">
+  <cps-tab label="Tree table 7">
     <cps-tree-table [data]="data" [size]="selSize">
       <ng-template #toolbar>
-        <span
-          >Treetable with custom toolbar, different table sizes are
-          available</span
-        >
+        <span>Tree table with custom toolbar and different sizes</span>
         <cps-button-toggle [options]="sizesOptions" [(ngModel)]="selSize">
         </cps-button-toggle>
       </ng-template>
@@ -263,10 +260,10 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 8">
+  <cps-tab label="Tree table 8">
     <cps-tree-table
       [data]="[]"
-      toolbarTitle="Empty treetable"
+      toolbarTitle="Empty tree table"
       emptyBodyHeight="400px">
       <ng-template #header>
         <th cpsTTColSortable="name">Name</th>
@@ -277,13 +274,13 @@
       </ng-template>
     </cps-tree-table>
   </cps-tab>
-  <cps-tab label="Treetable 9">
+  <cps-tab label="Tree table 9">
     <cps-tree-table
       [data]="data"
       [loading]="true"
       scrollHeight="400px"
       [columns]="cols"
-      toolbarTitle="Treetable in data loading state">
+      toolbarTitle="Tree table in data loading state">
     </cps-tree-table>
   </cps-tab>
 </cps-tab-group>
