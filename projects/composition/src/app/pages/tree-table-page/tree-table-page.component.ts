@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   CpsTreeTableComponent,
   CpsTreetableRowTogglerDirective,
@@ -8,7 +9,10 @@ import {
   TabChangeEvent,
   CpsTabComponent,
   CpsTabGroupComponent,
-  CpsButtonToggleComponent
+  CpsButtonToggleComponent,
+  CpsTreeTableHeaderSelectableDirective,
+  BtnToggleOption,
+  CpsTreeTableSize
 } from 'cps-ui-kit';
 
 @Component({
@@ -16,10 +20,12 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     CpsTreeTableComponent,
     CpsTreetableRowTogglerDirective,
     CpsTreeTableColumnSortableDirective,
     CpsTreeTableColumnFilterDirective,
+    CpsTreeTableHeaderSelectableDirective,
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent
@@ -30,6 +36,14 @@ import {
 })
 export class TreeTablePageComponent implements OnInit {
   selectedTabIndex = 0;
+
+  sizesOptions = [
+    { label: 'Small', value: 'small' },
+    { label: 'Normal', value: 'normal' },
+    { label: 'Large', value: 'large' }
+  ] as BtnToggleOption[];
+
+  selSize: CpsTreeTableSize = 'small';
 
   data = [
     {
@@ -458,7 +472,7 @@ export class TreeTablePageComponent implements OnInit {
   dataVirtual: any[] = [];
 
   ngOnInit(): void {
-    this.selCols = this.cols;
+    this.selCols = this.colsWithFilterType;
     this._genVirtualData();
   }
 
@@ -504,6 +518,10 @@ export class TreeTablePageComponent implements OnInit {
 
   onEditRowButtonClicked() {
     alert('Edit row button clicked');
+  }
+
+  onRowsSelectionChanged(rows: any) {
+    console.log(rows);
   }
 
   changeTab({ currentTabIndex }: TabChangeEvent) {
