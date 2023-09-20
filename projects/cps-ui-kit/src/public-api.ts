@@ -42,4 +42,6 @@ export * from './lib/components/cps-tab-group/cps-tab/cps-tab.component';
 
 export * from './lib/directives/cps-tooltip.directive';
 
+export * from './lib/services/cps-dialog.service';
+
 export * from './lib/utils/colors-utils';

@@ -14,16 +14,13 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { TreeNode } from 'primeng/api';
-import {
-  IconType,
-  iconSizeType
-} from '../components/cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import { TooltipPosition } from '../directives/cps-tooltip.directive';
-import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
+import { IconType, iconSizeType } from '../cps-icon/cps-icon.component';
+import { convertSize } from '../../utils/internal/size-utils';
+import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 @Component({
   template: ''
