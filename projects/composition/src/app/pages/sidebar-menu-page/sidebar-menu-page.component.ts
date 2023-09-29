@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsSidebarMenuComponent, CpsSidebarMenuItem } from 'cps-ui-kit';
+import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-sidebar-menu-page',
   standalone: true,
-  imports: [CommonModule, CpsSidebarMenuComponent],
+  imports: [CommonModule, CpsSidebarMenuComponent, RouterOutlet],
   templateUrl: './sidebar-menu-page.component.html',
   styleUrls: ['./sidebar-menu-page.component.scss']
 })
@@ -14,7 +15,7 @@ export class SidebarMenuPageComponent {
     {
       title: 'Dashboard',
       icon: 'grid',
-      url: '/abc'
+      url: '/'
     },
     {
       title: 'Favourites',
