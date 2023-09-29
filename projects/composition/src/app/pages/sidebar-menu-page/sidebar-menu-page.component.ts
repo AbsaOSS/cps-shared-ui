@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsSidebarMenuComponent, CpsSidebarMenuItem } from 'cps-ui-kit';
-import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-sidebar-menu-page',
   standalone: true,
-  imports: [CommonModule, CpsSidebarMenuComponent, RouterOutlet],
+  imports: [CommonModule, CpsSidebarMenuComponent],
   templateUrl: './sidebar-menu-page.component.html',
   styleUrls: ['./sidebar-menu-page.component.scss']
 })
