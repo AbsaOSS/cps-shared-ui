@@ -27,6 +27,7 @@ import { PaginatorPageComponent } from './pages/paginator-page/paginator-page.co
 import { MenuPageComponent } from './pages/menu-page/menu-page.component';
 import { SidebarMenuPageComponent } from './pages/sidebar-menu-page/sidebar-menu-page.component';
 import { TreeTablePageComponent } from './pages/tree-table-page/tree-table-page.component';
+import { DialogPageComponent } from './pages/dialog-page/dialog-page.component';
 
 const routes: Routes = [
   {
@@ -143,6 +144,11 @@ const routes: Routes = [
     path: 'datepicker',
     title: 'Datepicker',
     component: DatepickerPageComponent
+  },
+  {
+    path: 'dialog',
+    title: 'Dialog',
+    component: DialogPageComponent
   },
   {
     path: 'menu',

@@ -10,6 +10,7 @@
 - Checkbox
 - Chip
 - Datepicker
+- Dialog
 - Expansion panel
 - Icon
 - Info circle
