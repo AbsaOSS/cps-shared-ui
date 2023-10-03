@@ -48,10 +48,10 @@
       <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
     </span>
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-textarea-hint-text">
+  <div *ngIf="!error && !hideDetails" class="cps-textarea-hint">
     {{ hint }}
   </div>
-  <div *ngIf="error && !hideDetails" class="cps-textarea-error-text">
+  <div *ngIf="error && !hideDetails" class="cps-textarea-error">
     {{ error }}
   </div>
 </div>
