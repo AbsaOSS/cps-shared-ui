@@ -109,18 +109,20 @@ $hover-transition-duration: 0.2s;
       padding-right: 2.2rem;
     }
 
-    .cps-textarea-hint-text {
+    .cps-textarea-hint {
       color: $textarea-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
+      line-height: 1.125rem;
       cursor: default;
     }
 
-    .cps-textarea-error-text {
+    .cps-textarea-error {
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;
       min-height: 1.125rem;
+      line-height: 1.125rem;
       cursor: default;
     }
 
