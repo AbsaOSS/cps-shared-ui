@@ -70,6 +70,10 @@ $hover-transition-duration: 0.2s;
         }
       }
 
+      input[type='password'] {
+        font-family: Verdana;
+      }
+
       input:focus + .cps-input-prefix > .cps-input-prefix-icon,
       input:hover + .cps-input-prefix > .cps-input-prefix-icon {
         color: $color-calm;
@@ -196,17 +200,19 @@ $hover-transition-duration: 0.2s;
       padding-right: 2.2rem;
     }
 
-    .cps-input-hint-text {
+    .cps-input-hint {
       color: $input-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
+      line-height: 1.125rem;
       cursor: default;
     }
-    .cps-input-error-text {
+    .cps-input-error {
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;
       min-height: 1.125rem;
+      line-height: 1.125rem;
       cursor: default;
     }
     .cps-input-label {
