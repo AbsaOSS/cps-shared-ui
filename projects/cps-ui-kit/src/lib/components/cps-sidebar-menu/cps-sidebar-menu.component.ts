@@ -60,6 +60,7 @@ export type CpsSidebarMenuItem = {
 export class CpsSidebarMenuComponent implements OnInit {
   @Input() items: CpsSidebarMenuItem[] = [];
   @Input() isExpanded = true;
+  @Input() exactRoutes = false;
   @Input() height = '100%';
 
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;
@@ -79,8 +80,10 @@ export class CpsSidebarMenuComponent implements OnInit {
 
   isActive(item: CpsSidebarMenuItem) {
     if (!item.items) return false;
-    const urls = item.items.map((i) => i.url);
-    return urls.includes(this._router.url);
+    const urls = item.items.filter((i) => i.url).map((i) => i.url) as string[];
+    if (this.exactRoutes) {
+      return urls.includes(this._router.url);
+    } else return urls.some((url) => this._router.url.includes(url));
   }
 
   toggleSidebar() {
