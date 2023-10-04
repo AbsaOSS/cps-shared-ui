@@ -8,7 +8,7 @@
       class="cps-sidebar-menu-item"
       [routerLink]="[item.url]"
       routerLinkActive="active"
-      [routerLinkActiveOptions]="{exact: true}"
+      [routerLinkActiveOptions]="{ exact: exactRoutes }"
       [ngClass]="{ disabled: item.disabled }">
       <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
       <span
