@@ -81,9 +81,9 @@ export class CpsSidebarMenuComponent implements OnInit {
   isActive(item: CpsSidebarMenuItem) {
     if (!item.items) return false;
     const urls = item.items.filter((i) => i.url).map((i) => i.url) as string[];
-    if (this.exactRoutes) {
-      return urls.includes(this._router.url);
-    } else return urls.some((url) => this._router.url.includes(url));
+
+    if (this.exactRoutes) return urls.includes(this._router.url);
+    return urls.some((url) => this._router.url.includes(url));
   }
 
   toggleSidebar() {
