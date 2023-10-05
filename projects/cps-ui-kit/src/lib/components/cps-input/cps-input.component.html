@@ -33,6 +33,7 @@
       (input)="updateValueEvent($event)"
       [placeholder]="placeholder"
       [disabled]="disabled"
+      [readonly]="readonly"
       (keydown.enter)="onInputEnterKeyDown()"
       [ngStyle]="{
         width: cvtWidth,
@@ -48,7 +49,9 @@
           [size]="prefixIconSize"
           [style.color]="disabled ? '#9a9595' : null"
           [style.cursor]="
-            prefixIconClickable && !disabled ? 'pointer' : 'default'
+            prefixIconClickable && !disabled && !readonly
+              ? 'pointer'
+              : 'default'
           "
           (click)="onClickPrefixIcon()">
         </cps-icon>
@@ -59,7 +62,7 @@
       </span>
     </div>
 
-    <div class="cps-input-action-btns" *ngIf="!disabled">
+    <div class="cps-input-action-btns" *ngIf="!disabled && !readonly">
       <span
         *ngIf="clearable"
         [style.visibility]="

@@ -46,6 +46,7 @@ export class CpsInputComponent
   @Input() hint = '';
   @Input() placeholder = 'Please enter';
   @Input() disabled = false;
+  @Input() readonly = false;
   @Input() width: number | string = '100%';
   @Input() type: 'text' | 'number' | 'password' = 'text';
   @Input() loading = false;
@@ -218,7 +219,7 @@ export class CpsInputComponent
   }
 
   onClickPrefixIcon() {
-    if (!this.prefixIconClickable) return;
+    if (!this.prefixIconClickable || this.readonly || this.disabled) return;
     this.prefixIconClicked.emit();
   }
 
