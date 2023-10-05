@@ -28,7 +28,7 @@ $hover-transition-duration: 0.2s;
       position: relative;
       overflow: hidden;
       &:hover {
-        input:enabled {
+        input:enabled:not(:read-only) {
           border: 1px solid $color-calm;
         }
       }
@@ -58,8 +58,13 @@ $hover-transition-duration: 0.2s;
         border-radius: 4px;
         width: 100%;
         &:focus {
-          border: 1px solid $color-calm;
           outline: 0;
+        }
+        &:focus:not(:read-only) {
+          border: 1px solid $color-calm;
+        }
+        &:read-only {
+          cursor: default;
         }
 
         &:disabled {
@@ -68,14 +73,14 @@ $hover-transition-duration: 0.2s;
           opacity: 1;
           pointer-events: none;
         }
+
+        &[type='password'] {
+          font-family: Verdana;
+        }
       }
 
-      input[type='password'] {
-        font-family: Verdana;
-      }
-
-      input:focus + .cps-input-prefix > .cps-input-prefix-icon,
-      input:hover + .cps-input-prefix > .cps-input-prefix-icon {
+      input:focus:not(:read-only) + .cps-input-prefix > .cps-input-prefix-icon,
+      input:hover:not(:read-only) + .cps-input-prefix > .cps-input-prefix-icon {
         color: $color-calm;
       }
 
@@ -135,6 +140,10 @@ $hover-transition-duration: 0.2s;
         }
       }
 
+      input:not(:read-only) + .cps-input-prefix:hover > .cps-input-prefix-icon {
+        color: $color-calm;
+      }
+
       .cps-input-prefix {
         height: -webkit-fill-available;
         display: flex;
@@ -142,11 +151,6 @@ $hover-transition-duration: 0.2s;
         top: 50%;
         left: 0.75rem;
         transform: translate(0, -50%);
-        &:hover {
-          .cps-input-prefix-icon {
-            color: $color-calm;
-          }
-        }
         &-icon {
           transition-duration: $hover-transition-duration;
           height: -webkit-fill-available;
