@@ -68,9 +68,11 @@ $hover-transition-duration: 0.2s;
         }
 
         &:disabled {
+          opacity: 1;
+        }
+        &:disabled:not([readonly]) {
           color: $input-text-disabled-color;
           background-color: #f7f7f7;
-          opacity: 1;
           pointer-events: none;
         }
 
