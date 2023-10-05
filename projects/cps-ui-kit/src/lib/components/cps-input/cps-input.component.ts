@@ -64,6 +64,7 @@ export class CpsInputComponent
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
   @Input() appearance: CpsInputAppearanceType = 'outlined';
+  @Input() valueToDisplay = '';
 
   @Input() set value(value: string) {
     this._value = value;
