@@ -46,8 +46,8 @@
     <input
       *ngIf="valueToDisplay"
       [value]="valueToDisplay"
-      [disabled]="disabled"
-      [readonly]="readonly"
+      [disabled]="true"
+      [readonly]="true"
       [ngStyle]="{
         width: cvtWidth,
         'padding-left': prefixWidth || 'none'
