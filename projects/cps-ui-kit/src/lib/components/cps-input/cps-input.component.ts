@@ -102,6 +102,10 @@ export class CpsInputComponent
   }
 
   ngOnInit(): void {
+    if (this.valueToDisplay) {
+      this.readonly = true;
+      this.disabled = true;
+    }
     this.currentType = this.type;
     this.cvtWidth = convertSize(this.width);
 
