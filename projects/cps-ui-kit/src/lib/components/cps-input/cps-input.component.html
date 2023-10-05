@@ -1,7 +1,7 @@
 <div class="cps-input-container" [ngStyle]="{ width: cvtWidth }">
   <div
     class="cps-input-label"
-    [ngClass]="{ 'cps-input-label-disabled': disabled }"
+    [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }"
     *ngIf="label">
     <label>{{ label }}</label>
     <cps-info-circle
@@ -47,6 +47,7 @@
       *ngIf="valueToDisplay"
       [value]="valueToDisplay"
       [disabled]="true"
+      [readonly]="true"
       [ngStyle]="{
         width: cvtWidth,
         'padding-left': prefixWidth || 'none'
