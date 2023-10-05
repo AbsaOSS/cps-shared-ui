@@ -27,6 +27,7 @@
       underlined: appearance === 'underlined'
     }">
     <input
+      *ngIf="!valueToDisplay"
       spellcheck="false"
       [type]="currentType"
       [value]="value"
@@ -41,6 +42,15 @@
       }"
       (blur)="onBlur()"
       (focus)="onFocus()" />
+
+    <input
+      *ngIf="valueToDisplay"
+      [value]="valueToDisplay"
+      [disabled]="true"
+      [ngStyle]="{
+        width: cvtWidth,
+        'padding-left': prefixWidth || 'none'
+      }" />
 
     <div class="cps-input-prefix">
       <span *ngIf="prefixIcon" class="cps-input-prefix-icon">
