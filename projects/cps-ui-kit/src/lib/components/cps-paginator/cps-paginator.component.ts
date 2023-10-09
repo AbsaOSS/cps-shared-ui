@@ -19,14 +19,43 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-paginator.component.scss']
 })
 export class CpsPaginatorComponent implements OnInit {
+  /**
+   * Zero-relative number of the first row to be displayed.
+   * @group Props
+   */
   @Input() first = 0;
+  /**
+   * Data count to display per page.
+   * @group Props
+   */
   @Input() rows = 0;
+  /**
+   * Number of total records.
+   * @group Props
+   */
   @Input() totalRecords = 0;
+  /**
+   * Array of integer values to display inside rows per page dropdown. A object that have 'showAll' key can be added to it to show all data. Exp; [10,20,30]
+   * @group Props
+   */
   @Input() rowsPerPageOptions: number[] = [];
+  /**
+   * Whether to show it even there is only one page.
+   * @group Props
+   */
   @Input() alwaysShow = true;
+  /**
+   * Color of paginator background.
+   * @group Props
+   */
   @Input() backgroundColor = 'transparent';
-  @Input() resetPageOnRowsChange = false;
 
+  @Input() resetPageOnRowsChange = false;
+  /**
+   * Callback to invoke when page changes, the event object contains information about the new state.
+   * @param {any} event - Paginator state.
+   * @group Emits
+   */
   @Output() pageChanged = new EventEmitter<any>();
 
   @ViewChild('paginator')

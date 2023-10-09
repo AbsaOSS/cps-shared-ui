@@ -16,12 +16,40 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./cps-chip.component.scss']
 })
 export class CpsChipComponent implements OnChanges {
+  /**
+   * Label of the chip element.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Name of the icon.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Position of the icon.
+   * @group Props
+   */
   @Input() iconPosition: 'before' | 'after' = 'before';
+
+  /**
+   *Option for removing a selected chip element.
+   * @group Props
+   */
   @Input() closable = false;
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
 
+  /**
+   * Callback to invoke on chip close.
+   * @group Emits
+   */
   @Output() closed = new EventEmitter();
 
   classesList = ['cps-chip'];

@@ -19,10 +19,33 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   styleUrls: ['./cps-tag.component.scss']
 })
 export class CpsTagComponent implements ControlValueAccessor, OnChanges {
+  /**
+   * Type of tag.
+   * @group Props
+   */
   @Input() type: 'security' | 'classification' | 'custom' = 'custom'; // higher precedence over color
+  /**
+   * Lable of the tag.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Color of the tag.
+   * @group Props
+   */
   @Input() color = '';
+
+  /**
+   * When present, it specifies that the element should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Whether the tag should be selectable.
+   * @group Props
+   */
   @Input() selectable = false;
   @Input() set value(value: boolean) {
     this._value = value;
@@ -32,7 +55,11 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   get value(): boolean {
     return this._value;
   }
-
+  /**
+   * Callback to invoke on value change.
+   * @param {any} event - Browser event.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<boolean>();
 
   classesList: string[] = [];

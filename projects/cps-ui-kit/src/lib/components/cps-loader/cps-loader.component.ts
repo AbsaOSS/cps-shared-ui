@@ -10,9 +10,25 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-loader.component.scss']
 })
 export class CpsLoaderComponent implements OnInit {
+  /**
+   * Option for loader component to take up the whole screan.
+   * @group Props
+   */
   @Input() fullScreen = false;
+  /**
+   * Option to control thr transparency of the loader component.
+   * @group Props
+   */
   @Input() opacity: number | string = 0.1;
+  /**
+   * Color of the lable.
+   * @group Props
+   */
   @Input() labelColor = 'depth';
+  /**
+   * Option to show lable.
+   * @group Props
+   */
   @Input() showLabel = true;
 
   backgroundColor = 'rgba(0, 0, 0, 0.1)';

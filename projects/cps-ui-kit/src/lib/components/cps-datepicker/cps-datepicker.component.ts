@@ -39,26 +39,94 @@ export type CpsDatepickerAppearanceType =
 export class CpsDatepickerComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
+  /**
+   * Label of the datepicker element.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Width on the datepicker.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * Hint text for the type of date format.
+   * @group Props
+   */
   @Input() placeholder = 'MM/DD/YYYY';
+
+  /**
+   * Additional hint for the datepicker element.
+   * @group Props
+   */
   @Input() hint = '';
+
+  /**
+   *Option for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
+  /**
+   *Option for hiding details.
+   * @group Props
+   */
   @Input() hideDetails = false;
   @Input() persistentClear = false;
+
+  /**
+   *Option to show today's date.
+   * @group Props
+   */
   @Input() showTodayButton = true;
+
   @Input() openOnInputFocus = false;
+
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+
+  /**
+   * Styling appearance of datepicker input.
+   * @group Props
+   */
   @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
 
+  /**
+   * Option for adding min date.
+   * @group Props
+   */
   @Input()
   minDate!: Date;
 
+  /**
+   * Option for adding max date.
+   * @group Props
+   */
   @Input()
   maxDate!: Date;
 
@@ -72,6 +140,10 @@ export class CpsDatepickerComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<Date | null>();
 
   @ViewChild('datepickerInput')

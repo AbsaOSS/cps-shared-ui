@@ -131,9 +131,22 @@ export type iconSizeType =
   styleUrls: ['./cps-icon.component.scss']
 })
 export class CpsIconComponent implements OnChanges {
+  /**
+   * Name of the icon.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Size of the icon.
+   * @group Props
+   */
   @Input() size: iconSizeType = 'small';
 
+  /**
+   * Color of the icon.
+   * @group Props
+   */
   @Input() color = 'currentColor';
 
   iconColor = 'currentColor';

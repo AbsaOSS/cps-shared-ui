@@ -45,6 +45,10 @@ export class CpsTreeSelectComponent
   extends BaseTreeDropdownComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   * Styling appearance of select input.
+   * @group Props
+   */
   @Input() appearance: CpsTreeSelectAppearanceType = 'outlined';
 
   constructor(

@@ -11,11 +11,35 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-progress-linear.component.scss']
 })
 export class CpsProgressLinearComponent implements OnInit {
+  /**
+   * Width of the progress bar.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+  /**
+   * Height of the progress bar.
+   * @group Props
+   */
   @Input() height: number | string = '0.5rem';
+  /**
+   * Color of the progress bar.
+   * @group Props
+   */
   @Input() color = 'calm';
+  /**
+   * Background color of the progress bar.
+   * @group Props
+   */
   @Input() bgColor = 'white';
+  /**
+   * Option to control thr transparency of the loader component.
+   * @group Props
+   */
   @Input() opacity: number | string = 1;
+  /**
+   * Radius of the progress bar.
+   * @group Props
+   */
   @Input() radius: number | string = 0;
 
   ngOnInit(): void {

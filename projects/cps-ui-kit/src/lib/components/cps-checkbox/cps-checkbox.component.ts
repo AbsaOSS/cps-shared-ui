@@ -23,14 +23,48 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-checkbox.component.scss']
 })
 export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
+  /**
+   * Label of the checkbox element.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+
+  /**
+   * Name of the icon.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Color of the icon.
+   * @group Props
+   */
   @Input() iconColor = 'text-dark';
 
   @Input() set value(value: boolean) {
@@ -42,6 +76,10 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<boolean>();
 
   private _value = false;
