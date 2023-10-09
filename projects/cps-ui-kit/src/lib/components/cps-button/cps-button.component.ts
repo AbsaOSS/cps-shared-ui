@@ -20,18 +20,77 @@ import { convertSize, parseSize } from '../../utils/internal/size-utils';
   styleUrls: ['./cps-button.component.scss']
 })
 export class CpsButtonComponent implements OnInit {
+  /**
+   * Color of the button.
+   * @group Props
+   */
   @Input() color = 'calm';
+
+  /**
+   * Color of content on the button.
+   * @group Props
+   */
   @Input() contentColor = 'white'; // works only with solid type
+
+  /**
+   * Type of the button interms of style.
+   * @group Props
+   */
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
+
+  /**
+   * Label or text on the button.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Name of the icon on the button.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Position of the icon on the button.
+   * @group Props
+   */
   @Input() iconPosition: 'before' | 'after' = 'before';
+
+  /**
+   * Size on the button.
+   * @group Props
+   */
   @Input() size: 'xsmall' | 'small' | 'normal' | 'large' = 'normal';
+
+  /**
+   * Width on the button.
+   * @group Props
+   */
   @Input() width: number | string = 0;
+
+  /**
+   * Height on the button.
+   * @group Props
+   */
   @Input() height: number | string = 0;
+
+  /**
+   * When present, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   *When enabled, a cps-progress-circular bar is displayed.
+   * @group Props
+   */
   @Input() loading = false;
 
+  /**
+   * Callback to execute when button is clicked.
+   * @param {MouseEvent} event - Mouse event.
+   * @group Emits
+   */
   @Output() clicked = new EventEmitter();
 
   buttonColor = '';

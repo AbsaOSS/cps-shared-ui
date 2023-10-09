@@ -47,14 +47,34 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   ]
 })
 export class CpsRadioGroupComponent implements ControlValueAccessor {
+  /**
+   * An array of options in the menu.
+   * @group Props
+   */
   @Input() options = [] as RadioOption[];
   @Input() groupLabel = '';
   @Input() vertical = false;
+  /**
+   * When present, it specifies that the element should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+  /**
+   * Size of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input() set value(value: any) {
@@ -65,7 +85,11 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   get value(): any {
     return this._value;
   }
-
+  /**
+   * Callback to invoke on value change.
+   * @param {boolean} event - Browser event.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<boolean>();
 
   private _value: any = undefined;

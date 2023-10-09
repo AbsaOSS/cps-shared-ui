@@ -59,36 +59,147 @@ export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
 export class CpsSelectComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   * The label of the select component.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Hint text for the select component.
+   * @group Props
+   */
   @Input() placeholder = 'Please select';
+
+  /**
+   * More hints about the select component.
+   * @group Props
+   */
   @Input() hint = '';
   @Input() returnObject = true; // if false, value will be option[optionValue]
+
+  /**
+   * Specifies if multiple values can be selected.
+   * @group Props
+   */
   @Input() multiple = false;
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Width of the select input field.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * Options for selecting all element.
+   * @group Props
+   */
   @Input() selectAll = true; // doesn't work with virtual scroll
+
+  /**
+   * When selecting an element, it will appear in a form of a chip.
+   * @group Props
+   */
   @Input() chips = true;
+
+  /**
+   *Options for removing a selected chip element.
+   * @group Props
+   */
   @Input() closableChips = true;
+
+  /**
+   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
   @Input() openOnClear = true;
+
+  /**
+   * An array of options in the select component.
+   * @group Props
+   */
   @Input() options = [] as any[];
+
+  /**
+   * The label or tilte of the options.
+   * @group Props
+   */
   @Input() optionLabel = 'label';
   @Input() optionValue = 'value'; // needed only if returnObject === false
+  /**
+   * More iformation about the options.
+   * @group Props
+   */
   @Input() optionInfo = 'info';
+
+  /**
+   *Options for hiding details.
+   * @group Props
+   */
   @Input() hideDetails = false;
   @Input() persistentClear = false;
+  /**
+   * Icon before input value.
+   * @group Props
+   */
   @Input() prefixIcon: IconType = '';
+
+  /**
+   * Size of icon before input value.
+   * @group Props
+   */
   @Input() prefixIconSize: iconSizeType = '18px';
+
+  /**
+   *When enabled, a loading bar is displayed when data is being collected.
+   * @group Props
+   */
   @Input() loading = false;
+
+  /**
+   * Whether the data should be loaded on demand during scroll.
+   * @group Props
+   */
   @Input() virtualScroll = false;
+
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+  /**
+   * Size of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
   @Input() optionsClass = '';
+
+  /**
+   * Styling appearance of autocomplete input.
+   * @group Props
+   */
   @Input() appearance: CpsSelectAppearanceType = 'outlined';
 
+  /**
+   * Value selected.
+   * @group Props
+   */
   @Input('value') _value: any = undefined;
 
   set value(value: any) {
@@ -100,6 +211,11 @@ export class CpsSelectComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {any} event - Browser event.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<any>();
 
   @ViewChild('selectBox')

@@ -59,14 +59,53 @@ import {
   ]
 })
 export class CpsExpansionPanelComponent implements OnInit {
+  /**
+   * Title of the expansionPanel element.
+   * @group Props
+   */
   @Input() headerTitle = '';
+
+  /**
+   * Background color of the expansion panel element.
+   * @group Props
+   */
   @Input() backgroundColor = 'transparent';
+  /**
+   * Option to show the chevron icon.
+   * @group Props
+   */
   @Input() showChevron = true;
+
+  /**
+   * Option to expand.
+   * @group Props
+   */
   @Input() isExpanded = false;
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * If true, expansion panel element will have a border.
+   * @group Props
+   */
   @Input() bordered = true;
+
   @Input() borderRadius: number | string = '4px';
+
+  /**
+   * The width of the expansion panel.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * Icon name. Option to add icon infront of the title.
+   * @group Props
+   */
   @Input() prefixIcon: IconType = '';
 
   @Output() afterCollapse: EventEmitter<void> = new EventEmitter<void>();

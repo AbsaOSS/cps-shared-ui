@@ -44,7 +44,15 @@ export class CpsTreeAutocompleteComponent
   extends BaseTreeDropdownComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   *Message if autocomplete array of items is empty.
+   * @group Props
+   */
   @Input() emptyMessage = 'No results found';
+  /**
+   * Styling appearance of autocomplete input.
+   * @group Props
+   */
   @Input() appearance: CpsTreeAutocompleteAppearanceType = 'outlined';
 
   inputText = '';

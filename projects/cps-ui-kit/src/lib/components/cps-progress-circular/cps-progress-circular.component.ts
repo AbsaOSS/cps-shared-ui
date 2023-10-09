@@ -11,8 +11,20 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-progress-circular.component.scss']
 })
 export class CpsProgressCircularComponent implements OnInit {
+  /**
+   * Diameter of the circular-progress bar.
+   * @group Props
+   */
   @Input() diameter: number | string = 40;
+  /**
+   * Thickness of the circular-progress bar.
+   * @group Props
+   */
   @Input() strokeWidth: number | string = 4;
+  /**
+   * Color of the circular-progress bar.
+   * @group Props
+   */
   @Input() color = 'calm';
 
   ngOnInit(): void {

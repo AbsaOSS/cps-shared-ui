@@ -84,14 +84,44 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   encapsulation: ViewEncapsulation.None
 })
 export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Header title of the menue.
+   * @group Props
+   */
   @Input() header = '';
+
+  /**
+   * An array of items in the menu.
+   * @group Props
+   */
   @Input() items: CpsMenuItem[] = [];
+  /**
+   * Whether to include arrow on the menu.
+   * @group Props
+   */
   @Input() withArrow = true;
+  /**
+   * Menu with prepared-colored and without header and items description.
+   * @group Props
+   */
   @Input() compressed = false; // prepared-colored, without header and items description
+
   @Input() focusOnShow = true;
   @Input() persistent = false;
+  /**
+   * Styling class of the menu container.
+   * @group Props
+   */
   @Input() containerClass = '';
+  /**
+   * Transition options of the show animation.
+   * @group Props
+   */
   @Input() showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
+  /**
+   * Transition options of the hide animation.
+   * @group Props
+   */
   @Input() hideTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
 
   @Output() menuShown = new EventEmitter();

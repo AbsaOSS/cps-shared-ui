@@ -42,26 +42,110 @@ export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 export class CpsInputComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   * Label of the input element.
+   * @group Props
+   */
   @Input() label = '';
+  /**
+   * More hints about the input.
+   * @group Props
+   */
   @Input() hint = '';
+
+  /**
+   * Hint text for the input field.
+   * @group Props
+   */
   @Input() placeholder = 'Please enter';
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Width of the input field.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * Type of the input.
+   * @group Props
+   */
   @Input() type: 'text' | 'number' | 'password' = 'text';
+
+  /**
+   *When enabled, a loading bar is displayed when data is being collected.
+   * @group Props
+   */
   @Input() loading = false;
+
+  /**
+   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
+  /**
+   * Icon before input value.
+   * @group Props
+   */
   @Input() prefixIcon: IconType = '';
+
+  /**
+   * When enabled, icon will be clickable.
+   * @group Props
+   */
   @Input() prefixIconClickable = false;
+
+  /**
+   * Size of icon before input value.
+   * @group Props
+   */
   @Input() prefixIconSize: iconSizeType = '18px';
+
+  /**
+   * Text before input value.
+   * @group Props
+   */
   @Input() prefixText = '';
+
+  /**
+   *Options for hiding details.
+   * @group Props
+   */
   @Input() hideDetails = false;
+
   @Input() persistentClear = false;
   @Input() error = '';
+
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+
+  /**
+   * Styling appearance of input field.
+   * @group Props
+   */
   @Input() appearance: CpsInputAppearanceType = 'outlined';
 
   @Input() set value(value: string) {

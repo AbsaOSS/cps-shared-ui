@@ -76,6 +76,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() colFieldName = 'field';
 
   @Input() striped = true;
+  /**
+   * Whether the table should have boreders.
+   * @group Props
+   */
   @Input() bordered = true;
   @Input() size: CpsTableSize = 'normal';
   @Input() selectable = false;
@@ -102,6 +106,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() virtualScroll = false; // works only if scrollable is true
   @Input() numToleratedItems = 10;
 
+  /**
+   * Whether the table should have paginator.
+   * @group Props
+   */
   @Input() paginator = false;
   @Input() alwaysShowPaginator = true;
   @Input() rowsPerPageOptions: number[] = [];

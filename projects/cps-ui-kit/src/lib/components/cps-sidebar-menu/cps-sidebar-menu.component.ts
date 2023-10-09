@@ -58,8 +58,20 @@ export type CpsSidebarMenuItem = {
   ]
 })
 export class CpsSidebarMenuComponent implements OnInit {
+  /**
+   * An array of items in the sidebar component.
+   * @group Props
+   */
   @Input() items: CpsSidebarMenuItem[] = [];
+  /**
+   * Whether the sidebar should be expandable.
+   * @group Props
+   */
   @Input() isExpanded = true;
+  /**
+   * Height of the sidebar.
+   * @group Props
+   */
   @Input() height = '100%';
 
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;

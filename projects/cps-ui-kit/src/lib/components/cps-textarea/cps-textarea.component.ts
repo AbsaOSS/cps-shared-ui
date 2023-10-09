@@ -27,23 +27,75 @@ import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 export class CpsTextareaComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
+  /**
+   * Lable of the textarea component.
+   * @group Props
+   */
   @Input() label = '';
+  /**
+   * Hint text for the textarea field.
+   * @group Props
+   */
   @Input() placeholder = 'Please enter';
+  /**
+   * Number of rows in the textarea field.
+   * @group Props
+   */
   @Input() rows = 5;
+  /**
+   * The cols attribute specifies the visible width of a text area..
+   * @group Props
+   */
   @Input() cols = 20;
+
   @Input() autofocus = false;
+  /**
+   * More hint text about the textarea field.
+   * @group Props
+   */
   @Input() hint = '';
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+  /**
+   * Width of the textarea field.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
+  /**
+   *Options for hiding details.
+   * @group Props
+   */
   @Input() hideDetails = false;
   @Input() persistentClear = false;
   @Input() error = '';
   @Input() resizable: 'vertical' | 'none' = 'vertical';
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Max width of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input() set value(value: string) {
@@ -55,6 +107,11 @@ export class CpsTextareaComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {string} event - Browser event.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<string>();
   @Output() focused = new EventEmitter();
   @Output() prefixIconClicked = new EventEmitter();

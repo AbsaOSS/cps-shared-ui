@@ -38,15 +38,50 @@ export type BtnToggleOption = {
   styleUrls: ['./cps-button-toggle.component.scss']
 })
 export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
+  /**
+   * Label or name of the toggle button.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * An array of options on the toggle button.
+   * @group Props
+   */
   @Input() options = [] as BtnToggleOption[];
+
+  /**
+   * Specifies if multiple values can be selected.
+   * @group Props
+   */
   @Input() multiple = false;
+
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
   @Input() mandatory = true; // at least one of the options is mandatory
+
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input('value') _value: any = undefined;
@@ -60,6 +95,10 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<any>();
 
   constructor(@Self() @Optional() private _control: NgControl) {
