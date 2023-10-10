@@ -67,6 +67,7 @@ export class CpsInputComponent
   @Input() valueToDisplay = '';
 
   @Input() set value(value: string) {
+    if (!value) value = '';
     this._value = value;
     this.onChange(value);
   }
