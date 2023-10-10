@@ -142,6 +142,16 @@ export class CpsInputComponent
       return;
     }
 
+    if ('pattern' in errors) {
+      this.error = 'Value is invalid';
+      return;
+    }
+
+    if ('email' in errors) {
+      this.error = 'Email format is invalid';
+      return;
+    }
+
     if ('minlength' in errors) {
       // eslint-disable-next-line dot-notation
       this.error = `Field must contain at least ${errors['minlength'].requiredLength} characters`;
