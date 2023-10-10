@@ -47,6 +47,7 @@ export class CpsTextareaComponent
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   @Input() set value(value: string) {
+    if (!value) value = '';
     this._value = value;
     this.onChange(value);
   }
