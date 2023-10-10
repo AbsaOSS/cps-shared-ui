@@ -102,6 +102,11 @@ export class CpsTextareaComponent
       return;
     }
 
+    if ('pattern' in errors) {
+      this.error = 'Value is invalid';
+      return;
+    }
+
     if ('minlength' in errors) {
       // eslint-disable-next-line dot-notation
       this.error = `Field must contain at least ${errors['minlength'].requiredLength} characters`;
