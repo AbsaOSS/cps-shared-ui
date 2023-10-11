@@ -3,7 +3,7 @@
   class="cps-menu-container"
   [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
   [class]="containerClass"
-  (click)="onOverlayClick($event)"
+  (mousedown)="onOverlayClick($event)"
   [@animation]="{
     value: overlayVisible ? 'open' : 'close',
     params: {
@@ -13,7 +13,7 @@
   }"
   (@animation.start)="onAnimationStart($event)"
   (@animation.done)="onAnimationEnd($event)">
-  <div (mouseup)="onContentClick()" (touchend)="onContentClick()">
+  <div (mousedown)="onContentClick()" (touchstart)="onContentClick()">
     <ng-container *ngIf="items.length < 1">
       <ng-content></ng-content>
     </ng-container>

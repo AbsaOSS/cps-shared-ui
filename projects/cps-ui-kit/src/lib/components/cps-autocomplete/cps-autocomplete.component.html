@@ -27,7 +27,10 @@
       borderless: appearance === 'borderless',
       underlined: appearance === 'underlined'
     }">
-    <div class="cps-autocomplete-box" #autocompleteBox (click)="onBoxClick()">
+    <div
+      class="cps-autocomplete-box"
+      #autocompleteBox
+      (mousedown)="onBoxClick()">
       <div class="cps-autocomplete-box-area">
         <cps-icon
           *ngIf="prefixIcon"
@@ -109,7 +112,7 @@
           </span>
           <span
             class="cps-autocomplete-box-chevron"
-            (click)="onChevronClick($event)">
+            (mousedown)="onChevronClick($event)">
             <cps-icon
               icon="chevron-down"
               size="small"
