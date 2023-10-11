@@ -27,6 +27,7 @@ $hover-transition-duration: 0.2s;
     width: 100%;
     outline: none;
     font-family: 'Source Sans Pro', sans-serif;
+    font-weight: normal;
     display: grid;
 
     .cps-autocomplete-container {
@@ -190,8 +191,10 @@ $hover-transition-duration: 0.2s;
           .text-group-item {
             padding-bottom: 3px;
             padding-top: 2px;
-            padding-right: 4px;
             height: 24px;
+          }
+          .text-group-item:not(:first-child) {
+            padding-left: 4px;
           }
         }
       }
