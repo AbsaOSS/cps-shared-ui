@@ -299,8 +299,8 @@ export class CpsAutocompleteComponent
   onBoxClick() {
     if (!this.multiple) {
       this.activeSingle = true;
-      this.inputText = this._getValueLabel();
-      this.filteredOptions = this.options;
+      if (!this.inputText) this.inputText = this._getValueLabel();
+      if (!this.isOpened) this.filteredOptions = this.options;
     }
     this.focus();
     this._dehighlightOption();

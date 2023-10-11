@@ -84,8 +84,8 @@ export class CpsTreeAutocompleteComponent
   onBoxClick() {
     if (!this.multiple) {
       this.activeSingle = true;
-      this.inputText = this._getValueLabel();
-      this.treeList.resetFilter();
+      if (!this.inputText) this.inputText = this._getValueLabel();
+      if (!this.isOpened) this.treeList.resetFilter();
     }
     this.focus();
     this.optionFocused = false;
