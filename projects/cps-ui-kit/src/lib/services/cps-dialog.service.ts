@@ -1,12 +1,11 @@
 import {
   Injectable,
-  ComponentFactoryResolver,
-  ApplicationRef,
   Injector,
   Type,
   EmbeddedViewRef,
   ComponentRef,
-  Inject
+  Inject,
+  ViewContainerRef
 } from '@angular/core';
 import {
   DynamicDialogComponent,
@@ -26,8 +25,7 @@ export class CpsDialogService {
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private appRef: ApplicationRef,
+    private viewContainerRef: ViewContainerRef,
     private injector: Injector,
     @Inject(DOCUMENT) private document: Document
   ) {}
@@ -61,15 +59,10 @@ export class CpsDialogService {
       sub.unsubscribe();
     });
 
-    const componentFactory =
-      this.componentFactoryResolver.resolveComponentFactory(
-        DynamicDialogComponent
-      );
-    const componentRef = componentFactory.create(
-      new DynamicDialogInjector(this.injector, map)
+    const componentRef = this.viewContainerRef.createComponent(
+      DynamicDialogComponent,
+      { injector: new DynamicDialogInjector(this.injector, map) }
     );
-
-    this.appRef.attachView(componentRef.hostView);
 
     const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
@@ -87,7 +80,9 @@ export class CpsDialogService {
 
     const dialogComponentRef = this.dialogComponentRefMap.get(dialogRef);
     if (dialogComponentRef) {
-      this.appRef.detachView(dialogComponentRef.hostView);
+      this.viewContainerRef.detach(
+        this.viewContainerRef.indexOf(dialogComponentRef.hostView)
+      );
       dialogComponentRef.destroy();
       this.dialogComponentRefMap.delete(dialogRef);
     }
