@@ -385,6 +385,12 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   align() {
+    if (!this.target.isConnected) {
+      this.hide();
+      this._destroy();
+      return;
+    }
+
     if (this.autoZIndex) {
       ZIndexUtils.set(
         'overlay',
@@ -558,7 +564,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.unbindScrollListener();
   }
 
-  ngOnDestroy() {
+  private _destroy() {
     if (this.scrollHandler) {
       this.scrollHandler.destroy();
       this.scrollHandler = null;
@@ -581,5 +587,9 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     this.overlaySubscription?.unsubscribe();
 
     this.targetResizeObserver?.disconnect();
+  }
+
+  ngOnDestroy() {
+    this._destroy();
   }
 }
