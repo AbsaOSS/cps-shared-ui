@@ -17,7 +17,7 @@ import { find, isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
-import { BaseTreeDropdownComponent } from '../internal/base-tree-dropdown.component';
+import { BaseTreeDropdownComponent } from '../internal/base-tree-dropdown/base-tree-dropdown.component';
 
 export type CpsTreeAutocompleteAppearanceType =
   | 'outlined'

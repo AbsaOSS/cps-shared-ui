@@ -15,6 +15,7 @@ import {
 } from 'primeng/dynamicdialog';
 
 import { DOCUMENT } from '@angular/common';
+import { ConfirmationComponent } from '../components/internal/confirmation/confirmation.component';
 
 @Injectable()
 export class CpsDialogService {
@@ -38,6 +39,15 @@ export class CpsDialogService {
 
     const instance = this.dialogComponentRefMap.get(dialogRef)?.instance;
     if (instance) instance.childComponentType = componentType;
+
+    return dialogRef;
+  }
+
+  public openConfirmationDialog(config: DynamicDialogConfig): DynamicDialogRef {
+    const dialogRef = this.appendDialogComponentToBody(config);
+
+    const instance = this.dialogComponentRefMap.get(dialogRef)?.instance;
+    if (instance) instance.childComponentType = ConfirmationComponent;
 
     return dialogRef;
   }

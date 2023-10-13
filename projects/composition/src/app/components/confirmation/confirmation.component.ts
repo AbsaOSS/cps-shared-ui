@@ -5,11 +5,11 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   standalone: true,
   imports: [CpsButtonComponent, CpsIconComponent],
-  selector: 'app-confirm-delete',
-  templateUrl: './confirm-delete.component.html',
-  styleUrls: ['./confirm-delete.component.scss']
+  selector: 'app-confirmation',
+  templateUrl: './confirmation.component.html',
+  styleUrls: ['./confirmation.component.scss']
 })
-export class ConfirmDeleteComponent implements OnInit {
+export class ConfirmationComponent implements OnInit {
   subtitle = '';
 
   // eslint-disable-next-line no-useless-constructor

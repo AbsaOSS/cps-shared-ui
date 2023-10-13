@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ConfirmDeleteComponent } from '../../components/confirm-delete/confirm-delete.component';
+import { ConfirmationComponent } from '../../components/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-dialog-page',
@@ -20,7 +20,7 @@ export class DialogPageComponent {
   constructor(public dialogService: CpsDialogService) {}
 
   toggleDialog() {
-    this.ref = this.dialogService.open(ConfirmDeleteComponent, {
+    this.ref = this.dialogService.open(ConfirmationComponent, {
       // header: 'Select a Product',
       // width: '70%',
       // showHeader: false,
