@@ -17,7 +17,7 @@ import { find, isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
-import { BaseTreeDropdownComponent } from '../internal/base-tree-dropdown/base-tree-dropdown.component';
+import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown/cps-base-tree-dropdown.component';
 
 export type CpsTreeAutocompleteAppearanceType =
   | 'outlined'
@@ -41,7 +41,7 @@ export type CpsTreeAutocompleteAppearanceType =
   styleUrls: ['./cps-tree-autocomplete.component.scss']
 })
 export class CpsTreeAutocompleteComponent
-  extends BaseTreeDropdownComponent
+  extends CpsBaseTreeDropdownComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @Input() emptyMessage = 'No results found';

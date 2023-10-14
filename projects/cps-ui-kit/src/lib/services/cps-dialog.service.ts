@@ -7,22 +7,17 @@ import {
   Inject,
   ViewContainerRef
 } from '@angular/core';
-import {
-  DynamicDialogComponent,
-  DynamicDialogInjector,
-  DynamicDialogConfig,
-  DynamicDialogRef
-} from 'primeng/dynamicdialog';
-
+import { DynamicDialogInjector } from 'primeng/dynamicdialog';
 import { DOCUMENT } from '@angular/common';
-import { ConfirmationComponent } from '../components/internal/confirmation/confirmation.component';
+import { CpsConfirmationComponent } from '../components/internal/cps-confirmation/cps-confirmation.component';
+import { CpsDialogConfig } from '../components/cps-dialog/cps-dialog-config';
+import { CpsDialogRef } from '../components/cps-dialog/cps-dialog-ref';
+import { CpsDialogComponent } from '../components/internal/cps-dialog/cps-dialog.component';
 
 @Injectable()
 export class CpsDialogService {
-  dialogComponentRefMap: Map<
-    DynamicDialogRef,
-    ComponentRef<DynamicDialogComponent>
-  > = new Map();
+  dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
+    new Map();
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -31,10 +26,7 @@ export class CpsDialogService {
     @Inject(DOCUMENT) private document: Document
   ) {}
 
-  public open(
-    componentType: Type<any>,
-    config: DynamicDialogConfig
-  ): DynamicDialogRef {
+  public open(componentType: Type<any>, config: CpsDialogConfig): CpsDialogRef {
     const dialogRef = this.appendDialogComponentToBody(config);
 
     const instance = this.dialogComponentRefMap.get(dialogRef)?.instance;
@@ -43,21 +35,21 @@ export class CpsDialogService {
     return dialogRef;
   }
 
-  public openConfirmationDialog(config: DynamicDialogConfig): DynamicDialogRef {
+  public openConfirmationDialog(config: CpsDialogConfig): CpsDialogRef {
     const dialogRef = this.appendDialogComponentToBody(config);
 
     const instance = this.dialogComponentRefMap.get(dialogRef)?.instance;
-    if (instance) instance.childComponentType = ConfirmationComponent;
+    if (instance) instance.childComponentType = CpsConfirmationComponent;
 
     return dialogRef;
   }
 
-  private appendDialogComponentToBody(config: DynamicDialogConfig) {
+  private appendDialogComponentToBody(config: CpsDialogConfig) {
     const map = new WeakMap();
-    map.set(DynamicDialogConfig, config);
+    map.set(CpsDialogConfig, config);
 
-    const dialogRef = new DynamicDialogRef();
-    map.set(DynamicDialogRef, dialogRef);
+    const dialogRef = new CpsDialogRef();
+    map.set(CpsDialogRef, dialogRef);
 
     const sub = dialogRef.onClose.subscribe(() => {
       this.dialogComponentRefMap.get(dialogRef)?.instance.close();
@@ -70,7 +62,7 @@ export class CpsDialogService {
     });
 
     const componentRef = this.viewContainerRef.createComponent(
-      DynamicDialogComponent,
+      CpsDialogComponent,
       { injector: new DynamicDialogInjector(this.injector, map) }
     );
 
@@ -83,7 +75,7 @@ export class CpsDialogService {
     return dialogRef;
   }
 
-  private removeDialogComponentFromBody(dialogRef: DynamicDialogRef) {
+  private removeDialogComponentFromBody(dialogRef: CpsDialogRef) {
     if (!dialogRef || !this.dialogComponentRefMap.has(dialogRef)) {
       return;
     }

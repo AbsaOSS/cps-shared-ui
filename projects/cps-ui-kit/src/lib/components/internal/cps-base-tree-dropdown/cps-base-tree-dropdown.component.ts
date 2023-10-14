@@ -17,15 +17,15 @@ import { TreeNode } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import { IconType, iconSizeType } from '../cps-icon/cps-icon.component';
-import { convertSize } from '../../utils/internal/size-utils';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import { convertSize } from '../../../utils/internal/size-utils';
+import { TooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 @Component({
   template: ''
 })
-export class BaseTreeDropdownComponent
+export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';

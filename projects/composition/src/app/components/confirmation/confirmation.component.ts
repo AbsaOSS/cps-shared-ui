@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CpsButtonComponent, CpsIconComponent } from 'cps-ui-kit';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import {
+  CpsButtonComponent,
+  CpsDialogConfig,
+  CpsDialogRef,
+  CpsIconComponent
+} from 'cps-ui-kit';
 
 @Component({
   standalone: true,
@@ -14,8 +18,8 @@ export class ConfirmationComponent implements OnInit {
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    private _dialogRef: DynamicDialogRef,
-    public config: DynamicDialogConfig
+    private _dialogRef: CpsDialogRef,
+    public config: CpsDialogConfig
   ) {
     this.subtitle = config.data.subtitle;
   }

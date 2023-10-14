@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import {
+  CpsButtonComponent,
+  CpsDialogConfig,
+  CpsDialogRef,
+  CpsDialogService
+} from 'cps-ui-kit';
 import { ConfirmationComponent } from '../../components/confirmation/confirmation.component';
 
 @Component({
@@ -14,7 +18,7 @@ import { ConfirmationComponent } from '../../components/confirmation/confirmatio
   host: { class: 'composition-page' }
 })
 export class DialogPageComponent {
-  ref: DynamicDialogRef | undefined;
+  ref: CpsDialogRef | undefined;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(public dialogService: CpsDialogService) {}
@@ -32,7 +36,7 @@ export class DialogPageComponent {
       data: {
         subtitle: 'Hello dialog'
       }
-    });
+    } as CpsDialogConfig);
 
     this.ref.onClose.subscribe((confirm: boolean) => {});
 

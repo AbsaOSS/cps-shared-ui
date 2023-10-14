@@ -1,0 +1,25 @@
+<div class="cps-confirmation">
+  <cps-icon
+    icon="warning"
+    size="large"
+    class="cps-confirmation-icon"
+    color="calm">
+  </cps-icon>
+  <h1 class="cps-confirmation-title">Confirm the action</h1>
+  <span>{{ subtitle }}</span>
+
+  <div class="cps-confirmation-buttons">
+    <cps-button
+      type="borderless"
+      label="No"
+      (clicked)="close(false)"
+      color="prepared">
+    </cps-button>
+    <cps-button
+      data-cy="btn-yes"
+      label="Yes"
+      (clicked)="close(true)"
+      color="prepared">
+    </cps-button>
+  </div>
+</div>
