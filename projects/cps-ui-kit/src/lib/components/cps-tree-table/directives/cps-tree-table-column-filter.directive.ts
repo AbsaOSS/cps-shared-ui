@@ -22,11 +22,31 @@ export type CpsTreeTableColumnFilterType =
 })
 export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   @Input('cpsTTColFilter') field: string | undefined;
+  /**
+   * Type of filter in tree table.
+   * @group Props
+   */
   @Input() filterType: CpsTreeTableColumnFilterType = 'text';
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() filterShowClearButton = true;
+  /**
+   * Whether the filter should have apply button.
+   * @group Props
+   */
   @Input() filterShowApplyButton = true;
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() filterHideOnClear = false;
   @Input() filterCategoryOptions: string[] = [];
+  /**
+   * Hint text for the filter input field.
+   * @group Props
+   */
   @Input() filterPlaceholder = '';
 
   filterCompRef: ComponentRef<TableColumnFilterComponent>;
