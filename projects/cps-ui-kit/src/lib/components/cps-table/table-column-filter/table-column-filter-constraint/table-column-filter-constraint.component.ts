@@ -27,11 +27,27 @@ import { TreeTable } from 'primeng/treetable';
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
 export class TableColumnFilterConstraintComponent implements OnInit {
+  /**
+   * Type of filter constraint.
+   * @group Props
+   */
   @Input() type: string | undefined;
   @Input() field: string | undefined;
   @Input() filterConstraint: FilterMetadata | undefined;
+  /**
+   * An array of category options.
+   * @group Props
+   */
   @Input() categoryOptions: string[] = [];
+  /**
+   * Hint text for input field.
+   * @group Props
+   */
   @Input() placeholder = '';
+  /**
+   * Whether the filter should havean apply button.
+   * @group Props
+   */
   @Input() hasApplyButton = true;
 
   booleanOptions = [

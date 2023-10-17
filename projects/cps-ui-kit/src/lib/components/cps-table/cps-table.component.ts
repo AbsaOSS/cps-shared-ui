@@ -70,40 +70,121 @@ export type CpsTableSortMode = 'single' | 'multiple';
   ]
 })
 export class CpsTableComponent implements OnInit, AfterViewChecked {
+  /**
+   * An array of items to display on table.
+   * @group Props
+   */
   @Input() data: any[] = [];
+  /**
+   * An array of objects to represent columns on table.
+   * @group Props
+   */
   @Input() columns: { [key: string]: any }[] = [];
+
   @Input() colHeaderName = 'header';
   @Input() colFieldName = 'field';
-
+  /**
+   * Whether the table should have gray alternating stripes.
+   * @group Props
+   */
   @Input() striped = true;
   /**
-   * Whether the table should have boreders.
+   * Whether the table should have boreders inside.
    * @group Props
    */
   @Input() bordered = true;
+  /**
+   * Size of cells in table.
+   * @group Props
+   */
   @Input() size: CpsTableSize = 'normal';
   @Input() selectable = false;
+  /**
+   * Whether the table should have row hover.
+   * @group Props
+   */
   @Input() rowHover = true;
-  @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
+  /**
+   * field, that uniquely identifies a record in data (needed for expandable rows).
+   * @group Props
+   */
+  @Input() dataKey = '';
+  /**
+   * Whether the table should show row menu.
+   * @group Props
+   */
   @Input() showRowMenu = false;
+  /**
+   * Whether the table should have reorderable rows.
+   * @group Props
+   */
   @Input() reorderableRows = false;
+  /**
+   * Whether the table should show columnsToggle menu, where you can choose which columns to be displayed.
+   * @group Props
+   */
   @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
+  /**
+   *When enabled, a loader component is displayed when data is being collected.
+   * @group Props
+   */
   @Input() loading = false;
-
+  /**
+   * Inline style of the table.
+   * @group Props
+   */
   @Input() tableStyle = undefined;
+  /**
+   * Style class of the table.
+   * @group Props
+   */
   @Input() tableStyleClass = '';
-
+  /**
+   * Whether the table should be sortable.
+   * @group Props
+   */
   @Input() sortable = false; // makes all sortable if columns are provided
+  /**
+   * Whether the table's sortMode single or multiple.
+   * @group Props
+   */
   @Input() sortMode: CpsTableSortMode = 'single';
+  /**
+   * Whether to use the default sorting or a custom one using sortFunction.
+   * @group Props
+   */
   @Input() customSort = false;
-
+  /**
+   * Whether the table should have Toolbar.
+   * @group Props
+   */
   @Input() hasToolbar = true;
+  /**
+   * Toolbar size.
+   * @group Props
+   */
   @Input() toolbarSize: CpsTableToolbarSize = 'normal';
+  /**
+   * Toolbar title.
+   * @group Props
+   */
   @Input() toolbarTitle = '';
-
+  /**
+   * Enables scrollable tables.
+   * @group Props
+   */
   @Input() scrollable = true;
+  /**
+   * Height of the scroll viewport in fixed pixels or the "flex" keyword for a dynamic size.
+   * @group Props
+   */
   @Input() scrollHeight = ''; // 'flex' or value+'px'
+  /**
+   * Whether the data should be loaded on demand during scroll.
+   * @group Props
+   */
   @Input() virtualScroll = false; // works only if scrollable is true
+
   @Input() numToleratedItems = 10;
 
   /**
@@ -111,31 +192,105 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    * @group Props
    */
   @Input() paginator = false;
+  /**
+   * Whether to show it even there is only one page.
+   * @group Props
+   */
   @Input() alwaysShowPaginator = true;
+  /**
+   * An array of number of rows to be displayed.
+   * @group Props
+   */
   @Input() rowsPerPageOptions: number[] = [];
+  /**
+   * Index of the first row to be displayed.
+   * @group Props
+   */
   @Input() first = 0;
+  /**
+   * Number of rows to display per page.
+   * @group Props
+   */
   @Input() rows = 0;
+  /**
+   * Reset page on rows change.
+   * @group Props
+   */
   @Input() resetPageOnRowsChange = false;
+  /**
+   * Reset page on sort.
+   * @group Props
+   */
   @Input() resetPageOnSort = true;
-
+  /**
+   * Text to display when there is no data.
+   * @group Props
+   */
   @Input() emptyMessage = 'No data';
+  /**
+   * Height of table's body when there is no table data.
+   * @group Props
+   */
   @Input() emptyBodyHeight: number | string = '';
-
+  /**
+   * Defines if data is loaded and interacted with in lazy manner.
+   * @group Props
+   */
   @Input() lazy = false;
+  /**
+   * Whether to call lazy loading on initialization.
+   * @group Props
+   */
   @Input() lazyLoadOnInit = true;
-
+  /**
+   * Whether to show global filter (search component) on table component.
+   * @group Props
+   */
   @Input() showGlobalFilter = false;
+  /**
+   *Global filter placeholder (on the search component).
+   * @group Props
+   */
   @Input() globalFilterPlaceholder = 'Search';
+  /**
+   * An array of fields as string to use in global filtering.
+   * @group Props
+   */
   @Input() globalFilterFields: string[] = [];
-
+  /**
+   * Show remove button on selected row.
+   * @group Props
+   */
   @Input() showRemoveBtnOnSelect = true;
+  /**
+   * Whether to show action button on table.
+   * @group Props
+   */
   @Input() showActionBtn = false;
+  /**
+   * Action button title.
+   * @group Props
+   */
   @Input() actionBtnTitle = 'Action';
-
+  /**
+   * Whether to show export button on table.
+   * @group Props
+   */
   @Input() showExportBtn = false;
+  /**
+   * Name of the exported file.
+   * @group Props
+   */
   @Input() exportFilename = 'download';
+  /**
+   * Character to use as the csv separator.
+   * @group Props
+   */
   @Input() csvSeparator = ',';
-
+  /**
+   * Whether to show data reload button on table.
+   * @group Props
+   */
   @Input() showDataReloadBtn = false;
 
   @Output() selectionChanged = new EventEmitter<any[]>();
