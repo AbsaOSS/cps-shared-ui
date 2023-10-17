@@ -39,12 +39,32 @@ import { TreeTable } from 'primeng/treetable';
 })
 export class TableColumnFilterComponent {
   @Input() field: string | undefined;
+  /**
+   * Type of filter in table.
+   * @group Props
+   */
   @Input() type = 'text';
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() showClearButton = true;
+  /**
+   * Whether the filter should have apply button.
+   * @group Props
+   */
   @Input() showApplyButton = true;
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() hideOnClear = false;
   @Input() maxConstraints = 2;
   @Input() categoryOptions: string[] = [];
+  /**
+   * Hint text for the filter input field.
+   * @group Props
+   */
   @Input() placeholder = '';
 
   operator: string = FilterOperator.AND;
