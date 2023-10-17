@@ -13,7 +13,17 @@ import {
   styleUrls: ['./table-row-menu.component.scss']
 })
 export class TableRowMenuComponent {
+  /**
+   * Callback to invoke when edit-row button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() editRowBtnClicked = new EventEmitter<any>();
+  /**
+   * Callback to invoke when remove-row button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() removeRowBtnClicked = new EventEmitter<any>();
 
   items = [

@@ -293,15 +293,65 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    */
   @Input() showDataReloadBtn = false;
 
+  /**
+   * Callback to invoke on selection changed.
+   * @param {any[]} value - selected data.
+   * @group Emits
+   */
   @Output() selectionChanged = new EventEmitter<any[]>();
+  /**
+   * Callback to invoke when action button is clicked.
+   * @param {void} void - button clicked.
+   * @group Emits
+   */
   @Output() actionBtnClicked = new EventEmitter<void>();
+  /**
+   * Callback to invoke when edit-row button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() editRowBtnClicked = new EventEmitter<any>();
+  /**
+   * Callback to invoke on row removal.
+   * @param {any[]} any[] - array of rows removed.
+   * @group Emits
+   */
   @Output() rowsRemoved = new EventEmitter<any[]>();
+  /**
+   * Callback to invoke on page changed.
+   * @param {any} any - page changed.
+   * @group Emits
+   */
   @Output() pageChanged = new EventEmitter<any>();
+  /**
+   * Callback to invoke when data is sorted.
+   * @param {any} any - sort meta.
+   * @group Emits
+   */
   @Output() sorted = new EventEmitter<any>();
+  /**
+   * Callback to invoke when data is filtered.
+   * @param {any} any - custom filtering event.
+   * @group Emits
+   */
   @Output() filtered = new EventEmitter<any>();
+  /**
+   * Callback to invoke when rows are reordered.
+   * @param {any} any - rows reordered.
+   * @group Emits
+   */
   @Output() rowsReordered = new EventEmitter<any>();
+  /**
+   * Callback to invoke on roe removal.
+   * @param {object} object - selected column.
+   * @group Emits
+   */
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+  /**
+   * Callback to invoke when paging, sorting or filtering happens in lazy mode.
+   * @param {any} any - custom lazy loading event.
+   * @group Emits
+   */
   @Output() lazyLoaded = new EventEmitter<any>();
   @Output() dataReloadBtnClicked = new EventEmitter<any>();
   /**

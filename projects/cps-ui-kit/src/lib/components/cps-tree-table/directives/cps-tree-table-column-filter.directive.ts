@@ -38,7 +38,7 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
    */
   @Input() filterShowApplyButton = true;
   /**
-   * Whether the filter should have clear button.
+   * Whether the filter should hide on clear.
    * @group Props
    */
   @Input() filterHideOnClear = false;

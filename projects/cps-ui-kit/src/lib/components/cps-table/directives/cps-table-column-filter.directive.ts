@@ -22,12 +22,32 @@ export type CpsTableColumnFilterType =
 })
 export class CpsTableColumnFilterDirective implements OnInit, OnDestroy {
   @Input('cpsTColFilter') field: string | undefined;
+  /**
+   * Type of filter in table.
+   * @group Props
+   */
   @Input() filterType: CpsTableColumnFilterType = 'text';
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() filterShowClearButton = true;
+  /**
+   * Whether the filter should have apply button.
+   * @group Props
+   */
   @Input() filterShowApplyButton = true;
+  /**
+   * Whether the filter should hide on clear.
+   * @group Props
+   */
   @Input() filterHideOnClear = false;
   @Input() filterMaxConstraints = 2;
   @Input() filterCategoryOptions: string[] = [];
+  /**
+   * Hint text for the filter input field.
+   * @group Props
+   */
   @Input() filterPlaceholder = '';
 
   filterCompRef: ComponentRef<TableColumnFilterComponent>;
