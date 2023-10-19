@@ -12,12 +12,12 @@ import { getCSSColor } from '../../utils/colors-utils';
 })
 export class CpsProgressCircularComponent implements OnInit {
   /**
-   * Diameter of the circular-progress bar.
+   * Diameter of the circular-progress bar, of type number or string.
    * @group Props
    */
   @Input() diameter: number | string = 40;
   /**
-   * Thickness of the circular-progress bar.
+   * Thickness of the circular-progress bar, of type number or string.
    * @group Props
    */
   @Input() strokeWidth: number | string = 4;

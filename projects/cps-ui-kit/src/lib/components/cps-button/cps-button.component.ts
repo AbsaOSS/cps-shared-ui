@@ -33,7 +33,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() contentColor = 'white'; // works only with solid type
 
   /**
-   * Type of the button interms of style.
+   * Type of the button interms of style, it can be 'solid' or 'outlined' or 'borderless'.
    * @group Props
    */
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
@@ -51,25 +51,25 @@ export class CpsButtonComponent implements OnInit {
   @Input() icon: IconType = '';
 
   /**
-   * Position of the icon on the button.
+   * Position of the icon on the button, it can be 'before' or 'after'.
    * @group Props
    */
   @Input() iconPosition: 'before' | 'after' = 'before';
 
   /**
-   * Size on the button.
+   * Size on the button, it can be 'xsmall' or 'small' or 'normal' or 'large'.
    * @group Props
    */
   @Input() size: 'xsmall' | 'small' | 'normal' | 'large' = 'normal';
 
   /**
-   * Width on the button.
+   * Width on the button, of type number or string .
    * @group Props
    */
   @Input() width: number | string = 0;
 
   /**
-   * Height on the button.
+   * Height on the button, of type number or string .
    * @group Props
    */
   @Input() height: number | string = 0;
@@ -88,7 +88,7 @@ export class CpsButtonComponent implements OnInit {
 
   /**
    * Callback to execute when button is clicked.
-   * @param {MouseEvent} event - Mouse event.
+   * @param {any} any - button clicked.
    * @group Emits
    */
   @Output() clicked = new EventEmitter();

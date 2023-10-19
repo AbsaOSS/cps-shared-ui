@@ -53,7 +53,7 @@ export class CpsPaginatorComponent implements OnInit {
   @Input() resetPageOnRowsChange = false;
   /**
    * Callback to invoke when page changes, the event object contains information about the new state.
-   * @param {any} event - Paginator state.
+   * @param {any} any - page changed.
    * @group Emits
    */
   @Output() pageChanged = new EventEmitter<any>();

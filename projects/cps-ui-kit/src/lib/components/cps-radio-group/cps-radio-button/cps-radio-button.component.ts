@@ -14,10 +14,32 @@ let nextUniqueId = 0;
 })
 export class CpsRadioButtonComponent {
   private _uniqueId = `cps-radio-button-${++nextUniqueId}`;
-
+  /**
+   * An array of items in the radio component of object type {
+      value: any;
+      label?: string;
+      disabled?: boolean;
+      tooltip?: string;
+    }.
+   * @group Props
+   */
   @Input() option!: RadioOption;
+  /**
+   * Whether the radio button should be checked.
+   * @group Props
+   */
   @Input() checked = false;
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() groupDisabled = false;
+
+  /**
+   * Callback to invoke on value update.
+   * @param {Event} event - Custom update value event.
+   * @group Emits
+   */
   @Output() updateValueEvent = new EventEmitter<Event>();
 
   get inputId(): string {

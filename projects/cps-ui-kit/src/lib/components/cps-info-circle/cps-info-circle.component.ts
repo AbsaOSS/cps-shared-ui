@@ -14,7 +14,7 @@ import {
 })
 export class CpsInfoCircleComponent {
   /**
-   * Size of the icon.
+   * Size of the icon it can be of type number or string or it can be of vale 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
    * @group Props
    */
   @Input() size: iconSizeType = 'small';
@@ -26,7 +26,7 @@ export class CpsInfoCircleComponent {
   @Input() tooltipText = '';
 
   /**
-   * Position of the tooltip.
+   * Position of the tooltip, it can be 'top'or| 'bottom' or 'left' or 'right'.
    * @group Props
    */
   @Input() tooltipPosition: TooltipPosition = 'top';

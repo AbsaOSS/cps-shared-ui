@@ -52,7 +52,7 @@ export class CpsDatepickerComponent
   @Input() disabled = false;
 
   /**
-   * Width on the datepicker.
+   * Width on the datepicker of type  number or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -98,20 +98,20 @@ export class CpsDatepickerComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip.
+   * Size of infoTooltip, of type number or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip, it can be "top" or "bottom" or "left" or "right".
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   /**
-   * Styling appearance of datepicker input.
+   * Styling appearance of datepicker input , it can be 'outlined' or 'underlined' or 'borderless.
    * @group Props
    */
   @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
@@ -142,6 +142,7 @@ export class CpsDatepickerComponent
 
   /**
    * Callback to invoke on value change.
+   * @param {Date | null} value - value change.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<Date | null>();

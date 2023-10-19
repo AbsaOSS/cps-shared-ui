@@ -71,7 +71,10 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() placeholder = 'Please enter';
-
+  /**
+   * More hints text for the input field.
+   * @group Props
+   */
   @Input() hint = '';
   @Input() returnObject = true; // if false, value will be option[optionValue]
 
@@ -88,7 +91,7 @@ export class CpsAutocompleteComponent
   @Input() disabled = false;
 
   /**
-   * Width of the input field.
+   * Width of the input field, number or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -148,7 +151,7 @@ export class CpsAutocompleteComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Size of icon before input value.
+   * Size of icon before input value, of type number or string or 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
@@ -180,7 +183,7 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Max width of infoTooltip.
+   * Max width of infoTooltip of type number or string .
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
@@ -188,13 +191,13 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip, 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   /**
-   * Styling appearance of autocomplete input.
+   * Styling appearance of autocomplete input, it could be  'outlined' or 'underlined' or 'borderless'.
    * @group Props
    */
   @Input() appearance: CpsAutocompleteAppearanceType = 'outlined';
@@ -216,7 +219,7 @@ export class CpsAutocompleteComponent
 
   /**
    * Callback to invoke on value change.
-   * @param {any} event - Browser event.
+   * @param {any} any - value changed.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<any>();

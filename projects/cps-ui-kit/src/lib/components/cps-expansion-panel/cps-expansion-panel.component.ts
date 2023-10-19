@@ -97,7 +97,7 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() borderRadius: number | string = '4px';
 
   /**
-   * The width of the expansion panel.
+   * The width of the expansion panel of type number or string .
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -108,7 +108,17 @@ export class CpsExpansionPanelComponent implements OnInit {
    */
   @Input() prefixIcon: IconType = '';
 
+  /**
+   * Callback to invoke when a tab gets collapsed.
+   * @param {void}
+   * @group Emits
+   */
   @Output() afterCollapse: EventEmitter<void> = new EventEmitter<void>();
+  /**
+   * Callback to invoke when a tab gets expanded.
+   * @param {void}
+   * @group Emits
+   */
   @Output() afterExpand: EventEmitter<void> = new EventEmitter<void>();
 
   ngOnInit(): void {

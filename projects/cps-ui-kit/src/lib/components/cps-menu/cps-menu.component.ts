@@ -91,7 +91,15 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() header = '';
 
   /**
-   * An array of items in the menu.
+   * An array of items in the menu of object type {
+        title: string;
+        action?: (event?: any) => void;
+        icon?: string;
+        desc?: string;
+        url?: string;
+        target?: string;
+        disabled?: boolean;
+      }.
    * @group Props
    */
   @Input() items: CpsMenuItem[] = [];
@@ -124,9 +132,25 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @Input() hideTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
 
+  /**
+   * Callback to invoke when menu is shown.
+   * @group Emits
+   */
   @Output() menuShown = new EventEmitter();
+  /**
+   * Callback to invoke when menu is hidden.
+   * @group Emits
+   */
   @Output() menuHidden = new EventEmitter();
+  /**
+   * Callback to invoke before menu is hidden.
+   * @group Emits
+   */
   @Output() beforeMenuHidden = new EventEmitter();
+  /**
+   * Callback to invoke when content is clicked.
+   * @group Emits
+   */
   @Output() contentClicked = new EventEmitter();
 
   withIcons = true;

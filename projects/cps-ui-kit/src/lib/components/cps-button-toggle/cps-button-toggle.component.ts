@@ -45,7 +45,11 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() label = '';
 
   /**
-   * An array of options on the toggle button.
+   * An array of options on the toggle button, of object type 
+   *  {value: any;
+      label: string;
+      disabled?: boolean;
+      tooltip?: string;}.
    * @group Props
    */
   @Input() options = [] as BtnToggleOption[];
@@ -72,18 +76,21 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip.
+   * Size of infoTooltip, of type number or string .
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip, it can be 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
-
+  /**
+   * Value of the checkbox.
+   * @group Props
+   */
   @Input('value') _value: any = undefined;
 
   set value(value: any) {
@@ -97,6 +104,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
   /**
    * Callback to invoke on value change.
+   * @param {any} any - value changed.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<any>();
