@@ -29,7 +29,7 @@ export class CpsChipComponent implements OnChanges {
   @Input() icon: IconType = '';
 
   /**
-   * Position of the icon.
+   * Position of the icon, it can be 'before' or 'after'.
    * @group Props
    */
   @Input() iconPosition: 'before' | 'after' = 'before';
@@ -48,6 +48,7 @@ export class CpsChipComponent implements OnChanges {
 
   /**
    * Callback to invoke on chip close.
+   * @param {any} any - Chip closed.
    * @group Emits
    */
   @Output() closed = new EventEmitter();

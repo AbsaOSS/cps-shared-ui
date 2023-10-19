@@ -50,7 +50,7 @@ export class CpsTreeAutocompleteComponent
    */
   @Input() emptyMessage = 'No results found';
   /**
-   * Styling appearance of autocomplete input.
+   * Styling appearance of autocomplete input, it could be  'outlined' or 'underlined' or 'borderless'.
    * @group Props
    */
   @Input() appearance: CpsTreeAutocompleteAppearanceType = 'outlined';

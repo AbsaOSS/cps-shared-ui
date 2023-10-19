@@ -12,12 +12,12 @@ import { getCSSColor } from '../../utils/colors-utils';
 })
 export class CpsProgressLinearComponent implements OnInit {
   /**
-   * Width of the progress bar.
+   * Width of the progress bar, of type number or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
   /**
-   * Height of the progress bar.
+   * Height of the progress bar, of type number or string.
    * @group Props
    */
   @Input() height: number | string = '0.5rem';
@@ -32,12 +32,12 @@ export class CpsProgressLinearComponent implements OnInit {
    */
   @Input() bgColor = 'white';
   /**
-   * Option to control thr transparency of the loader component.
+   * Option to control thr transparency of the loader component, of type number or string.
    * @group Props
    */
   @Input() opacity: number | string = 1;
   /**
-   * Radius of the progress bar.
+   * Radius of the progress bar, of type number or string.
    * @group Props
    */
   @Input() radius: number | string = 0;

@@ -16,7 +16,7 @@ export class CpsLoaderComponent implements OnInit {
    */
   @Input() fullScreen = false;
   /**
-   * Option to control thr transparency of the loader component.
+   * Option to control the transparency of the loader component, of type number or string.
    * @group Props
    */
   @Input() opacity: number | string = 0.1;

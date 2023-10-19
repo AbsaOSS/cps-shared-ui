@@ -43,14 +43,14 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip.
+   * Size of infoTooltip, of type number or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip, it can be 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
@@ -78,6 +78,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
 
   /**
    * Callback to invoke on value change.
+   * @param {boolean} boolean - value changed.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<boolean>();

@@ -66,13 +66,13 @@ export class CpsInputComponent
   @Input() disabled = false;
 
   /**
-   * Width of the input field.
+   * Width of the input field, of type number or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
 
   /**
-   * Type of the input.
+   * Type of the input of type 'text' or 'number' or 'password'.
    * @group Props
    */
   @Input() type: 'text' | 'number' | 'password' = 'text';
@@ -102,7 +102,7 @@ export class CpsInputComponent
   @Input() prefixIconClickable = false;
 
   /**
-   * Size of icon before input value.
+   * Size of icon before input value, of type number or string or it can be a value 'fill' or 'xsmall' or 'small' or 'normal' or 'large';.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
@@ -130,20 +130,20 @@ export class CpsInputComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip.
+   * Size of infoTooltip, of type number or string .
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip, of type 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
 
   /**
-   * Styling appearance of input field.
+   * Styling appearance of input field, it can be "outlined" or "underlined" or "borderless".
    * @group Props
    */
   @Input() appearance: CpsInputAppearanceType = 'outlined';
@@ -157,11 +157,40 @@ export class CpsInputComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {string} string - value changed.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<string>();
+  /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
   @Output() focused = new EventEmitter();
+  /**
+   * Callback to invoke when the prefix icon is clicked.
+   * @param {any}
+   * @group Emits
+   */
   @Output() prefixIconClicked = new EventEmitter();
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}.
+   * @group Emits
+   */
   @Output() blurred = new EventEmitter();
+  /**
+   * Callback to invoke when x icon is clicked.
+   * @group Emits
+   */
   @Output() cleared = new EventEmitter();
+  /**
+   * Callback to invoke when enter is clicked.
+   * @param {any}
+   * @group Emits
+   */
   @Output() enterClicked = new EventEmitter();
 
   @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;

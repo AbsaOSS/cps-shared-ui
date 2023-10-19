@@ -138,7 +138,7 @@ export class CpsIconComponent implements OnChanges {
   @Input() icon: IconType = '';
 
   /**
-   * Size of the icon.
+   * Size of the icon, it can be of type number or string or of value 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
    * @group Props
    */
   @Input() size: iconSizeType = 'small';

@@ -21,6 +21,15 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   styleUrls: ['./cps-radio.component.scss']
 })
 export class CpsRadioComponent implements OnInit {
+  /**
+   * An array of items in the radio component of object type {
+      value: any;
+      label?: string;
+      disabled?: boolean;
+      tooltip?: string;
+    }.
+   * @group Props
+   */
   @Input() option!: RadioOption;
   radioGroup?: CpsRadioGroupComponent;
   groupDisabled = false;
