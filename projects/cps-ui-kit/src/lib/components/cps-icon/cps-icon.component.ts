@@ -6,6 +6,7 @@ import { getCSSColor } from '../../utils/colors-utils';
 export const iconNames = [
   'access',
   'access-denied',
+  'access-lock',
   'access-menu',
   'access-unlock',
   'add',
