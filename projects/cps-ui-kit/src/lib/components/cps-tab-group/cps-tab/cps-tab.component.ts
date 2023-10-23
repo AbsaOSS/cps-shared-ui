@@ -32,7 +32,7 @@ export class CpsTabComponent {
   @Input() tooltipText = '';
   @Input() tooltipContentClass = 'cps-tooltip-content';
   /**
-   * Width of Tooltip.
+   * Width of Tooltip, of type number or string.
    * @group Props
    */
   @Input() tooltipMaxWidth: number | string = '100%';

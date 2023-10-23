@@ -91,7 +91,7 @@ export class CpsSelectComponent
   @Input() disabled = false;
 
   /**
-   * Width of the select input field.
+   * Width of the select input field, of type number or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -123,19 +123,19 @@ export class CpsSelectComponent
   @Input() openOnClear = true;
 
   /**
-   * An array of options in the select component.
+   * An array of options of type any in the select component.
    * @group Props
    */
   @Input() options = [] as any[];
 
   /**
-   * The label or tilte of the options.
+   * The label or title of the options.
    * @group Props
    */
   @Input() optionLabel = 'label';
   @Input() optionValue = 'value'; // needed only if returnObject === false
   /**
-   * More iformation about the options.
+   * More information about the options.
    * @group Props
    */
   @Input() optionInfo = 'info';
@@ -153,7 +153,7 @@ export class CpsSelectComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Size of icon before input value.
+   * Size of icon before input value, of type number or string or value 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
@@ -177,21 +177,21 @@ export class CpsSelectComponent
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
   /**
-   * Size of infoTooltip.
+   * Size of infoTooltip, of type number or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip it can be "right" or "top" or "bottom" or "left".
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
   @Input() optionsClass = '';
 
   /**
-   * Styling appearance of autocomplete input.
+   * Styling appearance of autocomplete input it can be "outlined" or "underlined" or "borderless".
    * @group Props
    */
   @Input() appearance: CpsSelectAppearanceType = 'outlined';
@@ -213,7 +213,7 @@ export class CpsSelectComponent
 
   /**
    * Callback to invoke on value change.
-   * @param {any} event - Browser event.
+   * @param {any} any - value changed.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<any>();

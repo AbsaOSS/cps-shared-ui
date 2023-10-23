@@ -103,7 +103,7 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() width: number | string = '100%';
 
   /**
-   * Icon name. Option to add icon infront of the title.
+   * Icon name. Option to add icon in front of the title.
    * @group Props
    */
   @Input() prefixIcon: IconType = '';

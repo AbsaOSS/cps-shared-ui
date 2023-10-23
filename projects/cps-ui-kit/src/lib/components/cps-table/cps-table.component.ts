@@ -89,7 +89,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    */
   @Input() striped = true;
   /**
-   * Whether the table should have boreders inside.
+   * Whether the table should have borders inside.
    * @group Props
    */
   @Input() bordered = true;
@@ -115,7 +115,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    */
   @Input() showRowMenu = false;
   /**
-   * Whether the table should have reorderable rows.
+   * Whether the table should have re-orderable rows.
    * @group Props
    */
   @Input() reorderableRows = false;
@@ -160,7 +160,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    */
   @Input() hasToolbar = true;
   /**
-   * Toolbar size.
+   * Toolbar size, it can be "small" | "normal".
    * @group Props
    */
   @Input() toolbarSize: CpsTableToolbarSize = 'normal';
@@ -228,7 +228,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    */
   @Input() emptyMessage = 'No data';
   /**
-   * Height of table's body when there is no table data.
+   * Height of table's body when there is no table data, of type number | string.
    * @group Props
    */
   @Input() emptyBodyHeight: number | string = '';

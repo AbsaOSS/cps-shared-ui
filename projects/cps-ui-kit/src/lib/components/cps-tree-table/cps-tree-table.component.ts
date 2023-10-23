@@ -100,12 +100,12 @@ export class CpsTreeTableComponent
    */
   @Input() striped = true;
   /**
-   * Whether the table should have boreders inside.
+   * Whether the table should have borders inside.
    * @group Props
    */
   @Input() bordered = true;
   /**
-   * Size of cells in table.
+   * Size of cells in table, it can be "small" or "normal" or "large".
    * @group Props
    */
   @Input() size: CpsTreeTableSize = 'normal';
@@ -161,7 +161,7 @@ export class CpsTreeTableComponent
    */
   @Input() hasToolbar = true;
   /**
-   * Toolbar size.
+   * Toolbar size,it can be "small" or "normal".
    * @group Props
    */
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
@@ -227,7 +227,7 @@ export class CpsTreeTableComponent
    */
   @Input() emptyMessage = 'No data';
   /**
-   * Height of table's body when there is no table data.
+   * Height of table's body when there is no table data, it can be number or string.
    * @group Props
    */
   @Input() emptyBodyHeight: number | string = '';
@@ -277,19 +277,89 @@ export class CpsTreeTableComponent
    */
   @Input() showDataReloadBtn = false;
 
+  /**
+   * Callback to invoke on selected node change.
+   * @param {any[]} array - selection changed.
+   * @group Emits
+   */
   @Output() selectionChanged = new EventEmitter<any[]>();
+  /**
+   * Callback to invoke when action button is clicked.
+   * @param {any} any - action button clicked.
+   * @group Emits
+   */
   @Output() actionBtnClicked = new EventEmitter<void>();
+  /**
+   * Callback to invoke when edit row button is clicked.
+   * @param {any} any - Custom edit event.
+   * @group Emits
+   */
   @Output() editRowBtnClicked = new EventEmitter<any>();
+  /**
+   * Callback to invoke when rows are removed.
+   * @param {any} any - rows removed.
+   * @group Emits
+   */
   @Output() rowsRemoved = new EventEmitter<any[]>();
+  /**
+   * Callback to invoke when page is changed.
+   * @param {any} any - page changed.
+   * @group Emits
+   */
   @Output() pageChanged = new EventEmitter<any>();
+  /**
+   * Callback to invoke when a column gets sorted.
+   * @param {any} any - Sort data.
+   * @group Emits
+   */
   @Output() sorted = new EventEmitter<any>();
+  /**
+   * Callback to invoke when data is filtered.
+   * @param {any} any - Custom filter event.
+   * @group Emits
+   */
   @Output() filtered = new EventEmitter<any>();
+  /**
+   * Callback to invoke on selected columns.
+   * @param {any[]} object[] - selection changed.
+   * @group Emits
+   */
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+  /**
+   * Callback to invoke when paging, sorting or filtering happens in lazy mode.
+   * @param {any} any - Custom lazy load event.
+   * @group Emits
+   */
   @Output() lazyLoaded = new EventEmitter<any>();
+  /**
+   * Callback to invoke when data reload button is clicked.
+   * @param {any} any - data reload button clicked.
+   * @group Emits
+   */
   @Output() dataReloadBtnClicked = new EventEmitter<any>();
+  /**
+   * Callback to invoke when a node is expanded.
+   * @param {any} any - Node instance.
+   * @group Emits
+   */
   @Output() nodeExpanded = new EventEmitter<any>();
+  /**
+   * Callback to invoke when a node is collapsed.
+   * @param {any} any - Node collapse event.
+   * @group Emits
+   */
   @Output() nodeCollapsed = new EventEmitter<any>();
+  /**
+   * Callback to invoke when a node is selected.
+   * @param {any} any - Node instance.
+   * @group Emits
+   */
   @Output() nodeSelected = new EventEmitter<any>();
+  /**
+   * Callback to invoke when a node is unselected.
+   * @param {any} any - Custom node unselect event.
+   * @group Emits
+   */
   @Output() nodeUnselected = new EventEmitter<any>();
 
   /**

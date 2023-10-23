@@ -85,7 +85,7 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
 })
 export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
-   * Header title of the menue.
+   * Header title of the menu.
    * @group Props
    */
   @Input() header = '';

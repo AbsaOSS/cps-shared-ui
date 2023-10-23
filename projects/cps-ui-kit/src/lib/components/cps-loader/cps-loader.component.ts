@@ -11,7 +11,7 @@ import { getCSSColor } from '../../utils/colors-utils';
 })
 export class CpsLoaderComponent implements OnInit {
   /**
-   * Option for loader component to take up the whole screan.
+   * Option for loader component to take up the whole screen.
    * @group Props
    */
   @Input() fullScreen = false;
@@ -21,12 +21,12 @@ export class CpsLoaderComponent implements OnInit {
    */
   @Input() opacity: number | string = 0.1;
   /**
-   * Color of the lable.
+   * Color of the label.
    * @group Props
    */
   @Input() labelColor = 'depth';
   /**
-   * Option to show lable.
+   * Option to show label.
    * @group Props
    */
   @Input() showLabel = true;
