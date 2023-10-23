@@ -90,7 +90,7 @@ export class CpsTabGroupComponent
    */
   @Input() isSubTabs = false; // applies an alternative styling to tabs
   /**
-   * Transition options of how content appears.
+   * Transition options of how content appears, it can be "slide" | "fade".
    * @group Props
    */
   @Input() animationType: CpsTabsAnimationType = 'slide';
@@ -100,7 +100,17 @@ export class CpsTabGroupComponent
    */
   @Input() tabsBackground = 'inherit';
 
+  /**
+   * Callback to invoke before tab change.
+   * @param {TabChangeEvent} any - tab changed.
+   * @group Emits
+   */
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
+  /**
+   * Callback to invoke after tab change.
+   * @param {TabChangeEvent} any - tab changed.
+   * @group Emits
+   */
   @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
 
   @ViewChild('tabsList') tabsList!: ElementRef;

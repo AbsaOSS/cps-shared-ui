@@ -33,7 +33,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() contentColor = 'white'; // works only with solid type
 
   /**
-   * Type of the button interms of style, it can be 'solid' or 'outlined' or 'borderless'.
+   * Type of the button in terms of style, it can be 'solid' or 'outlined' or 'borderless'.
    * @group Props
    */
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';

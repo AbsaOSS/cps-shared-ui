@@ -59,7 +59,14 @@ export type CpsSidebarMenuItem = {
 })
 export class CpsSidebarMenuComponent implements OnInit {
   /**
-   * An array of items in the sidebar component.
+   * An array of items  of type {
+      title: string;
+      icon: string;
+      url?: string | undefined;
+      target?: string | undefined;
+      disabled?: boolean | undefined;
+      items?: CpsMenuItem[] | undefined;
+  } in the sidebar component.
    * @group Props
    */
   @Input() items: CpsSidebarMenuItem[] = [];

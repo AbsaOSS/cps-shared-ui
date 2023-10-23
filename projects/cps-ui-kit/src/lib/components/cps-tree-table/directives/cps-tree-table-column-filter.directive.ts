@@ -23,7 +23,7 @@ export type CpsTreeTableColumnFilterType =
 export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   @Input('cpsTTColFilter') field: string | undefined;
   /**
-   * Type of filter in tree table.
+   * Type of filter in tree table, it can be "number" or "boolean" or "text" or "date" or "category".
    * @group Props
    */
   @Input() filterType: CpsTreeTableColumnFilterType = 'text';

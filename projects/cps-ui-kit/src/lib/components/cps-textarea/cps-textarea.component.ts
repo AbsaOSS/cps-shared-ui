@@ -28,7 +28,7 @@ export class CpsTextareaComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
   /**
-   * Lable of the textarea component.
+   * Label of the textarea component.
    * @group Props
    */
   @Input() label = '';
@@ -60,7 +60,7 @@ export class CpsTextareaComponent
    */
   @Input() disabled = false;
   /**
-   * Width of the textarea field.
+   * Width of the textarea field, it can be of type number | string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -87,13 +87,13 @@ export class CpsTextareaComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Max width of infoTooltip.
+   * Max width of infoTooltip, it can be of type number | string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   /**
-   * Position of infoTooltip.
+   * Position of infoTooltip, it can be "top" or "bottom" or "left" or "right".
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
@@ -110,12 +110,27 @@ export class CpsTextareaComponent
 
   /**
    * Callback to invoke on value change.
-   * @param {string} event - Browser event.
+   * @param {string} string - value changed.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<string>();
+  /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
   @Output() focused = new EventEmitter();
+  /**
+   * Callback to invoke when the prefixIcon is clicked.
+   * @param {any}.
+   * @group Emits
+   */
   @Output() prefixIconClicked = new EventEmitter();
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}.
+   * @group Emits
+   */
   @Output() blurred = new EventEmitter();
 
   private _statusChangesSubscription: Subscription = new Subscription();

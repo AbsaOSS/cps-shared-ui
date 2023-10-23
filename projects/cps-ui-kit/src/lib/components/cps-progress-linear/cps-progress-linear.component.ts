@@ -32,7 +32,7 @@ export class CpsProgressLinearComponent implements OnInit {
    */
   @Input() bgColor = 'white';
   /**
-   * Option to control thr transparency of the loader component, of type number or string.
+   * Option to control the transparency of the loader component, of type number or string.
    * @group Props
    */
   @Input() opacity: number | string = 1;

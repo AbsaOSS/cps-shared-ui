@@ -46,7 +46,7 @@ export class CpsTreeSelectComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * Styling appearance of select input.
+   * Styling appearance of select input, it can be "outlined" or "underlined" or "borderless".
    * @group Props
    */
   @Input() appearance: CpsTreeSelectAppearanceType = 'outlined';

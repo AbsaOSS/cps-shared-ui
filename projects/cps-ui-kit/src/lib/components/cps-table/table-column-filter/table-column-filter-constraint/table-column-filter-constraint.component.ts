@@ -45,7 +45,7 @@ export class TableColumnFilterConstraintComponent implements OnInit {
    */
   @Input() placeholder = '';
   /**
-   * Whether the filter should havean apply button.
+   * Whether the filter should have an apply button.
    * @group Props
    */
   @Input() hasApplyButton = true;
