@@ -105,7 +105,9 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   onChange = (event: any) => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
 
-  onTouched = () => {};
+  onTouched = () => {
+    // Empty method
+  };
 
   registerOnChange(fn: any) {
     this.onChange = fn;
