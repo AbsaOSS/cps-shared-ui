@@ -25,7 +25,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
    */
   @Input() type: 'security' | 'classification' | 'custom' = 'custom'; // higher precedence over color
   /**
-   * Lable of the tag.
+   * Label of the tag.
    * @group Props
    */
   @Input() label = '';
@@ -55,6 +55,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   get value(): boolean {
     return this._value;
   }
+
   /**
    * Callback to invoke on value change.
    * @param {any} event - Browser event.
@@ -103,6 +104,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
+
   onTouched = () => {};
 
   registerOnChange(fn: any) {

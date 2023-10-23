@@ -98,6 +98,7 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   get value(): any {
     return this._value;
   }
+
   /**
    * Callback to invoke on value change.
    * @param {boolean} boolean - value changed.
