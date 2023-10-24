@@ -152,6 +152,7 @@ export class CpsDatepickerComponent
    * Value specified in component.
    * @group Props
    */
+
   @Input() set value(value: Date | null) {
     this._value = value;
     this.stringDate = this._dateToString(value);
