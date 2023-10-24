@@ -13,6 +13,7 @@
     <cps-tree-select
       label="Loading tree select"
       [loading]="true"
+      [initialExpandAll]="true"
       [options]="options"
       hint="This tree select is currently in a loading state">
     </cps-tree-select>
@@ -70,6 +71,7 @@
 
     <div class="sync-val-example">
       <cps-tree-select
+        [initialExpandDirectories]="true"
         width="500"
         label="Single tree select with two-way binding, select something"
         hint="This tree select has a fixed width of 500px"

@@ -51,6 +51,8 @@ export class CpsBaseTreeDropdownComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() initialExpandDirectories = false;
+  @Input() initialExpandAll = false;
 
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {
@@ -441,13 +443,13 @@ export class CpsBaseTreeDropdownComponent
   }
 
   private _toInnerOptions(_options: any[]): TreeNode[] {
-    function mapOption(
+    const mapOption = (
       o: any,
       optionLabel: string,
       optionInfo: string,
       key: string,
       originalOptionsMap: any
-    ) {
+    ) => {
       const inner = {
         inner: true,
         label: o[optionLabel],
@@ -455,10 +457,18 @@ export class CpsBaseTreeDropdownComponent
         key,
         styleClass: 'key-' + key
       } as TreeNode;
+
+      if (this.initialExpandAll) {
+        inner.expanded = true;
+      }
+
       if (o.isDirectory) {
         inner.type = 'directory';
         inner.selectable = false;
         inner.styleClass += ' cps-tree-node-fully-expandable';
+        if (this.initialExpandDirectories) {
+          inner.expanded = true;
+        }
       }
       if (o.children) {
         inner.children = o.children.map((c: any, index: number) => {
@@ -473,7 +483,7 @@ export class CpsBaseTreeDropdownComponent
       }
       originalOptionsMap.set(key, o);
       return inner;
-    }
+    };
 
     const res = _options.map((option, index) => {
       return mapOption(
