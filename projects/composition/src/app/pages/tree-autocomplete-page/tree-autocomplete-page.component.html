@@ -14,6 +14,7 @@
     <cps-tree-autocomplete
       label="Loading tree autocomplete"
       [loading]="true"
+      [initialExpandAll]="true"
       [options]="options"
       hint="This tree autocomplete is currently in a loading state">
     </cps-tree-autocomplete>
@@ -71,6 +72,7 @@
 
     <div class="sync-val-example">
       <cps-tree-autocomplete
+        [initialExpandDirectories]="true"
         width="500"
         label="Single tree autocomplete with two-way binding, enter something"
         hint="This tree autocomplete has a fixed width of 500px"
