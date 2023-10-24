@@ -167,6 +167,7 @@ export class BaseTreeDropdownComponent
   get options(): TreeNode[] {
     return this._options;
   }
+
   /**
    * Value specified in component.
    * @group Props
