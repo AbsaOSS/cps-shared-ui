@@ -215,12 +215,15 @@ export class CpsBaseTreeDropdownComponent
     this.onTouched = fn;
   }
 
-  writeValue(value: any) {
+  writeValue(value: any, internal = false) {
     this.value = value;
+    if (!internal && value !== null) {
+      this.treeSelection = this._valueToTreeSelection(this.value);
+    }
   }
 
   updateValue(value: any): void {
-    this.writeValue(value);
+    this.writeValue(value, true);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
