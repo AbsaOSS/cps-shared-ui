@@ -10,20 +10,55 @@ import { convertSize } from '../utils/internal/size-utils';
 export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type TooltipOpenOn = 'hover' | 'click' | 'focus';
 
+/**
+ * CpsTooltipDirective provides advisory information for a component.
+ * @group Components
+ */
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
 })
 export class CpsTooltipDirective implements OnDestroy {
   @Input('cpsTooltip') tooltip!: string;
-
+  /**
+   * Delay to show the tooltip in milliseconds, it can be type string or number.
+   * @group Props
+   */
   @Input() tooltipOpenDelay: string | number = 300;
+  /**
+   * Delay to hide the tooltip in milliseconds, it can be type string or number.
+   * @group Props
+   */
   @Input() tooltipCloseDelay: string | number = 300;
+  /**
+   * Whether the tooltip should open on hover, click or focus.
+   * @group Props
+   */
   @Input() tooltipOpenOn: TooltipOpenOn = 'hover';
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() tooltipPosition: TooltipPosition = 'top';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() tooltipPersistent = false;
+  /**
+   * When present, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() tooltipDisabled = false;
+  /**
+   * Max width of infoTooltip of type number or string .
+   * @group Props
+   */
   @Input() tooltipMaxWidth: number | string = '100%';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() tooltipContentClass = 'cps-tooltip-content';
 
   private _popup?: HTMLDivElement;

@@ -7,12 +7,25 @@ import {
   Input
 } from '@angular/core';
 
+/**
+ * ClickOutsideDirective is a directive when clicking outside a component.
+ * @group Components
+ */
 @Directive({
   standalone: true,
   selector: '[clickOutside]'
 })
 export class ClickOutsideDirective {
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() skipTargets: string[] = [];
+  /**
+   * Callback to invoke on outside click.
+   * @param {any} any - outside click.
+   * @group Emits
+   */
   @Output() clickOutside = new EventEmitter<void>();
 
   // eslint-disable-next-line no-useless-constructor

@@ -38,6 +38,10 @@ export type CpsAutocompleteAppearanceType =
   | 'underlined'
   | 'borderless';
 
+/**
+ * CpsAutocompleteComponent is an input component that provides real-time suggestions when being typed.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -76,6 +80,10 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() hint = '';
+  /**
+   *  Whether the component should return an object.
+   * @group Props
+   */
   @Input() returnObject = true; // if false, value will be option[optionValue]
 
   /**
@@ -119,7 +127,10 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() clearable = false;
-
+  /**
+   *  Whether the component should open or expand on clear.
+   * @group Props
+   */
   @Input() openOnClear = true;
 
   /**
@@ -133,7 +144,15 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() optionLabel = 'label';
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() optionValue = 'value'; // needed only if returnObject === false
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() optionInfo = 'info';
 
   /**
@@ -141,7 +160,10 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() hideDetails = false;
-
+  /**
+   * Whether the component should have persistent clear.
+   * @group Props
+   */
   @Input() persistentClear = false;
 
   /**
@@ -179,7 +201,10 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() infoTooltip = '';
-
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
@@ -187,7 +212,10 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
-
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
 
   /**

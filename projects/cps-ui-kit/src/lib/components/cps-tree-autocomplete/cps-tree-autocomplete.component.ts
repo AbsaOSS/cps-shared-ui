@@ -24,6 +24,10 @@ export type CpsTreeAutocompleteAppearanceType =
   | 'underlined'
   | 'borderless';
 
+/**
+ * CpsTreeAutocompleteComponent is an input component to choose from hierarchical data, that provides real-time suggestions when being typed.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [

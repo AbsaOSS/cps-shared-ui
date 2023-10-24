@@ -25,36 +25,136 @@ import { isEqual } from 'lodash-es';
 import { TooltipPosition } from '../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
 
+/**
+ * Not certain.
+ * BaseTreeDropdownComponent is an input component to choose from tree data on dropdown.
+ * @group Components
+ */
 @Component({
   template: ''
 })
 export class BaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   * Label of the dropdown element.
+   * @group Props
+   */
   @Input() label = '';
+  /**
+   * Default text to display when no option is selected.
+   * @group Props
+   */
   @Input() placeholder = 'Please enter';
+  /**
+   * Hint text for the input field.
+   * @group Props
+   */
   @Input() hint = '';
+  /**
+   * Specifies if multiple values can be selected.
+   * @group Props
+   */
   @Input() multiple = false;
+  /**
+   * If it is true, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+  /**
+   * Width of the input field, number or string.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+  /**
+   * When selecting an element, it will appear in a form of a chip.
+   * @group Props
+   */
   @Input() chips = true;
+  /**
+   *Options for removing a selected chip element.
+   * @group Props
+   */
   @Input() closableChips = true;
+  /**
+   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+  /**
+   *  Whether the component should open or expand on clear.
+   * @group Props
+   */
   @Input() openOnClear = true;
+  /**
+   * Name of the label field of an option.
+   * @group Props
+   */
   @Input() optionLabel = 'label';
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() optionInfo = 'info';
+  /**
+   *Options for hiding details.
+   * @group Props
+   */
   @Input() hideDetails = false;
+  /**
+   * Whether the component should have persistent clear.
+   * @group Props
+   */
   @Input() persistentClear = false;
+  /**
+   * Icon before input value.
+   * @group Props
+   */
   @Input() prefixIcon: IconType = '';
+  /**
+   * Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'.
+   * @group Props
+   */
   @Input() prefixIconSize: iconSizeType = '18px';
+  /**
+   *When enabled, a loading bar is displayed when data is being collected.
+   * @group Props
+   */
   @Input() loading = false;
+  /**
+   * Whether the data should be loaded on demand during scroll.
+   * @group Props
+   */
   @Input() virtualScroll = false;
+  /**
+   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+  /**
+   * Max width of infoTooltip of type number or string .
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
+  /**
+   * Position of infoTooltip, 'top' or 'bottom' or 'left' or 'right'.
+   * @group Props
+   */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
-
+  /**
+   * An array of objects to display as the available options.
+   * @group Props
+   */
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {
       this._options = options;
@@ -67,7 +167,10 @@ export class BaseTreeDropdownComponent
   get options(): TreeNode[] {
     return this._options;
   }
-
+  /**
+   * Value specified in component.
+   * @group Props
+   */
   @Input('value') _value: any = undefined;
 
   set value(value: any) {
@@ -79,6 +182,11 @@ export class BaseTreeDropdownComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {any} any - value changed.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<any>();
 
   @ViewChild('componentContainer')

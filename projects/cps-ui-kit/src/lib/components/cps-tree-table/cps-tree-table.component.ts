@@ -45,6 +45,12 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
 export type CpsTreeTableSize = 'small' | 'normal' | 'large';
 export type CpsTreeTableToolbarSize = 'small' | 'normal';
 export type CpsTreeTableSortMode = 'single' | 'multiple';
+
+/**
+ * CpsTreeTableComponent is used to display hierarchical data in tabular format.
+ * @group Components
+ */
+
 @Component({
   selector: 'cps-tree-table',
   standalone: true,

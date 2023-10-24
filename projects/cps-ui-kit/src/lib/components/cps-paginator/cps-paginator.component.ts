@@ -11,6 +11,10 @@ import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
+/**
+ * CpsPaginatorComponent is a generic component to display content in paged format.
+ * @group Components
+ */
 @Component({
   selector: 'cps-paginator',
   standalone: true,
@@ -49,7 +53,10 @@ export class CpsPaginatorComponent implements OnInit {
    * @group Props
    */
   @Input() backgroundColor = 'transparent';
-
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() resetPageOnRowsChange = false;
   /**
    * Callback to invoke when page changes, the event object contains information about the new state.

@@ -123,6 +123,10 @@ export type iconSizeType =
   | 'normal'
   | 'large';
 
+/**
+ * CpsIconComponent is a component that is used for icons.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule],

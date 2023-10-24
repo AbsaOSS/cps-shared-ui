@@ -17,6 +17,10 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
+/**
+ * CpsTextareaComponent adds styling and autoResize functionality to standard textarea element.
+ * @group Components
+ */
 @Component({
   standalone: true,
   selector: 'cps-textarea',
@@ -47,7 +51,10 @@ export class CpsTextareaComponent
    * @group Props
    */
   @Input() cols = 20;
-
+  /**
+   * Whether the textarea should autofocus.
+   * @group Props
+   */
   @Input() autofocus = false;
   /**
    * More hint text about the textarea field.
@@ -76,14 +83,30 @@ export class CpsTextareaComponent
    * @group Props
    */
   @Input() hideDetails = false;
+  /**
+   * Whether the component should have persistent clear.
+   * @group Props
+   */
   @Input() persistentClear = false;
+  /**
+   * Error message.
+   * @group Props
+   */
   @Input() error = '';
+  /**
+   * Whether the component should be resized vertically or not
+   * @group Props
+   */
   @Input() resizable: 'vertical' | 'none' = 'vertical';
   /**
    *When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
@@ -91,13 +114,20 @@ export class CpsTextareaComponent
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
   /**
    * Position of infoTooltip, it can be "top" or "bottom" or "left" or "right".
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
-
+  /**
+   * Value specified in component.
+   * @group Props
+   */
   @Input() set value(value: string) {
     if (!value) value = '';
     this._value = value;

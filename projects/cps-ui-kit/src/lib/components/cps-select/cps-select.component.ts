@@ -36,6 +36,10 @@ import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
+/**
+ * CpsSelectComponent is used to select items from a collection.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -76,6 +80,10 @@ export class CpsSelectComponent
    * @group Props
    */
   @Input() hint = '';
+  /**
+   *  Whether the component should return an object.
+   * @group Props
+   */
   @Input() returnObject = true; // if false, value will be option[optionValue]
 
   /**
@@ -119,7 +127,10 @@ export class CpsSelectComponent
    * @group Props
    */
   @Input() clearable = false;
-
+  /**
+   *  Whether the component should open or expand on clear.
+   * @group Props
+   */
   @Input() openOnClear = true;
 
   /**
@@ -133,8 +144,13 @@ export class CpsSelectComponent
    * @group Props
    */
   @Input() optionLabel = 'label';
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() optionValue = 'value'; // needed only if returnObject === false
   /**
+   * Not certain.
    * More information about the options.
    * @group Props
    */
@@ -145,6 +161,10 @@ export class CpsSelectComponent
    * @group Props
    */
   @Input() hideDetails = false;
+  /**
+   * Whether the component should have persistent clear.
+   * @group Props
+   */
   @Input() persistentClear = false;
   /**
    * Icon before input value.
@@ -175,12 +195,20 @@ export class CpsSelectComponent
    * @group Props
    */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
   /**
    * Size of infoTooltip, of type number or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
 
   /**
@@ -188,6 +216,10 @@ export class CpsSelectComponent
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+  /**
+   * Class for styling the select component.
+   * @group Props
+   */
   @Input() optionsClass = '';
 
   /**

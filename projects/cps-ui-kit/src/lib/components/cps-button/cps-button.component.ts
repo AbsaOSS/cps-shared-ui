@@ -12,6 +12,10 @@ import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 
+/**
+ * CpsButtonComponent is an extension to button component.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsIconComponent, CpsProgressCircularComponent],

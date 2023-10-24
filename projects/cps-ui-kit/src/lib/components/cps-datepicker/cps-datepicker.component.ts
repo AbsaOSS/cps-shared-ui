@@ -23,6 +23,10 @@ export type CpsDatepickerAppearanceType =
   | 'underlined'
   | 'borderless';
 
+/**
+ * CpsDatepickerComponent is an input component to provide date input.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -80,6 +84,10 @@ export class CpsDatepickerComponent
    * @group Props
    */
   @Input() hideDetails = false;
+  /**
+   * Whether the component should have persistent clear.
+   * @group Props
+   */
   @Input() persistentClear = false;
 
   /**
@@ -87,7 +95,10 @@ export class CpsDatepickerComponent
    * @group Props
    */
   @Input() showTodayButton = true;
-
+  /**
+   * Whether the datepicker should open on input-focus.
+   * @group Props
+   */
   @Input() openOnInputFocus = false;
 
   /**
@@ -95,6 +106,10 @@ export class CpsDatepickerComponent
    * @group Props
    */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
@@ -102,6 +117,10 @@ export class CpsDatepickerComponent
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
 
   /**
@@ -129,7 +148,10 @@ export class CpsDatepickerComponent
    */
   @Input()
   maxDate!: Date;
-
+  /**
+   * Value specified in component.
+   * @group Props
+   */
   @Input() set value(value: Date | null) {
     this._value = value;
     this.stringDate = this._dateToString(value);

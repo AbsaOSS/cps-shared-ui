@@ -27,6 +27,10 @@ import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 
 export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
+/**
+ * CpsInputComponent is used to enter input in a certain format such as numeric, text, or password.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -64,6 +68,10 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() disabled = false;
+  /**
+   * Whether the component should readonly.
+   * @group Props
+   */
   @Input() readonly = false;
 
   /**
@@ -119,8 +127,15 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() hideDetails = false;
-
+  /**
+   * Whether the component should have persistent clear.
+   * @group Props
+   */
   @Input() persistentClear = false;
+  /**
+   * Error message.
+   * @group Props
+   */
   @Input() error = '';
 
   /**
@@ -128,6 +143,10 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
@@ -135,6 +154,10 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
 
   /**
@@ -148,6 +171,10 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() appearance: CpsInputAppearanceType = 'outlined';
+  /**
+   * Value to display on input.
+   * @group Props
+   */
   @Input() valueToDisplay = '';
 
   @Input() set value(value: string) {

@@ -39,6 +39,10 @@ export interface TabChangeEvent {
 
 export type CpsTabsAnimationType = 'slide' | 'fade';
 
+/**
+ * CpsTabGroupComponent is a navigation component that displays items as tab headers.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [

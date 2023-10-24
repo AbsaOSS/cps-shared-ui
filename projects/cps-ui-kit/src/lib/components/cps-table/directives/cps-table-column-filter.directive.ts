@@ -16,6 +16,10 @@ export type CpsTableColumnFilterType =
   | 'boolean'
   | 'category';
 
+/**
+ * CpsTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in table.
+ * @group Components
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTColFilter]'
@@ -42,7 +46,15 @@ export class CpsTableColumnFilterDirective implements OnInit, OnDestroy {
    * @group Props
    */
   @Input() filterHideOnClear = false;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() filterMaxConstraints = 2;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() filterCategoryOptions: string[] = [];
   /**
    * Hint text for the filter input field.

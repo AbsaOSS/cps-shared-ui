@@ -11,6 +11,10 @@ import {
   trigger
 } from '@angular/animations';
 
+/**
+ * CpsExpansionPanelComponent is a component that provides content on expansion.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsIconComponent],
@@ -93,7 +97,10 @@ export class CpsExpansionPanelComponent implements OnInit {
    * @group Props
    */
   @Input() bordered = true;
-
+  /**
+   * The border radius of the component.
+   * @group Props
+   */
   @Input() borderRadius: number | string = '4px';
 
   /**

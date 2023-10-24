@@ -5,6 +5,10 @@ import {
   CpsMenuItem
 } from '../../cps-menu/cps-menu.component';
 
+/**
+ * TableRowMenuComponent is a navigation / command component in table.
+ * @group Components
+ */
 @Component({
   selector: 'table-row-menu',
   standalone: true,

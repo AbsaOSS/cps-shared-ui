@@ -39,6 +39,10 @@ export type CpsTableSize = 'small' | 'normal' | 'large';
 export type CpsTableToolbarSize = 'small' | 'normal';
 export type CpsTableSortMode = 'single' | 'multiple';
 
+/**
+ * CpsTableComponent displays data in tabular format.
+ * @group Components
+ */
 @Component({
   selector: 'cps-table',
   standalone: true,
@@ -80,8 +84,15 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    * @group Props
    */
   @Input() columns: { [key: string]: any }[] = [];
-
+  /**
+   * A key used to retrieve header from dataset.
+   * @group Props
+   */
   @Input() colHeaderName = 'header';
+  /**
+   * A key used to retrieve field from dataset.
+   * @group Props
+   */
   @Input() colFieldName = 'field';
   /**
    * Whether the table should have gray alternating stripes.
@@ -98,6 +109,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    * @group Props
    */
   @Input() size: CpsTableSize = 'normal';
+  /**
+   * Whether the table should be selectable.
+   * @group Props
+   */
   @Input() selectable = false;
   /**
    * Whether the table should have row hover.
@@ -184,7 +199,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    * @group Props
    */
   @Input() virtualScroll = false; // works only if scrollable is true
-
+  /**
+   * Whether to use the scroller feature. The properties of scroller component can be used like an object in it.
+   * @group Props
+   */
   @Input() numToleratedItems = 10;
 
   /**
@@ -353,6 +371,11 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    * @group Emits
    */
   @Output() lazyLoaded = new EventEmitter<any>();
+  /**
+   * Callback to invoke when data-reload button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() dataReloadBtnClicked = new EventEmitter<any>();
   /**
    * A function to implement custom sorting. customSort must be true.

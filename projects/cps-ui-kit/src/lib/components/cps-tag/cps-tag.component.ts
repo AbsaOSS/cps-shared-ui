@@ -11,6 +11,10 @@ import {
 import { getCSSColor } from '../../utils/colors-utils';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
+/**
+ * CpsTagComponent is used to categorize content.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule],
@@ -47,6 +51,10 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
    * @group Props
    */
   @Input() selectable = false;
+  /**
+   * Value specified in component.
+   * @group Props
+   */
   @Input() set value(value: boolean) {
     this._value = value;
     this.onChange(value);
@@ -103,11 +111,9 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
 
-  onTouched = () => {
-    // Empty method
-  };
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onTouched = () => {};
 
   registerOnChange(fn: any) {
     this.onChange = fn;

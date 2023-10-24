@@ -15,6 +15,10 @@ import { TooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
+/**
+ * CpsCheckboxComponent is an extension to standard checkbox element with theming.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsInfoCircleComponent, CpsIconComponent],
@@ -40,6 +44,10 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
    * @group Props
    */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
@@ -47,6 +55,10 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
 
   /**
@@ -66,7 +78,10 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
    * @group Props
    */
   @Input() iconColor = 'text-dark';
-
+  /**
+   * Value specified in component.
+   * @group Props
+   */
   @Input() set value(value: boolean) {
     this._value = value;
     this.onChange(value);
@@ -100,6 +115,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 

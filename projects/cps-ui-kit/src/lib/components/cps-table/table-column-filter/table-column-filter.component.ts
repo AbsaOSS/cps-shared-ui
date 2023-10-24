@@ -22,6 +22,10 @@ import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
 
+/**
+ * TableColumnFilterComponent is a filter component in table.
+ * @group Components
+ */
 @Component({
   selector: 'table-column-filter',
   standalone: true,
@@ -38,6 +42,10 @@ import { TreeTable } from 'primeng/treetable';
   styleUrls: ['./table-column-filter.component.scss']
 })
 export class TableColumnFilterComponent {
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() field: string | undefined;
   /**
    * Type of filter in table.
@@ -59,7 +67,15 @@ export class TableColumnFilterComponent {
    * @group Props
    */
   @Input() hideOnClear = false;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() maxConstraints = 2;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() categoryOptions: string[] = [];
   /**
    * Hint text for the filter input field.

@@ -27,6 +27,10 @@ export type CpsSidebarMenuItem = {
   items?: CpsMenuItem[];
 };
 
+/**
+ * CpsSidebarMenuComponent is a panel component displayed as an overlay at the edges of the screen.
+ * @group Components
+ */
 @Component({
   selector: 'cps-sidebar-menu',
   standalone: true,
@@ -75,6 +79,10 @@ export class CpsSidebarMenuComponent implements OnInit {
    * @group Props
    */
   @Input() isExpanded = true;
+  /**
+   * Whether the sidebar should allow activating a link on multiple routes.
+   * @group Props
+   */
   @Input() exactRoutes = false;
   /**
    * Height of the sidebar.

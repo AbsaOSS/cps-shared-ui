@@ -8,6 +8,10 @@ import {
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 
+/**
+ * CpsChipComponent represents people using icons and labels.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsIconComponent],

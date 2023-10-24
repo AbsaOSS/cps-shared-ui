@@ -9,6 +9,10 @@ import {
 } from '@angular/core';
 import { SortIcon, SortableColumn, Table } from 'primeng/table';
 
+/**
+ * CpsTableColumnSortableDirective is a sorting directive used to sort single or multiple columns in table.
+ * @group Components
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTColSortable]'

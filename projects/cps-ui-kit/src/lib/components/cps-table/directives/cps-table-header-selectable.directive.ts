@@ -8,6 +8,10 @@ import {
 } from '@angular/core';
 import { TableHeaderCheckbox } from 'primeng/table';
 
+/**
+ * CpsTableHeaderSelectableDirective is a selecting directive used to choose single or multiple header in table.
+ * @group Components
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTHdrSelectable]'

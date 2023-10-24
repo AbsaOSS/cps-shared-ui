@@ -8,6 +8,10 @@ import {
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
 
+/**
+ * CpsRadioComponent is an extension to standard radio button element with theming.
+ * @group Components
+ */
 @Component({
   standalone: true,
   selector: 'cps-radio',

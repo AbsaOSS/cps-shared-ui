@@ -28,6 +28,10 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   'CpsRadioGroupComponent'
 );
 
+/**
+ * CpsRadioGroupComponent is an extension to standard radio button element with theming.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -77,19 +81,30 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
    * @group Props
    */
   @Input() infoTooltip = '';
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
   /**
    * Size of infoTooltip, of type number or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
   /**
    * Position of infoTooltip, it can be "top" or "bottom" or "left" or "right".
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
-
+  /**
+   * Value specified in component.
+   * @group Props
+   */
   @Input() set value(value: any) {
     this._value = value;
     this.onChange(value);

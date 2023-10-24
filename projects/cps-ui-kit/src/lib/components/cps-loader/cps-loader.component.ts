@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 
+/**
+ * CpsLoaderComponent is a fetch data indicator.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule],

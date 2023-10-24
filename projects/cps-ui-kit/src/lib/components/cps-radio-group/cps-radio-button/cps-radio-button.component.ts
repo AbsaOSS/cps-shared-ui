@@ -5,6 +5,10 @@ import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 
 let nextUniqueId = 0;
 
+/**
+ * CpsRadioButtonComponent is an extension to standard radio button element with theming.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsTooltipDirective],

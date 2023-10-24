@@ -24,6 +24,10 @@ export type BtnToggleOption = {
   tooltip?: string;
 };
 
+/**
+ * CpsButtonToggleComponent is used to select a boolean value using a button.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -65,7 +69,10 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    * @group Props
    */
   @Input() disabled = false;
-
+  /**
+   *  Whether the options should be mandatory.
+   * @group Props
+   */
   @Input() mandatory = true; // at least one of the options is mandatory
 
   /**
@@ -73,6 +80,11 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    * @group Props
    */
   @Input() infoTooltip = '';
+
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
@@ -80,6 +92,11 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
 
   /**
@@ -88,7 +105,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
   /**
-   * Value of the checkbox.
+   * Value specified in component.
    * @group Props
    */
   @Input('value') _value: any = undefined;

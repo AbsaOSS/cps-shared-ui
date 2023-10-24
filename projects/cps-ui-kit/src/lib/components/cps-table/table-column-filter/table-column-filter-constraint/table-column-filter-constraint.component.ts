@@ -12,6 +12,11 @@ import {
 } from '../../../cps-button-toggle/cps-button-toggle.component';
 import { TreeTable } from 'primeng/treetable';
 
+/**
+ * Not certain.
+ * TableColumnFilterConstraintComponent is a filtering logic component in table.
+ * @group Components
+ */
 @Component({
   selector: 'table-column-filter-constraint',
   standalone: true,
@@ -32,7 +37,15 @@ export class TableColumnFilterConstraintComponent implements OnInit {
    * @group Props
    */
   @Input() type: string | undefined;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() field: string | undefined;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() filterConstraint: FilterMetadata | undefined;
   /**
    * An array of category options.

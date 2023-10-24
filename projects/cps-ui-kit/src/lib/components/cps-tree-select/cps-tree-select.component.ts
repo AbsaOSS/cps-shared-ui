@@ -23,6 +23,10 @@ export type CpsTreeSelectAppearanceType =
   | 'underlined'
   | 'borderless';
 
+/**
+ * CpsTreeSelectComponent is a form component to choose from hierarchical data.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [

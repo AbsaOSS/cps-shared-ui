@@ -5,6 +5,10 @@ import {
   TooltipPosition
 } from '../../directives/cps-tooltip.directive';
 
+/**
+ * CpsInfoCircleComponent is a component that provides information.
+ * @group Components
+ */
 @Component({
   selector: 'cps-info-circle',
   standalone: true,
@@ -30,7 +34,10 @@ export class CpsInfoCircleComponent {
    * @group Props
    */
   @Input() tooltipPosition: TooltipPosition = 'top';
-
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() tooltipContentClass = 'cps-tooltip-content';
 
   /**
@@ -38,5 +45,9 @@ export class CpsInfoCircleComponent {
    * @group Props
    */
   @Input() tooltipMaxWidth: number | string = '100%';
+  /**
+   * Whether the tooltip should have persistent info.
+   * @group Props
+   */
   @Input() tooltipPersistent = false;
 }

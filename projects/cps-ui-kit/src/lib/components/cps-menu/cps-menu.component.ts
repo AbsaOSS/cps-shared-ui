@@ -47,6 +47,10 @@ export type CpsMenuItem = {
 
 export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
 
+/**
+ * CpsMenuComponent is a navigation / command component that supports dynamic and static positioning.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, SharedModule, CpsIconComponent, RouterModule],
@@ -113,8 +117,15 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
    * @group Props
    */
   @Input() compressed = false; // prepared-colored, without header and items description
-
+  /**
+   * Whether the menu should show on focus.
+   * @group Props
+   */
   @Input() focusOnShow = true;
+  /**
+   * Whether the menu should be persistent.
+   * @group Props
+   */
   @Input() persistent = false;
   /**
    * Styling class of the menu container.
