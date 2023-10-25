@@ -152,12 +152,19 @@ export class BaseTreeDropdownComponent
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
   /**
-   * An array of objects to display as the available options.
+   * Not certain.
    * @group Props
    */
   @Input() initialExpandDirectories = false;
+  /**
+   * Not certain.
+   * @group Props
+   */
   @Input() initialExpandAll = false;
-
+  /**
+   * An array of objects to display as the available options.
+   * @group Props
+   */
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {
       this._options = options;
