@@ -155,6 +155,9 @@ export class BaseTreeDropdownComponent
    * An array of objects to display as the available options.
    * @group Props
    */
+  @Input() initialExpandDirectories = false;
+  @Input() initialExpandAll = false;
+
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {
       this._options = options;
@@ -325,12 +328,15 @@ export class BaseTreeDropdownComponent
     this.onTouched = fn;
   }
 
-  writeValue(value: any) {
+  writeValue(value: any, internal = false) {
     this.value = value;
+    if (!internal && value !== null) {
+      this.treeSelection = this._valueToTreeSelection(this.value);
+    }
   }
 
   updateValue(value: any): void {
-    this.writeValue(value);
+    this.writeValue(value, true);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
@@ -553,13 +559,13 @@ export class BaseTreeDropdownComponent
   }
 
   private _toInnerOptions(_options: any[]): TreeNode[] {
-    function mapOption(
+    const mapOption = (
       o: any,
       optionLabel: string,
       optionInfo: string,
       key: string,
       originalOptionsMap: any
-    ) {
+    ) => {
       const inner = {
         inner: true,
         label: o[optionLabel],
@@ -567,10 +573,18 @@ export class BaseTreeDropdownComponent
         key,
         styleClass: 'key-' + key
       } as TreeNode;
+
+      if (this.initialExpandAll) {
+        inner.expanded = true;
+      }
+
       if (o.isDirectory) {
         inner.type = 'directory';
         inner.selectable = false;
         inner.styleClass += ' cps-tree-node-fully-expandable';
+        if (this.initialExpandDirectories) {
+          inner.expanded = true;
+        }
       }
       if (o.children) {
         inner.children = o.children.map((c: any, index: number) => {
@@ -585,7 +599,7 @@ export class BaseTreeDropdownComponent
       }
       originalOptionsMap.set(key, o);
       return inner;
-    }
+    };
 
     const res = _options.map((option, index) => {
       return mapOption(
