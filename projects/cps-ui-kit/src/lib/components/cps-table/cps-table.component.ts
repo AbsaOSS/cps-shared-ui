@@ -123,12 +123,15 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() globalFilterFields: string[] = [];
 
   @Input() showRemoveBtnOnSelect = true;
+  @Input() removeBtnOnSelectDisabled = false;
 
   @Input() showAdditionalBtnOnSelect = false;
   @Input() additionalBtnOnSelectTitle = 'Select action';
+  @Input() additionalBtnOnSelectDisabled = false;
 
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
+  @Input() actionBtnDisabled = false;
 
   @Input() showExportBtn = false;
   @Input() exportFilename = 'download';
@@ -172,6 +175,9 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   @ViewChild('primengTable', { static: true })
   primengTable!: Table;
+
+  @ViewChild('globalFilterComp')
+  globalFilterComp!: CpsInputComponent;
 
   selectedRows: any[] = [];
 
@@ -287,6 +293,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (this.loading) this.clearGlobalFilter();
+
     const dataChanges = changes?.data;
     if (
       dataChanges?.previousValue?.length !== dataChanges?.currentValue?.length
@@ -295,6 +303,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
         this.data.includes(sr)
       );
     }
+  }
+
+  clearGlobalFilter() {
+    this.globalFilterComp?.clear();
   }
 
   onSelectionChanged(selection: any[]) {

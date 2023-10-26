@@ -48,6 +48,7 @@
         <div>{{ toolbarTitle }}</div>
         <div *ngIf="showGlobalFilter" class="cps-table-tbar-global-filter">
           <cps-input
+            #globalFilterComp
             prefixIcon="search"
             [placeholder]="globalFilterPlaceholder"
             (valueChanged)="onFilterGlobal($event)"
@@ -64,6 +65,7 @@
           class="cps-table-tbar-btn-on-select">
           <cps-button
             label="Remove"
+            [disabled]="removeBtnOnSelectDisabled"
             color="prepared"
             type="borderless"
             icon="remove"
@@ -76,6 +78,7 @@
           class="cps-table-tbar-btn-on-select">
           <cps-button
             [label]="additionalBtnOnSelectTitle"
+            [disabled]="additionalBtnOnSelectDisabled"
             color="prepared"
             type="borderless"
             [size]="toolbarSize"
@@ -85,6 +88,7 @@
         <div *ngIf="showActionBtn" class="cps-table-tbar-action-btn">
           <cps-button
             [label]="actionBtnTitle"
+            [disabled]="actionBtnDisabled"
             color="prepared"
             type="outlined"
             [size]="toolbarSize"
