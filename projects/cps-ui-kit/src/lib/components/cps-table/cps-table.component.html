@@ -61,7 +61,7 @@
       <div class="cps-table-tbar-right">
         <div
           *ngIf="showRemoveBtnOnSelect && selectedRows.length > 0"
-          class="cps-table-tbar-remove-btn">
+          class="cps-table-tbar-btn-on-select">
           <cps-button
             label="Remove"
             color="prepared"
@@ -69,6 +69,17 @@
             icon="remove"
             [size]="toolbarSize"
             (clicked)="removeSelected()">
+          </cps-button>
+        </div>
+        <div
+          *ngIf="showAdditionalBtnOnSelect && selectedRows.length > 0"
+          class="cps-table-tbar-btn-on-select">
+          <cps-button
+            [label]="additionalBtnOnSelectTitle"
+            color="prepared"
+            type="borderless"
+            [size]="toolbarSize"
+            (clicked)="onClickAdditionalBtnOnSelect()">
           </cps-button>
         </div>
         <div *ngIf="showActionBtn" class="cps-table-tbar-action-btn">
