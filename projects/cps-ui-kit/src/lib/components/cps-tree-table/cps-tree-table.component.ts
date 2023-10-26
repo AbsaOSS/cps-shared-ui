@@ -131,6 +131,7 @@ export class CpsTreeTableComponent
   @Input() showGlobalFilter = false;
   @Input() globalFilterPlaceholder = 'Search';
   @Input() globalFilterFields: string[] = [];
+  @Input() clearGlobalFilterOnLoading = false;
 
   @Input() showRemoveBtnOnSelect = true;
   @Input() removeBtnOnSelectDisabled = false;
@@ -291,7 +292,8 @@ export class CpsTreeTableComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.loading) this.clearGlobalFilter();
+    if (this.loading && this.clearGlobalFilterOnLoading)
+      this.clearGlobalFilter();
 
     const dataChanges = changes?.data;
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {

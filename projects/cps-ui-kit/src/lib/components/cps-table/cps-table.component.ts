@@ -121,6 +121,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() showGlobalFilter = false;
   @Input() globalFilterPlaceholder = 'Search';
   @Input() globalFilterFields: string[] = [];
+  @Input() clearGlobalFilterOnLoading = false;
 
   @Input() showRemoveBtnOnSelect = true;
   @Input() removeBtnOnSelectDisabled = false;
@@ -293,7 +294,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.loading) this.clearGlobalFilter();
+    if (this.loading && this.clearGlobalFilterOnLoading)
+      this.clearGlobalFilter();
 
     const dataChanges = changes?.data;
     if (
