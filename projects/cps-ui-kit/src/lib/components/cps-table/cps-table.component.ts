@@ -6,8 +6,10 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -69,7 +71,7 @@ export type CpsTableSortMode = 'single' | 'multiple';
     }
   ]
 })
-export class CpsTableComponent implements OnInit, AfterViewChecked {
+export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() data: any[] = [];
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
@@ -121,6 +123,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Input() globalFilterFields: string[] = [];
 
   @Input() showRemoveBtnOnSelect = true;
+
+  @Input() showAdditionalBtnOnSelect = false;
+  @Input() additionalBtnOnSelectTitle = 'Select action';
+
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
@@ -141,6 +147,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
   @Output() lazyLoaded = new EventEmitter<any>();
   @Output() dataReloadBtnClicked = new EventEmitter<any>();
+  @Output() additionalBtnOnSelectClicked = new EventEmitter<any[]>();
   /**
    * A function to implement custom sorting. customSort must be true.
    * @param {any} any - sort meta.
@@ -204,6 +211,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
+
+    if (this.showAdditionalBtnOnSelect) this.showRemoveBtnOnSelect = false;
 
     if (this.paginator) {
       if (this.rowsPerPageOptions.length < 1)
@@ -277,11 +286,19 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
     this.cdRef.detectChanges();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    const dataChanges = changes?.data;
+    if (
+      dataChanges?.previousValue?.length !== dataChanges?.currentValue?.length
+    ) {
+      this.selectedRows = this.selectedRows.filter((sr) =>
+        this.data.includes(sr)
+      );
+    }
+  }
+
   onSelectionChanged(selection: any[]) {
-    this.selectionChanged.emit(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      selection.map(({ _defaultSortOrder, ...rest }) => rest)
-    );
+    this.selectionChanged.emit(selection);
   }
 
   onSortFunction(event: SortEvent) {
@@ -302,11 +319,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
       (v: any) => !indexes.includes(v._defaultSortOrder)
     );
 
-    this.rowsRemoved.emit(
-      this.selectedRows.map(({ _defaultSortOrder, ...rest }) => rest)
-    );
+    this.rowsRemoved.emit(this.selectedRows);
 
     this.selectedRows = [];
+  }
+
+  onClickAdditionalBtnOnSelect() {
+    this.additionalBtnOnSelectClicked.emit(this.selectedRows);
   }
 
   onClickActionBtn() {
@@ -380,17 +399,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
   }
 
   onEditRowClicked(item: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, ...rest } = item;
-    this.editRowBtnClicked.emit(rest);
+    this.editRowBtnClicked.emit(item);
   }
 
   onRemoveRowClicked(item: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
     this.data = this.data.filter((v: any) => v !== item);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, ...rest } = item;
-    this.rowsRemoved.emit([rest]);
+    this.rowsRemoved.emit([item]);
   }
 
   onSort(event: any) {

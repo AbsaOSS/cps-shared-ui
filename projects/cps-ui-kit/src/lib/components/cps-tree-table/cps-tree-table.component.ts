@@ -7,9 +7,11 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -80,7 +82,7 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
   ]
 })
 export class CpsTreeTableComponent
-  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked
+  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked, OnChanges
 {
   @Input() data: any[] = [];
   @Input() columns: { [key: string]: any }[] = [];
@@ -131,6 +133,10 @@ export class CpsTreeTableComponent
   @Input() globalFilterFields: string[] = [];
 
   @Input() showRemoveBtnOnSelect = true;
+
+  @Input() showAdditionalBtnOnSelect = false;
+  @Input() additionalBtnOnSelectTitle = 'Select action';
+
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
 
@@ -138,6 +144,7 @@ export class CpsTreeTableComponent
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
+  @Output() additionalBtnOnSelectClicked = new EventEmitter<any[]>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
   @Output() rowsRemoved = new EventEmitter<any[]>();
   @Output() pageChanged = new EventEmitter<any>();
@@ -209,6 +216,8 @@ export class CpsTreeTableComponent
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
 
+    if (this.showAdditionalBtnOnSelect) this.showRemoveBtnOnSelect = false;
+
     if (this.virtualScroll) {
       this.defScrollHeight = this.scrollHeight;
 
@@ -273,6 +282,13 @@ export class CpsTreeTableComponent
         ?.querySelector('.p-treetable-tbody')
         ?.querySelector('tr')?.clientHeight || 0;
     this.cdRef.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const dataChanges = changes?.data;
+    if (dataChanges?.previousValue !== dataChanges?.currentValue) {
+      this.selectedRows = [];
+    }
   }
 
   ngOnDestroy(): void {
@@ -351,6 +367,10 @@ export class CpsTreeTableComponent
     this.primengTreeTable.filterGlobal(value, 'contains');
   }
 
+  onClickAdditionalBtnOnSelect() {
+    this.additionalBtnOnSelectClicked.emit(this.selectedRows);
+  }
+
   onClickActionBtn() {
     this.actionBtnClicked.emit();
   }
@@ -362,12 +382,7 @@ export class CpsTreeTableComponent
   removeSelected() {
     this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
     this.data = [...this.data];
-    this.rowsRemoved.emit(
-      this.selectedRows.map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ _defaultSortOrder, expanded, partialSelected, ...rest }) => rest
-      )
-    );
+    this.rowsRemoved.emit(this.selectedRows);
     this.selectedRows = [];
     setTimeout(() => {
       this._recalcVirtualHeight();
@@ -376,17 +391,13 @@ export class CpsTreeTableComponent
   }
 
   onEditRowClicked(node: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
-    this.editRowBtnClicked.emit(rest);
+    this.editRowBtnClicked.emit(node);
   }
 
   onRemoveRowClicked(node: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
     this._removeNodeFromData(node);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
-    this.rowsRemoved.emit([rest]);
+    this.rowsRemoved.emit([node]);
     setTimeout(() => {
       this._recalcVirtualHeight();
       this.cdRef.markForCheck();
@@ -545,12 +556,6 @@ export class CpsTreeTableComponent
   }
 
   onSelectionChanged(selection: any[]) {
-    this.selectionChanged.emit(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      selection.map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ _defaultSortOrder, expanded, partialSelected, ...rest }) => rest
-      )
-    );
+    this.selectionChanged.emit(selection);
   }
 }
