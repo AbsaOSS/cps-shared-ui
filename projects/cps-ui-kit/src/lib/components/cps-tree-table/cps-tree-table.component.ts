@@ -133,12 +133,15 @@ export class CpsTreeTableComponent
   @Input() globalFilterFields: string[] = [];
 
   @Input() showRemoveBtnOnSelect = true;
+  @Input() removeBtnOnSelectDisabled = false;
 
   @Input() showAdditionalBtnOnSelect = false;
   @Input() additionalBtnOnSelectTitle = 'Select action';
+  @Input() additionalBtnOnSelectDisabled = false;
 
   @Input() showActionBtn = false;
   @Input() actionBtnTitle = 'Action';
+  @Input() actionBtnDisabled = false;
 
   @Input() showDataReloadBtn = false;
 
@@ -179,6 +182,9 @@ export class CpsTreeTableComponent
 
   @ViewChild('primengTreeTable', { static: true })
   primengTreeTable!: TreeTable;
+
+  @ViewChild('globalFilterComp')
+  globalFilterComp!: CpsInputComponent;
 
   selectedColumns: { [key: string]: any }[] = [];
 
@@ -285,6 +291,8 @@ export class CpsTreeTableComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (this.loading) this.clearGlobalFilter();
+
     const dataChanges = changes?.data;
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {
       this.selectedRows = [];
@@ -295,6 +303,10 @@ export class CpsTreeTableComponent
     this.resizeObserver?.disconnect();
     if (this.virtualScroll && this.defScrollHeight === 'flex')
       window.removeEventListener('resize', this._onWindowResize.bind(this));
+  }
+
+  clearGlobalFilter() {
+    this.globalFilterComp?.clear();
   }
 
   private _onWindowResize() {
