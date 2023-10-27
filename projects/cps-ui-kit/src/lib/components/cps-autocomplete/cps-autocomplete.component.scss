@@ -176,9 +176,11 @@ $hover-transition-duration: 0.2s;
             padding-inline-end: inherit;
           }
         }
-        .multi-item-input,
         .multi-chip-input {
-          min-height: 24px;
+          min-height: 30px;
+        }
+        .multi-item-input {
+          min-height: 28px;
         }
         .chips-group {
           display: inline-flex;
