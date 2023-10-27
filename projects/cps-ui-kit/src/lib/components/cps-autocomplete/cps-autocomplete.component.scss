@@ -125,6 +125,7 @@ $hover-transition-duration: 0.2s;
       }
 
       &-input {
+        min-height: 36px;
         padding: 0;
         background-color: transparent;
         width: 0;
@@ -162,7 +163,6 @@ $hover-transition-duration: 0.2s;
             max-width: 100%;
           }
           &-input {
-            min-height: 36px;
             opacity: 0;
             min-width: 0;
             align-self: flex-start;
