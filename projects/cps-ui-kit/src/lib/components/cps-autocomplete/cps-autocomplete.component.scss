@@ -146,8 +146,10 @@ $hover-transition-duration: 0.2s;
         display: inline-flex;
         flex-direction: column;
         width: 100%;
-        margin-top: 3px;
-        margin-bottom: 3px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        min-height: 36px;
+        justify-content: center;
         position: relative;
 
         .single-item {
@@ -160,6 +162,7 @@ $hover-transition-duration: 0.2s;
             max-width: 100%;
           }
           &-input {
+            min-height: 36px;
             opacity: 0;
             min-width: 0;
             align-self: flex-start;
@@ -173,9 +176,14 @@ $hover-transition-duration: 0.2s;
             padding-inline-end: inherit;
           }
         }
+        .multi-item-input,
+        .multi-chip-input {
+          min-height: 24px;
+        }
         .chips-group {
           display: inline-flex;
           flex-wrap: wrap;
+          align-items: center;
           cps-chip {
             padding-bottom: 3px;
             padding-top: 3px;
@@ -184,17 +192,13 @@ $hover-transition-duration: 0.2s;
         }
         .text-group {
           color: $autocomplete-option-value-color;
-          padding-top: 3px;
-          padding-bottom: 3px;
+          align-items: center;
           display: inline-flex;
           flex-wrap: wrap;
           .text-group-item {
             padding-bottom: 3px;
-            padding-top: 2px;
-            height: 24px;
-          }
-          .text-group-item:not(:first-child) {
-            padding-left: 4px;
+            padding-top: 3px;
+            padding-right: 4px;
           }
         }
       }

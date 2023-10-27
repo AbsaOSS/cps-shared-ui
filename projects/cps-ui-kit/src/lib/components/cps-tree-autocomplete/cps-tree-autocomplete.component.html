@@ -128,7 +128,7 @@
           [emptyMessage]="emptyMessage"
           [virtualScroll]="virtualScroll"
           [virtualScrollItemSize]="virtualScrollItemSize"
-          [virtualScrollOptions]="{ numToleratedItems: 3 }"
+          [virtualScrollOptions]="{ numToleratedItems: numToleratedItems }"
           [scrollHeight]="virtualListHeight + 'px'"
           (onNodeSelect)="onSelectNode()"
           (onNodeExpand)="onNodeExpand($event)"
