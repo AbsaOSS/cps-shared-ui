@@ -144,7 +144,7 @@
             [value]="options"
             [delay]="0"
             [scrollHeight]="virtualListHeight + 'px'"
-            [options]="{ numToleratedItems: 3 }"
+            [options]="{ numToleratedItems: numToleratedItems }"
             [itemSize]="virtualScrollItemSize">
             <ng-template pTemplate="item" let-item>
               <ng-container
