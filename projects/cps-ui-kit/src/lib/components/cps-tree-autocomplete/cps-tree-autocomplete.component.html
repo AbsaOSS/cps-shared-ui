@@ -67,7 +67,12 @@
               {{ val.label }}{{ !last ? ',' : '' }}
             </div>
             <ng-container
-              *ngTemplateOutlet="treeAutocompleteInput"></ng-container>
+              *ngTemplateOutlet="
+                treeAutocompleteInput;
+                context: {
+                  inputClass: 'multi-item-input'
+                }
+              "></ng-container>
           </div>
 
           <div *ngIf="multiple && chips" class="chips-group">
@@ -80,7 +85,12 @@
               [label]="val.label">
             </cps-chip>
             <ng-container
-              *ngTemplateOutlet="treeAutocompleteInput"></ng-container>
+              *ngTemplateOutlet="
+                treeAutocompleteInput;
+                context: {
+                  inputClass: 'multi-chip-input'
+                }
+              "></ng-container>
           </div>
         </div>
         <span class="cps-treeautocomplete-box-icons">
