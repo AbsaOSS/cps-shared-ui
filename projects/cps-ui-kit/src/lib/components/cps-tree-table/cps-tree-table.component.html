@@ -50,6 +50,7 @@
         <div>{{ toolbarTitle }}</div>
         <div *ngIf="showGlobalFilter" class="cps-treetable-tbar-global-filter">
           <cps-input
+            #globalFilterComp
             prefixIcon="search"
             [placeholder]="globalFilterPlaceholder"
             (valueChanged)="onFilterGlobal($event)"
@@ -63,9 +64,10 @@
       <div class="cps-treetable-tbar-right">
         <div
           *ngIf="showRemoveBtnOnSelect && selectedRows.length > 0"
-          class="cps-treetable-tbar-remove-btn">
+          class="cps-treetable-tbar-btn-on-select">
           <cps-button
             label="Remove"
+            [disabled]="removeBtnOnSelectDisabled"
             color="prepared"
             type="borderless"
             icon="remove"
@@ -73,9 +75,22 @@
             (clicked)="removeSelected()">
           </cps-button>
         </div>
+        <div
+          *ngIf="showAdditionalBtnOnSelect && selectedRows.length > 0"
+          class="cps-treetable-tbar-btn-on-select">
+          <cps-button
+            [label]="additionalBtnOnSelectTitle"
+            [disabled]="additionalBtnOnSelectDisabled"
+            color="prepared"
+            type="borderless"
+            [size]="toolbarSize"
+            (clicked)="onClickAdditionalBtnOnSelect()">
+          </cps-button>
+        </div>
         <div *ngIf="showActionBtn" class="cps-treetable-tbar-action-btn">
           <cps-button
             [label]="actionBtnTitle"
+            [disabled]="actionBtnDisabled"
             color="prepared"
             type="outlined"
             [size]="toolbarSize"

@@ -75,7 +75,13 @@
                   : (val | labelByValue : options : optionValue : optionLabel)
               }}{{ !last ? ',' : '' }}
             </div>
-            <ng-container *ngTemplateOutlet="autocompleteInput"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="
+                autocompleteInput;
+                context: {
+                  inputClass: 'multi-item-input'
+                }
+              "></ng-container>
           </div>
 
           <div *ngIf="multiple && chips" class="chips-group">
@@ -91,7 +97,13 @@
                   : (val | labelByValue : options : optionValue : optionLabel)
               ">
             </cps-chip>
-            <ng-container *ngTemplateOutlet="autocompleteInput"></ng-container>
+            <ng-container
+              *ngTemplateOutlet="
+                autocompleteInput;
+                context: {
+                  inputClass: 'multi-chip-input'
+                }
+              "></ng-container>
           </div>
         </div>
         <span class="cps-autocomplete-box-icons">
@@ -176,7 +188,7 @@
             [value]="filteredOptions"
             [delay]="0"
             [scrollHeight]="virtualListHeight + 'px'"
-            [options]="{ numToleratedItems: 3 }"
+            [options]="{ numToleratedItems: numToleratedItems }"
             [itemSize]="virtualScrollItemSize">
             <ng-template pTemplate="item" let-item>
               <ng-container
