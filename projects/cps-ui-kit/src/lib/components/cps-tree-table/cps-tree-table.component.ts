@@ -121,6 +121,7 @@ export class CpsTreeTableComponent
   @Input() rows = 0;
   @Input() resetPageOnRowsChange = false;
   @Input() resetPageOnSort = true;
+  @Input() totalRecords = 0;
 
   @Input() emptyMessage = 'No data';
   @Input() emptyBodyHeight: number | string = '';
