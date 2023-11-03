@@ -17,6 +17,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
   TooltipPosition
@@ -24,7 +25,8 @@ import {
 
 export type BtnToggleOption = {
   value: any;
-  label: string;
+  label?: string;
+  icon?: string;
   disabled?: boolean;
   tooltip?: string;
 };
@@ -35,6 +37,7 @@ export type BtnToggleOption = {
     CommonModule,
     CheckOptionSelectedPipe,
     CpsInfoCircleComponent,
+    CpsIconComponent,
     CpsTooltipDirective
   ],
   providers: [CheckOptionSelectedPipe],
@@ -51,6 +54,7 @@ export class CpsButtonToggleComponent
   @Input() disabled = false;
   @Input() mandatory = true; // at least one of the options is mandatory
   @Input() equalWidths = true;
+  @Input() optionTooltipPosition: TooltipPosition = 'bottom';
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
