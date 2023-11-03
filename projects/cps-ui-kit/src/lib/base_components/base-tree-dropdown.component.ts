@@ -26,8 +26,7 @@ import { TooltipPosition } from '../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
 
 /**
- * Not certain.
- * BaseTreeDropdownComponent is an input component to choose from tree data on dropdown.
+ * BaseTreeDropdownComponent base class component to support tree dropdown.
  * @group Components
  */
 @Component({
@@ -41,126 +40,151 @@ export class BaseTreeDropdownComponent
    * @group Props
    */
   @Input() label = '';
+
   /**
    * Default text to display when no option is selected.
    * @group Props
    */
   @Input() placeholder = 'Please enter';
+
   /**
    * Hint text for the input field.
    * @group Props
    */
   @Input() hint = '';
+
   /**
    * Specifies if multiple values can be selected.
    * @group Props
    */
   @Input() multiple = false;
+
   /**
    * If it is true, it specifies that the component should be disabled.
    * @group Props
    */
   @Input() disabled = false;
+
   /**
    * Width of the input field, number or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
+
   /**
    * When selecting an element, it will appear in a form of a chip.
    * @group Props
    */
   @Input() chips = true;
+
   /**
-   *Options for removing a selected chip element.
+   * Options for removing a selected chip element.
    * @group Props
    */
   @Input() closableChips = true;
+
   /**
-   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * Options for clearing input, when enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
+
   /**
-   *  Whether the component should open or expand on clear.
+   * Whether the component should open or expand on clear.
    * @group Props
    */
   @Input() openOnClear = true;
+
   /**
    * Name of the label field of an option.
    * @group Props
    */
   @Input() optionLabel = 'label';
+
   /**
    * Not certain.
    * @group Props
    */
   @Input() optionInfo = 'info';
+
   /**
-   *Options for hiding details.
+   * Options for hiding details.
    * @group Props
    */
   @Input() hideDetails = false;
+
   /**
    * Whether the component should have persistent clear.
    * @group Props
    */
   @Input() persistentClear = false;
+
   /**
    * Icon before input value.
    * @group Props
    */
   @Input() prefixIcon: IconType = '';
+
   /**
    * Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
+
   /**
-   *When enabled, a loading bar is displayed when data is being collected.
+   * When enabled, a loading bar is displayed when data is being collected.
    * @group Props
    */
   @Input() loading = false;
+
   /**
    * Whether the data should be loaded on demand during scroll.
    * @group Props
    */
   @Input() virtualScroll = false;
+
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
+
   /**
    * Info tooltip class for styling.
    * @group Props
    */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
   /**
    * Max width of infoTooltip of type number or string .
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
   /**
    * Whether the tooltip should have persistent info.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
+
   /**
    * Position of infoTooltip, 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: TooltipPosition = 'top';
+
   /**
-   * Not certain.
+   * When set, it expands all directiories initially.
    * @group Props
    */
   @Input() initialExpandDirectories = false;
+
   /**
-   * Not certain.
+   * When set, it expands all options initially.
    * @group Props
    */
   @Input() initialExpandAll = false;
+
   /**
    * An array of objects to display as the available options.
    * @group Props
