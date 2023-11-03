@@ -32,7 +32,7 @@
     *ngIf="tooltip"
     [cpsTooltip]="option.tooltip"
     tooltipCloseDelay="0"
-    tooltipPosition="bottom">
+    [tooltipPosition]="optionTooltipPosition">
     <ng-container
       *ngTemplateOutlet="
         optionRadioTemplate;
@@ -62,7 +62,12 @@
       option.value | checkOptionSelected : value : multiple : true : ''
     "
     (change)="updateValueEvent($event)" />
-  <span class="cps-btn-toggle-content-option-content">
-    <span>{{ option.label }}</span>
+  <span class="cps-btn-toggle-content-option-content" #optionContent>
+    <cps-icon
+      *ngIf="option.icon"
+      [ngClass]="{ 'me-2': !!option.label }"
+      [icon]="option.icon">
+    </cps-icon>
+    <span *ngIf="option.label">{{ option.label }}</span>
   </span>
 </ng-template>
