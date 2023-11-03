@@ -21,6 +21,18 @@ export class ButtonTogglePageComponent {
     { label: 'Option 4', value: 'fourth' }
   ] as BtnToggleOption[];
 
+  iconOptions = [
+    { label: 'Succeeded', value: 'second', icon: 'toast-success' },
+    { label: 'Failed', value: 'third', icon: 'toast-error' },
+    { label: 'Pending', value: 'first', icon: 'pending' }
+  ] as BtnToggleOption[];
+
+  iconOnlyOptions = [
+    { value: 'second', icon: 'toast-success', tooltip: 'Succeeded' },
+    { value: 'third', icon: 'toast-error', tooltip: 'Failed' },
+    { value: 'first', icon: 'pending', tooltip: 'Pending' }
+  ] as BtnToggleOption[];
+
   partiallyDisabledOptions = [
     {
       label: 'Option 1',
