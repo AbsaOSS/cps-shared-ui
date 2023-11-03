@@ -240,6 +240,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked {
    * @group Props
    */
   @Input() resetPageOnSort = true;
+
+  /**
+   * Number of total records.
+   * @group Props
+   */
+  @Input() totalRecords = 0;
+
   /**
    * Text to display when there is no data.
    * @group Props

@@ -227,6 +227,13 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() resetPageOnSort = true;
+
+  /**
+   * Total number of records.
+   * @group Props
+   */
+  @Input() totalRecords = 0;
+
   /**
    * Text to display when there is no data.
    * @group Props

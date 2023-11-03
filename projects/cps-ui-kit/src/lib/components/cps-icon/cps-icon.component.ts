@@ -74,6 +74,7 @@ export const iconNames = [
   'open',
   'path',
   'pdf',
+  'pending',
   'plus',
   'projects',
   'question',
