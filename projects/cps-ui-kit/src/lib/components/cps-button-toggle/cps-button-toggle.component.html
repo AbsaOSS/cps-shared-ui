@@ -62,7 +62,7 @@
       option.value | checkOptionSelected : value : multiple : true : ''
     "
     (change)="updateValueEvent($event)" />
-  <span class="cps-btn-toggle-content-option-content">
+  <span class="cps-btn-toggle-content-option-content" #optionContent>
     <span>{{ option.label }}</span>
   </span>
 </ng-template>

@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Optional,
   Output,
-  Self
+  QueryList,
+  Renderer2,
+  Self,
+  ViewChildren
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
@@ -37,12 +42,15 @@ export type BtnToggleOption = {
   templateUrl: './cps-button-toggle.component.html',
   styleUrls: ['./cps-button-toggle.component.scss']
 })
-export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
+export class CpsButtonToggleComponent
+  implements ControlValueAccessor, OnInit, AfterViewInit
+{
   @Input() label = '';
   @Input() options = [] as BtnToggleOption[];
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() mandatory = true; // at least one of the options is mandatory
+  @Input() equalWidths = true;
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
@@ -62,7 +70,12 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
   @Output() valueChanged = new EventEmitter<any>();
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  @ViewChildren('optionContent') optionsList!: QueryList<ElementRef>;
+
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    private renderer: Renderer2
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -72,6 +85,10 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     if (this.multiple && !this._value) {
       this._value = [];
     }
+  }
+
+  ngAfterViewInit(): void {
+    this._setEqualWidths();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -130,6 +147,30 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
+  }
+
+  private _setEqualWidths() {
+    if (!this.equalWidths) return;
+
+    const contentOptions =
+      this.optionsList
+        ?.toArray()
+        ?.filter((opt) => opt?.nativeElement)
+        ?.map((opt) => opt.nativeElement) || [];
+
+    let largestButtonWidth = 0;
+    contentOptions.forEach((elem) => {
+      const buttonWidth = elem.offsetWidth || 0;
+      if (buttonWidth > largestButtonWidth) {
+        largestButtonWidth = buttonWidth;
+      }
+    });
+
+    if (largestButtonWidth > 0) {
+      contentOptions.forEach((elem) => {
+        this.renderer.setStyle(elem, 'min-width', largestButtonWidth + 'px');
+      });
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
