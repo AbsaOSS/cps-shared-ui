@@ -147,8 +147,8 @@ export class BaseTreeDropdownComponent
    * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
-  @Input() numToleratedItems = 10;
   @Input() infoTooltip = '';
+  @Input() numToleratedItems = 10;
 
   /**
    * Info tooltip class for styling.

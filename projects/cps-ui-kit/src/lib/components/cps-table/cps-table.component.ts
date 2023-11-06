@@ -75,12 +75,11 @@ export type CpsTableSortMode = 'single' | 'multiple';
     }
   ]
 })
-export class CpsTableComponent implements OnInit, AfterViewChecked {
+export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   /**
    * An array of items to display on table.
    * @group Props
    */
-export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() data: any[] = [];
   /**
    * An array of objects to represent columns on table.
@@ -286,16 +285,15 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    */
   @Input() globalFilterFields: string[] = [];
   /**
-   * Show remove button on selected row.
-   * @group Props
-   */
-  @Input() showRemoveBtnOnSelect = true;
-  /**
    * Whether to show action button on table.
    * @group Props
    */
   @Input() clearGlobalFilterOnLoading = false;
 
+  /**
+   * Show remove button on selected row.
+   * @group Props
+   */
   @Input() showRemoveBtnOnSelect = true;
   @Input() removeBtnOnSelectDisabled = false;
 

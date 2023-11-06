@@ -272,16 +272,15 @@ export class CpsTreeTableComponent
    */
   @Input() globalFilterFields: string[] = [];
   /**
-   * Show remove button on selected row.
-   * @group Props
-   */
-  @Input() showRemoveBtnOnSelect = true;
-  /**
    * Whether to show action button on table.
    * @group Props
    */
   @Input() clearGlobalFilterOnLoading = false;
 
+  /**
+   * Show remove button on selected row.
+   * @group Props
+   */
   @Input() showRemoveBtnOnSelect = true;
   @Input() removeBtnOnSelectDisabled = false;
 
