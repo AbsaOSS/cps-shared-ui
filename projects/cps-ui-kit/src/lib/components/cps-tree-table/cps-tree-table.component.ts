@@ -7,9 +7,11 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -86,7 +88,7 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
   ]
 })
 export class CpsTreeTableComponent
-  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked
+  implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked, OnChanges
 {
   /**
    * An array of items to display on table.
@@ -278,6 +280,15 @@ export class CpsTreeTableComponent
    * Whether to show action button on table.
    * @group Props
    */
+  @Input() clearGlobalFilterOnLoading = false;
+
+  @Input() showRemoveBtnOnSelect = true;
+  @Input() removeBtnOnSelectDisabled = false;
+
+  @Input() showAdditionalBtnOnSelect = false;
+  @Input() additionalBtnOnSelectTitle = 'Select action';
+  @Input() additionalBtnOnSelectDisabled = false;
+
   @Input() showActionBtn = false;
   /**
    * Action button title.
@@ -288,6 +299,8 @@ export class CpsTreeTableComponent
    * Whether to show data reload button on table.
    * @group Props
    */
+  @Input() actionBtnDisabled = false;
+
   @Input() showDataReloadBtn = false;
 
   /**
@@ -307,6 +320,8 @@ export class CpsTreeTableComponent
    * @param {any} any - Custom edit event.
    * @group Emits
    */
+
+  @Output() additionalBtnOnSelectClicked = new EventEmitter<any[]>();
   @Output() editRowBtnClicked = new EventEmitter<any>();
   /**
    * Callback to invoke when rows are removed.
@@ -397,6 +412,9 @@ export class CpsTreeTableComponent
   @ViewChild('primengTreeTable', { static: true })
   primengTreeTable!: TreeTable;
 
+  @ViewChild('globalFilterComp')
+  globalFilterComp!: CpsInputComponent;
+
   selectedColumns: { [key: string]: any }[] = [];
 
   rowOptions: { label: string; value: number }[] = [];
@@ -432,6 +450,8 @@ export class CpsTreeTableComponent
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
+
+    if (this.showAdditionalBtnOnSelect) this.showRemoveBtnOnSelect = false;
 
     if (this.virtualScroll) {
       this.defScrollHeight = this.scrollHeight;
@@ -499,10 +519,24 @@ export class CpsTreeTableComponent
     this.cdRef.detectChanges();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.loading && this.clearGlobalFilterOnLoading)
+      this.clearGlobalFilter();
+
+    const dataChanges = changes?.data;
+    if (dataChanges?.previousValue !== dataChanges?.currentValue) {
+      this.selectedRows = [];
+    }
+  }
+
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
     if (this.virtualScroll && this.defScrollHeight === 'flex')
       window.removeEventListener('resize', this._onWindowResize.bind(this));
+  }
+
+  clearGlobalFilter() {
+    this.globalFilterComp?.clear();
   }
 
   private _onWindowResize() {
@@ -575,6 +609,10 @@ export class CpsTreeTableComponent
     this.primengTreeTable.filterGlobal(value, 'contains');
   }
 
+  onClickAdditionalBtnOnSelect() {
+    this.additionalBtnOnSelectClicked.emit(this.selectedRows);
+  }
+
   onClickActionBtn() {
     this.actionBtnClicked.emit();
   }
@@ -586,12 +624,7 @@ export class CpsTreeTableComponent
   removeSelected() {
     this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
     this.data = [...this.data];
-    this.rowsRemoved.emit(
-      this.selectedRows.map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ _defaultSortOrder, expanded, partialSelected, ...rest }) => rest
-      )
-    );
+    this.rowsRemoved.emit(this.selectedRows);
     this.selectedRows = [];
     setTimeout(() => {
       this._recalcVirtualHeight();
@@ -600,17 +633,13 @@ export class CpsTreeTableComponent
   }
 
   onEditRowClicked(node: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
-    this.editRowBtnClicked.emit(rest);
+    this.editRowBtnClicked.emit(node);
   }
 
   onRemoveRowClicked(node: any) {
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
     this._removeNodeFromData(node);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _defaultSortOrder, expanded, partialSelected, ...rest } = node;
-    this.rowsRemoved.emit([rest]);
+    this.rowsRemoved.emit([node]);
     setTimeout(() => {
       this._recalcVirtualHeight();
       this.cdRef.markForCheck();
@@ -769,12 +798,6 @@ export class CpsTreeTableComponent
   }
 
   onSelectionChanged(selection: any[]) {
-    this.selectionChanged.emit(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      selection.map(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        ({ _defaultSortOrder, expanded, partialSelected, ...rest }) => rest
-      )
-    );
+    this.selectionChanged.emit(selection);
   }
 }
