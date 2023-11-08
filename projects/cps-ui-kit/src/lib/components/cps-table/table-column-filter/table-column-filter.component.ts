@@ -10,12 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  FilterMatchMode,
-  FilterMetadata,
-  FilterOperator,
-  SelectItem
-} from 'primeng/api';
+import { FilterMetadata, FilterOperator, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { CpsButtonComponent } from '../../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
@@ -23,6 +18,7 @@ import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
+import { CpsFilterMatchMode } from '../cps-filter-match-mode';
 
 @Component({
   selector: 'table-column-filter',
@@ -79,26 +75,26 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
 
   private filterMatchModeOptions = {
     text: [
-      FilterMatchMode.STARTS_WITH,
-      FilterMatchMode.CONTAINS,
-      FilterMatchMode.NOT_CONTAINS,
-      FilterMatchMode.ENDS_WITH,
-      FilterMatchMode.EQUALS,
-      FilterMatchMode.NOT_EQUALS
+      CpsFilterMatchMode.STARTS_WITH,
+      CpsFilterMatchMode.CONTAINS,
+      CpsFilterMatchMode.NOT_CONTAINS,
+      CpsFilterMatchMode.ENDS_WITH,
+      CpsFilterMatchMode.EQUALS,
+      CpsFilterMatchMode.NOT_EQUALS
     ],
     number: [
-      FilterMatchMode.EQUALS,
-      FilterMatchMode.NOT_EQUALS,
-      FilterMatchMode.LESS_THAN,
-      FilterMatchMode.LESS_THAN_OR_EQUAL_TO,
-      FilterMatchMode.GREATER_THAN,
-      FilterMatchMode.GREATER_THAN_OR_EQUAL_TO
+      CpsFilterMatchMode.EQUALS,
+      CpsFilterMatchMode.NOT_EQUALS,
+      CpsFilterMatchMode.LESS_THAN,
+      CpsFilterMatchMode.LESS_THAN_OR_EQUAL_TO,
+      CpsFilterMatchMode.GREATER_THAN,
+      CpsFilterMatchMode.GREATER_THAN_OR_EQUAL_TO
     ],
     date: [
-      FilterMatchMode.DATE_IS,
-      FilterMatchMode.DATE_IS_NOT,
-      FilterMatchMode.DATE_BEFORE,
-      FilterMatchMode.DATE_AFTER
+      CpsFilterMatchMode.DATE_IS,
+      CpsFilterMatchMode.DATE_IS_NOT,
+      CpsFilterMatchMode.DATE_BEFORE,
+      CpsFilterMatchMode.DATE_AFTER
     ]
   } as { [key: string]: string[] };
 
@@ -216,11 +212,11 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   getDefaultMatchMode(): string {
-    if (this.type === 'text') return FilterMatchMode.STARTS_WITH;
-    else if (this.type === 'number') return FilterMatchMode.EQUALS;
-    else if (this.type === 'date') return FilterMatchMode.DATE_IS;
-    else if (this.type === 'category') return FilterMatchMode.IN;
-    else return FilterMatchMode.CONTAINS;
+    if (this.type === 'text') return CpsFilterMatchMode.STARTS_WITH;
+    else if (this.type === 'number') return CpsFilterMatchMode.EQUALS;
+    else if (this.type === 'date') return CpsFilterMatchMode.DATE_IS;
+    else if (this.type === 'category') return CpsFilterMatchMode.IN;
+    else return CpsFilterMatchMode.CONTAINS;
   }
 
   getDefaultOperator(): string | undefined {
