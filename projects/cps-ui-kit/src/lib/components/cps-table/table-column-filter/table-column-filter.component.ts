@@ -3,17 +3,14 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnDestroy,
+  OnInit,
   Optional,
   ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  FilterMatchMode,
-  FilterMetadata,
-  FilterOperator,
-  SelectItem
-} from 'primeng/api';
+import { FilterMetadata, FilterOperator, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { CpsButtonComponent } from '../../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
@@ -21,6 +18,7 @@ import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
+import { CpsFilterMatchMode } from '../cps-filter-match-mode';
 
 @Component({
   selector: 'table-column-filter',
@@ -37,11 +35,14 @@ import { TreeTable } from 'primeng/treetable';
   templateUrl: './table-column-filter.component.html',
   styleUrls: ['./table-column-filter.component.scss']
 })
-export class TableColumnFilterComponent {
+export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() field: string | undefined;
   @Input() type = 'text';
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
+  @Input() showCloseButton = false;
+  @Input() persistent = false;
+  @Input() matchModes: CpsFilterMatchMode[] = [];
   @Input() hideOnClear = false;
   @Input() maxConstraints = 2;
   @Input() categoryOptions: string[] = [];
@@ -75,35 +76,37 @@ export class TableColumnFilterComponent {
 
   private filterMatchModeOptions = {
     text: [
-      FilterMatchMode.STARTS_WITH,
-      FilterMatchMode.CONTAINS,
-      FilterMatchMode.NOT_CONTAINS,
-      FilterMatchMode.ENDS_WITH,
-      FilterMatchMode.EQUALS,
-      FilterMatchMode.NOT_EQUALS
+      CpsFilterMatchMode.STARTS_WITH,
+      CpsFilterMatchMode.CONTAINS,
+      CpsFilterMatchMode.NOT_CONTAINS,
+      CpsFilterMatchMode.ENDS_WITH,
+      CpsFilterMatchMode.EQUALS,
+      CpsFilterMatchMode.NOT_EQUALS
     ],
     number: [
-      FilterMatchMode.EQUALS,
-      FilterMatchMode.NOT_EQUALS,
-      FilterMatchMode.LESS_THAN,
-      FilterMatchMode.LESS_THAN_OR_EQUAL_TO,
-      FilterMatchMode.GREATER_THAN,
-      FilterMatchMode.GREATER_THAN_OR_EQUAL_TO
+      CpsFilterMatchMode.EQUALS,
+      CpsFilterMatchMode.NOT_EQUALS,
+      CpsFilterMatchMode.LESS_THAN,
+      CpsFilterMatchMode.LESS_THAN_OR_EQUAL_TO,
+      CpsFilterMatchMode.GREATER_THAN,
+      CpsFilterMatchMode.GREATER_THAN_OR_EQUAL_TO
     ],
     date: [
-      FilterMatchMode.DATE_IS,
-      FilterMatchMode.DATE_IS_NOT,
-      FilterMatchMode.DATE_BEFORE,
-      FilterMatchMode.DATE_AFTER
+      CpsFilterMatchMode.DATE_IS,
+      CpsFilterMatchMode.DATE_IS_NOT,
+      CpsFilterMatchMode.DATE_BEFORE,
+      CpsFilterMatchMode.DATE_AFTER
     ]
-  } as { [key: string]: string[] };
+  } as { [key: string]: CpsFilterMatchMode[] };
 
-  matchModes: SelectItem[] | undefined;
+  currentMatchModes: SelectItem[] | undefined;
 
   @ViewChild('columnFilterMenu')
   columnFilterMenu!: CpsMenuComponent;
 
   _tableInstance: Table | TreeTable;
+
+  private _isFilterApplied = false;
 
   constructor(
     public elementRef: ElementRef,
@@ -114,6 +117,12 @@ export class TableColumnFilterComponent {
   }
 
   ngOnInit() {
+    if (this.matchModes.length > 0) {
+      this.filterMatchModeOptions[this.type] = this.matchModes;
+    }
+    this._tableInstance?.onFilter?.subscribe((value) =>
+      this._updateFilterApplied(value)
+    );
     if (!this._tableInstance.filters[<string>this.field]) {
       this.initFieldFilterConstraint();
     }
@@ -126,11 +135,26 @@ export class TableColumnFilterComponent {
       this.showApplyButton = false;
     }
 
-    this.matchModes = this.filterMatchModeOptions[this.type]?.map(
+    this.currentMatchModes = this.filterMatchModeOptions[this.type]?.map(
       (key: string) => {
         return { label: this.matchModeLabels[key], value: key };
       }
     );
+  }
+
+  private _updateFilterApplied(value: any) {
+    const curFilter = value.filters[<string>this.field];
+    if (curFilter) {
+      if (Array.isArray(curFilter)) {
+        this._isFilterApplied = (<FilterMetadata[]>curFilter).some(
+          (meta) => meta.value !== null
+        );
+      } else {
+        this._isFilterApplied = curFilter.value !== null;
+      }
+    } else {
+      this._isFilterApplied = false;
+    }
   }
 
   initFieldFilterConstraint() {
@@ -149,6 +173,10 @@ export class TableColumnFilterComponent {
         matchMode: defaultMatchMode
       };
     }
+  }
+
+  onCloseClick() {
+    this.hide();
   }
 
   onMenuMatchModeChange(value: any, filterMeta: FilterMetadata) {
@@ -188,11 +216,28 @@ export class TableColumnFilterComponent {
   }
 
   getDefaultMatchMode(): string {
-    if (this.type === 'text') return FilterMatchMode.STARTS_WITH;
-    else if (this.type === 'number') return FilterMatchMode.EQUALS;
-    else if (this.type === 'date') return FilterMatchMode.DATE_IS;
-    else if (this.type === 'category') return FilterMatchMode.IN;
-    else return FilterMatchMode.CONTAINS;
+    const getMatchMode = (val: CpsFilterMatchMode) => {
+      if (this.type in this.filterMatchModeOptions) {
+        return this.filterMatchModeOptions[this.type].includes(val)
+          ? val
+          : this.filterMatchModeOptions[this.type][0];
+      } else {
+        return val;
+      }
+    };
+
+    switch (this.type) {
+      case 'text':
+        return getMatchMode(CpsFilterMatchMode.STARTS_WITH);
+      case 'number':
+        return getMatchMode(CpsFilterMatchMode.EQUALS);
+      case 'date':
+        return getMatchMode(CpsFilterMatchMode.DATE_IS);
+      case 'category':
+        return CpsFilterMatchMode.IN;
+      default:
+        return getMatchMode(CpsFilterMatchMode.CONTAINS);
+    }
   }
 
   getDefaultOperator(): string | undefined {
@@ -269,6 +314,10 @@ export class TableColumnFilterComponent {
     parent.classList.add(className);
   }
 
+  onBeforeMenuHidden() {
+    if (!this._isFilterApplied) this.initFieldFilterConstraint();
+  }
+
   onMenuHidden() {
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
@@ -278,5 +327,9 @@ export class TableColumnFilterComponent {
   @HostListener('click', ['$event'])
   onClick(event: any) {
     event.stopPropagation();
+  }
+
+  ngOnDestroy(): void {
+    this._tableInstance?.onFilter?.unsubscribe();
   }
 }

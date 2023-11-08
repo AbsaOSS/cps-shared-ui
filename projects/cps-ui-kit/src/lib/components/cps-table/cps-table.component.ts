@@ -98,6 +98,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() hasToolbar = true;
   @Input() toolbarSize: CpsTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
+  @Input() toolbarIcon = '';
+  @Input() toolbarIconColor = '';
 
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
