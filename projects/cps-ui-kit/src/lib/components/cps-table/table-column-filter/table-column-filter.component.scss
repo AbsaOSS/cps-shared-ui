@@ -37,6 +37,19 @@ $operator-bg-color: var(--cps-color-bg-light);
   min-width: 200px;
   max-height: 500px;
   overflow: auto;
+  & &-header {
+    height: 32px;
+    padding: 8px;
+    border-bottom: 1px solid $line-color;
+    background: $operator-bg-color;
+    cps-icon {
+      float: right;
+      cursor: pointer;
+      &:hover {
+        color: var(--cps-color-calm);
+      }
+    }
+  }
   & &-operator {
     padding: 12px;
     border-bottom: 1px solid $line-color;

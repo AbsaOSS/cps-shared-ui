@@ -11,7 +11,8 @@ import {
   CpsButtonToggleComponent,
   BtnToggleOption,
   CpsTableSize,
-  TabChangeEvent
+  TabChangeEvent,
+  CpsFilterMatchMode
 } from 'cps-ui-kit';
 
 @Component({
@@ -34,6 +35,11 @@ import {
 })
 export class TablePageComponent implements OnInit {
   selectedTabIndex = 0;
+
+  dateMatchModes = [
+    CpsFilterMatchMode.DATE_BEFORE,
+    CpsFilterMatchMode.DATE_AFTER
+  ];
 
   sizesOptions = [
     { label: 'Small', value: 'small' },

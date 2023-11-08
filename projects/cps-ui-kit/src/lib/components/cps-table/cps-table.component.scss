@@ -65,6 +65,13 @@ $tbar-normal-height: 72px;
         .cps-table-tbar-global-filter {
           margin-left: 12px;
         }
+        .cps-table-tbar-icon {
+          display: flex;
+          margin-right: 8px;
+        }
+        .cps-table-tbar-title {
+          cursor: default;
+        }
       }
       .cps-table-tbar-right {
         display: flex;
