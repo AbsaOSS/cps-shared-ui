@@ -3,6 +3,8 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnDestroy,
+  OnInit,
   Optional,
   ViewChild
 } from '@angular/core';
@@ -37,12 +39,13 @@ import { TreeTable } from 'primeng/treetable';
   templateUrl: './table-column-filter.component.html',
   styleUrls: ['./table-column-filter.component.scss']
 })
-export class TableColumnFilterComponent {
+export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() field: string | undefined;
   @Input() type = 'text';
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
   @Input() showCloseButton = true;
+  @Input() persistent = true;
   @Input() hideOnClear = false;
   @Input() maxConstraints = 2;
   @Input() categoryOptions: string[] = [];
@@ -106,6 +109,8 @@ export class TableColumnFilterComponent {
 
   _tableInstance: Table | TreeTable;
 
+  private _isFilterApplied = false;
+
   constructor(
     public elementRef: ElementRef,
     @Optional() public dt: Table,
@@ -115,6 +120,9 @@ export class TableColumnFilterComponent {
   }
 
   ngOnInit() {
+    this._tableInstance?.onFilter?.subscribe((value) =>
+      this.setFilterApplied(value)
+    );
     if (!this._tableInstance.filters[<string>this.field]) {
       this.initFieldFilterConstraint();
     }
@@ -134,6 +142,21 @@ export class TableColumnFilterComponent {
     );
   }
 
+  setFilterApplied(value: any) {
+    const curFilter = value.filters[<string>this.field];
+    if (curFilter) {
+      if (Array.isArray(curFilter)) {
+        this._isFilterApplied = (<FilterMetadata[]>curFilter).some(
+          (meta) => meta.value !== null
+        );
+      } else {
+        this._isFilterApplied = curFilter.value !== null;
+      }
+    } else {
+      this._isFilterApplied = false;
+    }
+  }
+
   initFieldFilterConstraint() {
     const defaultMatchMode = this.getDefaultMatchMode();
     if (this._tableInstance instanceof Table) {
@@ -150,6 +173,10 @@ export class TableColumnFilterComponent {
         matchMode: defaultMatchMode
       };
     }
+  }
+
+  onCloseClick() {
+    this.hide();
   }
 
   onMenuMatchModeChange(value: any, filterMeta: FilterMetadata) {
@@ -270,6 +297,13 @@ export class TableColumnFilterComponent {
     parent.classList.add(className);
   }
 
+  onBeforeMenuHidden() {
+    if (!this._isFilterApplied) {
+      this.initFieldFilterConstraint();
+      this._tableInstance._filter();
+    }
+  }
+
   onMenuHidden() {
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
@@ -279,5 +313,9 @@ export class TableColumnFilterComponent {
   @HostListener('click', ['$event'])
   onClick(event: any) {
     event.stopPropagation();
+  }
+
+  ngOnDestroy(): void {
+    this._tableInstance?.onFilter?.unsubscribe();
   }
 }
