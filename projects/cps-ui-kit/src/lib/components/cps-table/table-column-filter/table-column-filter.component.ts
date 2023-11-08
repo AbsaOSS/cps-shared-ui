@@ -42,6 +42,7 @@ export class TableColumnFilterComponent {
   @Input() type = 'text';
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
+  @Input() showCloseButton = true;
   @Input() hideOnClear = false;
   @Input() maxConstraints = 2;
   @Input() categoryOptions: string[] = [];

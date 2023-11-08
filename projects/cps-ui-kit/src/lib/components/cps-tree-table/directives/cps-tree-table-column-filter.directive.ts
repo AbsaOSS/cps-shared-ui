@@ -25,6 +25,7 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   @Input() filterType: CpsTreeTableColumnFilterType = 'text';
   @Input() filterShowClearButton = true;
   @Input() filterShowApplyButton = true;
+  @Input() filterShowCloseButton = true;
   @Input() filterHideOnClear = false;
   @Input() filterCategoryOptions: string[] = [];
   @Input() filterPlaceholder = '';
@@ -45,6 +46,7 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
     this.filterCompRef.setInput('type', this.filterType);
     this.filterCompRef.setInput('showClearButton', this.filterShowClearButton);
     this.filterCompRef.setInput('showApplyButton', this.filterShowApplyButton);
+    this.filterCompRef.setInput('showCloseButton', this.filterShowCloseButton);
     this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
     this.filterCompRef.setInput('maxConstraints', 1);
     this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);

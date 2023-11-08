@@ -7,6 +7,11 @@
     (menuHidden)="onMenuHidden()">
     <div class="cps-table-col-filter-menu-content">
       <div
+        class="cps-table-col-filter-menu-content-header"
+        *ngIf="showCloseButton">
+        <cps-icon icon="close-x" (click)="hide()"></cps-icon>
+      </div>
+      <div
         class="cps-table-col-filter-menu-content-operator"
         *ngIf="isShowOperator">
         <cps-select
