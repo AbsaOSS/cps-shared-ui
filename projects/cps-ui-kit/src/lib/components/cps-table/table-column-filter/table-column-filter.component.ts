@@ -121,7 +121,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._tableInstance?.onFilter?.subscribe((value) =>
-      this.setFilterApplied(value)
+      this._updateFilterApplied(value)
     );
     if (!this._tableInstance.filters[<string>this.field]) {
       this.initFieldFilterConstraint();
@@ -142,7 +142,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     );
   }
 
-  setFilterApplied(value: any) {
+  private _updateFilterApplied(value: any) {
     const curFilter = value.filters[<string>this.field];
     if (curFilter) {
       if (Array.isArray(curFilter)) {
