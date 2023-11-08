@@ -40,8 +40,9 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() type = 'text';
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
-  @Input() showCloseButton = true;
-  @Input() persistent = true;
+  @Input() showCloseButton = false;
+  @Input() persistent = false;
+  @Input() matchModes: CpsFilterMatchMode[] = [];
   @Input() hideOnClear = false;
   @Input() maxConstraints = 2;
   @Input() categoryOptions: string[] = [];
@@ -96,9 +97,9 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
       CpsFilterMatchMode.DATE_BEFORE,
       CpsFilterMatchMode.DATE_AFTER
     ]
-  } as { [key: string]: string[] };
+  } as { [key: string]: CpsFilterMatchMode[] };
 
-  matchModes: SelectItem[] | undefined;
+  currentMatchModes: SelectItem[] | undefined;
 
   @ViewChild('columnFilterMenu')
   columnFilterMenu!: CpsMenuComponent;
@@ -116,6 +117,9 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (this.matchModes.length > 0) {
+      this.filterMatchModeOptions[this.type] = this.matchModes;
+    }
     this._tableInstance?.onFilter?.subscribe((value) =>
       this._updateFilterApplied(value)
     );
@@ -131,7 +135,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
       this.showApplyButton = false;
     }
 
-    this.matchModes = this.filterMatchModeOptions[this.type]?.map(
+    this.currentMatchModes = this.filterMatchModeOptions[this.type]?.map(
       (key: string) => {
         return { label: this.matchModeLabels[key], value: key };
       }
@@ -212,11 +216,28 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   getDefaultMatchMode(): string {
-    if (this.type === 'text') return CpsFilterMatchMode.STARTS_WITH;
-    else if (this.type === 'number') return CpsFilterMatchMode.EQUALS;
-    else if (this.type === 'date') return CpsFilterMatchMode.DATE_IS;
-    else if (this.type === 'category') return CpsFilterMatchMode.IN;
-    else return CpsFilterMatchMode.CONTAINS;
+    const getMatchMode = (val: CpsFilterMatchMode) => {
+      if (this.type in this.filterMatchModeOptions) {
+        return this.filterMatchModeOptions[this.type].includes(val)
+          ? val
+          : this.filterMatchModeOptions[this.type][0];
+      } else {
+        return val;
+      }
+    };
+
+    switch (this.type) {
+      case 'text':
+        return getMatchMode(CpsFilterMatchMode.STARTS_WITH);
+      case 'number':
+        return getMatchMode(CpsFilterMatchMode.EQUALS);
+      case 'date':
+        return getMatchMode(CpsFilterMatchMode.DATE_IS);
+      case 'category':
+        return CpsFilterMatchMode.IN;
+      default:
+        return getMatchMode(CpsFilterMatchMode.CONTAINS);
+    }
   }
 
   getDefaultOperator(): string | undefined {
@@ -294,10 +315,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   onBeforeMenuHidden() {
-    if (!this._isFilterApplied) {
-      this.initFieldFilterConstraint();
-      this._tableInstance._filter();
-    }
+    if (!this._isFilterApplied) this.initFieldFilterConstraint();
   }
 
   onMenuHidden() {

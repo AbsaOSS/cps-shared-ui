@@ -28,11 +28,11 @@
           *ngFor="let fieldConstraint of fieldConstraints; let i = index"
           class="cps-table-col-filter-menu-content-constraint">
           <cps-select
-            *ngIf="showMatchModes && matchModes"
+            *ngIf="showMatchModes && currentMatchModes"
             class="cps-table-col-filter-match-mode-select"
             [hideDetails]="true"
             [returnObject]="false"
-            [options]="matchModes"
+            [options]="currentMatchModes"
             [ngModel]="fieldConstraint.matchMode"
             (valueChanged)="
               onMenuMatchModeChange($event, fieldConstraint)

@@ -354,6 +354,9 @@ $tbar-normal-height: 72px;
           display: flex;
           margin-right: 8px;
         }
+        .cps-treetable-tbar-title {
+          cursor: default;
+        }
       }
       .cps-treetable-tbar-right {
         display: flex;

@@ -8,6 +8,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { TableColumnFilterComponent } from '../../cps-table/table-column-filter/table-column-filter.component';
+import { CpsFilterMatchMode } from '../../cps-table/cps-filter-match-mode';
 
 export type CpsTreeTableColumnFilterType =
   | 'text'
@@ -25,8 +26,9 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   @Input() filterType: CpsTreeTableColumnFilterType = 'text';
   @Input() filterShowClearButton = true;
   @Input() filterShowApplyButton = true;
-  @Input() filterShowCloseButton = true;
-  @Input() filterPersistent = true;
+  @Input() filterShowCloseButton = false;
+  @Input() filterPersistent = false;
+  @Input() filterMatchModes: CpsFilterMatchMode[] = [];
   @Input() filterHideOnClear = false;
   @Input() filterCategoryOptions: string[] = [];
   @Input() filterPlaceholder = '';
@@ -49,6 +51,7 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
     this.filterCompRef.setInput('showApplyButton', this.filterShowApplyButton);
     this.filterCompRef.setInput('showCloseButton', this.filterShowCloseButton);
     this.filterCompRef.setInput('persistent', this.filterPersistent);
+    this.filterCompRef.setInput('matchModes', this.filterMatchModes);
     this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
     this.filterCompRef.setInput('maxConstraints', 1);
     this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);

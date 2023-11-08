@@ -51,7 +51,7 @@
         <div *ngIf="toolbarIcon" class="cps-treetable-tbar-icon">
           <cps-icon [icon]="toolbarIcon" [color]="toolbarIconColor"></cps-icon>
         </div>
-        <div>{{ toolbarTitle }}</div>
+        <div class="cps-treetable-tbar-title">{{ toolbarTitle }}</div>
         <div *ngIf="showGlobalFilter" class="cps-treetable-tbar-global-filter">
           <cps-input
             #globalFilterComp
