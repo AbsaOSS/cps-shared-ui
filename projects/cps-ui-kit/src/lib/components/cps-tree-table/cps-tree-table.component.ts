@@ -108,6 +108,8 @@ export class CpsTreeTableComponent
   @Input() hasToolbar = true;
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
   @Input() toolbarTitle = '';
+  @Input() toolbarIcon = '';
+  @Input() toolbarIconColor = '';
 
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'

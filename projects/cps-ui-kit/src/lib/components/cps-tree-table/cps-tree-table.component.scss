@@ -350,6 +350,10 @@ $tbar-normal-height: 72px;
         .cps-treetable-tbar-global-filter {
           margin-left: 12px;
         }
+        .cps-treetable-tbar-icon {
+          display: flex;
+          margin-right: 8px;
+        }
       }
       .cps-treetable-tbar-right {
         display: flex;

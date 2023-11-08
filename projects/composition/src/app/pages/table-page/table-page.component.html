@@ -80,7 +80,9 @@
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (selectionChanged)="onRowsSelectionChanged($event)"
-      toolbarTitle="Table with external columns toggle and unstriped selectable and expandable rows">
+      toolbarIcon="toast-success"
+      toolbarIconColor="success"
+      toolbarTitle="Table with toolbar icon, external columns toggle, unstriped selectable and expandable rows">
       <ng-template #header>
         <th
           *ngFor="let scol of selCols"

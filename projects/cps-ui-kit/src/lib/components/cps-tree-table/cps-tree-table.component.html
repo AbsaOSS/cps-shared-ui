@@ -48,6 +48,9 @@
     </ng-container>
     <ng-container *ngIf="!toolbarTemplate">
       <div class="cps-treetable-tbar-left">
+        <div *ngIf="toolbarIcon" class="cps-treetable-tbar-icon">
+          <cps-icon [icon]="toolbarIcon" [color]="toolbarIconColor"></cps-icon>
+        </div>
         <div>{{ toolbarTitle }}</div>
         <div *ngIf="showGlobalFilter" class="cps-treetable-tbar-global-filter">
           <cps-input
