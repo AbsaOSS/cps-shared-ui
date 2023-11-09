@@ -38,19 +38,19 @@ import { CpsFilterMatchMode } from '../cps-filter-match-mode';
 export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() field: string | undefined;
   @Input() type = 'text';
+  @Input() persistent = false;
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
   @Input() showCloseButton = false;
-  @Input() persistent = false;
+  @Input() showMatchModes = true;
   @Input() matchModes: CpsFilterMatchMode[] = [];
-  @Input() hideOnClear = false;
+  @Input() showOperator = true;
   @Input() maxConstraints = 2;
+  @Input() hideOnClear = false;
   @Input() categoryOptions: string[] = [];
   @Input() placeholder = '';
 
   operator: string = FilterOperator.AND;
-  showMatchModes = true;
-  showOperator = true;
 
   operatorOptions = [
     { label: 'Match All', value: FilterOperator.AND, info: 'AND' },

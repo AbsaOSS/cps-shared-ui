@@ -24,11 +24,13 @@ export type CpsTreeTableColumnFilterType =
 export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   @Input('cpsTTColFilter') field: string | undefined;
   @Input() filterType: CpsTreeTableColumnFilterType = 'text';
+  @Input() filterPersistent = false;
   @Input() filterShowClearButton = true;
   @Input() filterShowApplyButton = true;
   @Input() filterShowCloseButton = false;
-  @Input() filterPersistent = false;
+  @Input() filterShowMatchModes = true;
   @Input() filterMatchModes: CpsFilterMatchMode[] = [];
+  @Input() filterShowOperator = true;
   @Input() filterHideOnClear = false;
   @Input() filterCategoryOptions: string[] = [];
   @Input() filterPlaceholder = '';
@@ -47,13 +49,15 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.filterCompRef.setInput('field', this.field);
     this.filterCompRef.setInput('type', this.filterType);
+    this.filterCompRef.setInput('persistent', this.filterPersistent);
     this.filterCompRef.setInput('showClearButton', this.filterShowClearButton);
     this.filterCompRef.setInput('showApplyButton', this.filterShowApplyButton);
     this.filterCompRef.setInput('showCloseButton', this.filterShowCloseButton);
-    this.filterCompRef.setInput('persistent', this.filterPersistent);
+    this.filterCompRef.setInput('showMatchModes', this.filterShowMatchModes);
     this.filterCompRef.setInput('matchModes', this.filterMatchModes);
-    this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
+    this.filterCompRef.setInput('showOperator', this.filterShowOperator);
     this.filterCompRef.setInput('maxConstraints', 1);
+    this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
     this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);
     this.filterCompRef.setInput(
       'placeholder',
