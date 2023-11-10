@@ -5,6 +5,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  OnChanges,
   ViewContainerRef
 } from '@angular/core';
 import { TableColumnFilterComponent } from '../../cps-table/table-column-filter/table-column-filter.component';
@@ -21,7 +22,9 @@ export type CpsTreeTableColumnFilterType =
   standalone: true,
   selector: '[cpsTTColFilter]'
 })
-export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
+export class CpsTreeTableColumnFilterDirective
+  implements OnInit, OnChanges, OnDestroy
+{
   @Input('cpsTTColFilter') field: string | undefined;
   @Input() filterType: CpsTreeTableColumnFilterType = 'text';
   @Input() filterPersistent = false;
@@ -47,6 +50,12 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.elementRef.nativeElement.firstChild.after(
+      this.filterCompRef.location.nativeElement
+    );
+  }
+
+  ngOnChanges(): void {
     this.filterCompRef.setInput('field', this.field);
     this.filterCompRef.setInput('type', this.filterType);
     this.filterCompRef.setInput('persistent', this.filterPersistent);
@@ -62,10 +71,6 @@ export class CpsTreeTableColumnFilterDirective implements OnInit, OnDestroy {
     this.filterCompRef.setInput(
       'placeholder',
       this.filterPlaceholder || this._getDefaultPlaceholder()
-    );
-
-    this.elementRef.nativeElement.firstChild.after(
-      this.filterCompRef.location.nativeElement
     );
   }
 
