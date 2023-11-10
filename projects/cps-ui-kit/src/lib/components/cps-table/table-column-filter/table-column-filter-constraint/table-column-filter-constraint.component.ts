@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import { Component, Input, OnChanges, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata } from 'primeng/api';
@@ -26,7 +26,7 @@ import { TreeTable } from 'primeng/treetable';
   templateUrl: './table-column-filter-constraint.component.html',
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
-export class TableColumnFilterConstraintComponent implements OnInit {
+export class TableColumnFilterConstraintComponent implements OnChanges {
   @Input() type: string | undefined;
   @Input() field: string | undefined;
   @Input() filterConstraint: FilterMetadata | undefined;
@@ -47,11 +47,11 @@ export class TableColumnFilterConstraintComponent implements OnInit {
     this._tableInstance = dt || tt;
   }
 
-  ngOnInit(): void {
-    this._initCategories();
+  ngOnChanges(): void {
+    this._updateCategories();
   }
 
-  private _initCategories() {
+  private _updateCategories() {
     if (this.type !== 'category') return;
     if (this.categoryOptions.length > 0) {
       this.categories = this.categoryOptions.map((o) => ({
