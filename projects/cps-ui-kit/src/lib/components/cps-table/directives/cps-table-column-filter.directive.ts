@@ -20,7 +20,8 @@ export type CpsTableColumnFilterType =
 
 @Directive({
   standalone: true,
-  selector: '[cpsTColFilter]'
+  selector: '[cpsTColFilter]',
+  exportAs: 'cpsTColFilter'
 })
 export class CpsTableColumnFilterDirective
   implements OnInit, OnChanges, OnDestroy
@@ -88,6 +89,10 @@ export class CpsTableColumnFilterDirective
       default:
         return '';
     }
+  }
+
+  clearFilter() {
+    this.filterCompRef?.instance?.clearFilter();
   }
 
   ngOnDestroy(): void {
