@@ -305,13 +305,14 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   clearFilter() {
-    this.clearFilterValues();
+    this._initFieldFilterConstraint();
     this._tableInstance._filter();
     if (this.hideOnClear) this.hide();
   }
 
   clearFilterValues() {
     this._initFieldFilterConstraint();
+    this.isFilterApplied = false;
   }
 
   applyFilter() {
@@ -326,7 +327,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   onBeforeMenuHidden() {
-    if (!this.isFilterApplied) this.clearFilterValues();
+    if (!this.isFilterApplied) this._initFieldFilterConstraint();
   }
 
   onMenuHidden() {
