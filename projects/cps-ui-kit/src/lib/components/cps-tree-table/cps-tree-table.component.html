@@ -102,13 +102,16 @@
           </cps-button>
         </div>
         <div
-          *ngIf="showColumnsToggle && columns.length > 0"
-          class="cps-treetable-tbar-coltoggle-btn">
+          *ngIf="showColumnsToggleBtn && columns.length > 0"
+          class="cps-treetable-tbar-coltoggle-btn"
+          [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">
           <cps-icon
             icon="columns"
             size="normal"
-            color="prepared-lighten1"
-            (click)="colToggleMenu.toggle($event)"></cps-icon>
+            [color]="
+              columnsToggleBtnDisabled ? 'text-lightest' : 'prepared-lighten1'
+            "
+            (click)="onColumnsToggle($event)"></cps-icon>
           <cps-menu #colToggleMenu [withArrow]="false">
             <div class="cps-treetable-coltoggle-menu">
               <div
@@ -137,11 +140,14 @@
             </div>
           </cps-menu>
         </div>
-        <div *ngIf="showDataReloadBtn" class="cps-treetable-tbar-reload-btn">
+        <div
+          *ngIf="showDataReloadBtn"
+          class="cps-treetable-tbar-reload-btn"
+          [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
           <cps-icon
             icon="refresh"
             size="18"
-            color="prepared-lighten1"
+            [color]="dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'"
             (click)="onReloadData()">
           </cps-icon>
         </div>

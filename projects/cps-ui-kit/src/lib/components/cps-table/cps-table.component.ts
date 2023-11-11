@@ -85,7 +85,6 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() dataKey = ''; // field, that uniquely identifies a record in data (needed for expandable rows)
   @Input() showRowMenu = false;
   @Input() reorderableRows = false;
-  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
   @Input() loading = false;
 
   @Input() tableStyle = undefined;
@@ -138,10 +137,15 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() actionBtnDisabled = false;
 
   @Input() showExportBtn = false;
+  @Input() exportBtnDisabled = false;
   @Input() exportFilename = 'download';
   @Input() csvSeparator = ',';
 
   @Input() showDataReloadBtn = false;
+  @Input() dataReloadBtnDisabled = false;
+
+  @Input() showColumnsToggleBtn = false; // if external body template is provided, use columnsSelected event emitter
+  @Input() columnsToggleBtnDisabled = false;
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
@@ -182,6 +186,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   @ViewChild('globalFilterComp')
   globalFilterComp!: CpsInputComponent;
+
+  @ViewChild('exportMenu')
+  exportMenu!: CpsMenuComponent;
+
+  @ViewChild('colToggleMenu')
+  colToggleMenu!: CpsMenuComponent;
 
   selectedRows: any[] = [];
 
@@ -442,7 +452,18 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onReloadData() {
+    if (this.dataReloadBtnDisabled) return;
     this.dataReloadBtnClicked.emit();
+  }
+
+  onExportData(event: any) {
+    if (this.exportBtnDisabled) return;
+    this.exportMenu?.toggle(event);
+  }
+
+  onColumnsToggle(event: any) {
+    if (this.columnsToggleBtnDisabled) return;
+    this.colToggleMenu?.toggle(event);
   }
 
   exportTable(format: CpsTableExportFormat) {

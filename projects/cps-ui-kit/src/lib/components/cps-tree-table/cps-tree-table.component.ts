@@ -95,7 +95,6 @@ export class CpsTreeTableComponent
   @Input() selectable = false;
   @Input() rowHover = true;
   @Input() showRowMenu = false;
-  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
   @Input() loading = false;
 
   @Input() tableStyle = undefined;
@@ -148,6 +147,10 @@ export class CpsTreeTableComponent
   @Input() actionBtnDisabled = false;
 
   @Input() showDataReloadBtn = false;
+  @Input() dataReloadBtnDisabled = false;
+
+  @Input() showColumnsToggleBtn = false; // if external body template is provided, use columnsSelected event emitter
+  @Input() columnsToggleBtnDisabled = false;
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
@@ -189,6 +192,9 @@ export class CpsTreeTableComponent
 
   @ViewChild('globalFilterComp')
   globalFilterComp!: CpsInputComponent;
+
+  @ViewChild('colToggleMenu')
+  colToggleMenu!: CpsMenuComponent;
 
   selectedColumns: { [key: string]: any }[] = [];
 
@@ -393,7 +399,13 @@ export class CpsTreeTableComponent
   }
 
   onReloadData() {
+    if (this.dataReloadBtnDisabled) return;
     this.dataReloadBtnClicked.emit();
+  }
+
+  onColumnsToggle(event: any) {
+    if (this.columnsToggleBtnDisabled) return;
+    this.colToggleMenu?.toggle(event);
   }
 
   removeSelected() {
