@@ -1,17 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnInit,
   Optional,
   Output,
-  QueryList,
   Renderer2,
-  Self,
-  ViewChildren
+  Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
@@ -23,7 +19,7 @@ import {
   TooltipPosition
 } from '../../directives/cps-tooltip.directive';
 
-export type BtnToggleOption = {
+export type CpsButtonToggleOption = {
   value: any;
   label?: string;
   icon?: string;
@@ -45,11 +41,9 @@ export type BtnToggleOption = {
   templateUrl: './cps-button-toggle.component.html',
   styleUrls: ['./cps-button-toggle.component.scss']
 })
-export class CpsButtonToggleComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit
-{
+export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() label = '';
-  @Input() options = [] as BtnToggleOption[];
+  @Input() options = [] as CpsButtonToggleOption[];
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() mandatory = true; // at least one of the options is mandatory
@@ -74,7 +68,7 @@ export class CpsButtonToggleComponent
 
   @Output() valueChanged = new EventEmitter<any>();
 
-  @ViewChildren('optionContent') optionsList!: QueryList<ElementRef>;
+  largestButtonWidth = 0;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -89,9 +83,6 @@ export class CpsButtonToggleComponent
     if (this.multiple && !this._value) {
       this._value = [];
     }
-  }
-
-  ngAfterViewInit(): void {
     this._setEqualWidths();
   }
 
@@ -156,25 +147,38 @@ export class CpsButtonToggleComponent
   private _setEqualWidths() {
     if (!this.equalWidths) return;
 
-    const contentOptions =
-      this.optionsList
-        ?.toArray()
-        ?.filter((opt) => opt?.nativeElement)
-        ?.map((opt) => opt.nativeElement) || [];
+    const hiddenSpan = this.renderer.createElement('span');
+    this.renderer.setStyle(hiddenSpan, 'visibility', 'hidden');
+    this.renderer.setStyle(hiddenSpan, 'position', 'absolute');
+    this.renderer.setStyle(hiddenSpan, 'left', '-9999px');
+    this.renderer.setStyle(hiddenSpan, 'font-size', '16px');
+    this.renderer.setStyle(hiddenSpan, 'letter-spacing', '0.05em');
+    this.renderer.setStyle(
+      hiddenSpan,
+      'font-family',
+      '"Source Sans Pro", sans-serif'
+    );
 
-    let largestButtonWidth = 0;
-    contentOptions.forEach((elem) => {
-      const buttonWidth = elem.offsetWidth || 0;
-      if (buttonWidth > largestButtonWidth) {
-        largestButtonWidth = buttonWidth;
+    this.renderer.appendChild(document.body, hiddenSpan);
+
+    this.largestButtonWidth = 0;
+    this.options.forEach((opt) => {
+      const text = this.renderer.createText(opt.label || '');
+      this.renderer.appendChild(hiddenSpan, text);
+
+      let width = hiddenSpan.offsetWidth || 0;
+      width += 26;
+      if (opt.icon) {
+        width += 16;
+        if (opt.label) width += 8;
       }
+      if (width > this.largestButtonWidth) {
+        this.largestButtonWidth = width;
+      }
+      this.renderer.removeChild(hiddenSpan, text);
     });
 
-    if (largestButtonWidth > 0) {
-      contentOptions.forEach((elem) => {
-        this.renderer.setStyle(elem, 'min-width', largestButtonWidth + 'px');
-      });
-    }
+    this.renderer.removeChild(document.body, hiddenSpan);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

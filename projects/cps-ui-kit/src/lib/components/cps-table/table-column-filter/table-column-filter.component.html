@@ -2,7 +2,7 @@
   <cps-menu
     #columnFilterMenu
     [withArrow]="false"
-    [persistent]="persistent"
+    [persistent]="persistent || isCategoryDropdownOpened"
     (menuShown)="onMenuShown()"
     (menuHidden)="onMenuHidden()"
     (beforeMenuHidden)="onBeforeMenuHidden()">
@@ -38,8 +38,11 @@
               onMenuMatchModeChange($event, fieldConstraint)
             "></cps-select>
           <table-column-filter-constraint
+            #constraintComponent
             [type]="type"
             [field]="field"
+            [asButtonToggle]="asButtonToggle"
+            [singleSelection]="singleSelection"
             [categoryOptions]="categoryOptions"
             [filterConstraint]="fieldConstraint"
             [hasApplyButton]="showApplyButton"

@@ -37,15 +37,28 @@
     (valueChanged)="onValueChange($event)">
   </cps-datepicker>
 
-  <cps-autocomplete
-    class="cps-table-col-filter-category-autocomplete"
-    *ngSwitchCase="'category'"
-    [placeholder]="placeholder"
-    [options]="categories"
-    [hideDetails]="true"
-    [clearable]="true"
-    [value]="filterConstraint?.value"
-    (valueChanged)="onValueChange($event)"
-    [returnObject]="false"
-    [multiple]="true"></cps-autocomplete>
+  <ng-container *ngSwitchCase="'category'">
+    <cps-autocomplete
+      #categoryAutocompleteComponent
+      *ngIf="!asButtonToggle"
+      class="cps-table-col-filter-category-autocomplete"
+      [placeholder]="placeholder"
+      [options]="categories"
+      [hideDetails]="true"
+      [clearable]="true"
+      [value]="filterConstraint?.value"
+      (valueChanged)="onValueChange($event)"
+      [returnObject]="false"
+      [multiple]="!singleSelection">
+    </cps-autocomplete>
+    <cps-button-toggle
+      *ngIf="asButtonToggle"
+      [options]="categories"
+      [value]="filterConstraint?.value"
+      optionTooltipPosition="top"
+      (valueChanged)="onValueChange($event)"
+      [mandatory]="false"
+      [multiple]="!singleSelection">
+    </cps-button-toggle>
+  </ng-container>
 </ng-container>
