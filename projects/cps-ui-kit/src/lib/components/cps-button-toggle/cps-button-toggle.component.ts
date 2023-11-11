@@ -23,7 +23,7 @@ import {
   TooltipPosition
 } from '../../directives/cps-tooltip.directive';
 
-export type BtnToggleOption = {
+export type CpsButtonToggleOption = {
   value: any;
   label?: string;
   icon?: string;
@@ -49,7 +49,7 @@ export class CpsButtonToggleComponent
   implements ControlValueAccessor, OnInit, AfterViewInit
 {
   @Input() label = '';
-  @Input() options = [] as BtnToggleOption[];
+  @Input() options = [] as CpsButtonToggleOption[];
   @Input() multiple = false;
   @Input() disabled = false;
   @Input() mandatory = true; // at least one of the options is mandatory

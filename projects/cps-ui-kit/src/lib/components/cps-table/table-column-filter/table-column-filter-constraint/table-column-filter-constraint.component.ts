@@ -7,7 +7,7 @@ import { CpsInputComponent } from '../../../cps-input/cps-input.component';
 import { CpsDatepickerComponent } from '../../../cps-datepicker/cps-datepicker.component';
 import { CpsAutocompleteComponent } from '../../../cps-autocomplete/cps-autocomplete.component';
 import {
-  BtnToggleOption,
+  CpsButtonToggleOption,
   CpsButtonToggleComponent
 } from '../../../cps-button-toggle/cps-button-toggle.component';
 import { TreeTable } from 'primeng/treetable';
@@ -43,7 +43,7 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   booleanOptions = [
     { label: 'True', value: 'true' },
     { label: 'False', value: 'false' }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
 
   categories: CpsColumnFilterCategoryOption[] = [];
 
@@ -65,6 +65,9 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
           label: o,
           value: o
         }));
+      } else {
+        this.categories = this
+          .categoryOptions as CpsColumnFilterCategoryOption[];
       }
     } else {
       let cats = [];

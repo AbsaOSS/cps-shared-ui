@@ -11,7 +11,7 @@ import {
   CpsTabGroupComponent,
   CpsButtonToggleComponent,
   CpsTreeTableHeaderSelectableDirective,
-  BtnToggleOption,
+  CpsButtonToggleOption,
   CpsTreeTableSize
 } from 'cps-ui-kit';
 
@@ -41,7 +41,7 @@ export class TreeTablePageComponent implements OnInit {
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
     { label: 'Large', value: 'large' }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
 
   selSize: CpsTreeTableSize = 'small';
 

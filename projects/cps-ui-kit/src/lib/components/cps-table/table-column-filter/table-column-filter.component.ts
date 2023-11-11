@@ -241,7 +241,9 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
       case 'date':
         return getMatchMode(CpsColumnFilterMatchMode.DATE_IS);
       case 'category':
-        return CpsColumnFilterMatchMode.IN;
+        return this.singleSelection
+          ? CpsColumnFilterMatchMode.IS
+          : CpsColumnFilterMatchMode.IN;
       default:
         return getMatchMode(CpsColumnFilterMatchMode.CONTAINS);
     }
