@@ -11,6 +11,10 @@ import {
   CpsButtonToggleComponent
 } from '../../../cps-button-toggle/cps-button-toggle.component';
 import { TreeTable } from 'primeng/treetable';
+import {
+  CpsColumnFilterCategoryOption,
+  CpsColumnFilterType
+} from '../../cps-column-filter-types';
 
 @Component({
   selector: 'table-column-filter-constraint',
@@ -27,10 +31,12 @@ import { TreeTable } from 'primeng/treetable';
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
 export class TableColumnFilterConstraintComponent implements OnChanges {
-  @Input() type: string | undefined;
+  @Input() type: CpsColumnFilterType = 'text';
   @Input() field: string | undefined;
   @Input() filterConstraint: FilterMetadata | undefined;
-  @Input() categoryOptions: string[] = [];
+  @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
+  @Input() asButtonToggle = false; // for category type only
+  @Input() singleSelection = false; // for category type only
   @Input() placeholder = '';
   @Input() hasApplyButton = true;
 
@@ -39,7 +45,7 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
     { label: 'False', value: 'false' }
   ] as BtnToggleOption[];
 
-  categories: { label: string; value: string }[] = [];
+  categories: CpsColumnFilterCategoryOption[] = [];
 
   _tableInstance: Table | TreeTable;
 
@@ -54,10 +60,12 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   private _updateCategories() {
     if (this.type !== 'category') return;
     if (this.categoryOptions.length > 0) {
-      this.categories = this.categoryOptions.map((o) => ({
-        label: o,
-        value: o
-      }));
+      if (typeof this.categoryOptions[0] === 'string') {
+        this.categories = (this.categoryOptions as string[]).map((o) => ({
+          label: o,
+          value: o
+        }));
+      }
     } else {
       let cats = [];
       if (this._tableInstance instanceof Table) {

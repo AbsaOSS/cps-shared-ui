@@ -9,14 +9,11 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { TableColumnFilterComponent } from '../../cps-table/table-column-filter/table-column-filter.component';
-import { CpsFilterMatchMode } from '../../cps-table/cps-filter-match-mode';
-
-export type CpsTreeTableColumnFilterType =
-  | 'text'
-  | 'number'
-  | 'date'
-  | 'boolean'
-  | 'category';
+import {
+  CpsColumnFilterType,
+  CpsColumnFilterMatchMode,
+  CpsColumnFilterCategoryOption
+} from '../../cps-table/cps-column-filter-types';
 
 @Directive({
   standalone: true,
@@ -27,16 +24,20 @@ export class CpsTreeTableColumnFilterDirective
   implements OnInit, OnChanges, OnDestroy
 {
   @Input('cpsTTColFilter') field: string | undefined;
-  @Input() filterType: CpsTreeTableColumnFilterType = 'text';
+  @Input() filterType: CpsColumnFilterType = 'text';
   @Input() filterPersistent = false;
   @Input() filterShowClearButton = true;
   @Input() filterShowApplyButton = true;
   @Input() filterShowCloseButton = false;
   @Input() filterShowMatchModes = true;
-  @Input() filterMatchModes: CpsFilterMatchMode[] = [];
+  @Input() filterMatchModes: CpsColumnFilterMatchMode[] = [];
   @Input() filterShowOperator = true;
   @Input() filterHideOnClear = false;
-  @Input() filterCategoryOptions: string[] = [];
+  @Input() filterCategoryOptions: CpsColumnFilterCategoryOption[] | string[] =
+    [];
+
+  @Input() filterAsButtonToggle = false; // for category filterType only
+  @Input() filterSingleSelection = false; // for category filterType only
   @Input() filterPlaceholder = '';
 
   filterCompRef: ComponentRef<TableColumnFilterComponent>;
@@ -69,6 +70,8 @@ export class CpsTreeTableColumnFilterDirective
     this.filterCompRef.setInput('maxConstraints', 1);
     this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
     this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);
+    this.filterCompRef.setInput('asButtonToggle', this.filterAsButtonToggle);
+    this.filterCompRef.setInput('singleSelection', this.filterSingleSelection);
     this.filterCompRef.setInput(
       'placeholder',
       this.filterPlaceholder || this._getDefaultPlaceholder()

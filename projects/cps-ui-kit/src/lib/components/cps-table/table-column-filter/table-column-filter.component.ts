@@ -18,7 +18,11 @@ import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
-import { CpsFilterMatchMode } from '../cps-filter-match-mode';
+import {
+  CpsColumnFilterCategoryOption,
+  CpsColumnFilterMatchMode,
+  CpsColumnFilterType
+} from '../cps-column-filter-types';
 
 @Component({
   selector: 'table-column-filter',
@@ -37,17 +41,20 @@ import { CpsFilterMatchMode } from '../cps-filter-match-mode';
 })
 export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() field: string | undefined;
-  @Input() type = 'text';
+  @Input() type: CpsColumnFilterType = 'text';
   @Input() persistent = false;
   @Input() showClearButton = true;
   @Input() showApplyButton = true;
   @Input() showCloseButton = false;
   @Input() showMatchModes = true;
-  @Input() matchModes: CpsFilterMatchMode[] = [];
+  @Input() matchModes: CpsColumnFilterMatchMode[] = [];
   @Input() showOperator = true;
   @Input() maxConstraints = 2;
   @Input() hideOnClear = false;
-  @Input() categoryOptions: string[] = [];
+  @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
+
+  @Input() asButtonToggle = false; // for category type only
+  @Input() singleSelection = false; // for category type only
   @Input() placeholder = '';
 
   operator: string = FilterOperator.AND;
@@ -76,28 +83,28 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
 
   private filterMatchModeOptions = {
     text: [
-      CpsFilterMatchMode.STARTS_WITH,
-      CpsFilterMatchMode.CONTAINS,
-      CpsFilterMatchMode.NOT_CONTAINS,
-      CpsFilterMatchMode.ENDS_WITH,
-      CpsFilterMatchMode.EQUALS,
-      CpsFilterMatchMode.NOT_EQUALS
+      CpsColumnFilterMatchMode.STARTS_WITH,
+      CpsColumnFilterMatchMode.CONTAINS,
+      CpsColumnFilterMatchMode.NOT_CONTAINS,
+      CpsColumnFilterMatchMode.ENDS_WITH,
+      CpsColumnFilterMatchMode.EQUALS,
+      CpsColumnFilterMatchMode.NOT_EQUALS
     ],
     number: [
-      CpsFilterMatchMode.EQUALS,
-      CpsFilterMatchMode.NOT_EQUALS,
-      CpsFilterMatchMode.LESS_THAN,
-      CpsFilterMatchMode.LESS_THAN_OR_EQUAL_TO,
-      CpsFilterMatchMode.GREATER_THAN,
-      CpsFilterMatchMode.GREATER_THAN_OR_EQUAL_TO
+      CpsColumnFilterMatchMode.EQUALS,
+      CpsColumnFilterMatchMode.NOT_EQUALS,
+      CpsColumnFilterMatchMode.LESS_THAN,
+      CpsColumnFilterMatchMode.LESS_THAN_OR_EQUAL_TO,
+      CpsColumnFilterMatchMode.GREATER_THAN,
+      CpsColumnFilterMatchMode.GREATER_THAN_OR_EQUAL_TO
     ],
     date: [
-      CpsFilterMatchMode.DATE_IS,
-      CpsFilterMatchMode.DATE_IS_NOT,
-      CpsFilterMatchMode.DATE_BEFORE,
-      CpsFilterMatchMode.DATE_AFTER
+      CpsColumnFilterMatchMode.DATE_IS,
+      CpsColumnFilterMatchMode.DATE_IS_NOT,
+      CpsColumnFilterMatchMode.DATE_BEFORE,
+      CpsColumnFilterMatchMode.DATE_AFTER
     ]
-  } as { [key: string]: CpsFilterMatchMode[] };
+  } as { [key: string]: CpsColumnFilterMatchMode[] };
 
   currentMatchModes: SelectItem[] | undefined;
 
@@ -216,7 +223,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   getDefaultMatchMode(): string {
-    const getMatchMode = (val: CpsFilterMatchMode) => {
+    const getMatchMode = (val: CpsColumnFilterMatchMode) => {
       if (this.type in this.filterMatchModeOptions) {
         return this.filterMatchModeOptions[this.type].includes(val)
           ? val
@@ -228,15 +235,15 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
 
     switch (this.type) {
       case 'text':
-        return getMatchMode(CpsFilterMatchMode.STARTS_WITH);
+        return getMatchMode(CpsColumnFilterMatchMode.STARTS_WITH);
       case 'number':
-        return getMatchMode(CpsFilterMatchMode.EQUALS);
+        return getMatchMode(CpsColumnFilterMatchMode.EQUALS);
       case 'date':
-        return getMatchMode(CpsFilterMatchMode.DATE_IS);
+        return getMatchMode(CpsColumnFilterMatchMode.DATE_IS);
       case 'category':
-        return CpsFilterMatchMode.IN;
+        return CpsColumnFilterMatchMode.IN;
       default:
-        return getMatchMode(CpsFilterMatchMode.CONTAINS);
+        return getMatchMode(CpsColumnFilterMatchMode.CONTAINS);
     }
   }
 

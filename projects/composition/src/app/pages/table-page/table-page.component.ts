@@ -12,7 +12,7 @@ import {
   BtnToggleOption,
   CpsTableSize,
   TabChangeEvent,
-  CpsFilterMatchMode
+  CpsColumnFilterMatchMode
 } from 'cps-ui-kit';
 
 @Component({
@@ -37,8 +37,8 @@ export class TablePageComponent implements OnInit {
   selectedTabIndex = 0;
 
   dateMatchModes = [
-    CpsFilterMatchMode.DATE_BEFORE,
-    CpsFilterMatchMode.DATE_AFTER
+    CpsColumnFilterMatchMode.DATE_BEFORE,
+    CpsColumnFilterMatchMode.DATE_AFTER
   ];
 
   sizesOptions = [
