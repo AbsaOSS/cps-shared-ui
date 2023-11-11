@@ -102,6 +102,10 @@ export class CpsTableColumnFilterDirective
     this.filterCompRef?.instance?.clearFilter();
   }
 
+  clearFilterValues() {
+    this.filterCompRef?.instance?.clearFilterValues();
+  }
+
   ngOnDestroy(): void {
     this.filterCompRef.destroy();
     this.viewContainerRef.clear();

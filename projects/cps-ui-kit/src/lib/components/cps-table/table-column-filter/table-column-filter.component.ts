@@ -141,7 +141,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
       this._updateFilterApplied(value)
     );
     if (!this._tableInstance.filters[<string>this.field]) {
-      this.initFieldFilterConstraint();
+      this._initFieldFilterConstraint();
     }
 
     if (this.maxConstraints > 1 && this.type !== 'category') {
@@ -174,7 +174,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  initFieldFilterConstraint() {
+  private _initFieldFilterConstraint() {
     const defaultMatchMode = this.getDefaultMatchMode();
     if (this._tableInstance instanceof Table) {
       this._tableInstance.filters[<string>this.field] = [
@@ -304,9 +304,13 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   clearFilter() {
-    this.initFieldFilterConstraint();
+    this.clearFilterValues();
     this._tableInstance._filter();
     if (this.hideOnClear) this.hide();
+  }
+
+  clearFilterValues() {
+    this._initFieldFilterConstraint();
   }
 
   applyFilter() {
@@ -321,7 +325,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   onBeforeMenuHidden() {
-    if (!this.isFilterApplied) this.initFieldFilterConstraint();
+    if (!this.isFilterApplied) this.clearFilterValues();
   }
 
   onMenuHidden() {
