@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -73,7 +72,6 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    private elementRef: ElementRef,
     private renderer: Renderer2
   ) {
     if (this._control) {
@@ -155,7 +153,6 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this.renderer.setStyle(hiddenSpan, 'left', '-9999px');
     this.renderer.setStyle(hiddenSpan, 'font-size', '16px');
     this.renderer.setStyle(hiddenSpan, 'letter-spacing', '0.05em');
-    this.renderer.setStyle(hiddenSpan, 'border', '0.0625em solid black');
     this.renderer.setStyle(
       hiddenSpan,
       'font-family',
@@ -170,7 +167,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
       this.renderer.appendChild(hiddenSpan, text);
 
       let width = hiddenSpan.offsetWidth || 0;
-      width += 24;
+      width += 26;
       if (opt.icon) {
         width += 16;
         if (opt.label) width += 8;
