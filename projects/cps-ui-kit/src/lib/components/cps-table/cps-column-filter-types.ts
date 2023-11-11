@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-export enum CpsFilterMatchMode {
+export enum CpsColumnFilterMatchMode {
   STARTS_WITH = 'startsWith',
   CONTAINS = 'contains',
   NOT_CONTAINS = 'notContains',
@@ -21,3 +21,18 @@ export enum CpsFilterMatchMode {
   DATE_BEFORE = 'dateBefore',
   DATE_AFTER = 'dateAfter'
 }
+
+export type CpsColumnFilterCategoryOption = {
+  value: any;
+  label?: string;
+  icon?: string;
+  disabled?: boolean;
+  tooltip?: string;
+};
+
+export type CpsColumnFilterType =
+  | 'text'
+  | 'number'
+  | 'date'
+  | 'boolean'
+  | 'category';

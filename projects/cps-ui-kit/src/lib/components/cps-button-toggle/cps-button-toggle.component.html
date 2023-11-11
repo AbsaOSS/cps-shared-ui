@@ -62,7 +62,11 @@
       option.value | checkOptionSelected : value : multiple : true : ''
     "
     (change)="updateValueEvent($event)" />
-  <span class="cps-btn-toggle-content-option-content" #optionContent>
+  <span
+    class="cps-btn-toggle-content-option-content"
+    [ngStyle]="{
+      'min-width': largestButtonWidth ? largestButtonWidth + 'px' : 'none'
+    }">
     <cps-icon
       *ngIf="option.icon"
       [ngClass]="{ 'me-2': !!option.label }"
