@@ -1,5 +1,6 @@
 $color-calm: var(--cps-color-calm);
 $dark-text-color: var(--cps-color-text-dark);
+$darkest-text-color: var(--cps-color-text-darkest);
 $line-color: var(--cps-color-line-mid);
 $operator-bg-color: var(--cps-color-bg-light);
 
@@ -38,12 +39,20 @@ $operator-bg-color: var(--cps-color-bg-light);
   max-height: 500px;
   overflow: auto;
   & &-header {
-    height: 32px;
+    min-height: 32px;
     padding: 8px;
     border-bottom: 1px solid $line-color;
     background: $operator-bg-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-title {
+      font-family: 'Source Sans Pro', sans-serif;
+      color: $darkest-text-color;
+      max-width: 390px;
+    }
     cps-icon {
-      float: right;
+      margin-left: 8px;
       cursor: pointer;
       &:hover {
         color: var(--cps-color-calm);
