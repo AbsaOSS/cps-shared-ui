@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, Optional } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  Optional,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata } from 'primeng/api';
@@ -40,6 +46,9 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   @Input() placeholder = '';
   @Input() hasApplyButton = true;
 
+  @ViewChild('categoryAutocompleteComponent')
+  categoryAutocompleteComponent?: CpsAutocompleteComponent;
+
   booleanOptions = [
     { label: 'True', value: 'true' },
     { label: 'False', value: 'false' }
@@ -48,6 +57,10 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   categories: CpsColumnFilterCategoryOption[] = [];
 
   _tableInstance: Table | TreeTable;
+
+  get isCategoryDropdownOpened() {
+    return this.categoryAutocompleteComponent?.isOpened || false;
+  }
 
   constructor(@Optional() public dt: Table, @Optional() public tt: TreeTable) {
     this._tableInstance = dt || tt;

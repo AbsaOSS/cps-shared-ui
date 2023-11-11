@@ -6,7 +6,9 @@ import {
   OnDestroy,
   OnInit,
   Optional,
-  ViewChild
+  QueryList,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -56,6 +58,9 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() asButtonToggle = false; // for category type only
   @Input() singleSelection = false; // for category type only
   @Input() placeholder = '';
+
+  @ViewChildren('constraintComponent')
+  constraintCompList!: QueryList<TableColumnFilterConstraintComponent>;
 
   operator: string = FilterOperator.AND;
 
@@ -114,6 +119,11 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   _tableInstance: Table | TreeTable;
 
   private _isFilterApplied = false;
+
+  get isCategoryDropdownOpened() {
+    if (this.type !== 'category') return false;
+    return this.constraintCompList?.first?.isCategoryDropdownOpened || false;
+  }
 
   constructor(
     public elementRef: ElementRef,
