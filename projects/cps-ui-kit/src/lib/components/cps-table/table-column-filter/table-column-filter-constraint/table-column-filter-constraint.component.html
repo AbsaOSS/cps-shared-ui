@@ -17,9 +17,10 @@
     (valueChanged)="onValueChange($event)"
     type="number"></cps-input>
 
-  <div class="cps-table-col-filter-constraint-boolean">
+  <div
+    class="cps-table-col-filter-constraint-btn-toggles"
+    *ngSwitchCase="'boolean'">
     <cps-button-toggle
-      *ngSwitchCase="'boolean'"
       [options]="booleanOptions"
       [value]="filterConstraint?.value"
       (valueChanged)="onValueChange($event)"
@@ -51,14 +52,15 @@
       [returnObject]="false"
       [multiple]="!singleSelection">
     </cps-autocomplete>
-    <cps-button-toggle
-      *ngIf="asButtonToggle"
-      [options]="categories"
-      [value]="filterConstraint?.value"
-      optionTooltipPosition="top"
-      (valueChanged)="onValueChange($event)"
-      [mandatory]="false"
-      [multiple]="!singleSelection">
-    </cps-button-toggle>
+    <div class="cps-table-col-filter-constraint-btn-toggles">
+      <cps-button-toggle
+        *ngIf="asButtonToggle"
+        [options]="categories"
+        [value]="filterConstraint?.value"
+        (valueChanged)="onValueChange($event)"
+        [mandatory]="false"
+        [multiple]="!singleSelection">
+      </cps-button-toggle>
+    </div>
   </ng-container>
 </ng-container>

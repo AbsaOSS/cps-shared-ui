@@ -88,13 +88,17 @@ $tbar-normal-height: 72px;
         .cps-table-tbar-reload-btn {
           display: contents;
           cps-icon {
-            margin-left: 8px;
+            margin-left: 12px;
             margin-right: 4px;
-            cursor: pointer;
           }
-          cps-icon:hover {
-            .cps-icon {
-              color: $color-prepared !important;
+          &:not(.btn-disabled) {
+            cps-icon {
+              cursor: pointer;
+            }
+            cps-icon:hover {
+              .cps-icon {
+                color: $color-prepared !important;
+              }
             }
           }
         }
