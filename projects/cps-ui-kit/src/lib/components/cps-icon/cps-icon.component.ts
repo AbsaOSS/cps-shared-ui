@@ -48,6 +48,7 @@ export const iconNames = [
   'filter',
   'filter_2',
   'filter-funnel',
+  'filter-funnel-filled',
   'follow',
   'glossary',
   'graph',

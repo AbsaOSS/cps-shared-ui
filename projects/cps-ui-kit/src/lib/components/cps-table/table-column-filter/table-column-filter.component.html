@@ -94,12 +94,12 @@
     </div>
   </cps-menu>
   <cps-icon
-    icon="filter-funnel"
+    [icon]="isFilterApplied ? 'filter-funnel-filled' : 'filter-funnel'"
     size="13"
     (click)="columnFilterMenu.toggle($event)"
     class="cps-table-col-filter-menu-button"
     [ngClass]="{
-      'cps-table-col-filter-menu-button-active': hasFilter()
+      'cps-table-col-filter-menu-button-active': isFilterApplied
     }"
     >>
   </cps-icon>
