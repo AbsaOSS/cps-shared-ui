@@ -27,7 +27,7 @@ $operator-bg-color: var(--cps-color-bg-light);
     }
 
     .cps-table-col-filter-menu-button-active {
-      color: $color-calm;
+      color: var(--cps-color-calm-lighten1);
     }
   }
 }

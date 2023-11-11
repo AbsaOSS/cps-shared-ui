@@ -118,7 +118,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
 
   _tableInstance: Table | TreeTable;
 
-  private _isFilterApplied = false;
+  isFilterApplied = false;
 
   get isCategoryDropdownOpened() {
     if (this.type !== 'category') return false;
@@ -163,14 +163,14 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     const curFilter = value.filters[<string>this.field];
     if (curFilter) {
       if (Array.isArray(curFilter)) {
-        this._isFilterApplied = (<FilterMetadata[]>curFilter).some(
-          (meta) => meta.value !== null
+        this.isFilterApplied = (<FilterMetadata[]>curFilter).some(
+          (meta) => !!meta.value
         );
       } else {
-        this._isFilterApplied = curFilter.value !== null;
+        this.isFilterApplied = !!curFilter.value;
       }
     } else {
-      this._isFilterApplied = false;
+      this.isFilterApplied = false;
     }
   }
 
@@ -299,19 +299,6 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     );
   }
 
-  hasFilter(): boolean {
-    const fieldFilter = this._tableInstance.filters[<string>this.field];
-    if (fieldFilter) {
-      if (Array.isArray(fieldFilter))
-        return !this._tableInstance.isFilterBlank(
-          (<FilterMetadata[]>fieldFilter)[0].value
-        );
-      else return !this._tableInstance.isFilterBlank(fieldFilter.value);
-    }
-
-    return false;
-  }
-
   hide() {
     this.columnFilterMenu.hide();
   }
@@ -334,7 +321,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   onBeforeMenuHidden() {
-    if (!this._isFilterApplied) this.initFieldFilterConstraint();
+    if (!this.isFilterApplied) this.initFieldFilterConstraint();
   }
 
   onMenuHidden() {
