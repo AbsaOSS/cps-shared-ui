@@ -33,6 +33,7 @@ export class CpsTableColumnFilterDirective
   @Input() filterMatchModes: CpsColumnFilterMatchMode[] = [];
   @Input() filterShowOperator = true;
   @Input() filterMaxConstraints = 2;
+  @Input() filterHeaderTitle = '';
   @Input() filterHideOnClear = false;
   @Input() filterCategoryOptions: CpsColumnFilterCategoryOption[] | string[] =
     [];
@@ -69,6 +70,7 @@ export class CpsTableColumnFilterDirective
     this.filterCompRef.setInput('matchModes', this.filterMatchModes);
     this.filterCompRef.setInput('showOperator', this.filterShowOperator);
     this.filterCompRef.setInput('maxConstraints', this.filterMaxConstraints);
+    this.filterCompRef.setInput('headerTitle', this.filterHeaderTitle);
     this.filterCompRef.setInput('hideOnClear', this.filterHideOnClear);
     this.filterCompRef.setInput('categoryOptions', this.filterCategoryOptions);
     this.filterCompRef.setInput('asButtonToggle', this.filterAsButtonToggle);

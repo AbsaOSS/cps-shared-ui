@@ -52,6 +52,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() matchModes: CpsColumnFilterMatchMode[] = [];
   @Input() showOperator = true;
   @Input() maxConstraints = 2;
+  @Input() headerTitle = '';
   @Input() hideOnClear = false;
   @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
 

@@ -9,8 +9,14 @@
     <div class="cps-table-col-filter-menu-content">
       <div
         class="cps-table-col-filter-menu-content-header"
-        *ngIf="showCloseButton">
-        <cps-icon icon="close-x" (click)="onCloseClick()"></cps-icon>
+        *ngIf="showCloseButton || headerTitle">
+        <span class="cps-table-col-filter-menu-content-header-title">
+          {{ headerTitle }}
+        </span>
+        <cps-icon
+          *ngIf="showCloseButton"
+          icon="close-x"
+          (click)="onCloseClick()"></cps-icon>
       </div>
       <div
         class="cps-table-col-filter-menu-content-operator"
