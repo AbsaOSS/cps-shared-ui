@@ -9,7 +9,7 @@ import {
   CpsTabGroupComponent,
   CpsTabComponent,
   CpsButtonToggleComponent,
-  BtnToggleOption,
+  CpsButtonToggleOption,
   CpsTableSize,
   TabChangeEvent,
   CpsColumnFilterMatchMode
@@ -45,7 +45,7 @@ export class TablePageComponent implements OnInit {
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
     { label: 'Large', value: 'large' }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
 
   selSize: CpsTableSize = 'small';
 

@@ -94,6 +94,10 @@ export class CpsTableColumnFilterDirective
     }
   }
 
+  hideFilter() {
+    this.filterCompRef?.instance?.hide();
+  }
+
   clearFilter() {
     this.filterCompRef?.instance?.clearFilter();
   }
