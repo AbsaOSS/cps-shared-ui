@@ -301,12 +301,14 @@ export class CpsTreeTableComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.loading && this.clearGlobalFilterOnLoading)
-      this.clearGlobalFilter();
+    if (this.loading) {
+      this.clearSelection();
+      if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
+    }
 
     const dataChanges = changes?.data;
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {
-      this.selectedRows = [];
+      this.clearSelection();
     }
   }
 
@@ -412,11 +414,15 @@ export class CpsTreeTableComponent
     this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
     this.data = [...this.data];
     this.rowsRemoved.emit(this.selectedRows);
-    this.selectedRows = [];
+    this.clearSelection();
     setTimeout(() => {
       this._recalcVirtualHeight();
       this.cdRef.markForCheck();
     });
+  }
+
+  clearSelection() {
+    this.selectedRows = [];
   }
 
   onEditRowClicked(node: any) {
