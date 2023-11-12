@@ -42,6 +42,7 @@
         [showButtonBar]="showTodayButton"
         [inline]="true"
         (onSelect)="onSelectCalendarDate($event)"
+        (onClearClick)="onClearCalendarDate()"
         [showOtherMonths]="false"
         [minDate]="minDate"
         [maxDate]="maxDate">

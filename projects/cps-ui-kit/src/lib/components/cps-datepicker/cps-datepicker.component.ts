@@ -224,10 +224,12 @@ export class CpsDatepickerComponent
     this.error = message || 'Unknown error';
   }
 
-  onSelectCalendarDate(dateVal: Date) {
-    this.toggleCalendar(false);
-    this._dateToString(dateVal);
+  onClearCalendarDate() {
+    this.onSelectCalendarDate(null);
+  }
 
+  onSelectCalendarDate(dateVal: Date | null) {
+    this.toggleCalendar(false);
     this.writeValue(dateVal);
     this.onChange(dateVal);
     this.valueChanged.emit(dateVal);
