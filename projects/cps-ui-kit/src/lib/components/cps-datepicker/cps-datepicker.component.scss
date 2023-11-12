@@ -1,4 +1,5 @@
 $color-calm: var(--cps-color-calm);
+$color-prepared: var(--cps-color-prepared);
 $color-highlight: #f8f4f5;
 $color-selected-background: #efe4e7;
 $other-month-color: var(--cps-color-text-light);
@@ -145,6 +146,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
     }
     .p-datepicker .p-datepicker-buttonbar .p-button {
       width: auto;
+      color: $color-prepared;
     }
     .p-datepicker .p-timepicker {
       border-top: 1px solid #dee2e6;

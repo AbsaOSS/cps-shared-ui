@@ -1,0 +1,16 @@
+.cps-tooltip {
+  position: absolute;
+  top: 0;
+  cursor: default;
+  font-size: 14px;
+  background: #f9f5f6;
+  color: var(--cps-color-text-darkest);
+  font-family: 'Source Sans Pro', sans-serif;
+  border: 1px solid var(--cps-color-calm);
+  overflow-wrap: break-word;
+  border-radius: 3px;
+  padding: 3px;
+  transition: opacity 0.2s;
+  opacity: 0;
+  z-index: 2000;
+}

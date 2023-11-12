@@ -121,7 +121,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
   destroyCallback: Nullable<Function>;
   overlaySubscription: Subscription | undefined;
 
-  targetResizeObserver: ResizeObserver;
+  resizeObserver: ResizeObserver;
 
   itemsClasses: string[] = [];
 
@@ -136,10 +136,12 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     public config: PrimeNGConfig,
     public overlayService: OverlayService
   ) {
-    this.targetResizeObserver = new ResizeObserver((entries) => {
-      entries.forEach((entry) => {
-        if (this.target && entry) this.align();
-      });
+    this.resizeObserver = new ResizeObserver((entries) => {
+      if (this.target) {
+        entries.forEach((entry) => {
+          if (entry) this.align();
+        });
+      }
     });
   }
 
@@ -192,7 +194,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.target = target || event?.currentTarget || event?.target;
-    if (this.target) this.targetResizeObserver.observe(this.target);
+    if (this.target) this.resizeObserver.observe(this.target);
     this.overlayVisible = true;
     this.render = true;
     this.position = pos || 'default';
@@ -438,6 +440,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
       this.beforeMenuHidden.emit(null);
     } else if (event.toState === 'open') {
       this.container = event.element;
+      if (this.container) this.resizeObserver.observe(this.container);
       this.appendContainer();
       this.align();
       this.bindDocumentClickListener();
@@ -586,7 +589,7 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.overlaySubscription?.unsubscribe();
 
-    this.targetResizeObserver?.disconnect();
+    this.resizeObserver?.disconnect();
   }
 
   ngOnDestroy() {
