@@ -2,7 +2,7 @@
   <cps-menu
     #columnFilterMenu
     [withArrow]="false"
-    [persistent]="persistent || isCategoryDropdownOpened"
+    [persistent]="persistent || (showApplyButton && isCategoryDropdownOpened)"
     (menuShown)="onMenuShown()"
     (menuHidden)="onMenuHidden()"
     (beforeMenuHidden)="onBeforeMenuHidden()">
