@@ -161,14 +161,16 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   private _updateFilterApplied(value: any) {
-    const curFilter = value.filters[<string>this.field];
-    if (curFilter) {
-      if (Array.isArray(curFilter)) {
-        this.isFilterApplied = (<FilterMetadata[]>curFilter).some(
-          (meta) => !!meta.value
+    const fieldFilter = value.filters[<string>this.field];
+    if (fieldFilter) {
+      if (Array.isArray(fieldFilter)) {
+        this.isFilterApplied = (<FilterMetadata[]>fieldFilter).some(
+          (meta) => !this._tableInstance.isFilterBlank(meta.value)
         );
       } else {
-        this.isFilterApplied = !!curFilter.value;
+        this.isFilterApplied = !this._tableInstance.isFilterBlank(
+          fieldFilter.value
+        );
       }
     } else {
       this.isFilterApplied = false;

@@ -107,7 +107,7 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   onValueChange(value: any) {
     (<any>this.filterConstraint).value = value;
 
-    if (value === '' || !this.hasApplyButton) {
+    if (this._tableInstance.isFilterBlank(value) || !this.hasApplyButton) {
       this._tableInstance._filter();
     }
   }
