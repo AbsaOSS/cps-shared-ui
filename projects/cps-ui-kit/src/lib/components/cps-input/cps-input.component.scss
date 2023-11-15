@@ -147,19 +147,24 @@ $hover-transition-duration: 0.2s;
       }
 
       .cps-input-prefix {
-        height: -webkit-fill-available;
         display: flex;
         position: absolute;
+        height: 100%;
         top: 50%;
         left: 0.75rem;
         transform: translate(0, -50%);
         &-icon {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           transition-duration: $hover-transition-duration;
-          height: -webkit-fill-available;
           margin-right: 0.5rem;
           color: $input-prefix-icon-color;
         }
         &-text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           color: $input-prefix-text-color;
           cursor: default;
           line-height: 1.2;
