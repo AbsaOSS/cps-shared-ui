@@ -7,9 +7,9 @@ $disabled-label-color: var(--cps-color-text-light);
 :host {
   .cps-radio-group-content-button {
     display: grid;
-    grid-template-columns: 1em auto;
+    grid-template-columns: 1rem auto;
     align-items: center;
-    gap: 0.75em;
+    gap: 0.75rem;
     &-label {
       font-size: 1rem;
       color: $label-color;
@@ -26,9 +26,9 @@ $disabled-label-color: var(--cps-color-text-light);
 
       font: inherit;
       color: $border-color;
-      width: 1.25em;
-      height: 1.25em;
-      border: 0.15em solid currentColor;
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 0.15rem solid currentColor;
       border-radius: 50%;
 
       display: grid;
@@ -46,17 +46,17 @@ $disabled-label-color: var(--cps-color-text-light);
 
       &::before {
         content: '';
-        width: 0.625em;
-        height: 0.625em;
+        width: 0.625rem;
+        height: 0.625rem;
         border-radius: 50%;
         transform: scale(0);
         transition: 120ms transform ease-in-out;
-        box-shadow: inset 1em 1em $color;
+        box-shadow: inset 1rem 1rem $color;
         background-color: CanvasText;
       }
 
       &[disabled]::before {
-        box-shadow: inset 1em 1em $disabled-color;
+        box-shadow: inset 1rem 1rem $disabled-color;
       }
 
       &:disabled + .cps-radio-group-content-button-label {
