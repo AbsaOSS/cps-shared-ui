@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 export class CpsChipComponent implements OnChanges {
   @Input() label = '';
   @Input() icon: IconType = '';
+  @Input() iconColor = 'text-darkest';
   @Input() iconPosition: 'before' | 'after' = 'before';
   @Input() closable = false;
   @Input() disabled = false;
