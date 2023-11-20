@@ -5,7 +5,7 @@ import {
   CpsRadioComponent,
   CpsRadioGroupComponent,
   CpsSelectComponent,
-  RadioOption
+  CpsRadioOption
 } from 'cps-ui-kit';
 
 @Component({
@@ -28,7 +28,7 @@ export class RadioPageComponent {
     { label: 'Option 1', value: 'first' },
     { label: 'Option 2', value: 'second' },
     { label: 'Option 3', value: 'third' }
-  ] as RadioOption[];
+  ] as CpsRadioOption[];
 
   partiallyDisabledOptions = [
     {
@@ -45,7 +45,7 @@ export class RadioPageComponent {
       tooltip: 'Third option is currently unavailable'
     },
     { label: 'Option 4', value: 'fourth' }
-  ] as RadioOption[];
+  ] as CpsRadioOption[];
 
   syncVal = 'first';
 

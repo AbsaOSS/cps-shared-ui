@@ -3,7 +3,7 @@ import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import {
   CPS_RADIO_GROUP,
   CpsRadioGroupComponent,
-  RadioOption
+  CpsRadioOption
 } from '../cps-radio-group.component';
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
@@ -21,7 +21,7 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   styleUrls: ['./cps-radio.component.scss']
 })
 export class CpsRadioComponent implements OnInit {
-  @Input() option!: RadioOption;
+  @Input() option!: CpsRadioOption;
   radioGroup?: CpsRadioGroupComponent;
   groupDisabled = false;
 

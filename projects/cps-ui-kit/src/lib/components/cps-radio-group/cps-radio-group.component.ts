@@ -17,7 +17,7 @@ import {
 } from '../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 
-export type RadioOption = {
+export type CpsRadioOption = {
   value: any;
   label?: string;
   disabled?: boolean;
@@ -47,7 +47,7 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   ]
 })
 export class CpsRadioGroupComponent implements ControlValueAccessor {
-  @Input() options = [] as RadioOption[];
+  @Input() options = [] as CpsRadioOption[];
   @Input() groupLabel = '';
   @Input() vertical = false;
   @Input() disabled = false;
@@ -93,10 +93,8 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
     this.value = value;
   }
 
-  updateValueEvent(event: any) {
-    event.preventDefault();
+  updateValueEvent(value: any) {
     if (this.disabled) return;
-    const value = event?.target?.value || '';
     this._updateValue(value);
   }
 
