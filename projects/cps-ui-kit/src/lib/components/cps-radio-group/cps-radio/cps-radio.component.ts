@@ -35,7 +35,7 @@ export class CpsRadioComponent implements OnInit {
     this.groupDisabled = this.radioGroup?.disabled ?? false;
   }
 
-  updateValueEvent(event: Event): void {
-    this.radioGroup?.updateValueEvent(event);
+  updateValueEvent(value: any): void {
+    this.radioGroup?.updateValueEvent(value);
   }
 }
