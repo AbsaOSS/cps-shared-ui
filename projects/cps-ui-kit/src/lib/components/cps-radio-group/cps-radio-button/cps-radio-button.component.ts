@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RadioOption } from '../cps-radio-group.component';
+import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 
@@ -15,7 +15,7 @@ let nextUniqueId = 0;
 export class CpsRadioButtonComponent {
   private _uniqueId = `cps-radio-button-${++nextUniqueId}`;
 
-  @Input() option!: RadioOption;
+  @Input() option!: CpsRadioOption;
   @Input() checked = false;
   @Input() groupDisabled = false;
   @Output() updateValueEvent = new EventEmitter<Event>();
@@ -27,6 +27,6 @@ export class CpsRadioButtonComponent {
   updateValue(event: Event): void {
     event.preventDefault();
     if (this.option.disabled) return;
-    this.updateValueEvent.emit(event);
+    this.updateValueEvent.emit(this.option.value);
   }
 }
