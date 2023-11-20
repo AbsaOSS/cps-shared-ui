@@ -198,6 +198,7 @@ $tbar-normal-height: 72px;
           font-family: 'Source Sans Pro', sans-serif;
           font-size: 14px;
           margin-right: 12px;
+          cursor: default;
         }
 
         .cps-select-box {
@@ -242,6 +243,10 @@ $tbar-normal-height: 72px;
       user-select: none;
       overflow: hidden;
       position: relative;
+    }
+
+    .p-paginator-current {
+      cursor: default;
     }
 
     .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,

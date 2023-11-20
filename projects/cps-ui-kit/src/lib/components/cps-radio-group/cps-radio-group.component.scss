@@ -14,6 +14,7 @@ $group-label-color: var(--cps-color-text-dark);
       margin-bottom: 0.75rem;
       align-items: center;
       display: inline-flex;
+      cursor: default;
 
       .cps-radio-group-label-info-circle {
         margin-left: 8px;
