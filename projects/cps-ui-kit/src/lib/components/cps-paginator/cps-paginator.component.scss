@@ -24,6 +24,7 @@ $elem-active-background: #f1eaec;
           font-family: 'Source Sans Pro', sans-serif;
           font-size: 14px;
           margin-right: 12px;
+          cursor: default;
         }
 
         .cps-select-box {
@@ -68,6 +69,10 @@ $elem-active-background: #f1eaec;
       user-select: none;
       overflow: hidden;
       position: relative;
+    }
+
+    .p-paginator-current {
+      cursor: default;
     }
 
     .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
