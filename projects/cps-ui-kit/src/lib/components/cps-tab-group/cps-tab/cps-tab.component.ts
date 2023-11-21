@@ -16,6 +16,8 @@ export class CpsTabComponent {
   @Input() tooltipContentClass = 'cps-tooltip-content';
   @Input() tooltipMaxWidth: number | string = '100%';
   @Input() tooltipPersistent = false;
+  @Input() badgeValue = '';
+  @Input() badgeTooltip = '';
   @ViewChild(TemplateRef) content!: TemplateRef<any>;
   active = false;
 }
