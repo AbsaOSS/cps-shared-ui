@@ -82,6 +82,18 @@
           padding: 10px;
           color: inherit;
         }
+        .cps-tab-badge {
+          min-width: 20px;
+          padding: 0 3px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: var(--cps-color-surprise);
+          color: white;
+          font-size: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
 
       &::-webkit-scrollbar {

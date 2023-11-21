@@ -1,12 +1,15 @@
 <div class="tabs-elems-group">
   <div class="tabs-elems-group-title">
-    Center-aligned tabs with slide transition and disabled last tab
+    Center-aligned tabs with slide transition, first tab badge and disabled last
+    tab
   </div>
   <cps-tab-group
     tabsBackground="bg-light"
     class="tab-example--center-aligned"
     (afterTabChanged)="changeTab($event)">
-    <cps-tab label="Tab 1">Content of tab 1</cps-tab>
+    <cps-tab label="Tab 1" badgeValue="7" badgeTooltip="Badge tooltip"
+      >Content of tab 1</cps-tab
+    >
     <cps-tab label="Tab 2">Content of tab 2</cps-tab>
     <cps-tab label="Tab 3">Content of tab 3</cps-tab>
     <cps-tab label="Tab 4" [disabled]="true">Content of tab 4</cps-tab>
