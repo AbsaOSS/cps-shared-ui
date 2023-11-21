@@ -1,6 +1,6 @@
 {
   "name": "cps-ui-kit",
-  "version": "0.127.0",
+  "version": "0.128.0",
   "peerDependencies": {
     "@angular/common": "15 - 16",
     "@angular/core": "15 - 16",

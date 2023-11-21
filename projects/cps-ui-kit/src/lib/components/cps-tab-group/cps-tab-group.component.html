@@ -23,18 +23,26 @@
         [tooltipMaxWidth]="tab.tooltipMaxWidth"
         [tooltipPersistent]="tab.tooltipPersistent"
         [tooltipContentClass]="tab.tooltipContentClass">
-        <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
-        </cps-icon>
-        <a class="cps-tab-link">{{ tab.label }}</a>
+        <ng-container
+          *ngTemplateOutlet="
+            tabHeaderTemplate;
+            context: {
+              tab: tab
+            }
+          "></ng-container>
       </li>
       <li
         *ngIf="!tab.tooltipText"
         class="cps-tab"
         (click)="!tab.disabled ? selectTab(tabIndex) : ''"
         [ngClass]="{ active: tab.active, disabled: tab.disabled }">
-        <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon">
-        </cps-icon>
-        <a class="cps-tab-link">{{ tab.label }}</a>
+        <ng-container
+          *ngTemplateOutlet="
+            tabHeaderTemplate;
+            context: {
+              tab: tab
+            }
+          "></ng-container>
       </li>
     </ng-container>
   </ul>
@@ -62,3 +70,19 @@
     </div>
   </ng-container>
 </div>
+
+<ng-template #tabHeaderTemplate let-tab="tab">
+  <cps-icon *ngIf="tab.icon" class="cps-tab-icon" [icon]="tab.icon"> </cps-icon>
+  <a class="cps-tab-link">{{ tab.label }}</a>
+  <ng-container *ngIf="tab.badgeValue">
+    <div
+      *ngIf="tab.badgeTooltip"
+      class="cps-tab-badge"
+      [cpsTooltip]="tab.badgeTooltip">
+      <span>{{ tab.badgeValue }}</span>
+    </div>
+    <div *ngIf="!tab.badgeTooltip" class="cps-tab-badge">
+      <span>{{ tab.badgeValue }}</span>
+    </div>
+  </ng-container>
+</ng-template>
