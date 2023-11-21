@@ -23,7 +23,7 @@ export class CpsChipComponent implements OnChanges {
   @Input() closable = false;
   @Input() disabled = false;
 
-  @Output() closed = new EventEmitter();
+  @Output() closed = new EventEmitter<string>();
 
   classesList = ['cps-chip'];
 
@@ -50,6 +50,6 @@ export class CpsChipComponent implements OnChanges {
 
   onCloseClick(event: any) {
     event.stopPropagation();
-    this.closed.emit();
+    this.closed.emit(this.label);
   }
 }
