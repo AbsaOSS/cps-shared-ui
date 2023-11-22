@@ -370,7 +370,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       this.resizing = true;
       this.lastPageX = event.pageX;
       this.lastPageY = event.pageY;
-      DomHandler.addClass(this.document.body, 'p-unselectable-text');
+      DomHandler.addClass(this.document.body, 'cps-unselectable-text');
       this.dialogRef.resizeInit(event);
     }
   }
@@ -428,7 +428,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   resizeEnd(event: MouseEvent) {
     if (this.resizing) {
       this.resizing = false;
-      DomHandler.removeClass(this.document.body, 'p-unselectable-text');
+      DomHandler.removeClass(this.document.body, 'cps-unselectable-text');
       this.dialogRef.resizeEnd(event);
     }
   }
@@ -450,7 +450,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       this.lastPageY = event.pageY;
 
       (this.container as HTMLDivElement).style.margin = '0';
-      DomHandler.addClass(this.document.body, 'p-unselectable-text');
+      DomHandler.addClass(this.document.body, 'cps-unselectable-text');
       this.dialogRef.dragStart(event);
     }
   }
@@ -492,7 +492,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   endDrag(event: MouseEvent) {
     if (this.dragging) {
       this.dragging = false;
-      DomHandler.removeClass(this.document.body, 'p-unselectable-text');
+      DomHandler.removeClass(this.document.body, 'cps-unselectable-text');
       this.dialogRef.dragEnd(event);
       this.cd.detectChanges();
     }

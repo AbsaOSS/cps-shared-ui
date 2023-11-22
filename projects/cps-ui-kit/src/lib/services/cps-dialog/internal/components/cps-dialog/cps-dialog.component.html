@@ -20,7 +20,6 @@
     #container
     [ngClass]="{
       'p-dialog p-dynamic-dialog p-component': true,
-      'p-dialog-rtl': config.rtl,
       'p-dialog-resizable': config.resizable,
       'p-dialog-draggable': config.draggable,
       'p-dialog-maximized': maximized
@@ -85,9 +84,6 @@
     </div>
     <div #content class="p-dialog-content" [ngStyle]="config.contentStyle">
       <ng-template pDynamicDialogContent></ng-template>
-    </div>
-    <div class="p-dialog-footer" *ngIf="config.footer">
-      {{ config.footer }}
     </div>
   </div>
 </div>

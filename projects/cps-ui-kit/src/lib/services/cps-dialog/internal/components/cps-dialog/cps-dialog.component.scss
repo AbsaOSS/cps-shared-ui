@@ -122,16 +122,34 @@
 /* Resizable */
 .p-dialog .p-resizable-handle {
   position: absolute;
-  font-size: 0.1px;
   display: block;
-  cursor: se-resize;
+  cursor: nwse-resize;
   width: 12px;
   height: 12px;
-  right: 1px;
-  bottom: 1px;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  &::after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 0;
+    box-shadow: 0 0px 0 1px var(--cps-color-calm),
+      0 7px 0 1px var(--cps-color-calm), 0 14px 0 1px var(--cps-color-calm);
+    transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
+    top: 50%;
+    left: 50%;
+  }
 }
 
 .p-confirm-dialog .p-dialog-content {
   display: flex;
   align-items: center;
+}
+
+:ng-deep {
+  .cps-unselectable-text {
+    user-select: none;
+  }
 }

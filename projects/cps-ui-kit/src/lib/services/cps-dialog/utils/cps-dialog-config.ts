@@ -16,6 +16,10 @@ export class CpsDialogConfig<T = any> {
    */
   headerInfoTooltip?: string;
   /**
+   * Header icon.
+   */
+  headerIcon?: string;
+  /**
    * Whether to show the header left border.
    */
   showHeaderBorder?: string;
@@ -23,10 +27,6 @@ export class CpsDialogConfig<T = any> {
    * Identifies the element (or elements) that labels the element it is applied to.
    */
   ariaLabelledBy?: string;
-  /**
-   * Footer text of the dialog.
-   */
-  footer?: string;
   /**
    * Width of the dialog.
    */
@@ -53,10 +53,6 @@ export class CpsDialogConfig<T = any> {
   disableClose?: boolean;
   /**
    * Inline style of the component.
-   */
-  rtl?: boolean;
-  /**
-   * Inline style of the comopnent.
    */
   style?: { [klass: string]: any } | null | undefined;
   /**
