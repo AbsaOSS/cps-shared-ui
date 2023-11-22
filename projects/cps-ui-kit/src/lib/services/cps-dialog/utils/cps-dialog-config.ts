@@ -22,7 +22,11 @@ export class CpsDialogConfig<T = any> {
   /**
    * Whether to show the header left border.
    */
-  showHeaderBorder?: string;
+  showHeaderLeftBorder?: string;
+  /**
+   * Whether to show the header bottom border.
+   */
+  showHeaderBottomBorder?: string;
   /**
    * Identifies the element (or elements) that labels the element it is applied to.
    */
@@ -103,14 +107,6 @@ export class CpsDialogConfig<T = any> {
    * Whether the dialog can be displayed full screen.
    */
   maximizable?: boolean;
-  /**
-   * Name of the maximize icon.
-   */
-  maximizeIcon?: string;
-  /**
-   * Name of the minimize icon.
-   */
-  minimizeIcon?: string;
   /**
    * Position of the dialog, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".
    */

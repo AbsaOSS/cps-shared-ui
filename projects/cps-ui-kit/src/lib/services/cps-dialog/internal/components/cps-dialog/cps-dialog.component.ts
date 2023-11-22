@@ -30,12 +30,11 @@ import {
 import { PrimeNGConfig, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
 import { TimesIcon } from 'primeng/icons/times';
-import { WindowMaximizeIcon } from 'primeng/icons/windowmaximize';
-import { WindowMinimizeIcon } from 'primeng/icons/windowminimize';
 import { ZIndexUtils } from 'primeng/utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -54,11 +53,10 @@ type VoidListener = () => void | null | undefined;
   standalone: true,
   imports: [
     CommonModule,
-    WindowMaximizeIcon,
-    WindowMinimizeIcon,
     TimesIcon,
     SharedModule,
-    CpsDialogContentDirective
+    CpsDialogContentDirective,
+    CpsButtonComponent
   ],
   templateUrl: './cps-dialog.component.html',
   styleUrls: ['./cps-dialog.component.scss'],
@@ -140,14 +138,6 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   get maximizable(): boolean {
     return this.config.maximizable!;
-  }
-
-  get maximizeIcon(): string {
-    return this.config.maximizeIcon!;
-  }
-
-  get minimizeIcon(): string {
-    return this.config.minimizeIcon!;
   }
 
   get style(): any {

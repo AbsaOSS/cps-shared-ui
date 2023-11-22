@@ -52,34 +52,24 @@
       *ngIf="config.showHeader === false ? false : true">
       <span class="p-dialog-title">{{ config.headerTitle }}</span>
       <div class="p-dialog-header-icons">
-        <button
+        <cps-button
           *ngIf="config.maximizable"
-          type="button"
-          [ngClass]="{
-            'p-dialog-header-icon p-dialog-header-maximize p-link': true
-          }"
-          (click)="maximize()"
-          (keydown.enter)="maximize()"
-          tabindex="-1"
-          pRipple>
-          <span
-            class="p-dialog-header-maximize-icon"
-            [ngClass]="maximized ? minimizeIcon : maximizeIcon"></span>
-          <WindowMaximizeIcon
-            *ngIf="!maximized && !maximizeIcon"
-            [styleClass]="'p-dialog-header-maximize-icon'" />
-          <WindowMinimizeIcon
-            *ngIf="maximized && !minimizeIcon"
-            [styleClass]="'p-dialog-header-maximize-icon'" />
-        </button>
-        <button
-          [ngClass]="'p-dialog-header-icon p-dialog-header-maximize p-link'"
-          type="button"
-          (click)="hide()"
-          (keydown.enter)="hide()"
-          *ngIf="config.showCloseBtn !== false">
-          <TimesIcon [styleClass]="'p-dialog-header-close-icon'" />
-        </button>
+          [icon]="maximized ? 'minimize' : 'maximize'"
+          size="small"
+          width="32"
+          color="graphite"
+          type="borderless"
+          (clicked)="maximize()">
+        </cps-button>
+        <cps-button
+          *ngIf="config.showCloseBtn !== false"
+          icon="close-x-2"
+          size="small"
+          width="32"
+          color="graphite"
+          type="borderless"
+          (clicked)="hide()">
+        </cps-button>
       </div>
     </div>
     <div #content class="p-dialog-content" [ngStyle]="config.contentStyle">
