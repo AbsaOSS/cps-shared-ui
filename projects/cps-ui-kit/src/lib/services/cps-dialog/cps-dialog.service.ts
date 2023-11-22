@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { DynamicDialogInjector } from 'primeng/dynamicdialog';
 import { DOCUMENT } from '@angular/common';
-import { CpsConfirmationComponent } from '../components/internal/cps-confirmation/cps-confirmation.component';
-import { CpsDialogConfig } from '../components/cps-dialog/cps-dialog-config';
-import { CpsDialogRef } from '../components/cps-dialog/cps-dialog-ref';
-import { CpsDialogComponent } from '../components/internal/cps-dialog/cps-dialog.component';
+import { CpsDialogRef } from './utils/cps-dialog-ref';
+import { CpsDialogConfig } from './utils/cps-dialog-config';
+import { CpsDialogComponent } from './internal/components/cps-dialog/cps-dialog.component';
+import { CpsConfirmationComponent } from './internal/components/cps-confirmation/cps-confirmation.component';
 
 @Injectable()
 export class CpsDialogService {

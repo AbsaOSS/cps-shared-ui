@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { CpsButtonComponent } from '../../cps-button/cps-button.component';
-import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
-import { CpsDialogConfig } from '../../cps-dialog/cps-dialog-config';
-import { CpsDialogRef } from '../../cps-dialog/cps-dialog-ref';
+import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
+import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 
 @Component({
   standalone: true,

@@ -34,9 +34,9 @@ import { TimesIcon } from 'primeng/icons/times';
 import { WindowMaximizeIcon } from 'primeng/icons/windowmaximize';
 import { WindowMinimizeIcon } from 'primeng/icons/windowminimize';
 import { ZIndexUtils } from 'primeng/utils';
-import { CpsDialogConfig } from '../../cps-dialog/cps-dialog-config';
-import { CpsDialogRef } from '../../cps-dialog/cps-dialog-ref';
-import { CpsDialogContent } from '../../cps-dialog/cps-dialog-content';
+import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
+import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -59,7 +59,7 @@ type VoidListener = () => void | null | undefined;
     WindowMinimizeIcon,
     TimesIcon,
     SharedModule,
-    CpsDialogContent
+    CpsDialogContentDirective
   ],
   templateUrl: './cps-dialog.component.html',
   styleUrls: ['./cps-dialog.component.scss'],
@@ -96,8 +96,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   lastPageY: number | undefined;
 
-  @ViewChild(CpsDialogContent)
-  insertionPoint: Nullable<CpsDialogContent>;
+  @ViewChild(CpsDialogContentDirective)
+  insertionPoint: Nullable<CpsDialogContentDirective>;
 
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
 

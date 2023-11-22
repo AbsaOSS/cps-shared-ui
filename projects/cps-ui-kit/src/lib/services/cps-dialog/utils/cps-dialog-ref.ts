@@ -122,4 +122,9 @@ export class CpsDialogRef {
    * @group Events
    */
   onMaximize: Observable<any> = this._onMaximize.asObservable();
+
+  /**
+   * Specifies if clicking the modal background should hide the dialog.
+   */
+  dismissableMask?: boolean;
 }

@@ -7,7 +7,7 @@ import { Directive, ViewContainerRef } from '@angular/core';
     class: 'p-element'
   }
 })
-export class CpsDialogContent {
+export class CpsDialogContentDirective {
   // eslint-disable-next-line no-useless-constructor
   constructor(public viewContainerRef: ViewContainerRef) {}
 }
