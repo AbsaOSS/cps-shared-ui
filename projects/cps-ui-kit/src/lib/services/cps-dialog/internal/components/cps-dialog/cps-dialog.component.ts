@@ -13,7 +13,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ComponentFactoryResolver,
   ComponentRef,
   ElementRef,
   Inject,
@@ -177,7 +176,6 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: any,
-    private componentFactoryResolver: ComponentFactoryResolver,
     private cd: ChangeDetectorRef,
     public renderer: Renderer2,
     public config: CpsDialogConfig,
@@ -188,18 +186,16 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit() {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.loadChildComponent(this.childComponentType!);
     this.cd.detectChanges();
   }
 
   loadChildComponent(componentType: Type<any>) {
-    const componentFactory =
-      this.componentFactoryResolver.resolveComponentFactory(componentType);
-
     const viewContainerRef = this.insertionPoint?.viewContainerRef;
     viewContainerRef?.clear();
 
-    this.componentRef = viewContainerRef?.createComponent(componentFactory);
+    this.componentRef = viewContainerRef?.createComponent(componentType);
   }
 
   moveOnTop() {
@@ -261,18 +257,22 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   close() {
+    if (this.config?.disableClose || this.dialogRef?.disableClose) return;
+
     this.visible = false;
     this.cd.markForCheck();
   }
 
   hide() {
+    if (this.config?.disableClose) return;
+
     if (this.dialogRef) {
-      this.dialogRef.close();
+      if (!this.dialogRef.disableClose) this.dialogRef.close();
     }
   }
 
   enableModality() {
-    if (this.config.closable !== false && this.config.dismissableMask) {
+    if (this.config.showCloseBtn !== false && !this.config.disableClose) {
       this.maskClickListener = this.renderer.listen(
         this.wrapper,
         'mousedown',
@@ -291,7 +291,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   disableModality() {
     if (this.wrapper) {
-      if (this.config.dismissableMask) {
+      if (!this.config.disableClose) {
         this.unbindMaskClickListener();
       }
 
@@ -575,7 +575,10 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     }
     this.bindDocumentKeydownListener();
 
-    if (this.config.closeOnEscape !== false && this.config.closable !== false) {
+    if (
+      this.config.closeOnEscape !== false &&
+      this.config.showCloseBtn !== false
+    ) {
       this.bindDocumentEscapeListener();
     }
 

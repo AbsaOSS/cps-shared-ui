@@ -51,7 +51,7 @@
       class="p-dialog-header"
       (mousedown)="initDrag($event)"
       *ngIf="config.showHeader === false ? false : true">
-      <span class="p-dialog-title">{{ config.header }}</span>
+      <span class="p-dialog-title">{{ config.headerTitle }}</span>
       <div class="p-dialog-header-icons">
         <button
           *ngIf="config.maximizable"
@@ -78,7 +78,7 @@
           type="button"
           (click)="hide()"
           (keydown.enter)="hide()"
-          *ngIf="config.closable !== false">
+          *ngIf="config.showCloseBtn !== false">
           <TimesIcon [styleClass]="'p-dialog-header-close-icon'" />
         </button>
       </div>

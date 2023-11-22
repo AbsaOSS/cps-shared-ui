@@ -4,9 +4,21 @@ export class CpsDialogConfig<T = any> {
    */
   data?: T;
   /**
+   * Whether to show the header or not.
+   */
+  showHeader?: boolean;
+  /**
    * Header text of the dialog.
    */
-  header?: string;
+  headerTitle?: string;
+  /**
+   * Header information tooltip.
+   */
+  headerInfoTooltip?: string;
+  /**
+   * Whether to show the header left border.
+   */
+  showHeaderBorder?: string;
   /**
    * Identifies the element (or elements) that labels the element it is applied to.
    */
@@ -36,9 +48,9 @@ export class CpsDialogConfig<T = any> {
    */
   autoZIndex?: boolean;
   /**
-   * Specifies if clicking the modal background should hide the dialog.
+   * Specifies whether the user is allowed to close the dialog.
    */
-  dismissableMask?: boolean;
+  disableClose?: boolean;
   /**
    * Inline style of the component.
    */
@@ -60,13 +72,9 @@ export class CpsDialogConfig<T = any> {
    */
   transitionOptions?: string;
   /**
-   * Adds a close icon to the header to hide the dialog.
+   * Adds a close button to the header to hide the dialog.
    */
-  closable?: boolean;
-  /**
-   * Whether to show the header or not.
-   */
-  showHeader?: boolean;
+  showCloseBtn?: boolean;
   /**
    * Defines if background should be blocked when dialog is displayed.
    */
@@ -110,5 +118,14 @@ export class CpsDialogConfig<T = any> {
   /**
    * Position of the dialog, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".
    */
-  position?: string;
+  position?:
+    | 'center'
+    | 'top'
+    | 'bottom'
+    | 'left'
+    | 'right'
+    | 'top-left'
+    | 'top-right'
+    | 'bottom-left'
+    | 'bottom-right';
 }

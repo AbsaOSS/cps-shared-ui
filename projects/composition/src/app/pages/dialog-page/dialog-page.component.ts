@@ -18,34 +18,33 @@ import { ConfirmationComponent } from '../../components/confirmation/confirmatio
   host: { class: 'composition-page' }
 })
 export class DialogPageComponent {
-  ref: CpsDialogRef | undefined;
+  dialogRef: CpsDialogRef | undefined;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(public dialogService: CpsDialogService) {}
 
   toggleDialog() {
-    this.ref = this.dialogService.open(ConfirmationComponent, {
-      // header: 'Select a Product',
+    this.dialogRef = this.dialogService.open(ConfirmationComponent, {
+      header: 'Select a Product',
       // width: '70%',
       // showHeader: false,
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
-      maximizable: true,
-      modal: true,
-      dismissableMask: true,
+      // contentStyle: { overflow: 'auto' },
+      // baseZIndex: 10000,
+      // maximizable: true,
+      // disableClose: true,
       data: {
         subtitle: 'Hello dialog'
       }
     } as CpsDialogConfig);
 
-    this.ref.onClose.subscribe((confirm: boolean) => {});
+    this.dialogRef.onClose.subscribe((confirm: boolean) => {});
 
-    this.ref.onMaximize.subscribe((value) => {});
+    this.dialogRef.onMaximize.subscribe((value) => {});
   }
 
   ngOnDestroy() {
-    if (this.ref) {
-      this.ref.close();
+    if (this.dialogRef) {
+      this.dialogRef.close();
     }
   }
 }

@@ -4,20 +4,22 @@
   <h1 class="confirm-title">Confirm the action</h1>
   <span>{{ subtitle }}</span>
 
+  <cps-button
+    [label]="closeDisabled ? 'Enable close' : 'Disable close'"
+    (clicked)="toggleDisableClose()"></cps-button>
+
   <div class="confirm-buttons">
     <cps-button
       type="borderless"
       label="No"
       (clicked)="close(false)"
-      color="prepared"
-    >
+      color="prepared">
     </cps-button>
     <cps-button
       data-cy="btn-yes"
       label="Yes"
       (clicked)="close(true)"
-      color="prepared"
-    >
+      color="prepared">
     </cps-button>
   </div>
 </div>

@@ -19,6 +19,8 @@ export class CpsDialogService {
   dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
     new Map();
 
+  _defaultConfig: CpsDialogConfig = {};
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private viewContainerRef: ViewContainerRef,

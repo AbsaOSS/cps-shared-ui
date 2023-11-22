@@ -16,17 +16,26 @@ import {
 export class ConfirmationComponent implements OnInit {
   subtitle = '';
 
+  closeDisabled = false;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private _dialogRef: CpsDialogRef,
-    public config: CpsDialogConfig
+    private _config: CpsDialogConfig
   ) {
-    this.subtitle = config.data.subtitle;
+    this.subtitle = _config.data.subtitle;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.closeDisabled = !!this._config.disableClose;
+  }
 
   close(confirm: boolean) {
     this._dialogRef.close(confirm);
+  }
+
+  toggleDisableClose() {
+    this.closeDisabled = !this.closeDisabled;
+    this._config.disableClose = this.closeDisabled;
   }
 }

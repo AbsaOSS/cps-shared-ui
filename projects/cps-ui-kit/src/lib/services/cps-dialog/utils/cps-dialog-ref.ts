@@ -6,6 +6,7 @@ export class CpsDialogRef {
    * @group Method
    */
   close(result?: any) {
+    if (this.disableClose) return;
     this._onClose.next(result);
   }
 
@@ -124,7 +125,7 @@ export class CpsDialogRef {
   onMaximize: Observable<any> = this._onMaximize.asObservable();
 
   /**
-   * Specifies if clicking the modal background should hide the dialog.
+   * Specifies whether the user is allowed to close the dialog.
    */
-  dismissableMask?: boolean;
+  disableClose?: boolean;
 }
