@@ -352,7 +352,6 @@ $hover-transition-duration: 0.2s;
       .p-tree-container
       .p-treenode
       .p-treenode-content:not(.p-highlight):focus {
-      //background-color: $option-highlight-background;
       background-color: $option-hover-background;
     }
 
@@ -365,12 +364,13 @@ $hover-transition-duration: 0.2s;
         opacity: 1;
       }
     }
-    // .p-tree
-    //   .p-tree-container
-    //   .p-treenode
-    //   .p-treenode-content.p-highlight:focus {
-    //   background: $option-highlight-selected-background;
-    // }
+
+    .p-tree
+      .p-tree-container
+      .p-treenode
+      .p-treenode-content.p-highlight:focus {
+      background: $option-highlight-selected-background;
+    }
 
     .p-tree-toggler {
       outline: 0 none;
