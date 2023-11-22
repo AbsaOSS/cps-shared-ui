@@ -46,6 +46,7 @@ export class CpsTreeAutocompleteComponent
 {
   @Input() emptyMessage = 'No results found';
   @Input() appearance: CpsTreeAutocompleteAppearanceType = 'outlined';
+  @Input() placeholder = 'Please enter';
 
   inputText = '';
   backspaceClickedOnce = false;

@@ -46,6 +46,7 @@ export class CpsTreeSelectComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @Input() appearance: CpsTreeSelectAppearanceType = 'outlined';
+  @Input() placeholder = 'Please select';
 
   constructor(
     @Optional() public override control: NgControl,

@@ -231,6 +231,8 @@ $hover-transition-duration: 0.2s;
       background: #ffffff;
       color: $treeselect-option-value-color;
       padding: 0;
+      border: unset;
+      border-radius: unset;
     }
 
     .cps-treeselect-option {
@@ -304,7 +306,12 @@ $hover-transition-duration: 0.2s;
       overflow: auto;
     }
 
+    .p-tree .p-tree-container .p-treenode {
+      padding: unset;
+    }
+
     .p-tree .p-tree-container .p-treenode .p-treenode-content {
+      border-radius: 0;
       transition: box-shadow 0.2s;
       padding: 0.25rem;
     }
@@ -338,6 +345,7 @@ $hover-transition-duration: 0.2s;
     .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
 
     .p-tree
@@ -379,6 +387,16 @@ $hover-transition-duration: 0.2s;
       :hover {
         color: $color-calm;
       }
+    }
+
+    .p-tree
+      .p-tree-container
+      .p-treenode
+      .p-treenode-content
+      .p-tree-toggler:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: unset;
     }
 
     .cps-tree-node-fully-expandable > .p-treenode-content:hover {

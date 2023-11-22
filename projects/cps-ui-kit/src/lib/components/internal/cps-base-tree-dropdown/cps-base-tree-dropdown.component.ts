@@ -29,7 +29,6 @@ export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
-  @Input() placeholder = 'Please enter';
   @Input() hint = '';
   @Input() multiple = false;
   @Input() disabled = false;
