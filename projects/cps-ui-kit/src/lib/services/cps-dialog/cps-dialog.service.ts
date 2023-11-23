@@ -14,7 +14,7 @@ import { CpsDialogConfig } from './utils/cps-dialog-config';
 import { CpsDialogComponent } from './internal/components/cps-dialog/cps-dialog.component';
 import { CpsConfirmationComponent } from './internal/components/cps-confirmation/cps-confirmation.component';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CpsDialogService {
   dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
     new Map();
@@ -36,6 +36,11 @@ export class CpsDialogService {
   }
 
   public openConfirmationDialog(config: CpsDialogConfig): CpsDialogRef {
+    if (!config.headerTitle) config.headerTitle = 'Confirm the action';
+    if (!config.headerIcon) config.headerIcon = 'warning';
+    if (!config.headerIconColor) config.headerIconColor = 'calm';
+    if (!config.minWidth) config.minWidth = '400px';
+    if (!config.maxWidth) config.maxWidth = '600px';
     const dialogRef = this.appendDialogComponentToBody(config);
 
     const instance = this.dialogComponentRefMap.get(dialogRef)?.instance;
