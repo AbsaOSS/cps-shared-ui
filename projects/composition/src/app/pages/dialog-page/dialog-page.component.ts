@@ -26,8 +26,11 @@ export class DialogPageComponent {
   toggleDialog() {
     this.dialogRef = this.dialogService.open(ConfirmationComponent, {
       headerTitle: 'Select a Product',
-      width: '70%',
-      height: '70%',
+      minWidth: '500px',
+      maxWidth: '1000px',
+      width: '1500px',
+      // width: '70%',
+      // height: '70%',
       // showHeader: false,
       // contentStyle: { overflow: 'auto' },
       // baseZIndex: 10000,

@@ -50,6 +50,22 @@ export class CpsDialogConfig<T = any> {
    */
   height?: string;
   /**
+   * Min-width of the dialog.
+   */
+  minWidth?: string;
+  /**
+   * Min-height of the dialog.
+   */
+  minHeight?: string;
+  /**
+   * Max-width of the dialog.
+   */
+  maxWidth?: string;
+  /**
+   * Max-height of the dialog.
+   */
+  maxHeight?: string;
+  /**
    * Specifies if pressing escape key should hide the dialog.
    */
   closeOnEscape?: boolean;
