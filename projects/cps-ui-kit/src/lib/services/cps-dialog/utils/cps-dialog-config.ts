@@ -1,3 +1,5 @@
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
+
 export class CpsDialogConfig<T = any> {
   /**
    * An object to pass to the component loaded inside the Dialog.
@@ -15,6 +17,10 @@ export class CpsDialogConfig<T = any> {
    * Header information tooltip.
    */
   headerInfoTooltip?: string;
+  /**
+   * Header information tooltip position.
+   */
+  headerInfoTooltipPosition?: CpsTooltipPosition;
   /**
    * Header icon.
    */

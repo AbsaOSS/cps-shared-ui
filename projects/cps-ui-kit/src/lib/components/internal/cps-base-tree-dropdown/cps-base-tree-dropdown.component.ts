@@ -19,7 +19,7 @@ import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils';
-import { TooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 @Component({
@@ -50,7 +50,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
   @Input() initialExpandDirectories = false;
   @Input() initialExpandAll = false;
 

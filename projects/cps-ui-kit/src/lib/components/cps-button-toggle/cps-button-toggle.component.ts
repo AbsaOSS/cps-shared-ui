@@ -16,7 +16,7 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
-  TooltipPosition
+  CpsTooltipPosition
 } from '../../directives/cps-tooltip.directive';
 
 export type CpsButtonToggleOption = {
@@ -48,12 +48,12 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() disabled = false;
   @Input() mandatory = true; // at least one of the options is mandatory
   @Input() equalWidths = true;
-  @Input() optionTooltipPosition: TooltipPosition = 'bottom';
+  @Input() optionTooltipPosition: CpsTooltipPosition = 'bottom';
   @Input() infoTooltip = '';
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   @Input('value') _value: any = undefined;
 

@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { convertSize } from '../utils/internal/size-utils';
 
-export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
-export type TooltipOpenOn = 'hover' | 'click' | 'focus';
+export type CpsTooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
 @Directive({
   selector: '[cpsTooltip]',
@@ -19,8 +19,8 @@ export class CpsTooltipDirective implements OnDestroy {
 
   @Input() tooltipOpenDelay: string | number = 300;
   @Input() tooltipCloseDelay: string | number = 300;
-  @Input() tooltipOpenOn: TooltipOpenOn = 'hover';
-  @Input() tooltipPosition: TooltipPosition = 'top';
+  @Input() tooltipOpenOn: CpsTooltipOpenOn = 'hover';
+  @Input() tooltipPosition: CpsTooltipPosition = 'top';
   @Input() tooltipPersistent = false;
   @Input() tooltipDisabled = false;
   @Input() tooltipMaxWidth: number | string = '100%';
@@ -112,7 +112,7 @@ export class CpsTooltipDirective implements OnDestroy {
       );
     }
 
-    let positions = ['top', 'bottom', 'left', 'right'] as TooltipPosition[];
+    let positions = ['top', 'bottom', 'left', 'right'] as CpsTooltipPosition[];
     positions = positions.filter((item) => item !== this.tooltipPosition);
     positions.unshift(this.tooltipPosition);
 
@@ -122,7 +122,7 @@ export class CpsTooltipDirective implements OnDestroy {
 
     for (const pos of positions) {
       const coords = this._getCoordsForPosition(
-        pos as TooltipPosition,
+        pos as CpsTooltipPosition,
         targetEl,
         targetElRect,
         popupRect
@@ -137,7 +137,7 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _getCoordsForPosition(
-    position: TooltipPosition,
+    position: CpsTooltipPosition,
     targetEl: HTMLElement,
     targetElRect: DOMRect,
     popupRect: DOMRect

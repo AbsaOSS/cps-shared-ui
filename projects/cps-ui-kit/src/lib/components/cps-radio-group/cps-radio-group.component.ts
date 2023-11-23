@@ -13,7 +13,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import {
   CpsTooltipDirective,
-  TooltipPosition
+  CpsTooltipPosition
 } from '../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 
@@ -55,7 +55,7 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   @Input() set value(value: any) {
     this._value = value;

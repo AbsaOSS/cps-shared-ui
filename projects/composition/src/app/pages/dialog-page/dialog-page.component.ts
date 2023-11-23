@@ -31,6 +31,8 @@ export class DialogPageComponent {
       // contentStyle: { overflow: 'auto' },
       // baseZIndex: 10000,
       maximizable: true,
+      headerInfoTooltip: 'This is a tooltip',
+      headerInfoTooltipPosition: 'bottom',
       draggable: true,
       // disableClose: true,
       resizable: true,

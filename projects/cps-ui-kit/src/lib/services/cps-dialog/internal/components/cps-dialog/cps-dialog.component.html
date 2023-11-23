@@ -49,7 +49,17 @@
       class="cps-dialog-header"
       (mousedown)="initDrag($event)"
       *ngIf="config.showHeader === false ? false : true">
-      <span class="cps-dialog-header-title">{{ config.headerTitle }}</span>
+      <div class="cps-dialog-header-left">
+        <span class="cps-dialog-header-title">{{ config.headerTitle }}</span>
+        <div class="cps-dialog-header-info-circle">
+          <cps-info-circle
+            *ngIf="config.headerInfoTooltip"
+            size="small"
+            [tooltipPosition]="config.headerInfoTooltipPosition || 'top'"
+            [tooltipText]="config.headerInfoTooltip">
+          </cps-info-circle>
+        </div>
+      </div>
       <div class="cps-dialog-header-action-buttons">
         <cps-button
           *ngIf="config.maximizable"

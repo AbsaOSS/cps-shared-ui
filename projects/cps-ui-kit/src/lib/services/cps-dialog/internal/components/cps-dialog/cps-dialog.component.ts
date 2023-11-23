@@ -34,6 +34,7 @@ import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.d
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
+import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -54,7 +55,8 @@ type VoidListener = () => void | null | undefined;
     CommonModule,
     SharedModule,
     CpsDialogContentDirective,
-    CpsButtonComponent
+    CpsButtonComponent,
+    CpsInfoCircleComponent
   ],
   templateUrl: './cps-dialog.component.html',
   styleUrls: ['./cps-dialog.component.scss'],
@@ -422,7 +424,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     function isHeaderActionButton(element: HTMLElement | null): boolean {
       while (
         element &&
-        !element.classList.contains('cps-dialog-header-action-button')
+        !element.classList.contains('cps-dialog-header-action-button') &&
+        !element.classList.contains('cps-dialog-header-info-circle')
       ) {
         element = element.parentElement;
       }

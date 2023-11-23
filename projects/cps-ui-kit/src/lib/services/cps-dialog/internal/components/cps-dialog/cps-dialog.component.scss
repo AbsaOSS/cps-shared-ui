@@ -72,9 +72,17 @@ $cps-overlay-background: rgba(0, 0, 0, 0.2);
   border-top-left-radius: 6px;
 }
 
-.cps-dialog .cps-dialog-header .cps-dialog-header-title {
-  font-weight: 700;
-  font-size: 1.25rem;
+.cps-dialog .cps-dialog-header .cps-dialog-header-left {
+  display: flex;
+  align-items: flex-end;
+  .cps-dialog-header-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+  .cps-dialog-header-info-circle {
+    margin-left: 6px;
+    cursor: default;
+  }
 }
 
 .cps-dialog .cps-dialog-content {
