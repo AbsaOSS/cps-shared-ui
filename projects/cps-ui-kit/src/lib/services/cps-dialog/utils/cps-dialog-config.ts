@@ -32,11 +32,11 @@ export class CpsDialogConfig<T = any> {
   /**
    * Whether to show the header left border.
    */
-  showHeaderLeftBorder?: string;
+  showHeaderLeftBorder?: boolean;
   /**
    * Whether to show the header bottom border.
    */
-  showHeaderBottomBorder?: string;
+  showHeaderBottomBorder?: boolean;
   /**
    * Identifies the element (or elements) that labels the element it is applied to.
    */
@@ -70,13 +70,17 @@ export class CpsDialogConfig<T = any> {
    */
   style?: { [klass: string]: any } | null | undefined;
   /**
+   * Style class of the component.
+   */
+  styleClass?: string;
+  /**
    * Inline style of the content.
    */
   contentStyle?: { [klass: string]: any } | null | undefined;
   /**
-   * Style class of the component.
+   * Style class of the content.
    */
-  styleClass?: string;
+  contentStyleClass?: string;
   /**
    * Transition options of the animation.
    */

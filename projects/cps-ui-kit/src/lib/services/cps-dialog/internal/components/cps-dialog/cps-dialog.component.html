@@ -46,9 +46,15 @@
       (mousedown)="initResize($event)"></div>
     <div
       #titlebar
+      *ngIf="config.showHeader !== false"
       class="cps-dialog-header"
-      (mousedown)="initDrag($event)"
-      *ngIf="config.showHeader === false ? false : true">
+      [ngClass]="{
+        'cps-dialog-header-left-bordered':
+          config.showHeaderLeftBorder !== false,
+        'cps-dialog-header-bottom-bordered':
+          config.showHeaderBottomBorder !== false
+      }"
+      (mousedown)="initDrag($event)">
       <div class="cps-dialog-header-left">
         <div class="cps-dialog-header-icon">
           <cps-icon
@@ -90,7 +96,11 @@
         </cps-button>
       </div>
     </div>
-    <div #content class="cps-dialog-content" [ngStyle]="config.contentStyle">
+    <div
+      #content
+      class="cps-dialog-content"
+      [ngStyle]="config.contentStyle"
+      [class]="config.contentStyleClass || ''">
       <ng-template cpsDialogContent></ng-template>
     </div>
   </div>

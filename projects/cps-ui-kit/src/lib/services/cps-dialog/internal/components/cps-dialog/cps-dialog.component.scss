@@ -54,62 +54,65 @@ $cps-overlay-background: rgba(0, 0, 0, 0.2);
   max-height: 90%;
   transform: scale(1);
   position: relative;
-  border-radius: 6px;
+  border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   border: 0 none;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: 'Source Sans Pro', sans-serif;
   font-size: 1rem;
   font-weight: normal;
 }
 
-.cps-dialog .cps-dialog-header {
-  border-bottom: 0 none;
-  background: #ffffff;
-  color: #343a40;
-  padding: 1.5rem;
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px;
-}
-
-.cps-dialog .cps-dialog-header .cps-dialog-header-left {
-  display: flex;
-  align-items: flex-end;
-  .cps-dialog-header-icon {
-    margin-right: 8px;
-    margin-bottom: 1px;
-  }
-  .cps-dialog-header-title {
-    font-weight: 700;
-    font-size: 1.25rem;
-  }
-  .cps-dialog-header-info-circle {
-    margin-left: 6px;
-    cursor: default;
+.cps-dialog {
+  .cps-dialog-header {
+    border-bottom: 0 none;
+    background: #ffffff;
+    color: var(--cps-color-text-dark);
+    padding: 1rem;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    &.cps-dialog-header-left-bordered {
+      border-left: 4px solid var(--cps-color-surprise);
+    }
+    &.cps-dialog-header-bottom-bordered {
+      border-bottom: 1px solid var(--cps-color-line-mid);
+    }
+    .cps-dialog-header-left {
+      display: flex;
+      align-items: flex-end;
+      .cps-dialog-header-icon {
+        margin-right: 8px;
+        margin-bottom: 1px;
+      }
+      .cps-dialog-header-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+      .cps-dialog-header-info-circle {
+        margin-left: 8px;
+        cursor: default;
+      }
+    }
   }
 }
 
 .cps-dialog .cps-dialog-content {
   background: #ffffff;
-  color: #495057;
-  padding: 0 1.5rem 2rem 1.5rem;
+  color: var(--cps-color-text-dark);
+  padding: 1rem;
 }
 
 .cps-dialog .cps-dialog-content:last-of-type {
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .cps-dialog-content {
   overflow-y: auto;
   flex-grow: 1;
-}
-
-.cps-dialog-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-shrink: 0;
 }
 
 .cps-dialog-draggable .cps-dialog-header {
