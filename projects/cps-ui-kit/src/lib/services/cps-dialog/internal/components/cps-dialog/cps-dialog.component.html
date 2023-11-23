@@ -41,8 +41,8 @@
     [style.height]="config.height"
     [style.minWidth]="config.minWidth"
     [style.minHeight]="config.minHeight"
-    [style.maxWidth]="config.maxWidth"
-    [style.maxHeight]="config.maxHeight">
+    [style.maxWidth]="maximized ? '' : config.maxWidth"
+    [style.maxHeight]="maximized ? '' : config.maxHeight">
     <div
       *ngIf="config.resizable && !maximized"
       class="cps-dialog-resizable-handle"

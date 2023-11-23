@@ -138,6 +138,10 @@ export class CpsDialogConfig<T = any> {
    */
   maximizable?: boolean;
   /**
+   * Whether the dialog is initially opened as full screen.
+   */
+  maximized?: boolean;
+  /**
    * Position of the dialog, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".
    */
   position?:

@@ -27,7 +27,7 @@ export class DialogPageComponent {
   openDialog() {
     this.dialogRef = this.dialogService.open(ConfirmationComponent, {
       headerTitle: 'Select a Product',
-      minWidth: '500px',
+      // minWidth: '500px',
       maxWidth: '1000px',
       width: '1500px',
       // width: '70%',
@@ -42,7 +42,8 @@ export class DialogPageComponent {
       keepInViewport: true,
       // minX: 100,
       // minY: 200,
-      maximizable: false,
+      maximized: true,
+      maximizable: true,
       // closeOnEscape: false,
       // showCloseBtn: true,
       // disableClose: false,
@@ -64,8 +65,17 @@ export class DialogPageComponent {
 
   openConfirmationDialog() {
     this.confDialogRef = this.dialogService.openConfirmationDialog({
-      data: { subtitle: 'Hello confirmation' }
+      data: {
+        subtitle: 'Are you really sure you want to break the law?'
+      }
     } as CpsDialogConfig);
+
+    this.confDialogRef.onClose.subscribe((confirm: boolean) => {
+      console.log(confirm);
+    });
+    this.confDialogRef.onOpen.subscribe(() => {
+      console.log('onOpen');
+    });
   }
 
   ngOnDestroy() {

@@ -15,6 +15,7 @@ import {
   Component,
   ComponentRef,
   ElementRef,
+  EventEmitter,
   Inject,
   NgZone,
   OnDestroy,
@@ -113,6 +114,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   documentDragEndListener!: VoidListener | null;
 
+  _openStateChanged = new EventEmitter<void>();
+
   get minX(): number {
     return this.config.minX ? this.config.minX : 0;
   }
@@ -166,6 +169,10 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.loadChildComponent(this.childComponentType!);
+
+    if (this.config.maximized && this.config.maximizable) {
+      this.maximize();
+    }
     this._cdRef.detectChanges();
   }
 
@@ -174,6 +181,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     viewContainerRef?.clear();
 
     this.componentRef = viewContainerRef?.createComponent(componentType);
+    if (this._dialogRef)
+      this._dialogRef.componentInstance = this.componentRef?.instance;
   }
 
   moveOnTop() {
@@ -218,6 +227,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     if (event.toState === 'void') {
       this.onContainerDestroy();
       this._dialogRef.destroy();
+    } else {
+      this._openStateChanged.emit();
     }
   }
 

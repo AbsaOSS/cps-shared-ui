@@ -14,6 +14,10 @@ import { CpsDialogConfig } from './utils/cps-dialog-config';
 import { CpsDialogComponent } from './internal/components/cps-dialog/cps-dialog.component';
 import { CpsConfirmationComponent } from './internal/components/cps-confirmation/cps-confirmation.component';
 
+/**
+ * Service for showing CpsDialog.
+ * @group Service
+ */
 @Injectable({ providedIn: 'root' })
 export class CpsDialogService {
   dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
@@ -76,6 +80,7 @@ export class CpsDialogService {
     this.document.body.appendChild(domElem);
 
     this.dialogComponentRefMap.set(dialogRef, componentRef);
+    dialogRef._setContainerInstance(componentRef.instance);
 
     return dialogRef;
   }

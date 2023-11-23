@@ -1,6 +1,25 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, take } from 'rxjs';
+import { CpsDialogComponent } from '../internal/components/cps-dialog/cps-dialog.component';
 
-export class CpsDialogRef {
+export class CpsDialogRef<T = any> {
+  private _containerInstance!: CpsDialogComponent;
+
+  /**
+   * The instance of the component opened into the dialog.
+   * @group Props
+   */
+  componentInstance!: T;
+
+  /**
+   * Sets dialog container instance.
+   */
+  _setContainerInstance(instance: CpsDialogComponent) {
+    this._containerInstance = instance;
+    this._containerInstance?._openStateChanged.pipe(take(1)).subscribe(() => {
+      this._onOpen.next();
+    });
+  }
+
   /**
    * Closes dialog.
    * @group Method
@@ -62,6 +81,14 @@ export class CpsDialogRef {
   maximize(value: any) {
     this._onMaximize.next(value);
   }
+
+  private readonly _onOpen = new Subject<void>();
+
+  /**
+   * Event triggered on dialog is opened.
+   * @group Events
+   */
+  onOpen: Observable<void> = this._onOpen.asObservable();
 
   private readonly _onClose = new Subject<any>();
 
@@ -126,6 +153,23 @@ export class CpsDialogRef {
 
   /**
    * Specifies whether the user is allowed to close the dialog.
+   * @group Props
    */
   disableClose?: boolean;
+
+  /**
+   * Checks whether the dialog is opened or closed.
+   * @group Method
+   */
+  isOpen() {
+    return this._containerInstance?.visible || false;
+  }
+
+  /**
+   * Checks whether the dialog is maximized or not.
+   * @group Method
+   */
+  isMaximized() {
+    return this._containerInstance?.maximized || false;
+  }
 }
