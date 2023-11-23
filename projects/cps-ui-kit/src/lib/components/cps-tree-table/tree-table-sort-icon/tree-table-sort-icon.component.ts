@@ -20,10 +20,7 @@ import { Subscription } from 'rxjs';
   imports: [CommonModule, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon],
   templateUrl: './tree-table-sort-icon.component.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'p-element'
-  }
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeTableSortIconComponent implements OnInit, OnDestroy {
   @Input() field = '';

@@ -119,7 +119,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       border-radius: 50%;
       transition: box-shadow 0.2s;
       border: 1px solid transparent;
-      &.p-element.p-disabled {
+      &.p-disabled {
         color: $disabled-day-color;
         cursor: default;
       }
