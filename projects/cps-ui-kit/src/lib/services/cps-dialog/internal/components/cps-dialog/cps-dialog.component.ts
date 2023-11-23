@@ -18,10 +18,8 @@ import {
   Inject,
   NgZone,
   OnDestroy,
-  Optional,
   PLATFORM_ID,
   Renderer2,
-  SkipSelf,
   Type,
   ViewChild,
   ViewEncapsulation,
@@ -76,8 +74,6 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   componentRef: Nullable<ComponentRef<any>>;
 
-  mask: Nullable<HTMLDivElement>;
-
   resizing: boolean | undefined;
 
   dragging: boolean | undefined;
@@ -97,17 +93,11 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
 
-  @ViewChild('content') contentViewChild: Nullable<ElementRef>;
-
-  @ViewChild('titlebar') headerViewChild: Nullable<ElementRef>;
-
   childComponentType: Nullable<Type<any>>;
 
   container: Nullable<HTMLDivElement>;
 
   wrapper: Nullable<HTMLElement>;
-
-  documentKeydownListener!: VoidListener | null;
 
   documentEscapeListener!: VoidListener | null;
 
@@ -165,19 +155,18 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     @Inject(PLATFORM_ID) private platformId: any,
-    private cd: ChangeDetectorRef,
+    private _dialogRef: CpsDialogRef,
+    private _cdRef: ChangeDetectorRef,
     public renderer: Renderer2,
     public config: CpsDialogConfig,
-    private dialogRef: CpsDialogRef,
     public zone: NgZone,
-    public primeNGConfig: PrimeNGConfig,
-    @SkipSelf() @Optional() private parentDialog: CpsDialogComponent
+    public primeNGConfig: PrimeNGConfig
   ) {}
 
   ngAfterViewInit() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.loadChildComponent(this.childComponentType!);
-    this.cd.detectChanges();
+    this._cdRef.detectChanges();
   }
 
   loadChildComponent(componentType: Type<any>) {
@@ -228,7 +217,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   onAnimationEnd(event: AnimationEvent) {
     if (event.toState === 'void') {
       this.onContainerDestroy();
-      this.dialogRef.destroy();
+      this._dialogRef.destroy();
     }
   }
 
@@ -246,17 +235,17 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   close() {
-    if (this.config?.disableClose || this.dialogRef?.disableClose) return;
+    if (this.config?.disableClose || this._dialogRef?.disableClose) return;
 
     this.visible = false;
-    this.cd.markForCheck();
+    this._cdRef.markForCheck();
   }
 
   hide() {
     if (this.config?.disableClose) return;
 
-    if (this.dialogRef) {
-      if (!this.dialogRef.disableClose) this.dialogRef.close();
+    if (this._dialogRef) {
+      if (!this._dialogRef.disableClose) this._dialogRef.close();
     }
   }
 
@@ -288,41 +277,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
         DomHandler.removeClass(this.document.body, 'cps-overflow-hidden');
       }
 
-      if (!(this.cd as ViewRef).destroyed) {
-        this.cd.detectChanges();
-      }
-    }
-  }
-
-  onKeydown(event: KeyboardEvent) {
-    // tab
-    if (event.which === 9) {
-      event.preventDefault();
-
-      const focusableElements = DomHandler.getFocusableElements(
-        this.container as HTMLDivElement
-      );
-      if (focusableElements && focusableElements.length > 0) {
-        if (!focusableElements[0].ownerDocument.activeElement) {
-          focusableElements[0].focus();
-        } else {
-          const focusedIndex = focusableElements.indexOf(
-            focusableElements[0].ownerDocument.activeElement
-          );
-
-          if (event.shiftKey) {
-            if (focusedIndex === -1 || focusedIndex === 0)
-              focusableElements[focusableElements.length - 1].focus();
-            else focusableElements[focusedIndex - 1].focus();
-          } else {
-            if (
-              focusedIndex === -1 ||
-              focusedIndex === focusableElements.length - 1
-            )
-              focusableElements[0].focus();
-            else focusableElements[focusedIndex + 1].focus();
-          }
-        }
+      if (!(this._cdRef as ViewRef).destroyed) {
+        this._cdRef.detectChanges();
       }
     }
   }
@@ -347,7 +303,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       DomHandler.removeClass(this.document.body, 'cps-overflow-hidden');
     }
 
-    this.dialogRef.maximize({ maximized: this.maximized });
+    this._dialogRef.maximize({ maximized: this.maximized });
   }
 
   initResize(event: MouseEvent) {
@@ -360,7 +316,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       this.lastPageX = event.pageX;
       this.lastPageY = event.pageY;
       DomHandler.addClass(this.document.body, 'cps-unselectable-text');
-      this.dialogRef.resizeInit(event);
+      this._dialogRef.resizeInit(event);
     }
   }
 
@@ -410,7 +366,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     if (this.resizing) {
       this.resizing = false;
       DomHandler.removeClass(this.document.body, 'cps-unselectable-text');
-      this.dialogRef.resizeEnd(event);
+      this._dialogRef.resizeEnd(event);
     }
   }
 
@@ -437,7 +393,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
     (this.container as HTMLDivElement).style.margin = '0';
     DomHandler.addClass(this.document.body, 'cps-unselectable-text');
-    this.dialogRef.dragStart(event);
+    this._dialogRef.dragStart(event);
   }
 
   onDrag(event: MouseEvent) {
@@ -478,8 +434,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     if (this.dragging) {
       this.dragging = false;
       DomHandler.removeClass(this.document.body, 'cps-unselectable-text');
-      this.dialogRef.dragEnd(event);
-      this.cd.detectChanges();
+      this._dialogRef.dragEnd(event);
+      this._cdRef.detectChanges();
     }
   }
 
@@ -555,11 +511,6 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   bindGlobalListeners() {
-    if (this.parentDialog) {
-      this.parentDialog.unbindDocumentKeydownListener();
-    }
-    this.bindDocumentKeydownListener();
-
     if (
       this.config.closeOnEscape !== false &&
       this.config.disableClose !== false
@@ -578,36 +529,10 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   unbindGlobalListeners() {
-    this.unbindDocumentKeydownListener();
     this.unbindDocumentEscapeListener();
     this.unbindDocumentResizeListeners();
     this.unbindDocumentDragListener();
     this.unbindDocumentDragEndListener();
-
-    if (this.parentDialog) {
-      this.parentDialog.bindDocumentKeydownListener();
-    }
-  }
-
-  bindDocumentKeydownListener() {
-    if (isPlatformBrowser(this.platformId)) {
-      if (!this.documentKeydownListener) {
-        this.zone.runOutsideAngular(() => {
-          this.documentKeydownListener = this.renderer.listen(
-            this.document,
-            'keydown',
-            this.onKeydown.bind(this)
-          );
-        });
-      }
-    }
-  }
-
-  unbindDocumentKeydownListener() {
-    if (this.documentKeydownListener) {
-      this.documentKeydownListener();
-      this.documentKeydownListener = null;
-    }
   }
 
   bindDocumentEscapeListener() {
@@ -647,9 +572,6 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.onContainerDestroy();
-
-    if (this.componentRef) {
-      this.componentRef.destroy();
-    }
+    this.componentRef?.destroy();
   }
 }

@@ -19,11 +19,12 @@ import { ConfirmationComponent } from '../../components/confirmation/confirmatio
 })
 export class DialogPageComponent {
   dialogRef: CpsDialogRef | undefined;
+  confDialogRef: CpsDialogRef | undefined;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(public dialogService: CpsDialogService) {}
 
-  toggleDialog() {
+  openDialog() {
     this.dialogRef = this.dialogService.open(ConfirmationComponent, {
       headerTitle: 'Select a Product',
       minWidth: '500px',
@@ -61,9 +62,14 @@ export class DialogPageComponent {
     this.dialogRef.onMaximize.subscribe((value) => {});
   }
 
+  openConfirmationDialog() {
+    this.confDialogRef = this.dialogService.openConfirmationDialog({
+      data: { subtitle: 'Hello confirmation' }
+    } as CpsDialogConfig);
+  }
+
   ngOnDestroy() {
-    if (this.dialogRef) {
-      this.dialogRef.close();
-    }
+    this.dialogRef?.close();
+    this.confDialogRef?.close();
   }
 }

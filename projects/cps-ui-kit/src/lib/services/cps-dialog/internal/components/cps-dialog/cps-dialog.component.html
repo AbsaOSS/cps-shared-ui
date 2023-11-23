@@ -49,7 +49,6 @@
       style="z-index: 90"
       (mousedown)="initResize($event)"></div>
     <div
-      #titlebar
       *ngIf="config.showHeader !== false"
       class="cps-dialog-header"
       [ngClass]="{
@@ -101,7 +100,6 @@
       </div>
     </div>
     <div
-      #content
       class="cps-dialog-content"
       [ngStyle]="config.contentStyle"
       [class]="config.contentStyleClass || ''">
