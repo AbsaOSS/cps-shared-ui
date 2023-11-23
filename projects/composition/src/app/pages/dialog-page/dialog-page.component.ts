@@ -30,6 +30,8 @@ export class DialogPageComponent {
       // showHeader: false,
       // contentStyle: { overflow: 'auto' },
       // baseZIndex: 10000,
+      headerIcon: 'avatar',
+      // headerIconColor: 'green',
       maximizable: true,
       headerInfoTooltip: 'This is a tooltip',
       headerInfoTooltipPosition: 'bottom',

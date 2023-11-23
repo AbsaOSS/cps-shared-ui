@@ -26,6 +26,10 @@ export class CpsDialogConfig<T = any> {
    */
   headerIcon?: string;
   /**
+   * Header icon color.
+   */
+  headerIconColor?: string;
+  /**
    * Whether to show the header left border.
    */
   showHeaderLeftBorder?: string;

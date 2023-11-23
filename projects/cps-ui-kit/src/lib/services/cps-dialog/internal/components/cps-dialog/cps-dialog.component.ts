@@ -35,6 +35,7 @@ import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
+import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -56,7 +57,8 @@ type VoidListener = () => void | null | undefined;
     SharedModule,
     CpsDialogContentDirective,
     CpsButtonComponent,
-    CpsInfoCircleComponent
+    CpsInfoCircleComponent,
+    CpsIconComponent
   ],
   templateUrl: './cps-dialog.component.html',
   styleUrls: ['./cps-dialog.component.scss'],

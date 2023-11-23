@@ -75,6 +75,10 @@ $cps-overlay-background: rgba(0, 0, 0, 0.2);
 .cps-dialog .cps-dialog-header .cps-dialog-header-left {
   display: flex;
   align-items: flex-end;
+  .cps-dialog-header-icon {
+    margin-right: 8px;
+    margin-bottom: 1px;
+  }
   .cps-dialog-header-title {
     font-weight: 700;
     font-size: 1.25rem;

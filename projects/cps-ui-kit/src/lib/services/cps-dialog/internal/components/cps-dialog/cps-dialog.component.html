@@ -50,6 +50,13 @@
       (mousedown)="initDrag($event)"
       *ngIf="config.showHeader === false ? false : true">
       <div class="cps-dialog-header-left">
+        <div class="cps-dialog-header-icon">
+          <cps-icon
+            *ngIf="config.headerIcon"
+            [icon]="config.headerIcon"
+            [color]="config.headerIconColor || 'currentColor'">
+          </cps-icon>
+        </div>
         <span class="cps-dialog-header-title">{{ config.headerTitle }}</span>
         <div class="cps-dialog-header-info-circle">
           <cps-info-circle
