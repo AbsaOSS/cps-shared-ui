@@ -261,7 +261,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   enableModality() {
-    if (this.config.showCloseBtn !== false && !this.config.disableClose) {
+    if (!this.config.disableClose) {
       this.maskClickListener = this.renderer.listen(
         this.wrapper,
         'mousedown',
@@ -370,9 +370,6 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       const deltaY = event.pageY - (this.lastPageY as number);
       const containerWidth = DomHandler.getOuterWidth(this.container);
       const containerHeight = DomHandler.getOuterHeight(this.container);
-      const contentHeight = DomHandler.getOuterHeight(
-        (<ElementRef>this.contentViewChild).nativeElement
-      );
       let newWidth = containerWidth + deltaX;
       let newHeight = containerHeight + deltaY;
       const minWidth = (this.container as HTMLDivElement).style.minWidth;
@@ -400,13 +397,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
         (!minHeight || newHeight > parseInt(minHeight)) &&
         offset.top + newHeight < viewport.height
       ) {
-        (<ElementRef>this.contentViewChild).nativeElement.style.height =
-          contentHeight + newHeight - containerHeight + 'px';
-
-        if (this._style.height) {
-          this._style.height = newHeight + 'px';
-          (this.container as HTMLDivElement).style.height = this._style.height;
-        }
+        this._style.height = newHeight + 'px';
+        (this.container as HTMLDivElement).style.height = this._style.height;
       }
 
       this.lastPageX = event.pageX;
@@ -570,7 +562,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
     if (
       this.config.closeOnEscape !== false &&
-      this.config.showCloseBtn !== false
+      this.config.disableClose !== false
     ) {
       this.bindDocumentEscapeListener();
     }

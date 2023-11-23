@@ -23,11 +23,11 @@ export class ConfirmationComponent implements OnInit {
     private _dialogRef: CpsDialogRef,
     private _config: CpsDialogConfig
   ) {
-    this.subtitle = _config.data.subtitle;
+    this.subtitle = this._config.data.subtitle;
   }
 
   ngOnInit(): void {
-    this.closeDisabled = !!this._config.disableClose;
+    this.closeDisabled = !!this._dialogRef.disableClose;
   }
 
   close(confirm: boolean) {
@@ -36,6 +36,6 @@ export class ConfirmationComponent implements OnInit {
 
   toggleDisableClose() {
     this.closeDisabled = !this.closeDisabled;
-    this._config.disableClose = this.closeDisabled;
+    this._dialogRef.disableClose = this.closeDisabled;
   }
 }
