@@ -31,6 +31,7 @@ export class DialogPageComponent {
       // contentStyle: { overflow: 'auto' },
       // baseZIndex: 10000,
       maximizable: true,
+      draggable: true,
       // disableClose: true,
       resizable: true,
       data: {

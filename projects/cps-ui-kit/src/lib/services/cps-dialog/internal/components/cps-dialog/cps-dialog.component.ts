@@ -152,7 +152,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   get parent() {
     const domElements = Array.from(
-      this.document.getElementsByClassName('p-dialog')
+      this.document.getElementsByClassName('cps-dialog')
     );
     return domElements.length > 1 ? domElements.pop() : undefined;
   }
@@ -215,7 +215,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
       case 'void':
         if (this.wrapper && this.config.modal !== false) {
-          DomHandler.addClass(this.wrapper, 'p-component-overlay-leave');
+          DomHandler.addClass(this.wrapper, 'cps-dialog-overlay-leave');
         }
         break;
     }
@@ -419,25 +419,28 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   initDrag(event: MouseEvent) {
-    if (
-      DomHandler.hasClass(event.target, 'p-dialog-header-icon') ||
-      DomHandler.hasClass(
-        (<HTMLElement>event.target).parentElement,
-        'p-dialog-header-icon'
-      )
-    ) {
-      return;
+    function isHeaderActionButton(element: HTMLElement | null): boolean {
+      while (
+        element &&
+        !element.classList.contains('cps-dialog-header-action-button')
+      ) {
+        element = element.parentElement;
+      }
+
+      return !!element;
     }
 
-    if (this.config.draggable) {
-      this.dragging = true;
-      this.lastPageX = event.pageX;
-      this.lastPageY = event.pageY;
+    if (!this.config.draggable) return;
 
-      (this.container as HTMLDivElement).style.margin = '0';
-      DomHandler.addClass(this.document.body, 'cps-unselectable-text');
-      this.dialogRef.dragStart(event);
-    }
+    if (isHeaderActionButton(<HTMLElement>event.target)) return;
+
+    this.dragging = true;
+    this.lastPageX = event.pageX;
+    this.lastPageY = event.pageY;
+
+    (this.container as HTMLDivElement).style.margin = '0';
+    DomHandler.addClass(this.document.body, 'cps-unselectable-text');
+    this.dialogRef.dragStart(event);
   }
 
   onDrag(event: MouseEvent) {

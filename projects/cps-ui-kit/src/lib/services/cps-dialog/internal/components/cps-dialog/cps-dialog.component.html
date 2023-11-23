@@ -1,28 +1,27 @@
 <div
   #mask
   [ngClass]="{
-    'p-dialog-mask': true,
-    'p-component-overlay p-component-overlay-enter p-dialog-mask-scrollblocker':
-      config.modal !== false,
-    'p-dialog-left': position === 'left',
-    'p-dialog-right': position === 'right',
-    'p-dialog-top': position === 'top',
-    'p-dialog-bottom': position === 'bottom',
-    'p-dialog-top-left': position === 'topleft' || position === 'top-left',
-    'p-dialog-top-right': position === 'topright' || position === 'top-right',
-    'p-dialog-bottom-left':
+    'cps-dialog-mask': true,
+    'cps-dialog-overlay cps-dialog-overlay-enter': config.modal !== false,
+    'cps-dialog-left': position === 'left',
+    'cps-dialog-right': position === 'right',
+    'cps-dialog-top': position === 'top',
+    'cps-dialog-bottom': position === 'bottom',
+    'cps-dialog-top-left': position === 'topleft' || position === 'top-left',
+    'cps-dialog-top-right': position === 'topright' || position === 'top-right',
+    'cps-dialog-bottom-left':
       position === 'bottomleft' || position === 'bottom-left',
-    'p-dialog-bottom-right':
+    'cps-dialog-bottom-right':
       position === 'bottomright' || position === 'bottom-right'
   }"
   [class]="config.maskStyleClass || ''">
   <div
     #container
     [ngClass]="{
-      'p-dialog p-dynamic-dialog': true,
-      'p-dialog-resizable': config.resizable,
-      'p-dialog-draggable': config.draggable,
-      'p-dialog-maximized': maximized
+      'cps-dialog': true,
+      'cps-dialog-resizable': config.resizable,
+      'cps-dialog-draggable': config.draggable,
+      'cps-dialog-maximized': maximized
     }"
     [ngStyle]="config.style"
     [class]="config.styleClass || ''"
@@ -42,18 +41,19 @@
     [style.height]="config.height">
     <div
       *ngIf="config.resizable && !maximized"
-      class="p-resizable-handle"
+      class="cps-dialog-resizable-handle"
       style="z-index: 90"
       (mousedown)="initResize($event)"></div>
     <div
       #titlebar
-      class="p-dialog-header"
+      class="cps-dialog-header"
       (mousedown)="initDrag($event)"
       *ngIf="config.showHeader === false ? false : true">
-      <span class="p-dialog-title">{{ config.headerTitle }}</span>
-      <div class="p-dialog-header-icons">
+      <span class="cps-dialog-header-title">{{ config.headerTitle }}</span>
+      <div class="cps-dialog-header-action-buttons">
         <cps-button
           *ngIf="config.maximizable"
+          class="cps-dialog-header-action-button"
           [icon]="maximized ? 'minimize' : 'maximize'"
           size="small"
           width="32"
@@ -63,6 +63,7 @@
         </cps-button>
         <cps-button
           *ngIf="config.showCloseBtn !== false"
+          class="cps-dialog-header-action-button"
           icon="close-x-2"
           size="small"
           width="32"
@@ -72,7 +73,7 @@
         </cps-button>
       </div>
     </div>
-    <div #content class="p-dialog-content" [ngStyle]="config.contentStyle">
+    <div #content class="cps-dialog-content" [ngStyle]="config.contentStyle">
       <ng-template cpsDialogContent></ng-template>
     </div>
   </div>
