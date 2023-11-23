@@ -1,3 +1,5 @@
+$cps-overlay-background: rgba(0, 0, 0, 0.2);
+
 .p-dialog-mask {
   position: fixed;
   top: 0;
@@ -14,14 +16,105 @@
   pointer-events: auto;
 }
 
+.p-component-overlay-enter {
+  animation: p-component-overlay-enter-animation 150ms forwards;
+}
+
+.p-component-overlay-leave {
+  animation: p-component-overlay-leave-animation 150ms forwards;
+}
+
+.p-component-overlay {
+  background-color: $cps-overlay-background;
+  transition-duration: 0.2s;
+}
+
+@keyframes p-component-overlay-enter-animation {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: $cps-overlay-background;
+  }
+}
+@keyframes p-component-overlay-leave-animation {
+  from {
+    background-color: $cps-overlay-background;
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
 .p-dialog {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   pointer-events: auto;
   max-height: 90%;
   transform: scale(1);
   position: relative;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 0 none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 1rem;
+  font-weight: normal;
 }
+
+.p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: #ffffff;
+  color: #343a40;
+  padding: 1.5rem;
+  border-top-right-radius: 6px;
+  border-top-left-radius: 6px;
+}
+
+.p-dialog .p-dialog-header .p-dialog-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #6c757d;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  margin-right: 0.5rem;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  color: #343a40;
+  border-color: transparent;
+  background: #e9ecef;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem #bfdbfe;
+}
+
+.p-dialog .p-dialog-header .p-dialog-header-icon:last-child {
+  margin-right: 0;
+}
+
+.p-dialog .p-dialog-content {
+  background: #ffffff;
+  color: #495057;
+  padding: 0 1.5rem 2rem 1.5rem;
+}
+
+.p-dialog .p-dialog-content:last-of-type {
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
 .p-dialog-content {
   overflow-y: auto;
   flex-grow: 1;
@@ -38,18 +131,9 @@
   cursor: move;
 }
 
-.p-dialog-footer {
-  flex-shrink: 0;
-}
-
 .p-dialog .p-dialog-header-icons {
   display: flex;
   align-items: center;
-}
-
-/* Fluid */
-.p-fluid .p-dialog-footer .p-button {
-  width: auto;
 }
 
 /* Top, Bottom, Left, Right, Top* and Bottom* */
@@ -77,6 +161,7 @@
   max-height: 100%;
   height: 100%;
 }
+
 .p-dialog-maximized {
   .p-dialog-content {
     flex-grow: 1;
@@ -141,13 +226,10 @@
   }
 }
 
-.p-confirm-dialog .p-dialog-content {
-  display: flex;
-  align-items: center;
+.cps-unselectable-text {
+  user-select: none;
 }
 
-:ng-deep {
-  .cps-unselectable-text {
-    user-select: none;
-  }
+.cps-overflow-hidden {
+  overflow: hidden;
 }

@@ -32,7 +32,7 @@ export class DialogPageComponent {
       // baseZIndex: 10000,
       maximizable: true,
       // disableClose: true,
-      // resizable: true,
+      resizable: true,
       data: {
         subtitle: 'Hello dialog'
       }

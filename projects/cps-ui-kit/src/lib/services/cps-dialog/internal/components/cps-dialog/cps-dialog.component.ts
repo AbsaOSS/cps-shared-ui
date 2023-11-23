@@ -29,7 +29,6 @@ import {
 } from '@angular/core';
 import { PrimeNGConfig, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
-import { TimesIcon } from 'primeng/icons/times';
 import { ZIndexUtils } from 'primeng/utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
@@ -49,11 +48,10 @@ type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
 
 @Component({
-  selector: 'p-dynamicDialog',
+  selector: 'cps-dialog',
   standalone: true,
   imports: [
     CommonModule,
-    TimesIcon,
     SharedModule,
     CpsDialogContentDirective,
     CpsButtonComponent
@@ -67,10 +65,7 @@ type VoidListener = () => void | null | undefined;
     ])
   ],
   changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None,
-  host: {
-    class: 'p-element'
-  }
+  encapsulation: ViewEncapsulation.None
 })
 export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   visible = true;
@@ -133,11 +128,11 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   get keepInViewport(): boolean {
-    return this.config.keepInViewport!;
+    return this.config.keepInViewport || false;
   }
 
   get maximizable(): boolean {
-    return this.config.maximizable!;
+    return this.config.maximizable || false;
   }
 
   get style(): any {
@@ -275,7 +270,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     }
 
     if (this.config.modal !== false) {
-      DomHandler.addClass(this.document.body, 'p-overflow-hidden');
+      DomHandler.addClass(this.document.body, 'cps-overflow-hidden');
     }
   }
 
@@ -286,7 +281,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       }
 
       if (this.config.modal !== false) {
-        DomHandler.removeClass(this.document.body, 'p-overflow-hidden');
+        DomHandler.removeClass(this.document.body, 'cps-overflow-hidden');
       }
 
       if (!(this.cd as ViewRef).destroyed) {
@@ -343,9 +338,9 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     this.maximized = !this.maximized;
 
     if (this.maximized) {
-      DomHandler.addClass(this.document.body, 'p-overflow-hidden');
+      DomHandler.addClass(this.document.body, 'cps-overflow-hidden');
     } else {
-      DomHandler.removeClass(this.document.body, 'p-overflow-hidden');
+      DomHandler.removeClass(this.document.body, 'cps-overflow-hidden');
     }
 
     this.dialogRef.maximize({ maximized: this.maximized });

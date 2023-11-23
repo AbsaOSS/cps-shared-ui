@@ -19,7 +19,7 @@
   <div
     #container
     [ngClass]="{
-      'p-dialog p-dynamic-dialog p-component': true,
+      'p-dialog p-dynamic-dialog': true,
       'p-dialog-resizable': config.resizable,
       'p-dialog-draggable': config.draggable,
       'p-dialog-maximized': maximized
@@ -41,7 +41,7 @@
     [style.width]="config.width"
     [style.height]="config.height">
     <div
-      *ngIf="config.resizable"
+      *ngIf="config.resizable && !maximized"
       class="p-resizable-handle"
       style="z-index: 90"
       (mousedown)="initResize($event)"></div>
@@ -73,7 +73,7 @@
       </div>
     </div>
     <div #content class="p-dialog-content" [ngStyle]="config.contentStyle">
-      <ng-template pDynamicDialogContent></ng-template>
+      <ng-template cpsDialogContent></ng-template>
     </div>
   </div>
 </div>
