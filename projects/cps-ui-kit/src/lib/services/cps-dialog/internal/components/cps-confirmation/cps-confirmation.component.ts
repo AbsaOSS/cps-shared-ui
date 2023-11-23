@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
@@ -11,20 +11,18 @@ import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
   templateUrl: './cps-confirmation.component.html',
   styleUrls: ['./cps-confirmation.component.scss']
 })
-export class CpsConfirmationComponent implements OnInit {
+export class CpsConfirmationComponent {
   subtitle = '';
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private _dialogRef: CpsDialogRef,
-    public config: CpsDialogConfig
+    private _config: CpsDialogConfig
   ) {
-    this.subtitle = config.data.subtitle;
+    this.subtitle = this._config.data.subtitle;
   }
 
-  ngOnInit(): void {}
-
   close(confirm: boolean) {
-    this._dialogRef.close(confirm);
+    this._dialogRef?.close(confirm);
   }
 }

@@ -3,15 +3,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 12px;
+    padding: 8px;
 
-    &-icon {
-      width: 40px;
-      height: 40px;
-    }
-
-    &-title {
+    &-subtitle {
+      font-size: 16px;
       font-weight: normal;
+      font-family: 'Source Sans Pro', sans-serif;
+      color: var(--cps-color-text-dark);
     }
 
     &-buttons {
