@@ -93,6 +93,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   insertionPoint: Nullable<CpsDialogContentDirective>;
 
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
+  @ViewChild('content') contentViewChild: Nullable<ElementRef>;
+  @ViewChild('header') headerViewChild: Nullable<ElementRef>;
 
   childComponentType: Nullable<Type<any>>;
 
@@ -354,6 +356,22 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       const deltaY = event.pageY - (this.lastPageY as number);
       const containerWidth = DomHandler.getOuterWidth(this.container);
       const containerHeight = DomHandler.getOuterHeight(this.container);
+      const contentHeight = DomHandler.getOuterHeight(
+        (<ElementRef>this.contentViewChild).nativeElement
+      );
+      const contentWidth = DomHandler.getOuterWidth(
+        (<ElementRef>this.contentViewChild).nativeElement
+      );
+      const headerHeight = this.headerViewChild
+        ? DomHandler.getOuterHeight(
+            (<ElementRef>this.headerViewChild).nativeElement
+          )
+        : 0;
+      const headerWidth = this.headerViewChild
+        ? DomHandler.getOuterWidth(
+            (<ElementRef>this.headerViewChild).nativeElement
+          )
+        : 0;
       let newWidth = containerWidth + deltaX;
       let newHeight = containerHeight + deltaY;
       const minWidth = (this.container as HTMLDivElement).style.minWidth;
@@ -373,7 +391,10 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
         (!minWidth || newWidth > parseInt(minWidth)) &&
         offset.left + newWidth < viewport.width
       ) {
-        this._style.width = newWidth + 'px';
+        const newContentWidth = contentWidth + newWidth - containerWidth;
+        const newHeaderWidth = headerWidth + newWidth - containerWidth;
+        this._style.width =
+          Math.max(newWidth, newContentWidth, newHeaderWidth) + 'px';
         (this.container as HTMLDivElement).style.width = this._style.width;
       }
 
@@ -381,7 +402,9 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
         (!minHeight || newHeight > parseInt(minHeight)) &&
         offset.top + newHeight < viewport.height
       ) {
-        this._style.height = newHeight + 'px';
+        const newContentHeight = contentHeight + newHeight - containerHeight;
+        this._style.height =
+          Math.max(newHeight, headerHeight + newContentHeight) + 'px';
         (this.container as HTMLDivElement).style.height = this._style.height;
       }
 

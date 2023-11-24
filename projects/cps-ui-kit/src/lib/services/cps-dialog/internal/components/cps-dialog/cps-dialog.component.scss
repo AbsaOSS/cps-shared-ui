@@ -66,6 +66,7 @@ $header-drag-active-background: #f1eaec;
 
 .cps-dialog {
   .cps-dialog-header {
+    overflow: hidden;
     border-bottom: 0 none;
     background: #ffffff;
     color: var(--cps-color-text-dark);
