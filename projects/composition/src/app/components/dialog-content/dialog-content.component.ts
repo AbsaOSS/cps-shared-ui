@@ -9,12 +9,13 @@ import {
 @Component({
   standalone: true,
   imports: [CpsButtonComponent, CpsIconComponent],
-  selector: 'app-confirmation',
-  templateUrl: './confirmation.component.html',
-  styleUrls: ['./confirmation.component.scss']
+  selector: 'app-dialog-content',
+  templateUrl: './dialog-content.component.html',
+  styleUrls: ['./dialog-content.component.scss']
 })
-export class ConfirmationComponent implements OnInit {
-  subtitle = '';
+export class DialogContentComponent implements OnInit {
+  info = '';
+  icon = '';
 
   closeDisabled = false;
 
@@ -23,7 +24,8 @@ export class ConfirmationComponent implements OnInit {
     private _dialogRef: CpsDialogRef,
     private _config: CpsDialogConfig
   ) {
-    this.subtitle = this._config.data.subtitle;
+    this.info = this._config.data.info;
+    this.icon = this._config.data.icon;
   }
 
   ngOnInit(): void {

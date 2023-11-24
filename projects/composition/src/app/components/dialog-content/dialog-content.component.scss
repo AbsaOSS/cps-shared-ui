@@ -1,5 +1,5 @@
 :host {
-  .confirm {
+  .my-dialog-content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -14,11 +14,8 @@
       font-weight: normal;
     }
 
-    &-buttons {
-      width: 100%;
-      display: flex;
-      justify-content: space-around;
-      padding-top: 28px;
+    &-button {
+      margin-top: 24px;
     }
   }
 }
