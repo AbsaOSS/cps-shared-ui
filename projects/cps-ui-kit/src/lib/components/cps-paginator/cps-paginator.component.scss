@@ -1,8 +1,8 @@
 $color-calm: var(--cps-color-calm);
 $text-color: var(--cps-color-text-dark);
 $border-color: var(--cps-color-text-dark);
-$elem-hover-background: #f8f4f5;
-$elem-active-background: #f1eaec;
+$elem-hover-background: var(--cps-color-highlight-hover);
+$elem-active-background: var(--cps-color-highlight-active);
 
 :host {
   ::ng-deep {

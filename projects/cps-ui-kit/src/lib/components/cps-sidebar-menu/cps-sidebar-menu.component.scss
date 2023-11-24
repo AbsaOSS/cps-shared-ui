@@ -2,8 +2,8 @@
   $sidebar-width: 80px;
   $sidebar-width-collapsed: 40px;
   $sidebar-item-height: 80px;
-  $sidebar-item-hover-background: #f8f4f5;
-  $sidebar-item-active-background: #f1eaec;
+  $sidebar-item-hover-background: var(--cps-color-highlight-hover);
+  $sidebar-item-active-background: var(--cps-color-highlight-active);
   $sidebar-item-content-color: var(--cps-color-text-darkest);
   $sidebar-item-content-disabled-color: var(--cps-color-text-light);
   $sidebar-border-color: var(--cps-color-line-mid);

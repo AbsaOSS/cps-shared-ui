@@ -1,6 +1,6 @@
 $cps-overlay-background: rgba(0, 0, 0, 0.2);
-$header-drag-hover-background: #f8f4f5;
-$header-drag-active-background: #f1eaec;
+$header-drag-hover-background: var(--cps-color-highlight-hover);
+$header-drag-active-background: var(--cps-color-highlight-active);
 
 .cps-dialog-mask {
   position: fixed;
@@ -90,6 +90,7 @@ $header-drag-active-background: #f1eaec;
         display: flex;
       }
       .cps-dialog-header-title {
+        cursor: default;
         font-weight: 700;
         font-size: 1.25rem;
       }
@@ -130,6 +131,11 @@ $header-drag-active-background: #f1eaec;
     cursor: move;
     &:hover {
       background-color: $header-drag-hover-background;
+    }
+    .cps-dialog-header-left {
+      .cps-dialog-header-title {
+        cursor: unset;
+      }
     }
   }
 }
