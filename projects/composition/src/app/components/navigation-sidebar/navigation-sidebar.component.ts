@@ -46,6 +46,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/datepicker'
     },
     {
+      title: 'Dialog',
+      url: '/dialog'
+    },
+    {
       title: 'Expansion panel',
       url: '/expansion-panel'
     },

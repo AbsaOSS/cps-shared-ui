@@ -1,8 +1,8 @@
 @import '../../../variables.scss';
 
 :host {
-  $item-hover-background: #f8f4f5;
-  $item-active-background: #f1eaec;
+  $item-hover-background: var(--cps-color-highlight-hover);
+  $item-active-background: var(--cps-color-highlight-active);
 
   border-right: 1px solid lightgrey;
   background-color: white;

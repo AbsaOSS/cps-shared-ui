@@ -23,7 +23,7 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 
 export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
@@ -62,7 +62,7 @@ export class CpsInputComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
   @Input() appearance: CpsInputAppearanceType = 'outlined';
   @Input() valueToDisplay = '';
 

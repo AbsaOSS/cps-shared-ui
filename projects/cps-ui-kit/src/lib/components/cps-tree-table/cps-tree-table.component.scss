@@ -4,21 +4,21 @@ $color-surprise: var(--cps-color-surprise);
 $toolbar-text-color: var(--cps-color-text-darkest);
 $treetable-borders-color: var(--cps-color-line-mid);
 $stripe-color: var(--cps-color-bg-light);
-$row-hover-background: #f8f4f5;
+$row-hover-background: var(--cps-color-highlight-hover);
 $row-selected-background: #f1ebed;
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
-$colitem-hover-background: #f8f4f5;
+$colitem-hover-background: var(--cps-color-highlight-hover);
 $colitem-value-color: var(--cps-color-text-dark);
 $selected-colitem-background: #efe4e7;
 $colitem-highlight-background: #f5eeef;
 $colitem-highlight-selected-background: #e6d4d9;
 $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
-$paginator-elem-hover-background: #f8f4f5;
-$paginator-elem-active-background: #f1eaec;
+$paginator-elem-hover-background: var(--cps-color-highlight-hover);
+$paginator-elem-active-background: var(--cps-color-highlight-active);
 $sorticon-hover-color: var(--cps-color-text-dark);
-$badge-background-color: #f1eaec;
+$badge-background-color: var(--cps-color-highlight-active);
 $checkbox-border-color: var(--cps-color-text-mild);
 
 $tbar-small-height: 43px;
@@ -126,6 +126,13 @@ $tbar-normal-height: 72px;
       overflow: hidden;
       position: relative;
     }
+
+    .p-link:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: unset;
+    }
+
     .p-link {
       text-align: left;
       background-color: transparent;
@@ -167,10 +174,12 @@ $tbar-normal-height: 72px;
       .p-treetable-toggler:enabled:hover {
       color: $color-calm;
       border-color: transparent;
+      background: unset;
     }
     .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler:focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
 
     .p-treetable .p-paginator-bottom {
@@ -226,6 +235,7 @@ $tbar-normal-height: 72px;
       padding: 0 0.5rem;
       font-family: 'Source Sans Pro', sans-serif;
       font-size: 14px;
+      height: unset;
     }
 
     .p-paginator-page,
@@ -254,6 +264,7 @@ $tbar-normal-height: 72px;
     .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
     .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
       background: $paginator-elem-hover-background;
+      border-color: unset;
     }
     .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):active,
     .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):active,
@@ -294,6 +305,7 @@ $tbar-normal-height: 72px;
 
     .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
       background: $paginator-elem-hover-background;
+      border-color: unset;
     }
     .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):active {
       background: $paginator-elem-active-background;
@@ -340,6 +352,8 @@ $tbar-normal-height: 72px;
       justify-content: space-between;
       align-items: center;
       padding: 0 10px;
+      border: unset;
+      background: unset;
       border-top: 1px solid $treetable-borders-color;
       border-right: 1px solid $treetable-borders-color;
       border-left: 4px solid $color-surprise !important;

@@ -16,8 +16,8 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { find, isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
-import { BaseTreeDropdownComponent } from '../../base_components/base-tree-dropdown.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown/cps-base-tree-dropdown.component';
 
 export type CpsTreeAutocompleteAppearanceType =
   | 'outlined'
@@ -41,11 +41,12 @@ export type CpsTreeAutocompleteAppearanceType =
   styleUrls: ['./cps-tree-autocomplete.component.scss']
 })
 export class CpsTreeAutocompleteComponent
-  extends BaseTreeDropdownComponent
+  extends CpsBaseTreeDropdownComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @Input() emptyMessage = 'No results found';
   @Input() appearance: CpsTreeAutocompleteAppearanceType = 'outlined';
+  @Input() placeholder = 'Please enter';
 
   inputText = '';
   backspaceClickedOnce = false;

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
-  TooltipPosition
+  CpsTooltipPosition
 } from '../../directives/cps-tooltip.directive';
 
 @Component({
@@ -15,7 +15,7 @@ import {
 export class CpsInfoCircleComponent {
   @Input() size: iconSizeType = 'small';
   @Input() tooltipText = '';
-  @Input() tooltipPosition: TooltipPosition = 'top';
+  @Input() tooltipPosition: CpsTooltipPosition = 'top';
   @Input() tooltipContentClass = 'cps-tooltip-content';
   @Input() tooltipMaxWidth: number | string = '100%';
   @Input() tooltipPersistent = false;

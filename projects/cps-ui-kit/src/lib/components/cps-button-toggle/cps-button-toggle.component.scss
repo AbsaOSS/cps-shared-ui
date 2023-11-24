@@ -7,8 +7,8 @@ $disabled-background-color: #f7f7f7;
 $disabled-option-label-color: var(--cps-color-text-light);
 $option-label-color: var(--cps-color-text-dark);
 $border-color: var(--cps-color-text-light);
-$option-hover-background: #f8f4f5;
-$option-active-background: #f1eaec;
+$option-hover-background: var(--cps-color-highlight-hover);
+$option-active-background: var(--cps-color-highlight-active);
 
 :host {
   .cps-btn-toggle {

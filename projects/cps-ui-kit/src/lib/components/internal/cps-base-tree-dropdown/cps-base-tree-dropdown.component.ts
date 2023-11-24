@@ -14,25 +14,21 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { TreeNode } from 'primeng/api';
-import {
-  IconType,
-  iconSizeType
-} from '../components/cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import { TooltipPosition } from '../directives/cps-tooltip.directive';
-import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
+import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import { convertSize } from '../../../utils/internal/size-utils';
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 @Component({
   template: ''
 })
-export class BaseTreeDropdownComponent
+export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   @Input() label = '';
-  @Input() placeholder = 'Please enter';
   @Input() hint = '';
   @Input() multiple = false;
   @Input() disabled = false;
@@ -54,7 +50,7 @@ export class BaseTreeDropdownComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
   @Input() initialExpandDirectories = false;
   @Input() initialExpandAll = false;
 

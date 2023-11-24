@@ -31,7 +31,7 @@ import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
@@ -86,7 +86,7 @@ export class CpsSelectComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
   @Input() infoTooltipMaxWidth: number | string = '100%';
   @Input() infoTooltipPersistent = false;
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
   @Input() optionsClass = '';
   @Input() appearance: CpsSelectAppearanceType = 'outlined';
 

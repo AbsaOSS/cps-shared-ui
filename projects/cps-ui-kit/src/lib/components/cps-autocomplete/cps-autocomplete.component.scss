@@ -6,7 +6,7 @@ $autocomplete-label-color: var(--cps-color-text-dark);
 $autocomplete-label-disabled-color: var(--cps-color-text-mild);
 $autocomplete-items-disabled-color: var(--cps-color-text-light);
 $autocomplete-hint-color: var(--cps-color-text-mild);
-$option-hover-background: #f8f4f5;
+$option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: #efe4e7;
 $option-highlight-background: #f5eeef;
 $option-highlight-selected-background: #e6d4d9;
