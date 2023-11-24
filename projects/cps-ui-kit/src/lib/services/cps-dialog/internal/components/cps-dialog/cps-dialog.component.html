@@ -19,8 +19,9 @@
     #container
     [ngClass]="{
       'cps-dialog': true,
-      'cps-dialog-resizable': config.resizable,
-      'cps-dialog-draggable': config.draggable,
+      'cps-dialog-resizable': resizable,
+      'cps-dialog-draggable': draggable && !maximized,
+      'cps-dialog-dragging': dragging,
       'cps-dialog-maximized': maximized
     }"
     [ngStyle]="config.style"
@@ -44,7 +45,7 @@
     [style.maxWidth]="maximized ? '' : config.maxWidth"
     [style.maxHeight]="maximized ? '' : config.maxHeight">
     <div
-      *ngIf="config.resizable && !maximized"
+      *ngIf="resizable && !maximized"
       class="cps-dialog-resizable-handle"
       style="z-index: 90"
       (mousedown)="initResize($event)"></div>
@@ -78,14 +79,14 @@
       </div>
       <div class="cps-dialog-header-action-buttons">
         <cps-button
-          *ngIf="config.maximizable"
+          *ngIf="maximizable"
           class="cps-dialog-header-action-button"
           [icon]="maximized ? 'minimize' : 'maximize'"
           size="small"
           width="32"
           color="graphite"
           type="borderless"
-          (clicked)="maximize()">
+          (clicked)="toggleMaximized()">
         </cps-button>
         <cps-button
           *ngIf="config.showCloseBtn !== false"

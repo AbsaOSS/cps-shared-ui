@@ -115,6 +115,11 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
   documentDragEndListener!: VoidListener | null;
 
   _openStateChanged = new EventEmitter<void>();
+  _dragStarted = new EventEmitter<MouseEvent>();
+  _dragEnded = new EventEmitter<MouseEvent>();
+  _resizeStarted = new EventEmitter<MouseEvent>();
+  _resizeEnded = new EventEmitter<MouseEvent>();
+  _maximizedStateChanged = new EventEmitter<boolean>();
 
   get minX(): number {
     return this.config.minX ? this.config.minX : 0;
@@ -130,6 +135,14 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
   get maximizable(): boolean {
     return this.config.maximizable || false;
+  }
+
+  get draggable(): boolean {
+    return this.config.draggable || false;
+  }
+
+  get resizable(): boolean {
+    return this.config.resizable || false;
   }
 
   get style(): any {
@@ -170,8 +183,8 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     this.loadChildComponent(this.childComponentType!);
 
-    if (this.config.maximized && this.config.maximizable) {
-      this.maximize();
+    if (this.config.maximized && this.maximizable) {
+      this.toggleMaximized();
     }
     this._cdRef.detectChanges();
   }
@@ -305,8 +318,12 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  maximize() {
-    this.maximized = !this.maximized;
+  toggleMaximized(value?: boolean) {
+    if (!this.maximizable) return;
+    if (typeof value === 'boolean') {
+      if (value === this.maximized || (!value && !this.maximized)) return;
+      this.maximized = value;
+    } else this.maximized = !this.maximized;
 
     if (this.maximized) {
       DomHandler.addClass(this.document.body, 'cps-overflow-hidden');
@@ -314,11 +331,11 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       DomHandler.removeClass(this.document.body, 'cps-overflow-hidden');
     }
 
-    this._dialogRef.maximize({ maximized: this.maximized });
+    this._maximizedStateChanged.emit(this.maximized);
   }
 
   initResize(event: MouseEvent) {
-    if (this.config.resizable) {
+    if (this.resizable) {
       if (!this.documentResizeListener) {
         this.bindDocumentResizeListeners();
       }
@@ -327,7 +344,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       this.lastPageX = event.pageX;
       this.lastPageY = event.pageY;
       DomHandler.addClass(this.document.body, 'cps-unselectable-text');
-      this._dialogRef.resizeInit(event);
+      this._resizeStarted.emit(event);
     }
   }
 
@@ -377,7 +394,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     if (this.resizing) {
       this.resizing = false;
       DomHandler.removeClass(this.document.body, 'cps-unselectable-text');
-      this._dialogRef.resizeEnd(event);
+      this._resizeEnded.emit(event);
     }
   }
 
@@ -394,7 +411,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       return !!element;
     }
 
-    if (!this.config.draggable) return;
+    if (!this.draggable || this.maximized) return;
 
     if (isHeaderActionButton(<HTMLElement>event.target)) return;
 
@@ -404,7 +421,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
     (this.container as HTMLDivElement).style.margin = '0';
     DomHandler.addClass(this.document.body, 'cps-unselectable-text');
-    this._dialogRef.dragStart(event);
+    this._dragStarted.emit(event);
   }
 
   onDrag(event: MouseEvent) {
@@ -445,7 +462,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     if (this.dragging) {
       this.dragging = false;
       DomHandler.removeClass(this.document.body, 'cps-unselectable-text');
-      this._dialogRef.dragEnd(event);
+      this._dragEnded.emit(event);
       this._cdRef.detectChanges();
     }
   }
@@ -529,11 +546,11 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       this.bindDocumentEscapeListener();
     }
 
-    if (this.config.resizable) {
+    if (this.resizable) {
       this.bindDocumentResizeListeners();
     }
 
-    if (this.config.draggable) {
+    if (this.draggable) {
       this.bindDocumentDragListener();
       this.bindDocumentDragEndListener();
     }

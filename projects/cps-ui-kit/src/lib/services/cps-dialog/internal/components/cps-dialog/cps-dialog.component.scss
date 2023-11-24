@@ -1,4 +1,6 @@
 $cps-overlay-background: rgba(0, 0, 0, 0.2);
+$header-drag-hover-background: #f8f4f5;
+$header-drag-active-background: #f1eaec;
 
 .cps-dialog-mask {
   position: fixed;
@@ -114,8 +116,17 @@ $cps-overlay-background: rgba(0, 0, 0, 0.2);
   flex-grow: 1;
 }
 
-.cps-dialog-draggable .cps-dialog-header {
-  cursor: move;
+.cps-dialog-dragging .cps-dialog-header {
+  background-color: $header-drag-active-background !important;
+}
+
+.cps-dialog-draggable {
+  .cps-dialog-header {
+    cursor: move;
+    &:hover {
+      background-color: $header-drag-hover-background;
+    }
+  }
 }
 
 .cps-dialog .cps-dialog-header-action-buttons {

@@ -58,9 +58,39 @@ export class DialogPageComponent {
       }
     } as CpsDialogConfig);
 
-    this.dialogRef.onClose.subscribe((confirm: boolean) => {});
+    this.dialogRef.onOpen.subscribe(() => {
+      console.log('opened');
+    });
 
-    this.dialogRef.onMaximize.subscribe((value) => {});
+    this.dialogRef.onClose.subscribe((confirm: boolean) => {
+      console.log('confirm', confirm);
+    });
+
+    this.dialogRef.onDestroy.subscribe(() => {
+      console.log('destroy');
+    });
+
+    this.dialogRef.onMaximize.subscribe((value) => {
+      console.log('onMaximize', value);
+    });
+
+    this.dialogRef.onDragStart.subscribe((event) => {
+      console.log('onDragStart', event);
+    });
+
+    this.dialogRef.onDragEnd.subscribe((event) => {
+      console.log('onDragEnd', event);
+    });
+
+    this.dialogRef.onResizeStart.subscribe((event) => {
+      console.log('onResizeStart', event);
+    });
+
+    this.dialogRef.onResizeEnd.subscribe((event) => {
+      console.log('onResizeEnd', event);
+    });
+
+    // this.dialogRef.minimize();
   }
 
   openConfirmationDialog() {
