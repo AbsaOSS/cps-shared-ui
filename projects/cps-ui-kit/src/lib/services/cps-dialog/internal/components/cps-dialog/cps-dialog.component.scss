@@ -84,9 +84,10 @@ $header-drag-active-background: #f1eaec;
     }
     .cps-dialog-header-left {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       .cps-dialog-header-icon {
         margin-right: 8px;
+        display: flex;
       }
       .cps-dialog-header-title {
         font-weight: 700;
@@ -95,6 +96,10 @@ $header-drag-active-background: #f1eaec;
       .cps-dialog-header-info-circle {
         margin-left: 8px;
         cursor: default;
+        display: flex;
+        cps-info-circle {
+          margin-top: 2px;
+        }
       }
     }
   }
