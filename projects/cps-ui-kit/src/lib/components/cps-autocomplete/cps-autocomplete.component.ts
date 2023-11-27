@@ -233,13 +233,13 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, 'top', 'bottom', 'left' or 'right'. Defaults to 'top'.
+   * Position of infoTooltip, 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
-   * Styling appearance of autocomplete input, it could be 'outlined', 'underlined' or 'borderless'. Defaults to 'outlined'.
+   * Styling appearance of autocomplete input, it could be 'outlined', 'underlined' or 'borderless'.
    * @group Props
    */
   @Input() appearance: CpsAutocompleteAppearanceType = 'outlined';

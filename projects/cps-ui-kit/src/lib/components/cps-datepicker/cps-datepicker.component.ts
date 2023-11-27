@@ -128,13 +128,13 @@ export class CpsDatepickerComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, it can be "top", "bottom", "left" or "right". Defaults to "top".
+   * Position of infoTooltip, it can be "top", "bottom", "left" or "right".
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
-   * Styling appearance of datepicker input, it can be 'outlined', 'underlined' or 'borderless. Defaults to 'outlined'.
+   * Styling appearance of datepicker input, it can be 'outlined', 'underlined' or 'borderless.
    * @group Props
    */
   @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
