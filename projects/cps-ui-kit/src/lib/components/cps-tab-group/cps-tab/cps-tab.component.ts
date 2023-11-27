@@ -49,6 +49,8 @@ export class CpsTabComponent {
    * @group Props
    */
   @Input() tooltipPersistent = false;
+  @Input() badgeValue = '';
+  @Input() badgeTooltip = '';
   @ViewChild(TemplateRef) content!: TemplateRef<any>;
   active = false;
 }

@@ -31,7 +31,7 @@ import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
@@ -70,21 +70,22 @@ export class CpsSelectComponent
   @Input() label = '';
 
   /**
-   * Hint text for the select component.
+   * Placeholder text for the select component.
    * @group Props
    */
   @Input() placeholder = 'Please select';
 
   /**
-   * More hints about the select component.
+   * Bottom hint text for the input field.
    * @group Props
    */
   @Input() hint = '';
+
   /**
-   *  Whether the component should return an object.
+   * Returns the object directly rather than the value specified with optionValue.
    * @group Props
    */
-  @Input() returnObject = true; // if false, value will be option[optionValue]
+  @Input() returnObject = true;
 
   /**
    * Specifies if multiple values can be selected.
@@ -93,79 +94,83 @@ export class CpsSelectComponent
   @Input() multiple = false;
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Specifies whether the component is disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * Width of the select input field, of type number or string.
+   * Width of the select input field, of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
 
   /**
-   * Options for selecting all element.
+   * Option for selecting all elements. Doesn't work with virtual scroll.
    * @group Props
    */
-  @Input() selectAll = true; // doesn't work with virtual scroll
+  @Input() selectAll = true;
 
   /**
-   * When selecting an element, it will appear in a form of a chip.
+   * When selecting elements, they will appear in a form of a chip.
    * @group Props
    */
   @Input() chips = true;
 
   /**
-   *Options for removing a selected chip element.
+   * Option for removing a selected chip element.
    * @group Props
    */
   @Input() closableChips = true;
 
   /**
-   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * Option for clearing input, when enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
+
   /**
-   *  Whether the component should open or expand on clear.
+   * Whether the dropdown list should open on clear.
    * @group Props
    */
   @Input() openOnClear = true;
 
   /**
-   * An array of options of type any in the select component.
+   * An array of options.
    * @group Props
    */
   @Input() options = [] as any[];
 
   /**
-   * The label or title of the options.
+   * Name of the label field of an option.
    * @group Props
    */
   @Input() optionLabel = 'label';
+
   /**
-   * Not certain.
+   * Name of the value field of an option. Needed only if returnObject prop is false.
    * @group Props
    */
-  @Input() optionValue = 'value'; // needed only if returnObject === false
+  @Input() optionValue = 'value';
+
   /**
-   * Not certain.
-   * More information about the options.
+   * Name of the info field of an option, shows the additional information text.
    * @group Props
    */
   @Input() optionInfo = 'info';
 
   /**
-   *Options for hiding details.
+   * Hides hint and validation errors.
    * @group Props
    */
   @Input() hideDetails = false;
+
   /**
-   * Whether the component should have persistent clear.
+   * Whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
+
   /**
    * Icon before input value.
    * @group Props
@@ -173,13 +178,13 @@ export class CpsSelectComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Size of icon before input value, of type number or string or value 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
+   * Size of icon before input value, of type number or string or value 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
 
   /**
-   *When enabled, a loading bar is displayed when data is being collected.
+   * When enabled, a loading bar is displayed when data is being collected.
    * @group Props
    */
   @Input() loading = false;
@@ -191,46 +196,55 @@ export class CpsSelectComponent
   @Input() virtualScroll = false;
 
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * Determines how many additional elements to add to the DOM outside of the view. Default value is half the number of items shown in the view.
+   * @group Props
+   */
+  @Input() numToleratedItems = 10;
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
-  @Input() numToleratedItems = 10;
+
   /**
-   * Info tooltip class for styling.
+   * InfoTooltip class for styling.
    * @group Props
    */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
   /**
-   * Size of infoTooltip, of type number or string.
+   * Max width of infoTooltip of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip it can be "right" or "top" or "bottom" or "left".
+   * Position of infoTooltip, 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
   /**
-   * Class for styling the select component.
+   * Class for additional styling of the dropdown list.
    * @group Props
    */
   @Input() optionsClass = '';
 
   /**
-   * Styling appearance of autocomplete input it can be "outlined" or "underlined" or "borderless".
+   * Styling appearance of select input, it could be 'outlined', 'underlined' or 'borderless'.
    * @group Props
    */
   @Input() appearance: CpsSelectAppearanceType = 'outlined';
 
   /**
-   * Value selected.
+   * Value of the select component.
    * @group Props
    */
   @Input('value') _value: any = undefined;

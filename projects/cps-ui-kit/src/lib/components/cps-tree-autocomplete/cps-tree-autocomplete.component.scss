@@ -6,7 +6,7 @@ $treeautocomplete-label-color: var(--cps-color-text-dark);
 $treeautocomplete-label-disabled-color: var(--cps-color-text-mild);
 $treeautocomplete-items-disabled-color: var(--cps-color-text-light);
 $treeautocomplete-hint-color: var(--cps-color-text-mild);
-$option-hover-background: #f8f4f5;
+$option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: #efe4e7;
 $option-highlight-background: #f5eeef;
 $option-highlight-selected-background: #e6d4d9;
@@ -310,6 +310,8 @@ $hover-transition-duration: 0.2s;
       background: #ffffff;
       color: $treeautocomplete-option-value-color;
       padding: 0;
+      border: unset;
+      border-radius: unset;
     }
 
     .cps-treeautocomplete-option {
@@ -383,7 +385,12 @@ $hover-transition-duration: 0.2s;
       overflow: auto;
     }
 
+    .p-tree .p-tree-container .p-treenode {
+      padding: unset;
+    }
+
     .p-tree .p-tree-container .p-treenode .p-treenode-content {
+      border-radius: 0;
       transition: box-shadow 0.2s;
       padding: 0.25rem;
     }
@@ -417,13 +424,13 @@ $hover-transition-duration: 0.2s;
     .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
 
     .p-tree
       .p-tree-container
       .p-treenode
       .p-treenode-content:not(.p-highlight):focus {
-      //background-color: $option-highlight-background;
       background-color: $option-hover-background;
     }
 
@@ -436,12 +443,13 @@ $hover-transition-duration: 0.2s;
         opacity: 1;
       }
     }
-    // .p-tree
-    //   .p-tree-container
-    //   .p-treenode
-    //   .p-treenode-content.p-highlight:focus {
-    //   background: $option-highlight-selected-background;
-    // }
+
+    .p-tree
+      .p-tree-container
+      .p-treenode
+      .p-treenode-content.p-highlight:focus {
+      background: $option-highlight-selected-background;
+    }
 
     .p-tree-toggler {
       outline: 0 none;
@@ -458,6 +466,16 @@ $hover-transition-duration: 0.2s;
       :hover {
         color: $color-calm;
       }
+    }
+
+    .p-tree
+      .p-tree-container
+      .p-treenode
+      .p-treenode-content
+      .p-tree-toggler:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: unset;
     }
 
     .cps-tree-node-fully-expandable > .p-treenode-content:hover {

@@ -6,26 +6,29 @@ import {
   OnInit,
   Optional,
   Output,
+  Renderer2,
   Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
-  TooltipPosition
+  CpsTooltipPosition
 } from '../../directives/cps-tooltip.directive';
 
-export type BtnToggleOption = {
+export type CpsButtonToggleOption = {
   value: any;
-  label: string;
+  label?: string;
+  icon?: string;
   disabled?: boolean;
   tooltip?: string;
 };
 
 /**
- * CpsButtonToggleComponent is used to select a boolean value using a button.
+ * CpsButtonToggleComponent is used to select values using buttons.
  * @group Components
  */
 @Component({
@@ -34,6 +37,7 @@ export type BtnToggleOption = {
     CommonModule,
     CheckOptionSelectedPipe,
     CpsInfoCircleComponent,
+    CpsIconComponent,
     CpsTooltipDirective
   ],
   providers: [CheckOptionSelectedPipe],
@@ -43,20 +47,16 @@ export type BtnToggleOption = {
 })
 export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   /**
-   * Label or name of the toggle button.
+   * Label of the toggle buttons.
    * @group Props
    */
   @Input() label = '';
 
   /**
-   * An array of options on the toggle button, of object type 
-   *  {value: any;
-      label: string;
-      disabled?: boolean;
-      tooltip?: string;}.
+   * An array of options.
    * @group Props
    */
-  @Input() options = [] as BtnToggleOption[];
+  @Input() options = [] as CpsButtonToggleOption[];
 
   /**
    * Specifies if multiple values can be selected.
@@ -65,18 +65,31 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() multiple = false;
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Specifies that the component should be disabled.
    * @group Props
    */
   @Input() disabled = false;
-  /**
-   *  Whether the options should be mandatory.
-   * @group Props
-   */
-  @Input() mandatory = true; // at least one of the options is mandatory
 
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * Whether at least one of the options is mandatory.
+   * @group Props
+   */
+  @Input() mandatory = true;
+
+  /**
+   * Whether all buttons should have equal widths.
+   * @group Props
+   */
+  @Input() equalWidths = true;
+
+  /**
+   * Position of the option tooltip, can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
+  @Input() optionTooltipPosition: CpsTooltipPosition = 'bottom';
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
@@ -88,13 +101,13 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip, of type number or string .
+   * Size of infoTooltip, of type number or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
@@ -103,9 +116,10 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    * Position of infoTooltip, it can be 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
   /**
-   * Value specified in component.
+   * Value of the component.
    * @group Props
    */
   @Input('value') _value: any = undefined;
@@ -126,7 +140,12 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    */
   @Output() valueChanged = new EventEmitter<any>();
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  largestButtonWidth = 0;
+
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    private renderer: Renderer2
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -136,6 +155,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     if (this.multiple && !this._value) {
       this._value = [];
     }
+    this._setEqualWidths();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -194,6 +214,43 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
+  }
+
+  private _setEqualWidths() {
+    if (!this.equalWidths) return;
+
+    const hiddenSpan = this.renderer.createElement('span');
+    this.renderer.setStyle(hiddenSpan, 'visibility', 'hidden');
+    this.renderer.setStyle(hiddenSpan, 'position', 'absolute');
+    this.renderer.setStyle(hiddenSpan, 'left', '-9999px');
+    this.renderer.setStyle(hiddenSpan, 'font-size', '16px');
+    this.renderer.setStyle(hiddenSpan, 'letter-spacing', '0.05em');
+    this.renderer.setStyle(
+      hiddenSpan,
+      'font-family',
+      '"Source Sans Pro", sans-serif'
+    );
+
+    this.renderer.appendChild(document.body, hiddenSpan);
+
+    this.largestButtonWidth = 0;
+    this.options.forEach((opt) => {
+      const text = this.renderer.createText(opt.label || '');
+      this.renderer.appendChild(hiddenSpan, text);
+
+      let width = hiddenSpan.offsetWidth || 0;
+      width += 26;
+      if (opt.icon) {
+        width += 16;
+        if (opt.label) width += 8;
+      }
+      if (width > this.largestButtonWidth) {
+        this.largestButtonWidth = width;
+      }
+      this.renderer.removeChild(hiddenSpan, text);
+    });
+
+    this.renderer.removeChild(document.body, hiddenSpan);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -1,4 +1,10 @@
-import { Component, Input, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  Optional,
+  ViewChild
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata } from 'primeng/api';
@@ -7,14 +13,17 @@ import { CpsInputComponent } from '../../../cps-input/cps-input.component';
 import { CpsDatepickerComponent } from '../../../cps-datepicker/cps-datepicker.component';
 import { CpsAutocompleteComponent } from '../../../cps-autocomplete/cps-autocomplete.component';
 import {
-  BtnToggleOption,
+  CpsButtonToggleOption,
   CpsButtonToggleComponent
 } from '../../../cps-button-toggle/cps-button-toggle.component';
 import { TreeTable } from 'primeng/treetable';
+import {
+  CpsColumnFilterCategoryOption,
+  CpsColumnFilterType
+} from '../../cps-column-filter-types';
 
 /**
- * Not certain.
- * TableColumnFilterConstraintComponent is a filtering logic component in table.
+ * TableColumnFilterConstraintComponent is a filtering constraint component in table and treetable.
  * @group Components
  */
 @Component({
@@ -31,62 +40,91 @@ import { TreeTable } from 'primeng/treetable';
   templateUrl: './table-column-filter-constraint.component.html',
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
-export class TableColumnFilterConstraintComponent implements OnInit {
+export class TableColumnFilterConstraintComponent implements OnChanges {
   /**
    * Type of filter constraint.
    * @group Props
    */
-  @Input() type: string | undefined;
+  @Input() type: CpsColumnFilterType = 'text';
+
   /**
-   * Not certain.
+   * Column name.
    * @group Props
    */
   @Input() field: string | undefined;
+
   /**
-   * Not certain.
+   * Constraint data.
    * @group Props
    */
   @Input() filterConstraint: FilterMetadata | undefined;
+
   /**
    * An array of category options.
    * @group Props
    */
-  @Input() categoryOptions: string[] = [];
+  @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
+
   /**
-   * Hint text for input field.
+   * Show category filter as button toggles.
+   * @group Props
+   */
+  @Input() asButtonToggle = false;
+
+  /**
+   * Single selection for category filter.
+   * @group Props
+   */
+  @Input() singleSelection = false;
+
+  /**
+   * Placeholder for input field.
    * @group Props
    */
   @Input() placeholder = '';
+
   /**
    * Whether the filter should have an apply button.
    * @group Props
    */
   @Input() hasApplyButton = true;
 
+  @ViewChild('categoryAutocompleteComponent')
+  categoryAutocompleteComponent?: CpsAutocompleteComponent;
+
   booleanOptions = [
     { label: 'True', value: 'true' },
     { label: 'False', value: 'false' }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
 
-  categories: { label: string; value: string }[] = [];
+  categories: CpsColumnFilterCategoryOption[] = [];
 
   _tableInstance: Table | TreeTable;
+
+  get isCategoryDropdownOpened() {
+    return this.categoryAutocompleteComponent?.isOpened || false;
+  }
 
   constructor(@Optional() public dt: Table, @Optional() public tt: TreeTable) {
     this._tableInstance = dt || tt;
   }
 
-  ngOnInit(): void {
-    this._initCategories();
+  ngOnChanges(): void {
+    this._updateCategories();
   }
 
-  private _initCategories() {
+  private _updateCategories() {
     if (this.type !== 'category') return;
     if (this.categoryOptions.length > 0) {
-      this.categories = this.categoryOptions.map((o) => ({
-        label: o,
-        value: o
-      }));
+      if (typeof this.categoryOptions[0] === 'string') {
+        this.categories = (this.categoryOptions as string[]).map((o) => ({
+          label: o,
+          value: o
+        }));
+      } else {
+        this.categories = this
+          .categoryOptions as CpsColumnFilterCategoryOption[];
+      }
     } else {
       let cats = [];
       if (this._tableInstance instanceof Table) {
@@ -112,7 +150,7 @@ export class TableColumnFilterConstraintComponent implements OnInit {
   onValueChange(value: any) {
     (<any>this.filterConstraint).value = value;
 
-    if (value === '' || !this.hasApplyButton) {
+    if (this._tableInstance.isFilterBlank(value) || !this.hasApplyButton) {
       this._tableInstance._filter();
     }
   }

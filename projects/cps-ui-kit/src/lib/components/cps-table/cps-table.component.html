@@ -46,7 +46,10 @@
     </ng-container>
     <ng-container *ngIf="!toolbarTemplate">
       <div class="cps-table-tbar-left">
-        <div>{{ toolbarTitle }}</div>
+        <div *ngIf="toolbarIcon" class="cps-table-tbar-icon">
+          <cps-icon [icon]="toolbarIcon" [color]="toolbarIconColor"></cps-icon>
+        </div>
+        <div class="cps-table-tbar-title">{{ toolbarTitle }}</div>
         <div *ngIf="showGlobalFilter" class="cps-table-tbar-global-filter">
           <cps-input
             #globalFilterComp
@@ -97,13 +100,16 @@
           </cps-button>
         </div>
         <div
-          *ngIf="showColumnsToggle && columns.length > 0"
-          class="cps-table-tbar-coltoggle-btn">
+          *ngIf="showColumnsToggleBtn && columns.length > 0"
+          class="cps-table-tbar-coltoggle-btn"
+          [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">
           <cps-icon
             icon="columns"
             size="normal"
-            color="prepared-lighten1"
-            (click)="colToggleMenu.toggle($event)"></cps-icon>
+            [color]="
+              columnsToggleBtnDisabled ? 'text-lightest' : 'prepared-lighten1'
+            "
+            (click)="onColumnsToggle($event)"></cps-icon>
           <cps-menu #colToggleMenu [withArrow]="false">
             <div class="cps-table-coltoggle-menu">
               <div
@@ -132,12 +138,15 @@
             </div>
           </cps-menu>
         </div>
-        <div *ngIf="showExportBtn" class="cps-table-tbar-export-btn">
+        <div
+          *ngIf="showExportBtn"
+          class="cps-table-tbar-export-btn"
+          [ngClass]="{ 'btn-disabled': exportBtnDisabled }">
           <cps-icon
             icon="export"
             size="20"
-            color="prepared-lighten1"
-            (click)="exportMenu.toggle($event)"></cps-icon>
+            [color]="exportBtnDisabled ? 'text-light' : 'prepared-lighten1'"
+            (click)="onExportData($event)"></cps-icon>
           <cps-menu
             #exportMenu
             [items]="exportMenuItems"
@@ -145,11 +154,14 @@
             [withArrow]="false">
           </cps-menu>
         </div>
-        <div *ngIf="showDataReloadBtn" class="cps-table-tbar-reload-btn">
+        <div
+          *ngIf="showDataReloadBtn"
+          class="cps-table-tbar-reload-btn"
+          [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
           <cps-icon
             icon="refresh"
             size="18"
-            color="prepared-lighten1"
+            [color]="dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'"
             (click)="onReloadData()">
           </cps-icon>
         </div>

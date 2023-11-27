@@ -9,7 +9,7 @@ import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 
 /**
- * CpsChipComponent represents people using icons and labels.
+ * CpsChipComponent represents a chip element.
  * @group Components
  */
 @Component({
@@ -33,13 +33,19 @@ export class CpsChipComponent implements OnChanges {
   @Input() icon: IconType = '';
 
   /**
-   * Position of the icon, it can be 'before' or 'after'.
+   * Color of the icon.
+   * @group Props
+   */
+  @Input() iconColor = 'text-darkest';
+
+  /**
+   * Position of the icon, it can be 'before' or 'after'. Defaults to 'before'.
    * @group Props
    */
   @Input() iconPosition: 'before' | 'after' = 'before';
 
   /**
-   *Option for removing a selected chip element.
+   * Option for closing a chip element.
    * @group Props
    */
   @Input() closable = false;
@@ -55,7 +61,7 @@ export class CpsChipComponent implements OnChanges {
    * @param {any} any - Chip closed.
    * @group Emits
    */
-  @Output() closed = new EventEmitter();
+  @Output() closed = new EventEmitter<string>();
 
   classesList = ['cps-chip'];
 
@@ -82,6 +88,6 @@ export class CpsChipComponent implements OnChanges {
 
   onCloseClick(event: any) {
     event.stopPropagation();
-    this.closed.emit();
+    this.closed.emit(this.label);
   }
 }

@@ -14,16 +14,13 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { TreeNode } from 'primeng/api';
-import {
-  IconType,
-  iconSizeType
-} from '../components/cps-icon/cps-icon.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../utils/internal/size-utils';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import { TooltipPosition } from '../directives/cps-tooltip.directive';
-import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
+import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import { convertSize } from '../../../utils/internal/size-utils';
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 /**
  * BaseTreeDropdownComponent base class component to support tree dropdown.
@@ -32,7 +29,7 @@ import { CpsMenuComponent } from '../components/cps-menu/cps-menu.component';
 @Component({
   template: ''
 })
-export class BaseTreeDropdownComponent
+export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   /**
@@ -42,13 +39,7 @@ export class BaseTreeDropdownComponent
   @Input() label = '';
 
   /**
-   * Default text to display when no option is selected.
-   * @group Props
-   */
-  @Input() placeholder = 'Please enter';
-
-  /**
-   * Hint text for the input field.
+   * Bottom hint text for the textarea field.
    * @group Props
    */
   @Input() hint = '';
@@ -144,11 +135,16 @@ export class BaseTreeDropdownComponent
   @Input() virtualScroll = false;
 
   /**
+   * Determines how many additional elements to add to the DOM outside of the view. Default value is half the number of items shown in the view.
+   * @group Props
+   */
+  @Input() numToleratedItems = 10;
+
+  /**
    * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
-  @Input() numToleratedItems = 10;
 
   /**
    * Info tooltip class for styling.
@@ -157,13 +153,13 @@ export class BaseTreeDropdownComponent
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Max width of infoTooltip of type number or string .
+   * Max width of infoTooltip of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
@@ -172,7 +168,7 @@ export class BaseTreeDropdownComponent
    * Position of infoTooltip, 'top' or 'bottom' or 'left' or 'right'.
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
    * When set, it expands all directiories initially.

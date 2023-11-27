@@ -1,0 +1,17 @@
+<div class="cps-confirmation">
+  <span class="cps-confirmation-subtitle">{{ subtitle }}</span>
+  <div class="cps-confirmation-buttons">
+    <cps-button
+      type="outlined"
+      label="No"
+      (clicked)="close(false)"
+      color="prepared">
+    </cps-button>
+    <cps-button
+      data-cy="btn-yes"
+      label="Yes"
+      (clicked)="close(true)"
+      color="prepared">
+    </cps-button>
+  </div>
+</div>

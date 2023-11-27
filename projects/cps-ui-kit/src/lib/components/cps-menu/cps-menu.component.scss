@@ -98,7 +98,7 @@
       }
     }
     .cps-menu-item:not(.cps-menu-item-disabled):hover {
-      background: #f8f4f5;
+      background: var(--cps-color-highlight-hover);
       .cps-menu-item-content {
         .cps-menu-item-content-title {
           color: var(--cps-color-calm);
@@ -120,7 +120,7 @@
       }
     }
     .cps-menu-item:not(.cps-menu-item-disabled):active {
-      background: #f1eaec;
+      background: var(--cps-color-highlight-active);
     }
 
     .cps-menu-item.cps-menu-item-first {

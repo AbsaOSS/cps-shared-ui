@@ -77,132 +77,163 @@ export type CpsTableSortMode = 'single' | 'multiple';
 })
 export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   /**
-   * An array of items to display on table.
+   * An array of objects to display.
    * @group Props
    */
   @Input() data: any[] = [];
+
   /**
-   * An array of objects to represent columns on table.
+   * An array of objects to represent dynamic columns.
    * @group Props
    */
   @Input() columns: { [key: string]: any }[] = [];
+
   /**
-   * A key used to retrieve header from dataset.
+   * A key used to retrieve the header from columns.
    * @group Props
    */
   @Input() colHeaderName = 'header';
+
   /**
-   * A key used to retrieve field from dataset.
+   * A key used to retrieve the field from columns.
    * @group Props
    */
   @Input() colFieldName = 'field';
+
   /**
-   * Whether the table should have gray alternating stripes.
+   * Whether the table should have alternating stripes.
    * @group Props
    */
   @Input() striped = true;
+
   /**
-   * Whether the table should have borders inside.
+   * Whether the table should have borders.
    * @group Props
    */
   @Input() bordered = true;
+
   /**
-   * Size of cells in table.
+   * Size of table cells, it can be "small", "normal" or "large".
    * @group Props
    */
   @Input() size: CpsTableSize = 'normal';
+
   /**
-   * Whether the table should be selectable.
+   * Whether the table should have row selection.
    * @group Props
    */
   @Input() selectable = false;
+
   /**
-   * Whether the table should have row hover.
+   * Whether the table should have rows highlighting on hover.
    * @group Props
    */
   @Input() rowHover = true;
+
   /**
-   * field, that uniquely identifies a record in data (needed for expandable rows).
+   * Field, that uniquely identifies a record in data (needed for expandable rows).
    * @group Props
    */
   @Input() dataKey = '';
+
   /**
    * Whether the table should show row menu.
    * @group Props
    */
   @Input() showRowMenu = false;
+
   /**
    * Whether the table should have re-orderable rows.
    * @group Props
    */
   @Input() reorderableRows = false;
+
   /**
-   * Whether the table should show columnsToggle menu, where you can choose which columns to be displayed.
-   * @group Props
-   */
-  @Input() showColumnsToggle = false; // if external body template is provided, use columnsSelected event emitter
-  /**
-   *When enabled, a loader component is displayed when data is being collected.
+   * When enabled, a loader component is displayed when data is being collected.
    * @group Props
    */
   @Input() loading = false;
+
   /**
    * Inline style of the table.
    * @group Props
    */
   @Input() tableStyle = undefined;
+
   /**
    * Style class of the table.
    * @group Props
    */
   @Input() tableStyleClass = '';
+
   /**
-   * Whether the table should be sortable.
+   * Makes all columns sortable if columns prop is provided.
    * @group Props
    */
-  @Input() sortable = false; // makes all sortable if columns are provided
+  @Input() sortable = false;
+
   /**
-   * Whether the table's sortMode single or multiple.
+   * Defines whether sorting works on single column or on multiple columns.
    * @group Props
    */
   @Input() sortMode: CpsTableSortMode = 'single';
+
   /**
    * Whether to use the default sorting or a custom one using sortFunction.
    * @group Props
    */
   @Input() customSort = false;
+
   /**
-   * Whether the table should have Toolbar.
+   * Whether the table has toolbar.
    * @group Props
    */
   @Input() hasToolbar = true;
+
   /**
-   * Toolbar size, it can be "small" | "normal".
+   * Toolbar size, it can be "small" or "normal".
    * @group Props
    */
   @Input() toolbarSize: CpsTableToolbarSize = 'normal';
+
   /**
    * Toolbar title.
    * @group Props
    */
   @Input() toolbarTitle = '';
+
   /**
-   * Enables scrollable tables.
+   * Toolbar icon name.
+   * @group Props
+   */
+  @Input() toolbarIcon = '';
+
+  /**
+   * Toolbar icon color.
+   * @group Props
+   */
+  @Input() toolbarIconColor = '';
+
+  /**
+   * Makes table scrollable.
    * @group Props
    */
   @Input() scrollable = true;
+
   /**
    * Height of the scroll viewport in fixed pixels or the "flex" keyword for a dynamic size.
    * @group Props
    */
-  @Input() scrollHeight = ''; // 'flex' or value+'px'
+  @Input() scrollHeight = '';
+
   /**
-   * Whether the data should be loaded on demand during scroll.
+   * Whether the data should be loaded on demand during scroll. Works only if scrollable prop is true.
    * @group Props
    */
-  @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() virtualScroll = false;
+
   /**
-   * Whether to use the scroller feature. The properties of scroller component can be used like an object in it.
+   * Determines how many additional elements to add to the DOM outside of the view. Default value is half the number of items shown in the view.
    * @group Props
    */
   @Input() numToleratedItems = 10;
@@ -212,31 +243,37 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Props
    */
   @Input() paginator = false;
+
   /**
-   * Whether to show it even there is only one page.
+   * Whether to show paginator even if there is only one page.
    * @group Props
    */
   @Input() alwaysShowPaginator = true;
+
   /**
-   * An array of number of rows to be displayed.
+   * Array of integer values to display inside rows per page dropdown of paginator.
    * @group Props
    */
   @Input() rowsPerPageOptions: number[] = [];
+
   /**
    * Index of the first row to be displayed.
    * @group Props
    */
   @Input() first = 0;
+
   /**
    * Number of rows to display per page.
    * @group Props
    */
   @Input() rows = 0;
+
   /**
    * Reset page on rows change.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;
+
   /**
    * Reset page on sort.
    * @group Props
@@ -254,81 +291,144 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Props
    */
   @Input() emptyMessage = 'No data';
+
   /**
-   * Height of table's body when there is no table data, of type number | string.
+   * Height of table's body when there is no data, of type number denoting pixels or string.
    * @group Props
    */
   @Input() emptyBodyHeight: number | string = '';
+
   /**
    * Defines if data is loaded and interacted with in lazy manner.
    * @group Props
    */
   @Input() lazy = false;
+
   /**
    * Whether to call lazy loading on initialization.
    * @group Props
    */
   @Input() lazyLoadOnInit = true;
+
   /**
-   * Whether to show global filter (search component) on table component.
+   * Whether to show global filter in the toolbar.
    * @group Props
    */
   @Input() showGlobalFilter = false;
+
   /**
-   *Global filter placeholder (on the search component).
+   * Global filter placeholder.
    * @group Props
    */
   @Input() globalFilterPlaceholder = 'Search';
+
   /**
-   * An array of fields as string to use in global filtering.
+   * An array of fields to use in global filtering.
    * @group Props
    */
   @Input() globalFilterFields: string[] = [];
+
   /**
-   * Whether to show action button on table.
+   * Whether to clear global filter on data loading.
    * @group Props
    */
   @Input() clearGlobalFilterOnLoading = false;
 
   /**
-   * Show remove button on selected row.
+   * Show remove button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showRemoveBtnOnSelect = true;
+
+  /**
+   * Whether removeBtnOnSelect is disabled.
+   * @group Props
+   */
   @Input() removeBtnOnSelectDisabled = false;
 
+  /**
+   * Whether to show additional button in the toolbar when rows are selected.
+   * @group Props
+   */
   @Input() showAdditionalBtnOnSelect = false;
+
+  /**
+   * AdditionalBtnOnSelect title.
+   * @group Props
+   */
   @Input() additionalBtnOnSelectTitle = 'Select action';
+
+  /**
+   * Whether additionalBtnOnSelect is disabled.
+   * @group Props
+   */
   @Input() additionalBtnOnSelectDisabled = false;
 
+  /**
+   * Whether to show action button on table.
+   * @group Props
+   */
   @Input() showActionBtn = false;
+
   /**
    * Action button title.
    * @group Props
    */
   @Input() actionBtnTitle = 'Action';
+
   /**
-   * Whether to show export button on table.
+   * Whether actionBtn is disabled.
    * @group Props
    */
   @Input() actionBtnDisabled = false;
 
+  /**
+   * Whether to show export button on table.
+   * @group Props
+   */
   @Input() showExportBtn = false;
+
+  /**
+   * Whether exportBtn is disabled.
+   * @group Props
+   */
+  @Input() exportBtnDisabled = false;
+
   /**
    * Name of the exported file.
    * @group Props
    */
   @Input() exportFilename = 'download';
+
   /**
    * Character to use as the csv separator.
    * @group Props
    */
   @Input() csvSeparator = ',';
+
   /**
-   * Whether to show data reload button on table.
+   * Whether to show data reload button in the toolbar.
    * @group Props
    */
   @Input() showDataReloadBtn = false;
+
+  /**
+   * Whether dataReloadBtn is disabled.
+   * @group Props
+   */
+  @Input() dataReloadBtnDisabled = false;
+
+  /**
+   * Whether the table should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
+   * @group Props
+   */
+  @Input() showColumnsToggleBtn = false;
+
+  /**
+   * Whether columnsToggle button is disabled.
+   * @group Props
+   */
+  @Input() columnsToggleBtnDisabled = false;
 
   /**
    * Callback to invoke on selection changed.
@@ -336,67 +436,84 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Emits
    */
   @Output() selectionChanged = new EventEmitter<any[]>();
+
   /**
    * Callback to invoke when action button is clicked.
    * @param {void} void - button clicked.
    * @group Emits
    */
   @Output() actionBtnClicked = new EventEmitter<void>();
+
   /**
    * Callback to invoke when edit-row button is clicked.
    * @param {any} any - button clicked.
    * @group Emits
    */
   @Output() editRowBtnClicked = new EventEmitter<any>();
+
   /**
-   * Callback to invoke on row removal.
+   * Callback to invoke on rows removal.
    * @param {any[]} any[] - array of rows removed.
    * @group Emits
    */
   @Output() rowsRemoved = new EventEmitter<any[]>();
+
   /**
    * Callback to invoke on page changed.
    * @param {any} any - page changed.
    * @group Emits
    */
   @Output() pageChanged = new EventEmitter<any>();
+
   /**
    * Callback to invoke when data is sorted.
    * @param {any} any - sort meta.
    * @group Emits
    */
   @Output() sorted = new EventEmitter<any>();
+
   /**
    * Callback to invoke when data is filtered.
    * @param {any} any - custom filtering event.
    * @group Emits
    */
   @Output() filtered = new EventEmitter<any>();
+
   /**
    * Callback to invoke when rows are reordered.
    * @param {any} any - rows reordered.
    * @group Emits
    */
   @Output() rowsReordered = new EventEmitter<any>();
+
   /**
-   * Callback to invoke on roe removal.
+   * Callback to invoke on columns selection.
    * @param {object} object - selected column.
    * @group Emits
    */
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+
   /**
    * Callback to invoke when paging, sorting or filtering happens in lazy mode.
    * @param {any} any - custom lazy loading event.
    * @group Emits
    */
   @Output() lazyLoaded = new EventEmitter<any>();
+
   /**
    * Callback to invoke when data-reload button is clicked.
    * @param {any} any - button clicked.
    * @group Emits
    */
   @Output() dataReloadBtnClicked = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when additional button on select is clicked.
+   * @param {any[]} any[] - selected data.
+   * @group Emits
+   */
   @Output() additionalBtnOnSelectClicked = new EventEmitter<any[]>();
+
   /**
    * A function to implement custom sorting. customSort must be true.
    * @param {any} any - sort meta.
@@ -424,6 +541,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   @ViewChild('globalFilterComp')
   globalFilterComp!: CpsInputComponent;
+
+  @ViewChild('exportMenu')
+  exportMenu!: CpsMenuComponent;
+
+  @ViewChild('colToggleMenu')
+  colToggleMenu!: CpsMenuComponent;
 
   selectedRows: any[] = [];
 
@@ -539,8 +662,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.loading && this.clearGlobalFilterOnLoading)
-      this.clearGlobalFilter();
+    if (this.loading) {
+      this.clearSelection();
+      if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
+    }
 
     const dataChanges = changes?.data;
     if (
@@ -550,6 +675,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
         this.data.includes(sr)
       );
     }
+  }
+
+  clearSelection() {
+    this.selectedRows = [];
   }
 
   clearGlobalFilter() {
@@ -580,7 +709,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
     this.rowsRemoved.emit(this.selectedRows);
 
-    this.selectedRows = [];
+    this.clearSelection();
   }
 
   onClickAdditionalBtnOnSelect() {
@@ -684,7 +813,18 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onReloadData() {
+    if (this.dataReloadBtnDisabled) return;
     this.dataReloadBtnClicked.emit();
+  }
+
+  onExportData(event: any) {
+    if (this.exportBtnDisabled) return;
+    this.exportMenu?.toggle(event);
+  }
+
+  onColumnsToggle(event: any) {
+    if (this.columnsToggleBtnDisabled) return;
+    this.colToggleMenu?.toggle(event);
   }
 
   exportTable(format: CpsTableExportFormat) {

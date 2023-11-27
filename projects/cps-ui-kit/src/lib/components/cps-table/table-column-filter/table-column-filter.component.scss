@@ -1,5 +1,6 @@
 $color-calm: var(--cps-color-calm);
 $dark-text-color: var(--cps-color-text-dark);
+$darkest-text-color: var(--cps-color-text-darkest);
 $line-color: var(--cps-color-line-mid);
 $operator-bg-color: var(--cps-color-bg-light);
 
@@ -27,7 +28,7 @@ $operator-bg-color: var(--cps-color-bg-light);
     }
 
     .cps-table-col-filter-menu-button-active {
-      color: $color-calm;
+      color: var(--cps-color-calm-lighten1);
     }
   }
 }
@@ -37,6 +38,28 @@ $operator-bg-color: var(--cps-color-bg-light);
   min-width: 200px;
   max-height: 500px;
   overflow: auto;
+  & &-header {
+    min-height: 32px;
+    padding: 8px;
+    border-bottom: 1px solid $line-color;
+    background: $operator-bg-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &-title {
+      font-family: 'Source Sans Pro', sans-serif;
+      color: $darkest-text-color;
+      max-width: 390px;
+      cursor: default;
+    }
+    cps-icon {
+      margin-left: 8px;
+      cursor: pointer;
+      &:hover {
+        color: var(--cps-color-calm);
+      }
+    }
+  }
   & &-operator {
     padding: 12px;
     border-bottom: 1px solid $line-color;

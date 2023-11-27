@@ -13,11 +13,11 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import {
   CpsTooltipDirective,
-  TooltipPosition
+  CpsTooltipPosition
 } from '../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 
-export type RadioOption = {
+export type CpsRadioOption = {
   value: any;
   label?: string;
   disabled?: boolean;
@@ -29,7 +29,7 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
 );
 
 /**
- * CpsRadioGroupComponent is an extension to standard radio button element with theming.
+ * CpsRadioGroupComponent is a radio buttons group.
  * @group Components
  */
 @Component({
@@ -52,57 +52,61 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
 })
 export class CpsRadioGroupComponent implements ControlValueAccessor {
   /**
-   * An array of object type {
-      value: any;
-      label?: string;
-      disabled?: boolean;
-      tooltip?: string;
-    }.
+   * An array of options.
    * @group Props
    */
-  @Input() options = [] as RadioOption[];
+  @Input() options = [] as CpsRadioOption[];
+
   /**
-   * Group label of the radio element.
+   * Label of the radio group.
    * @group Props
    */
   @Input() groupLabel = '';
+
   /**
-   * Whether the radio element should be vertical.
+   * Whether the radio group should be vertical.
    * @group Props
    */
   @Input() vertical = false;
+
   /**
-   * When present, it specifies that the element should be disabled.
+   * Whether the component is disabled.
    * @group Props
    */
   @Input() disabled = false;
+
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
+
   /**
-   * Info tooltip class for styling.
+   * InfoTooltip class for styling.
    * @group Props
    */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
   /**
-   * Size of infoTooltip, of type number or string.
+   * Size of infoTooltip, of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
+
   /**
-   * Position of infoTooltip, it can be "top" or "bottom" or "left" or "right".
+   * Position of infoTooltip, it can be "top", "bottom", "left" or "right".
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
   /**
-   * Value specified in component.
+   * Value of the radio group.
    * @group Props
    */
   @Input() set value(value: any) {
@@ -146,10 +150,8 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
     this.value = value;
   }
 
-  updateValueEvent(event: any) {
-    event.preventDefault();
+  updateValueEvent(value: any) {
     if (this.disabled) return;
-    const value = event?.target?.value || '';
     this._updateValue(value);
   }
 

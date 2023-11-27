@@ -1,7 +1,7 @@
-@import 'bootstrap-grid';
-@import 'variables.scss';
-@import 'fonts.scss';
-@import 'cps-tooltip-style.scss';
+@import './_bootstrap-grid';
+@import './_colors.scss';
+@import './_fonts.scss';
+@import './_cps-tooltip-style.scss';
 
 *,
 *::before,

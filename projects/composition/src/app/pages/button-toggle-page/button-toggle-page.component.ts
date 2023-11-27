@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   CpsButtonToggleComponent,
-  BtnToggleOption
+  CpsButtonToggleOption
 } from 'projects/cps-ui-kit/src/public-api';
 
 @Component({
@@ -19,7 +19,19 @@ export class ButtonTogglePageComponent {
     { label: 'Option 2', value: 'second' },
     { label: 'Option 3', value: 'third' },
     { label: 'Option 4', value: 'fourth' }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
+
+  iconOptions = [
+    { label: 'Succeeded', value: 'second', icon: 'toast-success' },
+    { label: 'Failed', value: 'third', icon: 'toast-error' },
+    { label: 'Pending', value: 'first', icon: 'pending' }
+  ] as CpsButtonToggleOption[];
+
+  iconOnlyOptions = [
+    { value: 'second', icon: 'toast-success', tooltip: 'Succeeded' },
+    { value: 'third', icon: 'toast-error', tooltip: 'Failed' },
+    { value: 'first', icon: 'pending', tooltip: 'Pending' }
+  ] as CpsButtonToggleOption[];
 
   partiallyDisabledOptions = [
     {
@@ -43,7 +55,7 @@ export class ButtonTogglePageComponent {
       disabled: true,
       tooltip: 'Sixth option is currently unavailable'
     }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
 
   syncVal = 'first';
   multiSyncVal = ['third', 'fourth'];

@@ -2,8 +2,8 @@ $transition-duration: 0.2s;
 $header-text-color: var(--cps-color-text-dark);
 $disabled-header-text-color: var(--cps-color-text-mild);
 $border-color: var(--cps-color-text-lightest);
-$header-hover-background: #f8f4f5;
-$header-active-background: #f1eaec;
+$header-hover-background: var(--cps-color-highlight-hover);
+$header-active-background: var(--cps-color-highlight-active);
 
 :host {
   display: flex;

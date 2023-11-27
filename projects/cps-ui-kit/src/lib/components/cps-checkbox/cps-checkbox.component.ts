@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
 /**
- * CpsCheckboxComponent is an extension to standard checkbox element with theming.
+ * CpsCheckboxComponent is a checkbox element.
  * @group Components
  */
 @Component({
@@ -40,32 +40,34 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
 
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
+
   /**
-   * Info tooltip class for styling.
+   * InfoTooltip class for styling.
    * @group Props
    */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip, of type number or string.
+   * Size of infoTooltip, of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, it can be 'top' or 'bottom' or 'left' or 'right'.
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
    * Name of the icon.
@@ -78,8 +80,9 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
    * @group Props
    */
   @Input() iconColor = 'text-dark';
+
   /**
-   * Value specified in component.
+   * Value of the checkbox.
    * @group Props
    */
   @Input() set value(value: boolean) {

@@ -1,5 +1,6 @@
 $color-calm: var(--cps-color-calm);
-$color-highlight: #f8f4f5;
+$color-prepared: var(--cps-color-prepared);
+$color-highlight: var(--cps-color-highlight-hover);
 $color-selected-background: #efe4e7;
 $other-month-color: var(--cps-color-text-light);
 $text-color: var(--cps-color-text-darkest);
@@ -73,6 +74,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker .p-datepicker-header .p-datepicker-next:focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
     .p-datepicker .p-datepicker-header .p-datepicker-title {
       line-height: 2rem;
@@ -117,7 +119,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       border-radius: 50%;
       transition: box-shadow 0.2s;
       border: 1px solid transparent;
-      &.p-element.p-disabled {
+      &.p-disabled {
         color: $disabled-day-color;
         cursor: default;
       }
@@ -130,9 +132,12 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker table td > span:focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
     .p-datepicker table td.p-datepicker-today > span {
       border-color: $color-calm;
+      background: unset;
+      color: unset;
     }
     .p-datepicker table td.p-datepicker-today > span.p-highlight {
       color: $color-calm;
@@ -140,11 +145,12 @@ $disabled-day-color: var(--cps-color-text-lightest);
       font-weight: bold;
     }
     .p-datepicker .p-datepicker-buttonbar {
-      padding-top: 0.5rem;
+      padding: 0.5rem 0 0;
       border-top: 1px solid #dee2e6;
     }
     .p-datepicker .p-datepicker-buttonbar .p-button {
       width: auto;
+      color: $color-prepared;
     }
     .p-datepicker .p-timepicker {
       border-top: 1px solid #dee2e6;
@@ -167,6 +173,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker .p-timepicker button:focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
     .p-datepicker .p-timepicker button:last-child {
       margin-top: 0.2em;
@@ -232,6 +239,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       span:not(.p-highlight):not(.p-disabled):focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
     .p-datepicker:not(.p-disabled)
       .p-monthpicker
@@ -243,6 +251,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       .p-monthpicker-month:not(.p-disabled):focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
     .p-datepicker:not(.p-disabled)
       .p-yearpicker
@@ -254,6 +263,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       .p-yearpicker-year:not(.p-disabled):focus {
       outline: 0 none;
       outline-offset: 0;
+      box-shadow: unset;
     }
 
     p-calendar.p-calendar-clearable .p-inputtext {
@@ -276,6 +286,12 @@ $disabled-day-color: var(--cps-color-text-lightest);
 
     .p-datepicker-other-month {
       color: $other-month-color;
+    }
+
+    .p-link:focus {
+      outline: 0 none;
+      outline-offset: 0;
+      box-shadow: unset;
     }
 
     .p-link {
@@ -312,6 +328,9 @@ $disabled-day-color: var(--cps-color-text-lightest);
       transition: background-color 0.2s, color 0.2s, border-color 0.2s,
         box-shadow 0.2s;
       border-radius: 6px;
+      &:focus {
+        box-shadow: unset;
+      }
       &:hover {
         background-color: $color-highlight;
       }

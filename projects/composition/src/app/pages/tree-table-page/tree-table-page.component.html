@@ -53,7 +53,7 @@
       [columns]="colsVirtual"
       [sortable]="true"
       [virtualScroll]="true"
-      [showColumnsToggle]="true"
+      [showColumnsToggleBtn]="true"
       scrollHeight="500px"
       toolbarTitle="Sortable tree table with virtual scroller, global filter and internal columns toggle">
     </cps-tree-table>
@@ -97,11 +97,13 @@
       sortMode="multiple"
       [striped]="false"
       [showRowMenu]="true"
-      [showColumnsToggle]="true"
+      [showColumnsToggleBtn]="true"
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked()"
       (selectionChanged)="onRowsSelectionChanged($event)"
-      toolbarTitle="Tree table with external columns toggle and unstriped selectable rows">
+      toolbarIcon="toast-success"
+      toolbarIconColor="success"
+      toolbarTitle="Tree table with toolbar icon, external columns toggle and unstriped selectable rows">
       <ng-template #header>
         <th
           *ngFor="let scol of selCols"
@@ -134,7 +136,7 @@
       [data]="data"
       [selectable]="true"
       toolbarSize="small"
-      scrollHeight="calc(100vh - 300px)"
+      scrollHeight="calc(100vh - 370px)"
       toolbarTitle="Tree table with nested header and small toolbar">
       <ng-template #nestedHeader>
         <tr>

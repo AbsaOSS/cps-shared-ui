@@ -3,13 +3,13 @@ import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import {
   CPS_RADIO_GROUP,
   CpsRadioGroupComponent,
-  RadioOption
+  CpsRadioOption
 } from '../cps-radio-group.component';
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
 
 /**
- * CpsRadioComponent is an extension to standard radio button element with theming.
+ * CpsRadioComponent is a radio button with custom content.
  * @group Components
  */
 @Component({
@@ -26,15 +26,11 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
 })
 export class CpsRadioComponent implements OnInit {
   /**
-   * An array of items in the radio component of object type {
-      value: any;
-      label?: string;
-      disabled?: boolean;
-      tooltip?: string;
-    }.
+   * An option.
    * @group Props
    */
-  @Input() option!: RadioOption;
+  @Input() option!: CpsRadioOption;
+
   radioGroup?: CpsRadioGroupComponent;
   groupDisabled = false;
 
@@ -48,7 +44,7 @@ export class CpsRadioComponent implements OnInit {
     this.groupDisabled = this.radioGroup?.disabled ?? false;
   }
 
-  updateValueEvent(event: Event): void {
-    this.radioGroup?.updateValueEvent(event);
+  updateValueEvent(value: any): void {
+    this.radioGroup?.updateValueEvent(value);
   }
 }

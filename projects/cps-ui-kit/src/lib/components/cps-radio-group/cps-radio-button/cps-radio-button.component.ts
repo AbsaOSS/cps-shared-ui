@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RadioOption } from '../cps-radio-group.component';
+import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 
 let nextUniqueId = 0;
 
 /**
- * CpsRadioButtonComponent is an extension to standard radio button element with theming.
+ * CpsRadioButtonComponent is an internal radio button component.
  * @group Components
  */
 @Component({
@@ -18,23 +18,21 @@ let nextUniqueId = 0;
 })
 export class CpsRadioButtonComponent {
   private _uniqueId = `cps-radio-button-${++nextUniqueId}`;
+
   /**
-   * An array of items in the radio component of object type {
-      value: any;
-      label?: string;
-      disabled?: boolean;
-      tooltip?: string;
-    }.
+   * An option.
    * @group Props
    */
-  @Input() option!: RadioOption;
+  @Input() option!: CpsRadioOption;
+
   /**
-   * Whether the radio button should be checked.
+   * Whether the radio button is checked.
    * @group Props
    */
   @Input() checked = false;
+
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether the radio button is disabled.
    * @group Props
    */
   @Input() groupDisabled = false;
@@ -53,6 +51,6 @@ export class CpsRadioButtonComponent {
   updateValue(event: Event): void {
     event.preventDefault();
     if (this.option.disabled) return;
-    this.updateValueEvent.emit(event);
+    this.updateValueEvent.emit(this.option.value);
   }
 }

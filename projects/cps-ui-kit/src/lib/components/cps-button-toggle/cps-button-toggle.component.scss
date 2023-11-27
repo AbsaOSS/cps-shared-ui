@@ -6,9 +6,9 @@ $selected-disabled-option-label-color: var(--cps-color-text-mild);
 $disabled-background-color: #f7f7f7;
 $disabled-option-label-color: var(--cps-color-text-light);
 $option-label-color: var(--cps-color-text-dark);
-$border-color: var(--cps-color-silver);
-$option-hover-background: #f8f4f5;
-$option-active-background: #f1eaec;
+$border-color: var(--cps-color-text-light);
+$option-hover-background: var(--cps-color-highlight-hover);
+$option-active-background: var(--cps-color-highlight-active);
 
 :host {
   .cps-btn-toggle {
@@ -20,6 +20,7 @@ $option-active-background: #f1eaec;
       font-weight: 700;
       font-size: 16px;
       font-family: 'Source Sans Pro', sans-serif;
+      cursor: default;
 
       .cps-btn-toggle-label-info-circle {
         margin-left: 8px;
@@ -70,6 +71,7 @@ $option-active-background: #f1eaec;
           display: flex;
           width: max-content;
           align-items: center;
+          justify-content: center;
           cursor: pointer;
           background-color: #ffffff;
           padding: 0.375em 0.75em;

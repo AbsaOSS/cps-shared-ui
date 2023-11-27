@@ -7,8 +7,8 @@ import {
 } from '@angular/core';
 import { convertSize } from '../utils/internal/size-utils';
 
-export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right';
-export type TooltipOpenOn = 'hover' | 'click' | 'focus';
+export type CpsTooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
 /**
  * CpsTooltipDirective provides advisory information for a component.
@@ -19,42 +19,54 @@ export type TooltipOpenOn = 'hover' | 'click' | 'focus';
   standalone: true
 })
 export class CpsTooltipDirective implements OnDestroy {
+  /**
+   * Tooltip text or html to show.
+   * @group Props
+   */
   @Input('cpsTooltip') tooltip!: string;
+
   /**
    * Delay to show the tooltip in milliseconds, it can be type string or number.
    * @group Props
    */
   @Input() tooltipOpenDelay: string | number = 300;
+
   /**
    * Delay to hide the tooltip in milliseconds, it can be type string or number.
    * @group Props
    */
   @Input() tooltipCloseDelay: string | number = 300;
+
   /**
    * Whether the tooltip should open on hover, click or focus.
    * @group Props
    */
-  @Input() tooltipOpenOn: TooltipOpenOn = 'hover';
+  @Input() tooltipOpenOn: CpsTooltipOpenOn = 'hover';
+
   /**
-   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * Position of the tooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
-  @Input() tooltipPosition: TooltipPosition = 'top';
+  @Input() tooltipPosition: CpsTooltipPosition = 'top';
+
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the tooltip is persistent.
    * @group Props
    */
   @Input() tooltipPersistent = false;
+
   /**
-   * When present, it specifies that the component should be disabled.
+   * When present, it specifies that the tooltip should be disabled.
    * @group Props
    */
   @Input() tooltipDisabled = false;
+
   /**
-   * Max width of infoTooltip of type number or string .
+   * Max width of infoTooltip of type number denoting pixels or string.
    * @group Props
    */
   @Input() tooltipMaxWidth: number | string = '100%';
+
   /**
    * Info tooltip class for styling.
    * @group Props
@@ -147,7 +159,7 @@ export class CpsTooltipDirective implements OnDestroy {
       );
     }
 
-    let positions = ['top', 'bottom', 'left', 'right'] as TooltipPosition[];
+    let positions = ['top', 'bottom', 'left', 'right'] as CpsTooltipPosition[];
     positions = positions.filter((item) => item !== this.tooltipPosition);
     positions.unshift(this.tooltipPosition);
 
@@ -157,7 +169,7 @@ export class CpsTooltipDirective implements OnDestroy {
 
     for (const pos of positions) {
       const coords = this._getCoordsForPosition(
-        pos as TooltipPosition,
+        pos as CpsTooltipPosition,
         targetEl,
         targetElRect,
         popupRect
@@ -172,7 +184,7 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _getCoordsForPosition(
-    position: TooltipPosition,
+    position: CpsTooltipPosition,
     targetEl: HTMLElement,
     targetElRect: DOMRect,
     popupRect: DOMRect

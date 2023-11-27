@@ -23,12 +23,12 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 
 export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
 /**
- * CpsInputComponent is used to enter input in a certain format such as numeric, text, or password.
+ * CpsInputComponent is used to enter values in a certain formats such as numeric, text or password.
  * @group Components
  */
 @Component({
@@ -51,49 +51,51 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() label = '';
+
   /**
-   * More hints about the input.
+   * Bottom hint text for the input field.
    * @group Props
    */
   @Input() hint = '';
 
   /**
-   * Hint text for the input field.
+   * Placeholder text for the input field.
    * @group Props
    */
   @Input() placeholder = 'Please enter';
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether input is disabled.
    * @group Props
    */
   @Input() disabled = false;
+
   /**
-   * Whether the component should readonly.
+   * Whether input is readonly.
    * @group Props
    */
   @Input() readonly = false;
 
   /**
-   * Width of the input field, of type number or string.
+   * Width of the input field, of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
 
   /**
-   * Type of the input of type 'text' or 'number' or 'password'.
+   * Type of the input of type 'text', 'number' or 'password'.
    * @group Props
    */
   @Input() type: 'text' | 'number' | 'password' = 'text';
 
   /**
-   *When enabled, a loading bar is displayed when data is being collected.
+   * When enabled, a loading bar is displayed when data is being collected.
    * @group Props
    */
   @Input() loading = false;
 
   /**
-   *Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * Option for clearing input, when enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
@@ -105,13 +107,13 @@ export class CpsInputComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * When enabled, icon will be clickable.
+   * When enabled, prefixIcon is clickable.
    * @group Props
    */
   @Input() prefixIconClickable = false;
 
   /**
-   * Size of icon before input value, of type number or string or it can be a value 'fill' or 'xsmall' or 'small' or 'normal' or 'large';.
+   * Size of icon before input value, of type number or string or it can be a value 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
@@ -123,15 +125,17 @@ export class CpsInputComponent
   @Input() prefixText = '';
 
   /**
-   *Options for hiding details.
+   * Hides hint and validation errors.
    * @group Props
    */
   @Input() hideDetails = false;
+
   /**
-   * Whether the component should have persistent clear.
+   * Whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
+
   /**
    * Error message.
    * @group Props
@@ -139,44 +143,51 @@ export class CpsInputComponent
   @Input() error = '';
 
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
+
   /**
-   * Info tooltip class for styling.
+   * InfoTooltip class for styling.
    * @group Props
    */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip, of type number or string .
+   * Max width of infoTooltip, of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, of type 'top' or 'bottom' or 'left' or 'right'.
+   * Position of infoTooltip, of type 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
    * Styling appearance of input field, it can be "outlined" or "underlined" or "borderless".
    * @group Props
    */
   @Input() appearance: CpsInputAppearanceType = 'outlined';
+
   /**
-   * Value to display on input.
+   * Readonly value to display inside of input field.
    * @group Props
    */
   @Input() valueToDisplay = '';
 
+  /**
+   * Value of the input.
+   * @group Props
+   */
   @Input() set value(value: string) {
     if (!value) value = '';
     this._value = value;

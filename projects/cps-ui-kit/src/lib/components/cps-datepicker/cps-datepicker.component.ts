@@ -15,7 +15,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
-import { TooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsDatepickerAppearanceType =
@@ -56,81 +56,85 @@ export class CpsDatepickerComponent
   @Input() disabled = false;
 
   /**
-   * Width on the datepicker of type  number or string.
+   * Width of the datepicker of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
 
   /**
-   * Hint text for the type of date format.
+   * Placeholder text. Defaults to 'MM/DD/YYYY'.
    * @group Props
    */
   @Input() placeholder = 'MM/DD/YYYY';
 
   /**
-   * Additional hint for the datepicker element.
+   * Bottom hint text for the input field.
    * @group Props
    */
   @Input() hint = '';
 
   /**
-   *Option for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * Option for clearing input, when enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
 
   /**
-   *Option for hiding details.
+   * Hides hint and validation errors.
    * @group Props
    */
   @Input() hideDetails = false;
+
   /**
-   * Whether the component should have persistent clear.
+   * Whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
 
   /**
-   *Option to show today's date.
+   * Whether to show button to be able to select today's date.
    * @group Props
    */
   @Input() showTodayButton = true;
+
   /**
-   * Whether the datepicker should open on input-focus.
+   * Whether the datepicker dropdown should open on input focus.
    * @group Props
    */
   @Input() openOnInputFocus = false;
 
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
+
   /**
-   * Info tooltip class for styling.
+   * InfoTooltip class for styling.
    * @group Props
    */
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip, of type number or string.
+   * Size of infoTooltip, of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
   /**
-   * Whether the tooltip should have persistent info.
+   * Whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, it can be "top" or "bottom" or "left" or "right".
+   * Position of infoTooltip, it can be "top", "bottom", "left" or "right". Defaults to "top".
    * @group Props
    */
-  @Input() infoTooltipPosition: TooltipPosition = 'top';
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
-   * Styling appearance of datepicker input , it can be 'outlined' or 'underlined' or 'borderless.
+   * Styling appearance of datepicker input, it can be 'outlined', 'underlined' or 'borderless. Defaults to 'outlined'.
    * @group Props
    */
   @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
@@ -153,6 +157,10 @@ export class CpsDatepickerComponent
    * @group Props
    */
 
+  /**
+   * Value of the datepicker.
+   * @group Props
+   */
   @Input() set value(value: Date | null) {
     this._value = value;
     this.stringDate = this._dateToString(value);
@@ -320,10 +328,12 @@ export class CpsDatepickerComponent
     this.error = message || 'Unknown error';
   }
 
-  onSelectCalendarDate(dateVal: Date) {
-    this.toggleCalendar(false);
-    this._dateToString(dateVal);
+  onClearCalendarDate() {
+    this.onSelectCalendarDate(null);
+  }
 
+  onSelectCalendarDate(dateVal: Date | null) {
+    this.toggleCalendar(false);
     this.writeValue(dateVal);
     this.onChange(dateVal);
     this.valueChanged.emit(dateVal);

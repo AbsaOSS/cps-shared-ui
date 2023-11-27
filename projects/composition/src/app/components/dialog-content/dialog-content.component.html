@@ -1,0 +1,15 @@
+<div class="my-dialog-content">
+  <cps-icon
+    [icon]="icon"
+    size="large"
+    class="my-dialog-content-icon"
+    color="calm">
+  </cps-icon>
+  <h1 class="my-dialog-content-title">This is the dialog content</h1>
+  <span>{{ info }}</span>
+
+  <cps-button
+    class="my-dialog-content-button"
+    [label]="closeDisabled ? 'Enable closing' : 'Disable closing'"
+    (clicked)="toggleDisableClose()"></cps-button>
+</div>

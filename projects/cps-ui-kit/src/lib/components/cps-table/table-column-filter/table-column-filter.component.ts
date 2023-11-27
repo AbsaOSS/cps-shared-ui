@@ -3,17 +3,16 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnDestroy,
+  OnInit,
   Optional,
-  ViewChild
+  QueryList,
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  FilterMatchMode,
-  FilterMetadata,
-  FilterOperator,
-  SelectItem
-} from 'primeng/api';
+import { FilterMetadata, FilterOperator, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { CpsButtonComponent } from '../../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
@@ -21,9 +20,14 @@ import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
+import {
+  CpsColumnFilterCategoryOption,
+  CpsColumnFilterMatchMode,
+  CpsColumnFilterType
+} from '../cps-column-filter-types';
 
 /**
- * TableColumnFilterComponent is a filter component in table.
+ * TableColumnFilterComponent is a filter component in table and treetable.
  * @group Components
  */
 @Component({
@@ -41,51 +45,107 @@ import { TreeTable } from 'primeng/treetable';
   templateUrl: './table-column-filter.component.html',
   styleUrls: ['./table-column-filter.component.scss']
 })
-export class TableColumnFilterComponent {
+export class TableColumnFilterComponent implements OnInit, OnDestroy {
   /**
-   * Not certain.
+   * Name of the column to be filtered.
    * @group Props
    */
   @Input() field: string | undefined;
+
   /**
-   * Type of filter in table.
+   * Type of filter in table, it can be of type "number", "boolean", "text", "date" or "category".
    * @group Props
    */
-  @Input() type = 'text';
+  @Input() type: CpsColumnFilterType = 'text';
+
+  /**
+   * Whether the filter menu should be persistent.
+   * @group Props
+   */
+  @Input() persistent = false;
+
   /**
    * Whether the filter should have clear button.
    * @group Props
    */
   @Input() showClearButton = true;
+
   /**
    * Whether the filter should have apply button.
    * @group Props
    */
   @Input() showApplyButton = true;
+
+  /**
+   * Whether the filter should have close button.
+   * @group Props
+   */
+  @Input() showCloseButton = false;
+
+  /**
+   * Whether the filter should have match modes.
+   * @group Props
+   */
+  @Input() showMatchModes = true;
+
+  /**
+   * Match modes for filter.
+   * @group Props
+   */
+  @Input() matchModes: CpsColumnFilterMatchMode[] = [];
+
+  /**
+   * Whether the filter should have operator.
+   * @group Props
+   */
+  @Input() showOperator = true;
+
+  /**
+   * Maximum number of constraints.
+   * @group Props
+   */
+  @Input() maxConstraints = 2;
+
+  /**
+   * Title of the filter.
+   * @group Props
+   */
+  @Input() headerTitle = '';
+
   /**
    * Whether the filter should hide on clear.
    * @group Props
    */
   @Input() hideOnClear = false;
+
   /**
-   * Not certain.
+   * Options for category filter.
    * @group Props
    */
-  @Input() maxConstraints = 2;
+  @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
+
   /**
-   * Not certain.
+   * Show category filter as button toggles.
    * @group Props
    */
-  @Input() categoryOptions: string[] = [];
+  @Input() asButtonToggle = false;
+
   /**
-   * Hint text for the filter input field.
+   * Single selection for category filter.
+   * @group Props
+   */
+  @Input() singleSelection = false;
+
+  /**
+   * Placeholder for filter constraints.
    * @group Props
    */
   @Input() placeholder = '';
 
+  @ViewChildren('constraintComponent')
+  constraintCompList!: QueryList<TableColumnFilterConstraintComponent>;
+
   operator: string = FilterOperator.AND;
-  showMatchModes = true;
-  showOperator = true;
 
   operatorOptions = [
     { label: 'Match All', value: FilterOperator.AND, info: 'AND' },
@@ -111,35 +171,42 @@ export class TableColumnFilterComponent {
 
   private filterMatchModeOptions = {
     text: [
-      FilterMatchMode.STARTS_WITH,
-      FilterMatchMode.CONTAINS,
-      FilterMatchMode.NOT_CONTAINS,
-      FilterMatchMode.ENDS_WITH,
-      FilterMatchMode.EQUALS,
-      FilterMatchMode.NOT_EQUALS
+      CpsColumnFilterMatchMode.STARTS_WITH,
+      CpsColumnFilterMatchMode.CONTAINS,
+      CpsColumnFilterMatchMode.NOT_CONTAINS,
+      CpsColumnFilterMatchMode.ENDS_WITH,
+      CpsColumnFilterMatchMode.EQUALS,
+      CpsColumnFilterMatchMode.NOT_EQUALS
     ],
     number: [
-      FilterMatchMode.EQUALS,
-      FilterMatchMode.NOT_EQUALS,
-      FilterMatchMode.LESS_THAN,
-      FilterMatchMode.LESS_THAN_OR_EQUAL_TO,
-      FilterMatchMode.GREATER_THAN,
-      FilterMatchMode.GREATER_THAN_OR_EQUAL_TO
+      CpsColumnFilterMatchMode.EQUALS,
+      CpsColumnFilterMatchMode.NOT_EQUALS,
+      CpsColumnFilterMatchMode.LESS_THAN,
+      CpsColumnFilterMatchMode.LESS_THAN_OR_EQUAL_TO,
+      CpsColumnFilterMatchMode.GREATER_THAN,
+      CpsColumnFilterMatchMode.GREATER_THAN_OR_EQUAL_TO
     ],
     date: [
-      FilterMatchMode.DATE_IS,
-      FilterMatchMode.DATE_IS_NOT,
-      FilterMatchMode.DATE_BEFORE,
-      FilterMatchMode.DATE_AFTER
+      CpsColumnFilterMatchMode.DATE_IS,
+      CpsColumnFilterMatchMode.DATE_IS_NOT,
+      CpsColumnFilterMatchMode.DATE_BEFORE,
+      CpsColumnFilterMatchMode.DATE_AFTER
     ]
-  } as { [key: string]: string[] };
+  } as { [key: string]: CpsColumnFilterMatchMode[] };
 
-  matchModes: SelectItem[] | undefined;
+  currentMatchModes: SelectItem[] | undefined;
 
   @ViewChild('columnFilterMenu')
   columnFilterMenu!: CpsMenuComponent;
 
   _tableInstance: Table | TreeTable;
+
+  isFilterApplied = false;
+
+  get isCategoryDropdownOpened() {
+    if (this.type !== 'category') return false;
+    return this.constraintCompList?.first?.isCategoryDropdownOpened || false;
+  }
 
   constructor(
     public elementRef: ElementRef,
@@ -150,8 +217,14 @@ export class TableColumnFilterComponent {
   }
 
   ngOnInit() {
+    if (this.matchModes.length > 0) {
+      this.filterMatchModeOptions[this.type] = this.matchModes;
+    }
+    this._tableInstance?.onFilter?.subscribe((value) =>
+      this._updateFilterApplied(value)
+    );
     if (!this._tableInstance.filters[<string>this.field]) {
-      this.initFieldFilterConstraint();
+      this._initFieldFilterConstraint();
     }
 
     if (this.maxConstraints > 1 && this.type !== 'category') {
@@ -162,14 +235,31 @@ export class TableColumnFilterComponent {
       this.showApplyButton = false;
     }
 
-    this.matchModes = this.filterMatchModeOptions[this.type]?.map(
+    this.currentMatchModes = this.filterMatchModeOptions[this.type]?.map(
       (key: string) => {
         return { label: this.matchModeLabels[key], value: key };
       }
     );
   }
 
-  initFieldFilterConstraint() {
+  private _updateFilterApplied(value: any) {
+    const fieldFilter = value.filters[<string>this.field];
+    if (fieldFilter) {
+      if (Array.isArray(fieldFilter)) {
+        this.isFilterApplied = (<FilterMetadata[]>fieldFilter).some(
+          (meta) => !this._tableInstance.isFilterBlank(meta.value)
+        );
+      } else {
+        this.isFilterApplied = !this._tableInstance.isFilterBlank(
+          fieldFilter.value
+        );
+      }
+    } else {
+      this.isFilterApplied = false;
+    }
+  }
+
+  private _initFieldFilterConstraint() {
     const defaultMatchMode = this.getDefaultMatchMode();
     if (this._tableInstance instanceof Table) {
       this._tableInstance.filters[<string>this.field] = [
@@ -185,6 +275,10 @@ export class TableColumnFilterComponent {
         matchMode: defaultMatchMode
       };
     }
+  }
+
+  onCloseClick() {
+    this.hide();
   }
 
   onMenuMatchModeChange(value: any, filterMeta: FilterMetadata) {
@@ -224,11 +318,30 @@ export class TableColumnFilterComponent {
   }
 
   getDefaultMatchMode(): string {
-    if (this.type === 'text') return FilterMatchMode.STARTS_WITH;
-    else if (this.type === 'number') return FilterMatchMode.EQUALS;
-    else if (this.type === 'date') return FilterMatchMode.DATE_IS;
-    else if (this.type === 'category') return FilterMatchMode.IN;
-    else return FilterMatchMode.CONTAINS;
+    const getMatchMode = (val: CpsColumnFilterMatchMode) => {
+      if (this.type in this.filterMatchModeOptions) {
+        return this.filterMatchModeOptions[this.type].includes(val)
+          ? val
+          : this.filterMatchModeOptions[this.type][0];
+      } else {
+        return val;
+      }
+    };
+
+    switch (this.type) {
+      case 'text':
+        return getMatchMode(CpsColumnFilterMatchMode.STARTS_WITH);
+      case 'number':
+        return getMatchMode(CpsColumnFilterMatchMode.EQUALS);
+      case 'date':
+        return getMatchMode(CpsColumnFilterMatchMode.DATE_IS);
+      case 'category':
+        return this.singleSelection
+          ? CpsColumnFilterMatchMode.IS
+          : CpsColumnFilterMatchMode.IN;
+      default:
+        return getMatchMode(CpsColumnFilterMatchMode.CONTAINS);
+    }
   }
 
   getDefaultOperator(): string | undefined {
@@ -271,27 +384,19 @@ export class TableColumnFilterComponent {
     );
   }
 
-  hasFilter(): boolean {
-    const fieldFilter = this._tableInstance.filters[<string>this.field];
-    if (fieldFilter) {
-      if (Array.isArray(fieldFilter))
-        return !this._tableInstance.isFilterBlank(
-          (<FilterMetadata[]>fieldFilter)[0].value
-        );
-      else return !this._tableInstance.isFilterBlank(fieldFilter.value);
-    }
-
-    return false;
-  }
-
   hide() {
     this.columnFilterMenu.hide();
   }
 
   clearFilter() {
-    this.initFieldFilterConstraint();
+    this._initFieldFilterConstraint();
     this._tableInstance._filter();
     if (this.hideOnClear) this.hide();
+  }
+
+  clearFilterValues() {
+    this._initFieldFilterConstraint();
+    this.isFilterApplied = false;
   }
 
   applyFilter() {
@@ -305,6 +410,10 @@ export class TableColumnFilterComponent {
     parent.classList.add(className);
   }
 
+  onBeforeMenuHidden() {
+    if (!this.isFilterApplied) this._initFieldFilterConstraint();
+  }
+
   onMenuHidden() {
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
@@ -314,5 +423,9 @@ export class TableColumnFilterComponent {
   @HostListener('click', ['$event'])
   onClick(event: any) {
     event.stopPropagation();
+  }
+
+  ngOnDestroy(): void {
+    this._tableInstance?.onFilter?.unsubscribe();
   }
 }

@@ -7,7 +7,14 @@
       toolbarTitle="Table with a paginator, multiple sorting and individual filtering">
       <ng-template #header>
         <th cpsTColSortable="a" cpsTColFilter="a" filterType="text">A</th>
-        <th cpsTColSortable="b" cpsTColFilter="b" filterType="date">B</th>
+        <th
+          cpsTColSortable="b"
+          cpsTColFilter="b"
+          filterType="date"
+          [filterMatchModes]="dateMatchModes"
+          [filterShowOperator]="false">
+          B
+        </th>
         <th cpsTColSortable="c" cpsTColFilter="c" filterType="number">C</th>
         <th cpsTColSortable="d" cpsTColFilter="d" filterType="boolean">D</th>
         <th cpsTColSortable="e" cpsTColFilter="e" filterType="category">E</th>
@@ -32,7 +39,7 @@
       [columns]="colsVirtual"
       [sortable]="true"
       [virtualScroll]="true"
-      [showColumnsToggle]="true"
+      [showColumnsToggleBtn]="true"
       scrollHeight="500px"
       toolbarTitle="Sortable table with virtual scroller, global filter and internal columns toggle">
     </cps-table>
@@ -76,11 +83,13 @@
       sortMode="multiple"
       [striped]="false"
       [showRowMenu]="true"
-      [showColumnsToggle]="true"
+      [showColumnsToggleBtn]="true"
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (selectionChanged)="onRowsSelectionChanged($event)"
-      toolbarTitle="Table with external columns toggle and unstriped selectable and expandable rows">
+      toolbarIcon="toast-success"
+      toolbarIconColor="success"
+      toolbarTitle="Table with toolbar icon, external columns toggle, unstriped selectable and expandable rows">
       <ng-template #header>
         <th
           *ngFor="let scol of selCols"

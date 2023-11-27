@@ -9,9 +9,10 @@ import {
   CpsTabGroupComponent,
   CpsTabComponent,
   CpsButtonToggleComponent,
-  BtnToggleOption,
+  CpsButtonToggleOption,
   CpsTableSize,
-  TabChangeEvent
+  TabChangeEvent,
+  CpsColumnFilterMatchMode
 } from 'cps-ui-kit';
 
 @Component({
@@ -35,11 +36,16 @@ import {
 export class TablePageComponent implements OnInit {
   selectedTabIndex = 0;
 
+  dateMatchModes = [
+    CpsColumnFilterMatchMode.DATE_BEFORE,
+    CpsColumnFilterMatchMode.DATE_AFTER
+  ];
+
   sizesOptions = [
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
     { label: 'Large', value: 'large' }
-  ] as BtnToggleOption[];
+  ] as CpsButtonToggleOption[];
 
   selSize: CpsTableSize = 'small';
 
