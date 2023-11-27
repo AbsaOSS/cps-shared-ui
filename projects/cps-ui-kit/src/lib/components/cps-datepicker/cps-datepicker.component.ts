@@ -152,10 +152,6 @@ export class CpsDatepickerComponent
    */
   @Input()
   maxDate!: Date;
-  /**
-   * Value specified in component.
-   * @group Props
-   */
 
   /**
    * Value of the datepicker.

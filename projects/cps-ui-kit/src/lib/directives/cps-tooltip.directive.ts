@@ -62,13 +62,13 @@ export class CpsTooltipDirective implements OnDestroy {
   @Input() tooltipDisabled = false;
 
   /**
-   * Max width of infoTooltip of type number denoting pixels or string.
+   * Max width of the tooltip of type number denoting pixels or string.
    * @group Props
    */
   @Input() tooltipMaxWidth: number | string = '100%';
 
   /**
-   * Info tooltip class for styling.
+   * Tooltip content class for styling.
    * @group Props
    */
   @Input() tooltipContentClass = 'cps-tooltip-content';
