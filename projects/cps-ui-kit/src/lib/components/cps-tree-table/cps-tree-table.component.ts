@@ -114,13 +114,13 @@ export class CpsTreeTableComponent
   @Input() colFieldName = 'field';
 
   /**
-   * Table min width.
+   * Treetable min width in pixels.
    * @group Props
    */
   @Input() minWidth = 0;
 
   /**
-   * Whether minWidth prop is used for table body only, excluding toolbar and paginator.
+   * Whether minWidth prop is used for treetable body only, excluding toolbar and paginator.
    * @group Props
    */
   @Input() minWidthForBodyOnly = true;
