@@ -88,6 +88,7 @@ export class CpsTreeTableComponent
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
   @Input() colFieldName = 'field';
+  @Input() minWidth = 0;
 
   @Input() striped = true;
   @Input() bordered = true;
@@ -113,6 +114,7 @@ export class CpsTreeTableComponent
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() maxVirtualScrollItemHeight = 0;
   @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
@@ -211,10 +213,24 @@ export class CpsTreeTableComponent
   scrollableBody: any;
   scrollbarWidth = 0;
 
+  observerDebouncers = new WeakMap();
+  observerHandlers = new WeakMap();
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
+        if (!this.observerHandlers.has(entry.target)) {
+          this.observerHandlers.set(entry.target, () => {
+            entry.target.dispatchEvent(new CustomEvent('treeTableBodyResized'));
+          });
+        }
+        clearTimeout(this.observerDebouncers.get(entry.target));
+        this.observerDebouncers.set(
+          entry.target,
+          setTimeout(this.observerHandlers.get(entry.target), 100)
+        );
+
         const body = entry.target;
         const sbarVisible = body.scrollHeight > body.clientHeight;
 
@@ -274,6 +290,26 @@ export class CpsTreeTableComponent
   }
 
   ngAfterViewInit(): void {
+    if (this.minWidth > 0) {
+      const treeTableMain =
+        this.primengTreeTable.el.nativeElement.querySelector('.p-treetable');
+      if (treeTableMain) treeTableMain.style.overflow = 'auto';
+
+      const scrollableWrapper =
+        this.primengTreeTable.el.nativeElement.querySelector(
+          '.p-treetable-scrollable-wrapper'
+        );
+      if (scrollableWrapper)
+        scrollableWrapper.style.minWidth = this.minWidth + 'px';
+
+      const treeTableHeader =
+        this.primengTreeTable.el.nativeElement.querySelector(
+          '.p-treetable-header'
+        );
+      if (treeTableHeader)
+        treeTableHeader.style.minWidth = this.minWidth + 'px';
+    }
+
     this.scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
       '.p-treetable-scrollable-body'
     );
@@ -286,17 +322,37 @@ export class CpsTreeTableComponent
 
       if (this.headerBox) {
         this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
+
+        this.scrollableBody.addEventListener('treeTableBodyResized', () => {
+          this._recalcVirtualHeight();
+        });
+
         this.resizeObserver.observe(this.scrollableBody);
+      }
+    }
+  }
+
+  private _updateVirtualScrollItemSize() {
+    if (!this.virtualScroll) return;
+    const tr = this.primengTreeTable?.el?.nativeElement
+      ?.querySelector('.p-treetable-tbody')
+      ?.querySelector('tr');
+
+    if (tr) {
+      this.virtualScrollItemSize = tr.clientHeight || 0;
+
+      if (this.maxVirtualScrollItemHeight > 0) {
+        this.virtualScrollItemSize = Math.min(
+          this.maxVirtualScrollItemHeight,
+          this.virtualScrollItemSize
+        );
       }
     }
   }
 
   ngAfterViewChecked() {
     if (!this.virtualScroll || this.virtualScrollItemSize) return;
-    this.virtualScrollItemSize =
-      this.primengTreeTable?.el?.nativeElement
-        ?.querySelector('.p-treetable-tbody')
-        ?.querySelector('tr')?.clientHeight || 0;
+    this._recalcVirtualHeight();
     this.cdRef.detectChanges();
   }
 
@@ -365,27 +421,32 @@ export class CpsTreeTableComponent
   }
 
   private _recalcVirtualHeight() {
-    if (this.virtualScroll && this.defScrollHeight) {
-      const itemsLen = this.primengTreeTable.serializedValue.length;
-      if (itemsLen < 1) {
-        this.scrollHeight = this.emptyBodyHeight
-          ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
-          : this.virtualScrollItemSize + 1 + 'px';
-      } else {
-        const curHeight = this.virtualScrollItemSize * itemsLen + 2;
-        if (this.defScrollHeight === 'flex') {
-          if (curHeight >= this.defScrollHeightPx) {
-            this.scrollHeight = 'flex';
-            setTimeout(() => {
-              this.scrollableBody.style.height = '100%';
-              this.cdRef.markForCheck();
-            });
-            return;
+    setTimeout(() => {
+      if (this.virtualScroll && this.defScrollHeight) {
+        this._updateVirtualScrollItemSize();
+        const itemsLen = this.primengTreeTable.serializedValue.length;
+        if (itemsLen < 1) {
+          this.scrollHeight = this.emptyBodyHeight
+            ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
+            : this.virtualScrollItemSize + 1 + 'px';
+        } else {
+          const curHeight = this.virtualScrollItemSize * itemsLen + 2;
+          if (this.defScrollHeight === 'flex') {
+            if (curHeight >= this.defScrollHeightPx) {
+              this.scrollHeight = 'flex';
+              setTimeout(() => {
+                this.scrollableBody.style.height = '100%';
+                this.cdRef.markForCheck();
+              });
+              return;
+            }
           }
+          this.scrollHeight =
+            Math.min(this.defScrollHeightPx, curHeight) + 'px';
         }
-        this.scrollHeight = Math.min(this.defScrollHeightPx, curHeight) + 'px';
+        this.cdRef.markForCheck();
       }
-    }
+    });
   }
 
   onFilterGlobal(value: string) {
@@ -415,10 +476,7 @@ export class CpsTreeTableComponent
     this.data = [...this.data];
     this.rowsRemoved.emit(this.selectedRows);
     this.clearSelection();
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    });
+    this._recalcVirtualHeight();
   }
 
   clearSelection() {
@@ -433,10 +491,7 @@ export class CpsTreeTableComponent
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
     this._removeNodeFromData(node);
     this.rowsRemoved.emit([node]);
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    });
+    this._recalcVirtualHeight();
   }
 
   private _removeNodeFromData(nodeToRemove: any, single = true): void {
@@ -538,18 +593,12 @@ export class CpsTreeTableComponent
 
   onNodeExpanded(event: any) {
     this.nodeExpanded.emit(event);
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    });
+    this._recalcVirtualHeight();
   }
 
   onNodeCollapsed(event: any) {
     this.nodeCollapsed.emit(event);
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    });
+    this._recalcVirtualHeight();
   }
 
   onNodeSelected(event: any) {
@@ -566,10 +615,7 @@ export class CpsTreeTableComponent
 
   onFilter(event: any) {
     this.filtered.emit(event);
-    setTimeout(() => {
-      this._recalcVirtualHeight();
-      this.cdRef.markForCheck();
-    });
+    this._recalcVirtualHeight();
   }
 
   onSelectColumn(col: any) {
