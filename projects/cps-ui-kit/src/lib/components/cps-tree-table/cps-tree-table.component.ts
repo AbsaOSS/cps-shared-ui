@@ -210,28 +210,16 @@ export class CpsTreeTableComponent
   defScrollHeight = '';
 
   resizeObserver: ResizeObserver;
+  windowResizeDebouncer: any;
+
   headerBox: any;
   scrollableBody: any;
   scrollbarWidth = 0;
-
-  observerDebouncers = new WeakMap();
-  observerHandlers = new WeakMap();
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
-        if (!this.observerHandlers.has(entry.target)) {
-          this.observerHandlers.set(entry.target, () => {
-            entry.target.dispatchEvent(new CustomEvent('treeTableBodyResized'));
-          });
-        }
-        clearTimeout(this.observerDebouncers.get(entry.target));
-        this.observerDebouncers.set(
-          entry.target,
-          setTimeout(this.observerHandlers.get(entry.target), 100)
-        );
-
         const body = entry.target;
         const sbarVisible = body.scrollHeight > body.clientHeight;
 
@@ -255,8 +243,7 @@ export class CpsTreeTableComponent
     if (this.virtualScroll) {
       this.defScrollHeight = this.scrollHeight;
 
-      if (this.defScrollHeight === 'flex')
-        window.addEventListener('resize', this._onWindowResize.bind(this));
+      window.addEventListener('resize', this._onWindowResize.bind(this));
 
       if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
         this.defScrollHeightPx = parseInt(this.scrollHeight, 10);
@@ -317,11 +304,6 @@ export class CpsTreeTableComponent
         }
 
         this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
-
-        this.scrollableBody.addEventListener('treeTableBodyResized', () => {
-          this._recalcVirtualHeight();
-        });
-
         this.resizeObserver.observe(this.scrollableBody);
       }
     }
@@ -401,7 +383,7 @@ export class CpsTreeTableComponent
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
-    if (this.virtualScroll && this.defScrollHeight === 'flex')
+    if (this.virtualScroll)
       window.removeEventListener('resize', this._onWindowResize.bind(this));
   }
 
@@ -410,7 +392,14 @@ export class CpsTreeTableComponent
   }
 
   private _onWindowResize() {
-    this.defScrollHeightPx = this.scrollableBody.clientHeight;
+    if (this.defScrollHeight === 'flex')
+      this.defScrollHeightPx = this.scrollableBody.clientHeight;
+    else {
+      clearTimeout(this.windowResizeDebouncer);
+      this.windowResizeDebouncer = setTimeout(() => {
+        this._recalcVirtualHeight();
+      }, 100);
+    }
   }
 
   get styleClass() {
