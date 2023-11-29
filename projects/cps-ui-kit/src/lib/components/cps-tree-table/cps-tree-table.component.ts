@@ -318,12 +318,21 @@ export class CpsTreeTableComponent
 
     if (!trs?.length) return;
 
-    let h = trs[0]?.clientHeight || 0;
+    let h = trs[0]?.offsetHeight || 0;
     if (h === 0) return;
 
-    trs.forEach((tr: HTMLElement) => {
-      const clientHeight = tr.clientHeight;
-      if (clientHeight) h = Math.min(h, clientHeight);
+    trs.forEach((tr: HTMLElement, idx: number) => {
+      let rh = 0;
+      const tds = tr?.querySelectorAll('td');
+      tds?.forEach((td: HTMLElement) => {
+        td.style.display = 'block';
+        const offsetHeight = Math.ceil(td.offsetHeight);
+        if (offsetHeight) rh = Math.max(rh, offsetHeight);
+        td.style.display = '';
+      });
+      if (rh) {
+        h = idx === 0 ? rh : Math.min(h, rh);
+      }
     });
 
     this.virtualScrollItemSize = h;
