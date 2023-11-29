@@ -328,11 +328,21 @@ export class CpsTreeTableComponent
   private _updateVirtualScrollItemSize() {
     if (!this.virtualScroll) return;
 
-    const tr = this.primengTreeTable?.el?.nativeElement
+    const trs = this.primengTreeTable?.el?.nativeElement
       ?.querySelector('.p-treetable-tbody')
-      ?.querySelector('tr');
+      ?.querySelectorAll('tr');
 
-    this.virtualScrollItemSize = tr?.clientHeight || 0;
+    if (!trs?.length) return;
+
+    let h = trs[0]?.clientHeight || 0;
+    if (h === 0) return;
+
+    trs.forEach((tr: HTMLElement) => {
+      const clientHeight = tr.clientHeight;
+      if (clientHeight) h = Math.min(h, clientHeight);
+    });
+
+    this.virtualScrollItemSize = h;
   }
 
   ngAfterViewChecked() {
