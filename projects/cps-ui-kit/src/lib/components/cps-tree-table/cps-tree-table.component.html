@@ -232,9 +232,13 @@
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
           <td *ngFor="let col of columns; let i = index">
-            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0">
-            </p-treeTableToggler>
-            {{ rowData[col[colFieldName]] }}
+            <span *ngIf="i === 0" style="display: flex">
+              <p-treeTableToggler [rowNode]="rowNode"> </p-treeTableToggler>
+              {{ rowData[col[colFieldName]] }}
+            </span>
+            <ng-container *ngIf="i > 0">{{
+              rowData[col[colFieldName]]
+            }}</ng-container>
           </td>
         </ng-container>
       </ng-container>
