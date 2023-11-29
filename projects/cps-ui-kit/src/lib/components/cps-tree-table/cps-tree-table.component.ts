@@ -317,17 +317,15 @@ export class CpsTreeTableComponent
       ?.querySelectorAll('tr');
 
     if (!trs?.length) return;
+    if (!trs[0]?.offsetHeight) return;
 
-    let h = trs[0]?.offsetHeight || 0;
-    if (h === 0) return;
-
+    let h = 0;
     trs.forEach((tr: HTMLElement, idx: number) => {
       let rh = 0;
       const tds = tr?.querySelectorAll('td');
       tds?.forEach((td: HTMLElement) => {
         td.style.display = 'block';
-        const offsetHeight = Math.ceil(td.offsetHeight);
-        if (offsetHeight) rh = Math.max(rh, offsetHeight);
+        if (td.offsetHeight) rh = Math.max(rh, td.offsetHeight);
         td.style.display = '';
       });
       if (rh) {
