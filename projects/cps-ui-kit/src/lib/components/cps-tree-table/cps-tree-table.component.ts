@@ -115,7 +115,6 @@ export class CpsTreeTableComponent
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
-  @Input() maxVirtualScrollItemHeight = 0;
   @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
@@ -328,20 +327,12 @@ export class CpsTreeTableComponent
 
   private _updateVirtualScrollItemSize() {
     if (!this.virtualScroll) return;
+
     const tr = this.primengTreeTable?.el?.nativeElement
       ?.querySelector('.p-treetable-tbody')
       ?.querySelector('tr');
 
-    if (tr) {
-      this.virtualScrollItemSize = tr.clientHeight || 0;
-
-      if (this.maxVirtualScrollItemHeight > 0) {
-        this.virtualScrollItemSize = Math.min(
-          this.maxVirtualScrollItemHeight,
-          this.virtualScrollItemSize
-        );
-      }
-    }
+    this.virtualScrollItemSize = tr?.clientHeight || 0;
   }
 
   ngAfterViewChecked() {
