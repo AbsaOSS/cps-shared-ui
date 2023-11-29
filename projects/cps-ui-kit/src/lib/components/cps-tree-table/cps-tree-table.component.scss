@@ -41,6 +41,16 @@ $tbar-normal-height: 72px;
     .p-treetable-scrollable-wrapper {
       position: relative;
     }
+    .cps-treetable-nonvirtual.cps-treetable-flex .p-treetable-flex-scrollable,
+    .cps-treetable-nonvirtual.cps-treetable-flex
+      .p-treetable-flex-scrollable
+      .p-treetable-scrollable-wrapper,
+    .cps-treetable-nonvirtual.cps-treetable-flex
+      .p-treetable-flex-scrollable
+      .p-treetable-scrollable-view {
+      height: unset;
+    }
+
     .cps-treetable-bottom-bordered > .p-treetable-scrollable-wrapper {
       border-bottom: 1px solid $treetable-borders-color;
     }
@@ -73,6 +83,12 @@ $tbar-normal-height: 72px;
     .p-treetable-scrollable-body {
       overflow: auto !important;
       position: relative;
+    }
+
+    .cps-treetable-flex {
+      .p-treetable-scrollable-body {
+        height: 100%;
+      }
     }
 
     .p-treetable .p-treetable-tbody > tr {
