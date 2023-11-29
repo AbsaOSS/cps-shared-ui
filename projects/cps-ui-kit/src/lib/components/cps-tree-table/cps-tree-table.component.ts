@@ -88,7 +88,7 @@ export class CpsTreeTableComponent
   @Input() columns: { [key: string]: any }[] = [];
   @Input() colHeaderName = 'header';
   @Input() colFieldName = 'field';
-  @Input() minWidth = 0;
+  @Input() minWidth: number | string = '';
   @Input() minWidthForBodyOnly = true;
 
   @Input() striped = true;
@@ -115,6 +115,7 @@ export class CpsTreeTableComponent
   @Input() scrollable = true;
   @Input() scrollHeight = ''; // 'flex' or value+'px'
   @Input() virtualScroll = false; // works only if scrollable is true
+  @Input() virtualScrollItemHeight = 0;
   @Input() numToleratedItems = 10;
 
   @Input() paginator = false;
@@ -245,8 +246,9 @@ export class CpsTreeTableComponent
   }
 
   ngOnInit(): void {
-    this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
     if (!this.scrollable) this.virtualScroll = false;
+    this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
+    this.minWidth = convertSize(this.minWidth);
 
     if (this.showAdditionalBtnOnSelect) this.showRemoveBtnOnSelect = false;
 
@@ -296,9 +298,9 @@ export class CpsTreeTableComponent
       '.p-treetable-scrollable-body'
     );
     if (this.scrollableBody) {
-      if (this.minWidthForBodyOnly && this.minWidth > 0) {
+      if (this.minWidthForBodyOnly && this.minWidth) {
         const table = this.scrollableBody.querySelector('table');
-        if (table) table.style.minWidth = this.minWidth + 'px';
+        if (table) table.style.minWidth = this.minWidth;
       }
 
       if (this.virtualScroll && this.defScrollHeight === 'flex')
@@ -309,9 +311,9 @@ export class CpsTreeTableComponent
       );
 
       if (this.headerBox) {
-        if (this.minWidthForBodyOnly && this.minWidth > 0) {
+        if (this.minWidthForBodyOnly && this.minWidth) {
           const table = this.headerBox.querySelector('table');
-          if (table) table.style.minWidth = this.minWidth + 'px';
+          if (table) table.style.minWidth = this.minWidth;
         }
 
         this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
@@ -326,7 +328,7 @@ export class CpsTreeTableComponent
   }
 
   private _updateVirtualScrollItemSize() {
-    if (!this.virtualScroll) return;
+    if (!this.virtualScroll || this.virtualScrollItemHeight) return;
 
     const trs = this.primengTreeTable?.el?.nativeElement
       ?.querySelector('.p-treetable-tbody')
@@ -360,25 +362,24 @@ export class CpsTreeTableComponent
     if (treeTableMain) {
       treeTableMain.style.overflow = 'auto';
       const paginatorEl = treeTableMain.querySelector('.p-paginator');
-      if (paginatorEl) paginatorEl.style.minWidth = this.minWidth + 'px';
+      if (paginatorEl) paginatorEl.style.minWidth = this.minWidth;
       const loadingOverlay = treeTableMain.querySelector(
         '.p-treetable-loading-overlay'
       );
-      if (loadingOverlay) loadingOverlay.style.minWidth = this.minWidth + 'px';
+      if (loadingOverlay) loadingOverlay.style.minWidth = this.minWidth;
     }
 
     const scrollableWrapper =
       this.primengTreeTable.el?.nativeElement?.querySelector(
         '.p-treetable-scrollable-wrapper'
       );
-    if (scrollableWrapper)
-      scrollableWrapper.style.minWidth = this.minWidth + 'px';
+    if (scrollableWrapper) scrollableWrapper.style.minWidth = this.minWidth;
 
     const treeTableHeader =
       this.primengTreeTable.el?.nativeElement?.querySelector(
         '.p-treetable-header'
       );
-    if (treeTableHeader) treeTableHeader.style.minWidth = this.minWidth + 'px';
+    if (treeTableHeader) treeTableHeader.style.minWidth = this.minWidth;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -386,6 +387,9 @@ export class CpsTreeTableComponent
       this.clearSelection();
       if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
     }
+
+    if (this.virtualScrollItemHeight)
+      this.virtualScrollItemSize = this.virtualScrollItemHeight;
 
     this._setMinWidthOverall();
 
