@@ -225,7 +225,7 @@ export class CpsTreeTableComponent
         const body = entry.target;
         this.scrollbarVisible = body.scrollHeight > body.clientHeight;
 
-        if (this.scrollbarVisible)
+        if (this.scrollbarVisible && this.virtualScroll)
           this.scrollableBody.style.setProperty(
             'overflow',
             'auto',
@@ -466,7 +466,7 @@ export class CpsTreeTableComponent
   }
 
   private _recalcVirtualHeight() {
-    if (!this.scrollbarVisible)
+    if (!this.scrollbarVisible && this.virtualScroll)
       this.scrollableBody.style.setProperty('overflow', 'hidden', 'important');
 
     setTimeout(() => {
