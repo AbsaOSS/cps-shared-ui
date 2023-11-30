@@ -115,6 +115,10 @@ $tbar-normal-height: 72px;
       border-width: 0 1px 1px 0;
     }
 
+    .p-treetable-auto-layout table {
+      table-layout: auto;
+    }
+
     .p-treetable .p-treetable-tbody > tr > td:only-child {
       border-width: 0 1px 1px 1px;
     }

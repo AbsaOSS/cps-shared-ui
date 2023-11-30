@@ -91,6 +91,12 @@ export class CpsTreeTableComponent
   @Input() minWidth: number | string = '';
   @Input() minWidthForBodyOnly = true;
 
+  /**
+   * Whether the cell widths scale according to their content or not.
+   * @group Props
+   */
+  @Input() autoLayout = true;
+
   @Input() striped = true;
   @Input() bordered = true;
   @Input() size: CpsTreeTableSize = 'normal';
@@ -316,7 +322,54 @@ export class CpsTreeTableComponent
         this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
         this.resizeObserver.observe(this.scrollableBody);
       }
+
+      this._calcAutoLayoutHeaderWidths();
     }
+
+    if (!this.scrollable) {
+      const tableWrapper =
+        this.primengTreeTable.el?.nativeElement?.querySelector(
+          '.p-treetable-wrapper'
+        );
+      if (tableWrapper && this.minWidthForBodyOnly && this.minWidth) {
+        const table = tableWrapper.querySelector('table');
+        if (table) table.style.minWidth = this.minWidth;
+      }
+    }
+  }
+
+  private _calcAutoLayoutHeaderWidths() {
+    if (!this.autoLayout || !this.scrollable) return;
+
+    const headerCells = this.primengTreeTable.el.nativeElement
+      ?.querySelector('.p-treetable-thead')
+      ?.querySelectorAll('th');
+
+    if (!headerCells?.length) return;
+
+    const tableBody = this.primengTreeTable.el.nativeElement
+      ?.querySelector('.p-treetable-tbody')
+      ?.querySelector('tr');
+
+    if (!tableBody) return;
+
+    const tableCells = tableBody.querySelectorAll('td');
+
+    if (!tableCells?.length) return;
+
+    let idx = 0;
+
+    headerCells.forEach((cell: HTMLElement) => {
+      const cellWidth = cell.offsetWidth;
+      const tableCell = tableCells[idx];
+      if (tableCell) {
+        tableCell.style.width = cellWidth + 'px';
+        tableCell.style.minWidth = cellWidth + 'px';
+      }
+      idx++;
+    });
+
+    this.cdRef.detectChanges();
   }
 
   private _updateVirtualScrollItemSize() {
@@ -382,6 +435,14 @@ export class CpsTreeTableComponent
         '.p-treetable-scrollable-wrapper'
       );
     if (scrollableWrapper) scrollableWrapper.style.minWidth = this.minWidth;
+
+    if (!this.scrollable) {
+      const tableWrapper =
+        this.primengTreeTable.el?.nativeElement?.querySelector(
+          '.p-treetable-wrapper'
+        );
+      if (tableWrapper) tableWrapper.style.minWidth = this.minWidth;
+    }
 
     const treeTableHeader =
       this.primengTreeTable.el?.nativeElement?.querySelector(
