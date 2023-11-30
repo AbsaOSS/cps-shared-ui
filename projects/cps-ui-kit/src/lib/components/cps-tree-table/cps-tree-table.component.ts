@@ -341,32 +341,45 @@ export class CpsTreeTableComponent
   private _calcAutoLayoutHeaderWidths() {
     if (!this.autoLayout || !this.scrollable) return;
 
-    const headerCells = this.primengTreeTable.el.nativeElement
-      ?.querySelector('.p-treetable-thead')
-      ?.querySelectorAll('th');
+    const headerRows = this.headerBox?.querySelectorAll('tr');
+    if (!headerRows?.length) return;
 
+    const headerCells =
+      headerRows[headerRows.length - 1]?.querySelectorAll('th');
     if (!headerCells?.length) return;
 
-    const tableBody = this.primengTreeTable.el.nativeElement
-      ?.querySelector('.p-treetable-tbody')
-      ?.querySelector('tr');
+    const thWidths = Array.from(headerCells).map((th: any) => th.offsetWidth);
 
-    if (!tableBody) return;
+    if (thWidths.every((w) => w === 0)) return;
 
-    const tableCells = tableBody.querySelectorAll('td');
+    const bodyRows = this.scrollableBody?.querySelectorAll('tr');
+    if (!bodyRows?.length) return;
 
-    if (!tableCells?.length) return;
+    const tdWidths: number[] = [];
+    bodyRows.forEach((tr: HTMLElement) => {
+      const tds = tr?.querySelectorAll('td');
+      tds?.forEach((td: HTMLElement, idx: number) => {
+        const tdWidth = td.offsetWidth;
+        if (!tdWidths[idx]) tdWidths[idx] = 0;
+        tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
+      });
+    });
 
-    let idx = 0;
+    if (thWidths.length !== tdWidths.length) return;
 
-    headerCells.forEach((cell: HTMLElement) => {
-      const cellWidth = cell.offsetWidth;
-      const tableCell = tableCells[idx];
-      if (tableCell) {
-        tableCell.style.width = cellWidth + 'px';
-        tableCell.style.minWidth = cellWidth + 'px';
-      }
-      idx++;
+    const maxWidths = thWidths.map((v, idx) => Math.max(v, tdWidths[idx]));
+
+    headerCells.forEach((th: any, idx: number) => {
+      th.style.width = maxWidths[idx] + 'px';
+      // th.style.minWidth = maxWidths[idx] + 'px';
+    });
+
+    bodyRows.forEach((tr: HTMLElement) => {
+      const tds = tr?.querySelectorAll('td');
+      tds?.forEach((td: HTMLElement, idx: number) => {
+        td.style.width = maxWidths[idx] + 'px';
+        // td.style.minWidth = maxWidths[idx] + 'px';
+      });
     });
 
     this.cdRef.detectChanges();
@@ -412,6 +425,8 @@ export class CpsTreeTableComponent
       this._recalcVirtualHeight();
       this.cdRef.detectChanges();
     }
+
+    this._calcAutoLayoutHeaderWidths();
   }
 
   private _setMinWidthOverall() {
