@@ -216,15 +216,23 @@ export class CpsTreeTableComponent
   headerBox: any;
   scrollableBody: any;
   scrollbarWidth = 0;
+  scrollbarVisible = true;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const body = entry.target;
-        const sbarVisible = body.scrollHeight > body.clientHeight;
+        this.scrollbarVisible = body.scrollHeight > body.clientHeight;
 
-        let wScroll = sbarVisible ? this.scrollbarWidth : 0;
+        if (this.scrollbarVisible && this.virtualScroll)
+          this.scrollableBody.style.setProperty(
+            'overflow',
+            'auto',
+            'important'
+          );
+
+        let wScroll = this.scrollbarVisible ? this.scrollbarWidth : 0;
         if (wScroll > 0) wScroll -= 1;
 
         this.headerBox.style.paddingRight = `${wScroll}px`;
@@ -458,6 +466,9 @@ export class CpsTreeTableComponent
   }
 
   private _recalcVirtualHeight() {
+    if (!this.scrollbarVisible && this.virtualScroll)
+      this.scrollableBody.style.setProperty('overflow', 'hidden', 'important');
+
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
         this._updateVirtualScrollItemSize();
