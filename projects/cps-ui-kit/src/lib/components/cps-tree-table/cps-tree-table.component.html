@@ -1,7 +1,11 @@
 <p-treeTable
   #primengTreeTable
   ttWithUnsort
-  [ngClass]="{ 'cps-treetable-loading': loading }"
+  [ngClass]="{
+    'cps-treetable-loading': loading,
+    'cps-treetable-flex': defScrollHeight === 'flex',
+    'cps-treetable-nonvirtual': !virtualScroll
+  }"
   [value]="data"
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"

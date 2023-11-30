@@ -565,6 +565,7 @@ export class CpsTreeTableComponent
 
   virtualScrollItemSize = 0;
   defScrollHeightPx = 0;
+  defScrollHeightPxInitial = 0;
   defScrollHeight = '';
 
   resizeObserver: ResizeObserver;
@@ -573,15 +574,23 @@ export class CpsTreeTableComponent
   headerBox: any;
   scrollableBody: any;
   scrollbarWidth = 0;
+  scrollbarVisible = true;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const body = entry.target;
-        const sbarVisible = body.scrollHeight > body.clientHeight;
+        this.scrollbarVisible = body.scrollHeight > body.clientHeight;
 
-        let wScroll = sbarVisible ? this.scrollbarWidth : 0;
+        if (this.scrollbarVisible && this.virtualScroll)
+          this.scrollableBody.style.setProperty(
+            'overflow',
+            'auto',
+            'important'
+          );
+
+        let wScroll = this.scrollbarVisible ? this.scrollbarWidth : 0;
         if (wScroll > 0) wScroll -= 1;
 
         this.headerBox.style.paddingRight = `${wScroll}px`;
@@ -598,9 +607,8 @@ export class CpsTreeTableComponent
 
     if (this.showAdditionalBtnOnSelect) this.showRemoveBtnOnSelect = false;
 
+    this.defScrollHeight = this.scrollHeight;
     if (this.virtualScroll) {
-      this.defScrollHeight = this.scrollHeight;
-
       window.addEventListener('resize', this._onWindowResize.bind(this));
 
       if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
@@ -648,8 +656,10 @@ export class CpsTreeTableComponent
         if (table) table.style.minWidth = this.minWidth;
       }
 
-      if (this.virtualScroll && this.defScrollHeight === 'flex')
+      if (this.virtualScroll && this.defScrollHeight === 'flex') {
         this.defScrollHeightPx = this.scrollableBody.clientHeight;
+        this.defScrollHeightPxInitial = this.defScrollHeightPx;
+      }
 
       this.headerBox = this.primengTreeTable.el.nativeElement.querySelector(
         '.p-treetable-scrollable-header-box'
@@ -695,9 +705,18 @@ export class CpsTreeTableComponent
   }
 
   ngAfterViewChecked() {
-    if (!this.virtualScroll || this.virtualScrollItemSize) return;
-    this._recalcVirtualHeight();
-    this.cdRef.detectChanges();
+    if (!this.virtualScroll) return;
+
+    if (!this.defScrollHeightPx && this.defScrollHeight === 'flex') {
+      this.defScrollHeightPx = this.scrollableBody.clientHeight;
+      this.defScrollHeightPxInitial = this.defScrollHeightPx;
+      this.cdRef.detectChanges();
+    }
+
+    if (!this.virtualScrollItemSize) {
+      this._recalcVirtualHeight();
+      this.cdRef.detectChanges();
+    }
   }
 
   private _setMinWidthOverall() {
@@ -757,14 +776,13 @@ export class CpsTreeTableComponent
   }
 
   private _onWindowResize() {
-    if (this.defScrollHeight === 'flex')
-      this.defScrollHeightPx = this.scrollableBody.clientHeight;
-    else {
-      clearTimeout(this.windowResizeDebouncer);
-      this.windowResizeDebouncer = setTimeout(() => {
-        this._recalcVirtualHeight();
-      }, 100);
-    }
+    // if (this.defScrollHeight === 'flex')
+    //   this.defScrollHeightPx = this.scrollableBody.clientHeight;
+
+    clearTimeout(this.windowResizeDebouncer);
+    this.windowResizeDebouncer = setTimeout(() => {
+      this._recalcVirtualHeight();
+    }, 100);
   }
 
   get styleClass() {
@@ -806,6 +824,9 @@ export class CpsTreeTableComponent
   }
 
   private _recalcVirtualHeight() {
+    if (!this.scrollbarVisible && this.virtualScroll)
+      this.scrollableBody.style.setProperty('overflow', 'hidden', 'important');
+
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
         this._updateVirtualScrollItemSize();
@@ -817,12 +838,10 @@ export class CpsTreeTableComponent
         } else {
           const curHeight = this.virtualScrollItemSize * itemsLen + 2;
           if (this.defScrollHeight === 'flex') {
-            if (curHeight >= this.defScrollHeightPx) {
+            if (curHeight >= this.defScrollHeightPxInitial) {
               this.scrollHeight = 'flex';
-              setTimeout(() => {
-                this.scrollableBody.style.height = '100%';
-                this.cdRef.markForCheck();
-              });
+              this.scrollableBody.style.height = '100%';
+              this.cdRef.markForCheck();
               return;
             }
           }
