@@ -17,8 +17,7 @@ $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
 $paginator-elem-hover-background: var(--cps-color-highlight-hover);
 $paginator-elem-active-background: var(--cps-color-highlight-active);
-$sorticon-hover-color: var(--cps-color-text-dark);
-$badge-background-color: var(--cps-color-highlight-active);
+$sorticon-hover-color: var(--cps-color-text-mild);
 $checkbox-border-color: var(--cps-color-text-mild);
 
 $tbar-small-height: 43px;
@@ -74,7 +73,7 @@ $tbar-normal-height: 72px;
       padding: 1rem 1rem;
       border: 1px solid $treetable-borders-color;
       border-width: 0 0 1px 1px;
-      font-weight: 700;
+      font-weight: 400;
       color: $header-text-color;
       background: white;
       transition: box-shadow 0.2s;
@@ -465,6 +464,17 @@ $tbar-normal-height: 72px;
       color: $header-text-color;
     }
 
+    .p-treetable
+      .p-sortable-column:not(.p-highlight):hover
+      .cps-sortable-column-icon.unsorted {
+      .arrow-up {
+        border-bottom-color: $sorticon-hover-color;
+      }
+      .arrow-down {
+        border-top-color: $sorticon-hover-color;
+      }
+    }
+
     .p-icon-wrapper {
       display: inline-flex;
     }
@@ -479,14 +489,8 @@ $tbar-normal-height: 72px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .p-treetable .p-sortable-column .p-column-title,
-    .p-treetable .p-sortable-column .cps-sortable-column-badge {
-      vertical-align: unset;
-    }
-
-    .p-treetable .p-sortable-column .cps-sortable-column-badge {
+      font-size: 12px;
+      vertical-align: top;
       color: $color-calm;
       margin-left: 0.25rem;
     }

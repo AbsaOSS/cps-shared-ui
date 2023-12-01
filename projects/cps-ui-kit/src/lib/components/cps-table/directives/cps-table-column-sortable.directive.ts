@@ -7,7 +7,8 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { SortIcon, SortableColumn, Table } from 'primeng/table';
+import { SortableColumn, Table } from 'primeng/table';
+import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-sort-icon.component';
 
 @Directive({
   standalone: true,
@@ -18,7 +19,7 @@ export class CpsTableColumnSortableDirective
   implements OnInit, OnDestroy
 {
   @Input('cpsTColSortable') override field = '';
-  sortIconRef: ComponentRef<SortIcon>;
+  sortIconRef: ComponentRef<CpsSortIconComponent>;
 
   constructor(
     private elementRef: ElementRef,
@@ -26,7 +27,8 @@ export class CpsTableColumnSortableDirective
     public override dt: Table
   ) {
     super(dt);
-    this.sortIconRef = this.viewContainerRef.createComponent(SortIcon);
+    this.sortIconRef =
+      this.viewContainerRef.createComponent(CpsSortIconComponent);
   }
 
   override ngOnInit(): void {

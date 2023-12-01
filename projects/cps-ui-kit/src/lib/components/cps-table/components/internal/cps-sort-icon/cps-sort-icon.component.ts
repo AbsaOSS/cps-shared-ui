@@ -5,8 +5,10 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  Optional
 } from '@angular/core';
+import { Table } from 'primeng/table';
 import { TreeTable } from 'primeng/treetable';
 import { Subscription } from 'rxjs';
 
@@ -25,9 +27,16 @@ export class CpsSortIconComponent implements OnInit, OnDestroy {
 
   sortOrder = 0;
 
-  constructor(public tt: TreeTable, public cd: ChangeDetectorRef) {
-    this.subscription = this.tt.tableService.sortSource$.subscribe(
-      (sortMeta) => {
+  _tableInstance: Table | TreeTable;
+
+  constructor(
+    @Optional() public dt: Table,
+    @Optional() public tt: TreeTable,
+    public cd: ChangeDetectorRef
+  ) {
+    this._tableInstance = dt || tt;
+    this.subscription = this._tableInstance.tableService.sortSource$.subscribe(
+      () => {
         this.updateSortState();
       }
     );
@@ -37,28 +46,30 @@ export class CpsSortIconComponent implements OnInit, OnDestroy {
     this.updateSortState();
   }
 
-  onClick(event: any) {
+  onClick(event: Event) {
     event.preventDefault();
   }
 
   updateSortState() {
-    if (this.tt.sortMode === 'single') {
-      this.sortOrder = this.tt.isSorted(this.field) ? this.tt.sortOrder : 0;
-    } else if (this.tt.sortMode === 'multiple') {
-      const sortMeta = this.tt.getSortMeta(this.field);
+    if (this._tableInstance.sortMode === 'single') {
+      this.sortOrder = this._tableInstance.isSorted(this.field)
+        ? this._tableInstance.sortOrder
+        : 0;
+    } else if (this._tableInstance.sortMode === 'multiple') {
+      const sortMeta = this._tableInstance.getSortMeta(this.field);
       this.sortOrder = sortMeta ? sortMeta.order : 0;
     }
     this.cd.markForCheck();
   }
 
   getMultiSortMetaIndex() {
-    const multiSortMeta = this.tt._multiSortMeta;
+    const multiSortMeta = this._tableInstance._multiSortMeta;
     let index = -1;
 
     if (
       multiSortMeta &&
-      this.tt.sortMode === 'multiple' &&
-      multiSortMeta.length > 1
+      this._tableInstance.sortMode === 'multiple' &&
+      ((this.dt && this.dt.showInitialSortBadge) || multiSortMeta.length > 1)
     ) {
       for (let i = 0; i < multiSortMeta.length; i++) {
         const meta = multiSortMeta[i];
@@ -73,11 +84,15 @@ export class CpsSortIconComponent implements OnInit, OnDestroy {
   }
 
   getBadgeValue() {
-    return this.getMultiSortMetaIndex() + 1;
+    const index = this.getMultiSortMetaIndex();
+    return this.dt && this.dt.groupRowsBy && index > -1 ? index : index + 1;
   }
 
   isMultiSorted() {
-    return this.tt.sortMode === 'multiple' && this.getMultiSortMetaIndex() > -1;
+    return (
+      this._tableInstance.sortMode === 'multiple' &&
+      this.getMultiSortMetaIndex() > -1
+    );
   }
 
   ngOnDestroy() {
