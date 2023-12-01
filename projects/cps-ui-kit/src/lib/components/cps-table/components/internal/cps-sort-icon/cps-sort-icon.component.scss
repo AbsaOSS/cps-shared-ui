@@ -13,17 +13,17 @@
     border-top-color: var(--cps-color-calm);
     margin-top: 4px;
   }
-  .unsorted {
+  .sort-unsorted {
     flex-direction: column;
     vertical-align: bottom;
-    .arrow-up {
+    .sort-unsorted-arrow-up {
       display: inline-flex;
       border: 4px solid transparent;
       border-bottom-color: var(--cps-color-line-dark);
       margin-bottom: 4px;
       margin-top: -4px;
     }
-    .arrow-down {
+    .sort-unsorted-arrow-down {
       display: inline-flex;
       border: 4px solid transparent;
       border-top-color: var(--cps-color-line-dark);

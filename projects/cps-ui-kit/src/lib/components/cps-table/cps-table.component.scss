@@ -177,16 +177,6 @@ $tbar-normal-height: 72px;
       padding: 1.25rem 1.25rem;
     }
 
-    .p-datatable .p-sortable-column:not(.p-highlight):hover {
-      background: white;
-      color: $header-text-color;
-    }
-
-    .p-datatable .p-sortable-column.p-highlight:hover {
-      background: white;
-      color: $header-text-color;
-    }
-
     .p-datatable .p-datatable-thead > tr > th {
       text-align: left;
       padding: 1rem 1rem;
@@ -214,11 +204,11 @@ $tbar-normal-height: 72px;
 
     .p-datatable
       .p-sortable-column:not(.p-highlight):hover
-      .cps-sortable-column-icon.unsorted {
-      .arrow-up {
+      .cps-sortable-column-icon.sort-unsorted {
+      .sort-unsorted-arrow-up {
         border-bottom-color: $sorticon-hover-color;
       }
-      .arrow-down {
+      .sort-unsorted-arrow-down {
         border-top-color: $sorticon-hover-color;
       }
     }

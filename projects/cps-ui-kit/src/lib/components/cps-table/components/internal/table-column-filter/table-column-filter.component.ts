@@ -343,6 +343,31 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
+  private _updateSortIconColor(color: string) {
+    const unsortedUp =
+      this.elementRef?.nativeElement?.parentElement?.querySelector(
+        '.sort-unsorted-arrow-up'
+      );
+    if (unsortedUp) {
+      unsortedUp.style.borderBottomColor = color;
+    }
+    const unsortedDown =
+      this.elementRef?.nativeElement?.parentElement?.querySelector(
+        '.sort-unsorted-arrow-down'
+      );
+    if (unsortedDown) {
+      unsortedDown.style.borderTopColor = color;
+    }
+  }
+
+  @HostListener('mouseenter') onMouseOver() {
+    this._updateSortIconColor('var(--cps-color-line-dark)');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this._updateSortIconColor('');
+  }
+
   ngOnDestroy(): void {
     this._tableInstance?.onFilter?.unsubscribe();
   }

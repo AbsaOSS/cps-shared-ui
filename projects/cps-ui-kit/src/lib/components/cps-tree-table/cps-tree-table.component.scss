@@ -473,23 +473,13 @@ $tbar-normal-height: 72px;
       background: white;
     }
 
-    .p-treetable .p-sortable-column:not(.p-highlight):hover {
-      background: white;
-      color: $header-text-color;
-    }
-
-    .p-treetable .p-sortable-column.p-highlight:hover {
-      background: white;
-      color: $header-text-color;
-    }
-
     .p-treetable
       .p-sortable-column:not(.p-highlight):hover
-      .cps-sortable-column-icon.unsorted {
-      .arrow-up {
+      .cps-sortable-column-icon.sort-unsorted {
+      .sort-unsorted-arrow-up {
         border-bottom-color: $sorticon-hover-color;
       }
-      .arrow-down {
+      .sort-unsorted-arrow-down {
         border-top-color: $sorticon-hover-color;
       }
     }
