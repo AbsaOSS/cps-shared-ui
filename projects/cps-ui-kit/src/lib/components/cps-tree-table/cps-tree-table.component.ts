@@ -39,6 +39,8 @@ import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
 import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
 import { convertSize } from '../../utils/internal/size-utils';
+import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
+import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -66,6 +68,8 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     AngleRightIcon,
     AngleDoubleRightIcon,
     CpsTreeTableColumnSortableDirective,
+    CpsTreeTableHeaderSelectableDirective,
+    CpsTreeTableRowSelectableDirective,
     TreeTableUnsortDirective,
     TableRowMenuComponent
   ],
@@ -244,6 +248,8 @@ export class CpsTreeTableComponent
         this.headerBox.style.paddingRight = `${wScroll}px`;
         this.headerBox.style.borderRight =
           wScroll > 0 ? '1px solid #d7d5d5' : 'unset';
+
+        this._calcAutoLayoutHeaderWidths();
       });
     });
   }
@@ -413,6 +419,7 @@ export class CpsTreeTableComponent
   }
 
   ngAfterViewChecked() {
+    this._calcAutoLayoutHeaderWidths();
     if (!this.virtualScroll) return;
 
     if (!this.defScrollHeightPx && this.defScrollHeight === 'flex') {
@@ -425,8 +432,6 @@ export class CpsTreeTableComponent
       this._recalcVirtualHeight();
       this.cdRef.detectChanges();
     }
-
-    this._calcAutoLayoutHeaderWidths();
   }
 
   private _setMinWidthOverall() {

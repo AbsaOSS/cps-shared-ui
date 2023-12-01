@@ -26,6 +26,7 @@ export class CpsTreeTableHeaderSelectableDirective
   }
 
   ngOnInit(): void {
+    this.elementRef.nativeElement.classList.add('cps-tt-hdr-selectable');
     this.elementRef.nativeElement.appendChild(
       this.checkboxCompRef.location.nativeElement
     );

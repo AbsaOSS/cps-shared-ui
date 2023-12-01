@@ -173,9 +173,7 @@
   <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
       <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th> -->
-      <th style="width: 55px" *ngIf="selectable">
-        <p-treeTableHeaderCheckbox></p-treeTableHeaderCheckbox>
-      </th>
+      <th *ngIf="selectable" cpsTTHdrSelectable></th>
       <ng-container *ngIf="headerTemplate">
         <ng-container
           *ngTemplateOutlet="
@@ -218,9 +216,7 @@
       <!-- <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td> -->
-      <td style="width: 55px" *ngIf="selectable">
-        <p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
-      </td>
+      <td [cpsTTRowSelectable]="rowNode" *ngIf="selectable"></td>
       <ng-container *ngIf="bodyTemplate">
         <ng-container
           *ngTemplateOutlet="

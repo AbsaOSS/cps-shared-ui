@@ -655,11 +655,12 @@ $tbar-normal-height: 72px;
       border-left: none !important;
     }
 
-    td:has(p-treetablecheckbox) {
+    .cps-tt-hdr-selectable {
       text-align: center !important;
+      width: 55px !important;
     }
 
-    th:has(p-treetableheadercheckbox) {
+    .cps-tt-row-selectable {
       text-align: center !important;
       width: 55px !important;
     }
