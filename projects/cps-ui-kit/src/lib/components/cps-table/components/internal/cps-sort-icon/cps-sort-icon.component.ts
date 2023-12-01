@@ -5,24 +5,20 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit,
-  ViewEncapsulation
+  OnInit
 } from '@angular/core';
-import { SortAltIcon } from 'primeng/icons/sortalt';
-import { SortAmountDownIcon } from 'primeng/icons/sortamountdown';
-import { SortAmountUpAltIcon } from 'primeng/icons/sortamountupalt';
 import { TreeTable } from 'primeng/treetable';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'tree-table-sort-icon',
+  selector: 'cps-sort-icon',
   standalone: true,
-  imports: [CommonModule, SortAltIcon, SortAmountUpAltIcon, SortAmountDownIcon],
-  templateUrl: './tree-table-sort-icon.component.html',
-  encapsulation: ViewEncapsulation.None,
+  imports: [CommonModule],
+  templateUrl: './cps-sort-icon.component.html',
+  styleUrls: ['./cps-sort-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeTableSortIconComponent implements OnInit, OnDestroy {
+export class CpsSortIconComponent implements OnInit, OnDestroy {
   @Input() field = '';
 
   subscription: Subscription;
@@ -33,7 +29,6 @@ export class TreeTableSortIconComponent implements OnInit, OnDestroy {
     this.subscription = this.tt.tableService.sortSource$.subscribe(
       (sortMeta) => {
         this.updateSortState();
-        this.cd.markForCheck();
       }
     );
   }
@@ -53,6 +48,7 @@ export class TreeTableSortIconComponent implements OnInit, OnDestroy {
       const sortMeta = this.tt.getSortMeta(this.field);
       this.sortOrder = sortMeta ? sortMeta.order : 0;
     }
+    this.cd.markForCheck();
   }
 
   getMultiSortMetaIndex() {

@@ -8,12 +8,13 @@ import {
   OnChanges,
   ViewContainerRef
 } from '@angular/core';
-import { TableColumnFilterComponent } from '../table-column-filter/table-column-filter.component';
+
 import {
   CpsColumnFilterCategoryOption,
   CpsColumnFilterMatchMode,
   CpsColumnFilterType
 } from '../cps-column-filter-types';
+import { TableColumnFilterComponent } from '../components/internal/table-column-filter/table-column-filter.component';
 
 @Directive({
   standalone: true,

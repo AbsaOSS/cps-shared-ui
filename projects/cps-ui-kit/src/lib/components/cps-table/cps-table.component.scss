@@ -260,13 +260,8 @@ $tbar-normal-height: 72px;
     }
 
     .p-datatable .p-sortable-column .p-sortable-column-badge {
-      border-radius: 50%;
-      height: 1.125rem;
-      min-width: 1.125rem;
-      line-height: 1.125rem;
       color: $color-calm;
-      background: $badge-background-color;
-      margin-left: 0.5rem;
+      margin-left: 0.25rem;
     }
 
     .p-link {

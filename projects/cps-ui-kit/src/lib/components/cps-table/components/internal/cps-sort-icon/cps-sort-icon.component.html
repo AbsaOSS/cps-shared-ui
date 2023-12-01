@@ -1,0 +1,10 @@
+<div *ngIf="sortOrder === 0" class="cps-sortable-column-icon unsorted">
+  <div class="arrow-up"></div>
+  <div class="arrow-down"></div>
+</div>
+<div *ngIf="sortOrder === 1" class="cps-sortable-column-icon sort-desc"></div>
+<div *ngIf="sortOrder === -1" class="cps-sortable-column-icon sort-asc"></div>
+
+<span *ngIf="isMultiSorted()" class="cps-sortable-column-badge">{{
+  getBadgeValue()
+}}</span>

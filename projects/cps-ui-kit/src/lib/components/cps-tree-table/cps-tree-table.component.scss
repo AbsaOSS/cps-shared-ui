@@ -455,12 +455,6 @@ $tbar-normal-height: 72px;
       background: white;
     }
 
-    .p-treetable .p-treetable-thead > tr > th:hover {
-      sortalticon {
-        opacity: 1;
-      }
-    }
-
     .p-treetable .p-sortable-column:not(.p-highlight):hover {
       background: white;
       color: $header-text-color;
@@ -469,21 +463,6 @@ $tbar-normal-height: 72px;
     .p-treetable .p-sortable-column.p-highlight:hover {
       background: white;
       color: $header-text-color;
-    }
-
-    .p-treetable
-      .p-sortable-column:not(.p-highlight):hover
-      .p-sortable-column-icon {
-      color: $sorticon-hover-color;
-    }
-
-    .p-treetable .p-sortable-column .p-sortable-column-icon {
-      color: $header-text-color;
-      margin-left: 0.5rem;
-    }
-
-    .p-treetable .p-sortable-column.p-highlight .p-sortable-column-icon {
-      color: $color-calm;
     }
 
     .p-icon-wrapper {
@@ -496,31 +475,20 @@ $tbar-normal-height: 72px;
       height: 1rem;
     }
 
-    .p-sortable-column-icon {
-      width: 13px;
-      height: 13px;
-    }
-
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
+    .p-treetable .p-sortable-column .cps-sortable-column-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
 
     .p-treetable .p-sortable-column .p-column-title,
-    .p-treetable .p-sortable-column .p-sortable-column-icon,
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
+    .p-treetable .p-sortable-column .cps-sortable-column-badge {
       vertical-align: unset;
     }
 
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
-      border-radius: 50%;
-      height: 1.125rem;
-      min-width: 1.125rem;
-      line-height: 1.125rem;
+    .p-treetable .p-sortable-column .cps-sortable-column-badge {
       color: $color-calm;
-      background: $badge-background-color;
-      margin-left: 0.5rem;
+      margin-left: 0.25rem;
     }
 
     .p-link {
@@ -608,15 +576,6 @@ $tbar-normal-height: 72px;
       .cps-table-col-filter-menu-button {
         color: $body-text-color;
       }
-    }
-
-    sortalticon {
-      opacity: 0;
-    }
-
-    p-treetablesorticon {
-      display: inline-flex;
-      align-items: baseline;
     }
 
     .p-treetable.p-treetable-gridlines .p-treetable-footer {

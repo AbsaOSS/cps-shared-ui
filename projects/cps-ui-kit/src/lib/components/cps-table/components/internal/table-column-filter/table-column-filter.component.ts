@@ -14,17 +14,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata, FilterOperator, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { CpsButtonComponent } from '../../cps-button/cps-button.component';
-import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
-import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
-import { CpsSelectComponent } from '../../cps-select/cps-select.component';
-import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
 import {
   CpsColumnFilterCategoryOption,
   CpsColumnFilterMatchMode,
   CpsColumnFilterType
-} from '../cps-column-filter-types';
+} from '../../../cps-column-filter-types';
+import { CpsButtonComponent } from '../../../../cps-button/cps-button.component';
+import { CpsMenuComponent } from '../../../../cps-menu/cps-menu.component';
+import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
+import { CpsSelectComponent } from '../../../../cps-select/cps-select.component';
+import { TableColumnFilterConstraintComponent } from '../table-column-filter-constraint/table-column-filter-constraint.component';
 
 @Component({
   selector: 'table-column-filter',
