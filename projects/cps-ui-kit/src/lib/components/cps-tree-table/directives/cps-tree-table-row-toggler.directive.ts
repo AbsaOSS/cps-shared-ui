@@ -26,6 +26,9 @@ export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.elementRef.nativeElement.classList.add(
+      'cps-treetable-row-toggler-cell'
+    );
     this.togglerCompRef.setInput('rowNode', this.rowNode);
 
     const spanElement = document.createElement('span');

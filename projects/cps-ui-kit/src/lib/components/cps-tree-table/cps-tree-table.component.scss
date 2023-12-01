@@ -79,6 +79,7 @@ $tbar-normal-height: 72px;
       color: $header-text-color;
       background: white;
       transition: box-shadow 0.2s;
+      overflow: hidden;
     }
 
     .p-treetable-scrollable-body {
@@ -90,6 +91,10 @@ $tbar-normal-height: 72px;
       .p-treetable-scrollable-body {
         height: 100%;
       }
+    }
+
+    .p-treetable .p-treetable-tbody {
+      background: #ffffff;
     }
 
     .p-treetable .p-treetable-tbody > tr {
@@ -107,6 +112,18 @@ $tbar-normal-height: 72px;
       border-width: 0 0 1px 0;
       padding: 1rem 1rem;
       overflow: hidden;
+    }
+
+    .cps-treetable-autolayout-calced
+      .p-treetable
+      .p-treetable-scrollable-body
+      .p-treetable-tbody
+      > tr
+      > td:not(.cps-treetable-row-toggler-cell):not(
+        .cps-treetable-selectable-cell
+      ):not(.cps-treetable-row-menu-cell):not(.cps-treetable-empty-message-td) {
+      opacity: 0;
+      border-left-color: transparent;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:first-child {
@@ -651,13 +668,13 @@ $tbar-normal-height: 72px;
     }
 
     .cps-treetable-row-menu-cell {
-      width: 55px !important;
+      width: 55px;
       border-left: none !important;
     }
 
     .cps-treetable-selectable-cell {
+      width: 55px;
       text-align: center !important;
-      width: 55px !important;
     }
 
     .p-checkbox {

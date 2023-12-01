@@ -4,10 +4,11 @@
   [ngClass]="{
     'cps-treetable-loading': loading,
     'cps-treetable-flex': defScrollHeight === 'flex',
-    'cps-treetable-nonvirtual': !virtualScroll
+    'cps-treetable-nonvirtual': !virtualScroll,
+    'cps-treetable-autolayout-calced': autoLayout && scrollable,
   }"
   [value]="data"
-  [autoLayout]="autoLayout"
+  [autoLayout]="autoLayout && !scrollable"
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"
   [virtualScroll]="virtualScroll"
@@ -233,8 +234,10 @@
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
           <td *ngFor="let col of columns; let i = index">
-            <span *ngIf="i === 0" style="display: flex">
-              <p-treeTableToggler [rowNode]="rowNode"> </p-treeTableToggler>
+            <span
+              *ngIf="i === 0"
+              style="display: flex"
+              [cpsTTRowToggler]="rowNode">
               {{ rowData[col[colFieldName]] }}
             </span>
             <ng-container *ngIf="i > 0">{{
