@@ -9,18 +9,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { CpsInputComponent } from '../../../cps-input/cps-input.component';
-import { CpsDatepickerComponent } from '../../../cps-datepicker/cps-datepicker.component';
-import { CpsAutocompleteComponent } from '../../../cps-autocomplete/cps-autocomplete.component';
-import {
-  CpsButtonToggleOption,
-  CpsButtonToggleComponent
-} from '../../../cps-button-toggle/cps-button-toggle.component';
 import { TreeTable } from 'primeng/treetable';
+import { CpsInputComponent } from '../../../../cps-input/cps-input.component';
+import { CpsDatepickerComponent } from '../../../../cps-datepicker/cps-datepicker.component';
+import {
+  CpsButtonToggleComponent,
+  CpsButtonToggleOption
+} from '../../../../cps-button-toggle/cps-button-toggle.component';
+import { CpsAutocompleteComponent } from '../../../../cps-autocomplete/cps-autocomplete.component';
 import {
   CpsColumnFilterCategoryOption,
   CpsColumnFilterType
-} from '../../cps-column-filter-types';
+} from '../../../cps-column-filter-types';
 
 @Component({
   selector: 'table-column-filter-constraint',

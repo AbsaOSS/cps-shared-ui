@@ -8,7 +8,7 @@ import {
   OnChanges,
   ViewContainerRef
 } from '@angular/core';
-import { TableColumnFilterComponent } from '../../cps-table/table-column-filter/table-column-filter.component';
+import { TableColumnFilterComponent } from '../../cps-table/components/internal/table-column-filter/table-column-filter.component';
 import {
   CpsColumnFilterType,
   CpsColumnFilterMatchMode,

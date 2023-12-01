@@ -23,7 +23,7 @@ export class ColorsPageComponent implements OnInit {
     },
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
-    { name: 'Highlights', colors: [[], []] },
+    { name: 'Highlights', colors: [[], [], [], []] },
     { name: 'Backgrounds', colors: [[], [], []] },
     { name: 'Lines', colors: [[], [], []] },
     { name: 'Text', colors: [[], [], [], [], []] }
@@ -36,7 +36,7 @@ export class ColorsPageComponent implements OnInit {
     },
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
-    { name: 'Highlights', colors: [[], []] },
+    { name: 'Highlights', colors: [[], [], [], []] },
     { name: 'Backgrounds', colors: [[], [], []] },
     { name: 'Lines', colors: [[], [], []] },
     { name: 'Text', colors: [[], [], [], [], []] }
@@ -104,6 +104,10 @@ export class ColorsPageComponent implements OnInit {
         this.colorsList[3].colors[0].push({ name, value });
       } else if (name === 'highlight-active') {
         this.colorsList[3].colors[1].push({ name, value });
+      } else if (name === 'highlight-selected') {
+        this.colorsList[3].colors[2].push({ name, value });
+      } else if (name === 'highlight-selected-dark') {
+        this.colorsList[3].colors[3].push({ name, value });
       } else if (name === 'bg-light') {
         this.colorsList[4].colors[0].push({ name, value });
       } else if (name === 'bg-mid') {

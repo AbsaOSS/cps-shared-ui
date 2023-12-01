@@ -5,20 +5,21 @@ $toolbar-text-color: var(--cps-color-text-darkest);
 $treetable-borders-color: var(--cps-color-line-mid);
 $stripe-color: var(--cps-color-bg-light);
 $row-hover-background: var(--cps-color-highlight-hover);
-$row-selected-background: #f1ebed;
+$row-selected-background: var(--cps-color-highlight-active);
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
 $colitem-hover-background: var(--cps-color-highlight-hover);
 $colitem-value-color: var(--cps-color-text-dark);
-$selected-colitem-background: #efe4e7;
-$colitem-highlight-background: #f5eeef;
-$colitem-highlight-selected-background: #e6d4d9;
+$selected-colitem-background: var(--cps-color-highlight-selected);
+$colitem-highlight-background: var(--cps-color-highlight-active);
+$colitem-highlight-selected-background: var(
+  --cps-color-highlight-selected-dark
+);
 $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
 $paginator-elem-hover-background: var(--cps-color-highlight-hover);
 $paginator-elem-active-background: var(--cps-color-highlight-active);
-$sorticon-hover-color: var(--cps-color-text-dark);
-$badge-background-color: var(--cps-color-highlight-active);
+$sorticon-hover-color: var(--cps-color-text-mild);
 $checkbox-border-color: var(--cps-color-text-mild);
 
 $tbar-small-height: 43px;
@@ -74,10 +75,11 @@ $tbar-normal-height: 72px;
       padding: 1rem 1rem;
       border: 1px solid $treetable-borders-color;
       border-width: 0 0 1px 1px;
-      font-weight: 700;
+      font-weight: 400;
       color: $header-text-color;
       background: white;
       transition: box-shadow 0.2s;
+      overflow: hidden;
     }
 
     .p-treetable-scrollable-body {
@@ -89,6 +91,10 @@ $tbar-normal-height: 72px;
       .p-treetable-scrollable-body {
         height: 100%;
       }
+    }
+
+    .p-treetable .p-treetable-tbody {
+      background: #ffffff;
     }
 
     .p-treetable .p-treetable-tbody > tr {
@@ -108,11 +114,27 @@ $tbar-normal-height: 72px;
       overflow: hidden;
     }
 
+    .cps-treetable-autolayout-calced
+      .p-treetable
+      .p-treetable-scrollable-body
+      .p-treetable-tbody
+      > tr
+      > td:not(.cps-treetable-row-toggler-cell):not(
+        .cps-treetable-selectable-cell
+      ):not(.cps-treetable-row-menu-cell):not(.cps-treetable-empty-message-td) {
+      opacity: 0;
+      border-left-color: transparent;
+    }
+
     .p-treetable .p-treetable-tbody > tr > td:first-child {
       border-width: 0 0 1px 1px;
     }
     .p-treetable .p-treetable-tbody > tr > td:last-child {
       border-width: 0 1px 1px 0;
+    }
+
+    .p-treetable-auto-layout table {
+      table-layout: auto;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:only-child {
@@ -451,35 +473,15 @@ $tbar-normal-height: 72px;
       background: white;
     }
 
-    .p-treetable .p-treetable-thead > tr > th:hover {
-      sortalticon {
-        opacity: 1;
-      }
-    }
-
-    .p-treetable .p-sortable-column:not(.p-highlight):hover {
-      background: white;
-      color: $header-text-color;
-    }
-
-    .p-treetable .p-sortable-column.p-highlight:hover {
-      background: white;
-      color: $header-text-color;
-    }
-
     .p-treetable
       .p-sortable-column:not(.p-highlight):hover
-      .p-sortable-column-icon {
-      color: $sorticon-hover-color;
-    }
-
-    .p-treetable .p-sortable-column .p-sortable-column-icon {
-      color: $header-text-color;
-      margin-left: 0.5rem;
-    }
-
-    .p-treetable .p-sortable-column.p-highlight .p-sortable-column-icon {
-      color: $color-calm;
+      .cps-sortable-column-icon.sort-unsorted {
+      .sort-unsorted-arrow-up {
+        border-bottom-color: $sorticon-hover-color;
+      }
+      .sort-unsorted-arrow-down {
+        border-top-color: $sorticon-hover-color;
+      }
     }
 
     .p-icon-wrapper {
@@ -492,31 +494,14 @@ $tbar-normal-height: 72px;
       height: 1rem;
     }
 
-    .p-sortable-column-icon {
-      width: 13px;
-      height: 13px;
-    }
-
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
+    .p-treetable .p-sortable-column .cps-sortable-column-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-
-    .p-treetable .p-sortable-column .p-column-title,
-    .p-treetable .p-sortable-column .p-sortable-column-icon,
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
-      vertical-align: unset;
-    }
-
-    .p-treetable .p-sortable-column .p-sortable-column-badge {
-      border-radius: 50%;
-      height: 1.125rem;
-      min-width: 1.125rem;
-      line-height: 1.125rem;
+      font-size: 12px;
+      vertical-align: top;
       color: $color-calm;
-      background: $badge-background-color;
-      margin-left: 0.5rem;
+      margin-left: 0.25rem;
     }
 
     .p-link {
@@ -606,15 +591,6 @@ $tbar-normal-height: 72px;
       }
     }
 
-    sortalticon {
-      opacity: 0;
-    }
-
-    p-treetablesorticon {
-      display: inline-flex;
-      align-items: baseline;
-    }
-
     .p-treetable.p-treetable-gridlines .p-treetable-footer {
       border-width: 0 1px 1px 1px;
     }
@@ -686,13 +662,9 @@ $tbar-normal-height: 72px;
       border-left: none !important;
     }
 
-    td:has(p-treetablecheckbox) {
+    .cps-treetable-selectable-cell {
+      width: 55px;
       text-align: center !important;
-    }
-
-    th:has(p-treetableheadercheckbox) {
-      text-align: center !important;
-      width: 55px !important;
     }
 
     .p-checkbox {

@@ -4,9 +4,11 @@
   [ngClass]="{
     'cps-treetable-loading': loading,
     'cps-treetable-flex': defScrollHeight === 'flex',
-    'cps-treetable-nonvirtual': !virtualScroll
+    'cps-treetable-nonvirtual': !virtualScroll,
+    'cps-treetable-autolayout-calced': autoLayout && scrollable,
   }"
   [value]="data"
+  [autoLayout]="autoLayout && !scrollable"
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"
   [virtualScroll]="virtualScroll"
@@ -172,9 +174,7 @@
   <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
       <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th> -->
-      <th style="width: 55px" *ngIf="selectable">
-        <p-treeTableHeaderCheckbox></p-treeTableHeaderCheckbox>
-      </th>
+      <th *ngIf="selectable" cpsTTHdrSelectable></th>
       <ng-container *ngIf="headerTemplate">
         <ng-container
           *ngTemplateOutlet="
@@ -217,9 +217,7 @@
       <!-- <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td> -->
-      <td style="width: 55px" *ngIf="selectable">
-        <p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
-      </td>
+      <td [cpsTTRowSelectable]="rowNode" *ngIf="selectable"></td>
       <ng-container *ngIf="bodyTemplate">
         <ng-container
           *ngTemplateOutlet="
@@ -235,15 +233,12 @@
       </ng-container>
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
-          <td *ngFor="let col of columns; let i = index">
-            <span *ngIf="i === 0" style="display: flex">
-              <p-treeTableToggler [rowNode]="rowNode"> </p-treeTableToggler>
+          <ng-container *ngFor="let col of columns; let i = index">
+            <td *ngIf="i === 0" [cpsTTRowToggler]="rowNode">
               {{ rowData[col[colFieldName]] }}
-            </span>
-            <ng-container *ngIf="i > 0">{{
-              rowData[col[colFieldName]]
-            }}</ng-container>
-          </td>
+            </td>
+            <td *ngIf="i > 0">{{ rowData[col[colFieldName]] }}</td>
+          </ng-container>
         </ng-container>
       </ng-container>
       <td *ngIf="showRowMenu" class="cps-treetable-row-menu-cell">
