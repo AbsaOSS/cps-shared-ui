@@ -651,16 +651,11 @@ $tbar-normal-height: 72px;
     }
 
     .cps-treetable-row-menu-cell {
-      width: 55px;
+      width: 55px !important;
       border-left: none !important;
     }
 
-    .cps-tt-hdr-selectable {
-      text-align: center !important;
-      width: 55px !important;
-    }
-
-    .cps-tt-row-selectable {
+    .cps-treetable-selectable-cell {
       text-align: center !important;
       width: 55px !important;
     }
