@@ -42,6 +42,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
 import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
 import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler.directive';
+import { Subscription, fromEvent } from 'rxjs';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -230,6 +231,8 @@ export class CpsTreeTableComponent
   scrollbarWidth = 0;
   scrollbarVisible = true;
 
+  private _scrollSubscription?: Subscription;
+
   private _needRecalcAutoLayout = true;
 
   // eslint-disable-next-line no-useless-constructor
@@ -312,9 +315,19 @@ export class CpsTreeTableComponent
         if (table) table.style.minWidth = this.minWidth;
       }
 
-      if (this.virtualScroll && this.defScrollHeight === 'flex') {
-        this.defScrollHeightPx = this.scrollableBody.clientHeight;
-        this.defScrollHeightPxInitial = this.defScrollHeightPx;
+      if (this.virtualScroll) {
+        if (this.defScrollHeight === 'flex') {
+          this.defScrollHeightPx = this.scrollableBody.clientHeight;
+          this.defScrollHeightPxInitial = this.defScrollHeightPx;
+        }
+        if (this.autoLayout) {
+          this._scrollSubscription = fromEvent(
+            this.scrollableBody,
+            'scroll'
+          ).subscribe(() => {
+            this._calcAutoLayoutHeaderWidths(true);
+          });
+        }
       }
 
       this.headerBox = this.primengTreeTable.el.nativeElement.querySelector(
@@ -331,7 +344,10 @@ export class CpsTreeTableComponent
         this.resizeObserver.observe(this.scrollableBody);
       }
 
-      this._calcAutoLayoutHeaderWidths();
+      if (this._needRecalcAutoLayout) {
+        this._calcAutoLayoutHeaderWidths();
+        this.cdRef.detectChanges();
+      }
     }
 
     if (!this.scrollable) {
@@ -343,6 +359,25 @@ export class CpsTreeTableComponent
         const table = tableWrapper.querySelector('table');
         if (table) table.style.minWidth = this.minWidth;
       }
+    }
+  }
+
+  ngAfterViewChecked() {
+    if (this._needRecalcAutoLayout) {
+      this._calcAutoLayoutHeaderWidths();
+      this.cdRef.detectChanges();
+    }
+    if (!this.virtualScroll) return;
+
+    if (!this.defScrollHeightPx && this.defScrollHeight === 'flex') {
+      this.defScrollHeightPx = this.scrollableBody.clientHeight;
+      this.defScrollHeightPxInitial = this.defScrollHeightPx;
+      this.cdRef.detectChanges();
+    }
+
+    if (!this.virtualScrollItemSize) {
+      this._recalcVirtualHeight();
+      this.cdRef.detectChanges();
     }
   }
 
@@ -455,8 +490,6 @@ export class CpsTreeTableComponent
     });
 
     this._needRecalcAutoLayout = false;
-
-    this.cdRef.detectChanges();
   }
 
   private _updateVirtualScrollItemSize() {
@@ -484,22 +517,6 @@ export class CpsTreeTableComponent
     });
 
     this.virtualScrollItemSize = h;
-  }
-
-  ngAfterViewChecked() {
-    this._calcAutoLayoutHeaderWidths();
-    if (!this.virtualScroll) return;
-
-    if (!this.defScrollHeightPx && this.defScrollHeight === 'flex') {
-      this.defScrollHeightPx = this.scrollableBody.clientHeight;
-      this.defScrollHeightPxInitial = this.defScrollHeightPx;
-      this.cdRef.detectChanges();
-    }
-
-    if (!this.virtualScrollItemSize) {
-      this._recalcVirtualHeight();
-      this.cdRef.detectChanges();
-    }
   }
 
   private _setMinWidthOverall() {
@@ -559,8 +576,10 @@ export class CpsTreeTableComponent
 
   ngOnDestroy(): void {
     this.resizeObserver?.disconnect();
-    if (this.virtualScroll)
+    if (this.virtualScroll) {
+      if (this.autoLayout) this._scrollSubscription?.unsubscribe();
       window.removeEventListener('resize', this._onWindowResize.bind(this));
+    }
   }
 
   clearGlobalFilter() {
