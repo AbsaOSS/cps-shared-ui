@@ -5,14 +5,16 @@ $toolbar-text-color: var(--cps-color-text-darkest);
 $treetable-borders-color: var(--cps-color-line-mid);
 $stripe-color: var(--cps-color-bg-light);
 $row-hover-background: var(--cps-color-highlight-hover);
-$row-selected-background: #f1ebed;
+$row-selected-background: var(--cps-color-highlight-active);
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
 $colitem-hover-background: var(--cps-color-highlight-hover);
 $colitem-value-color: var(--cps-color-text-dark);
-$selected-colitem-background: #efe4e7;
-$colitem-highlight-background: #f5eeef;
-$colitem-highlight-selected-background: #e6d4d9;
+$selected-colitem-background: var(--cps-color-highlight-selected);
+$colitem-highlight-background: var(--cps-color-highlight-active);
+$colitem-highlight-selected-background: var(
+  --cps-color-highlight-selected-dark
+);
 $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
 $paginator-elem-hover-background: var(--cps-color-highlight-hover);
