@@ -233,17 +233,12 @@
       </ng-container>
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
-          <td *ngFor="let col of columns; let i = index">
-            <span
-              *ngIf="i === 0"
-              style="display: flex"
-              [cpsTTRowToggler]="rowNode">
+          <ng-container *ngFor="let col of columns; let i = index">
+            <td *ngIf="i === 0" [cpsTTRowToggler]="rowNode">
               {{ rowData[col[colFieldName]] }}
-            </span>
-            <ng-container *ngIf="i > 0">{{
-              rowData[col[colFieldName]]
-            }}</ng-container>
-          </td>
+            </td>
+            <td *ngIf="i > 0">{{ rowData[col[colFieldName]] }}</td>
+          </ng-container>
         </ng-container>
       </ng-container>
       <td *ngIf="showRowMenu" class="cps-treetable-row-menu-cell">
