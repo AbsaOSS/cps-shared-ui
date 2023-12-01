@@ -219,41 +219,41 @@ export class CpsTreeTableComponent
   selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
-  defScrollHeightPx = 0;
-  defScrollHeightPxInitial = 0;
   defScrollHeight = '';
 
-  resizeObserver: ResizeObserver;
-  windowResizeDebouncer: any;
+  private _defScrollHeightPx = 0;
+  private _defScrollHeightPxInitial = 0;
 
-  headerBox: any;
-  scrollableBody: any;
-  scrollbarWidth = 0;
-  scrollbarVisible = true;
-
+  private _resizeObserver: ResizeObserver;
+  private _windowResizeDebouncer: any;
   private _scrollSubscription?: Subscription;
+
+  private _headerBox: any;
+  private _scrollableBody: any;
+  private _scrollbarWidth = 0;
+  private _scrollbarVisible = true;
 
   private _needRecalcAutoLayout = true;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {
-    this.resizeObserver = new ResizeObserver((entries) => {
+    this._resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const body = entry.target;
-        this.scrollbarVisible = body.scrollHeight > body.clientHeight;
+        this._scrollbarVisible = body.scrollHeight > body.clientHeight;
 
-        if (this.scrollbarVisible && this.virtualScroll)
-          this.scrollableBody.style.setProperty(
+        if (this._scrollbarVisible && this.virtualScroll)
+          this._scrollableBody.style.setProperty(
             'overflow',
             'auto',
             'important'
           );
 
-        let wScroll = this.scrollbarVisible ? this.scrollbarWidth : 0;
+        let wScroll = this._scrollbarVisible ? this._scrollbarWidth : 0;
         if (wScroll > 0) wScroll -= 1;
 
-        this.headerBox.style.paddingRight = `${wScroll}px`;
-        this.headerBox.style.borderRight =
+        this._headerBox.style.paddingRight = `${wScroll}px`;
+        this._headerBox.style.borderRight =
           wScroll > 0 ? '1px solid #d7d5d5' : 'unset';
       });
     });
@@ -271,7 +271,7 @@ export class CpsTreeTableComponent
       window.addEventListener('resize', this._onWindowResize.bind(this));
 
       if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
-        this.defScrollHeightPx = parseInt(this.scrollHeight, 10);
+        this._defScrollHeightPx = parseInt(this.scrollHeight, 10);
       }
     }
 
@@ -306,23 +306,23 @@ export class CpsTreeTableComponent
   ngAfterViewInit(): void {
     this._setMinWidthOverall();
 
-    this.scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
+    this._scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
       '.p-treetable-scrollable-body'
     );
-    if (this.scrollableBody) {
+    if (this._scrollableBody) {
       if (this.minWidthForBodyOnly && this.minWidth) {
-        const table = this.scrollableBody.querySelector('table');
+        const table = this._scrollableBody.querySelector('table');
         if (table) table.style.minWidth = this.minWidth;
       }
 
       if (this.virtualScroll) {
         if (this.defScrollHeight === 'flex') {
-          this.defScrollHeightPx = this.scrollableBody.clientHeight;
-          this.defScrollHeightPxInitial = this.defScrollHeightPx;
+          this._defScrollHeightPx = this._scrollableBody.clientHeight;
+          this._defScrollHeightPxInitial = this._defScrollHeightPx;
         }
         if (this.autoLayout) {
           this._scrollSubscription = fromEvent(
-            this.scrollableBody,
+            this._scrollableBody,
             'scroll'
           ).subscribe(() => {
             this._calcAutoLayoutHeaderWidths(true);
@@ -330,18 +330,18 @@ export class CpsTreeTableComponent
         }
       }
 
-      this.headerBox = this.primengTreeTable.el.nativeElement.querySelector(
+      this._headerBox = this.primengTreeTable.el.nativeElement.querySelector(
         '.p-treetable-scrollable-header-box'
       );
 
-      if (this.headerBox) {
+      if (this._headerBox) {
         if (this.minWidthForBodyOnly && this.minWidth) {
-          const table = this.headerBox.querySelector('table');
+          const table = this._headerBox.querySelector('table');
           if (table) table.style.minWidth = this.minWidth;
         }
 
-        this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
-        this.resizeObserver.observe(this.scrollableBody);
+        this._scrollbarWidth = DomHandler.calculateScrollbarWidth();
+        this._resizeObserver.observe(this._scrollableBody);
       }
 
       if (this._needRecalcAutoLayout) {
@@ -369,9 +369,9 @@ export class CpsTreeTableComponent
     }
     if (!this.virtualScroll) return;
 
-    if (!this.defScrollHeightPx && this.defScrollHeight === 'flex') {
-      this.defScrollHeightPx = this.scrollableBody.clientHeight;
-      this.defScrollHeightPxInitial = this.defScrollHeightPx;
+    if (!this._defScrollHeightPx && this.defScrollHeight === 'flex') {
+      this._defScrollHeightPx = this._scrollableBody.clientHeight;
+      this._defScrollHeightPxInitial = this._defScrollHeightPx;
       this.cdRef.detectChanges();
     }
 
@@ -381,12 +381,38 @@ export class CpsTreeTableComponent
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.loading) {
+      this.clearSelection();
+      if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
+    }
+
+    if (this.virtualScrollItemHeight)
+      this.virtualScrollItemSize = this.virtualScrollItemHeight;
+
+    this._setMinWidthOverall();
+
+    const dataChanges = changes?.data;
+    if (dataChanges?.previousValue !== dataChanges?.currentValue) {
+      this.clearSelection();
+    }
+    this._calcAutoLayoutHeaderWidths(true);
+  }
+
+  ngOnDestroy(): void {
+    this._resizeObserver?.disconnect();
+    if (this.virtualScroll) {
+      if (this.autoLayout) this._scrollSubscription?.unsubscribe();
+      window.removeEventListener('resize', this._onWindowResize.bind(this));
+    }
+  }
+
   private _calcAutoLayoutHeaderWidths(forced = false) {
     if (!this.autoLayout || !this.scrollable) return;
 
     if (!this._needRecalcAutoLayout && !forced) return;
 
-    const headerRows = this.headerBox?.querySelectorAll('tr');
+    const headerRows = this._headerBox?.querySelectorAll('tr');
     if (!headerRows?.length) return;
 
     const headerCells =
@@ -422,7 +448,7 @@ export class CpsTreeTableComponent
       return thWidth;
     });
 
-    const bodyRows = this.scrollableBody?.querySelectorAll('tr');
+    const bodyRows = this._scrollableBody?.querySelectorAll('tr');
     if (!bodyRows?.length) return;
 
     const tdWidths: number[] = [];
@@ -556,42 +582,12 @@ export class CpsTreeTableComponent
     if (treeTableHeader) treeTableHeader.style.minWidth = this.minWidth;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.loading) {
-      this.clearSelection();
-      if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
-    }
-
-    if (this.virtualScrollItemHeight)
-      this.virtualScrollItemSize = this.virtualScrollItemHeight;
-
-    this._setMinWidthOverall();
-
-    const dataChanges = changes?.data;
-    if (dataChanges?.previousValue !== dataChanges?.currentValue) {
-      this.clearSelection();
-    }
-    this._calcAutoLayoutHeaderWidths(true);
-  }
-
-  ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
-    if (this.virtualScroll) {
-      if (this.autoLayout) this._scrollSubscription?.unsubscribe();
-      window.removeEventListener('resize', this._onWindowResize.bind(this));
-    }
-  }
-
-  clearGlobalFilter() {
-    this.globalFilterComp?.clear();
-  }
-
   private _onWindowResize() {
     // if (this.defScrollHeight === 'flex')
     //   this.defScrollHeightPx = this.scrollableBody.clientHeight;
 
-    clearTimeout(this.windowResizeDebouncer);
-    this.windowResizeDebouncer = setTimeout(() => {
+    clearTimeout(this._windowResizeDebouncer);
+    this._windowResizeDebouncer = setTimeout(() => {
       this._recalcVirtualHeight();
     }, 100);
   }
@@ -630,13 +626,9 @@ export class CpsTreeTableComponent
     return classesList.join(' ');
   }
 
-  onSortFunction(event: SortEvent) {
-    this.customSortFunction.emit(event);
-  }
-
   private _recalcVirtualHeight() {
-    if (!this.scrollbarVisible && this.virtualScroll)
-      this.scrollableBody.style.setProperty('overflow', 'hidden', 'important');
+    if (!this._scrollbarVisible && this.virtualScroll)
+      this._scrollableBody.style.setProperty('overflow', 'hidden', 'important');
 
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
@@ -649,19 +641,69 @@ export class CpsTreeTableComponent
         } else {
           const curHeight = this.virtualScrollItemSize * itemsLen + 2;
           if (this.defScrollHeight === 'flex') {
-            if (curHeight >= this.defScrollHeightPxInitial) {
+            if (curHeight >= this._defScrollHeightPxInitial) {
               this.scrollHeight = 'flex';
-              this.scrollableBody.style.height = '100%';
+              this._scrollableBody.style.height = '100%';
               this.cdRef.markForCheck();
               return;
             }
           }
           this.scrollHeight =
-            Math.min(this.defScrollHeightPx, curHeight) + 'px';
+            Math.min(this._defScrollHeightPx, curHeight) + 'px';
         }
         this.cdRef.markForCheck();
       }
     });
+  }
+
+  private _removeNodeFromData(nodeToRemove: any, single = true): void {
+    const _findTopSortOrder = (_node: any): any => {
+      if (!_node) return undefined;
+      if (typeof _node._defaultSortOrder === 'number')
+        return _node._defaultSortOrder;
+      return _findTopSortOrder(_node.parent);
+    };
+
+    const _removeFromChildren = (_node: any) => {
+      if (!_node?.children) return false;
+      const idx = _node.children.indexOf(nodeToRemove);
+      if (idx >= 0) {
+        _node.children.splice(idx, 1);
+        if (_node.children.length === 0) {
+          delete _node.children;
+        }
+        return true;
+      } else {
+        for (const child of _node.children) {
+          if (_removeFromChildren(child)) return true;
+        }
+        return false;
+      }
+    };
+
+    // locate top level node
+    const sortOrder = _findTopSortOrder(nodeToRemove);
+    if (sortOrder === undefined) return;
+    const node = this.data.find((n) => n._defaultSortOrder === sortOrder);
+    if (!node) return;
+
+    // remove the node itself or remove its child
+    if (nodeToRemove === node) {
+      this.data = this.data.filter((v: any) => v !== nodeToRemove);
+    } else {
+      if (node.children) {
+        _removeFromChildren(node);
+        if (single) this.data = [...this.data];
+      }
+    }
+  }
+
+  clearGlobalFilter() {
+    this.globalFilterComp?.clear();
+  }
+
+  onSortFunction(event: SortEvent) {
+    this.customSortFunction.emit(event);
   }
 
   onFilterGlobal(value: string) {
@@ -713,48 +755,6 @@ export class CpsTreeTableComponent
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
-  }
-
-  private _removeNodeFromData(nodeToRemove: any, single = true): void {
-    const _findTopSortOrder = (_node: any): any => {
-      if (!_node) return undefined;
-      if (typeof _node._defaultSortOrder === 'number')
-        return _node._defaultSortOrder;
-      return _findTopSortOrder(_node.parent);
-    };
-
-    const _removeFromChildren = (_node: any) => {
-      if (!_node?.children) return false;
-      const idx = _node.children.indexOf(nodeToRemove);
-      if (idx >= 0) {
-        _node.children.splice(idx, 1);
-        if (_node.children.length === 0) {
-          delete _node.children;
-        }
-        return true;
-      } else {
-        for (const child of _node.children) {
-          if (_removeFromChildren(child)) return true;
-        }
-        return false;
-      }
-    };
-
-    // locate top level node
-    const sortOrder = _findTopSortOrder(nodeToRemove);
-    if (sortOrder === undefined) return;
-    const node = this.data.find((n) => n._defaultSortOrder === sortOrder);
-    if (!node) return;
-
-    // remove the node itself or remove its child
-    if (nodeToRemove === node) {
-      this.data = this.data.filter((v: any) => v !== nodeToRemove);
-    } else {
-      if (node.children) {
-        _removeFromChildren(node);
-        if (single) this.data = [...this.data];
-      }
-    }
   }
 
   toggleAllColumns() {
