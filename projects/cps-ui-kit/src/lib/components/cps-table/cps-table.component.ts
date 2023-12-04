@@ -146,6 +146,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   @Input() showColumnsToggleBtn = false; // if external body template is provided, use columnsSelected event emitter
   @Input() columnsToggleBtnDisabled = false;
+  @Input() initialColumns: { [key: string]: any }[] = []; // if not provided, all columns are initially visible
 
   @Output() selectionChanged = new EventEmitter<any[]>();
   @Output() actionBtnClicked = new EventEmitter<void>();
@@ -259,7 +260,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       this.globalFilterFields = Object.keys(this.data[0]);
     }
 
-    this.selectedColumns = this.columns;
+    this.selectedColumns =
+      this.initialColumns.length > 0 ? this.initialColumns : this.columns;
   }
 
   get styleClass() {

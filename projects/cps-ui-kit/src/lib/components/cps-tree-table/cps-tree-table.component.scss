@@ -148,16 +148,18 @@ $tbar-normal-height: 72px;
               ) {
               border-left-color: $stripe-color;
             }
-
-            > tr:hover
-              > td:not(.cps-treetable-row-toggler-cell):not(
-                .cps-treetable-selectable-cell
-              ):not(.cps-treetable-row-menu-cell):not(
-                .cps-treetable-empty-message-td
-              ) {
-              border-left-color: $row-hover-background;
-            }
           }
+        }
+
+        .p-treetable-scrollable-body
+          .p-treetable-tbody
+          > tr:hover
+          > td:not(.cps-treetable-row-toggler-cell):not(
+            .cps-treetable-selectable-cell
+          ):not(.cps-treetable-row-menu-cell):not(
+            .cps-treetable-empty-message-td
+          ) {
+          border-left-color: $row-hover-background;
         }
       }
     }
