@@ -511,6 +511,7 @@ export class CpsTreeTableComponent
           td.style.width = percentages[hasSelectableCell ? idx - 1 : idx] + '%';
         }
         td.style.opacity = '1';
+        td.style.overflow = 'hidden';
         if (this.bordered)
           td.style.borderLeftColor = 'var(--cps-color-line-mid)';
       });

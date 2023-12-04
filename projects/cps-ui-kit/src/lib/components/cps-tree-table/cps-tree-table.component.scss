@@ -29,7 +29,6 @@ $tbar-normal-height: 72px;
   ::ng-deep {
     .p-treetable {
       position: relative;
-      background: #ffffff;
     }
     .p-component,
     .p-component * {
@@ -42,7 +41,12 @@ $tbar-normal-height: 72px;
     }
     .p-treetable-scrollable-wrapper {
       position: relative;
+      background: #ffffff;
     }
+    .p-treetable-wrapper {
+      background: #ffffff;
+    }
+
     .cps-treetable-nonvirtual.cps-treetable-flex .p-treetable-flex-scrollable,
     .cps-treetable-nonvirtual.cps-treetable-flex
       .p-treetable-flex-scrollable
@@ -112,7 +116,12 @@ $tbar-normal-height: 72px;
       border: 1px solid $treetable-borders-color;
       border-width: 0 0 1px 0;
       padding: 1rem 1rem;
-      overflow: hidden;
+    }
+
+    p-treetable:not(.cps-treetable-autolayout-calced) {
+      .p-treetable .p-treetable-tbody > tr > td {
+        overflow: hidden;
+      }
     }
 
     .cps-treetable-autolayout-calced {
