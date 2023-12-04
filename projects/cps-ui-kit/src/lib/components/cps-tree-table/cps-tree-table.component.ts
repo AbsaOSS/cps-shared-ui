@@ -458,9 +458,11 @@ export class CpsTreeTableComponent
         if (!isSelectableCell && !isRowCell) {
           this.renderer.setStyle(th, 'width', 'min-content');
           this.renderer.setStyle(th, 'display', 'block');
+          this.renderer.setStyle(th, 'text-wrap', 'nowrap');
           thWidth = th.offsetWidth;
           this.renderer.setStyle(th, 'width', wprev);
           this.renderer.removeStyle(th, 'display');
+          this.renderer.removeStyle(th, 'text-wrap');
         }
         return thWidth;
       });
