@@ -47,14 +47,16 @@ $tbar-normal-height: 72px;
       background: #ffffff;
     }
 
-    .cps-treetable-nonvirtual.cps-treetable-flex .p-treetable-flex-scrollable,
-    .cps-treetable-nonvirtual.cps-treetable-flex
-      .p-treetable-flex-scrollable
-      .p-treetable-scrollable-wrapper,
-    .cps-treetable-nonvirtual.cps-treetable-flex
-      .p-treetable-flex-scrollable
-      .p-treetable-scrollable-view {
-      height: unset;
+    .cps-treetable-nonvirtual.cps-treetable-flex {
+      .p-treetable-flex-scrollable.cps-tbar-normal
+        .p-treetable-scrollable-wrapper {
+        height: calc(100% - $tbar-normal-height);
+      }
+
+      .p-treetable-flex-scrollable.cps-tbar-small
+        .p-treetable-scrollable-wrapper {
+        height: calc(100% - $tbar-small-height);
+      }
     }
 
     .cps-treetable-bottom-bordered > .p-treetable-scrollable-wrapper {
