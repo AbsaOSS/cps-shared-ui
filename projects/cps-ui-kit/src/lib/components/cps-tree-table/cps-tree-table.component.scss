@@ -29,6 +29,7 @@ $tbar-normal-height: 72px;
   ::ng-deep {
     .p-treetable {
       position: relative;
+      background: #ffffff;
     }
     .p-component,
     .p-component * {
@@ -114,16 +115,42 @@ $tbar-normal-height: 72px;
       overflow: hidden;
     }
 
-    .cps-treetable-autolayout-calced
-      .p-treetable
-      .p-treetable-scrollable-body
-      .p-treetable-tbody
-      > tr
-      > td:not(.cps-treetable-row-toggler-cell):not(
-        .cps-treetable-selectable-cell
-      ):not(.cps-treetable-row-menu-cell):not(.cps-treetable-empty-message-td) {
-      opacity: 0;
-      border-left-color: transparent;
+    .cps-treetable-autolayout-calced {
+      .p-treetable {
+        .p-treetable-scrollable-body
+          .p-treetable-tbody
+          > tr
+          > td:not(.cps-treetable-row-toggler-cell):not(
+            .cps-treetable-selectable-cell
+          ):not(.cps-treetable-row-menu-cell):not(
+            .cps-treetable-empty-message-td
+          ) {
+          opacity: 0;
+          border-left-color: #ffffff;
+        }
+
+        &.p-treetable-striped {
+          .p-treetable-scrollable-body .p-treetable-tbody {
+            > tr:nth-child(odd)
+              > td:not(.cps-treetable-row-toggler-cell):not(
+                .cps-treetable-selectable-cell
+              ):not(.cps-treetable-row-menu-cell):not(
+                .cps-treetable-empty-message-td
+              ) {
+              border-left-color: $stripe-color;
+            }
+
+            > tr:hover
+              > td:not(.cps-treetable-row-toggler-cell):not(
+                .cps-treetable-selectable-cell
+              ):not(.cps-treetable-row-menu-cell):not(
+                .cps-treetable-empty-message-td
+              ) {
+              border-left-color: $row-hover-background;
+            }
+          }
+        }
+      }
     }
 
     .p-treetable .p-treetable-tbody > tr > td:first-child {

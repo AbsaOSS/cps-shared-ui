@@ -396,6 +396,7 @@ export class CpsTreeTableComponent
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {
       this.clearSelection();
     }
+    this._recalcVirtualHeight();
     this._calcAutoLayoutHeaderWidths(true);
   }
 
