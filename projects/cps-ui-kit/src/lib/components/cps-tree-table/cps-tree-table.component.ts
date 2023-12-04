@@ -423,22 +423,6 @@ export class CpsTreeTableComponent
     }
   }
 
-  private _isRowVisible(tr: HTMLElement) {
-    if (!this.virtualScroll) return true;
-    const parentRect = this._scrollableBody.getBoundingClientRect();
-    const childRect = tr.getBoundingClientRect();
-
-    return (
-      (childRect.top >= parentRect.top &&
-        childRect.bottom <= parentRect.bottom &&
-        childRect.left >= parentRect.left &&
-        childRect.right <= parentRect.right) ||
-      (childRect.top >= parentRect.top && childRect.top <= parentRect.bottom) ||
-      (childRect.bottom >= parentRect.top &&
-        childRect.bottom <= parentRect.bottom)
-    );
-  }
-
   private _calcAutoLayoutHeaderWidths(forced = false) {
     this.ngZone.runOutsideAngular(() => {
       if (!this.autoLayout || !this.scrollable) return;
@@ -485,28 +469,36 @@ export class CpsTreeTableComponent
       if (!bodyRows?.length) return;
 
       const tdWidths: number[] = [];
-      bodyRows.forEach((tr: HTMLElement) => {
-        if (this._isRowVisible(tr)) {
-          const tds = tr?.querySelectorAll('td');
-          tds?.forEach((td: HTMLElement, idx: number) => {
-            const wprev = td.style.width;
-            const isSelectableOrRowMenuCell =
-              td.classList.contains('cps-treetable-selectable-cell') ||
-              td.classList.contains('cps-treetable-row-menu-cell');
+      const fragment = document.createDocumentFragment();
+      const hiddenDiv = document.createElement('div');
+      hiddenDiv.style.visibility = 'hidden';
+      hiddenDiv.style.position = 'absolute';
+      hiddenDiv.style.whiteSpace = 'nowrap';
 
-            let tdWidth = 55;
-            if (!isSelectableOrRowMenuCell) {
-              this.renderer.setStyle(td, 'width', 'min-content');
-              this.renderer.setStyle(td, 'display', 'block');
-              tdWidth = td.offsetWidth;
-              this.renderer.setStyle(td, 'width', wprev);
-              this.renderer.removeStyle(td, 'display');
-            }
-            if (!tdWidths[idx]) tdWidths[idx] = 0;
-            tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
-          });
-        }
+      document.body.appendChild(hiddenDiv);
+      bodyRows.forEach((tr: HTMLElement) => {
+        const tds = tr?.querySelectorAll('td');
+        tds?.forEach((td: HTMLElement, idx: number) => {
+          const isSelectableOrRowMenuCell =
+            td.classList.contains('cps-treetable-selectable-cell') ||
+            td.classList.contains('cps-treetable-row-menu-cell');
+
+          let tdWidth = 55;
+          if (!isSelectableOrRowMenuCell) {
+            const clonedTd = td.cloneNode(true) as HTMLElement;
+            fragment.appendChild(clonedTd);
+            this.renderer.setStyle(clonedTd, 'width', 'min-content');
+            this.renderer.setStyle(clonedTd, 'display', 'block');
+            hiddenDiv.innerHTML = clonedTd.innerHTML;
+            hiddenDiv.style.width = 'auto';
+            tdWidth = hiddenDiv.offsetWidth;
+            fragment.removeChild(clonedTd);
+          }
+          if (!tdWidths[idx]) tdWidths[idx] = 0;
+          tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
+        });
       });
+      document.body.removeChild(hiddenDiv);
 
       if (thWidths.length !== tdWidths.length) return;
 
