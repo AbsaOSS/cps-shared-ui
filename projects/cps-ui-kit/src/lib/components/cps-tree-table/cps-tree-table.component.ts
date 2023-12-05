@@ -413,8 +413,8 @@ export class CpsTreeTableComponent
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {
       this.clearSelection();
     }
-    this._recalcVirtualHeight();
     this._calcAutoLayoutHeaderWidths(true);
+    this._recalcVirtualHeight();
   }
 
   ngOnDestroy(): void {
@@ -578,9 +578,12 @@ export class CpsTreeTableComponent
       let rh = 0;
       const tds = tr?.querySelectorAll('td');
       tds?.forEach((td: HTMLElement) => {
+        const wprev = td.style.width;
         this.renderer.setStyle(td, 'display', 'block');
+        this.renderer.removeStyle(td, 'width');
         if (td.offsetHeight) rh = Math.max(rh, td.offsetHeight);
         this.renderer.removeStyle(td, 'display');
+        this.renderer.setStyle(td, 'width', wprev);
       });
       if (rh) {
         h = idx === 0 ? rh : Math.min(h, rh);
@@ -788,10 +791,10 @@ export class CpsTreeTableComponent
     this.data = [...this.data];
     this.rowsRemoved.emit(this.selectedRows);
     this.clearSelection();
-    this._recalcVirtualHeight();
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
+    this._recalcVirtualHeight();
   }
 
   clearSelection() {
@@ -806,10 +809,10 @@ export class CpsTreeTableComponent
     this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
     this._removeNodeFromData(node);
     this.rowsRemoved.emit([node]);
-    this._recalcVirtualHeight();
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
+    this._recalcVirtualHeight();
   }
 
   toggleAllColumns() {
@@ -875,18 +878,18 @@ export class CpsTreeTableComponent
 
   onNodeExpanded(event: any) {
     this.nodeExpanded.emit(event);
-    this._recalcVirtualHeight();
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
+    this._recalcVirtualHeight();
   }
 
   onNodeCollapsed(event: any) {
     this.nodeCollapsed.emit(event);
-    this._recalcVirtualHeight();
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
+    this._recalcVirtualHeight();
   }
 
   onNodeSelected(event: any) {
@@ -906,10 +909,10 @@ export class CpsTreeTableComponent
 
   onFilter(event: any) {
     this.filtered.emit(event);
-    this._recalcVirtualHeight();
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
+    this._recalcVirtualHeight();
   }
 
   onSelectColumn(col: any) {
