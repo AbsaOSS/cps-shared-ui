@@ -28,36 +28,43 @@ export class CpsPaginatorComponent implements OnInit {
    * @group Props
    */
   @Input() first = 0;
+
   /**
-   * Data count to display per page.
+   * Rows count to display per page.
    * @group Props
    */
   @Input() rows = 0;
+
   /**
    * Number of total records.
    * @group Props
    */
   @Input() totalRecords = 0;
+
   /**
    * Array of integer values to display inside rows per page dropdown. A object that have 'showAll' key can be added to it to show all data. Exp; [10,20,30]
    * @group Props
    */
   @Input() rowsPerPageOptions: number[] = [];
+
   /**
    * Whether to show it even there is only one page.
    * @group Props
    */
   @Input() alwaysShow = true;
+
   /**
    * Color of paginator background.
    * @group Props
    */
   @Input() backgroundColor = 'transparent';
+
   /**
-   * Not certain.
+   * Whether to reset page index when the number of rows per page changes.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;
+
   /**
    * Callback to invoke when page changes, the event object contains information about the new state.
    * @param {any} any - page changed.

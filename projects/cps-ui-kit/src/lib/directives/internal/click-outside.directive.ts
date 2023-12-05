@@ -17,10 +17,11 @@ import {
 })
 export class ClickOutsideDirective {
   /**
-   * Not certain.
+   * Classes list to skip outside click.
    * @group Props
    */
   @Input() skipTargets: string[] = [];
+
   /**
    * Callback to invoke on outside click.
    * @param {any} any - outside click.

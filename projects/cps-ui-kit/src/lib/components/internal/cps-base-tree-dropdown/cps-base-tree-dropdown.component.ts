@@ -93,7 +93,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() optionLabel = 'label';
 
   /**
-   * Not certain.
+   * Name of the info field of an option, shows the additional information text.
    * @group Props
    */
   @Input() optionInfo = 'info';
