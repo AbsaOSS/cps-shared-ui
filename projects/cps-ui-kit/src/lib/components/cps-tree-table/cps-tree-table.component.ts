@@ -629,6 +629,8 @@ export class CpsTreeTableComponent
           'border-right',
           wScroll > 0 ? '1px solid #d7d5d5' : 'unset'
         );
+
+        this._calcAutoLayoutHeaderWidths();
       });
     });
   }
@@ -751,8 +753,10 @@ export class CpsTreeTableComponent
     }
 
     if (!this.virtualScrollItemSize) {
-      this._recalcVirtualHeight();
-      this.cdRef.detectChanges();
+      setTimeout(() => {
+        this._recalcVirtualHeight();
+        this.cdRef.detectChanges();
+      });
     }
   }
 
