@@ -26,6 +26,9 @@ export class CpsTreeTableHeaderSelectableDirective
   }
 
   ngOnInit(): void {
+    this.elementRef.nativeElement.classList.add(
+      'cps-treetable-selectable-cell'
+    );
     this.elementRef.nativeElement.appendChild(
       this.checkboxCompRef.location.nativeElement
     );

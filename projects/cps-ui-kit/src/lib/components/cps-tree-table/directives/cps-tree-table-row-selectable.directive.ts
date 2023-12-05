@@ -25,6 +25,9 @@ export class CpsTreeTableRowSelectableDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.elementRef.nativeElement.classList.add(
+      'cps-treetable-selectable-cell'
+    );
     this.checkboxCompRef.setInput('value', this.value);
 
     this.elementRef.nativeElement.appendChild(

@@ -429,6 +429,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Props
    */
   @Input() columnsToggleBtnDisabled = false;
+  @Input() initialColumns: { [key: string]: any }[] = []; // if not provided, all columns are initially visible
 
   /**
    * Callback to invoke on selection changed.
@@ -614,7 +615,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       this.globalFilterFields = Object.keys(this.data[0]);
     }
 
-    this.selectedColumns = this.columns;
+    this.selectedColumns =
+      this.initialColumns.length > 0 ? this.initialColumns : this.columns;
   }
 
   get styleClass() {

@@ -14,17 +14,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata, FilterOperator, SelectItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { CpsButtonComponent } from '../../cps-button/cps-button.component';
-import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
-import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
-import { CpsSelectComponent } from '../../cps-select/cps-select.component';
-import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint/table-column-filter-constraint.component';
 import { TreeTable } from 'primeng/treetable';
 import {
   CpsColumnFilterCategoryOption,
   CpsColumnFilterMatchMode,
   CpsColumnFilterType
-} from '../cps-column-filter-types';
+} from '../../../cps-column-filter-types';
+import { CpsButtonComponent } from '../../../../cps-button/cps-button.component';
+import { CpsMenuComponent } from '../../../../cps-menu/cps-menu.component';
+import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
+import { CpsSelectComponent } from '../../../../cps-select/cps-select.component';
+import { TableColumnFilterConstraintComponent } from '../table-column-filter-constraint/table-column-filter-constraint.component';
 
 /**
  * TableColumnFilterComponent is a filter component in table and treetable.
@@ -423,6 +423,31 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @HostListener('click', ['$event'])
   onClick(event: any) {
     event.stopPropagation();
+  }
+
+  private _updateSortIconColor(color: string) {
+    const unsortedUp =
+      this.elementRef?.nativeElement?.parentElement?.querySelector(
+        '.sort-unsorted-arrow-up'
+      );
+    if (unsortedUp) {
+      unsortedUp.style.borderBottomColor = color;
+    }
+    const unsortedDown =
+      this.elementRef?.nativeElement?.parentElement?.querySelector(
+        '.sort-unsorted-arrow-down'
+      );
+    if (unsortedDown) {
+      unsortedDown.style.borderTopColor = color;
+    }
+  }
+
+  @HostListener('mouseenter') onMouseOver() {
+    this._updateSortIconColor('var(--cps-color-line-dark)');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this._updateSortIconColor('');
   }
 
   ngOnDestroy(): void {

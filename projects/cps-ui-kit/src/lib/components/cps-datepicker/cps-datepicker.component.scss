@@ -1,7 +1,7 @@
 $color-calm: var(--cps-color-calm);
 $color-prepared: var(--cps-color-prepared);
 $color-highlight: var(--cps-color-highlight-hover);
-$color-selected-background: #efe4e7;
+$color-selected-background: var(--cps-color-highlight-selected);
 $other-month-color: var(--cps-color-text-light);
 $text-color: var(--cps-color-text-darkest);
 $disabled-day-color: var(--cps-color-text-lightest);

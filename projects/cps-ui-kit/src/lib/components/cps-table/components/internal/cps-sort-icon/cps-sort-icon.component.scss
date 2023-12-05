@@ -1,0 +1,32 @@
+:host {
+  .cps-sortable-column-icon {
+    display: inline-flex;
+    margin-left: 8px;
+  }
+  .sort-desc {
+    border: 4px solid transparent;
+    border-bottom-color: var(--cps-color-calm);
+    margin-bottom: 4px;
+  }
+  .sort-asc {
+    border: 4px solid transparent;
+    border-top-color: var(--cps-color-calm);
+    margin-top: 4px;
+  }
+  .sort-unsorted {
+    flex-direction: column;
+    vertical-align: bottom;
+    .sort-unsorted-arrow-up {
+      display: inline-flex;
+      border: 4px solid transparent;
+      border-bottom-color: var(--cps-color-line-dark);
+      margin-bottom: 4px;
+      margin-top: -4px;
+    }
+    .sort-unsorted-arrow-down {
+      display: inline-flex;
+      border: 4px solid transparent;
+      border-top-color: var(--cps-color-line-dark);
+    }
+  }
+}

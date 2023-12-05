@@ -7,10 +7,13 @@ import {
   ContentChild,
   EventEmitter,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  Renderer2,
+  RendererStyleFlags2,
   SimpleChanges,
   TemplateRef,
   ViewChild
@@ -39,6 +42,10 @@ import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
 import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
 import { convertSize } from '../../utils/internal/size-utils';
+import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
+import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
+import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler.directive';
+import { Subscription, fromEvent } from 'rxjs';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -71,6 +78,9 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     AngleRightIcon,
     AngleDoubleRightIcon,
     CpsTreeTableColumnSortableDirective,
+    CpsTreeTableHeaderSelectableDirective,
+    CpsTreeTableRowSelectableDirective,
+    CpsTreetableRowTogglerDirective,
     TreeTableUnsortDirective,
     TableRowMenuComponent
   ],
@@ -124,6 +134,12 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() minWidthForBodyOnly = true;
+
+  /**
+   * Whether the cell widths scale according to their content or not.
+   * @group Props
+   */
+  @Input() autoLayout = true;
 
   /**
    * Whether the treetable should have alternating stripes.
@@ -423,6 +439,7 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() columnsToggleBtnDisabled = false;
+  @Input() initialColumns: { [key: string]: any }[] = []; // if not provided, all columns are initially visible
 
   /**
    * Callback to invoke on selected node change.
@@ -564,38 +581,54 @@ export class CpsTreeTableComponent
   selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
-  defScrollHeightPx = 0;
-  defScrollHeightPxInitial = 0;
   defScrollHeight = '';
 
-  resizeObserver: ResizeObserver;
-  windowResizeDebouncer: any;
+  private _defScrollHeightPx = 0;
+  private _defScrollHeightPxInitial = 0;
 
-  headerBox: any;
-  scrollableBody: any;
-  scrollbarWidth = 0;
-  scrollbarVisible = true;
+  private _resizeObserver: ResizeObserver;
+  private _windowResizeDebouncer: any;
+  private _scrollSubscription?: Subscription;
+
+  private _headerBox: any;
+  private _scrollableBody: any;
+  private _scrollbarWidth = 0;
+  private _scrollbarVisible = true;
+
+  private _needRecalcAutoLayout = true;
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private cdRef: ChangeDetectorRef) {
-    this.resizeObserver = new ResizeObserver((entries) => {
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    private renderer: Renderer2,
+    private ngZone: NgZone
+  ) {
+    this._resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const body = entry.target;
-        this.scrollbarVisible = body.scrollHeight > body.clientHeight;
+        this._scrollbarVisible = body.scrollHeight > body.clientHeight;
 
-        if (this.scrollbarVisible && this.virtualScroll)
-          this.scrollableBody.style.setProperty(
+        if (this._scrollbarVisible && this.virtualScroll)
+          this.renderer.setStyle(
+            this._scrollableBody,
             'overflow',
             'auto',
-            'important'
+            RendererStyleFlags2.Important
           );
 
-        let wScroll = this.scrollbarVisible ? this.scrollbarWidth : 0;
+        let wScroll = this._scrollbarVisible ? this._scrollbarWidth : 0;
         if (wScroll > 0) wScroll -= 1;
 
-        this.headerBox.style.paddingRight = `${wScroll}px`;
-        this.headerBox.style.borderRight =
-          wScroll > 0 ? '1px solid #d7d5d5' : 'unset';
+        this.renderer.setStyle(
+          this._headerBox,
+          'padding-right',
+          `${wScroll}px`
+        );
+        this.renderer.setStyle(
+          this._headerBox,
+          'border-right',
+          wScroll > 0 ? '1px solid #d7d5d5' : 'unset'
+        );
       });
     });
   }
@@ -612,7 +645,7 @@ export class CpsTreeTableComponent
       window.addEventListener('resize', this._onWindowResize.bind(this));
 
       if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
-        this.defScrollHeightPx = parseInt(this.scrollHeight, 10);
+        this._defScrollHeightPx = parseInt(this.scrollHeight, 10);
       }
     }
 
@@ -641,75 +674,79 @@ export class CpsTreeTableComponent
       this.globalFilterFields = Object.keys(this.data[0].data);
     }
 
-    this.selectedColumns = this.columns;
+    this.selectedColumns =
+      this.initialColumns.length > 0 ? this.initialColumns : this.columns;
   }
 
   ngAfterViewInit(): void {
     this._setMinWidthOverall();
 
-    this.scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
+    this._scrollableBody = this.primengTreeTable.el.nativeElement.querySelector(
       '.p-treetable-scrollable-body'
     );
-    if (this.scrollableBody) {
+    if (this._scrollableBody) {
       if (this.minWidthForBodyOnly && this.minWidth) {
-        const table = this.scrollableBody.querySelector('table');
-        if (table) table.style.minWidth = this.minWidth;
+        const table = this._scrollableBody.querySelector('table');
+        if (table) this.renderer.setStyle(table, 'min-width', this.minWidth);
       }
 
-      if (this.virtualScroll && this.defScrollHeight === 'flex') {
-        this.defScrollHeightPx = this.scrollableBody.clientHeight;
-        this.defScrollHeightPxInitial = this.defScrollHeightPx;
+      if (this.virtualScroll) {
+        if (this.defScrollHeight === 'flex') {
+          this._defScrollHeightPx = this._scrollableBody.clientHeight;
+          this._defScrollHeightPxInitial = this._defScrollHeightPx;
+        }
+        if (this.autoLayout) {
+          this._scrollSubscription = fromEvent(
+            this._scrollableBody,
+            'scroll'
+          ).subscribe(() => {
+            this._calcAutoLayoutHeaderWidths(true);
+          });
+        }
       }
 
-      this.headerBox = this.primengTreeTable.el.nativeElement.querySelector(
+      this._headerBox = this.primengTreeTable.el.nativeElement.querySelector(
         '.p-treetable-scrollable-header-box'
       );
 
-      if (this.headerBox) {
+      if (this._headerBox) {
         if (this.minWidthForBodyOnly && this.minWidth) {
-          const table = this.headerBox.querySelector('table');
-          if (table) table.style.minWidth = this.minWidth;
+          const table = this._headerBox.querySelector('table');
+          if (table) this.renderer.setStyle(table, 'min-width', this.minWidth);
         }
 
-        this.scrollbarWidth = DomHandler.calculateScrollbarWidth();
-        this.resizeObserver.observe(this.scrollableBody);
+        this._scrollbarWidth = DomHandler.calculateScrollbarWidth();
+        this._resizeObserver.observe(this._scrollableBody);
+      }
+
+      if (this._needRecalcAutoLayout) {
+        this._calcAutoLayoutHeaderWidths();
+        this.cdRef.detectChanges();
+      }
+    }
+
+    if (!this.scrollable) {
+      const tableWrapper =
+        this.primengTreeTable.el?.nativeElement?.querySelector(
+          '.p-treetable-wrapper'
+        );
+      if (tableWrapper && this.minWidthForBodyOnly && this.minWidth) {
+        const table = tableWrapper.querySelector('table');
+        if (table) this.renderer.setStyle(table, 'min-width', this.minWidth);
       }
     }
   }
 
-  private _updateVirtualScrollItemSize() {
-    if (!this.virtualScroll || this.virtualScrollItemHeight) return;
-
-    const trs = this.primengTreeTable?.el?.nativeElement
-      ?.querySelector('.p-treetable-tbody')
-      ?.querySelectorAll('tr');
-
-    if (!trs?.length) return;
-    if (!trs[0]?.offsetHeight) return;
-
-    let h = 0;
-    trs.forEach((tr: HTMLElement, idx: number) => {
-      let rh = 0;
-      const tds = tr?.querySelectorAll('td');
-      tds?.forEach((td: HTMLElement) => {
-        td.style.display = 'block';
-        if (td.offsetHeight) rh = Math.max(rh, td.offsetHeight);
-        td.style.display = '';
-      });
-      if (rh) {
-        h = idx === 0 ? rh : Math.min(h, rh);
-      }
-    });
-
-    this.virtualScrollItemSize = h;
-  }
-
   ngAfterViewChecked() {
+    if (this._needRecalcAutoLayout) {
+      this._calcAutoLayoutHeaderWidths();
+      this.cdRef.detectChanges();
+    }
     if (!this.virtualScroll) return;
 
-    if (!this.defScrollHeightPx && this.defScrollHeight === 'flex') {
-      this.defScrollHeightPx = this.scrollableBody.clientHeight;
-      this.defScrollHeightPxInitial = this.defScrollHeightPx;
+    if (!this._defScrollHeightPx && this.defScrollHeight === 'flex') {
+      this._defScrollHeightPx = this._scrollableBody.clientHeight;
+      this._defScrollHeightPxInitial = this._defScrollHeightPx;
       this.cdRef.detectChanges();
     }
 
@@ -717,35 +754,6 @@ export class CpsTreeTableComponent
       this._recalcVirtualHeight();
       this.cdRef.detectChanges();
     }
-  }
-
-  private _setMinWidthOverall() {
-    if (this.minWidthForBodyOnly || !this.minWidth || !this.primengTreeTable)
-      return;
-
-    const treeTableMain =
-      this.primengTreeTable.el?.nativeElement?.querySelector('.p-treetable');
-    if (treeTableMain) {
-      treeTableMain.style.overflow = 'auto';
-      const paginatorEl = treeTableMain.querySelector('.p-paginator');
-      if (paginatorEl) paginatorEl.style.minWidth = this.minWidth;
-      const loadingOverlay = treeTableMain.querySelector(
-        '.p-treetable-loading-overlay'
-      );
-      if (loadingOverlay) loadingOverlay.style.minWidth = this.minWidth;
-    }
-
-    const scrollableWrapper =
-      this.primengTreeTable.el?.nativeElement?.querySelector(
-        '.p-treetable-scrollable-wrapper'
-      );
-    if (scrollableWrapper) scrollableWrapper.style.minWidth = this.minWidth;
-
-    const treeTableHeader =
-      this.primengTreeTable.el?.nativeElement?.querySelector(
-        '.p-treetable-header'
-      );
-    if (treeTableHeader) treeTableHeader.style.minWidth = this.minWidth;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -763,24 +771,234 @@ export class CpsTreeTableComponent
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {
       this.clearSelection();
     }
+    this._calcAutoLayoutHeaderWidths(true);
+    this._recalcVirtualHeight();
   }
 
   ngOnDestroy(): void {
-    this.resizeObserver?.disconnect();
-    if (this.virtualScroll)
+    this._resizeObserver?.disconnect();
+    if (this.virtualScroll) {
+      if (this.autoLayout) this._scrollSubscription?.unsubscribe();
       window.removeEventListener('resize', this._onWindowResize.bind(this));
+    }
   }
 
-  clearGlobalFilter() {
-    this.globalFilterComp?.clear();
+  private _calcAutoLayoutHeaderWidths(forced = false) {
+    this.ngZone.runOutsideAngular(() => {
+      if (!this.autoLayout || !this.scrollable) return;
+
+      if (!this._needRecalcAutoLayout && !forced) return;
+
+      const headerRows = this._headerBox?.querySelectorAll('tr');
+      if (!headerRows?.length) return;
+
+      const headerCells =
+        headerRows[headerRows.length - 1]?.querySelectorAll('th');
+      if (!headerCells?.length) return;
+
+      let hasSelectableCell = false;
+      let hasRowMenuCell = false;
+
+      const ths = Array.from(headerCells);
+      if (ths.every((th: any) => th.offsetWidth === 0)) return;
+
+      const thWidths = ths.map((th: any) => {
+        const wprev = th.style.width;
+
+        const isSelectableCell = th.classList.contains(
+          'cps-treetable-selectable-cell'
+        );
+
+        const isRowCell = th.classList.contains('cps-treetable-row-menu-cell');
+
+        if (isSelectableCell) hasSelectableCell = true;
+        if (isRowCell) hasRowMenuCell = true;
+
+        let thWidth = 55;
+        if (!isSelectableCell && !isRowCell) {
+          this.renderer.setStyle(th, 'width', 'min-content');
+          this.renderer.setStyle(th, 'display', 'block');
+          this.renderer.setStyle(th, 'text-wrap', 'nowrap');
+          thWidth = th.offsetWidth;
+          this.renderer.setStyle(th, 'width', wprev);
+          this.renderer.removeStyle(th, 'display');
+          this.renderer.removeStyle(th, 'text-wrap');
+        }
+        return thWidth;
+      });
+
+      const bodyRows = this._scrollableBody?.querySelectorAll('tr');
+      if (!bodyRows?.length) return;
+
+      const tdWidths: number[] = [];
+      const fragment = document.createDocumentFragment();
+      const hiddenDiv = document.createElement('div');
+      hiddenDiv.style.visibility = 'hidden';
+      hiddenDiv.style.position = 'absolute';
+      hiddenDiv.style.whiteSpace = 'nowrap';
+
+      document.body.appendChild(hiddenDiv);
+      bodyRows.forEach((tr: HTMLElement) => {
+        const tds = tr?.querySelectorAll('td');
+        tds?.forEach((td: HTMLElement, idx: number) => {
+          const isSelectableOrRowMenuCell =
+            td.classList.contains('cps-treetable-selectable-cell') ||
+            td.classList.contains('cps-treetable-row-menu-cell');
+
+          let tdWidth = 55;
+          if (!isSelectableOrRowMenuCell) {
+            const clonedTd = td.cloneNode(true) as HTMLElement;
+            fragment.appendChild(clonedTd);
+            this.renderer.setStyle(clonedTd, 'width', 'min-content');
+            this.renderer.setStyle(clonedTd, 'display', 'block');
+            hiddenDiv.innerHTML = clonedTd.innerHTML;
+            hiddenDiv.style.width = 'auto';
+            tdWidth = hiddenDiv.offsetWidth;
+            fragment.removeChild(clonedTd);
+          }
+          if (!tdWidths[idx]) tdWidths[idx] = 0;
+          tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
+        });
+      });
+      document.body.removeChild(hiddenDiv);
+
+      if (thWidths.length !== tdWidths.length) return;
+
+      const maxWidths = thWidths.map((v, idx) => Math.max(v, tdWidths[idx]));
+      let sum = maxWidths.reduce((a, b) => a + b, 0);
+      if (hasSelectableCell) {
+        sum -= 55;
+        maxWidths.shift();
+      }
+      if (hasRowMenuCell) {
+        sum -= 55;
+        maxWidths.pop();
+      }
+
+      const percentages = maxWidths.map((v) => (v / sum) * 100);
+
+      headerCells.forEach((th: any, idx: number) => {
+        if (
+          (hasSelectableCell && idx === 0) ||
+          (hasRowMenuCell && idx === headerCells.length - 1)
+        ) {
+          this.renderer.setStyle(th, 'width', '55px');
+        } else
+          this.renderer.setStyle(
+            th,
+            'width',
+            percentages[hasSelectableCell ? idx - 1 : idx] + '%'
+          );
+      });
+
+      bodyRows.forEach((tr: HTMLElement) => {
+        const tds = tr?.querySelectorAll('td');
+        tds?.forEach((td: HTMLElement, idx: number) => {
+          if (
+            (hasSelectableCell && idx === 0) ||
+            (hasRowMenuCell && idx === tds.length - 1)
+          ) {
+            this.renderer.setStyle(td, 'width', '55px');
+          } else {
+            this.renderer.setStyle(
+              td,
+              'width',
+              percentages[hasSelectableCell ? idx - 1 : idx] + '%'
+            );
+          }
+          this.renderer.setStyle(td, 'opacity', '1');
+          this.renderer.setStyle(td, 'overflow', 'hidden');
+          if (this.bordered)
+            this.renderer.setStyle(
+              td,
+              'border-left-color',
+              'var(--cps-color-line-mid)'
+            );
+        });
+      });
+
+      this._needRecalcAutoLayout = false;
+    });
+  }
+
+  private _updateVirtualScrollItemSize() {
+    if (!this.virtualScroll || this.virtualScrollItemHeight) return;
+
+    const trs = this.primengTreeTable?.el?.nativeElement
+      ?.querySelector('.p-treetable-tbody')
+      ?.querySelectorAll('tr');
+
+    if (!trs?.length) return;
+    if (!trs[0]?.offsetHeight) return;
+
+    let h = 0;
+    trs.forEach((tr: HTMLElement, idx: number) => {
+      let rh = 0;
+      const tds = tr?.querySelectorAll('td');
+      tds?.forEach((td: HTMLElement) => {
+        const wprev = td.style.width;
+        this.renderer.setStyle(td, 'display', 'block');
+        this.renderer.removeStyle(td, 'width');
+        if (td.offsetHeight) rh = Math.max(rh, td.offsetHeight);
+        this.renderer.removeStyle(td, 'display');
+        this.renderer.setStyle(td, 'width', wprev);
+      });
+      if (rh) {
+        h = idx === 0 ? rh : Math.min(h, rh);
+      }
+    });
+
+    this.virtualScrollItemSize = h;
+  }
+
+  private _setMinWidthOverall() {
+    if (this.minWidthForBodyOnly || !this.minWidth || !this.primengTreeTable)
+      return;
+
+    const treeTableMain =
+      this.primengTreeTable.el?.nativeElement?.querySelector('.p-treetable');
+    if (treeTableMain) {
+      this.renderer.setStyle(treeTableMain, 'overflow', 'auto');
+      const paginatorEl = treeTableMain.querySelector('.p-paginator');
+      if (paginatorEl)
+        this.renderer.setStyle(paginatorEl, 'min-width', this.minWidth);
+      const loadingOverlay = treeTableMain.querySelector(
+        '.p-treetable-loading-overlay'
+      );
+      if (loadingOverlay)
+        this.renderer.setStyle(loadingOverlay, 'min-width', this.minWidth);
+    }
+
+    const scrollableWrapper =
+      this.primengTreeTable.el?.nativeElement?.querySelector(
+        '.p-treetable-scrollable-wrapper'
+      );
+    if (scrollableWrapper)
+      this.renderer.setStyle(scrollableWrapper, 'min-width', this.minWidth);
+
+    if (!this.scrollable) {
+      const tableWrapper =
+        this.primengTreeTable.el?.nativeElement?.querySelector(
+          '.p-treetable-wrapper'
+        );
+      if (tableWrapper)
+        this.renderer.setStyle(tableWrapper, 'min-width', this.minWidth);
+    }
+
+    const treeTableHeader =
+      this.primengTreeTable.el?.nativeElement?.querySelector(
+        '.p-treetable-header'
+      );
+    if (treeTableHeader)
+      this.renderer.setStyle(treeTableHeader, 'min-width', this.minWidth);
   }
 
   private _onWindowResize() {
     // if (this.defScrollHeight === 'flex')
     //   this.defScrollHeightPx = this.scrollableBody.clientHeight;
 
-    clearTimeout(this.windowResizeDebouncer);
-    this.windowResizeDebouncer = setTimeout(() => {
+    clearTimeout(this._windowResizeDebouncer);
+    this._windowResizeDebouncer = setTimeout(() => {
       this._recalcVirtualHeight();
     }, 100);
   }
@@ -819,13 +1037,14 @@ export class CpsTreeTableComponent
     return classesList.join(' ');
   }
 
-  onSortFunction(event: SortEvent) {
-    this.customSortFunction.emit(event);
-  }
-
   private _recalcVirtualHeight() {
-    if (!this.scrollbarVisible && this.virtualScroll)
-      this.scrollableBody.style.setProperty('overflow', 'hidden', 'important');
+    if (!this._scrollbarVisible && this.virtualScroll)
+      this.renderer.setStyle(
+        this._scrollableBody,
+        'overflow',
+        'hidden',
+        RendererStyleFlags2.Important
+      );
 
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
@@ -838,64 +1057,19 @@ export class CpsTreeTableComponent
         } else {
           const curHeight = this.virtualScrollItemSize * itemsLen + 2;
           if (this.defScrollHeight === 'flex') {
-            if (curHeight >= this.defScrollHeightPxInitial) {
+            if (curHeight >= this._defScrollHeightPxInitial) {
               this.scrollHeight = 'flex';
-              this.scrollableBody.style.height = '100%';
+              this.renderer.setStyle(this._scrollableBody, 'height', '100%');
               this.cdRef.markForCheck();
               return;
             }
           }
           this.scrollHeight =
-            Math.min(this.defScrollHeightPx, curHeight) + 'px';
+            Math.min(this._defScrollHeightPx, curHeight) + 'px';
         }
         this.cdRef.markForCheck();
       }
     });
-  }
-
-  onFilterGlobal(value: string) {
-    this.primengTreeTable.filterGlobal(value, 'contains');
-  }
-
-  onClickAdditionalBtnOnSelect() {
-    this.additionalBtnOnSelectClicked.emit(this.selectedRows);
-  }
-
-  onClickActionBtn() {
-    this.actionBtnClicked.emit();
-  }
-
-  onReloadData() {
-    if (this.dataReloadBtnDisabled) return;
-    this.dataReloadBtnClicked.emit();
-  }
-
-  onColumnsToggle(event: any) {
-    if (this.columnsToggleBtnDisabled) return;
-    this.colToggleMenu?.toggle(event);
-  }
-
-  removeSelected() {
-    this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
-    this.data = [...this.data];
-    this.rowsRemoved.emit(this.selectedRows);
-    this.clearSelection();
-    this._recalcVirtualHeight();
-  }
-
-  clearSelection() {
-    this.selectedRows = [];
-  }
-
-  onEditRowClicked(node: any) {
-    this.editRowBtnClicked.emit(node);
-  }
-
-  onRemoveRowClicked(node: any) {
-    this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
-    this._removeNodeFromData(node);
-    this.rowsRemoved.emit([node]);
-    this._recalcVirtualHeight();
   }
 
   private _removeNodeFromData(nodeToRemove: any, single = true): void {
@@ -940,10 +1114,72 @@ export class CpsTreeTableComponent
     }
   }
 
+  clearGlobalFilter() {
+    this.globalFilterComp?.clear();
+  }
+
+  onSortFunction(event: SortEvent) {
+    this.customSortFunction.emit(event);
+  }
+
+  onFilterGlobal(value: string) {
+    this.primengTreeTable.filterGlobal(value, 'contains');
+  }
+
+  onClickAdditionalBtnOnSelect() {
+    this.additionalBtnOnSelectClicked.emit(this.selectedRows);
+  }
+
+  onClickActionBtn() {
+    this.actionBtnClicked.emit();
+  }
+
+  onReloadData() {
+    if (this.dataReloadBtnDisabled) return;
+    this.dataReloadBtnClicked.emit();
+  }
+
+  onColumnsToggle(event: any) {
+    if (this.columnsToggleBtnDisabled) return;
+    this.colToggleMenu?.toggle(event);
+  }
+
+  removeSelected() {
+    this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
+    this.data = [...this.data];
+    this.rowsRemoved.emit(this.selectedRows);
+    this.clearSelection();
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
+    this._recalcVirtualHeight();
+  }
+
+  clearSelection() {
+    this.selectedRows = [];
+  }
+
+  onEditRowClicked(node: any) {
+    this.editRowBtnClicked.emit(node);
+  }
+
+  onRemoveRowClicked(node: any) {
+    this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
+    this._removeNodeFromData(node);
+    this.rowsRemoved.emit([node]);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
+    this._recalcVirtualHeight();
+  }
+
   toggleAllColumns() {
     this.selectedColumns =
       this.selectedColumns.length < this.columns.length ? this.columns : [];
     this.columnsSelected.emit(this.selectedColumns);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
   }
 
   isColumnSelected(col: any) {
@@ -989,6 +1225,9 @@ export class CpsTreeTableComponent
     };
 
     this.pageChanged.emit(state);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
   }
 
   onLazyLoaded(event: any) {
@@ -997,11 +1236,17 @@ export class CpsTreeTableComponent
 
   onNodeExpanded(event: any) {
     this.nodeExpanded.emit(event);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
     this._recalcVirtualHeight();
   }
 
   onNodeCollapsed(event: any) {
     this.nodeCollapsed.emit(event);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
     this._recalcVirtualHeight();
   }
 
@@ -1015,10 +1260,16 @@ export class CpsTreeTableComponent
 
   onSort(event: any) {
     this.sorted.emit(event);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
   }
 
   onFilter(event: any) {
     this.filtered.emit(event);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
     this._recalcVirtualHeight();
   }
 
@@ -1038,6 +1289,9 @@ export class CpsTreeTableComponent
     }
     this.selectedColumns = res;
     this.columnsSelected.emit(this.selectedColumns);
+    setTimeout(() => {
+      this._calcAutoLayoutHeaderWidths(true);
+    });
   }
 
   onSelectionChanged(selection: any[]) {
