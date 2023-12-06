@@ -1,4 +1,95 @@
 @font-face {
   font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-BlackIt.woff2) format('woff2');
+  font-weight: 900;
+  font-style: italic;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-BoldIt.woff2) format('woff2');
+  font-weight: bold;
+  font-style: italic;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-Black.woff2) format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-Bold.woff2) format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-SemiboldIt.woff2) format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-Semibold.woff2) format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-LightIt.woff2) format('woff2');
+  font-weight: 300;
+  font-style: italic;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
   src: url(../assets/fonts/SourceSansPro-Regular.woff2) format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-ExtraLightIt.woff2) format('woff2');
+  font-weight: 200;
+  font-style: italic;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-Light.woff2) format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-It.woff2) format('woff2');
+  font-weight: normal;
+  font-style: italic;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  src: url(../assets/fonts/SourceSansPro-ExtraLight.woff2) format('woff2');
+  font-weight: 200;
+  font-style: normal;
+  font-display: auto;
 }
