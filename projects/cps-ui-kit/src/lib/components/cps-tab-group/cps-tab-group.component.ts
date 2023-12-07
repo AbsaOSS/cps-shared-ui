@@ -84,22 +84,25 @@ export class CpsTabGroupComponent
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
 {
   /**
-   * Index of selected item in the tab component.
+   * Index of the selected tab.
    * @group Props
    */
   @Input() selectedIndex = 0;
+
   /**
-   * applies an alternative styling to tabs.
+   * Whether to apply an alternative 'subtabs' styling.
    * @group Props
    */
-  @Input() isSubTabs = false; // applies an alternative styling to tabs
+  @Input() isSubTabs = false;
+
   /**
-   * Transition options of how content appears, it can be "slide" | "fade".
+   * Transition options of how content appears, it can be "slide" or "fade".
    * @group Props
    */
   @Input() animationType: CpsTabsAnimationType = 'slide';
+
   /**
-   * Background styling to tabs.
+   * Background styling of tabs.
    * @group Props
    */
   @Input() tabsBackground = 'inherit';
@@ -110,6 +113,7 @@ export class CpsTabGroupComponent
    * @group Emits
    */
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
+
   /**
    * Callback to invoke after tab change.
    * @param {TabChangeEvent} any - tab changed.

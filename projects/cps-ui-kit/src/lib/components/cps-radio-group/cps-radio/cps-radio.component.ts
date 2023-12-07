@@ -9,7 +9,7 @@ import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
 
 /**
- * CpsRadioComponent is a radio button with custom content.
+ * CpsRadioComponent is a radio button with arbitrary content.
  * @group Components
  */
 @Component({

@@ -76,7 +76,7 @@ export class CpsSelectComponent
   @Input() placeholder = 'Please select';
 
   /**
-   * Bottom hint text for the input field.
+   * Bottom hint text for the select component.
    * @group Props
    */
   @Input() hint = '';
@@ -100,7 +100,7 @@ export class CpsSelectComponent
   @Input() disabled = false;
 
   /**
-   * Width of the select input field, of type number denoting pixels or string.
+   * Width of the select component, of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -118,13 +118,13 @@ export class CpsSelectComponent
   @Input() chips = true;
 
   /**
-   * Option for removing a selected chip element.
+   * Whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
 
   /**
-   * Option for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * When enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
@@ -238,7 +238,7 @@ export class CpsSelectComponent
   @Input() optionsClass = '';
 
   /**
-   * Styling appearance of select input, it could be 'outlined', 'underlined' or 'borderless'.
+   * Styling appearance of select input, it can be 'outlined', 'underlined' or 'borderless'.
    * @group Props
    */
   @Input() appearance: CpsSelectAppearanceType = 'outlined';

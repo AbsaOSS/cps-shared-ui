@@ -12,7 +12,7 @@ import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-s
 
 /**
  * CpsTableColumnSortableDirective is a sorting directive used to sort single or multiple columns in table.
- * @group Components
+ * @group Directives
  */
 @Directive({
   standalone: true,
@@ -22,7 +22,12 @@ export class CpsTableColumnSortableDirective
   extends SortableColumn
   implements OnInit, OnDestroy
 {
+  /**
+   * Name of the column to be sorted.
+   * @group Props
+   */
   @Input('cpsTColSortable') override field = '';
+
   sortIconRef: ComponentRef<CpsSortIconComponent>;
 
   constructor(

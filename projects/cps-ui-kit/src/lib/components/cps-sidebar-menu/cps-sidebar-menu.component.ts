@@ -28,7 +28,7 @@ export type CpsSidebarMenuItem = {
 };
 
 /**
- * CpsSidebarMenuComponent is a panel component displayed as an overlay at the edges of the screen.
+ * CpsSidebarMenuComponent is a vertical menu panel component displayed at the edge of the screen.
  * @group Components
  */
 @Component({
@@ -63,32 +63,28 @@ export type CpsSidebarMenuItem = {
 })
 export class CpsSidebarMenuComponent implements OnInit {
   /**
-   * An array of items  of type {
-      title: string;
-      icon: string;
-      url?: string | undefined;
-      target?: string | undefined;
-      disabled?: boolean | undefined;
-      items?: CpsMenuItem[] | undefined;
-  } in the sidebar component.
+   * An array of menu items.
    * @group Props
    */
   @Input() items: CpsSidebarMenuItem[] = [];
+
   /**
-   * Whether the sidebar should be expandable.
+   * Indicates current expansion state of the sidebar.
    * @group Props
    */
   @Input() isExpanded = true;
+
   /**
-   * Whether the sidebar should allow activating a link on multiple routes.
+   * Whether the menu items should allow activating only exact links.
    * @group Props
    */
   @Input() exactRoutes = false;
+
   /**
-   * Height of the sidebar.
+   * Height of the sidebar, of type number denoting pixels or string.
    * @group Props
    */
-  @Input() height = '100%';
+  @Input() height: number | string = '100%';
 
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;
 

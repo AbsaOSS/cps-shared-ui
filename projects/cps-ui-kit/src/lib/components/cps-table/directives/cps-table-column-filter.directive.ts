@@ -18,7 +18,7 @@ import { TableColumnFilterComponent } from '../components/internal/table-column-
 
 /**
  * CpsTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in table.
- * @group Components
+ * @group Directives
  */
 @Directive({
   standalone: true,
@@ -35,7 +35,7 @@ export class CpsTableColumnFilterDirective
   @Input('cpsTColFilter') field: string | undefined;
 
   /**
-   * Type of filter in table, it can be of type "number", "boolean", "text", "date" or "category".
+   * Type of a filter in table, it can be of type "number", "boolean", "text", "date" or "category".
    * @group Props
    */
   @Input() filterType: CpsColumnFilterType = 'text';
@@ -108,7 +108,7 @@ export class CpsTableColumnFilterDirective
     [];
 
   /**
-   * Show category filter as button toggles.
+   * Whether to show category filter as button toggles.
    * @group Props
    */
   @Input() filterAsButtonToggle = false;

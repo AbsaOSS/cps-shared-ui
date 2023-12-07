@@ -23,7 +23,7 @@ import {
 } from '../../../cps-column-filter-types';
 
 /**
- * TableColumnFilterConstraintComponent is a filtering constraint component in table and treetable.
+ * TableColumnFilterConstraintComponent is an internal filtering constraint component in table and treetable.
  * @group Components
  */
 @Component({

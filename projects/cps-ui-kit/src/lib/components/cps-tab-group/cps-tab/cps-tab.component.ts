@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 
 /**
- * CpsTabComponent is a navigation component that displays items as tab headers.
+ * CpsTabComponent is a tab within a tab-group.
  * @group Components
  */
 @Component({
@@ -14,12 +14,13 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
 })
 export class CpsTabComponent {
   /**
-   * Label of the tab component.
+   * Label of the tab.
    * @group Props
    */
   @Input() label = '';
+
   /**
-   * Icon before input value.
+   * Icon before the label.
    * @group Props
    */
   @Input() icon = '';
@@ -29,28 +30,44 @@ export class CpsTabComponent {
    * @group Props
    */
   @Input() disabled = false;
+
   /**
-   *When it is not an empty string, text field is displayed to show text for more info.
+   * Whether to show the tooltip on tab hover.
    * @group Props
    */
   @Input() tooltipText = '';
+
   /**
-   * Info tooltip class for styling.
+   * Class for styling the tab tooltip.
    * @group Props
    */
   @Input() tooltipContentClass = 'cps-tooltip-content';
+
   /**
-   * Width of Tooltip, of type number or string.
+   * Max width of the tooltip, of type number denoting pixels or string.
    * @group Props
    */
   @Input() tooltipMaxWidth: number | string = '100%';
+
   /**
    * Whether the tooltip should have persistent info.
    * @group Props
    */
   @Input() tooltipPersistent = false;
+
+  /**
+   * Badge value to show on the tab after the label in a form of a circle.
+   * @group Props
+   */
   @Input() badgeValue = '';
+
+  /**
+   * Tooltip text to show on badge hover.
+   * @group Props
+   */
   @Input() badgeTooltip = '';
+
   @ViewChild(TemplateRef) content!: TemplateRef<any>;
+
   active = false;
 }

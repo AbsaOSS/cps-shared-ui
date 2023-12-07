@@ -9,8 +9,8 @@ import {
 import { TableHeaderCheckbox } from 'primeng/table';
 
 /**
- * CpsTableHeaderSelectableDirective is a selecting directive used to choose single or multiple header in table.
- * @group Components
+ * CpsTableHeaderSelectableDirective is a directive used to apply a checkbox to a header cell.
+ * @group Directives
  */
 @Directive({
   standalone: true,

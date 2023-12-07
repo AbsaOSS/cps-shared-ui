@@ -23,7 +23,7 @@ import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
-import { TableRowMenuComponent } from './table-row-menu/table-row-menu.component';
+import { TableRowMenuComponent } from './components/internal/table-row-menu/table-row-menu.component';
 import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
 import { convertSize } from '../../utils/internal/size-utils';
@@ -269,13 +269,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() rows = 0;
 
   /**
-   * Reset page on rows change.
+   * Whether to reset page on rows change.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;
 
   /**
-   * Reset page on sort.
+   * Whether to reset page on table data sorting.
    * @group Props
    */
   @Input() resetPageOnSort = true;
@@ -335,7 +335,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() clearGlobalFilterOnLoading = false;
 
   /**
-   * Show remove button in the toolbar when rows are selected.
+   * Whether to show remove button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showRemoveBtnOnSelect = true;
@@ -365,7 +365,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() additionalBtnOnSelectDisabled = false;
 
   /**
-   * Whether to show action button on table.
+   * Whether to show action button in the toolbar.
    * @group Props
    */
   @Input() showActionBtn = false;
@@ -383,7 +383,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() actionBtnDisabled = false;
 
   /**
-   * Whether to show export button on table.
+   * Whether to show export button in the toolbar.
    * @group Props
    */
   @Input() showExportBtn = false;
@@ -429,7 +429,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Props
    */
   @Input() columnsToggleBtnDisabled = false;
-  @Input() initialColumns: { [key: string]: any }[] = []; // if not provided, all columns are initially visible
+
+  /**
+   * Array of initial columns to show in the table. If not provided, all columns are initially visible.
+   * @group Props
+   */
+  @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
    * Callback to invoke on selection changed.

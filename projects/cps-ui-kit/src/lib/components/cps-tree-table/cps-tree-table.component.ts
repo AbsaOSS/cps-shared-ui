@@ -40,7 +40,7 @@ import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
-import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
+import { TableRowMenuComponent } from '../cps-table/components/internal/table-row-menu/table-row-menu.component';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
 import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
@@ -280,7 +280,7 @@ export class CpsTreeTableComponent
   @Input() paginator = false;
 
   /**
-   * Whether to show it even there is only one page.
+   * Whether to show paginator even there is only one page.
    * @group Props
    */
   @Input() alwaysShowPaginator = true;
@@ -304,13 +304,13 @@ export class CpsTreeTableComponent
   @Input() rows = 0;
 
   /**
-   * Reset page on rows change.
+   * Whether to reset page on rows change.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;
 
   /**
-   * Reset page on sort.
+   * Whether to reset page on treetable data sorting.
    * @group Props
    */
   @Input() resetPageOnSort = true;
@@ -370,7 +370,7 @@ export class CpsTreeTableComponent
   @Input() clearGlobalFilterOnLoading = false;
 
   /**
-   * Show remove button in the toolbar when rows are selected.
+   * Whether to show remove button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showRemoveBtnOnSelect = true;
@@ -400,10 +400,11 @@ export class CpsTreeTableComponent
   @Input() additionalBtnOnSelectDisabled = false;
 
   /**
-   * Whether to show action button on table.
+   * Whether to show action button in the toolbar.
    * @group Props
    */
   @Input() showActionBtn = false;
+
   /**
    * Action button title.
    * @group Props
@@ -429,7 +430,7 @@ export class CpsTreeTableComponent
   @Input() dataReloadBtnDisabled = false;
 
   /**
-   * Whether the table should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
+   * Whether the treetable should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
    * @group Props
    */
   @Input() showColumnsToggleBtn = false;
@@ -439,7 +440,12 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() columnsToggleBtnDisabled = false;
-  @Input() initialColumns: { [key: string]: any }[] = []; // if not provided, all columns are initially visible
+
+  /**
+   * Array of initial columns to show in the treetable. If not provided, all columns are initially visible.
+   * @group Props
+   */
+  @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
    * Callback to invoke on selected node change.

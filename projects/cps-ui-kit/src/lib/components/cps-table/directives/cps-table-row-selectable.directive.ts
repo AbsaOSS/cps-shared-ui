@@ -10,8 +10,8 @@ import {
 import { TableCheckbox } from 'primeng/table';
 
 /**
- * CpsTableRowSelectableDirective is a selecting directive used to choose single or multiple rows in table.
- * @group Components
+ * CpsTableRowSelectableDirective is a directive used to apply a checkbox to a body cell.
+ * @group Directives
  */
 @Directive({
   standalone: true,
@@ -19,7 +19,7 @@ import { TableCheckbox } from 'primeng/table';
 })
 export class CpsTableRowSelectableDirective implements OnInit, OnDestroy {
   /**
-   * Value in row selected.
+   * Cell value.
    * @group Props
    */
   @Input('cpsTRowSelectable') value: any;

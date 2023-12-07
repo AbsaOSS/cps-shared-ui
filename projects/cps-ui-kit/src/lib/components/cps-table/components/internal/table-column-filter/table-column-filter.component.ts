@@ -27,7 +27,7 @@ import { CpsSelectComponent } from '../../../../cps-select/cps-select.component'
 import { TableColumnFilterConstraintComponent } from '../table-column-filter-constraint/table-column-filter-constraint.component';
 
 /**
- * TableColumnFilterComponent is a filter component in table and treetable.
+ * TableColumnFilterComponent is an internal filter component in table and treetable.
  * @group Components
  */
 @Component({

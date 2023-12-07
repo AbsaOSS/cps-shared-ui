@@ -70,7 +70,7 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   @Input() vertical = false;
 
   /**
-   * Whether the component is disabled.
+   * Whether the radio group is disabled.
    * @group Props
    */
   @Input() disabled = false;

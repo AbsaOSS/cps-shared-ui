@@ -42,7 +42,7 @@ export class CpsPaginatorComponent implements OnInit {
   @Input() totalRecords = 0;
 
   /**
-   * Array of integer values to display inside rows per page dropdown. A object that have 'showAll' key can be added to it to show all data. Exp; [10,20,30]
+   * Array of integer values to display inside rows per page dropdown.
    * @group Props
    */
   @Input() rowsPerPageOptions: number[] = [];
