@@ -184,19 +184,19 @@ export class CpsSelectComponent
   @Input() prefixIconSize: iconSizeType = '18px';
 
   /**
-   * When enabled, a loading bar is displayed when data is being collected.
+   * When enabled, a loading bar is displayed.
    * @group Props
    */
   @Input() loading = false;
 
   /**
-   * Whether the data should be loaded on demand during scroll.
+   * Whether only the elements within scrollable area should be added into the DOM.
    * @group Props
    */
   @Input() virtualScroll = false;
 
   /**
-   * Determines how many additional elements to add to the DOM outside of the view. Default value is half the number of items shown in the view.
+   * Determines how many additional elements to add to the DOM outside of the view.
    * @group Props
    */
   @Input() numToleratedItems = 10;
@@ -226,7 +226,7 @@ export class CpsSelectComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, 'top', 'bottom', 'left' or 'right'.
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';

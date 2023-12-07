@@ -95,7 +95,7 @@ export class CpsAutocompleteComponent
   @Input() multiple = false;
 
   /**
-   * If it is true, it specifies that the component is disabled.
+   * Whether autocomplete is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -119,7 +119,7 @@ export class CpsAutocompleteComponent
   @Input() chips = true;
 
   /**
-   * Option for removing a selected chip element.
+   * Option for removing a chip element.
    * @group Props
    */
   @Input() closableChips = true;
@@ -185,7 +185,7 @@ export class CpsAutocompleteComponent
   @Input() prefixIconSize: iconSizeType = '18px';
 
   /**
-   * When enabled, a loading bar is displayed when data is being collected.
+   * When enabled, a loading bar is displayed.
    * @group Props
    */
   @Input() loading = false;
@@ -197,13 +197,13 @@ export class CpsAutocompleteComponent
   @Input() emptyMessage = 'No results found';
 
   /**
-   * Whether the data should be loaded on demand during scroll.
+   * Whether only the elements within scrollable area should be added into the DOM.
    * @group Props
    */
   @Input() virtualScroll = false;
 
   /**
-   * Determines how many additional elements to add to the DOM outside of the view. Default value is half the number of items shown in the view.
+   * Determines how many additional elements to add to the DOM outside of the view.
    * @group Props
    */
   @Input() numToleratedItems = 10;
@@ -233,7 +233,7 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, 'top', 'bottom', 'left' or 'right'.
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';

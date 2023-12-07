@@ -74,29 +74,31 @@ export class CpsExpansionPanelComponent implements OnInit {
    * @group Props
    */
   @Input() backgroundColor = 'transparent';
+
   /**
-   * Option to show the chevron icon.
+   * Whether to show the chevron icon.
    * @group Props
    */
   @Input() showChevron = true;
 
   /**
-   * Option to expand.
+   * Indicates current expansion state.
    * @group Props
    */
   @Input() isExpanded = false;
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether expansion panel is disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * If true, expansion panel element will have a border.
+   * If true, expansion panel element will have borders.
    * @group Props
    */
   @Input() bordered = true;
+
   /**
    * The border radius of the component.
    * @group Props
@@ -104,25 +106,26 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() borderRadius: number | string = '4px';
 
   /**
-   * The width of the expansion panel of type number or string .
+   * The width of the expansion panel of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
 
   /**
-   * Icon name. Option to add icon in front of the title.
+   * Name of the icon in front of the title.
    * @group Props
    */
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Callback to invoke when a tab gets collapsed.
+   * Callback to invoke after a tab gets collapsed.
    * @param {void}
    * @group Emits
    */
   @Output() afterCollapse: EventEmitter<void> = new EventEmitter<void>();
+
   /**
-   * Callback to invoke when a tab gets expanded.
+   * Callback to invoke after a tab gets expanded.
    * @param {void}
    * @group Emits
    */

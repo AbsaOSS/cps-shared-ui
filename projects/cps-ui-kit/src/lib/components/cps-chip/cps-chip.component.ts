@@ -51,7 +51,7 @@ export class CpsChipComponent implements OnChanges {
   @Input() closable = false;
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether chip is disabled.
    * @group Props
    */
   @Input() disabled = false;

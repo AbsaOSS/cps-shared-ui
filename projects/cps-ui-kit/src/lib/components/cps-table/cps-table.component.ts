@@ -149,7 +149,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() reorderableRows = false;
 
   /**
-   * When enabled, a loader component is displayed when data is being collected.
+   * When enabled, a loader component is displayed.
    * @group Props
    */
   @Input() loading = false;
@@ -227,13 +227,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() scrollHeight = '';
 
   /**
-   * Whether the data should be loaded on demand during scroll. Works only if scrollable prop is true.
+   * Whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true.
    * @group Props
    */
   @Input() virtualScroll = false;
 
   /**
-   * Determines how many additional elements to add to the DOM outside of the view. Default value is half the number of items shown in the view.
+   * Determines how many additional elements to add to the DOM outside of the view.
    * @group Props
    */
   @Input() numToleratedItems = 10;

@@ -25,7 +25,7 @@ export class CpsTabComponent {
   @Input() icon = '';
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether tab is disabled.
    * @group Props
    */
   @Input() disabled = false;

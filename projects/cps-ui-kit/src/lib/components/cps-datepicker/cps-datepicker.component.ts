@@ -50,7 +50,7 @@ export class CpsDatepickerComponent
   @Input() label = '';
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether datepicker is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -62,7 +62,7 @@ export class CpsDatepickerComponent
   @Input() width: number | string = '100%';
 
   /**
-   * Placeholder text. Defaults to 'MM/DD/YYYY'.
+   * Placeholder text.
    * @group Props
    */
   @Input() placeholder = 'MM/DD/YYYY';
@@ -140,14 +140,14 @@ export class CpsDatepickerComponent
   @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
 
   /**
-   * Option for adding min date.
+   * Minimal date availalbe for selection.
    * @group Props
    */
   @Input()
   minDate!: Date;
 
   /**
-   * Option for adding max date.
+   * Maximal date availalbe for selection.
    * @group Props
    */
   @Input()

@@ -134,7 +134,7 @@ export class CpsTextareaComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, of type 'top', 'bottom', 'left' or 'right'.
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';

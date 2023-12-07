@@ -89,7 +89,7 @@ export class CpsInputComponent
   @Input() type: 'text' | 'number' | 'password' = 'text';
 
   /**
-   * When enabled, a loading bar is displayed when data is being collected.
+   * When enabled, a loading bar is displayed.
    * @group Props
    */
   @Input() loading = false;
@@ -167,7 +167,7 @@ export class CpsInputComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, of type 'top', 'bottom', 'left' or 'right'.
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
@@ -204,29 +204,34 @@ export class CpsInputComponent
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<string>();
+
   /**
    * Callback to invoke when the component receives focus.
    * @param {any}
    * @group Emits
    */
   @Output() focused = new EventEmitter();
+
   /**
    * Callback to invoke when the prefix icon is clicked.
    * @param {any}
    * @group Emits
    */
   @Output() prefixIconClicked = new EventEmitter();
+
   /**
    * Callback to invoke when the component loses focus.
    * @param {any}.
    * @group Emits
    */
   @Output() blurred = new EventEmitter();
+
   /**
    * Callback to invoke when x icon is clicked.
    * @group Emits
    */
   @Output() cleared = new EventEmitter();
+
   /**
    * Callback to invoke when enter is clicked.
    * @param {any}

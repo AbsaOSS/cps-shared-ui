@@ -19,18 +19,21 @@ export class CpsLoaderComponent implements OnInit {
    * @group Props
    */
   @Input() fullScreen = false;
+
   /**
    * Option to control the transparency of the loader component, of type number or string.
    * @group Props
    */
   @Input() opacity: number | string = 0.1;
+
   /**
    * Color of the label.
    * @group Props
    */
   @Input() labelColor = 'depth';
+
   /**
-   * Option to show label.
+   * Whether to show 'Loading...' label.
    * @group Props
    */
   @Input() showLabel = true;

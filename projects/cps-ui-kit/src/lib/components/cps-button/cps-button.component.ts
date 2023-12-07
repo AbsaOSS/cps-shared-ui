@@ -13,7 +13,7 @@ import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progr
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 
 /**
- * CpsButtonComponent is an extension to button component.
+ * CpsButtonComponent is a button element.
  * @group Components
  */
 @Component({
@@ -31,13 +31,13 @@ export class CpsButtonComponent implements OnInit {
   @Input() color = 'calm';
 
   /**
-   * Color of content on the button.
+   * Color of content on the button. Works only with 'solid' type.
    * @group Props
    */
-  @Input() contentColor = 'white'; // works only with solid type
+  @Input() contentColor = 'white';
 
   /**
-   * Type of the button in terms of style, it can be 'solid' or 'outlined' or 'borderless'.
+   * Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'.
    * @group Props
    */
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
@@ -61,19 +61,19 @@ export class CpsButtonComponent implements OnInit {
   @Input() iconPosition: 'before' | 'after' = 'before';
 
   /**
-   * Size on the button, it can be 'xsmall' or 'small' or 'normal' or 'large'.
+   * Size on the button, it can be 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
   @Input() size: 'xsmall' | 'small' | 'normal' | 'large' = 'normal';
 
   /**
-   * Width on the button, of type number or string .
+   * Width on the button, of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = 0;
 
   /**
-   * Height on the button, of type number or string .
+   * Height on the button, of type number denoting pixels or string.
    * @group Props
    */
   @Input() height: number | string = 0;
@@ -85,7 +85,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() disabled = false;
 
   /**
-   *When enabled, a cps-progress-circular bar is displayed.
+   * When enabled, a cps-progress-circular bar is displayed.
    * @group Props
    */
   @Input() loading = false;

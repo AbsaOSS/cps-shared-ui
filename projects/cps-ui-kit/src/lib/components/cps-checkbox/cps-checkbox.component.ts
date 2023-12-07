@@ -28,13 +28,13 @@ import { getCSSColor } from '../../utils/colors-utils';
 })
 export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   /**
-   * Label of the checkbox element.
+   * Label of the checkbox.
    * @group Props
    */
   @Input() label = '';
 
   /**
-   * If it is true, it specifies that the component should be disabled.
+   * Whether checkbox is disabled.
    * @group Props
    */
   @Input() disabled = false;
