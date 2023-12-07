@@ -23,7 +23,7 @@ import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 /**
- * BaseTreeDropdownComponent base class component to support tree dropdown.
+ * BaseTreeDropdownComponent is an internal base component to support hierarchical data dropdown.
  * @group Components
  */
 @Component({
@@ -33,13 +33,13 @@ export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * Label of the dropdown element.
+   * Label of the component.
    * @group Props
    */
   @Input() label = '';
 
   /**
-   * Bottom hint text for the textarea field.
+   * Bottom hint text.
    * @group Props
    */
   @Input() hint = '';
@@ -57,7 +57,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() disabled = false;
 
   /**
-   * Width of the input field, number or string.
+   * Width of the component, of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -69,19 +69,19 @@ export class CpsBaseTreeDropdownComponent
   @Input() chips = true;
 
   /**
-   * Options for removing a selected chip element.
+   * Whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
 
   /**
-   * Options for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * When enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
 
   /**
-   * Whether the component should open or expand on clear.
+   * Whether the dropdown should open on clear.
    * @group Props
    */
   @Input() openOnClear = true;
@@ -105,7 +105,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear.
+   * Whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -165,7 +165,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() infoTooltipPersistent = false;
 
   /**
-   * Position of infoTooltip, it can be 'top' or 'bottom' or 'left' or 'right'.
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
@@ -200,7 +200,7 @@ export class CpsBaseTreeDropdownComponent
   }
 
   /**
-   * Value specified in component.
+   * Value of the component.
    * @group Props
    */
   @Input('value') _value: any = undefined;

@@ -71,13 +71,13 @@ export class CpsAutocompleteComponent
   @Input() label = '';
 
   /**
-   * Placeholder text for the input field.
+   * Placeholder text.
    * @group Props
    */
   @Input() placeholder = 'Please enter';
 
   /**
-   * Bottom hint text for the input field.
+   * Bottom hint text.
    * @group Props
    */
   @Input() hint = '';
@@ -119,13 +119,13 @@ export class CpsAutocompleteComponent
   @Input() chips = true;
 
   /**
-   * Option for removing a chip element.
+   * Whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
 
   /**
-   * Option for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * When enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;

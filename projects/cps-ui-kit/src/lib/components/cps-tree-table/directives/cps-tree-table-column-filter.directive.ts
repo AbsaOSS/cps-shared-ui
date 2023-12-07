@@ -17,7 +17,7 @@ import {
 
 /**
  * CpsTreeTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in treetable.
- * @group Components
+ * @group Directives
  */
 @Directive({
   standalone: true,
@@ -101,7 +101,7 @@ export class CpsTreeTableColumnFilterDirective
     [];
 
   /**
-   * Show category filter as button toggles.
+   * Whether to show category filter as button toggles.
    * @group Props
    */
   @Input() filterAsButtonToggle = false;

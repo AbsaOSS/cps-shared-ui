@@ -11,8 +11,8 @@ export type CpsTooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
 /**
- * CpsTooltipDirective provides advisory information for a component.
- * @group Components
+ * CpsTooltipDirective provides advisory information for a target element.
+ * @group Directives
  */
 @Directive({
   selector: '[cpsTooltip]',
@@ -26,13 +26,13 @@ export class CpsTooltipDirective implements OnDestroy {
   @Input('cpsTooltip') tooltip!: string;
 
   /**
-   * Delay to show the tooltip in milliseconds, it can be type string or number.
+   * Delay to show the tooltip in milliseconds, it can be of type string or number.
    * @group Props
    */
   @Input() tooltipOpenDelay: string | number = 300;
 
   /**
-   * Delay to hide the tooltip in milliseconds, it can be type string or number.
+   * Delay to hide the tooltip in milliseconds, it can be of type string or number.
    * @group Props
    */
   @Input() tooltipCloseDelay: string | number = 300;

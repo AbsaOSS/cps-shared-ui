@@ -74,7 +74,7 @@ export class CpsDatepickerComponent
   @Input() hint = '';
 
   /**
-   * Option for clearing input, when enabled, a clear icon is displayed to clear the value.
+   * When enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;

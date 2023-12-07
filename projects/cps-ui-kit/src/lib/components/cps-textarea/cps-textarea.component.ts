@@ -32,25 +32,25 @@ export class CpsTextareaComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
   /**
-   * Label of the textarea component.
+   * Label of the textarea.
    * @group Props
    */
   @Input() label = '';
 
   /**
-   * Placeholder text for the textarea field.
+   * Placeholder text for the textarea.
    * @group Props
    */
   @Input() placeholder = 'Please enter';
 
   /**
-   * Number of rows in the textarea field.
+   * Number of rows in the textarea.
    * @group Props
    */
   @Input() rows = 5;
 
   /**
-   * The cols attribute specifies the visible width of a text area.
+   * The cols attribute specifies the visible width of a textarea.
    * @group Props
    */
   @Input() cols = 20;
@@ -62,25 +62,25 @@ export class CpsTextareaComponent
   @Input() autofocus = false;
 
   /**
-   * Bottom hint text for the textarea field.
+   * Bottom hint text for the textarea.
    * @group Props
    */
   @Input() hint = '';
 
   /**
-   * Whether the component is disabled.
+   * Whether the textarea is disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * Width of the textarea field, it can be of type number denoting pixels or string.
+   * Width of the textarea, it can be of type number denoting pixels or string.
    * @group Props
    */
   @Input() width: number | string = '100%';
 
   /**
-   * Option for clearing textarea, when enabled, a clear icon is displayed to clear the value.
+   * When enabled, a clear icon is displayed to clear the value.
    * @group Props
    */
   @Input() clearable = false;
@@ -92,7 +92,7 @@ export class CpsTextareaComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Whether the textarea should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -110,7 +110,7 @@ export class CpsTextareaComponent
   @Input() resizable: 'vertical' | 'none' = 'vertical';
 
   /**
-   *When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';

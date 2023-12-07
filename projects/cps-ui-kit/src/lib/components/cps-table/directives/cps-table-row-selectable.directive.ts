@@ -23,6 +23,7 @@ export class CpsTableRowSelectableDirective implements OnInit, OnDestroy {
    * @group Props
    */
   @Input('cpsTRowSelectable') value: any;
+
   checkboxCompRef: ComponentRef<TableCheckbox>;
 
   constructor(

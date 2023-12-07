@@ -24,10 +24,11 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 })
 export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   /**
-   * Type of tag.
+   * Type of the tag. It can be security, classification or custom, has higher precedence over color
    * @group Props
    */
-  @Input() type: 'security' | 'classification' | 'custom' = 'custom'; // higher precedence over color
+  @Input() type: 'security' | 'classification' | 'custom' = 'custom';
+
   /**
    * Label of the tag.
    * @group Props
@@ -41,7 +42,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   @Input() color = '';
 
   /**
-   * When present, it specifies that the element should be disabled.
+   * Whether the tag should be disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -51,8 +52,9 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
    * @group Props
    */
   @Input() selectable = false;
+
   /**
-   * Value specified in component.
+   * Tag value.
    * @group Props
    */
   @Input() set value(value: boolean) {

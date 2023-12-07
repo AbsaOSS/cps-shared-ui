@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 
 /**
- * ClickOutsideDirective is a directive when clicking outside a component.
- * @group Components
+ * ClickOutsideDirective is an internal directive when clicking outside a component.
+ * @group Directives
  */
 @Directive({
   standalone: true,

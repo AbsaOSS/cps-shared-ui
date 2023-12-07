@@ -24,7 +24,7 @@ export type CpsTreeSelectAppearanceType =
   | 'borderless';
 
 /**
- * CpsTreeSelectComponent is a form component to choose from hierarchical data.
+ * CpsTreeSelectComponent allows to select items from hierarchical data dropdown.
  * @group Components
  */
 @Component({
@@ -50,10 +50,15 @@ export class CpsTreeSelectComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * Styling appearance of select input, it can be "outlined" or "underlined" or "borderless".
+   * Styling appearance of tree select, it can be "outlined", "underlined" or "borderless".
    * @group Props
    */
   @Input() appearance: CpsTreeSelectAppearanceType = 'outlined';
+
+  /**
+   * Placeholder text.
+   * @group Props
+   */
   @Input() placeholder = 'Please select';
 
   constructor(
