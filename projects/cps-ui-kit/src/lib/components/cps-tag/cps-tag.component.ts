@@ -24,7 +24,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 })
 export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   /**
-   * Type of the tag. It can be security, classification or custom, has higher precedence over color
+   * Type of the tag. It can be security, classification or custom, has higher precedence over color.
    * @group Props
    */
   @Input() type: 'security' | 'classification' | 'custom' = 'custom';
