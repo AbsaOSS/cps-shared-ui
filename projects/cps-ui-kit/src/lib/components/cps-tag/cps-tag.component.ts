@@ -68,7 +68,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   /**
    * Callback to invoke on value change.
-   * @param {any} event - Browser event.
+   * @param {boolean} boolean - value change.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<boolean>();

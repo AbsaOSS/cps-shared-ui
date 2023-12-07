@@ -169,14 +169,14 @@ export class CpsTextareaComponent
 
   /**
    * Callback to invoke when the prefixIcon is clicked.
-   * @param {any}.
+   * @param {any}
    * @group Emits
    */
   @Output() prefixIconClicked = new EventEmitter();
 
   /**
    * Callback to invoke when the component loses focus.
-   * @param {any}.
+   * @param {any}
    * @group Emits
    */
   @Output() blurred = new EventEmitter();

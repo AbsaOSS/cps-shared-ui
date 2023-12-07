@@ -221,13 +221,14 @@ export class CpsInputComponent
 
   /**
    * Callback to invoke when the component loses focus.
-   * @param {any}.
+   * @param {any}
    * @group Emits
    */
   @Output() blurred = new EventEmitter();
 
   /**
    * Callback to invoke when x icon is clicked.
+   * @param {any}
    * @group Emits
    */
   @Output() cleared = new EventEmitter();

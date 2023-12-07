@@ -456,7 +456,7 @@ export class CpsTreeTableComponent
 
   /**
    * Callback to invoke when action button is clicked.
-   * @param {any} any - action button clicked.
+   * @param {void} void - action button clicked.
    * @group Emits
    */
   @Output() actionBtnClicked = new EventEmitter<void>();

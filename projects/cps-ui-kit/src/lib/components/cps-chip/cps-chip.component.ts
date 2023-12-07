@@ -58,7 +58,7 @@ export class CpsChipComponent implements OnChanges {
 
   /**
    * Callback to invoke on chip close.
-   * @param {any} any - Chip closed.
+   * @param {string} string - Chip closed.
    * @group Emits
    */
   @Output() closed = new EventEmitter<string>();

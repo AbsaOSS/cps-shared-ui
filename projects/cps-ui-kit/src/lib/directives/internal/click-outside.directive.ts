@@ -24,7 +24,7 @@ export class ClickOutsideDirective {
 
   /**
    * Callback to invoke on outside click.
-   * @param {any} any - outside click.
+   * @param {void} void - outside click.
    * @group Emits
    */
   @Output() clickOutside = new EventEmitter<void>();
