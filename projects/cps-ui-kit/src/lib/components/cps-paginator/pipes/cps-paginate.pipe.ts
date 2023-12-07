@@ -1,5 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * The CpsPaginatePipe is a pipe designed to provide a set of items in batches, taking into account specified pagination parameters.
+ * @group Pipes
+ */
 @Pipe({
   standalone: true,
   name: 'cpsPaginate'

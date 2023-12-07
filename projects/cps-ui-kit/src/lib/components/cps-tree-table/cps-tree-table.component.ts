@@ -40,7 +40,7 @@ import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
-import { TableRowMenuComponent } from '../cps-table/table-row-menu/table-row-menu.component';
+import { TableRowMenuComponent } from '../cps-table/components/internal/table-row-menu/table-row-menu.component';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
 import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
@@ -54,6 +54,11 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
 export type CpsTreeTableSize = 'small' | 'normal' | 'large';
 export type CpsTreeTableToolbarSize = 'small' | 'normal';
 export type CpsTreeTableSortMode = 'single' | 'multiple';
+
+/**
+ * CpsTreeTableComponent is used to display hierarchical data in tabular format.
+ * @group Components
+ */
 @Component({
   selector: 'cps-tree-table',
   standalone: true,
@@ -94,11 +99,40 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
 export class CpsTreeTableComponent
   implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked, OnChanges
 {
+  /**
+   * An array of objects to display.
+   * @group Props
+   */
   @Input() data: any[] = [];
+
+  /**
+   * An array of objects to represent dynamic columns.
+   * @group Props
+   */
   @Input() columns: { [key: string]: any }[] = [];
+
+  /**
+   * A key used to retrieve the header from columns.
+   * @group Props
+   */
   @Input() colHeaderName = 'header';
+
+  /**
+   * A key used to retrieve the field from columns.
+   * @group Props
+   */
   @Input() colFieldName = 'field';
+
+  /**
+   * Treetable min width of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() minWidth: number | string = '';
+
+  /**
+   * Whether minWidth prop is used for treetable body only, excluding toolbar and paginator.
+   * @group Props
+   */
   @Input() minWidthForBodyOnly = true;
 
   /**
@@ -107,85 +141,415 @@ export class CpsTreeTableComponent
    */
   @Input() autoLayout = true;
 
+  /**
+   * Whether the treetable should have alternating stripes.
+   * @group Props
+   */
   @Input() striped = true;
+
+  /**
+   * Whether the treetable should have borders.
+   * @group Props
+   */
   @Input() bordered = true;
+
+  /**
+   * Size of treetable cells, it can be "small", "normal" or "large".
+   * @group Props
+   */
   @Input() size: CpsTreeTableSize = 'normal';
+
+  /**
+   * Whether the treetable should have row selection.
+   * @group Props
+   */
   @Input() selectable = false;
+
+  /**
+   * Whether the treetable should have rows highlighting on hover.
+   * @group Props
+   */
   @Input() rowHover = true;
+
+  /**
+   * Whether the treetable should show row menu.
+   * @group Props
+   */
   @Input() showRowMenu = false;
+
+  /**
+   * When enabled, a loader component is displayed.
+   * @group Props
+   */
   @Input() loading = false;
 
+  /**
+   * Inline style of the treetable.
+   * @group Props
+   */
   @Input() tableStyle = undefined;
+
+  /**
+   * Style class of the treetable.
+   * @group Props
+   */
   @Input() tableStyleClass = '';
 
-  @Input() sortable = false; // makes all sortable if columns are provided
+  /**
+   * Makes all columns sortable if columns prop is provided.
+   * @group Props
+   */
+  @Input() sortable = false;
+
+  /**
+   * Defines whether sorting works on single column or on multiple columns.
+   * @group Props
+   */
   @Input() sortMode: CpsTreeTableSortMode = 'single';
+
+  /**
+   * Whether to use the default sorting or a custom one using sortFunction.
+   * @group Props
+   */
   @Input() customSort = false;
 
+  /**
+   * Whether the treetable has toolbar.
+   * @group Props
+   */
   @Input() hasToolbar = true;
+
+  /**
+   * Toolbar size, it can be "small" or "normal".
+   * @group Props
+   */
   @Input() toolbarSize: CpsTreeTableToolbarSize = 'normal';
+
+  /**
+   * Toolbar title.
+   * @group Props
+   */
   @Input() toolbarTitle = '';
+
+  /**
+   * Toolbar icon name.
+   * @group Props
+   */
   @Input() toolbarIcon = '';
+
+  /**
+   * Toolbar icon color.
+   * @group Props
+   */
   @Input() toolbarIconColor = '';
 
+  /**
+   * Makes treetable scrollable.
+   * @group Props
+   */
   @Input() scrollable = true;
-  @Input() scrollHeight = ''; // 'flex' or value+'px'
-  @Input() virtualScroll = false; // works only if scrollable is true
+
+  /**
+   * Height of the scroll viewport in fixed pixels or the "flex" keyword for a dynamic size.
+   * @group Props
+   */
+  @Input() scrollHeight = '';
+
+  /**
+   * Whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true.
+   * @group Props
+   */
+  @Input() virtualScroll = false;
+
+  /**
+   * Height of a virtual scroll item in fixed pixels.
+   * @group Props
+   */
   @Input() virtualScrollItemHeight = 0;
+
+  /**
+   * Determines how many additional elements to add to the DOM outside of the view.
+   * @group Props
+   */
   @Input() numToleratedItems = 10;
 
+  /**
+   * Whether the treetable should have paginator.
+   * @group Props
+   */
   @Input() paginator = false;
+
+  /**
+   * Whether to show paginator even there is only one page.
+   * @group Props
+   */
   @Input() alwaysShowPaginator = true;
+
+  /**
+   * Array of integer values to display inside rows per page dropdown of paginator.
+   * @group Props
+   */
   @Input() rowsPerPageOptions: number[] = [];
+
+  /**
+   * Index of the first row to be displayed.
+   * @group Props
+   */
   @Input() first = 0;
+
+  /**
+   * Number of rows to display per page.
+   * @group Props
+   */
   @Input() rows = 0;
+
+  /**
+   * Whether to reset page on rows change.
+   * @group Props
+   */
   @Input() resetPageOnRowsChange = false;
+
+  /**
+   * Whether to reset page on treetable data sorting.
+   * @group Props
+   */
   @Input() resetPageOnSort = true;
+
+  /**
+   * Number of total records.
+   * @group Props
+   */
   @Input() totalRecords = 0;
 
+  /**
+   * Text to display when there is no data.
+   * @group Props
+   */
   @Input() emptyMessage = 'No data';
+
+  /**
+   * Height of treetable's body when there is no data, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() emptyBodyHeight: number | string = '';
 
+  /**
+   * Defines if data is loaded and interacted with in lazy manner.
+   * @group Props
+   */
   @Input() lazy = false;
+
+  /**
+   * Whether to call lazy loading on initialization.
+   * @group Props
+   */
   @Input() lazyLoadOnInit = true;
 
+  /**
+   * Whether to show global filter in the toolbar.
+   * @group Props
+   */
   @Input() showGlobalFilter = false;
+
+  /**
+   * Global filter placeholder.
+   * @group Props
+   */
   @Input() globalFilterPlaceholder = 'Search';
+
+  /**
+   * An array of fields to use in global filtering.
+   * @group Props
+   */
   @Input() globalFilterFields: string[] = [];
+
+  /**
+   * Whether to clear global filter on data loading.
+   * @group Props
+   */
   @Input() clearGlobalFilterOnLoading = false;
 
+  /**
+   * Whether to show remove button in the toolbar when rows are selected.
+   * @group Props
+   */
   @Input() showRemoveBtnOnSelect = true;
+
+  /**
+   * Whether removeBtnOnSelect is disabled.
+   * @group Props
+   */
   @Input() removeBtnOnSelectDisabled = false;
 
+  /**
+   * Whether to show additional button in the toolbar when rows are selected.
+   * @group Props
+   */
   @Input() showAdditionalBtnOnSelect = false;
+
+  /**
+   * AdditionalBtnOnSelect title.
+   * @group Props
+   */
   @Input() additionalBtnOnSelectTitle = 'Select action';
+
+  /**
+   * Whether additionalBtnOnSelect is disabled.
+   * @group Props
+   */
   @Input() additionalBtnOnSelectDisabled = false;
 
+  /**
+   * Whether to show action button in the toolbar.
+   * @group Props
+   */
   @Input() showActionBtn = false;
+
+  /**
+   * Action button title.
+   * @group Props
+   */
   @Input() actionBtnTitle = 'Action';
+
+  /**
+   * Whether actionBtn is disabled.
+   * @group Props
+   */
   @Input() actionBtnDisabled = false;
 
+  /**
+   * Whether to show data reload button in the toolbar.
+   * @group Props
+   */
   @Input() showDataReloadBtn = false;
+
+  /**
+   * Whether dataReloadBtn is disabled.
+   * @group Props
+   */
   @Input() dataReloadBtnDisabled = false;
 
-  @Input() showColumnsToggleBtn = false; // if external body template is provided, use columnsSelected event emitter
-  @Input() columnsToggleBtnDisabled = false;
-  @Input() initialColumns: { [key: string]: any }[] = []; // if not provided, all columns are initially visible
+  /**
+   * Whether the treetable should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
+   * @group Props
+   */
+  @Input() showColumnsToggleBtn = false;
 
+  /**
+   * Whether columnsToggle button is disabled.
+   * @group Props
+   */
+  @Input() columnsToggleBtnDisabled = false;
+
+  /**
+   * Array of initial columns to show in the treetable. If not provided, all columns are initially visible.
+   * @group Props
+   */
+  @Input() initialColumns: { [key: string]: any }[] = [];
+
+  /**
+   * Callback to invoke on selected node change.
+   * @param {any[]} array - selection changed.
+   * @group Emits
+   */
   @Output() selectionChanged = new EventEmitter<any[]>();
+
+  /**
+   * Callback to invoke when action button is clicked.
+   * @param {void} void - action button clicked.
+   * @group Emits
+   */
   @Output() actionBtnClicked = new EventEmitter<void>();
+
+  /**
+   * Callback to invoke when additional button on select is clicked.
+   * @param {any[]} any[] - selected data.
+   * @group Emits
+   */
   @Output() additionalBtnOnSelectClicked = new EventEmitter<any[]>();
+
+  /**
+   * Callback to invoke when edit-row button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() editRowBtnClicked = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when rows are removed.
+   * @param {any} any - rows removed.
+   * @group Emits
+   */
   @Output() rowsRemoved = new EventEmitter<any[]>();
+
+  /**
+   * Callback to invoke when page is changed.
+   * @param {any} any - page changed.
+   * @group Emits
+   */
   @Output() pageChanged = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when data is sorted.
+   * @param {any} any - Sort data.
+   * @group Emits
+   */
   @Output() sorted = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when data is filtered.
+   * @param {any} any - Custom filter event.
+   * @group Emits
+   */
   @Output() filtered = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke on selected columns.
+   * @param {any[]} object[] - selection changed.
+   * @group Emits
+   */
   @Output() columnsSelected = new EventEmitter<{ [key: string]: any }[]>();
+
+  /**
+   * Callback to invoke when paging, sorting or filtering happens in lazy mode.
+   * @param {any} any - Custom lazy load event.
+   * @group Emits
+   */
   @Output() lazyLoaded = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when data reload button is clicked.
+   * @param {any} any - data reload button clicked.
+   * @group Emits
+   */
   @Output() dataReloadBtnClicked = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when a node is expanded.
+   * @param {any} any - Node instance.
+   * @group Emits
+   */
   @Output() nodeExpanded = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when a node is collapsed.
+   * @param {any} any - Node collapse event.
+   * @group Emits
+   */
   @Output() nodeCollapsed = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when a node is selected.
+   * @param {any} any - Node instance.
+   * @group Emits
+   */
   @Output() nodeSelected = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when a node is unselected.
+   * @param {any} any - Custom node unselect event.
+   * @group Emits
+   */
   @Output() nodeUnselected = new EventEmitter<any>();
 
   /**

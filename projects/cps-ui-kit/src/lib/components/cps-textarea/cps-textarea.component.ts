@@ -17,6 +17,10 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 
+/**
+ * CpsTextareaComponent is a textarea component.
+ * @group Components
+ */
 @Component({
   standalone: true,
   selector: 'cps-textarea',
@@ -27,25 +31,118 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 export class CpsTextareaComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
+  /**
+   * Label of the textarea.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Placeholder text for the textarea.
+   * @group Props
+   */
   @Input() placeholder = 'Please enter';
+
+  /**
+   * Number of rows in the textarea.
+   * @group Props
+   */
   @Input() rows = 5;
+
+  /**
+   * The cols attribute specifies the visible width of a textarea.
+   * @group Props
+   */
   @Input() cols = 20;
+
+  /**
+   * Whether the textarea can auto focus.
+   * @group Props
+   */
   @Input() autofocus = false;
+
+  /**
+   * Bottom hint text for the textarea.
+   * @group Props
+   */
   @Input() hint = '';
+
+  /**
+   * Whether the textarea is disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Width of the textarea, it can be of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * When enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
+  /**
+   * Hides hint and validation errors.
+   * @group Props
+   */
   @Input() hideDetails = false;
+
+  /**
+   * Whether the textarea should have persistent clear icon.
+   * @group Props
+   */
   @Input() persistentClear = false;
+
+  /**
+   * Error message.
+   * @group Props
+   */
   @Input() error = '';
+
+  /**
+   * Whether the component can be resized vertically or not.
+   * @group Props
+   */
   @Input() resizable: 'vertical' | 'none' = 'vertical';
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
+
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Max width of infoTooltip, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the infoTooltip is persistent.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
+  /**
+   * Value of the textarea.
+   * @group Props
+   */
   @Input() set value(value: string) {
     if (!value) value = '';
     this._value = value;
@@ -56,9 +153,32 @@ export class CpsTextareaComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {string} string - value changed.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<string>();
+
+  /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
   @Output() focused = new EventEmitter();
+
+  /**
+   * Callback to invoke when the prefixIcon is clicked.
+   * @param {any}
+   * @group Emits
+   */
   @Output() prefixIconClicked = new EventEmitter();
+
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}
+   * @group Emits
+   */
   @Output() blurred = new EventEmitter();
 
   private _statusChangesSubscription: Subscription = new Subscription();

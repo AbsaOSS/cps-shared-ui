@@ -8,6 +8,10 @@ import {
 } from '@angular/core';
 import { TTHeaderCheckbox } from 'primeng/treetable';
 
+/**
+ * CpsTreeTableHeaderSelectableDirective is a directive used to apply a checkbox to a header cell.
+ * @group Directives
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTTHdrSelectable]'

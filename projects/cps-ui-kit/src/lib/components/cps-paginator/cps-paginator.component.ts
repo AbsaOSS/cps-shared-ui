@@ -11,6 +11,10 @@ import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
+/**
+ * CpsPaginatorComponent is a generic component to display content in paged format.
+ * @group Components
+ */
 @Component({
   selector: 'cps-paginator',
   standalone: true,
@@ -19,14 +23,53 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-paginator.component.scss']
 })
 export class CpsPaginatorComponent implements OnInit {
+  /**
+   * Zero-relative number of the first row to be displayed.
+   * @group Props
+   */
   @Input() first = 0;
+
+  /**
+   * Rows count to display per page.
+   * @group Props
+   */
   @Input() rows = 0;
+
+  /**
+   * Number of total records.
+   * @group Props
+   */
   @Input() totalRecords = 0;
+
+  /**
+   * Array of integer values to display inside rows per page dropdown.
+   * @group Props
+   */
   @Input() rowsPerPageOptions: number[] = [];
+
+  /**
+   * Whether to show it even there is only one page.
+   * @group Props
+   */
   @Input() alwaysShow = true;
+
+  /**
+   * Color of paginator background.
+   * @group Props
+   */
   @Input() backgroundColor = 'transparent';
+
+  /**
+   * Whether to reset page index when the number of rows per page changes.
+   * @group Props
+   */
   @Input() resetPageOnRowsChange = false;
 
+  /**
+   * Callback to invoke when page changes, the event object contains information about the new state.
+   * @param {any} any - page changed.
+   * @group Emits
+   */
   @Output() pageChanged = new EventEmitter<any>();
 
   @ViewChild('paginator')

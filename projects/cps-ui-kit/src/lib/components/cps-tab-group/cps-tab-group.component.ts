@@ -39,6 +39,10 @@ export interface TabChangeEvent {
 
 export type CpsTabsAnimationType = 'slide' | 'fade';
 
+/**
+ * CpsTabGroupComponent is a navigation component that displays items as tab headers.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -79,12 +83,42 @@ export type CpsTabsAnimationType = 'slide' | 'fade';
 export class CpsTabGroupComponent
   implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
 {
+  /**
+   * Index of the selected tab.
+   * @group Props
+   */
   @Input() selectedIndex = 0;
-  @Input() isSubTabs = false; // applies an alternative styling to tabs
+
+  /**
+   * Whether to apply an alternative 'subtabs' styling.
+   * @group Props
+   */
+  @Input() isSubTabs = false;
+
+  /**
+   * Transition options of how content appears, it can be "slide" or "fade".
+   * @group Props
+   */
   @Input() animationType: CpsTabsAnimationType = 'slide';
+
+  /**
+   * Background styling of tabs.
+   * @group Props
+   */
   @Input() tabsBackground = 'inherit';
 
+  /**
+   * Callback to invoke before tab change.
+   * @param {TabChangeEvent} any - tab changed.
+   * @group Emits
+   */
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
+
+  /**
+   * Callback to invoke after tab change.
+   * @param {TabChangeEvent} any - tab changed.
+   * @group Emits
+   */
   @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
 
   @ViewChild('tabsList') tabsList!: ElementRef;

@@ -12,6 +12,10 @@ import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 
+/**
+ * CpsButtonComponent is a button element.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsIconComponent, CpsProgressCircularComponent],
@@ -20,18 +24,77 @@ import { convertSize, parseSize } from '../../utils/internal/size-utils';
   styleUrls: ['./cps-button.component.scss']
 })
 export class CpsButtonComponent implements OnInit {
+  /**
+   * Color of the button.
+   * @group Props
+   */
   @Input() color = 'calm';
-  @Input() contentColor = 'white'; // works only with solid type
+
+  /**
+   * Color of content on the button. Works only with 'solid' type.
+   * @group Props
+   */
+  @Input() contentColor = 'white';
+
+  /**
+   * Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'.
+   * @group Props
+   */
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
+
+  /**
+   * Label or text on the button.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Name of the icon on the button.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Position of the icon on the button, it can be 'before' or 'after'.
+   * @group Props
+   */
   @Input() iconPosition: 'before' | 'after' = 'before';
+
+  /**
+   * Size on the button, it can be 'xsmall', 'small', 'normal' or 'large'.
+   * @group Props
+   */
   @Input() size: 'xsmall' | 'small' | 'normal' | 'large' = 'normal';
+
+  /**
+   * Width on the button, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() width: number | string = 0;
+
+  /**
+   * Height on the button, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() height: number | string = 0;
+
+  /**
+   * When present, it specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * When enabled, a cps-progress-circular bar is displayed.
+   * @group Props
+   */
   @Input() loading = false;
 
+  /**
+   * Callback to execute when button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() clicked = new EventEmitter();
 
   buttonColor = '';

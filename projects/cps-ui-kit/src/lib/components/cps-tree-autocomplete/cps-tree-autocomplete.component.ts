@@ -24,6 +24,10 @@ export type CpsTreeAutocompleteAppearanceType =
   | 'underlined'
   | 'borderless';
 
+/**
+ * CpsTreeAutocompleteComponent allows to choose items from hierarchical data dropdown and provides real-time suggestions when being typed.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -44,8 +48,22 @@ export class CpsTreeAutocompleteComponent
   extends CpsBaseTreeDropdownComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   * Message if array of items is empty.
+   * @group Props
+   */
   @Input() emptyMessage = 'No results found';
+
+  /**
+   * Styling appearance of tree autocomplete, it can be 'outlined', 'underlined' or 'borderless'.
+   * @group Props
+   */
   @Input() appearance: CpsTreeAutocompleteAppearanceType = 'outlined';
+
+  /**
+   * Placeholder text.
+   * @group Props
+   */
   @Input() placeholder = 'Please enter';
 
   inputText = '';

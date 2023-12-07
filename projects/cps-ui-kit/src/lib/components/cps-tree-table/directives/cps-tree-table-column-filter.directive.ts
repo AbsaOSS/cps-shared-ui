@@ -15,6 +15,10 @@ import {
   CpsColumnFilterCategoryOption
 } from '../../cps-table/cps-column-filter-types';
 
+/**
+ * CpsTreeTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in treetable.
+ * @group Directives
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTTColFilter]',
@@ -23,22 +27,95 @@ import {
 export class CpsTreeTableColumnFilterDirective
   implements OnInit, OnChanges, OnDestroy
 {
+  /**
+   * Name of the column to be filtered.
+   * @group Props
+   */
   @Input('cpsTTColFilter') field: string | undefined;
+
+  /**
+   * Type of filter in treetable, it can be of type "number", "boolean", "text", "date" or "category".
+   * @group Props
+   */
   @Input() filterType: CpsColumnFilterType = 'text';
+
+  /**
+   * Whether the filter menu should be persistent.
+   * @group Props
+   */
   @Input() filterPersistent = false;
+
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() filterShowClearButton = true;
+
+  /**
+   * Whether the filter should have apply button.
+   * @group Props
+   */
   @Input() filterShowApplyButton = true;
+
+  /**
+   * Whether the filter should have close button.
+   * @group Props
+   */
   @Input() filterShowCloseButton = false;
+
+  /**
+   * Whether the filter should have match modes.
+   * @group Props
+   */
   @Input() filterShowMatchModes = true;
+
+  /**
+   * Match modes for filter.
+   * @group Props
+   */
   @Input() filterMatchModes: CpsColumnFilterMatchMode[] = [];
+
+  /**
+   * Whether the filter should have operator.
+   * @group Props
+   */
   @Input() filterShowOperator = true;
+
+  /**
+   * Title of the filter.
+   * @group Props
+   */
   @Input() filterHeaderTitle = '';
+
+  /**
+   * Whether the filter should hide on clear.
+   * @group Props
+   */
   @Input() filterHideOnClear = false;
+
+  /**
+   * Options for category filter.
+   * @group Props
+   */
   @Input() filterCategoryOptions: CpsColumnFilterCategoryOption[] | string[] =
     [];
 
-  @Input() filterAsButtonToggle = false; // for category filterType only
-  @Input() filterSingleSelection = false; // for category filterType only
+  /**
+   * Whether to show category filter as button toggles.
+   * @group Props
+   */
+  @Input() filterAsButtonToggle = false;
+
+  /**
+   * Single selection for category filter.
+   * @group Props
+   */
+  @Input() filterSingleSelection = false;
+
+  /**
+   * Placeholder for filter constraints.
+   * @group Props
+   */
   @Input() filterPlaceholder = '';
 
   filterCompRef: ComponentRef<TableColumnFilterComponent>;

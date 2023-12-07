@@ -47,6 +47,10 @@ export type CpsMenuItem = {
 
 export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
 
+/**
+ * CpsMenuComponent is a popup element, that contains menu items or arbitrary content.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, SharedModule, CpsIconComponent, RouterModule],
@@ -84,19 +88,82 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   encapsulation: ViewEncapsulation.None
 })
 export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Header title of the menu.
+   * @group Props
+   */
   @Input() header = '';
+
+  /**
+   * An array of menu items.
+   * @group Props
+   */
   @Input() items: CpsMenuItem[] = [];
+
+  /**
+   * Whether to include top pointing arrow on the menu.
+   * @group Props
+   */
   @Input() withArrow = true;
-  @Input() compressed = false; // prepared-colored, without header and items description
+
+  /**
+   * Menu with prepared-colored items, without header and items description.
+   * @group Props
+   */
+  @Input() compressed = false;
+
+  /**
+   * Whether the menu should show on target element focus.
+   * @group Props
+   */
   @Input() focusOnShow = true;
+
+  /**
+   * Whether the menu should be persistent.
+   * @group Props
+   */
   @Input() persistent = false;
+
+  /**
+   * Styling class of the menu container.
+   * @group Props
+   */
   @Input() containerClass = '';
+
+  /**
+   * Transition options of the show animation.
+   * @group Props
+   */
   @Input() showTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
+
+  /**
+   * Transition options of the hide animation.
+   * @group Props
+   */
   @Input() hideTransitionOptions = '.12s cubic-bezier(0, 0, 0.2, 1)';
 
+  /**
+   * Callback to invoke when menu is shown.
+   * @group Emits
+   */
   @Output() menuShown = new EventEmitter();
+
+  /**
+   * Callback to invoke when menu is hidden.
+   * @group Emits
+   */
   @Output() menuHidden = new EventEmitter();
+
+  /**
+   * Callback to invoke before menu is hidden.
+   * @group Emits
+   */
   @Output() beforeMenuHidden = new EventEmitter();
+
+  /**
+   * Callback to invoke when content is clicked.
+   * @group Emits
+   */
   @Output() contentClicked = new EventEmitter();
 
   withIcons = true;

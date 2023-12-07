@@ -15,6 +15,10 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
+/**
+ * CpsCheckboxComponent is a checkbox element.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsInfoCircleComponent, CpsIconComponent],
@@ -23,16 +27,64 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-checkbox.component.scss']
 })
 export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
+  /**
+   * Label of the checkbox.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Whether checkbox is disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
+
+  /**
+   * InfoTooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the infoTooltip is persistent.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * Name of the icon.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Color of the icon.
+   * @group Props
+   */
   @Input() iconColor = 'text-dark';
 
+  /**
+   * Value of the checkbox.
+   * @group Props
+   */
   @Input() set value(value: boolean) {
     this._value = value;
     this.onChange(value);
@@ -42,6 +94,11 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {boolean} boolean - value changed.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<boolean>();
 
   private _value = false;
@@ -61,6 +118,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 

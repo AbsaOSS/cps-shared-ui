@@ -23,6 +23,10 @@ export type CpsDatepickerAppearanceType =
   | 'underlined'
   | 'borderless';
 
+/**
+ * CpsDatepickerComponent is an input component to provide date input.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -39,29 +43,120 @@ export type CpsDatepickerAppearanceType =
 export class CpsDatepickerComponent
   implements ControlValueAccessor, OnInit, OnDestroy
 {
+  /**
+   * Label of the datepicker element.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Whether datepicker is disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Width of the datepicker of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * Placeholder text.
+   * @group Props
+   */
   @Input() placeholder = 'MM/DD/YYYY';
+
+  /**
+   * Bottom hint text for the input field.
+   * @group Props
+   */
   @Input() hint = '';
+
+  /**
+   * When enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
+  /**
+   * Hides hint and validation errors.
+   * @group Props
+   */
   @Input() hideDetails = false;
+
+  /**
+   * Whether the component should have persistent clear icon.
+   * @group Props
+   */
   @Input() persistentClear = false;
+
+  /**
+   * Whether to show button to be able to select today's date.
+   * @group Props
+   */
   @Input() showTodayButton = true;
+
+  /**
+   * Whether the datepicker dropdown should open on input focus.
+   * @group Props
+   */
   @Input() openOnInputFocus = false;
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
+
+  /**
+   * InfoTooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the infoTooltip is persistent.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip, it can be "top", "bottom", "left" or "right".
+   * @group Props
+   */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * Styling appearance of datepicker input, it can be 'outlined', 'underlined' or 'borderless.
+   * @group Props
+   */
   @Input() appearance: CpsDatepickerAppearanceType = 'outlined';
 
+  /**
+   * Minimal date availalbe for selection.
+   * @group Props
+   */
   @Input()
   minDate!: Date;
 
+  /**
+   * Maximal date availalbe for selection.
+   * @group Props
+   */
   @Input()
   maxDate!: Date;
 
+  /**
+   * Value of the datepicker.
+   * @group Props
+   */
   @Input() set value(value: Date | null) {
     this._value = value;
     this.stringDate = this._dateToString(value);
@@ -72,6 +167,11 @@ export class CpsDatepickerComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {Date | null} value - value change.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<Date | null>();
 
   @ViewChild('datepickerInput')

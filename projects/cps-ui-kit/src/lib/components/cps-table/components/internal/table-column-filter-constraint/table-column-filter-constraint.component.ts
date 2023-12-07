@@ -22,6 +22,10 @@ import {
   CpsColumnFilterType
 } from '../../../cps-column-filter-types';
 
+/**
+ * TableColumnFilterConstraintComponent is an internal filtering constraint component in table and treetable.
+ * @group Components
+ */
 @Component({
   selector: 'table-column-filter-constraint',
   standalone: true,
@@ -37,13 +41,52 @@ import {
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
 export class TableColumnFilterConstraintComponent implements OnChanges {
+  /**
+   * Type of filter constraint.
+   * @group Props
+   */
   @Input() type: CpsColumnFilterType = 'text';
+
+  /**
+   * Column name.
+   * @group Props
+   */
   @Input() field: string | undefined;
+
+  /**
+   * Constraint data.
+   * @group Props
+   */
   @Input() filterConstraint: FilterMetadata | undefined;
+
+  /**
+   * An array of category options.
+   * @group Props
+   */
   @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
-  @Input() asButtonToggle = false; // for category type only
-  @Input() singleSelection = false; // for category type only
+
+  /**
+   * Whether to show category filter as button toggles.
+   * @group Props
+   */
+  @Input() asButtonToggle = false;
+
+  /**
+   * Single selection for category filter.
+   * @group Props
+   */
+  @Input() singleSelection = false;
+
+  /**
+   * Placeholder for input field.
+   * @group Props
+   */
   @Input() placeholder = '';
+
+  /**
+   * Whether the filter should have an apply button.
+   * @group Props
+   */
   @Input() hasApplyButton = true;
 
   @ViewChild('categoryAutocompleteComponent')

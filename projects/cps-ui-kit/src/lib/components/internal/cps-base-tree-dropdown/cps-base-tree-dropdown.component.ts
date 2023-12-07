@@ -22,38 +22,170 @@ import { convertSize } from '../../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
+/**
+ * BaseTreeDropdownComponent is an internal base component to support hierarchical data dropdown.
+ * @group Components
+ */
 @Component({
   template: ''
 })
 export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
+  /**
+   * Label of the component.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Bottom hint text.
+   * @group Props
+   */
   @Input() hint = '';
+
+  /**
+   * Specifies if multiple values can be selected.
+   * @group Props
+   */
   @Input() multiple = false;
+
+  /**
+   * Whether the component is disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Width of the component, of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * When selecting an element, it will appear in a form of a chip.
+   * @group Props
+   */
   @Input() chips = true;
+
+  /**
+   * Whether the chips can be directly removed.
+   * @group Props
+   */
   @Input() closableChips = true;
+
+  /**
+   * When enabled, a clear icon is displayed to clear the value.
+   * @group Props
+   */
   @Input() clearable = false;
+
+  /**
+   * Whether the dropdown should open on clear.
+   * @group Props
+   */
   @Input() openOnClear = true;
+
+  /**
+   * Name of the label field of an option.
+   * @group Props
+   */
   @Input() optionLabel = 'label';
+
+  /**
+   * Name of the info field of an option, shows the additional information text.
+   * @group Props
+   */
   @Input() optionInfo = 'info';
+
+  /**
+   * Options for hiding details.
+   * @group Props
+   */
   @Input() hideDetails = false;
+
+  /**
+   * Whether the component should have persistent clear icon.
+   * @group Props
+   */
   @Input() persistentClear = false;
+
+  /**
+   * Icon before input value.
+   * @group Props
+   */
   @Input() prefixIcon: IconType = '';
+
+  /**
+   * Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'.
+   * @group Props
+   */
   @Input() prefixIconSize: iconSizeType = '18px';
+
+  /**
+   * When enabled, a loading bar is displayed.
+   * @group Props
+   */
   @Input() loading = false;
+
+  /**
+   * Whether only the elements within scrollable area should be added into the DOM.
+   * @group Props
+   */
   @Input() virtualScroll = false;
+
+  /**
+   * Determines how many additional elements to add to the DOM outside of the view.
+   * @group Props
+   */
   @Input() numToleratedItems = 10;
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
+
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Max width of infoTooltip of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the infoTooltip is persistent.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * When set, it expands all directiories initially.
+   * @group Props
+   */
   @Input() initialExpandDirectories = false;
+
+  /**
+   * When set, it expands all options initially.
+   * @group Props
+   */
   @Input() initialExpandAll = false;
 
+  /**
+   * An array of objects to display as the available options.
+   * @group Props
+   */
   @Input() set options(options: any[]) {
     if (options?.some((o) => o.inner)) {
       this._options = options;
@@ -67,6 +199,10 @@ export class CpsBaseTreeDropdownComponent
     return this._options;
   }
 
+  /**
+   * Value of the component.
+   * @group Props
+   */
   @Input('value') _value: any = undefined;
 
   set value(value: any) {
@@ -78,6 +214,11 @@ export class CpsBaseTreeDropdownComponent
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {any} any - value changed.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<any>();
 
   @ViewChild('componentContainer')

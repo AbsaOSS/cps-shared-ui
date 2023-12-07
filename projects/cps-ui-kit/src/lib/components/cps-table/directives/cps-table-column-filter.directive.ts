@@ -16,6 +16,10 @@ import {
 } from '../cps-column-filter-types';
 import { TableColumnFilterComponent } from '../components/internal/table-column-filter/table-column-filter.component';
 
+/**
+ * CpsTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in table.
+ * @group Directives
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTColFilter]',
@@ -24,23 +28,101 @@ import { TableColumnFilterComponent } from '../components/internal/table-column-
 export class CpsTableColumnFilterDirective
   implements OnInit, OnChanges, OnDestroy
 {
+  /**
+   * Name of the column to be filtered.
+   * @group Props
+   */
   @Input('cpsTColFilter') field: string | undefined;
+
+  /**
+   * Type of a filter in table, it can be of type "number", "boolean", "text", "date" or "category".
+   * @group Props
+   */
   @Input() filterType: CpsColumnFilterType = 'text';
+
+  /**
+   * Whether the filter menu should be persistent.
+   * @group Props
+   */
   @Input() filterPersistent = false;
+
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() filterShowClearButton = true;
+
+  /**
+   * Whether the filter should have apply button.
+   * @group Props
+   */
   @Input() filterShowApplyButton = true;
+
+  /**
+   * Whether the filter should have close button.
+   * @group Props
+   */
   @Input() filterShowCloseButton = false;
+
+  /**
+   * Whether the filter should have match modes.
+   * @group Props
+   */
   @Input() filterShowMatchModes = true;
+
+  /**
+   * Match modes for filter.
+   * @group Props
+   */
   @Input() filterMatchModes: CpsColumnFilterMatchMode[] = [];
+
+  /**
+   * Whether the filter should have operator.
+   * @group Props
+   */
   @Input() filterShowOperator = true;
+
+  /**
+   * Maximum number of constraints.
+   * @group Props
+   */
   @Input() filterMaxConstraints = 2;
+
+  /**
+   * Title of the filter.
+   * @group Props
+   */
   @Input() filterHeaderTitle = '';
+
+  /**
+   * Whether the filter should hide on clear.
+   * @group Props
+   */
   @Input() filterHideOnClear = false;
+
+  /**
+   * Options for category filter.
+   * @group Props
+   */
   @Input() filterCategoryOptions: CpsColumnFilterCategoryOption[] | string[] =
     [];
 
-  @Input() filterAsButtonToggle = false; // for category filterType only
-  @Input() filterSingleSelection = false; // for category filterType only
+  /**
+   * Whether to show category filter as button toggles.
+   * @group Props
+   */
+  @Input() filterAsButtonToggle = false;
+
+  /**
+   * Single selection for category filter.
+   * @group Props
+   */
+  @Input() filterSingleSelection = false;
+
+  /**
+   * Placeholder for filter constraints.
+   * @group Props
+   */
   @Input() filterPlaceholder = '';
 
   filterCompRef: ComponentRef<TableColumnFilterComponent>;

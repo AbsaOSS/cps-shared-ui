@@ -11,6 +11,10 @@ import {
 import { getCSSColor } from '../../utils/colors-utils';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
+/**
+ * CpsTagComponent is used to categorize content.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule],
@@ -19,11 +23,40 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   styleUrls: ['./cps-tag.component.scss']
 })
 export class CpsTagComponent implements ControlValueAccessor, OnChanges {
-  @Input() type: 'security' | 'classification' | 'custom' = 'custom'; // higher precedence over color
+  /**
+   * Type of the tag. It can be security, classification or custom, has higher precedence over color.
+   * @group Props
+   */
+  @Input() type: 'security' | 'classification' | 'custom' = 'custom';
+
+  /**
+   * Label of the tag.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * Color of the tag.
+   * @group Props
+   */
   @Input() color = '';
+
+  /**
+   * Whether the tag should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * Whether the tag should be selectable.
+   * @group Props
+   */
   @Input() selectable = false;
+
+  /**
+   * Tag value.
+   * @group Props
+   */
   @Input() set value(value: boolean) {
     this._value = value;
     this.onChange(value);
@@ -33,6 +66,11 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {boolean} boolean - value change.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<boolean>();
 
   classesList: string[] = [];
@@ -75,6 +113,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 

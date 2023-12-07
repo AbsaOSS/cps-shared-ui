@@ -10,20 +10,67 @@ import { convertSize } from '../utils/internal/size-utils';
 export type CpsTooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
+/**
+ * CpsTooltipDirective provides advisory information for a target element.
+ * @group Directives
+ */
 @Directive({
   selector: '[cpsTooltip]',
   standalone: true
 })
 export class CpsTooltipDirective implements OnDestroy {
+  /**
+   * Tooltip text or html to show.
+   * @group Props
+   */
   @Input('cpsTooltip') tooltip!: string;
 
+  /**
+   * Delay to show the tooltip in milliseconds, it can be of type string or number.
+   * @group Props
+   */
   @Input() tooltipOpenDelay: string | number = 300;
+
+  /**
+   * Delay to hide the tooltip in milliseconds, it can be of type string or number.
+   * @group Props
+   */
   @Input() tooltipCloseDelay: string | number = 300;
+
+  /**
+   * Whether the tooltip should open on hover, click or focus.
+   * @group Props
+   */
   @Input() tooltipOpenOn: CpsTooltipOpenOn = 'hover';
+
+  /**
+   * Position of the tooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() tooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * Whether the tooltip is persistent.
+   * @group Props
+   */
   @Input() tooltipPersistent = false;
+
+  /**
+   * When present, it specifies that the tooltip should be disabled.
+   * @group Props
+   */
   @Input() tooltipDisabled = false;
+
+  /**
+   * Max width of the tooltip of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() tooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Tooltip content class for styling.
+   * @group Props
+   */
   @Input() tooltipContentClass = 'cps-tooltip-content';
 
   private _popup?: HTMLDivElement;

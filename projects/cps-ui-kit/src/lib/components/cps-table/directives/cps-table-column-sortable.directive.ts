@@ -10,6 +10,10 @@ import {
 import { SortableColumn, Table } from 'primeng/table';
 import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-sort-icon.component';
 
+/**
+ * CpsTableColumnSortableDirective is a sorting directive used to sort single or multiple columns in table.
+ * @group Directives
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTColSortable]'
@@ -18,7 +22,12 @@ export class CpsTableColumnSortableDirective
   extends SortableColumn
   implements OnInit, OnDestroy
 {
+  /**
+   * Name of the column to be sorted.
+   * @group Props
+   */
   @Input('cpsTColSortable') override field = '';
+
   sortIconRef: ComponentRef<CpsSortIconComponent>;
 
   constructor(

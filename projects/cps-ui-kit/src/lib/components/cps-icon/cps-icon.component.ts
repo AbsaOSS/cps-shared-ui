@@ -128,6 +128,10 @@ export type iconSizeType =
   | 'normal'
   | 'large';
 
+/**
+ * CpsIconComponent is a component that is used for icons.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule],
@@ -136,9 +140,22 @@ export type iconSizeType =
   styleUrls: ['./cps-icon.component.scss']
 })
 export class CpsIconComponent implements OnChanges {
+  /**
+   * Name of the icon.
+   * @group Props
+   */
   @Input() icon: IconType = '';
+
+  /**
+   * Size of the icon, it can be of type number denoting pixels, string or 'fill', 'xsmall', 'small', 'normal' or 'large'.
+   * @group Props
+   */
   @Input() size: iconSizeType = 'small';
 
+  /**
+   * Color of the icon.
+   * @group Props
+   */
   @Input() color = 'currentColor';
 
   iconColor = 'currentColor';

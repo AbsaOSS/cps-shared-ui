@@ -2,6 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 
+/**
+ * CpsLoaderComponent is a fetch data indicator.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule],
@@ -10,9 +14,28 @@ import { getCSSColor } from '../../utils/colors-utils';
   styleUrls: ['./cps-loader.component.scss']
 })
 export class CpsLoaderComponent implements OnInit {
+  /**
+   * Option for loader component to take up the whole screen.
+   * @group Props
+   */
   @Input() fullScreen = false;
+
+  /**
+   * Option to control the transparency of the loader component, of type number or string.
+   * @group Props
+   */
   @Input() opacity: number | string = 0.1;
+
+  /**
+   * Color of the label.
+   * @group Props
+   */
   @Input() labelColor = 'depth';
+
+  /**
+   * Whether to show 'Loading...' label.
+   * @group Props
+   */
   @Input() showLabel = true;
 
   backgroundColor = 'rgba(0, 0, 0, 0.1)';

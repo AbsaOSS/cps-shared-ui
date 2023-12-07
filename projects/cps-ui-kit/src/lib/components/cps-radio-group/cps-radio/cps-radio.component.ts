@@ -8,6 +8,10 @@ import {
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
 
+/**
+ * CpsRadioComponent is a radio button with arbitrary content.
+ * @group Components
+ */
 @Component({
   standalone: true,
   selector: 'cps-radio',
@@ -21,7 +25,12 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   styleUrls: ['./cps-radio.component.scss']
 })
 export class CpsRadioComponent implements OnInit {
+  /**
+   * An option.
+   * @group Props
+   */
   @Input() option!: CpsRadioOption;
+
   radioGroup?: CpsRadioGroupComponent;
   groupDisabled = false;
 

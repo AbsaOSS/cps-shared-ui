@@ -27,6 +27,10 @@ export type CpsButtonToggleOption = {
   tooltip?: string;
 };
 
+/**
+ * CpsButtonToggleComponent is used to select values using buttons.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [
@@ -42,19 +46,82 @@ export type CpsButtonToggleOption = {
   styleUrls: ['./cps-button-toggle.component.scss']
 })
 export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
+  /**
+   * Label of the toggle buttons.
+   * @group Props
+   */
   @Input() label = '';
+
+  /**
+   * An array of options.
+   * @group Props
+   */
   @Input() options = [] as CpsButtonToggleOption[];
+
+  /**
+   * Specifies if multiple values can be selected.
+   * @group Props
+   */
   @Input() multiple = false;
+
+  /**
+   * Specifies that the component should be disabled.
+   * @group Props
+   */
   @Input() disabled = false;
-  @Input() mandatory = true; // at least one of the options is mandatory
+
+  /**
+   * Whether at least one of the options is mandatory.
+   * @group Props
+   */
+  @Input() mandatory = true;
+
+  /**
+   * Whether all buttons should have equal widths.
+   * @group Props
+   */
   @Input() equalWidths = true;
+
+  /**
+   * Position of the option tooltip, can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() optionTooltipPosition: CpsTooltipPosition = 'bottom';
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
   @Input() infoTooltip = '';
+
+  /**
+   * Info tooltip class for styling.
+   * @group Props
+   */
   @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Size of infoTooltip, of type number or string.
+   * @group Props
+   */
   @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the infoTooltip is persistent.
+   * @group Props
+   */
   @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
+  /**
+   * Value of the component.
+   * @group Props
+   */
   @Input('value') _value: any = undefined;
 
   set value(value: any) {
@@ -66,6 +133,11 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     return this._value;
   }
 
+  /**
+   * Callback to invoke on value change.
+   * @param {any} any - value changed.
+   * @group Emits
+   */
   @Output() valueChanged = new EventEmitter<any>();
 
   largestButtonWidth = 0;

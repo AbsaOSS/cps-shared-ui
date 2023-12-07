@@ -1,10 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { CpsIconComponent } from '../../cps-icon/cps-icon.component';
+import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
 import {
   CpsMenuComponent,
   CpsMenuItem
-} from '../../cps-menu/cps-menu.component';
+} from '../../../../cps-menu/cps-menu.component';
 
+/**
+ * TableRowMenuComponent is an internal component which applies the menu to each row.
+ * @group Components
+ */
 @Component({
   selector: 'table-row-menu',
   standalone: true,
@@ -13,10 +17,21 @@ import {
   styleUrls: ['./table-row-menu.component.scss']
 })
 export class TableRowMenuComponent {
+  /**
+   * Callback to invoke when edit-row button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() editRowBtnClicked = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when remove-row button is clicked.
+   * @param {any} any - button clicked.
+   * @group Emits
+   */
   @Output() removeRowBtnClicked = new EventEmitter<any>();
 
-  items = [
+  items: CpsMenuItem[] = [
     {
       title: 'Edit',
       icon: 'edit',
@@ -31,5 +46,5 @@ export class TableRowMenuComponent {
         this.removeRowBtnClicked.emit(event);
       }
     }
-  ] as CpsMenuItem[];
+  ];
 }

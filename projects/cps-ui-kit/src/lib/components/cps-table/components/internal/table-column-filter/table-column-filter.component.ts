@@ -26,6 +26,10 @@ import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from '../table-column-filter-constraint/table-column-filter-constraint.component';
 
+/**
+ * TableColumnFilterComponent is an internal filter component in table and treetable.
+ * @group Components
+ */
 @Component({
   selector: 'table-column-filter',
   standalone: true,
@@ -42,22 +46,100 @@ import { TableColumnFilterConstraintComponent } from '../table-column-filter-con
   styleUrls: ['./table-column-filter.component.scss']
 })
 export class TableColumnFilterComponent implements OnInit, OnDestroy {
+  /**
+   * Name of the column to be filtered.
+   * @group Props
+   */
   @Input() field: string | undefined;
+
+  /**
+   * Type of filter in table, it can be of type "number", "boolean", "text", "date" or "category".
+   * @group Props
+   */
   @Input() type: CpsColumnFilterType = 'text';
+
+  /**
+   * Whether the filter menu should be persistent.
+   * @group Props
+   */
   @Input() persistent = false;
+
+  /**
+   * Whether the filter should have clear button.
+   * @group Props
+   */
   @Input() showClearButton = true;
+
+  /**
+   * Whether the filter should have apply button.
+   * @group Props
+   */
   @Input() showApplyButton = true;
+
+  /**
+   * Whether the filter should have close button.
+   * @group Props
+   */
   @Input() showCloseButton = false;
+
+  /**
+   * Whether the filter should have match modes.
+   * @group Props
+   */
   @Input() showMatchModes = true;
+
+  /**
+   * Match modes for filter.
+   * @group Props
+   */
   @Input() matchModes: CpsColumnFilterMatchMode[] = [];
+
+  /**
+   * Whether the filter should have operator.
+   * @group Props
+   */
   @Input() showOperator = true;
+
+  /**
+   * Maximum number of constraints.
+   * @group Props
+   */
   @Input() maxConstraints = 2;
+
+  /**
+   * Title of the filter.
+   * @group Props
+   */
   @Input() headerTitle = '';
+
+  /**
+   * Whether the filter should hide on clear.
+   * @group Props
+   */
   @Input() hideOnClear = false;
+
+  /**
+   * Options for category filter.
+   * @group Props
+   */
   @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
 
-  @Input() asButtonToggle = false; // for category type only
-  @Input() singleSelection = false; // for category type only
+  /**
+   * Whether to show category filter as button toggles.
+   * @group Props
+   */
+  @Input() asButtonToggle = false;
+
+  /**
+   * Single selection for category filter.
+   * @group Props
+   */
+  @Input() singleSelection = false;
+
+  /**
+   * Placeholder for filter constraints.
+   * @group Props
+   */
   @Input() placeholder = '';
 
   @ViewChildren('constraintComponent')

@@ -11,6 +11,10 @@ import {
   trigger
 } from '@angular/animations';
 
+/**
+ * CpsExpansionPanelComponent is a component that provides content on expansion.
+ * @group Components
+ */
 @Component({
   standalone: true,
   imports: [CommonModule, CpsIconComponent],
@@ -59,17 +63,72 @@ import {
   ]
 })
 export class CpsExpansionPanelComponent implements OnInit {
+  /**
+   * Title of the expansionPanel element.
+   * @group Props
+   */
   @Input() headerTitle = '';
+
+  /**
+   * Background color of the expansion panel element.
+   * @group Props
+   */
   @Input() backgroundColor = 'transparent';
+
+  /**
+   * Whether to show the chevron icon.
+   * @group Props
+   */
   @Input() showChevron = true;
+
+  /**
+   * Indicates current expansion state.
+   * @group Props
+   */
   @Input() isExpanded = false;
+
+  /**
+   * Whether expansion panel is disabled.
+   * @group Props
+   */
   @Input() disabled = false;
+
+  /**
+   * If true, expansion panel element will have borders.
+   * @group Props
+   */
   @Input() bordered = true;
+
+  /**
+   * The border radius of the component.
+   * @group Props
+   */
   @Input() borderRadius: number | string = '4px';
+
+  /**
+   * The width of the expansion panel of type number denoting pixels or string.
+   * @group Props
+   */
   @Input() width: number | string = '100%';
+
+  /**
+   * Name of the icon in front of the title.
+   * @group Props
+   */
   @Input() prefixIcon: IconType = '';
 
+  /**
+   * Callback to invoke after a tab gets collapsed.
+   * @param {void}
+   * @group Emits
+   */
   @Output() afterCollapse: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
+   * Callback to invoke after a tab gets expanded.
+   * @param {void}
+   * @group Emits
+   */
   @Output() afterExpand: EventEmitter<void> = new EventEmitter<void>();
 
   ngOnInit(): void {

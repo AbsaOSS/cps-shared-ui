@@ -10,6 +10,10 @@ import {
 import { TTSortableColumn, TreeTable } from 'primeng/treetable';
 import { CpsSortIconComponent } from '../../cps-table/components/internal/cps-sort-icon/cps-sort-icon.component';
 
+/**
+ * CpsTreeTableColumnSortableDirective is a sorting directive used to sort single or multiple columns in treetable.
+ * @group Directives
+ */
 @Directive({
   standalone: true,
   selector: '[cpsTTColSortable]'
@@ -18,7 +22,12 @@ export class CpsTreeTableColumnSortableDirective
   extends TTSortableColumn
   implements OnInit, OnDestroy
 {
+  /**
+   * Name of the column to be sorted.
+   * @group Props
+   */
   @Input('cpsTTColSortable') override field = '';
+
   sortIconRef: ComponentRef<CpsSortIconComponent>;
 
   constructor(
