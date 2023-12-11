@@ -45,7 +45,7 @@ import {
       state(
         'hidden',
         style({
-          borderBottom: '0'
+          borderBottom: ''
         })
       ),
       state(
@@ -53,7 +53,7 @@ import {
         style({
           borderBottom: '{{borderStyle}}'
         }),
-        { params: { borderStyle: '0' } }
+        { params: { borderStyle: '' } }
       ),
       transition('visible <=> hidden', [
         animate('0.2s cubic-bezier(0.4, 0, 0.2, 1)')
