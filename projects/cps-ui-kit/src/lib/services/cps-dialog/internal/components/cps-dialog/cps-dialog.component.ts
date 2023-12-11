@@ -232,7 +232,12 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
 
       case 'void':
         if (this.wrapper && this.config.modal !== false) {
-          DomHandler.addClass(this.wrapper, 'cps-dialog-overlay-leave');
+          if (this.config.blurredBackground) {
+            DomHandler.addClass(
+              this.wrapper,
+              'cps-dialog-blurred-overlay-leave'
+            );
+          } else DomHandler.addClass(this.wrapper, 'cps-dialog-overlay-leave');
         }
         break;
     }
