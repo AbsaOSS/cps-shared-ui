@@ -1,11 +1,11 @@
 <div
   class="cps-expansion-panel"
   [class.expanded]="isExpanded"
-  [class.bordered]="bordered"
   [ngStyle]="{
     'background-color': backgroundColor,
     'border-radius': borderRadius,
-    width: width
+    width: width,
+    border: bordered ? '1px solid ' + borderColor : ''
   }">
   <div
     class="cps-expansion-panel-header"
@@ -13,7 +13,9 @@
       isExpanded
         ? {
             value: 'visible',
-            params: { borderStyle: bordered ? '1px solid #b5b2b2' : '0' }
+            params: {
+              borderStyle: bordered ? '1px solid ' + borderColor : '0'
+            }
           }
         : 'hidden'
     "

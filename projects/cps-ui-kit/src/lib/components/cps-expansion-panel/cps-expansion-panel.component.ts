@@ -106,6 +106,12 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() borderRadius: number | string = '4px';
 
   /**
+   * Border color of the expansion panel.
+   * @group Props
+   */
+  @Input() borderColor = 'line-dark';
+
+  /**
    * The width of the expansion panel of type number denoting pixels or string.
    * @group Props
    */
@@ -132,6 +138,7 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Output() afterExpand: EventEmitter<void> = new EventEmitter<void>();
 
   ngOnInit(): void {
+    this.borderColor = getCSSColor(this.borderColor);
     this.backgroundColor = getCSSColor(this.backgroundColor);
     this.borderRadius = convertSize(this.borderRadius);
     this.width = convertSize(this.width);

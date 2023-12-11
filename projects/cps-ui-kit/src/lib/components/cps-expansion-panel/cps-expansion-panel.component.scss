@@ -1,7 +1,6 @@
 $transition-duration: 0.2s;
 $header-text-color: var(--cps-color-text-dark);
 $disabled-header-text-color: var(--cps-color-text-mild);
-$border-color: var(--cps-color-text-lightest);
 $header-hover-background: var(--cps-color-highlight-hover);
 $header-active-background: var(--cps-color-highlight-active);
 
@@ -12,10 +11,6 @@ $header-active-background: var(--cps-color-highlight-active);
     font-family: 'Source Sans Pro', sans-serif;
     line-height: 20px;
     color: $header-text-color;
-
-    &.bordered {
-      border: 1px solid $border-color;
-    }
 
     &-header {
       display: flex;
