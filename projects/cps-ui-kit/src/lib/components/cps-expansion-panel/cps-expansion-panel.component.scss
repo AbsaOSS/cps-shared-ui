@@ -16,7 +16,7 @@ $header-active-background: var(--cps-color-highlight-active);
       border-bottom-color: transparent;
       display: flex;
       align-items: center;
-      padding: 10px 16px;
+      padding: 10px 16px 10px 24px;
       font-size: 16px;
       justify-content: space-between;
       -webkit-user-select: none;
@@ -51,6 +51,7 @@ $header-active-background: var(--cps-color-highlight-active);
     &-title {
       flex: 1 0 auto;
       display: inline-flex;
+      font-weight: 600;
     }
 
     &-chevron {
@@ -66,7 +67,7 @@ $header-active-background: var(--cps-color-highlight-active);
       color: $header-text-color;
       font-size: 16px;
       &-inner {
-        padding: 16px;
+        padding: 16px 24px;
       }
     }
 
