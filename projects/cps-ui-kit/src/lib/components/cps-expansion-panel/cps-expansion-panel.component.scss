@@ -13,6 +13,7 @@ $header-active-background: var(--cps-color-highlight-active);
     color: $header-text-color;
 
     &-header {
+      border-bottom-color: transparent;
       display: flex;
       align-items: center;
       padding: 10px 16px;
