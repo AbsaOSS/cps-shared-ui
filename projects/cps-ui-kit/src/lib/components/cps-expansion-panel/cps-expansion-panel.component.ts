@@ -103,13 +103,13 @@ export class CpsExpansionPanelComponent implements OnInit {
    * The border radius of the component.
    * @group Props
    */
-  @Input() borderRadius: number | string = '4px';
+  @Input() borderRadius: number | string = 0;
 
   /**
    * Border color of the expansion panel.
    * @group Props
    */
-  @Input() borderColor = 'line-dark';
+  @Input() borderColor = 'line-light';
 
   /**
    * The width of the expansion panel of type number denoting pixels or string.
