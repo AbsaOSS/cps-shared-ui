@@ -54,6 +54,17 @@ export class DialogPageComponent {
     });
   }
 
+  openBlurredBgDialog() {
+    this._dialogService.open(DialogContentComponent, {
+      headerTitle: 'Dialog with blurred background',
+      blurredBackground: true,
+      data: {
+        info: 'Greetings from the dialog content component',
+        icon: 'like'
+      }
+    } as CpsDialogConfig);
+  }
+
   openDraggableDialog() {
     const dialogRef = this._dialogService.open(DialogContentComponent, {
       headerTitle: 'Draggable dialog',

@@ -110,6 +110,10 @@ export class CpsDialogConfig<T = any> {
    */
   modal?: boolean;
   /**
+   * When modal dialog is displayed, defines whether background should be blurred.
+   */
+  blurredBackground?: boolean;
+  /**
    * Style class of the mask.
    */
   maskStyleClass?: string;

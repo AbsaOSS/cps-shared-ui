@@ -2,7 +2,11 @@
   #mask
   [ngClass]="{
     'cps-dialog-mask': true,
-    'cps-dialog-overlay cps-dialog-overlay-enter': config.modal !== false,
+    'cps-dialog-overlay': config.modal !== false,
+    'cps-dialog-overlay-enter':
+      config.modal !== false && !config.blurredBackground,
+    'cps-dialog-blurred-overlay cps-dialog-blurred-overlay-enter':
+      config.modal !== false && config.blurredBackground,
     'cps-dialog-left': position === 'left',
     'cps-dialog-right': position === 'right',
     'cps-dialog-top': position === 'top',

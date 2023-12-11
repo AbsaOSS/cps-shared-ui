@@ -1,6 +1,7 @@
 $cps-overlay-background: rgba(0, 0, 0, 0.2);
 $header-drag-hover-background: var(--cps-color-highlight-hover);
 $header-drag-active-background: var(--cps-color-highlight-active);
+$animation-duration: 150ms;
 
 .cps-dialog-mask {
   position: fixed;
@@ -19,16 +20,30 @@ $header-drag-active-background: var(--cps-color-highlight-active);
 }
 
 .cps-dialog-overlay-enter {
-  animation: cps-dialog-overlay-enter-animation 150ms forwards;
+  animation: cps-dialog-overlay-enter-animation $animation-duration forwards;
 }
 
 .cps-dialog-overlay-leave {
-  animation: cps-dialog-overlay-leave-animation 150ms forwards;
+  animation: cps-dialog-overlay-leave-animation $animation-duration forwards;
+}
+
+.cps-dialog-blurred-overlay-enter {
+  animation: cps-dialog-blurred-overlay-enter-animation $animation-duration
+    forwards;
+}
+
+.cps-dialog-blurred-overlay-leave {
+  animation: cps-dialog-blurred-overlay-leave-animation $animation-duration
+    forwards;
 }
 
 .cps-dialog-overlay {
   background-color: $cps-overlay-background;
   transition-duration: 0.2s;
+}
+
+.cps-dialog-blurred-overlay {
+  backdrop-filter: blur(6px);
 }
 
 @keyframes cps-dialog-overlay-enter-animation {
@@ -45,6 +60,27 @@ $header-drag-active-background: var(--cps-color-highlight-active);
   }
   to {
     background-color: transparent;
+  }
+}
+
+@keyframes cps-dialog-blurred-overlay-enter-animation {
+  from {
+    background-color: transparent;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    background-color: $cps-overlay-background;
+    backdrop-filter: blur(6px);
+  }
+}
+@keyframes cps-dialog-blurred-overlay-leave-animation {
+  from {
+    background-color: $cps-overlay-background;
+    backdrop-filter: blur(6px);
+  }
+  to {
+    background-color: transparent;
+    backdrop-filter: blur(0px);
   }
 }
 
