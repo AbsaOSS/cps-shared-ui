@@ -42,7 +42,8 @@
         <div
           class="cps-autocomplete-box-items"
           *ngIf="
-            (value && !multiple) || (value?.length > 0 && multiple);
+            (value !== undefined && value !== null && !multiple) ||
+              (value?.length > 0 && multiple);
             else autocompleteInput
           ">
           <span *ngIf="!multiple" class="single-item">
@@ -112,7 +113,8 @@
             [style.visibility]="
               persistentClear ||
               (!persistentClear &&
-                ((multiple && value?.length) || (!multiple && value)))
+                ((multiple && value?.length) ||
+                  (!multiple && value !== undefined && value !== null)))
                 ? 'visible'
                 : 'hidden'
             "
@@ -230,7 +232,8 @@
     [class]="inputClass"
     [style]="inputStyle"
     [placeholder]="
-      (!value && !multiple) || (value?.length < 1 && multiple)
+      ((value === undefined || value === null) && !multiple) ||
+      (value?.length < 1 && multiple)
         ? placeholder
         : ''
     "
