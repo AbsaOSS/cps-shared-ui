@@ -358,7 +358,11 @@ export class CpsSelectComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (this.virtualScroll && this.value) {
+        } else if (
+          this.virtualScroll &&
+          this.value !== undefined &&
+          this.value !== null
+        ) {
           let v: any;
           if (this.multiple) {
             if (this.value.length > 0) {
@@ -582,13 +586,13 @@ export class CpsSelectComponent
     event.stopPropagation();
 
     if (
-      (!this.multiple && this.value) ||
+      (!this.multiple && this.value !== undefined && this.value !== null) ||
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
-      const val = this.multiple ? [] : this.returnObject ? undefined : '';
+      const val = this.multiple ? [] : undefined;
       this.updateValue(val);
     }
     this._dehighlightOption();

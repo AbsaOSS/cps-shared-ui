@@ -38,12 +38,18 @@
         </cps-icon>
         <div
           class="cps-select-box-placeholder"
-          *ngIf="(!value && !multiple) || (value?.length < 1 && multiple)">
+          *ngIf="
+            ((value === undefined || value === null) && !multiple) ||
+            (value?.length < 1 && multiple)
+          ">
           {{ placeholder }}
         </div>
         <div
           class="cps-select-box-items"
-          *ngIf="(value && !multiple) || (value?.length > 0 && multiple)">
+          *ngIf="
+            (value !== undefined && value !== null && !multiple) ||
+            (value?.length > 0 && multiple)
+          ">
           <span *ngIf="!multiple" class="single-item">
             {{
               returnObject
@@ -85,7 +91,8 @@
           [style.visibility]="
             persistentClear ||
             (!persistentClear &&
-              ((multiple && value?.length) || (!multiple && value)))
+              ((multiple && value?.length) ||
+                (!multiple && value !== null && value !== undefined)))
               ? 'visible'
               : 'hidden'
           "
