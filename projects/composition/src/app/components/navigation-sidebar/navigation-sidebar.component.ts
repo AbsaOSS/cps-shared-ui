@@ -114,6 +114,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/textarea'
     },
     {
+      title: 'Timepicker',
+      url: '/timepicker'
+    },
+    {
       title: 'Tooltip directive',
       url: '/tooltip'
     },

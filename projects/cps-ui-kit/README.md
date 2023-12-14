@@ -27,6 +27,7 @@
 - Tabs
 - Tag
 - Textarea
+- Timepicker
 - Tooltip directive
 - Tree autocomplete
 - Tree select
