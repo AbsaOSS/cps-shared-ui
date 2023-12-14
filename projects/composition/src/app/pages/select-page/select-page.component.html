@@ -75,10 +75,10 @@
     <div class="sync-val-example">
       <cps-select
         width="500"
-        label="Multiple select with two-way binding without keeping initial items order"
+        label="Multiple select with two-way binding and keeping initial items order"
         [returnObject]="false"
         [options]="syncOptions"
-        [keepInitialOrder]="false"
+        [keepInitialOrder]="true"
         optionLabel="title"
         optionValue="val"
         optionInfo="ticker"

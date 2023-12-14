@@ -145,7 +145,7 @@ export class CpsSelectComponent
    * If multiple, defines whether selected options should be ordered according to the initial order of the options.
    * @group Props
    */
-  @Input() keepInitialOrder = true;
+  @Input() keepInitialOrder = false;
 
   /**
    * Name of the label field of an option.
