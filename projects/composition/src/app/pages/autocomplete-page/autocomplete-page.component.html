@@ -75,9 +75,10 @@
     <div class="sync-val-example">
       <cps-autocomplete
         width="500"
-        label="Multiple autocomplete with two-way binding, enter something"
+        label="Multiple autocomplete with two-way binding without keeping initial items order"
         [returnObject]="false"
         [options]="syncOptions"
+        [keepInitialOrder]="false"
         optionLabel="title"
         optionValue="val"
         optionInfo="ticker"
