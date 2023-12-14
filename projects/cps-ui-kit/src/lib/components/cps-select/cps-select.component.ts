@@ -142,6 +142,12 @@ export class CpsSelectComponent
   @Input() options = [] as any[];
 
   /**
+   * If multiple, defines whether selected options should be ordered according to the initial order of the options.
+   * @group Props
+   */
+  @Input() keepInitialOrder = false;
+
+  /**
    * Name of the label field of an option.
    * @group Props
    */
@@ -399,12 +405,27 @@ export class CpsSelectComponent
       if (includes(this.value, val)) {
         res = this.value.filter((v: any) => !isEqual(v, val));
       } else {
-        this.options.forEach((o) => {
-          const ov = this.returnObject ? o : o[this.optionValue];
-          if (this.value.some((v: any) => isEqual(v, ov)) || isEqual(val, ov)) {
-            res.push(ov);
+        if (this.keepInitialOrder) {
+          this.options.forEach((o) => {
+            const ov = this.returnObject ? o : o[this.optionValue];
+            if (
+              this.value.some((v: any) => isEqual(v, ov)) ||
+              isEqual(val, ov)
+            ) {
+              res.push(ov);
+            }
+          });
+        } else {
+          const opt = this.options.find((o) => {
+            return isEqual(val, this.returnObject ? o : o[this.optionValue]);
+          });
+          if (opt) {
+            res = [
+              ...this.value,
+              this.returnObject ? opt : opt[this.optionValue]
+            ];
           }
-        });
+        }
       }
       this.updateValue(res);
     } else {
