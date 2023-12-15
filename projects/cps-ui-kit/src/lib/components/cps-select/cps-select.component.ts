@@ -26,7 +26,7 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 import {
   VirtualScroller,
   VirtualScrollerModule
@@ -364,11 +364,7 @@ export class CpsSelectComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (
-          this.virtualScroll &&
-          this.value !== undefined &&
-          this.value !== null
-        ) {
+        } else if (this.virtualScroll && !this.isEmptyValue()) {
           let v: any;
           if (this.multiple) {
             if (this.value.length > 0) {
@@ -393,7 +389,7 @@ export class CpsSelectComponent
 
   select(option: any, byValue: boolean): void {
     function includes(array: any[], val: any): boolean {
-      return array ? !!find(array, (item) => isEqual(item, val)) : false;
+      return array?.some((item) => isEqual(item, val)) || false;
     }
     const val = byValue
       ? option
@@ -607,7 +603,7 @@ export class CpsSelectComponent
     event.stopPropagation();
 
     if (
-      (!this.multiple && this.value !== undefined && this.value !== null) ||
+      (!this.multiple && !this.isEmptyValue()) ||
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
@@ -630,5 +626,14 @@ export class CpsSelectComponent
   focus() {
     this.selectContainer?.nativeElement?.focus();
     this._toggleOptions(true);
+  }
+
+  isEmptyValue(): boolean {
+    return (
+      this.value === null ||
+      this.value === undefined ||
+      (typeof this.value === 'string' && this.value.trim() === '') ||
+      Number.isNaN(this.value)
+    );
   }
 }

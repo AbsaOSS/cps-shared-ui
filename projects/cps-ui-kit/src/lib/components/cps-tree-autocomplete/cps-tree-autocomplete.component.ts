@@ -13,7 +13,7 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
@@ -159,7 +159,7 @@ export class CpsTreeAutocompleteComponent
 
   private _select(option: TreeNode): void {
     function includes(array: any[], val: any): boolean {
-      return array ? !!find(array, (item) => isEqual(item, val)) : false;
+      return array?.some((item) => isEqual(item, val)) || false;
     }
 
     this.backspaceClickedOnce = false;

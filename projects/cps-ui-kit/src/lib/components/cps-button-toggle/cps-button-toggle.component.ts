@@ -175,7 +175,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this.value = value;
   }
 
-  updateValueEvent(event: any) {
+  updateValueEvent(event: any, val: any) {
     if (this.disabled) return;
     const check = event?.target?.checked || false;
 
@@ -183,8 +183,6 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
       event.target.checked = true;
       return;
     }
-
-    const val = event?.target?.value || undefined;
 
     if (this.multiple) {
       let res = [] as any;
