@@ -61,7 +61,7 @@
     [checked]="
       option.value | checkOptionSelected : value : multiple : true : ''
     "
-    (change)="updateValueEvent($event)" />
+    (change)="updateValueEvent($event, option.value)" />
   <span
     class="cps-btn-toggle-content-option-content"
     [ngStyle]="{
