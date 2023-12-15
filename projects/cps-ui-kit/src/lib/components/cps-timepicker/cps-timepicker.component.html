@@ -1,1 +1,46 @@
-<p>cps-timepicker works!</p>
+<div class="timepicker">
+  <span class="timepicker-label">{{ label }}</span>
+  <div class="timepicker-body">
+    <cps-autocomplete
+      width="70"
+      [options]="hours"
+      [hideDetails]="true"
+      [value]="value?.hours"
+      (blurred)="onBlur()"
+      placeholder="- -"
+      (valueChanged)="
+        updateValueInternal({
+          hours: $event,
+          minutes: value?.minutes || '',
+          time: value?.time || 'AM'
+        })
+      "></cps-autocomplete>
+    <span class="timepicker-delimiter">:</span>
+    <cps-input
+      width="50"
+      [hideDetails]="true"
+      [value]="value?.minutes || ''"
+      (blurred)="onBlur()"
+      placeholder="- -"
+      (valueChanged)="
+        updateValueInternal({
+          hours: value?.hours || '',
+          minutes: $event,
+          time: value?.time || 'AM'
+        })
+      "></cps-input>
+    <cps-button-toggle
+      class="am-pm-selector"
+      [options]="timeOfDayOptions"
+      [value]="value?.time || 'AM'"
+      (valueChanged)="
+        updateValueInternal({
+          hours: value?.hours || '',
+          minutes: value?.minutes || '',
+          time: $event
+        })
+      ">
+    </cps-button-toggle>
+  </div>
+  <!-- <app-error *ngIf="hasError()" [control]="control"> </app-error> -->
+</div>
