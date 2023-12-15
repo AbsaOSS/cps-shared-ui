@@ -2,49 +2,53 @@
   <span class="timepicker-label">{{ label }}</span>
   <div class="timepicker-body">
     <cps-autocomplete
+      #hoursField
       width="60"
-      [options]="hours"
+      [options]="hoursOptions"
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
+      [returnObject]="false"
       [value]="value?.hours"
       (blurred)="onBlur()"
       placeholder="HH"
-      (valueChanged)="
-        updateValueInternal({
-          hours: $event,
-          minutes: value?.minutes || '',
-          time: value?.time || 'AM'
-        })
-      "></cps-autocomplete>
+      (valueChanged)="updateHours($event)"
+      (inputChanged)="updateHours($event)"></cps-autocomplete>
     <span class="timepicker-delimiter">:</span>
     <cps-autocomplete
+      #minutesField
       width="60"
-      [options]="minutes"
+      [options]="minutesOptions"
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
+      [returnObject]="false"
       [value]="value?.minutes"
       (blurred)="onBlur()"
       placeholder="MM"
-      (valueChanged)="
-        updateValueInternal({
-          hours: value?.hours || '',
-          minutes: $event,
-          time: value?.time || 'AM'
-        })
-      "></cps-autocomplete>
+      (valueChanged)="updateMinutes($event)"
+      (inputChanged)="updateMinutes($event)"></cps-autocomplete>
+    <span *ngIf="withSeconds" class="timepicker-delimiter">:</span>
+    <cps-autocomplete
+      *ngIf="withSeconds"
+      #secondsField
+      width="60"
+      [options]="secondsOptions"
+      [hideDetails]="true"
+      [showChevron]="false"
+      [showEmptyMessage]="false"
+      [returnObject]="false"
+      [value]="value?.seconds"
+      (blurred)="onBlur()"
+      placeholder="SS"
+      (valueChanged)="updateSeconds($event)"
+      (inputChanged)="updateSeconds($event)"></cps-autocomplete>
     <cps-button-toggle
+      *ngIf="!use24HourTime"
       class="am-pm-selector"
-      [options]="timeOfDayOptions"
-      [value]="value?.time || 'AM'"
-      (valueChanged)="
-        updateValueInternal({
-          hours: value?.hours || '',
-          minutes: value?.minutes || '',
-          time: $event
-        })
-      ">
+      [options]="dayPeriodOptions"
+      [value]="value?.dayPeriod || 'AM'"
+      (valueChanged)="updateDayPeriod($event)">
     </cps-button-toggle>
   </div>
   <!-- <app-error *ngIf="hasError()" [control]="control"> </app-error> -->

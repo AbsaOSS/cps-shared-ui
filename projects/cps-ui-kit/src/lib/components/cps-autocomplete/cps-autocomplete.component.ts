@@ -284,6 +284,13 @@ export class CpsAutocompleteComponent
    */
   @Output() valueChanged = new EventEmitter<any>();
 
+  /**
+   * Callback to invoke on user input.
+   * @param {string} string - input changed.
+   * @group Emits
+   */
+  @Output() inputChanged = new EventEmitter<string>();
+
   @ViewChild('autocompleteBox')
   autocompleteBox!: ElementRef;
 
@@ -440,6 +447,8 @@ export class CpsAutocompleteComponent
   }
 
   filterOptions(event: any) {
+    this.inputChanged.emit(event?.target?.value || '');
+
     if (!this.isOpened) {
       this._toggleOptions(true);
     }
@@ -807,5 +816,12 @@ export class CpsAutocompleteComponent
       (typeof this.value === 'string' && this.value.trim() === '') ||
       Number.isNaN(this.value)
     );
+  }
+
+  updateInputText(text: string) {
+    this.inputText = text;
+    setTimeout(() => {
+      this.focusInput();
+    });
   }
 }
