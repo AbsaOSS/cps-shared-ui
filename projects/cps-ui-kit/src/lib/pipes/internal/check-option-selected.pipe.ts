@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 
 @Pipe({ standalone: true, name: 'checkOptionSelected' })
 export class CheckOptionSelectedPipe implements PipeTransform {
@@ -11,7 +11,7 @@ export class CheckOptionSelectedPipe implements PipeTransform {
     optionValue: string
   ): boolean {
     function includes(array: any[], val: any): boolean {
-      return array ? !!find(array, (item) => isEqual(item, val)) : false;
+      return array?.some((item) => isEqual(item, val)) || false;
     }
 
     return multiple

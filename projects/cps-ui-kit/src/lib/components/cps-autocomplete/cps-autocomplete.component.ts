@@ -25,7 +25,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 import {
   VirtualScroller,
   VirtualScrollerModule
@@ -346,7 +346,7 @@ export class CpsAutocompleteComponent
 
   select(option: any, byValue: boolean): void {
     function includes(array: any[], val: any): boolean {
-      return array ? !!find(array, (item) => isEqual(item, val)) : false;
+      return array?.some((item) => isEqual(item, val)) || false;
     }
 
     this.backspaceClickedOnce = false;
@@ -452,7 +452,7 @@ export class CpsAutocompleteComponent
     event.stopPropagation();
 
     if (
-      (!this.multiple && this.value !== undefined && this.value !== null) ||
+      (!this.multiple && !this.isEmptyValue()) ||
       (this.multiple && this.value?.length > 0)
     ) {
       if (this.openOnClear) {
@@ -601,11 +601,7 @@ export class CpsAutocompleteComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (
-          this.virtualScroll &&
-          this.value !== undefined &&
-          this.value !== null
-        ) {
+        } else if (this.virtualScroll && !this.isEmptyValue()) {
           let v: any;
           if (this.multiple) {
             if (this.value.length > 0) {
@@ -656,7 +652,7 @@ export class CpsAutocompleteComponent
   }
 
   private _getValueLabel() {
-    return this.value !== undefined && this.value !== null
+    return !this.isEmptyValue()
       ? this.returnObject
         ? this.value[this.optionLabel]
         : this._labelByValue.transform(
@@ -787,5 +783,14 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       this.focusInput();
     }, 0);
+  }
+
+  isEmptyValue(): boolean {
+    return (
+      this.value === null ||
+      this.value === undefined ||
+      (typeof this.value === 'string' && this.value.trim() === '') ||
+      Number.isNaN(this.value)
+    );
   }
 }
