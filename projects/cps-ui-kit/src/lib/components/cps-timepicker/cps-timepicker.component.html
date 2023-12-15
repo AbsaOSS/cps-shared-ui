@@ -2,12 +2,14 @@
   <span class="timepicker-label">{{ label }}</span>
   <div class="timepicker-body">
     <cps-autocomplete
-      width="70"
+      width="60"
       [options]="hours"
       [hideDetails]="true"
+      [showChevron]="false"
+      [showEmptyMessage]="false"
       [value]="value?.hours"
       (blurred)="onBlur()"
-      placeholder="- -"
+      placeholder="HH"
       (valueChanged)="
         updateValueInternal({
           hours: $event,
@@ -16,19 +18,22 @@
         })
       "></cps-autocomplete>
     <span class="timepicker-delimiter">:</span>
-    <cps-input
-      width="50"
+    <cps-autocomplete
+      width="60"
+      [options]="minutes"
       [hideDetails]="true"
-      [value]="value?.minutes || ''"
+      [showChevron]="false"
+      [showEmptyMessage]="false"
+      [value]="value?.minutes"
       (blurred)="onBlur()"
-      placeholder="- -"
+      placeholder="MM"
       (valueChanged)="
         updateValueInternal({
           hours: value?.hours || '',
           minutes: $event,
           time: value?.time || 'AM'
         })
-      "></cps-input>
+      "></cps-autocomplete>
     <cps-button-toggle
       class="am-pm-selector"
       [options]="timeOfDayOptions"

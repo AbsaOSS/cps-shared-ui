@@ -15,7 +15,6 @@ import {
   CpsButtonToggleOption
 } from '../cps-button-toggle/cps-button-toggle.component';
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
-import { CpsInputComponent } from '../cps-input/cps-input.component';
 
 interface Time {
   hours: string;
@@ -30,12 +29,7 @@ interface Time {
 @Component({
   selector: 'cps-timepicker',
   standalone: true,
-  imports: [
-    CommonModule,
-    CpsButtonToggleComponent,
-    CpsAutocompleteComponent,
-    CpsInputComponent
-  ],
+  imports: [CommonModule, CpsButtonToggleComponent, CpsAutocompleteComponent],
   templateUrl: './cps-timepicker.component.html',
   styleUrls: ['./cps-timepicker.component.scss']
 })
