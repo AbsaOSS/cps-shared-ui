@@ -113,6 +113,12 @@ export class CpsAutocompleteComponent
   @Input() selectAll = true;
 
   /**
+   * Defines whether the chevron icon should be displayed.
+   * @group Props
+   */
+  @Input() showChevron = true;
+
+  /**
    * When selecting elements, they will appear in a form of a chip.
    * @group Props
    */
@@ -201,6 +207,12 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() emptyMessage = 'No results found';
+
+  /**
+   * Defines whether the empty message should be displayed.
+   * @group Props
+   */
+  @Input() showEmptyMessage = true;
 
   /**
    * Whether only the elements within scrollable area should be added into the DOM.
@@ -477,6 +489,7 @@ export class CpsAutocompleteComponent
   }
 
   onBeforeOptionsHidden() {
+    this._confirmInput(this.inputText || '');
     this._closeAndClear();
   }
 
@@ -486,8 +499,10 @@ export class CpsAutocompleteComponent
       if (!this.inputText) this.inputText = this._getValueLabel();
       if (!this.isOpened) this.filteredOptions = this.options;
     }
-    this.focus();
     this._dehighlightOption();
+    setTimeout(() => {
+      this.focus();
+    });
   }
 
   onContainerKeyDown(event: any) {
