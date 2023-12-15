@@ -123,6 +123,7 @@
               (click)="clear($event)"></cps-icon>
           </span>
           <span
+            *ngIf="showChevron"
             class="cps-autocomplete-box-chevron"
             (mousedown)="onChevronClick($event)">
             <cps-icon
@@ -147,7 +148,7 @@
           width: autocompleteBoxWidth + 'px'
         }">
         <div
-          *ngIf="filteredOptions.length < 1"
+          *ngIf="showEmptyMessage && filteredOptions.length < 1"
           class="cps-autocomplete-options-empty">
           {{ emptyMessage }}
         </div>
