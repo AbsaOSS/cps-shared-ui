@@ -27,7 +27,7 @@ import { TableRowMenuComponent } from './components/internal/table-row-menu/tabl
 import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
 import { convertSize } from '../../utils/internal/size-utils';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -772,7 +772,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   isColumnSelected(col: any) {
-    return !!find(this.selectedColumns, (item) => isEqual(item, col));
+    return this.selectedColumns.some((item) => isEqual(item, col));
   }
 
   onSelectColumn(col: any) {

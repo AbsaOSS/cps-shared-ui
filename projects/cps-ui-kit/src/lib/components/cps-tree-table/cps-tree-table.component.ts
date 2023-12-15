@@ -31,7 +31,7 @@ import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 import { SortEvent } from 'primeng/api';
-import { find, isEqual } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
@@ -1193,7 +1193,7 @@ export class CpsTreeTableComponent
   }
 
   isColumnSelected(col: any) {
-    return !!find(this.selectedColumns, (item) => isEqual(item, col));
+    return this.selectedColumns.some((item) => isEqual(item, col));
   }
 
   onRowsPerPageChanged() {
