@@ -119,6 +119,30 @@ export class CpsAutocompleteComponent
   @Input() showChevron = true;
 
   /**
+   * Defines whether autocomplete should select the first match while user is typing.
+   * @group Props
+   */
+  @Input() selectWhileTyping = false;
+
+  /**
+   * Defines whether the options should be filtered by aliases in addition to labels.
+   * @group Props
+   */
+  @Input() withOptionsAliases = false;
+
+  /**
+   * Defines whether the options should be filtered by aliases in addition to labels when no label match is found. Works only If withOptionsAliases is true.
+   * @group Props
+   */
+  @Input() useOptionsAliasesWhenNoMatch = false;
+
+  /**
+   * Name of the alias field of an option. Needed only if withOptionsAliases prop is true.
+   * @group Props
+   */
+  @Input() optionAlias = 'alias';
+
+  /**
    * When selecting elements, they will appear in a form of a chip.
    * @group Props
    */
@@ -363,7 +387,7 @@ export class CpsAutocompleteComponent
     this.resizeObserver?.disconnect();
   }
 
-  select(option: any, byValue: boolean): void {
+  select(option: any, byValue: boolean, needClearInput = true): void {
     function includes(array: any[], val: any): boolean {
       return array?.some((item) => isEqual(item, val)) || false;
     }
@@ -405,7 +429,10 @@ export class CpsAutocompleteComponent
     } else {
       this.updateValue(val);
     }
-    this._clearInput();
+
+    if (needClearInput) {
+      this._clearInput();
+    }
     setTimeout(() => {
       this.focusInput();
     }, 0);
@@ -456,9 +483,36 @@ export class CpsAutocompleteComponent
     this.backspaceClickedOnce = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
 
-    this.filteredOptions = this.options.filter((o: any) =>
-      o[this.optionLabel].toLowerCase().includes(searchVal)
-    );
+    let _filteredOptions = this.options.filter((o: any) => {
+      let res = o[this.optionLabel].toLowerCase().includes(searchVal);
+      if (
+        !res &&
+        this.withOptionsAliases &&
+        !this.useOptionsAliasesWhenNoMatch
+      ) {
+        res = o[this.optionAlias]?.toLowerCase()?.includes(searchVal) || false;
+      }
+      return res;
+    });
+
+    if (
+      _filteredOptions.length === 0 &&
+      this.withOptionsAliases &&
+      this.useOptionsAliasesWhenNoMatch
+    ) {
+      _filteredOptions = this.options.filter(
+        (o: any) =>
+          o[this.optionAlias]?.toLowerCase()?.includes(searchVal) || false
+      );
+    }
+
+    this.filteredOptions = _filteredOptions;
+
+    if (this.selectWhileTyping) {
+      if (this.filteredOptions.length > 0) {
+        this.select(this.filteredOptions[0], false, false);
+      }
+    }
 
     setTimeout(() => {
       this.recalcVirtualListHeight();
@@ -816,12 +870,5 @@ export class CpsAutocompleteComponent
       (typeof this.value === 'string' && this.value.trim() === '') ||
       Number.isNaN(this.value)
     );
-  }
-
-  updateInputText(text: string) {
-    this.inputText = text;
-    setTimeout(() => {
-      this.focusInput();
-    });
   }
 }

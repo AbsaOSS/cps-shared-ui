@@ -17,7 +17,7 @@ import {
 } from '../cps-button-toggle/cps-button-toggle.component';
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 
-interface Time {
+export interface CpsTime {
   hours: string;
   minutes: string;
   seconds?: string;
@@ -71,7 +71,7 @@ export class CpsTimepickerComponent implements OnInit {
    * Whether the timepicker uses 24-hour format.
    * @group Props
    */
-  @Input() use24HourTime = true;
+  @Input() use24HourTime = false;
 
   /**
    * Whether the timepicker has seconds.
@@ -83,13 +83,13 @@ export class CpsTimepickerComponent implements OnInit {
    * Value of the timepicker.
    * @group Props
    */
-  @Input() set value(value: Time | undefined) {
+  @Input() set value(value: CpsTime | undefined) {
     if (!value) value = undefined;
     this._value = value;
     this.onChange(value);
   }
 
-  get value(): Time | undefined {
+  get value(): CpsTime | undefined {
     return this._value;
   }
 
@@ -98,7 +98,7 @@ export class CpsTimepickerComponent implements OnInit {
    * @param {string} string - value changed.
    * @group Emits
    */
-  @Output() valueChanged = new EventEmitter<Time | undefined>();
+  @Output() valueChanged = new EventEmitter<CpsTime | undefined>();
 
   @ViewChild('hoursField')
   hoursField!: CpsAutocompleteComponent;
@@ -109,7 +109,7 @@ export class CpsTimepickerComponent implements OnInit {
   @ViewChild('secondsField')
   secondsField?: CpsAutocompleteComponent;
 
-  private _value: Time | undefined = undefined;
+  private _value: CpsTime | undefined = undefined;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -128,12 +128,7 @@ export class CpsTimepickerComponent implements OnInit {
         dayPeriod: 'AM'
       };
 
-    this.hoursOptions = (
-      this.use24HourTime ? this._getRange(0, 23) : this._getRange(0, 12)
-    ).map((h) => ({
-      value: h.toString().padStart(2, '0'),
-      label: h.toString().padStart(2, '0')
-    }));
+    this._initHoursOptions();
 
     if (this.withSeconds) {
       this.secondsOptions = this._getRange(0, 59).map((m) => ({
@@ -141,6 +136,24 @@ export class CpsTimepickerComponent implements OnInit {
         label: m.toString().padStart(2, '0')
       }));
     }
+  }
+
+  private _initHoursOptions() {
+    const getHourAlias = (h: number) => {
+      h = h === 12 ? 0 : h + 12;
+      return h.toString().padStart(2, '0');
+    };
+
+    this.hoursOptions = (
+      this.use24HourTime ? this._getRange(0, 23) : this._getRange(1, 12)
+    ).map((h) => {
+      const res: { value: string; label: string; alias?: string } = {
+        value: h.toString().padStart(2, '0'),
+        label: h.toString().padStart(2, '0')
+      };
+      if (!this.use24HourTime) res.alias = getHourAlias(h);
+      return res;
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -156,163 +169,159 @@ export class CpsTimepickerComponent implements OnInit {
     this.onTouched = fn;
   }
 
-  writeValue(value: Time | undefined) {
+  writeValue(value: CpsTime | undefined) {
     this.value = value;
   }
 
-  private _updateValue(value: Time | undefined) {
+  private _updateValue(value: CpsTime | undefined) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
   updateHours(hours: string) {
-    const event = {
-      hours,
-      minutes: this.value?.minutes || '',
-      seconds: this.value?.seconds || '',
-      dayPeriod: this.value?.dayPeriod || 'AM'
-    };
-
-    const numReg = /^\d+$/;
-    if (!numReg.test(event.hours)) {
-      event.hours = this.value?.hours || '';
-      this.resetValue(event);
-      this.hoursField?.updateInputText(this.value?.seconds || '');
-      return;
+    const userInput = this.hoursField?.inputText;
+    if (userInput) {
+      const h = parseInt(userInput, 10);
+      if (!isNaN(h) && h >= 13 && h <= 23) {
+        if (this.value) this.value.dayPeriod = 'PM';
+      }
     }
 
-    if (event.hours.length > 3) {
-      event.hours = event.hours.substring(0, 3);
-    }
+    // this.hoursOptions
 
-    if (event.hours.length === 1 && +event.hours >= 1 && +event.hours <= 9) {
-      event.hours = '0' + event.hours;
-    }
+    // const event = {
+    //   hours,
+    //   minutes: this.value?.minutes || '',
+    //   seconds: this.value?.seconds || '',
+    //   dayPeriod: this.value?.dayPeriod || 'AM'
+    // };
 
-    if (event.hours.length === 3 && event.hours[0] === '0') {
-      event.hours = event.hours.substring(1);
-      this.resetValue(event);
-    }
+    // const numReg = /^\d+$/;
+    // if (!numReg.test(event.hours)) {
+    //   event.hours = this.value?.hours || '';
+    //   this.resetValue(event);
+    //   // this.hoursField?.updateInputText(this.value?.seconds || '');
+    //   return;
+    // }
 
-    if (event.hours.length > 2) {
-      event.hours = event.hours.substring(1);
-    }
+    // if (event.hours.length > 3) {
+    //   event.hours = event.hours.substring(0, 3);
+    // }
 
-    if (event.hours === '00' || event.hours === '24') {
-      event.hours = '12';
-      event.dayPeriod = 'AM';
-    }
+    // if (event.hours.length === 1 && +event.hours >= 1 && +event.hours <= 9) {
+    //   event.hours = '0' + event.hours;
+    // }
 
-    if (+event.hours > 12) {
-      if (+event.hours <= 23) {
-        let hours = '' + (+event.hours - 12);
-        if (hours.length === 1) {
-          hours = '0' + hours;
-        }
-        event.hours = hours;
-        event.dayPeriod = 'PM';
-      } else event.hours = '0' + event.hours[event.hours.length - 1];
-    }
+    // if (event.hours.length === 3 && event.hours[0] === '0') {
+    //   event.hours = event.hours.substring(1);
+    //   this.resetValue(event);
+    // }
 
-    if (event.hours?.length === 2) {
-      this._updateValue(event);
-      this.hoursField.updateInputText(this.value?.hours || '');
-    }
+    // if (event.hours.length > 2) {
+    //   event.hours = event.hours.substring(1);
+    // }
+
+    // if (event.hours === '00' || event.hours === '24') {
+    //   event.hours = '12';
+    //   event.dayPeriod = 'AM';
+    // }
+
+    // if (+event.hours > 12) {
+    //   if (+event.hours <= 23) {
+    //     let hours = '' + (+event.hours - 12);
+    //     if (hours.length === 1) {
+    //       hours = '0' + hours;
+    //     }
+    //     event.hours = hours;
+    //     event.dayPeriod = 'PM';
+    //   } else event.hours = '0' + event.hours[event.hours.length - 1];
+    // }
+
+    // if (event.hours?.length === 2) {
+    //   this._updateValue(event);
+    //   // this.hoursField.updateInputText(this.value?.hours || '');
+    // }
   }
 
   updateMinutes(minutes: string) {
-    const event = {
-      hours: this.value?.hours || '',
-      minutes,
-      seconds: this.value?.seconds || '',
-      dayPeriod: this.value?.dayPeriod || 'AM'
-    };
-
-    const numReg = /^\d+$/;
-    if (!numReg.test(event.minutes)) {
-      event.minutes = this.value?.minutes || '';
-      this.resetValue(event);
-      this.minutesField?.updateInputText(this.value?.seconds || '');
-      return;
-    }
-
-    if (event.minutes.length > 3) {
-      event.minutes = event.minutes.substring(0, 3);
-    }
-
-    if (
-      event.minutes.length === 1 &&
-      +event.minutes >= 0 &&
-      +event.minutes <= 9
-    ) {
-      event.minutes = '0' + event.minutes;
-    }
-
-    if (event.minutes.length === 3 && event.minutes[0] === '0') {
-      event.minutes = event.minutes.substring(1);
-      this.resetValue(event);
-    }
-
-    if (event.minutes.length > 2) {
-      event.minutes = event.minutes.substring(1);
-    }
-
-    if (+event.minutes > 59) {
-      event.minutes = '0' + event.minutes[event.minutes.length - 1];
-    }
-
-    if (event.minutes?.length === 2) {
-      this._updateValue(event);
-      this.minutesField.updateInputText(this.value?.minutes || '');
-    }
+    // const event = {
+    //   hours: this.value?.hours || '',
+    //   minutes,
+    //   seconds: this.value?.seconds || '',
+    //   dayPeriod: this.value?.dayPeriod || 'AM'
+    // };
+    // const numReg = /^\d+$/;
+    // if (!numReg.test(event.minutes)) {
+    //   event.minutes = this.value?.minutes || '';
+    //   this.resetValue(event);
+    //   // this.minutesField?.updateInputText(this.value?.seconds || '');
+    //   return;
+    // }
+    // if (event.minutes.length > 3) {
+    //   event.minutes = event.minutes.substring(0, 3);
+    // }
+    // if (
+    //   event.minutes.length === 1 &&
+    //   +event.minutes >= 0 &&
+    //   +event.minutes <= 9
+    // ) {
+    //   event.minutes = '0' + event.minutes;
+    // }
+    // if (event.minutes.length === 3 && event.minutes[0] === '0') {
+    //   event.minutes = event.minutes.substring(1);
+    //   this.resetValue(event);
+    // }
+    // if (event.minutes.length > 2) {
+    //   event.minutes = event.minutes.substring(1);
+    // }
+    // if (+event.minutes > 59) {
+    //   event.minutes = '0' + event.minutes[event.minutes.length - 1];
+    // }
+    // if (event.minutes?.length === 2) {
+    //   this._updateValue(event);
+    //   // this.minutesField.updateInputText(this.value?.minutes || '');
+    // }
   }
 
   updateSeconds(seconds: string) {
-    const event = {
-      hours: this.value?.hours || '',
-      minutes: this.value?.minutes || '',
-      seconds,
-      dayPeriod: this.value?.dayPeriod || 'AM'
-    };
-
-    const numReg = /^\d+$/;
-    if (!numReg.test(event.seconds)) {
-      event.seconds = this.value?.seconds || '';
-      this.resetValue(event);
-      this.secondsField?.updateInputText(this.value?.seconds || '');
-      return;
-    }
-
-    if (event.seconds.length > 3) {
-      event.seconds = event.seconds.substring(0, 3);
-    }
-
-    if (
-      event.seconds.length === 1 &&
-      +event.seconds >= 0 &&
-      +event.seconds <= 9
-    ) {
-      event.seconds = '0' + event.seconds;
-    }
-
-    if (event.seconds.length === 3 && event.seconds[0] === '0') {
-      event.seconds = event.seconds.substring(1);
-      this.resetValue(event);
-    }
-
-    if (event.seconds.length > 2) {
-      event.seconds = event.seconds.substring(1);
-    }
-
-    if (+event.seconds > 59) {
-      event.seconds = '0' + event.seconds[event.seconds.length - 1];
-    }
-
-    if (event.seconds?.length === 2) {
-      this._updateValue(event);
-      this.secondsField?.updateInputText(this.value?.seconds || '');
-    }
+    //   const event = {
+    //     hours: this.value?.hours || '',
+    //     minutes: this.value?.minutes || '',
+    //     seconds,
+    //     dayPeriod: this.value?.dayPeriod || 'AM'
+    //   };
+    //   const numReg = /^\d+$/;
+    //   if (!numReg.test(event.seconds)) {
+    //     event.seconds = this.value?.seconds || '';
+    //     this.resetValue(event);
+    //     // this.secondsField?.updateInputText(this.value?.seconds || '');
+    //     return;
+    //   }
+    //   if (event.seconds.length > 3) {
+    //     event.seconds = event.seconds.substring(0, 3);
+    //   }
+    //   if (
+    //     event.seconds.length === 1 &&
+    //     +event.seconds >= 0 &&
+    //     +event.seconds <= 9
+    //   ) {
+    //     event.seconds = '0' + event.seconds;
+    //   }
+    //   if (event.seconds.length === 3 && event.seconds[0] === '0') {
+    //     event.seconds = event.seconds.substring(1);
+    //     this.resetValue(event);
+    //   }
+    //   if (event.seconds.length > 2) {
+    //     event.seconds = event.seconds.substring(1);
+    //   }
+    //   if (+event.seconds > 59) {
+    //     event.seconds = '0' + event.seconds[event.seconds.length - 1];
+    //   }
+    //   if (event.seconds?.length === 2) {
+    //     this._updateValue(event);
+    //     // this.secondsField?.updateInputText(this.value?.seconds || '');
+    //   }
   }
 
   updateDayPeriod(dayPeriod: 'AM' | 'PM') {
@@ -322,88 +331,6 @@ export class CpsTimepickerComponent implements OnInit {
       seconds: this.value?.seconds || '',
       dayPeriod
     });
-  }
-
-  updateValueInternal(event: Time | undefined) {
-    // if (!event?.hours || !event?.minutes) {
-    //   this.value = event;
-    //   return;
-    // }
-
-    if (!event) return;
-
-    const numReg = /^\d+$/;
-    if (!numReg.test(event.hours)) {
-      event.hours = this.value?.hours || '';
-      this.resetValue(event);
-      return;
-    }
-
-    if (event.hours.length > 3) {
-      event.hours = event.hours.substring(0, 3);
-    }
-
-    if (event.hours.length === 1 && +event.hours >= 1 && +event.hours <= 9) {
-      event.hours = '0' + event.hours;
-    }
-
-    if (event.hours.length === 3 && event.hours[0] === '0') {
-      event.hours = event.hours.substring(1);
-      this.resetValue(event);
-    }
-
-    if (event.hours.length > 2) {
-      event.hours = event.hours.substring(1);
-    }
-
-    if (event.hours === '00' || event.hours === '24') {
-      event.hours = '12';
-      event.dayPeriod = 'AM';
-    }
-
-    if (+event.hours > 12) {
-      if (+event.hours <= 23) {
-        let hours = '' + (+event.hours - 12);
-        if (hours.length === 1) {
-          hours = '0' + hours;
-        }
-        event.hours = hours;
-        event.dayPeriod = 'PM';
-      } else event.hours = '0' + event.hours[event.hours.length - 1];
-    }
-
-    if (!numReg.test(event.minutes)) {
-      event.minutes = this.value?.minutes || '';
-      this.resetValue(event);
-      return;
-    }
-
-    if (event.minutes.length > 3) {
-      event.minutes = event.minutes.substring(0, 3);
-    }
-
-    if (
-      event.minutes.length === 1 &&
-      +event.minutes >= 0 &&
-      +event.minutes <= 9
-    ) {
-      event.minutes = '0' + event.minutes;
-    }
-
-    if (event.minutes.length === 3 && event.minutes[0] === '0') {
-      event.minutes = event.minutes.substring(1);
-      this.resetValue(event);
-    }
-
-    if (event.minutes.length > 2) {
-      event.minutes = event.minutes.substring(1);
-    }
-
-    if (+event.minutes > 59) {
-      event.minutes = '0' + event.minutes[event.minutes.length - 1];
-    }
-
-    this._updateValue(event);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -429,7 +356,7 @@ export class CpsTimepickerComponent implements OnInit {
     this._updateValue(this.value);
   }
 
-  private resetValue(event: Time | undefined) {
+  private resetValue(event: CpsTime | undefined) {
     this.value = {
       hours: '',
       minutes: '',

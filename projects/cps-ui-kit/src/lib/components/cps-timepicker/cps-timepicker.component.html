@@ -5,44 +5,43 @@
       #hoursField
       width="60"
       [options]="hoursOptions"
+      [selectWhileTyping]="true"
+      [withOptionsAliases]="!use24HourTime"
+      [useOptionsAliasesWhenNoMatch]="true"
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
       [returnObject]="false"
       [value]="value?.hours"
-      (blurred)="onBlur()"
-      placeholder="HH"
       (valueChanged)="updateHours($event)"
-      (inputChanged)="updateHours($event)"></cps-autocomplete>
+      placeholder="HH"></cps-autocomplete>
     <span class="timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
       width="60"
       [options]="minutesOptions"
+      [selectWhileTyping]="true"
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
       [returnObject]="false"
       [value]="value?.minutes"
-      (blurred)="onBlur()"
-      placeholder="MM"
       (valueChanged)="updateMinutes($event)"
-      (inputChanged)="updateMinutes($event)"></cps-autocomplete>
+      placeholder="MM"></cps-autocomplete>
     <span *ngIf="withSeconds" class="timepicker-delimiter">:</span>
     <cps-autocomplete
       *ngIf="withSeconds"
       #secondsField
       width="60"
       [options]="secondsOptions"
+      [selectWhileTyping]="true"
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
       [returnObject]="false"
       [value]="value?.seconds"
-      (blurred)="onBlur()"
-      placeholder="SS"
       (valueChanged)="updateSeconds($event)"
-      (inputChanged)="updateSeconds($event)"></cps-autocomplete>
+      placeholder="SS"></cps-autocomplete>
     <cps-button-toggle
       *ngIf="!use24HourTime"
       class="am-pm-selector"
