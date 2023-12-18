@@ -137,7 +137,7 @@ export class CpsAutocompleteComponent
   @Input() useOptionsAliasesWhenNoMatch = false;
 
   /**
-   * Name of the alias field of an option. Needed only if withOptionsAliases prop is true.
+   * Name of the alias field of an option. Needed only if withOptionsAliases is true.
    * @group Props
    */
   @Input() optionAlias = 'alias';
@@ -308,13 +308,6 @@ export class CpsAutocompleteComponent
    */
   @Output() valueChanged = new EventEmitter<any>();
 
-  /**
-   * Callback to invoke on user input.
-   * @param {string} string - input changed.
-   * @group Emits
-   */
-  @Output() inputChanged = new EventEmitter<string>();
-
   @ViewChild('autocompleteBox')
   autocompleteBox!: ElementRef;
 
@@ -474,8 +467,6 @@ export class CpsAutocompleteComponent
   }
 
   filterOptions(event: any) {
-    this.inputChanged.emit(event?.target?.value || '');
-
     if (!this.isOpened) {
       this._toggleOptions(true);
     }

@@ -180,191 +180,84 @@ export class CpsTimepickerComponent implements OnInit {
   }
 
   updateHours(hours: string) {
-    const userInput = this.hoursField?.inputText;
+    const userInput = this.hoursField?.inputText || hours;
     if (userInput) {
       const h = parseInt(userInput, 10);
-      if (!isNaN(h) && h >= 13 && h <= 23) {
-        if (this.value) this.value.dayPeriod = 'PM';
+      if (!isNaN(h) && this.value) {
+        const isPM = h >= 13 && h <= 23;
+        if (this.use24HourTime) this.value.dayPeriod = isPM ? 'PM' : 'AM';
+        else if (isPM) {
+          this.value.dayPeriod = 'PM';
+        }
       }
     }
 
-    // this.hoursOptions
-
-    // const event = {
-    //   hours,
-    //   minutes: this.value?.minutes || '',
-    //   seconds: this.value?.seconds || '',
-    //   dayPeriod: this.value?.dayPeriod || 'AM'
-    // };
-
-    // const numReg = /^\d+$/;
-    // if (!numReg.test(event.hours)) {
-    //   event.hours = this.value?.hours || '';
-    //   this.resetValue(event);
-    //   // this.hoursField?.updateInputText(this.value?.seconds || '');
-    //   return;
-    // }
-
-    // if (event.hours.length > 3) {
-    //   event.hours = event.hours.substring(0, 3);
-    // }
-
-    // if (event.hours.length === 1 && +event.hours >= 1 && +event.hours <= 9) {
-    //   event.hours = '0' + event.hours;
-    // }
-
-    // if (event.hours.length === 3 && event.hours[0] === '0') {
-    //   event.hours = event.hours.substring(1);
-    //   this.resetValue(event);
-    // }
-
-    // if (event.hours.length > 2) {
-    //   event.hours = event.hours.substring(1);
-    // }
-
-    // if (event.hours === '00' || event.hours === '24') {
-    //   event.hours = '12';
-    //   event.dayPeriod = 'AM';
-    // }
-
-    // if (+event.hours > 12) {
-    //   if (+event.hours <= 23) {
-    //     let hours = '' + (+event.hours - 12);
-    //     if (hours.length === 1) {
-    //       hours = '0' + hours;
-    //     }
-    //     event.hours = hours;
-    //     event.dayPeriod = 'PM';
-    //   } else event.hours = '0' + event.hours[event.hours.length - 1];
-    // }
-
-    // if (event.hours?.length === 2) {
-    //   this._updateValue(event);
-    //   // this.hoursField.updateInputText(this.value?.hours || '');
-    // }
+    if (this.value?.hours !== hours) {
+      if (this.value) this.value.hours = hours;
+    }
+    this._tryUpdateValue();
   }
 
   updateMinutes(minutes: string) {
-    // const event = {
-    //   hours: this.value?.hours || '',
-    //   minutes,
-    //   seconds: this.value?.seconds || '',
-    //   dayPeriod: this.value?.dayPeriod || 'AM'
-    // };
-    // const numReg = /^\d+$/;
-    // if (!numReg.test(event.minutes)) {
-    //   event.minutes = this.value?.minutes || '';
-    //   this.resetValue(event);
-    //   // this.minutesField?.updateInputText(this.value?.seconds || '');
-    //   return;
-    // }
-    // if (event.minutes.length > 3) {
-    //   event.minutes = event.minutes.substring(0, 3);
-    // }
-    // if (
-    //   event.minutes.length === 1 &&
-    //   +event.minutes >= 0 &&
-    //   +event.minutes <= 9
-    // ) {
-    //   event.minutes = '0' + event.minutes;
-    // }
-    // if (event.minutes.length === 3 && event.minutes[0] === '0') {
-    //   event.minutes = event.minutes.substring(1);
-    //   this.resetValue(event);
-    // }
-    // if (event.minutes.length > 2) {
-    //   event.minutes = event.minutes.substring(1);
-    // }
-    // if (+event.minutes > 59) {
-    //   event.minutes = '0' + event.minutes[event.minutes.length - 1];
-    // }
-    // if (event.minutes?.length === 2) {
-    //   this._updateValue(event);
-    //   // this.minutesField.updateInputText(this.value?.minutes || '');
-    // }
+    if (this.value?.minutes !== minutes) {
+      if (this.value) this.value.minutes = minutes;
+    }
+    this._tryUpdateValue();
   }
 
   updateSeconds(seconds: string) {
-    //   const event = {
-    //     hours: this.value?.hours || '',
-    //     minutes: this.value?.minutes || '',
-    //     seconds,
-    //     dayPeriod: this.value?.dayPeriod || 'AM'
-    //   };
-    //   const numReg = /^\d+$/;
-    //   if (!numReg.test(event.seconds)) {
-    //     event.seconds = this.value?.seconds || '';
-    //     this.resetValue(event);
-    //     // this.secondsField?.updateInputText(this.value?.seconds || '');
-    //     return;
-    //   }
-    //   if (event.seconds.length > 3) {
-    //     event.seconds = event.seconds.substring(0, 3);
-    //   }
-    //   if (
-    //     event.seconds.length === 1 &&
-    //     +event.seconds >= 0 &&
-    //     +event.seconds <= 9
-    //   ) {
-    //     event.seconds = '0' + event.seconds;
-    //   }
-    //   if (event.seconds.length === 3 && event.seconds[0] === '0') {
-    //     event.seconds = event.seconds.substring(1);
-    //     this.resetValue(event);
-    //   }
-    //   if (event.seconds.length > 2) {
-    //     event.seconds = event.seconds.substring(1);
-    //   }
-    //   if (+event.seconds > 59) {
-    //     event.seconds = '0' + event.seconds[event.seconds.length - 1];
-    //   }
-    //   if (event.seconds?.length === 2) {
-    //     this._updateValue(event);
-    //     // this.secondsField?.updateInputText(this.value?.seconds || '');
-    //   }
+    if (this.value?.seconds !== seconds) {
+      if (this.value) this.value.seconds = seconds;
+    }
+    this._tryUpdateValue();
   }
 
   updateDayPeriod(dayPeriod: 'AM' | 'PM') {
-    this._updateValue({
-      hours: this.value?.hours || '',
-      minutes: this.value?.minutes || '',
-      seconds: this.value?.seconds || '',
-      dayPeriod
-    });
+    if (this.value?.dayPeriod !== dayPeriod) {
+      if (this.value) this.value.dayPeriod = dayPeriod;
+    }
+    this._tryUpdateValue();
+  }
+
+  private _tryUpdateValue() {
+    if (this.value?.hours && this.value?.minutes && this.value?.dayPeriod) {
+      if (!this.withSeconds || (this.withSeconds && this.value?.seconds))
+        this._updateValue(this.value);
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
 
-  onBlur(): void {
-    let hours = this.value?.hours || '';
-    let minutes = this.value?.minutes || '';
-    let dayPeriod = this.value?.dayPeriod || 'AM';
+  // onBlur(): void {
+  //   let hours = this.value?.hours || '';
+  //   let minutes = this.value?.minutes || '';
+  //   let dayPeriod = this.value?.dayPeriod || 'AM';
 
-    if (hours.length === 1) {
-      if (hours === '0') {
-        hours = '12';
-        dayPeriod = 'AM';
-      } else hours = '0' + hours;
-    }
+  //   if (hours.length === 1) {
+  //     if (hours === '0') {
+  //       hours = '12';
+  //       dayPeriod = 'AM';
+  //     } else hours = '0' + hours;
+  //   }
 
-    if (+minutes === 0 || +minutes > 59) {
-      minutes = '00';
-    }
+  //   if (+minutes === 0 || +minutes > 59) {
+  //     minutes = '00';
+  //   }
 
-    this.resetValue({ hours, minutes, dayPeriod });
-    this._updateValue(this.value);
-  }
+  //   this._resetValue({ hours, minutes, dayPeriod });
+  //   this._updateValue(this.value);
+  // }
 
-  private resetValue(event: CpsTime | undefined) {
-    this.value = {
-      hours: '',
-      minutes: '',
-      dayPeriod: 'AM'
-    };
-    this.cdRef.detectChanges();
-    this.value = event;
-  }
+  // private _resetValue(event: CpsTime | undefined) {
+  //   this.value = {
+  //     hours: '',
+  //     minutes: '',
+  //     dayPeriod: 'AM'
+  //   };
+  //   this.cdRef.detectChanges();
+  //   this.value = event;
+  // }
 
   private _getRange(startFrom: number, until: number) {
     return Array.from(
