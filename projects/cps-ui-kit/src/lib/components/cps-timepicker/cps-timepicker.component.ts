@@ -226,6 +226,12 @@ export class CpsTimepickerComponent implements OnInit {
     }
   }
 
+  // TODOS:
+  // NEED SUPPORT FOR ERRORS
+  // NEED TO FIGURE OUT HOW TO EMIT VALUE
+  // NEED TO FIGURE OUT THE INITIAL TIME OBJECT STATE (IF IT'S UNDEFINED)
+  // WHEN CONFIRMING VALUE WITH ENTER, DROPDOWN IS BEING OPENED (E.G. TYPE 2 AND CLICK ENTER)
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
 

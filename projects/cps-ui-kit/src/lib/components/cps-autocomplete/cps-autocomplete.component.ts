@@ -380,7 +380,12 @@ export class CpsAutocompleteComponent
     this.resizeObserver?.disconnect();
   }
 
-  select(option: any, byValue: boolean, needClearInput = true): void {
+  select(
+    option: any,
+    byValue: boolean,
+    needClearInput = true,
+    needFocusInput = true
+  ): void {
     function includes(array: any[], val: any): boolean {
       return array?.some((item) => isEqual(item, val)) || false;
     }
@@ -426,9 +431,11 @@ export class CpsAutocompleteComponent
     if (needClearInput) {
       this._clearInput();
     }
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
+    if (needFocusInput) {
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
   }
 
   onOptionClick(option: any) {
@@ -543,7 +550,7 @@ export class CpsAutocompleteComponent
   }
 
   onBeforeOptionsHidden() {
-    this._confirmInput(this.inputText || '');
+    this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
   }
 
@@ -601,7 +608,7 @@ export class CpsAutocompleteComponent
     // enter
     else if (code === 13) {
       if (this.optionHighlightedIndex < 0) {
-        this._confirmInput(event?.target?.value || '');
+        this._confirmInput(event?.target?.value || '', true);
         event.stopPropagation();
       }
     } else if ([38, 40].includes(code)) {
@@ -807,7 +814,7 @@ export class CpsAutocompleteComponent
     }
   }
 
-  private _confirmInput(searchVal: string) {
+  private _confirmInput(searchVal: string, needFocusInput: boolean) {
     if (!this.isOpened) return;
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
@@ -821,7 +828,7 @@ export class CpsAutocompleteComponent
       (o: any) => o[this.optionLabel].toLowerCase() === searchVal
     );
     if (found) {
-      this.select(found, false);
+      this.select(found, false, true, needFocusInput);
       this._toggleOptions(this.multiple);
     } else {
       if (!this.multiple) {
