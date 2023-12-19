@@ -65,10 +65,11 @@
       [showActionBtn]="true"
       [showRowMenu]="true"
       [showDataReloadBtn]="true"
+      [showRowRemoveButton]="false"
       (editRowBtnClicked)="onEditRowButtonClicked()"
       (actionBtnClicked)="onActionBtnClicked()"
       (dataReloadBtnClicked)="onReloadBtnClicked()"
-      toolbarTitle="Tree table with rows menus, action and data reload buttons">
+      toolbarTitle="Tree table with rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently disabled">
       <ng-template #header>
         <th>Name</th>
         <th>Size</th>
@@ -218,7 +219,7 @@
     </cps-tree-table>
   </cps-tab>
   <cps-tab label="Tree table 7">
-    <cps-tree-table [data]="data" [size]="selSize">
+    <cps-tree-table [data]="data" [size]="selSize" >
       <ng-template #toolbar>
         <span>Tree table with custom toolbar and different sizes</span>
         <cps-button-toggle [options]="sizesOptions" [(ngModel)]="selSize">

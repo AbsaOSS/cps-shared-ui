@@ -172,10 +172,20 @@ export class CpsTreeTableComponent
   @Input() rowHover = true;
 
   /**
-   * Whether the treetable should show row menu.
+   * Determines whether the treetable should display a menu for each row.
+   * If true, the row menu is shown. If false, it's hidden.
+   * Note: The 'Remove' button (controlled by 'showRowRemoveButton') is part of this menu.
    * @group Props
    */
   @Input() showRowMenu = false;
+
+  /**
+   * Determines whether the 'Remove' button should be displayed in the row menu.
+   * If true, 'Remove' button is shown. If false, it's hidden.
+   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * @group Props
+   */
+  @Input() showRowRemoveButton = true;
 
   /**
    * When enabled, a loader component is displayed.

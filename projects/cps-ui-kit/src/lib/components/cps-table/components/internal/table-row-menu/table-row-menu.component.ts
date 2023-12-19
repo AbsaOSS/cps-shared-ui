@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
 import {
   CpsMenuComponent,
@@ -16,7 +16,7 @@ import {
   templateUrl: './table-row-menu.component.html',
   styleUrls: ['./table-row-menu.component.scss']
 })
-export class TableRowMenuComponent {
+export class TableRowMenuComponent implements OnInit {
   /**
    * Callback to invoke when edit-row button is clicked.
    * @param {any} any - button clicked.
@@ -31,20 +31,34 @@ export class TableRowMenuComponent {
    */
   @Output() removeRowBtnClicked = new EventEmitter<any>();
 
-  items: CpsMenuItem[] = [
-    {
-      title: 'Edit',
-      icon: 'edit',
-      action: (event: any) => {
-        this.editRowBtnClicked.emit(event);
+  /**
+   * Determines whether the 'Remove' button should be displayed in the menu.
+   * If true, 'Remove' button is shown. If false, it's hidden.
+   * @group Props
+   */
+  @Input() showRowRemoveButton = false;
+
+  items: CpsMenuItem[] = [];
+
+  ngOnInit(): void {
+    this.items = [
+      {
+        title: 'Edit',
+        icon: 'edit',
+        action: (event: any) => {
+          this.editRowBtnClicked.emit(event);
+        }
       }
-    },
-    {
-      title: 'Remove',
-      icon: 'remove',
-      action: (event: any) => {
-        this.removeRowBtnClicked.emit(event);
-      }
+    ];
+
+    if (this.showRowRemoveButton) {
+      this.items.push({
+        title: 'Remove',
+        icon: 'remove',
+        action: (event: any) => {
+          this.removeRowBtnClicked.emit(event);
+        }
+      });
     }
-  ];
+  }
 }
