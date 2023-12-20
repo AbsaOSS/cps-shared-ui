@@ -471,6 +471,8 @@ export class TreeTablePageComponent implements OnInit {
 
   dataVirtual: any[] = [];
 
+  isRemoveBtnVisible = false;
+
   ngOnInit(): void {
     this.selCols = this.colsWithFilterType;
     this._genVirtualData();
@@ -509,7 +511,9 @@ export class TreeTablePageComponent implements OnInit {
   }
 
   onActionBtnClicked() {
-    alert('Action button clicked');
+    this.isRemoveBtnVisible = !this.isRemoveBtnVisible;
+    const visibilityStatus = this.isRemoveBtnVisible ? 'visible' : 'hidden';
+    alert(`Action performed: The remove button is now ${visibilityStatus}.`);
   }
 
   onReloadBtnClicked() {
