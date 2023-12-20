@@ -69,7 +69,12 @@
       (editRowBtnClicked)="onEditRowButtonClicked()"
       (actionBtnClicked)="onActionBtnClicked()"
       (dataReloadBtnClicked)="onReloadBtnClicked()"
-      toolbarTitle="Tree table with rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently disabled">
+      toolbarTitle="Tree table with rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently {{
+        isRemoveBtnVisible ? 'visible' : 'hidden'
+      }}"
+      actionBtnTitle="{{
+        isRemoveBtnVisible ? 'Hide' : 'Show'
+      }} Remove buttons">
       <ng-template #header>
         <th>Name</th>
         <th>Size</th>
