@@ -31,7 +31,7 @@ export class TableRowMenuComponent implements OnInit {
    */
   @Output() removeRowBtnClicked = new EventEmitter<any>();
 
-  private _showRowRemoveButton = false;
+  private _showRowRemoveButton = true;
 
   /**
    * Determines whether the 'Remove' button should be displayed in the menu.

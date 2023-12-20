@@ -143,6 +143,14 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() showRowMenu = false;
 
   /**
+   * Determines whether the 'Remove' button should be displayed in the row menu.
+   * If true, 'Remove' button is shown. If false, it's hidden.
+   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * @group Props
+   */
+  @Input() showRowRemoveButton = true;
+
+  /**
    * Whether the table should have re-orderable rows.
    * @group Props
    */

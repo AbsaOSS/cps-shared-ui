@@ -267,7 +267,8 @@
       <td *ngIf="showRowMenu" class="cps-table-row-menu-cell">
         <table-row-menu
           (editRowBtnClicked)="onEditRowClicked(item)"
-          (removeRowBtnClicked)="onRemoveRowClicked(item)"></table-row-menu>
+          (removeRowBtnClicked)="onRemoveRowClicked(item)"
+          [showRowRemoveButton]="showRowRemoveButton"></table-row-menu>
       </td>
     </tr>
   </ng-template>
