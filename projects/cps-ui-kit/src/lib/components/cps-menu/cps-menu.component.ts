@@ -18,11 +18,12 @@ import {
   Inject,
   Input,
   NgZone,
+  OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   PLATFORM_ID,
   Renderer2,
+  SimpleChanges,
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
@@ -87,28 +88,18 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent implements AfterViewInit, OnDestroy {
+export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   /**
    * Header title of the menu.
    * @group Props
    */
   @Input() header = '';
 
-  private _items: CpsMenuItem[] = [];
-
   /**
    * An array of menu items.
    * @group Props
    */
-  @Input() set items(value: CpsMenuItem[]) {
-    this._items = value;
-    if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
-    this._setItemsClasses();
-  }
-
-  get items(): CpsMenuItem[] {
-    return this._items;
-  }
+  @Input() items: CpsMenuItem[] = [];
 
   /**
    * Whether to include top pointing arrow on the menu.
@@ -220,6 +211,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy {
         });
       }
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.items || changes.compressed) {
+      if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
+      this._setItemsClasses();
+    }
   }
 
   ngAfterViewInit(): void {
