@@ -31,16 +31,30 @@ export class TableRowMenuComponent implements OnInit {
    */
   @Output() removeRowBtnClicked = new EventEmitter<any>();
 
+  private _showRowRemoveButton = false;
+
   /**
    * Determines whether the 'Remove' button should be displayed in the menu.
    * If true, 'Remove' button is shown. If false, it's hidden.
    * @group Props
    */
-  @Input() showRowRemoveButton = false;
+  @Input()
+  set showRowRemoveButton(value: boolean) {
+    this._showRowRemoveButton = value;
+    this.initializeItems();
+  }
+
+  get showRowRemoveButton(): boolean {
+    return this._showRowRemoveButton;
+  }
 
   items: CpsMenuItem[] = [];
 
   ngOnInit(): void {
+    this.initializeItems();
+  }
+
+  initializeItems() {
     this.items = [
       {
         title: 'Edit',

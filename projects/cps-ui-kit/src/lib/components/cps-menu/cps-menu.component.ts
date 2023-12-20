@@ -87,18 +87,28 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CpsMenuComponent implements AfterViewInit, OnDestroy {
   /**
    * Header title of the menu.
    * @group Props
    */
   @Input() header = '';
 
+  private _items: CpsMenuItem[] = [];
+
   /**
    * An array of menu items.
    * @group Props
    */
-  @Input() items: CpsMenuItem[] = [];
+  @Input() set items(value: CpsMenuItem[]) {
+    this._items = value;
+    if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
+    this._setItemsClasses();
+  }
+
+  get items(): CpsMenuItem[] {
+    return this._items;
+  }
 
   /**
    * Whether to include top pointing arrow on the menu.
@@ -210,11 +220,6 @@ export class CpsMenuComponent implements OnInit, AfterViewInit, OnDestroy {
         });
       }
     });
-  }
-
-  ngOnInit(): void {
-    if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
-    this._setItemsClasses();
   }
 
   ngAfterViewInit(): void {
