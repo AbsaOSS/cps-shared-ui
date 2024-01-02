@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -40,7 +41,7 @@ export interface CpsTime {
   templateUrl: './cps-timepicker.component.html',
   styleUrls: ['./cps-timepicker.component.scss']
 })
-export class CpsTimepickerComponent implements OnInit {
+export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   dayPeriodOptions = [
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' }
@@ -138,6 +139,12 @@ export class CpsTimepickerComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(): void {
+    if (this.hoursField) this.hoursField.isTimePickerField = true;
+    if (this.minutesField) this.minutesField.isTimePickerField = true;
+    if (this.secondsField) this.secondsField.isTimePickerField = true;
+  }
+
   private _initHoursOptions() {
     const getHourAlias = (h: number) => {
       h = h === 12 ? 0 : h + 12;
@@ -230,7 +237,7 @@ export class CpsTimepickerComponent implements OnInit {
   // NEED SUPPORT FOR ERRORS
   // NEED TO FIGURE OUT HOW TO EMIT VALUE
   // NEED TO FIGURE OUT THE INITIAL TIME OBJECT STATE (IF IT'S UNDEFINED)
-  // WHEN CONFIRMING VALUE WITH ENTER, DROPDOWN IS BEING OPENED (E.G. TYPE 2 AND CLICK ENTER)
+  // NEED TO CHECK HOW 24H FORMAT WORKS
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}

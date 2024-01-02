@@ -119,19 +119,13 @@ export class CpsAutocompleteComponent
   @Input() showChevron = true;
 
   /**
-   * Defines whether autocomplete should select the first match while user is typing.
-   * @group Props
-   */
-  @Input() selectWhileTyping = false;
-
-  /**
    * Defines whether the options should be filtered by aliases in addition to labels.
    * @group Props
    */
   @Input() withOptionsAliases = false;
 
   /**
-   * Defines whether the options should be filtered by aliases in addition to labels when no label match is found. Works only If withOptionsAliases is true.
+   * Defines whether the options should be filtered by aliases in addition to labels only when no label match is found. Works only If withOptionsAliases is true.
    * @group Props
    */
   @Input() useOptionsAliasesWhenNoMatch = false;
@@ -340,6 +334,8 @@ export class CpsAutocompleteComponent
   autocompleteBoxWidth = 0;
   resizeObserver: ResizeObserver;
 
+  isTimePickerField = false;
+
   constructor(
     @Self() @Optional() private _control: NgControl,
     private _labelByValue: LabelByValuePipe
@@ -505,12 +501,6 @@ export class CpsAutocompleteComponent
     }
 
     this.filteredOptions = _filteredOptions;
-
-    if (this.selectWhileTyping) {
-      if (this.filteredOptions.length > 0) {
-        this.select(this.filteredOptions[0], false, false);
-      }
-    }
 
     setTimeout(() => {
       this.recalcVirtualListHeight();
@@ -722,6 +712,7 @@ export class CpsAutocompleteComponent
   }
 
   private updateValue(value: any): void {
+    if (!this.multiple && isEqual(value, this.value)) return;
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
@@ -816,6 +807,7 @@ export class CpsAutocompleteComponent
 
   private _confirmInput(searchVal: string, needFocusInput: boolean) {
     if (!this.isOpened) return;
+
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
       if (this.multiple) return;
@@ -832,6 +824,10 @@ export class CpsAutocompleteComponent
       this._toggleOptions(this.multiple);
     } else {
       if (!this.multiple) {
+        if (this.isTimePickerField && this.filteredOptions.length > 0) {
+          this.select(this.filteredOptions[0], false, false, needFocusInput);
+          this._toggleOptions(false);
+        }
         this.inputText = this._getValueLabel();
         this.filteredOptions = this.options;
         return;
