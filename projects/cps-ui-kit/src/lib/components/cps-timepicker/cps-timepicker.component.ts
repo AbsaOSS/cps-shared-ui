@@ -279,6 +279,14 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
     );
   }
 
+  numberOnly(event: any): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
+  }
+
   // hasError(): boolean {
   //   return !!this._control?.control?.touched && !!this._control.errors;
   // }

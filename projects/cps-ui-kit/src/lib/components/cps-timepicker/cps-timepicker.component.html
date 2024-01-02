@@ -3,6 +3,7 @@
   <div class="timepicker-body">
     <cps-autocomplete
       #hoursField
+      (keypress)="numberOnly($event)"
       width="60"
       [options]="hoursOptions"
       [withOptionsAliases]="!use24HourTime"
@@ -17,6 +18,7 @@
     <span class="timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
+      (keypress)="numberOnly($event)"
       width="60"
       [options]="minutesOptions"
       [hideDetails]="true"
@@ -30,6 +32,7 @@
     <cps-autocomplete
       *ngIf="withSeconds"
       #secondsField
+      (keypress)="numberOnly($event)"
       width="60"
       [options]="secondsOptions"
       [hideDetails]="true"
