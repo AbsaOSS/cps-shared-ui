@@ -13,13 +13,14 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {
   CpsButtonToggleComponent,
   CpsButtonToggleOption
 } from '../cps-button-toggle/cps-button-toggle.component';
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
-import { Subscription } from 'rxjs';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 
 export interface CpsTime {
   hours: string;
@@ -39,7 +40,8 @@ export interface CpsTime {
     CommonModule,
     FormsModule,
     CpsButtonToggleComponent,
-    CpsAutocompleteComponent
+    CpsAutocompleteComponent,
+    CpsInfoCircleComponent
   ],
   templateUrl: './cps-timepicker.component.html',
   styleUrls: ['./cps-timepicker.component.scss']
@@ -301,6 +303,9 @@ export class CpsTimepickerComponent
     this.onTouched = fn;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setDisabledState(disabled: boolean) {}
+
   writeValue(value: CpsTime | undefined) {
     this.value = value;
   }
@@ -371,40 +376,6 @@ export class CpsTimepickerComponent
   // NEED TO FIGURE OUT HOW TO EMIT VALUE
   // NEED TO FIGURE OUT THE INITIAL TIME OBJECT STATE (IF IT'S UNDEFINED)
   // NEED TO CHECK HOW 24H FORMAT WORKS
-  // ADD TOOLTIP TO THE LABEL
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
-
-  // onBlur(): void {
-  //   let hours = this.value?.hours || '';
-  //   let minutes = this.value?.minutes || '';
-  //   let dayPeriod = this.value?.dayPeriod || 'AM';
-
-  //   if (hours.length === 1) {
-  //     if (hours === '0') {
-  //       hours = '12';
-  //       dayPeriod = 'AM';
-  //     } else hours = '0' + hours;
-  //   }
-
-  //   if (+minutes === 0 || +minutes > 59) {
-  //     minutes = '00';
-  //   }
-
-  //   this._resetValue({ hours, minutes, dayPeriod });
-  //   this._updateValue(this.value);
-  // }
-
-  // private _resetValue(event: CpsTime | undefined) {
-  //   this.value = {
-  //     hours: '',
-  //     minutes: '',
-  //     dayPeriod: 'AM'
-  //   };
-  //   this.cdRef.detectChanges();
-  //   this.value = event;
-  // }
 
   private _getRange(startFrom: number, until: number) {
     return Array.from(

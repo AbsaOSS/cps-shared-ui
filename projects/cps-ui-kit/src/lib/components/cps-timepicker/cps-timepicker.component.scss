@@ -1,54 +1,64 @@
-$color-white: #ffffff;
 $color-error: #cc3333;
 $timepicker-hint-color: var(--cps-color-text-mild);
+$timepicker-label-color: var(--cps-color-text-dark);
+$timepicker-label-disabled-color: var(--cps-color-text-mild);
+$timepicker-delimeter-color: var(--cps-color-text-lightest);
 
-:host::ng-deep .cps-timepicker {
-  display: flex;
-  flex-direction: column;
-
-  &-label {
-    color: var(--cps-color-text-dark);
-    font-size: 14px;
-    line-height: 14px;
-    font-weight: 600;
-  }
-
-  &-body {
+:host {
+  .cps-timepicker {
     display: flex;
-    flex-direction: row;
-    margin-top: 7px;
+    flex-direction: column;
 
-    .cps-timepicker-am-pm-selector {
-      margin-left: 10px;
-      margin-top: 0;
+    .cps-timepicker-label {
+      align-items: center;
+      display: inline-flex;
+      margin-bottom: 0.2rem;
+      color: $timepicker-label-color;
+      font-size: 0.875rem;
+      font-weight: 600;
+
+      &-info-circle {
+        margin-left: 8px;
+      }
+
+      &-disabled {
+        color: $timepicker-label-disabled-color;
+      }
     }
 
-    .cps-timepicker-delimiter {
-      color: var(--cps-color-text-lightest);
-      font-size: 24px;
-      margin: 0 10px;
-    }
-  }
+    &-body {
+      display: flex;
+      flex-direction: row;
 
-  .cps-timepicker-hint {
-    color: $timepicker-hint-color;
-    font-size: 0.75rem;
-    min-height: 1.125rem;
-    line-height: 1.125rem;
-    cursor: default;
-    margin-top: 0.2rem;
-  }
-  .cps-timepicker-error {
-    color: $color-error;
-    font-weight: bold;
-    font-size: 0.75rem;
-    min-height: 1.125rem;
-    line-height: 1.125rem;
-    cursor: default;
-    margin-top: 0.2rem;
+      .cps-timepicker-am-pm-selector {
+        margin-left: 10px;
+        margin-top: 0;
+      }
+
+      .cps-timepicker-delimiter {
+        color: $timepicker-delimeter-color;
+        font-size: 24px;
+        margin: 0 10px;
+      }
+    }
+
+    .cps-timepicker-hint {
+      color: $timepicker-hint-color;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      line-height: 1.125rem;
+      cursor: default;
+      margin-top: 0.2rem;
+    }
+    
+    .cps-timepicker-error {
+      color: $color-error;
+      font-weight: bold;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      line-height: 1.125rem;
+      cursor: default;
+      margin-top: 0.2rem;
+    }
   }
 }
-
-// ::ng-deep .cps-btn-toggle-content-option-content {
-//   border-color: var(--cps-color-line-light);
-// }
