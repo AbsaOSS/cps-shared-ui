@@ -70,6 +70,7 @@
       *ngIf="!use24HourTime"
       class="cps-timepicker-am-pm-selector"
       [options]="dayPeriodOptions"
+      [disabled]="disabled"
       [value]="value?.dayPeriod || 'AM'"
       (valueChanged)="updateDayPeriod($event)">
     </cps-button-toggle>

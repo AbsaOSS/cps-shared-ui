@@ -10,6 +10,6 @@ export class LabelByValuePipe implements PipeTransform {
     labelKey: string
   ): string {
     const option = options.find((opt) => isEqual(opt[valueKey], value));
-    return option ? option[labelKey] : 'unknown';
+    return option ? option[labelKey] : '';
   }
 }

@@ -16,7 +16,7 @@ export class CombineLabelsPipe implements PipeTransform {
           return v[labelKey];
         } else {
           const option = options.find((opt) => isEqual(opt[valueKey], v));
-          return option ? option[labelKey] : 'unknown';
+          return option ? option[labelKey] : '';
         }
       })
       .join(', ');

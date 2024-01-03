@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -87,7 +86,7 @@ export class CpsTimepickerComponent
    * Whether the timepicker has seconds.
    * @group Props
    */
-  @Input() withSeconds = true;
+  @Input() withSeconds = false;
 
   /**
    * Bottom hint text for the timepicker.
@@ -150,7 +149,7 @@ export class CpsTimepickerComponent
    * @param {string} string - value changed.
    * @group Emits
    */
-  @Output() valueChanged = new EventEmitter<CpsTime | undefined>();
+  @Output() valueChanged = new EventEmitter<CpsTime>();
 
   @ViewChild('hoursField')
   hoursField!: CpsAutocompleteComponent;
@@ -168,10 +167,7 @@ export class CpsTimepickerComponent
 
   private _value: CpsTime | undefined = undefined;
 
-  constructor(
-    @Self() @Optional() private _control: NgControl,
-    private cdRef: ChangeDetectorRef
-  ) {
+  constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -202,6 +198,85 @@ export class CpsTimepickerComponent
 
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onChange = (event: any) => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onTouched = () => {};
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setDisabledState(disabled: boolean) {}
+
+  writeValue(value: CpsTime) {
+    this.value = value;
+  }
+
+  onFieldBlur() {
+    this._control?.control?.markAsTouched();
+    this._checkErrors();
+  }
+
+  updateHours(hours: string) {
+    const userInput = this.hoursField?.inputText || hours || '';
+    if (userInput) {
+      this._initValue();
+      const h = parseInt(userInput, 10);
+      if (!isNaN(h) && this.value) {
+        const isPM = h >= 13 && h <= 23;
+        if (this.use24HourTime) this.value.dayPeriod = isPM ? 'PM' : 'AM';
+        else if (isPM) {
+          this.value.dayPeriod = 'PM';
+        }
+      }
+    }
+
+    if (this.value?.hours !== hours) {
+      if (this.value) this.value.hours = hours;
+    }
+    this._tryUpdateValue();
+  }
+
+  updateMinutes(minutes: string) {
+    minutes = minutes || '';
+    if (minutes) this._initValue();
+    if (this.value?.minutes !== minutes) {
+      if (this.value) this.value.minutes = minutes;
+    }
+    this._tryUpdateValue();
+  }
+
+  updateSeconds(seconds: string) {
+    seconds = seconds || '';
+    if (seconds) this._initValue();
+    if (this.value?.seconds !== seconds) {
+      if (this.value) this.value.seconds = seconds;
+    }
+    this._tryUpdateValue();
+  }
+
+  updateDayPeriod(dayPeriod: 'AM' | 'PM') {
+    if (dayPeriod) this._initValue();
+    if (this.value?.dayPeriod !== dayPeriod) {
+      if (this.value) this.value.dayPeriod = dayPeriod;
+    }
+    this._tryUpdateValue();
+  }
+
+  numberOnly(event: any): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
 
   private _initValue() {
@@ -290,105 +365,26 @@ export class CpsTimepickerComponent
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onTouched = () => {};
-
-  registerOnChange(fn: any) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any) {
-    this.onTouched = fn;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
-
-  writeValue(value: CpsTime | undefined) {
-    this.value = value;
-  }
-
-  private _updateValue(value: CpsTime | undefined) {
+  private _updateValue(value: CpsTime) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
-  onFieldBlur() {
-    this._control?.control?.markAsTouched();
-    this._checkErrors();
-  }
-
-  updateHours(hours: string) {
-    const userInput = this.hoursField?.inputText || hours;
-    if (userInput) {
-      this._initValue();
-      const h = parseInt(userInput, 10);
-      if (!isNaN(h) && this.value) {
-        const isPM = h >= 13 && h <= 23;
-        if (this.use24HourTime) this.value.dayPeriod = isPM ? 'PM' : 'AM';
-        else if (isPM) {
-          this.value.dayPeriod = 'PM';
-        }
-      }
-    }
-
-    if (this.value?.hours !== hours) {
-      if (this.value) this.value.hours = hours;
-    }
-    this._tryUpdateValue();
-  }
-
-  updateMinutes(minutes: string) {
-    if (minutes) this._initValue();
-    if (this.value?.minutes !== minutes) {
-      if (this.value) this.value.minutes = minutes;
-    }
-    this._tryUpdateValue();
-  }
-
-  updateSeconds(seconds: string) {
-    if (seconds) this._initValue();
-    if (this.value?.seconds !== seconds) {
-      if (this.value) this.value.seconds = seconds;
-    }
-    this._tryUpdateValue();
-  }
-
-  updateDayPeriod(dayPeriod: 'AM' | 'PM') {
-    if (dayPeriod) this._initValue();
-    if (this.value?.dayPeriod !== dayPeriod) {
-      if (this.value) this.value.dayPeriod = dayPeriod;
-    }
-    this._tryUpdateValue();
-  }
-
   private _tryUpdateValue() {
-    if (this.value?.hours && this.value?.minutes && this.value?.dayPeriod) {
-      if (!this.withSeconds || (this.withSeconds && this.value?.seconds))
-        this._updateValue(this.value);
-    }
+    if (
+      this.value?.hours &&
+      this.value?.minutes &&
+      (!this.withSeconds || (this.withSeconds && this.value?.seconds)) &&
+      (this.use24HourTime || (!this.use24HourTime && this.value?.dayPeriod))
+    )
+      this._updateValue(this.value);
   }
-
-  // TODOS:
-  // NEED TO FIGURE OUT HOW TO EMIT VALUE
-  // NEED TO FIGURE OUT THE INITIAL TIME OBJECT STATE (IF IT'S UNDEFINED)
-  // NEED TO CHECK HOW 24H FORMAT WORKS
 
   private _getRange(startFrom: number, until: number) {
     return Array.from(
       { length: until + 1 - startFrom },
       (_, k) => k + startFrom
     );
-  }
-
-  numberOnly(event: any): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
   }
 }

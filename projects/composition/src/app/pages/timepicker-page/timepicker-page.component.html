@@ -1,7 +1,35 @@
 <form [formGroup]="form">
-  <cps-timepicker
-    label="Required timepicker with a tooltip"
-    formControlName="requiredTimepicker"
-    infoTooltip="Provide any information here"></cps-timepicker>
+  <div class="timepickers-group">
+    <cps-timepicker
+      label="Required 12-hour timepicker with a tooltip"
+      formControlName="requiredTimepicker"
+      infoTooltip="Provide any information here"></cps-timepicker>
+    <cps-timepicker
+      label="Disabled 12-hour timepicker"
+      [disabled]="true"
+      hint="This timepicker is disabled">
+    </cps-timepicker>
+    <cps-timepicker
+      label="12-hour timepicker with seconds"
+      (valueChanged)="onValueChanged($event)"
+      [withSeconds]="true">
+    </cps-timepicker>
+    <cps-timepicker label="24-hour timepicker" [use24HourTime]="true">
+    </cps-timepicker>
+    <cps-timepicker
+      label="24-hour timepicker with seconds"
+      [use24HourTime]="true"
+      [value]="val24"
+      [withSeconds]="true">
+    </cps-timepicker>
+    <div class="sync-val-example">
+      <cps-timepicker
+        label="12-hour timepicker with two-way binding"
+        [(ngModel)]="syncVal"
+        [withSeconds]="true"
+        [ngModelOptions]="{ standalone: true }">
+      </cps-timepicker>
+      <span>{{ syncVal | json }}</span>
+    </div>
+  </div>
 </form>
-<!-- <cps-timepicker label="I am timepicker"></cps-timepicker> -->

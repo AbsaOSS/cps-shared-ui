@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsTimepickerComponent } from 'cps-ui-kit';
+import { CpsTime, CpsTimepickerComponent } from 'cps-ui-kit';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -25,12 +25,34 @@ import {
 export class TimepickerPageComponent implements OnInit {
   form!: UntypedFormGroup;
 
+  syncVal: CpsTime = {
+    hours: '05',
+    minutes: '10',
+    seconds: '10',
+    dayPeriod: 'PM'
+  };
+
+  val24: CpsTime = {
+    hours: '22',
+    minutes: '59',
+    seconds: '59'
+  };
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 
   ngOnInit() {
+    const defVal: CpsTime = {
+      hours: '11',
+      minutes: '10',
+      dayPeriod: 'PM'
+    };
     this.form = this._formBuilder.group({
-      requiredTimepicker: ['', [Validators.required]]
+      requiredTimepicker: [defVal, [Validators.required]]
     });
+  }
+
+  onValueChanged(val: CpsTime) {
+    console.log('onValueChanged', val);
   }
 }
