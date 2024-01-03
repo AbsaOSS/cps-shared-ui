@@ -48,7 +48,7 @@ export class CpsInfoCircleComponent {
   @Input() tooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the tooltip is persistent.
+   * Determines whether the tooltip is persistent.
    * @group Props
    */
   @Input() tooltipPersistent = false;

@@ -95,7 +95,7 @@ export class CpsAutocompleteComponent
   @Input() multiple = false;
 
   /**
-   * Whether autocomplete is disabled.
+   * Determines whether autocomplete is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -113,19 +113,19 @@ export class CpsAutocompleteComponent
   @Input() selectAll = true;
 
   /**
-   * Defines whether the chevron icon should be displayed.
+   * Determines whether the chevron icon should be displayed.
    * @group Props
    */
   @Input() showChevron = true;
 
   /**
-   * Defines whether the options should be filtered by aliases in addition to labels.
+   * Determines whether the options should be filtered by aliases in addition to labels.
    * @group Props
    */
   @Input() withOptionsAliases = false;
 
   /**
-   * Defines whether the options should be filtered by aliases in addition to labels only when no label match is found. Works only If withOptionsAliases is true.
+   * Determines whether the options should be filtered by aliases in addition to labels only when no label match is found. Works only If withOptionsAliases is true.
    * @group Props
    */
   @Input() useOptionsAliasesWhenNoMatch = false;
@@ -143,7 +143,7 @@ export class CpsAutocompleteComponent
   @Input() chips = true;
 
   /**
-   * Whether the chips can be directly removed.
+   * Determines whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
@@ -155,7 +155,7 @@ export class CpsAutocompleteComponent
   @Input() clearable = false;
 
   /**
-   * Whether the dropdown list should open on clear.
+   * Determines whether the dropdown list should open on clear.
    * @group Props
    */
   @Input() openOnClear = true;
@@ -167,7 +167,7 @@ export class CpsAutocompleteComponent
   @Input() options = [] as any[];
 
   /**
-   * If multiple, defines whether selected options should be ordered according to the initial order of the options.
+   * If multiple, determines whether selected options should be ordered according to the initial order of the options.
    * @group Props
    */
   @Input() keepInitialOrder = false;
@@ -197,7 +197,7 @@ export class CpsAutocompleteComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Determines whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -227,13 +227,13 @@ export class CpsAutocompleteComponent
   @Input() emptyMessage = 'No results found';
 
   /**
-   * Defines whether the empty message should be displayed.
+   * Determines whether the empty message should be displayed.
    * @group Props
    */
   @Input() showEmptyMessage = true;
 
   /**
-   * Whether only the elements within scrollable area should be added into the DOM.
+   * Determines whether only the elements within scrollable area should be added into the DOM.
    * @group Props
    */
   @Input() virtualScroll = false;
@@ -269,7 +269,7 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

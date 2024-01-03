@@ -6,7 +6,7 @@ export class CpsDialogConfig<T = any> {
    */
   data?: T;
   /**
-   * Whether to show the header or not.
+   * Determines whether to show the header or not.
    */
   showHeader?: boolean;
   /**
@@ -30,11 +30,11 @@ export class CpsDialogConfig<T = any> {
    */
   headerIconColor?: string;
   /**
-   * Whether to show the header left border.
+   * Determines whether to show the header left border.
    */
   showHeaderLeftBorder?: boolean;
   /**
-   * Whether to show the header bottom border.
+   * Determines whether to show the header bottom border.
    */
   showHeaderBottomBorder?: boolean;
   /**
@@ -74,7 +74,7 @@ export class CpsDialogConfig<T = any> {
    */
   baseZIndex?: number;
   /**
-   * Whether to automatically manage layering.
+   * Determines whether to automatically manage layering.
    */
   autoZIndex?: boolean;
   /**
@@ -110,7 +110,7 @@ export class CpsDialogConfig<T = any> {
    */
   modal?: boolean;
   /**
-   * When modal dialog is displayed, defines whether background should be blurred.
+   * When modal dialog is displayed, determines whether background should be blurred.
    */
   blurredBackground?: boolean;
   /**
@@ -138,11 +138,11 @@ export class CpsDialogConfig<T = any> {
    */
   minY?: number;
   /**
-   * Whether the dialog can be displayed full screen.
+   * Determines whether the dialog can be displayed full screen.
    */
   maximizable?: boolean;
   /**
-   * Whether the dialog is initially opened as full screen.
+   * Determines whether the dialog is initially opened as full screen.
    */
   maximized?: boolean;
   /**

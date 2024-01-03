@@ -90,7 +90,7 @@ export class CpsTabGroupComponent
   @Input() selectedIndex = 0;
 
   /**
-   * Whether to apply an alternative 'subtabs' styling.
+   * Determines whether to apply an alternative 'subtabs' styling.
    * @group Props
    */
   @Input() isSubTabs = false;

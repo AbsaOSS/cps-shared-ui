@@ -40,31 +40,31 @@ export class CpsTreeTableColumnFilterDirective
   @Input() filterType: CpsColumnFilterType = 'text';
 
   /**
-   * Whether the filter menu should be persistent.
+   * Determines whether the filter menu should be persistent.
    * @group Props
    */
   @Input() filterPersistent = false;
 
   /**
-   * Whether the filter should have clear button.
+   * Determines whether the filter should have clear button.
    * @group Props
    */
   @Input() filterShowClearButton = true;
 
   /**
-   * Whether the filter should have apply button.
+   * Determines whether the filter should have apply button.
    * @group Props
    */
   @Input() filterShowApplyButton = true;
 
   /**
-   * Whether the filter should have close button.
+   * Determines whether the filter should have close button.
    * @group Props
    */
   @Input() filterShowCloseButton = false;
 
   /**
-   * Whether the filter should have match modes.
+   * Determines whether the filter should have match modes.
    * @group Props
    */
   @Input() filterShowMatchModes = true;
@@ -76,7 +76,7 @@ export class CpsTreeTableColumnFilterDirective
   @Input() filterMatchModes: CpsColumnFilterMatchMode[] = [];
 
   /**
-   * Whether the filter should have operator.
+   * Determines whether the filter should have operator.
    * @group Props
    */
   @Input() filterShowOperator = true;
@@ -88,7 +88,7 @@ export class CpsTreeTableColumnFilterDirective
   @Input() filterHeaderTitle = '';
 
   /**
-   * Whether the filter should hide on clear.
+   * Determines whether the filter should hide on clear.
    * @group Props
    */
   @Input() filterHideOnClear = false;
@@ -101,7 +101,7 @@ export class CpsTreeTableColumnFilterDirective
     [];
 
   /**
-   * Whether to show category filter as button toggles.
+   * Determines whether to show category filter as button toggles.
    * @group Props
    */
   @Input() filterAsButtonToggle = false;

@@ -38,7 +38,7 @@ export class CpsTooltipDirective implements OnDestroy {
   @Input() tooltipCloseDelay: string | number = 300;
 
   /**
-   * Whether the tooltip should open on hover, click or focus.
+   * Determines whether the tooltip should open on hover, click or focus.
    * @group Props
    */
   @Input() tooltipOpenOn: CpsTooltipOpenOn = 'hover';
@@ -50,7 +50,7 @@ export class CpsTooltipDirective implements OnDestroy {
   @Input() tooltipPosition: CpsTooltipPosition = 'top';
 
   /**
-   * Whether the tooltip is persistent.
+   * Determines whether the tooltip is persistent.
    * @group Props
    */
   @Input() tooltipPersistent = false;

@@ -65,13 +65,13 @@ export class CpsInputComponent
   @Input() placeholder = 'Please enter';
 
   /**
-   * Whether input is disabled.
+   * Determines whether input is disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * Whether input is readonly.
+   * Determines whether input is readonly.
    * @group Props
    */
   @Input() readonly = false;
@@ -131,7 +131,7 @@ export class CpsInputComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Determines whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -161,7 +161,7 @@ export class CpsInputComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

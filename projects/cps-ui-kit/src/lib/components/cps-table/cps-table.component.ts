@@ -181,7 +181,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() sortable = false;
 
   /**
-   * Defines whether sorting works on single column or on multiple columns.
+   * Determines whether sorting works on single column or on multiple columns.
    * @group Props
    */
   @Input() sortMode: CpsTableSortMode = 'single';

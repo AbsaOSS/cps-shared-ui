@@ -42,13 +42,13 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   @Input() color = '';
 
   /**
-   * Whether the tag should be disabled.
+   * Determines whether the tag should be disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * Whether the tag should be selectable.
+   * Determines whether the tag should be selectable.
    * @group Props
    */
   @Input() selectable = false;

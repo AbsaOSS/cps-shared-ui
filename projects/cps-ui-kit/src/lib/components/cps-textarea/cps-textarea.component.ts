@@ -56,7 +56,7 @@ export class CpsTextareaComponent
   @Input() cols = 20;
 
   /**
-   * Whether the textarea can auto focus.
+   * Determines whether the textarea can auto focus.
    * @group Props
    */
   @Input() autofocus = false;
@@ -68,7 +68,7 @@ export class CpsTextareaComponent
   @Input() hint = '';
 
   /**
-   * Whether the textarea is disabled.
+   * Determines whether the textarea is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -92,7 +92,7 @@ export class CpsTextareaComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the textarea should have persistent clear icon.
+   * Determines whether the textarea should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -104,7 +104,7 @@ export class CpsTextareaComponent
   @Input() error = '';
 
   /**
-   * Whether the component can be resized vertically or not.
+   * Determines whether the component can be resized vertically or not.
    * @group Props
    */
   @Input() resizable: 'vertical' | 'none' = 'vertical';
@@ -128,7 +128,7 @@ export class CpsTextareaComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

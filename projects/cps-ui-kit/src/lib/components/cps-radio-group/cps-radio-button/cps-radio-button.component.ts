@@ -26,13 +26,13 @@ export class CpsRadioButtonComponent {
   @Input() option!: CpsRadioOption;
 
   /**
-   * Whether the radio button is checked.
+   * Determines whether the radio button is checked.
    * @group Props
    */
   @Input() checked = false;
 
   /**
-   * Whether the radio button is disabled.
+   * Determines whether the radio button is disabled.
    * @group Props
    */
   @Input() groupDisabled = false;

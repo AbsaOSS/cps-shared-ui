@@ -71,13 +71,13 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() disabled = false;
 
   /**
-   * Whether at least one of the options is mandatory.
+   * Determines whether at least one of the options is mandatory.
    * @group Props
    */
   @Input() mandatory = true;
 
   /**
-   * Whether all buttons should have equal widths.
+   * Determines whether all buttons should have equal widths.
    * @group Props
    */
   @Input() equalWidths = true;
@@ -107,7 +107,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

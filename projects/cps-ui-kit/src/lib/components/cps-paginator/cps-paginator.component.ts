@@ -48,7 +48,7 @@ export class CpsPaginatorComponent implements OnInit {
   @Input() rowsPerPageOptions: number[] = [];
 
   /**
-   * Whether to show it even there is only one page.
+   * Determines whether to show it even there is only one page.
    * @group Props
    */
   @Input() alwaysShow = true;
@@ -60,7 +60,7 @@ export class CpsPaginatorComponent implements OnInit {
   @Input() backgroundColor = 'transparent';
 
   /**
-   * Whether to reset page index when the number of rows per page changes.
+   * Determines whether to reset page index when the number of rows per page changes.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;

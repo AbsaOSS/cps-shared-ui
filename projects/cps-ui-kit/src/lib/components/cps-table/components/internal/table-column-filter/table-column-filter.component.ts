@@ -59,31 +59,31 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() type: CpsColumnFilterType = 'text';
 
   /**
-   * Whether the filter menu should be persistent.
+   * Determines whether the filter menu should be persistent.
    * @group Props
    */
   @Input() persistent = false;
 
   /**
-   * Whether the filter should have clear button.
+   * Determines whether the filter should have clear button.
    * @group Props
    */
   @Input() showClearButton = true;
 
   /**
-   * Whether the filter should have apply button.
+   * Determines whether the filter should have apply button.
    * @group Props
    */
   @Input() showApplyButton = true;
 
   /**
-   * Whether the filter should have close button.
+   * Determines whether the filter should have close button.
    * @group Props
    */
   @Input() showCloseButton = false;
 
   /**
-   * Whether the filter should have match modes.
+   * Determines whether the filter should have match modes.
    * @group Props
    */
   @Input() showMatchModes = true;
@@ -95,7 +95,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() matchModes: CpsColumnFilterMatchMode[] = [];
 
   /**
-   * Whether the filter should have operator.
+   * Determines whether the filter should have operator.
    * @group Props
    */
   @Input() showOperator = true;
@@ -113,7 +113,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() headerTitle = '';
 
   /**
-   * Whether the filter should hide on clear.
+   * Determines whether the filter should hide on clear.
    * @group Props
    */
   @Input() hideOnClear = false;
@@ -125,7 +125,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
 
   /**
-   * Whether to show category filter as button toggles.
+   * Determines whether to show category filter as button toggles.
    * @group Props
    */
   @Input() asButtonToggle = false;

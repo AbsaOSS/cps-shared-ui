@@ -71,19 +71,19 @@ export class CpsTimepickerComponent
   @Input() label = '';
 
   /**
-   * Whether the timepicker is disabled.
+   * Determines whether the timepicker is disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * Whether the timepicker uses 24-hour format.
+   * Determines whether the timepicker uses 24-hour format.
    * @group Props
    */
   @Input() use24HourTime = false;
 
   /**
-   * Whether the timepicker has seconds.
+   * Determines whether the timepicker has seconds.
    * @group Props
    */
   @Input() withSeconds = false;
@@ -119,7 +119,7 @@ export class CpsTimepickerComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

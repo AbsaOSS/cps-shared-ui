@@ -33,7 +33,7 @@ export class CpsLoaderComponent implements OnInit {
   @Input() labelColor = 'depth';
 
   /**
-   * Whether to show 'Loading...' label.
+   * Determines whether to show 'Loading...' label.
    * @group Props
    */
   @Input() showLabel = true;

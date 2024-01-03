@@ -51,7 +51,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() multiple = false;
 
   /**
-   * Whether the component is disabled.
+   * Determines whether the component is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -69,7 +69,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() chips = true;
 
   /**
-   * Whether the chips can be directly removed.
+   * Determines whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
@@ -81,7 +81,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() clearable = false;
 
   /**
-   * Whether the dropdown should open on clear.
+   * Determines whether the dropdown should open on clear.
    * @group Props
    */
   @Input() openOnClear = true;
@@ -105,7 +105,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Determines whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -129,7 +129,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() loading = false;
 
   /**
-   * Whether only the elements within scrollable area should be added into the DOM.
+   * Determines whether only the elements within scrollable area should be added into the DOM.
    * @group Props
    */
   @Input() virtualScroll = false;
@@ -159,7 +159,7 @@ export class CpsBaseTreeDropdownComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

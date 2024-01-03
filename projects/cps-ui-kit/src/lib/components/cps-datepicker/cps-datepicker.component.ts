@@ -50,7 +50,7 @@ export class CpsDatepickerComponent
   @Input() label = '';
 
   /**
-   * Whether datepicker is disabled.
+   * Determines whether datepicker is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -86,19 +86,19 @@ export class CpsDatepickerComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Determines whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
 
   /**
-   * Whether to show button to be able to select today's date.
+   * Determines whether to show button to be able to select today's date.
    * @group Props
    */
   @Input() showTodayButton = true;
 
   /**
-   * Whether the datepicker dropdown should open on input focus.
+   * Determines whether the datepicker dropdown should open on input focus.
    * @group Props
    */
   @Input() openOnInputFocus = false;
@@ -122,7 +122,7 @@ export class CpsDatepickerComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
