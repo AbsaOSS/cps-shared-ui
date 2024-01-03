@@ -231,9 +231,7 @@ export class CpsTimepickerComponent
       this._initValue();
       const h = parseInt(userInput, 10);
       if (!isNaN(h) && this.value) {
-        const isPM = h >= 13 && h <= 23;
-        if (this.use24HourTime) this.value.dayPeriod = isPM ? 'PM' : 'AM';
-        else if (isPM) {
+        if (h >= 13 && h <= 23 && !this.use24HourTime) {
           this.value.dayPeriod = 'PM';
         }
       }
