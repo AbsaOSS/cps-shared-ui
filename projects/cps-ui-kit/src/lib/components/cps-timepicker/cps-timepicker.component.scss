@@ -1,6 +1,8 @@
 $color-white: #ffffff;
+$color-error: #cc3333;
+$timepicker-hint-color: var(--cps-color-text-mild);
 
-:host::ng-deep .timepicker {
+:host::ng-deep .cps-timepicker {
   display: flex;
   flex-direction: column;
 
@@ -16,16 +18,34 @@ $color-white: #ffffff;
     flex-direction: row;
     margin-top: 7px;
 
-    .am-pm-selector {
+    .cps-timepicker-am-pm-selector {
       margin-left: 10px;
       margin-top: 0;
     }
 
-    .timepicker-delimiter {
+    .cps-timepicker-delimiter {
       color: var(--cps-color-text-lightest);
       font-size: 24px;
       margin: 0 10px;
     }
+  }
+
+  .cps-timepicker-hint {
+    color: $timepicker-hint-color;
+    font-size: 0.75rem;
+    min-height: 1.125rem;
+    line-height: 1.125rem;
+    cursor: default;
+    margin-top: 0.2rem;
+  }
+  .cps-timepicker-error {
+    color: $color-error;
+    font-weight: bold;
+    font-size: 0.75rem;
+    min-height: 1.125rem;
+    line-height: 1.125rem;
+    cursor: default;
+    margin-top: 0.2rem;
   }
 }
 

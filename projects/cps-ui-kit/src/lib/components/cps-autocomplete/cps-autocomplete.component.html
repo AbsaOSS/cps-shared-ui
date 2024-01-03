@@ -3,7 +3,11 @@
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
   tabindex="1"
-  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
+  [ngClass]="{
+    disabled: disabled,
+    error: error || externalError,
+    active: isOpened
+  }"
   #autocompleteContainer>
   <div class="cps-autocomplete-label" *ngIf="label">
     <label>{{ label }}</label>
@@ -213,10 +217,14 @@
       bgColor="transparent">
     </cps-progress-linear>
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-autocomplete-hint">
+  <div
+    *ngIf="!error && !externalError && !hideDetails"
+    class="cps-autocomplete-hint">
     {{ hint }}
   </div>
-  <div *ngIf="error && !hideDetails" class="cps-autocomplete-error">
+  <div
+    *ngIf="(error || externalError) && !hideDetails"
+    class="cps-autocomplete-error">
     {{ error }}
   </div>
 </div>

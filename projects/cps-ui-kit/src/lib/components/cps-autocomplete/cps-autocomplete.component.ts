@@ -245,6 +245,12 @@ export class CpsAutocompleteComponent
   @Input() numToleratedItems = 10;
 
   /**
+   * Externally set error message.
+   * @group Props
+   */
+  @Input() externalError = '';
+
+  /**
    * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
@@ -301,6 +307,13 @@ export class CpsAutocompleteComponent
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
 
   @ViewChild('autocompleteBox')
   autocompleteBox!: ElementRef;
@@ -537,11 +550,13 @@ export class CpsAutocompleteComponent
   onBlur() {
     this._control?.control?.markAsTouched();
     this._checkErrors();
+    this.blurred.emit();
   }
 
   onBeforeOptionsHidden() {
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
+    this.onBlur();
   }
 
   onBoxClick() {
@@ -621,7 +636,6 @@ export class CpsAutocompleteComponent
   }
 
   focus() {
-    this.autocompleteContainer?.nativeElement?.focus();
     this.focusInput();
     this._toggleOptions(true);
   }

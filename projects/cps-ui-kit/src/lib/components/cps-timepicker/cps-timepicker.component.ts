@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Optional,
   Output,
@@ -17,6 +18,8 @@ import {
   CpsButtonToggleOption
 } from '../cps-button-toggle/cps-button-toggle.component';
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
+import { Subscription } from 'rxjs';
 
 export interface CpsTime {
   hours: string;
@@ -41,7 +44,9 @@ export interface CpsTime {
   templateUrl: './cps-timepicker.component.html',
   styleUrls: ['./cps-timepicker.component.scss']
 })
-export class CpsTimepickerComponent implements OnInit, AfterViewInit {
+export class CpsTimepickerComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   dayPeriodOptions = [
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' }
@@ -55,6 +60,8 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   }));
 
   secondsOptions: { label: string; value: string }[] = [];
+
+  private _statusChangesSubscription: Subscription = new Subscription();
 
   /**
    * Label of the timepicker.
@@ -79,6 +86,48 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
    * @group Props
    */
   @Input() withSeconds = true;
+
+  /**
+   * Bottom hint text for the timepicker.
+   * @group Props
+   */
+  @Input() hint = '';
+
+  /**
+   * Hides hint and validation errors.
+   * @group Props
+   */
+  @Input() hideDetails = false;
+
+  /**
+   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * @group Props
+   */
+  @Input() infoTooltip = '';
+
+  /**
+   * InfoTooltip class for styling.
+   * @group Props
+   */
+  @Input() infoTooltipClass = 'cps-tooltip-content';
+
+  /**
+   * Max width of infoTooltip, of type number denoting pixels or string.
+   * @group Props
+   */
+  @Input() infoTooltipMaxWidth: number | string = '100%';
+
+  /**
+   * Whether the infoTooltip is persistent.
+   * @group Props
+   */
+  @Input() infoTooltipPersistent = false;
+
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
    * Value of the timepicker.
@@ -110,6 +159,11 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   @ViewChild('secondsField')
   secondsField?: CpsAutocompleteComponent;
 
+  error = '';
+  hoursError = '';
+  minutesError = '';
+  secondsError = '';
+
   private _value: CpsTime | undefined = undefined;
 
   constructor(
@@ -122,13 +176,6 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (!this.value)
-      this.value = {
-        hours: '',
-        minutes: '',
-        dayPeriod: 'AM'
-      };
-
     this._initHoursOptions();
 
     if (this.withSeconds) {
@@ -137,12 +184,90 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
         label: m.toString().padStart(2, '0')
       }));
     }
+
+    this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
+      () => {
+        this._checkErrors();
+      }
+    ) as Subscription;
   }
 
   ngAfterViewInit(): void {
     if (this.hoursField) this.hoursField.isTimePickerField = true;
     if (this.minutesField) this.minutesField.isTimePickerField = true;
     if (this.secondsField) this.secondsField.isTimePickerField = true;
+  }
+
+  ngOnDestroy() {
+    this._statusChangesSubscription?.unsubscribe();
+  }
+
+  private _initValue() {
+    if (!this.value) {
+      this.value = {
+        hours: '',
+        minutes: ''
+      };
+    }
+    if (!this.use24HourTime && !('dayPeriod' in this.value)) {
+      this.value.dayPeriod = 'AM';
+    }
+    if (this.withSeconds && !('seconds' in this.value)) {
+      this.value.seconds = '';
+    }
+  }
+
+  private _isValueValid() {
+    if (!this.value) return false;
+    if (!this.value.hours || !this.value.minutes) return false;
+    if (this.withSeconds && !this.value.seconds) return false;
+    if (!this.use24HourTime && !this.value.dayPeriod) return false;
+    return true;
+  }
+
+  private _updateErrors() {
+    this.error = 'Time is invalid';
+    this.hoursError = this.value?.hours ? '' : this.error;
+    this.minutesError = this.value?.minutes ? '' : this.error;
+    if (this.withSeconds)
+      this.secondsError = this.value?.seconds ? '' : this.error;
+  }
+
+  private _setErrors(error: string) {
+    this.error = error;
+    this.hoursError = error;
+    this.minutesError = error;
+    this.secondsError = this.withSeconds ? error : '';
+  }
+
+  private _checkErrors() {
+    if (!this._control) return;
+
+    if (this.value && !this._isValueValid()) {
+      this._updateErrors();
+      return;
+    }
+
+    const errors = this._control?.errors;
+
+    if (!this._control?.control?.touched || !errors) {
+      this._setErrors('');
+      return;
+    }
+
+    if ('required' in errors) {
+      this._setErrors('Field is required');
+      return;
+    }
+
+    const errArr = Object.values(errors);
+    if (errArr.length < 1) {
+      this._setErrors('');
+      return;
+    }
+    const message = errArr.find((msg) => typeof msg === 'string');
+
+    this._setErrors(message || 'Unknown error');
   }
 
   private _initHoursOptions() {
@@ -186,9 +311,15 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
     this.valueChanged.emit(value);
   }
 
+  onFieldBlur() {
+    this._control?.control?.markAsTouched();
+    this._checkErrors();
+  }
+
   updateHours(hours: string) {
     const userInput = this.hoursField?.inputText || hours;
     if (userInput) {
+      this._initValue();
       const h = parseInt(userInput, 10);
       if (!isNaN(h) && this.value) {
         const isPM = h >= 13 && h <= 23;
@@ -206,6 +337,7 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   }
 
   updateMinutes(minutes: string) {
+    if (minutes) this._initValue();
     if (this.value?.minutes !== minutes) {
       if (this.value) this.value.minutes = minutes;
     }
@@ -213,6 +345,7 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   }
 
   updateSeconds(seconds: string) {
+    if (seconds) this._initValue();
     if (this.value?.seconds !== seconds) {
       if (this.value) this.value.seconds = seconds;
     }
@@ -220,6 +353,7 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   }
 
   updateDayPeriod(dayPeriod: 'AM' | 'PM') {
+    if (dayPeriod) this._initValue();
     if (this.value?.dayPeriod !== dayPeriod) {
       if (this.value) this.value.dayPeriod = dayPeriod;
     }
@@ -234,10 +368,10 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
   }
 
   // TODOS:
-  // NEED SUPPORT FOR ERRORS
   // NEED TO FIGURE OUT HOW TO EMIT VALUE
   // NEED TO FIGURE OUT THE INITIAL TIME OBJECT STATE (IF IT'S UNDEFINED)
   // NEED TO CHECK HOW 24H FORMAT WORKS
+  // ADD TOOLTIP TO THE LABEL
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
@@ -286,8 +420,4 @@ export class CpsTimepickerComponent implements OnInit, AfterViewInit {
     }
     return true;
   }
-
-  // hasError(): boolean {
-  //   return !!this._control?.control?.touched && !!this._control.errors;
-  // }
 }

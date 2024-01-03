@@ -1,6 +1,6 @@
-<div class="timepicker">
-  <span class="timepicker-label">{{ label }}</span>
-  <div class="timepicker-body">
+<div class="cps-timepicker">
+  <span class="cps-timepicker-label">{{ label }}</span>
+  <div class="cps-timepicker-body">
     <cps-autocomplete
       #hoursField
       (keypress)="numberOnly($event)"
@@ -11,11 +11,13 @@
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
+      (blurred)="onFieldBlur()"
       [returnObject]="false"
       [value]="value?.hours"
       (valueChanged)="updateHours($event)"
+      [externalError]="hoursError"
       placeholder="HH"></cps-autocomplete>
-    <span class="timepicker-delimiter">:</span>
+    <span class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
       (keypress)="numberOnly($event)"
@@ -24,11 +26,13 @@
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
+      (blurred)="onFieldBlur()"
       [returnObject]="false"
       [value]="value?.minutes"
       (valueChanged)="updateMinutes($event)"
+      [externalError]="minutesError"
       placeholder="MM"></cps-autocomplete>
-    <span *ngIf="withSeconds" class="timepicker-delimiter">:</span>
+    <span *ngIf="withSeconds" class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       *ngIf="withSeconds"
       #secondsField
@@ -38,17 +42,24 @@
       [hideDetails]="true"
       [showChevron]="false"
       [showEmptyMessage]="false"
+      (blurred)="onFieldBlur()"
       [returnObject]="false"
       [value]="value?.seconds"
       (valueChanged)="updateSeconds($event)"
+      [externalError]="secondsError"
       placeholder="SS"></cps-autocomplete>
     <cps-button-toggle
       *ngIf="!use24HourTime"
-      class="am-pm-selector"
+      class="cps-timepicker-am-pm-selector"
       [options]="dayPeriodOptions"
       [value]="value?.dayPeriod || 'AM'"
       (valueChanged)="updateDayPeriod($event)">
     </cps-button-toggle>
   </div>
-  <!-- <app-error *ngIf="hasError()" [control]="control"> </app-error> -->
+  <div *ngIf="!error && !hideDetails" class="cps-timepicker-hint">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-timepicker-error">
+    {{ error }}
+  </div>
 </div>
