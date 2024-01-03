@@ -244,7 +244,8 @@
       <td *ngIf="showRowMenu" class="cps-treetable-row-menu-cell">
         <table-row-menu
           (editRowBtnClicked)="onEditRowClicked(rowNode.node)"
-          (removeRowBtnClicked)="onRemoveRowClicked(rowNode.node)">
+          (removeRowBtnClicked)="onRemoveRowClicked(rowNode.node)"
+          [showRowRemoveButton]="showRowRemoveButton">
         </table-row-menu>
       </td>
     </tr>
