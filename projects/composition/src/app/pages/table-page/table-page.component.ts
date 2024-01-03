@@ -49,6 +49,8 @@ export class TablePageComponent implements OnInit {
 
   selSize: CpsTableSize = 'small';
 
+  isRemoveBtnVisible = false;
+
   data = [
     {
       a: 'a1',
@@ -349,7 +351,9 @@ export class TablePageComponent implements OnInit {
   }
 
   onActionBtnClicked() {
-    alert('Action button clicked');
+    this.isRemoveBtnVisible = !this.isRemoveBtnVisible;
+    const visibilityStatus = this.isRemoveBtnVisible ? 'visible' : 'hidden';
+    alert(`'Remove' buttons are now ${visibilityStatus}`);
   }
 
   onReloadBtnClicked() {

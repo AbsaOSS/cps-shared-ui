@@ -50,11 +50,17 @@
       [reorderableRows]="true"
       [showActionBtn]="true"
       [showRowMenu]="true"
+      [showRowRemoveButton]="isRemoveBtnVisible"
       [showDataReloadBtn]="true"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (actionBtnClicked)="onActionBtnClicked()"
       (dataReloadBtnClicked)="onReloadBtnClicked()"
-      toolbarTitle="Table with draggable rows, rows menus, action and data reload buttons">
+      toolbarTitle="Table with draggable rows, rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently {{
+        isRemoveBtnVisible ? 'visible' : 'hidden'
+      }}"
+      actionBtnTitle="{{
+        isRemoveBtnVisible ? 'Hide' : 'Show'
+      }} Remove buttons">
       <ng-template #header>
         <th>A</th>
         <th>B</th>

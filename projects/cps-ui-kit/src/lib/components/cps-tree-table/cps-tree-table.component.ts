@@ -130,25 +130,25 @@ export class CpsTreeTableComponent
   @Input() minWidth: number | string = '';
 
   /**
-   * Whether minWidth prop is used for treetable body only, excluding toolbar and paginator.
+   * Determines whether minWidth prop is used for treetable body only, excluding toolbar and paginator.
    * @group Props
    */
   @Input() minWidthForBodyOnly = true;
 
   /**
-   * Whether the cell widths scale according to their content or not.
+   * Determines whether the cell widths scale according to their content or not.
    * @group Props
    */
   @Input() autoLayout = true;
 
   /**
-   * Whether the treetable should have alternating stripes.
+   * Determines whether the treetable should have alternating stripes.
    * @group Props
    */
   @Input() striped = true;
 
   /**
-   * Whether the treetable should have borders.
+   * Determines whether the treetable should have borders.
    * @group Props
    */
   @Input() bordered = true;
@@ -160,21 +160,19 @@ export class CpsTreeTableComponent
   @Input() size: CpsTreeTableSize = 'normal';
 
   /**
-   * Whether the treetable should have row selection.
+   * Determines whether the treetable should have row selection.
    * @group Props
    */
   @Input() selectable = false;
 
   /**
-   * Whether the treetable should have rows highlighting on hover.
+   * Determines whether the treetable should have rows highlighting on hover.
    * @group Props
    */
   @Input() rowHover = true;
 
   /**
-   * Determines whether the treetable should display a menu for each row.
-   * If true, the row menu is shown. If false, it's hidden.
-   * Note: The 'Remove' button (controlled by 'showRowRemoveButton') is part of this menu.
+   * Determines whether the treetable should show row menus.
    * @group Props
    */
   @Input() showRowMenu = false;
@@ -212,19 +210,19 @@ export class CpsTreeTableComponent
   @Input() sortable = false;
 
   /**
-   * Defines whether sorting works on single column or on multiple columns.
+   * Determines whether sorting works on single column or on multiple columns.
    * @group Props
    */
   @Input() sortMode: CpsTreeTableSortMode = 'single';
 
   /**
-   * Whether to use the default sorting or a custom one using sortFunction.
+   * Determines whether to use the default sorting or a custom one using sortFunction.
    * @group Props
    */
   @Input() customSort = false;
 
   /**
-   * Whether the treetable has toolbar.
+   * Determines whether the treetable has a toolbar.
    * @group Props
    */
   @Input() hasToolbar = true;
@@ -266,7 +264,7 @@ export class CpsTreeTableComponent
   @Input() scrollHeight = '';
 
   /**
-   * Whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true.
+   * Determines whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true.
    * @group Props
    */
   @Input() virtualScroll = false;
@@ -284,13 +282,13 @@ export class CpsTreeTableComponent
   @Input() numToleratedItems = 10;
 
   /**
-   * Whether the treetable should have paginator.
+   * Determines whether the treetable should have paginator.
    * @group Props
    */
   @Input() paginator = false;
 
   /**
-   * Whether to show paginator even there is only one page.
+   * Determines whether to show paginator even there is only one page.
    * @group Props
    */
   @Input() alwaysShowPaginator = true;
@@ -314,13 +312,13 @@ export class CpsTreeTableComponent
   @Input() rows = 0;
 
   /**
-   * Whether to reset page on rows change.
+   * Determines whether to reset page on rows change.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;
 
   /**
-   * Whether to reset page on treetable data sorting.
+   * Determines whether to reset page on treetable data sorting.
    * @group Props
    */
   @Input() resetPageOnSort = true;
@@ -350,13 +348,13 @@ export class CpsTreeTableComponent
   @Input() lazy = false;
 
   /**
-   * Whether to call lazy loading on initialization.
+   * Determines whether to call lazy loading on initialization.
    * @group Props
    */
   @Input() lazyLoadOnInit = true;
 
   /**
-   * Whether to show global filter in the toolbar.
+   * Determines whether to show global filter in the toolbar.
    * @group Props
    */
   @Input() showGlobalFilter = false;
@@ -374,25 +372,25 @@ export class CpsTreeTableComponent
   @Input() globalFilterFields: string[] = [];
 
   /**
-   * Whether to clear global filter on data loading.
+   * Determines whether to clear global filter on data loading.
    * @group Props
    */
   @Input() clearGlobalFilterOnLoading = false;
 
   /**
-   * Whether to show remove button in the toolbar when rows are selected.
+   * Determines whether to show remove button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showRemoveBtnOnSelect = true;
 
   /**
-   * Whether removeBtnOnSelect is disabled.
+   * Determines whether removeBtnOnSelect is disabled.
    * @group Props
    */
   @Input() removeBtnOnSelectDisabled = false;
 
   /**
-   * Whether to show additional button in the toolbar when rows are selected.
+   * Determines whether to show additional button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showAdditionalBtnOnSelect = false;
@@ -404,13 +402,13 @@ export class CpsTreeTableComponent
   @Input() additionalBtnOnSelectTitle = 'Select action';
 
   /**
-   * Whether additionalBtnOnSelect is disabled.
+   * Determines whether additionalBtnOnSelect is disabled.
    * @group Props
    */
   @Input() additionalBtnOnSelectDisabled = false;
 
   /**
-   * Whether to show action button in the toolbar.
+   * Determines whether to show action button in the toolbar.
    * @group Props
    */
   @Input() showActionBtn = false;
@@ -422,31 +420,31 @@ export class CpsTreeTableComponent
   @Input() actionBtnTitle = 'Action';
 
   /**
-   * Whether actionBtn is disabled.
+   * Determines whether actionBtn is disabled.
    * @group Props
    */
   @Input() actionBtnDisabled = false;
 
   /**
-   * Whether to show data reload button in the toolbar.
+   * Determines whether to show data reload button in the toolbar.
    * @group Props
    */
   @Input() showDataReloadBtn = false;
 
   /**
-   * Whether dataReloadBtn is disabled.
+   * Determines whether dataReloadBtn is disabled.
    * @group Props
    */
   @Input() dataReloadBtnDisabled = false;
 
   /**
-   * Whether the treetable should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
+   * Determines whether the treetable should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
    * @group Props
    */
   @Input() showColumnsToggleBtn = false;
 
   /**
-   * Whether columnsToggle button is disabled.
+   * Determines whether columnsToggle button is disabled.
    * @group Props
    */
   @Input() columnsToggleBtnDisabled = false;

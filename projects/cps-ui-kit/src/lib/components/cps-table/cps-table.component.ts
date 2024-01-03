@@ -101,13 +101,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() colFieldName = 'field';
 
   /**
-   * Whether the table should have alternating stripes.
+   * Determines whether the table should have alternating stripes.
    * @group Props
    */
   @Input() striped = true;
 
   /**
-   * Whether the table should have borders.
+   * Determines whether the table should have borders.
    * @group Props
    */
   @Input() bordered = true;
@@ -119,13 +119,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() size: CpsTableSize = 'normal';
 
   /**
-   * Whether the table should have row selection.
+   * Determines whether the table should have row selection.
    * @group Props
    */
   @Input() selectable = false;
 
   /**
-   * Whether the table should have rows highlighting on hover.
+   * Determines whether the table should have rows highlighting on hover.
    * @group Props
    */
   @Input() rowHover = true;
@@ -137,7 +137,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() dataKey = '';
 
   /**
-   * Whether the table should show row menu.
+   * Determines whether the table should show row menus.
    * @group Props
    */
   @Input() showRowMenu = false;
@@ -151,7 +151,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() showRowRemoveButton = true;
 
   /**
-   * Whether the table should have re-orderable rows.
+   * Determines whether the table should have re-orderable rows.
    * @group Props
    */
   @Input() reorderableRows = false;
@@ -187,13 +187,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() sortMode: CpsTableSortMode = 'single';
 
   /**
-   * Whether to use the default sorting or a custom one using sortFunction.
+   * Determines whether to use the default sorting or a custom one using sortFunction.
    * @group Props
    */
   @Input() customSort = false;
 
   /**
-   * Whether the table has toolbar.
+   * Determines whether the table has a toolbar.
    * @group Props
    */
   @Input() hasToolbar = true;
@@ -235,7 +235,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() scrollHeight = '';
 
   /**
-   * Whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true.
+   * Determines whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true.
    * @group Props
    */
   @Input() virtualScroll = false;
@@ -247,13 +247,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() numToleratedItems = 10;
 
   /**
-   * Whether the table should have paginator.
+   * Determines whether the table should have paginator.
    * @group Props
    */
   @Input() paginator = false;
 
   /**
-   * Whether to show paginator even if there is only one page.
+   * Determines whether to show paginator even if there is only one page.
    * @group Props
    */
   @Input() alwaysShowPaginator = true;
@@ -277,13 +277,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() rows = 0;
 
   /**
-   * Whether to reset page on rows change.
+   * Determines whether to reset page on rows change.
    * @group Props
    */
   @Input() resetPageOnRowsChange = false;
 
   /**
-   * Whether to reset page on table data sorting.
+   * Determines whether to reset page on table data sorting.
    * @group Props
    */
   @Input() resetPageOnSort = true;
@@ -313,13 +313,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() lazy = false;
 
   /**
-   * Whether to call lazy loading on initialization.
+   * Determines whether to call lazy loading on initialization.
    * @group Props
    */
   @Input() lazyLoadOnInit = true;
 
   /**
-   * Whether to show global filter in the toolbar.
+   * Determines whether to show global filter in the toolbar.
    * @group Props
    */
   @Input() showGlobalFilter = false;
@@ -337,25 +337,25 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() globalFilterFields: string[] = [];
 
   /**
-   * Whether to clear global filter on data loading.
+   * Determines whether to clear global filter on data loading.
    * @group Props
    */
   @Input() clearGlobalFilterOnLoading = false;
 
   /**
-   * Whether to show remove button in the toolbar when rows are selected.
+   * Determines whether to show remove button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showRemoveBtnOnSelect = true;
 
   /**
-   * Whether removeBtnOnSelect is disabled.
+   * Determines whether removeBtnOnSelect is disabled.
    * @group Props
    */
   @Input() removeBtnOnSelectDisabled = false;
 
   /**
-   * Whether to show additional button in the toolbar when rows are selected.
+   * Determines whether to show additional button in the toolbar when rows are selected.
    * @group Props
    */
   @Input() showAdditionalBtnOnSelect = false;
@@ -367,13 +367,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() additionalBtnOnSelectTitle = 'Select action';
 
   /**
-   * Whether additionalBtnOnSelect is disabled.
+   * Determines whether additionalBtnOnSelect is disabled.
    * @group Props
    */
   @Input() additionalBtnOnSelectDisabled = false;
 
   /**
-   * Whether to show action button in the toolbar.
+   * Determines whether to show action button in the toolbar.
    * @group Props
    */
   @Input() showActionBtn = false;
@@ -385,19 +385,19 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() actionBtnTitle = 'Action';
 
   /**
-   * Whether actionBtn is disabled.
+   * Determines whether actionBtn is disabled.
    * @group Props
    */
   @Input() actionBtnDisabled = false;
 
   /**
-   * Whether to show export button in the toolbar.
+   * Determines whether to show export button in the toolbar.
    * @group Props
    */
   @Input() showExportBtn = false;
 
   /**
-   * Whether exportBtn is disabled.
+   * Determines whether exportBtn is disabled.
    * @group Props
    */
   @Input() exportBtnDisabled = false;
@@ -415,25 +415,25 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() csvSeparator = ',';
 
   /**
-   * Whether to show data reload button in the toolbar.
+   * Determines whether to show data reload button in the toolbar.
    * @group Props
    */
   @Input() showDataReloadBtn = false;
 
   /**
-   * Whether dataReloadBtn is disabled.
+   * Determines whether dataReloadBtn is disabled.
    * @group Props
    */
   @Input() dataReloadBtnDisabled = false;
 
   /**
-   * Whether the table should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
+   * Determines whether the table should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
    * @group Props
    */
   @Input() showColumnsToggleBtn = false;
 
   /**
-   * Whether columnsToggle button is disabled.
+   * Determines whether columnsToggle button is disabled.
    * @group Props
    */
   @Input() columnsToggleBtnDisabled = false;
