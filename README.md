@@ -32,6 +32,7 @@ This repository consists of two projects:
 - Tabs
 - Tag
 - Textarea
+- Timepicker
 - Tooltip directive
 - Tree autocomplete
 - Tree select

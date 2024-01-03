@@ -64,13 +64,13 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   @Input() groupLabel = '';
 
   /**
-   * Whether the radio group should be vertical.
+   * Determines whether the radio group should be vertical.
    * @group Props
    */
   @Input() vertical = false;
 
   /**
-   * Whether the radio group is disabled.
+   * Determines whether the radio group is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -94,7 +94,7 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

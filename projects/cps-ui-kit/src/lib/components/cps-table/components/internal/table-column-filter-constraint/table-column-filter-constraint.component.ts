@@ -66,7 +66,7 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   @Input() categoryOptions: CpsColumnFilterCategoryOption[] | string[] = [];
 
   /**
-   * Whether to show category filter as button toggles.
+   * Determines whether to show category filter as button toggles.
    * @group Props
    */
   @Input() asButtonToggle = false;
@@ -84,7 +84,7 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
   @Input() placeholder = '';
 
   /**
-   * Whether the filter should have an apply button.
+   * Determines whether the filter should have an apply button.
    * @group Props
    */
   @Input() hasApplyButton = true;

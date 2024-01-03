@@ -95,7 +95,7 @@ export class CpsAutocompleteComponent
   @Input() multiple = false;
 
   /**
-   * Whether autocomplete is disabled.
+   * Determines whether autocomplete is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -113,10 +113,28 @@ export class CpsAutocompleteComponent
   @Input() selectAll = true;
 
   /**
-   * Defines whether the chevron icon should be displayed.
+   * Determines whether the chevron icon should be displayed.
    * @group Props
    */
   @Input() showChevron = true;
+
+  /**
+   * Determines whether the options should be filtered by aliases in addition to labels.
+   * @group Props
+   */
+  @Input() withOptionsAliases = false;
+
+  /**
+   * Determines whether the options should be filtered by aliases in addition to labels only when no label match is found. Works only If withOptionsAliases is true.
+   * @group Props
+   */
+  @Input() useOptionsAliasesWhenNoMatch = false;
+
+  /**
+   * Name of the alias field of an option. Needed only if withOptionsAliases is true.
+   * @group Props
+   */
+  @Input() optionAlias = 'alias';
 
   /**
    * When selecting elements, they will appear in a form of a chip.
@@ -125,7 +143,7 @@ export class CpsAutocompleteComponent
   @Input() chips = true;
 
   /**
-   * Whether the chips can be directly removed.
+   * Determines whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
@@ -137,7 +155,7 @@ export class CpsAutocompleteComponent
   @Input() clearable = false;
 
   /**
-   * Whether the dropdown list should open on clear.
+   * Determines whether the dropdown list should open on clear.
    * @group Props
    */
   @Input() openOnClear = true;
@@ -149,7 +167,7 @@ export class CpsAutocompleteComponent
   @Input() options = [] as any[];
 
   /**
-   * If multiple, defines whether selected options should be ordered according to the initial order of the options.
+   * If multiple, determines whether selected options should be ordered according to the initial order of the options.
    * @group Props
    */
   @Input() keepInitialOrder = false;
@@ -179,7 +197,7 @@ export class CpsAutocompleteComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Determines whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -209,13 +227,13 @@ export class CpsAutocompleteComponent
   @Input() emptyMessage = 'No results found';
 
   /**
-   * Defines whether the empty message should be displayed.
+   * Determines whether the empty message should be displayed.
    * @group Props
    */
   @Input() showEmptyMessage = true;
 
   /**
-   * Whether only the elements within scrollable area should be added into the DOM.
+   * Determines whether only the elements within scrollable area should be added into the DOM.
    * @group Props
    */
   @Input() virtualScroll = false;
@@ -225,6 +243,12 @@ export class CpsAutocompleteComponent
    * @group Props
    */
   @Input() numToleratedItems = 10;
+
+  /**
+   * Externally set error message.
+   * @group Props
+   */
+  @Input() externalError = '';
 
   /**
    * When it is not an empty string, an info icon is displayed to show text for more info.
@@ -245,7 +269,7 @@ export class CpsAutocompleteComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;
@@ -284,6 +308,13 @@ export class CpsAutocompleteComponent
    */
   @Output() valueChanged = new EventEmitter<any>();
 
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
+
   @ViewChild('autocompleteBox')
   autocompleteBox!: ElementRef;
 
@@ -315,6 +346,8 @@ export class CpsAutocompleteComponent
 
   autocompleteBoxWidth = 0;
   resizeObserver: ResizeObserver;
+
+  isTimePickerField = false;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -356,7 +389,12 @@ export class CpsAutocompleteComponent
     this.resizeObserver?.disconnect();
   }
 
-  select(option: any, byValue: boolean): void {
+  select(
+    option: any,
+    byValue: boolean,
+    needClearInput = true,
+    needFocusInput = true
+  ): void {
     function includes(array: any[], val: any): boolean {
       return array?.some((item) => isEqual(item, val)) || false;
     }
@@ -398,10 +436,15 @@ export class CpsAutocompleteComponent
     } else {
       this.updateValue(val);
     }
-    this._clearInput();
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
+
+    if (needClearInput) {
+      this._clearInput();
+    }
+    if (needFocusInput) {
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
   }
 
   onOptionClick(option: any) {
@@ -447,9 +490,30 @@ export class CpsAutocompleteComponent
     this.backspaceClickedOnce = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
 
-    this.filteredOptions = this.options.filter((o: any) =>
-      o[this.optionLabel].toLowerCase().includes(searchVal)
-    );
+    let _filteredOptions = this.options.filter((o: any) => {
+      let res = o[this.optionLabel].toLowerCase().includes(searchVal);
+      if (
+        !res &&
+        this.withOptionsAliases &&
+        !this.useOptionsAliasesWhenNoMatch
+      ) {
+        res = o[this.optionAlias]?.toLowerCase()?.includes(searchVal) || false;
+      }
+      return res;
+    });
+
+    if (
+      _filteredOptions.length === 0 &&
+      this.withOptionsAliases &&
+      this.useOptionsAliasesWhenNoMatch
+    ) {
+      _filteredOptions = this.options.filter(
+        (o: any) =>
+          o[this.optionAlias]?.toLowerCase()?.includes(searchVal) || false
+      );
+    }
+
+    this.filteredOptions = _filteredOptions;
 
     setTimeout(() => {
       this.recalcVirtualListHeight();
@@ -486,11 +550,13 @@ export class CpsAutocompleteComponent
   onBlur() {
     this._control?.control?.markAsTouched();
     this._checkErrors();
+    this.blurred.emit();
   }
 
   onBeforeOptionsHidden() {
-    this._confirmInput(this.inputText || '');
+    this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
+    this.onBlur();
   }
 
   onBoxClick() {
@@ -547,7 +613,7 @@ export class CpsAutocompleteComponent
     // enter
     else if (code === 13) {
       if (this.optionHighlightedIndex < 0) {
-        this._confirmInput(event?.target?.value || '');
+        this._confirmInput(event?.target?.value || '', true);
         event.stopPropagation();
       }
     } else if ([38, 40].includes(code)) {
@@ -570,7 +636,6 @@ export class CpsAutocompleteComponent
   }
 
   focus() {
-    this.autocompleteContainer?.nativeElement?.focus();
     this.focusInput();
     this._toggleOptions(true);
   }
@@ -661,6 +726,7 @@ export class CpsAutocompleteComponent
   }
 
   private updateValue(value: any): void {
+    if (!this.multiple && isEqual(value, this.value)) return;
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
@@ -753,8 +819,9 @@ export class CpsAutocompleteComponent
     }
   }
 
-  private _confirmInput(searchVal: string) {
+  private _confirmInput(searchVal: string, needFocusInput: boolean) {
     if (!this.isOpened) return;
+
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
       if (this.multiple) return;
@@ -767,10 +834,14 @@ export class CpsAutocompleteComponent
       (o: any) => o[this.optionLabel].toLowerCase() === searchVal
     );
     if (found) {
-      this.select(found, false);
+      this.select(found, false, true, needFocusInput);
       this._toggleOptions(this.multiple);
     } else {
       if (!this.multiple) {
+        if (this.isTimePickerField && this.filteredOptions.length > 0) {
+          this.select(this.filteredOptions[0], false, false, needFocusInput);
+          this._toggleOptions(false);
+        }
         this.inputText = this._getValueLabel();
         this.filteredOptions = this.options;
         return;

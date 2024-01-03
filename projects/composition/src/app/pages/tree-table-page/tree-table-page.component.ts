@@ -513,7 +513,7 @@ export class TreeTablePageComponent implements OnInit {
   onActionBtnClicked() {
     this.isRemoveBtnVisible = !this.isRemoveBtnVisible;
     const visibilityStatus = this.isRemoveBtnVisible ? 'visible' : 'hidden';
-    alert(`Action performed: The remove button is now ${visibilityStatus}.`);
+    alert(`'Remove' buttons are now ${visibilityStatus}`);
   }
 
   onReloadBtnClicked() {

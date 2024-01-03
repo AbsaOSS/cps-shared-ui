@@ -26,13 +26,13 @@ export class CpsTabComponent {
   @Input() icon = '';
 
   /**
-   * Whether tab is disabled.
+   * Determines whether tab is disabled.
    * @group Props
    */
   @Input() disabled = false;
 
   /**
-   * Whether to show the tooltip on tab hover.
+   * Determines whether to show the tooltip on tab hover.
    * @group Props
    */
   @Input() tooltipText = '';
@@ -50,7 +50,7 @@ export class CpsTabComponent {
   @Input() tooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the tooltip should have persistent info.
+   * Determines whether the tooltip should have persistent info.
    * @group Props
    */
   @Input() tooltipPersistent = false;

@@ -102,7 +102,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() items: CpsMenuItem[] = [];
 
   /**
-   * Whether to include top pointing arrow on the menu.
+   * Determines whether to include top pointing arrow on the menu.
    * @group Props
    */
   @Input() withArrow = true;
@@ -114,13 +114,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() compressed = false;
 
   /**
-   * Whether the menu should show on target element focus.
+   * Determines whether the menu should show on target element focus.
    * @group Props
    */
   @Input() focusOnShow = true;
 
   /**
-   * Whether the menu should be persistent.
+   * Determines whether the menu should be persistent.
    * @group Props
    */
   @Input() persistent = false;

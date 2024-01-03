@@ -28,6 +28,7 @@ import { MenuPageComponent } from './pages/menu-page/menu-page.component';
 import { SidebarMenuPageComponent } from './pages/sidebar-menu-page/sidebar-menu-page.component';
 import { TreeTablePageComponent } from './pages/tree-table-page/tree-table-page.component';
 import { DialogPageComponent } from './pages/dialog-page/dialog-page.component';
+import { TimepickerPageComponent } from './pages/timepicker-page/timepicker-page.component';
 
 const routes: Routes = [
   {
@@ -164,6 +165,11 @@ const routes: Routes = [
     path: 'textarea',
     title: 'Textarea',
     component: TextareaPageComponent
+  },
+  {
+    path: 'timepicker',
+    title: 'Timepicker',
+    component: TimepickerPageComponent
   },
   {
     path: 'tooltip',

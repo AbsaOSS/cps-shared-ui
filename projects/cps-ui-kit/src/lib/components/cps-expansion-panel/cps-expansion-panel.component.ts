@@ -76,7 +76,7 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() backgroundColor = 'transparent';
 
   /**
-   * Whether to show the chevron icon.
+   * Determines whether to show the chevron icon.
    * @group Props
    */
   @Input() showChevron = true;
@@ -88,7 +88,7 @@ export class CpsExpansionPanelComponent implements OnInit {
   @Input() isExpanded = false;
 
   /**
-   * Whether expansion panel is disabled.
+   * Determines whether expansion panel is disabled.
    * @group Props
    */
   @Input() disabled = false;

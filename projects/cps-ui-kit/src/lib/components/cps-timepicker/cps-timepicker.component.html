@@ -1,0 +1,84 @@
+<div class="cps-timepicker">
+  <div
+    class="cps-timepicker-label"
+    [ngClass]="{ 'cps-timepicker-label-disabled': disabled }"
+    *ngIf="label">
+    <label>{{ label }}</label>
+    <cps-info-circle
+      *ngIf="infoTooltip"
+      class="cps-timepicker-label-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  </div>
+  <div class="cps-timepicker-body">
+    <cps-autocomplete
+      #hoursField
+      (keypress)="numberOnly($event)"
+      width="60"
+      [options]="hoursOptions"
+      [withOptionsAliases]="!use24HourTime"
+      [useOptionsAliasesWhenNoMatch]="true"
+      [hideDetails]="true"
+      [disabled]="disabled"
+      [showChevron]="false"
+      [showEmptyMessage]="false"
+      (blurred)="onFieldBlur()"
+      [returnObject]="false"
+      [value]="value?.hours"
+      (valueChanged)="updateHours($event)"
+      [externalError]="hoursError"
+      placeholder="HH"></cps-autocomplete>
+    <span class="cps-timepicker-delimiter">:</span>
+    <cps-autocomplete
+      #minutesField
+      (keypress)="numberOnly($event)"
+      width="60"
+      [options]="minutesOptions"
+      [hideDetails]="true"
+      [disabled]="disabled"
+      [showChevron]="false"
+      [showEmptyMessage]="false"
+      (blurred)="onFieldBlur()"
+      [returnObject]="false"
+      [value]="value?.minutes"
+      (valueChanged)="updateMinutes($event)"
+      [externalError]="minutesError"
+      placeholder="MM"></cps-autocomplete>
+    <span *ngIf="withSeconds" class="cps-timepicker-delimiter">:</span>
+    <cps-autocomplete
+      *ngIf="withSeconds"
+      #secondsField
+      (keypress)="numberOnly($event)"
+      width="60"
+      [options]="secondsOptions"
+      [hideDetails]="true"
+      [disabled]="disabled"
+      [showChevron]="false"
+      [showEmptyMessage]="false"
+      (blurred)="onFieldBlur()"
+      [returnObject]="false"
+      [value]="value?.seconds"
+      (valueChanged)="updateSeconds($event)"
+      [externalError]="secondsError"
+      placeholder="SS"></cps-autocomplete>
+    <cps-button-toggle
+      *ngIf="!use24HourTime"
+      class="cps-timepicker-am-pm-selector"
+      [options]="dayPeriodOptions"
+      [disabled]="disabled"
+      [value]="value?.dayPeriod || 'AM'"
+      (valueChanged)="updateDayPeriod($event)">
+    </cps-button-toggle>
+  </div>
+  <div *ngIf="!error && !hideDetails" class="cps-timepicker-hint">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-timepicker-error">
+    {{ error }}
+  </div>
+</div>

@@ -34,7 +34,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() label = '';
 
   /**
-   * Whether checkbox is disabled.
+   * Determines whether checkbox is disabled.
    * @group Props
    */
   @Input() disabled = false;
@@ -58,7 +58,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

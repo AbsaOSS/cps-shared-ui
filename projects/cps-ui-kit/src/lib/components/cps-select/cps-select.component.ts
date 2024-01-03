@@ -118,7 +118,7 @@ export class CpsSelectComponent
   @Input() chips = true;
 
   /**
-   * Whether the chips can be directly removed.
+   * Determines whether the chips can be directly removed.
    * @group Props
    */
   @Input() closableChips = true;
@@ -130,7 +130,7 @@ export class CpsSelectComponent
   @Input() clearable = false;
 
   /**
-   * Whether the dropdown list should open on clear.
+   * Determines whether the dropdown list should open on clear.
    * @group Props
    */
   @Input() openOnClear = true;
@@ -142,7 +142,7 @@ export class CpsSelectComponent
   @Input() options = [] as any[];
 
   /**
-   * If multiple, defines whether selected options should be ordered according to the initial order of the options.
+   * If multiple, determines whether selected options should be ordered according to the initial order of the options.
    * @group Props
    */
   @Input() keepInitialOrder = false;
@@ -172,7 +172,7 @@ export class CpsSelectComponent
   @Input() hideDetails = false;
 
   /**
-   * Whether the component should have persistent clear icon.
+   * Determines whether the component should have persistent clear icon.
    * @group Props
    */
   @Input() persistentClear = false;
@@ -196,7 +196,7 @@ export class CpsSelectComponent
   @Input() loading = false;
 
   /**
-   * Whether only the elements within scrollable area should be added into the DOM.
+   * Determines whether only the elements within scrollable area should be added into the DOM.
    * @group Props
    */
   @Input() virtualScroll = false;
@@ -226,7 +226,7 @@ export class CpsSelectComponent
   @Input() infoTooltipMaxWidth: number | string = '100%';
 
   /**
-   * Whether the infoTooltip is persistent.
+   * Determines whether the infoTooltip is persistent.
    * @group Props
    */
   @Input() infoTooltipPersistent = false;

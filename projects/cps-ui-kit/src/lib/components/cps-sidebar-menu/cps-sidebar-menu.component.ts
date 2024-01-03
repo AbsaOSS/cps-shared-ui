@@ -75,7 +75,7 @@ export class CpsSidebarMenuComponent implements OnInit {
   @Input() isExpanded = true;
 
   /**
-   * Whether the menu items should allow activating only exact links.
+   * Determines whether the menu items should allow activating only exact links.
    * @group Props
    */
   @Input() exactRoutes = false;
