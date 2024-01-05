@@ -1,0 +1,77 @@
+$cps-overlay-background: rgba(0, 0, 0, 0.2);
+$animation-duration: 150ms;
+
+.cps-notification-container-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.cps-notification-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  transform: scale(1);
+  position: relative;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 0 none;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.cps-notification-container .cps-notification-content {
+  background: transparent;
+  flex-grow: 1;
+}
+
+/* Top, Bottom, Left, Right, Top* and Bottom* */
+.cps-notification-container-top .cps-notification-container,
+.cps-notification-container-bottom .cps-notification-container,
+.cps-notification-container-left .cps-notification-container,
+.cps-notification-container-right .cps-notification-container,
+.cps-notification-container-top-left .cps-notification-container,
+.cps-notification-container-top-right .cps-notification-container,
+.cps-notification-container-bottom-left .cps-notification-container,
+.cps-notification-container-bottom-right .cps-notification-container {
+  margin: 0.75rem;
+  transform: translate3d(0px, 0px, 0px);
+}
+
+/* Position */
+.cps-notification-container-left {
+  justify-content: flex-start;
+}
+.cps-notification-container-right {
+  justify-content: flex-end;
+}
+.cps-notification-container-top {
+  align-items: flex-start;
+}
+.cps-notification-container-top-left {
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.cps-notification-container-top-right {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.cps-notification-container-bottom {
+  align-items: flex-end;
+}
+.cps-notification-container-bottom-left {
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.cps-notification-container-bottom-right {
+  justify-content: flex-end;
+  align-items: flex-end;
+}

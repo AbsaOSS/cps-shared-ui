@@ -1,0 +1,44 @@
+<div
+  #mask
+  [ngClass]="{
+    'cps-notification-container-mask': true,
+    'cps-notification-container-left': position === 'left',
+    'cps-notification-container-right': position === 'right',
+    'cps-notification-container-top': position === 'top',
+    'cps-notification-container-bottom': position === 'bottom',
+    'cps-notification-container-top-left':
+      position === 'topleft' || position === 'top-left',
+    'cps-notification-container-top-right':
+      position === 'topright' || position === 'top-right',
+    'cps-notification-container-bottom-left':
+      position === 'bottomleft' || position === 'bottom-left',
+    'cps-notification-container-bottom-right':
+      position === 'bottomright' || position === 'bottom-right'
+  }"
+  [class]="config.maskStyleClass || ''">
+  <div
+    #container
+    class="cps-notification-container"
+    [ngStyle]="config.style"
+    [class]="config.styleClass || ''"
+    [@animation]="{
+      value: 'visible',
+      params: {
+        transform: transformOptions,
+        transition:
+          config.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)'
+      }
+    }"
+    (@animation.start)="onAnimationStart($event)"
+    (@animation.done)="onAnimationEnd($event)"
+    role="notification"
+    *ngIf="visible">
+    <div
+      #content
+      class="cps-notification-content"
+      [ngStyle]="config.contentStyle"
+      [class]="config.contentStyleClass || ''">
+      <ng-template cpsNotificationContent></ng-template>
+    </div>
+  </div>
+</div>

@@ -29,6 +29,7 @@ import { SidebarMenuPageComponent } from './pages/sidebar-menu-page/sidebar-menu
 import { TreeTablePageComponent } from './pages/tree-table-page/tree-table-page.component';
 import { DialogPageComponent } from './pages/dialog-page/dialog-page.component';
 import { TimepickerPageComponent } from './pages/timepicker-page/timepicker-page.component';
+import { NotificationPageComponent } from './pages/notification-page/notification-page.component';
 
 const routes: Routes = [
   {
@@ -155,6 +156,11 @@ const routes: Routes = [
     path: 'menu',
     title: 'Menu',
     component: MenuPageComponent
+  },
+  {
+    path: 'notifications',
+    title: 'Notifications',
+    component: NotificationPageComponent
   },
   {
     path: 'paginator',

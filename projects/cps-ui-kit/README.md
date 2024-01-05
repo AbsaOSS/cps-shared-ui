@@ -17,6 +17,7 @@
 - Input
 - Loader
 - Menu
+- Notifications
 - Paginator
 - Progress circular (indeterminate)
 - Progress linear (indeterminate)
