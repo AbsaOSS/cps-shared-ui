@@ -84,7 +84,6 @@ export class CpsNotificationContainerComponent
   insertionPoint: Nullable<CpsNotificationContentDirective>;
 
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
-  @ViewChild('content') contentViewChild: Nullable<ElementRef>;
 
   childComponentType: Nullable<Type<any>>;
 
@@ -99,6 +98,8 @@ export class CpsNotificationContainerComponent
   transformOptions = 'scale(0.7)';
 
   _openStateChanged = new EventEmitter<void>();
+
+  notifications: CpsNotificationConfig[] = [];
 
   get keepInViewport(): boolean {
     return this.config.keepInViewport || false;
@@ -152,6 +153,8 @@ export class CpsNotificationContainerComponent
     if (this._dialogRef)
       this._dialogRef.componentInstance = this.componentRef?.instance;
   }
+
+  addNotification(notification: CpsNotificationConfig) {}
 
   moveOnTop() {
     if (this.config.autoZIndex !== false) {

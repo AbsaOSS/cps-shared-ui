@@ -17,6 +17,7 @@ import {
 } from './utils/cps-notification-config';
 import { CpsNotificationContainerComponent } from './internal/components/cps-notification-container/cps-notification-container.component';
 import { CpsToastComponent } from './internal/components/cps-toast/cps-toast.component';
+import { Subject } from 'rxjs';
 
 /**
  * Service for showing notifications.
@@ -28,6 +29,20 @@ export class CpsNotificationService {
     CpsNotificationRef,
     ComponentRef<CpsNotificationContainerComponent>
   > = new Map();
+
+  containersMap: Map<
+    CpsNotificationPosition,
+    ComponentRef<CpsNotificationContainerComponent>
+  > = new Map();
+
+  private notificationClosedSubject = new Subject<CpsNotificationConfig>();
+
+  notificationClosed$ = this.notificationClosedSubject.asObservable();
+
+  // Method to emit the event
+  emitNotificationClosed(data: CpsNotificationConfig) {
+    this.notificationClosedSubject.next(data);
+  }
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -88,6 +103,10 @@ export class CpsNotificationService {
     );
   }
 
+  public clear() {
+    // TODO remove all notifications
+  }
+
   private _createNotification(
     type: CpsNotificationType,
     message: string,
@@ -140,27 +159,35 @@ export class CpsNotificationService {
     });
 
     const destroySub = notificationRef.onDestroy.subscribe(() => {
-      this.removeNotificationFromContainer(notificationRef);
+      this.removeContainer(notificationRef);
       destroySub.unsubscribe();
       sub.unsubscribe();
     });
 
-    const componentRef = this.viewContainerRef.createComponent(
-      CpsNotificationContainerComponent,
-      { injector: new DynamicDialogInjector(this.injector, map) }
-    );
+    // CREATE CONTAINER COMPONENT IF IT DOESN'T EXIST ON SELECTED POSITION
+    const position = config.position || CpsNotificationPosition.TOPRIGHT;
+    let containerComponentRef = this.containersMap.get(position);
+    if (!containerComponentRef) {
+      containerComponentRef = this.viewContainerRef.createComponent(
+        CpsNotificationContainerComponent,
+        { injector: new DynamicDialogInjector(this.injector, map) }
+      );
+      const domElem = (containerComponentRef.hostView as EmbeddedViewRef<any>)
+        .rootNodes[0] as HTMLElement;
+      this.document.body.appendChild(domElem);
 
-    const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
-      .rootNodes[0] as HTMLElement;
-    this.document.body.appendChild(domElem);
+      this.notificationsRefMap.set(notificationRef, containerComponentRef);
+      notificationRef._setContainerInstance(containerComponentRef.instance);
 
-    this.notificationsRefMap.set(notificationRef, componentRef);
-    notificationRef._setContainerInstance(componentRef.instance);
+      this.containersMap.set(position, containerComponentRef);
+    }
+
+    containerComponentRef.instance.addNotification(config);
 
     return notificationRef;
   }
 
-  private removeNotificationFromContainer(notificationRef: CpsNotificationRef) {
+  private removeContainer(notificationRef: CpsNotificationRef) {
     if (!notificationRef || !this.notificationsRefMap.has(notificationRef)) {
       return;
     }
