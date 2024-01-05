@@ -6,9 +6,7 @@ import {
   Inject,
   ViewContainerRef
 } from '@angular/core';
-import { DynamicDialogInjector } from 'primeng/dynamicdialog';
 import { DOCUMENT } from '@angular/common';
-import { CpsNotificationRef } from './utils/cps-notification-ref';
 import {
   CpsNotificationCategory,
   CpsNotificationConfig,
@@ -16,8 +14,7 @@ import {
   CpsNotificationType
 } from './utils/cps-notification-config';
 import { CpsNotificationContainerComponent } from './internal/components/cps-notification-container/cps-notification-container.component';
-import { CpsToastComponent } from './internal/components/cps-toast/cps-toast.component';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Service for showing notifications.
@@ -25,11 +22,6 @@ import { Subject } from 'rxjs';
  */
 @Injectable({ providedIn: 'root' })
 export class CpsNotificationService {
-  notificationsRefMap: Map<
-    CpsNotificationRef,
-    ComponentRef<CpsNotificationContainerComponent>
-  > = new Map();
-
   containersMap: Map<
     CpsNotificationPosition,
     ComponentRef<CpsNotificationContainerComponent>
@@ -37,10 +29,14 @@ export class CpsNotificationService {
 
   private notificationClosedSubject = new Subject<CpsNotificationConfig>();
 
-  notificationClosed$ = this.notificationClosedSubject.asObservable();
+  /**
+   * An Observable that emits a new value whenever a notification is closed.
+   */
+  get notificationClosed(): Observable<CpsNotificationConfig> {
+    return this.notificationClosedSubject.asObservable();
+  }
 
-  // Method to emit the event
-  emitNotificationClosed(data: CpsNotificationConfig) {
+  private _emitNotificationClosed(data: CpsNotificationConfig) {
     this.notificationClosedSubject.next(data);
   }
 
@@ -55,8 +51,8 @@ export class CpsNotificationService {
     message: string,
     details?: string,
     config?: CpsNotificationConfig
-  ): CpsNotificationRef {
-    return this._createNotification(
+  ) {
+    this._createNotification(
       CpsNotificationType.INFO,
       message,
       details,
@@ -68,8 +64,8 @@ export class CpsNotificationService {
     message: string,
     details?: string,
     config?: CpsNotificationConfig
-  ): CpsNotificationRef {
-    return this._createNotification(
+  ) {
+    this._createNotification(
       CpsNotificationType.WARNING,
       message,
       details,
@@ -81,8 +77,8 @@ export class CpsNotificationService {
     message: string,
     details?: string,
     config?: CpsNotificationConfig
-  ): CpsNotificationRef {
-    return this._createNotification(
+  ) {
+    this._createNotification(
       CpsNotificationType.SUCCESS,
       message,
       details,
@@ -94,8 +90,8 @@ export class CpsNotificationService {
     message: string,
     details?: string,
     config?: CpsNotificationConfig
-  ): CpsNotificationRef {
-    return this._createNotification(
+  ) {
+    this._createNotification(
       CpsNotificationType.ERROR,
       message,
       details,
@@ -112,15 +108,10 @@ export class CpsNotificationService {
     message: string,
     details?: string,
     config?: CpsNotificationConfig
-  ): CpsNotificationRef {
+  ) {
     config = this._initConfig(type, config);
 
-    const notificationRef = this.appendNotificationToContainer(config);
-
-    const instance = this.notificationsRefMap.get(notificationRef)?.instance;
-    if (instance) instance.childComponentType = CpsToastComponent;
-
-    return notificationRef;
+    this.appendNotificationToContainer(config);
   }
 
   private _initConfig(
@@ -148,57 +139,46 @@ export class CpsNotificationService {
   // }
 
   private appendNotificationToContainer(config: CpsNotificationConfig) {
-    const map = new WeakMap();
-    map.set(CpsNotificationConfig, config);
-
-    const notificationRef = new CpsNotificationRef();
-    map.set(CpsNotificationRef, notificationRef);
-
-    const sub = notificationRef.onClose.subscribe(() => {
-      this.notificationsRefMap.get(notificationRef)?.instance.close();
-    });
-
-    const destroySub = notificationRef.onDestroy.subscribe(() => {
-      this.removeContainer(notificationRef);
-      destroySub.unsubscribe();
-      sub.unsubscribe();
-    });
-
-    // CREATE CONTAINER COMPONENT IF IT DOESN'T EXIST ON SELECTED POSITION
     const position = config.position || CpsNotificationPosition.TOPRIGHT;
+
     let containerComponentRef = this.containersMap.get(position);
+
     if (!containerComponentRef) {
       containerComponentRef = this.viewContainerRef.createComponent(
-        CpsNotificationContainerComponent,
-        { injector: new DynamicDialogInjector(this.injector, map) }
+        CpsNotificationContainerComponent
       );
+      containerComponentRef.setInput('position', position);
+      containerComponentRef.setInput('maxAmount', config.maxAmount);
+
       const domElem = (containerComponentRef.hostView as EmbeddedViewRef<any>)
         .rootNodes[0] as HTMLElement;
       this.document.body.appendChild(domElem);
 
-      this.notificationsRefMap.set(notificationRef, containerComponentRef);
-      notificationRef._setContainerInstance(containerComponentRef.instance);
+      containerComponentRef.instance.closed.subscribe(
+        (data: CpsNotificationConfig) => {
+          this._emitNotificationClosed(data);
+          this.tryRemoveContainer(position);
+        }
+      );
 
       this.containersMap.set(position, containerComponentRef);
     }
 
     containerComponentRef.instance.addNotification(config);
-
-    return notificationRef;
   }
 
-  private removeContainer(notificationRef: CpsNotificationRef) {
-    if (!notificationRef || !this.notificationsRefMap.has(notificationRef)) {
-      return;
-    }
+  private tryRemoveContainer(position: CpsNotificationPosition) {
+    const container = this.containersMap.get(position);
 
-    const dialogComponentRef = this.notificationsRefMap.get(notificationRef);
-    if (dialogComponentRef) {
+    if (!container?.instance || container.instance.notifications.length > 0)
+      return;
+
+    if (container) {
       this.viewContainerRef.detach(
-        this.viewContainerRef.indexOf(dialogComponentRef.hostView)
+        this.viewContainerRef.indexOf(container.hostView)
       );
-      dialogComponentRef.destroy();
-      this.notificationsRefMap.delete(notificationRef);
+      container.destroy();
+      this.containersMap.delete(position);
     }
   }
 }

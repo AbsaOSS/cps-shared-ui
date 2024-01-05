@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
-import { CpsNotificationRef } from '../../../utils/cps-notification-ref';
-import { CpsNotificationConfig } from '../../../utils/cps-notification-config';
 import { CommonModule } from '@angular/common';
+import { CpsNotificationConfig } from '../../../utils/cps-notification-config';
 
 @Component({
   standalone: true,
@@ -13,18 +12,25 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./cps-toast.component.scss']
 })
 export class CpsToastComponent {
+  @Input() data!: CpsNotificationConfig;
+
   subtitle = '';
 
+  /**
+   * Callback to invoke on toast close.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() closed = new EventEmitter();
+
   // eslint-disable-next-line no-useless-constructor
-  constructor(
-    private _notifRef: CpsNotificationRef,
-    private _config: CpsNotificationConfig
-  ) {
-    // this.subtitle = this._config.data.subtitle;
+  constructor() {
+    this.subtitle = 'Hello'; // this._config.data.subtitle;
   }
 
   close() {
-    this._notifRef?.close(true);
+    this.closed.emit();
+    // this._notifRef?.close(true);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

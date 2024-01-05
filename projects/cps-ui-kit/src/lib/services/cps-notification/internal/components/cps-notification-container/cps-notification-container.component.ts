@@ -17,23 +17,25 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
+  Input,
   NgZone,
   OnDestroy,
-  PLATFORM_ID,
+  Output,
   Renderer2,
-  Type,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { PrimeNGConfig, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
-import { CpsNotificationContentDirective } from '../../directives/cps-notification-content.directive';
-import { CpsNotificationConfig } from '../../../utils/cps-notification-config';
-import { CpsNotificationRef } from '../../../utils/cps-notification-ref';
+import {
+  CpsNotificationConfig,
+  CpsNotificationPosition
+} from '../../../utils/cps-notification-config';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
+import { CpsToastComponent } from '../cps-toast/cps-toast.component';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -53,10 +55,10 @@ type VoidListener = () => void | null | undefined;
   imports: [
     CommonModule,
     SharedModule,
-    CpsNotificationContentDirective,
     CpsButtonComponent,
     CpsInfoCircleComponent,
-    CpsIconComponent
+    CpsIconComponent,
+    CpsToastComponent
   ],
   templateUrl: './cps-notification-container.component.html',
   styleUrls: ['./cps-notification-container.component.scss'],
@@ -72,6 +74,27 @@ type VoidListener = () => void | null | undefined;
 export class CpsNotificationContainerComponent
   implements AfterViewInit, OnDestroy
 {
+  /**
+   * Position of the notification container.
+   * @group Props
+   */
+  @Input() position = CpsNotificationPosition.TOPRIGHT;
+
+  /**
+   * Max amount of notifications to be displayed within the container.
+   * @group Props
+   */
+  @Input() maxAmount?: number;
+
+  /**
+   * Callback to invoke on notification close.
+   * @param {CpsNotificationConfig} CpsNotificationConfig - notification closed.
+   * @group Emits
+   */
+  @Output() closed = new EventEmitter<CpsNotificationConfig>();
+
+  CpsNotificationPosition = CpsNotificationPosition;
+
   visible = true;
 
   componentRef: Nullable<ComponentRef<any>>;
@@ -80,12 +103,7 @@ export class CpsNotificationContainerComponent
 
   originalStyle: any;
 
-  @ViewChild(CpsNotificationContentDirective)
-  insertionPoint: Nullable<CpsNotificationContentDirective>;
-
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
-
-  childComponentType: Nullable<Type<any>>;
 
   container: Nullable<HTMLDivElement>;
 
@@ -101,10 +119,6 @@ export class CpsNotificationContainerComponent
 
   notifications: CpsNotificationConfig[] = [];
 
-  get keepInViewport(): boolean {
-    return this.config.keepInViewport || false;
-  }
-
   get style(): any {
     return this._style;
   }
@@ -114,10 +128,6 @@ export class CpsNotificationContainerComponent
       this._style = { ...value };
       this.originalStyle = value;
     }
-  }
-
-  get position(): string {
-    return this.config.position || '';
   }
 
   get parent() {
@@ -130,43 +140,34 @@ export class CpsNotificationContainerComponent
   // eslint-disable-next-line no-useless-constructor
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: any,
-    private _dialogRef: CpsNotificationRef,
     private _cdRef: ChangeDetectorRef,
     public renderer: Renderer2,
-    public config: CpsNotificationConfig,
     public zone: NgZone,
     public primeNGConfig: PrimeNGConfig
   ) {}
 
   ngAfterViewInit() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.loadChildComponent(this.childComponentType!);
     this._cdRef.detectChanges();
   }
 
-  loadChildComponent(componentType: Type<any>) {
-    const viewContainerRef = this.insertionPoint?.viewContainerRef;
-    viewContainerRef?.clear();
-
-    this.componentRef = viewContainerRef?.createComponent(componentType);
-    if (this._dialogRef)
-      this._dialogRef.componentInstance = this.componentRef?.instance;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  addNotification(notification: CpsNotificationConfig) {
+    this.notifications.push(notification);
   }
 
-  addNotification(notification: CpsNotificationConfig) {}
+  onCloseNotification(notification: CpsNotificationConfig) {
+    this.notifications = this.notifications.filter(
+      (ntf) => ntf !== notification
+    );
+    this.closed.emit(notification);
+  }
 
   moveOnTop() {
-    if (this.config.autoZIndex !== false) {
-      ZIndexUtils.set(
-        'modal',
-        this.container,
-        (this.config.baseZIndex || 0) + this.primeNGConfig.zIndex.modal
-      );
-      (this.wrapper as HTMLElement).style.zIndex = String(
-        parseInt((this.container as HTMLDivElement).style.zIndex, 10) - 1
-      );
-    }
+    ZIndexUtils.set('modal', this.container, this.primeNGConfig.zIndex.modal);
+    (this.wrapper as HTMLElement).style.zIndex = String(
+      parseInt((this.container as HTMLDivElement).style.zIndex, 10) - 1
+    );
   }
 
   onAnimationStart(event: AnimationEvent) {
@@ -175,10 +176,6 @@ export class CpsNotificationContainerComponent
         this.container = event.element;
         this.wrapper = (this.container as HTMLDivElement).parentElement;
         this.moveOnTop();
-        if (this.parent) {
-          this.unbindGlobalListeners();
-        }
-        this.bindGlobalListeners();
         this.focus();
         break;
 
@@ -191,35 +188,25 @@ export class CpsNotificationContainerComponent
   onAnimationEnd(event: AnimationEvent) {
     if (event.toState === 'void') {
       this.onContainerDestroy();
-      this._dialogRef.destroy();
     } else {
       this._openStateChanged.emit();
     }
   }
 
   onContainerDestroy() {
-    this.unbindGlobalListeners();
-
-    if (this.container && this.config.autoZIndex !== false) {
+    if (this.container) {
       ZIndexUtils.clear(this.container);
     }
     this.container = null;
   }
 
   close() {
-    if (this.config?.disableClose || this._dialogRef?.disableClose) return;
-
     this.visible = false;
     this._cdRef.markForCheck();
   }
 
-  hide() {
-    if (this.config?.disableClose) return;
-
-    if (this._dialogRef) {
-      if (!this._dialogRef.disableClose) this._dialogRef.close();
-    }
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  hide() {}
 
   focus() {
     const focusable = DomHandler.getFocusableElements(
@@ -229,47 +216,6 @@ export class CpsNotificationContainerComponent
       this.zone.runOutsideAngular(() => {
         setTimeout(() => focusable[0].focus(), 5);
       });
-    }
-  }
-
-  bindGlobalListeners() {
-    if (
-      this.config.closeOnEscape !== false &&
-      this.config.disableClose !== false
-    ) {
-      this.bindDocumentEscapeListener();
-    }
-  }
-
-  unbindGlobalListeners() {
-    this.unbindDocumentEscapeListener();
-  }
-
-  bindDocumentEscapeListener() {
-    const documentTarget: any = this.maskViewChild
-      ? this.maskViewChild.nativeElement.ownerDocument
-      : 'document';
-
-    this.documentEscapeListener = this.renderer.listen(
-      documentTarget,
-      'keydown',
-      (event) => {
-        if (event.which === 27) {
-          if (
-            parseInt((this.container as HTMLDivElement).style.zIndex) ===
-            ZIndexUtils.getCurrent()
-          ) {
-            this.hide();
-          }
-        }
-      }
-    );
-  }
-
-  unbindDocumentEscapeListener() {
-    if (this.documentEscapeListener) {
-      this.documentEscapeListener();
-      this.documentEscapeListener = null;
     }
   }
 

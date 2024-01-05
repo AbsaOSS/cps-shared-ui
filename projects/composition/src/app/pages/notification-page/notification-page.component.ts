@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsButtonComponent, CpsNotificationService } from 'cps-ui-kit';
+import {
+  CpsButtonComponent,
+  CpsNotificationConfig,
+  CpsNotificationService
+} from 'cps-ui-kit';
 
 @Component({
   selector: 'app-notification-page',
@@ -16,13 +20,12 @@ export class NotificationPageComponent {
   constructor(private _notifService: CpsNotificationService) {}
 
   showSuccessNotification() {
-    const notificationRef = this._notifService.success(
-      'Notification message',
-      'Notification details'
-    );
+    this._notifService.success('Notification message', 'Notification details');
 
-    notificationRef.onClose.subscribe((result: boolean) => {
-      console.log(result);
-    });
+    this._notifService.notificationClosed.subscribe(
+      (data: CpsNotificationConfig) => {
+        console.log('Event emitted with data:', data);
+      }
+    );
   }
 }

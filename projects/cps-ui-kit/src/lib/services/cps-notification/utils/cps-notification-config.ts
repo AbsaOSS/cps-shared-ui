@@ -38,49 +38,13 @@ export class CpsNotificationConfig<T = any> {
    */
   data?: T;
   /**
-   * Specifies if pressing escape key should hide the notification.
-   */
-  closeOnEscape?: boolean;
-  /**
-   * Base zIndex value to use in layering.
-   */
-  baseZIndex?: number;
-  /**
-   * Determines whether to automatically manage layering.
-   */
-  autoZIndex?: boolean;
-  /**
    * Specifies whether the user is allowed to close the notification.
    */
   disableClose?: boolean;
   /**
-   * Inline style of the component.
-   */
-  style?: { [klass: string]: any } | null | undefined;
-  /**
-   * Style class of the component.
-   */
-  styleClass?: string;
-  /**
-   * Inline style of the content.
-   */
-  contentStyle?: { [klass: string]: any } | null | undefined;
-  /**
-   * Style class of the content.
-   */
-  contentStyleClass?: string;
-  /**
    * Transition options of the animation.
    */
   transitionOptions?: string;
-  /**
-   * Style class of the mask.
-   */
-  maskStyleClass?: string;
-  /**
-   * Keeps dialog in the viewport.
-   */
-  keepInViewport?: boolean;
   /**
    * Category of the notification, options are "toast" or "alert".
    * @default toast
