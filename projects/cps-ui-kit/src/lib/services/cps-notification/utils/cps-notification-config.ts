@@ -62,7 +62,7 @@ export interface CpsNotificationConfig {
    */
   timeout?: number;
   /**
-   * Max amount of notifications that can be simultaneously visualized within a container.
+   * Max amount of notifications that can be simultaneously visualized within a positioned container.
    * @default undefined
    */
   maxAmount?: number;

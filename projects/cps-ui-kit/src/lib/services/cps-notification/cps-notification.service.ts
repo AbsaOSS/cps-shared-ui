@@ -22,29 +22,25 @@ import { Observable, Subject } from 'rxjs';
  */
 @Injectable({ providedIn: 'root' })
 export class CpsNotificationService {
-  containersMap: Map<
+  private _containersMap: Map<
     CpsNotificationPosition,
     ComponentRef<CpsNotificationContainerComponent>
   > = new Map();
 
-  private notificationClosedSubject = new Subject<CpsNotificationConfig>();
-
-  /**
-   * An Observable that emits a new value whenever a notification is closed.
-   */
-  get notificationClosed(): Observable<CpsNotificationConfig> {
-    return this.notificationClosedSubject.asObservable();
-  }
-
-  private _emitNotificationClosed(data: CpsNotificationConfig) {
-    this.notificationClosedSubject.next(data);
-  }
+  private _notificationClosedSubject = new Subject<CpsNotificationConfig>();
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private _appRef: ApplicationRef,
     @Inject(DOCUMENT) private document: Document
   ) {}
+
+  /**
+   * An Observable that emits a new value whenever a notification is closed.
+   */
+  public get notificationClosed(): Observable<CpsNotificationConfig> {
+    return this._notificationClosedSubject.asObservable();
+  }
 
   public info(
     message: string,
@@ -99,11 +95,11 @@ export class CpsNotificationService {
   }
 
   public clear() {
-    this.containersMap.forEach((container) => {
+    this._containersMap.forEach((container) => {
       this._appRef.detachView(container.hostView);
       container.destroy();
     });
-    this.containersMap.clear();
+    this._containersMap.clear();
   }
 
   private _createNotification(
@@ -114,7 +110,7 @@ export class CpsNotificationService {
   ) {
     config = this._initConfig(type, message, details, config);
 
-    this.appendNotificationToContainer(config);
+    this._appendNotificationToContainer(config);
   }
 
   private _initConfig(
@@ -134,10 +130,11 @@ export class CpsNotificationService {
     return config;
   }
 
-  private appendNotificationToContainer(config: CpsNotificationConfig) {
+  private _appendNotificationToContainer(config: CpsNotificationConfig) {
     const position = config.position || CpsNotificationPosition.TOPRIGHT;
 
-    let containerComponentRef = this.containersMap.get(position);
+    let containerComponentRef = this._containersMap.get(position);
+    const found = !!containerComponentRef;
 
     if (!containerComponentRef) {
       containerComponentRef = createComponent(
@@ -155,19 +152,22 @@ export class CpsNotificationService {
 
       containerComponentRef.instance.closed.subscribe(
         (data: CpsNotificationConfig) => {
-          this._emitNotificationClosed(data);
-          this.tryRemoveContainer(position);
+          this._notificationClosedSubject.next(data);
+          this._tryRemoveContainer(position);
         }
       );
 
-      this.containersMap.set(position, containerComponentRef);
+      this._containersMap.set(position, containerComponentRef);
     }
+
+    if (found && config.maxAmount)
+      containerComponentRef.setInput('maxAmount', config.maxAmount);
 
     containerComponentRef.instance.addNotification(config);
   }
 
-  private tryRemoveContainer(position: CpsNotificationPosition) {
-    const container = this.containersMap.get(position);
+  private _tryRemoveContainer(position: CpsNotificationPosition) {
+    const container = this._containersMap.get(position);
 
     if (!container?.instance || container.instance.notifications.length > 0)
       return;
@@ -175,7 +175,7 @@ export class CpsNotificationService {
     if (container) {
       this._appRef.detachView(container.hostView);
       container.destroy();
-      this.containersMap.delete(position);
+      this._containersMap.delete(position);
     }
   }
 }
