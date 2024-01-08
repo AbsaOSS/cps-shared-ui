@@ -8,7 +8,7 @@ $textarea-label-color: var(--cps-color-text-dark);
 $textarea-text-color: var(--cps-color-text-dark);
 $textarea-text-disabled-color: var(--cps-color-text-light);
 
-$color-error: #cc3333;
+$color-error: var(--cps-color-error);
 $error-background: #fef3f2;
 
 $hover-transition-duration: 0.2s;
