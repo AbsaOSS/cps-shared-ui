@@ -35,7 +35,6 @@ $animation-duration: 150ms;
   flex-direction: column-reverse;
 }
 
-/* Top, Bottom, Left, Right, Top* and Bottom* */
 .cps-notification-container-top .cps-notification-container,
 .cps-notification-container-bottom .cps-notification-container,
 .cps-notification-container-left .cps-notification-container,
@@ -48,7 +47,6 @@ $animation-duration: 150ms;
   transform: translate3d(0px, 0px, 0px);
 }
 
-/* Position */
 .cps-notification-container-left {
   justify-content: flex-start;
 }

@@ -123,10 +123,10 @@ export class CpsNotificationService {
     details?: string,
     config?: CpsNotificationConfig
   ): CpsNotificationConfig {
-    if (!config) config = new CpsNotificationConfig();
+    if (!config) config = {};
     config.type = type;
-    if (!config.message) config.message = message;
-    if (!config.details) config.details = details;
+    if (message) config.message = message;
+    if (details) config.details = details;
     if (!config.appearance)
       config.appearance = CpsNotificationAppearance.FILLED;
     if (!config.position) config.position = CpsNotificationPosition.TOPRIGHT;

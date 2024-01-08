@@ -32,7 +32,7 @@ export enum CpsNotificationPosition {
   BOTTOMRIGHT = 'bottom-right'
 }
 
-export class CpsNotificationConfig {
+export interface CpsNotificationConfig {
   /**
    * Message to be displayed in the notification.
    */
