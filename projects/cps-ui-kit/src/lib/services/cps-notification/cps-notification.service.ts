@@ -99,7 +99,11 @@ export class CpsNotificationService {
   }
 
   public clear() {
-    // TODO notifs remove all notifications
+    this.containersMap.forEach((container) => {
+      this._appRef.detachView(container.hostView);
+      container.destroy();
+    });
+    this.containersMap.clear();
   }
 
   private _createNotification(

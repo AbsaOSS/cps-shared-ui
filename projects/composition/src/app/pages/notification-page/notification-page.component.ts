@@ -62,4 +62,8 @@ export class NotificationPageComponent {
     );
     this.counter += 1;
   }
+
+  clearNotifications() {
+    this._notifService.clear();
+  }
 }
