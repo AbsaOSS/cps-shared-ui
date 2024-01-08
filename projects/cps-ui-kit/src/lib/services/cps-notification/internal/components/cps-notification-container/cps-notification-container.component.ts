@@ -22,6 +22,7 @@ import { CpsButtonComponent } from '../../../../../components/cps-button/cps-but
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CpsToastComponent } from '../cps-toast/cps-toast.component';
+import { animateChild, query, transition, trigger } from '@angular/animations';
 
 type Nullable<T = void> = T | null | undefined;
 
@@ -38,7 +39,12 @@ type Nullable<T = void> = T | null | undefined;
   ],
   templateUrl: './cps-notification-container.component.html',
   styleUrls: ['./cps-notification-container.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [
+    trigger('notificationAnimation', [
+      transition(':enter, :leave', [query('@*', animateChild())])
+    ])
+  ]
 })
 export class CpsNotificationContainerComponent
   implements AfterViewInit, OnDestroy

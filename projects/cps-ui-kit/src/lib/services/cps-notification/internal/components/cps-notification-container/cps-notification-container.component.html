@@ -22,6 +22,7 @@
       <ng-container *ngFor="let notification of notifications; let i = index">
         <cps-toast
           [data]="notification"
+          @notificationAnimation
           (closed)="onCloseNotification(notification, i)">
         </cps-toast>
       </ng-container>
