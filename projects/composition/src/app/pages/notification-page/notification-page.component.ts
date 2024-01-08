@@ -29,39 +29,52 @@ export class NotificationPageComponent {
 
   counter = 0;
   showSuccessNotification() {
-    this._notifService.success(
-      `Notification message ${this.counter}`,
-      'Http failure response for https://aul-dev.datassetsnp.aws.dsarena.com/aul/api-v2/domain-data-access/readonly-access-requests: 0 Unknown Error',
-      {
-        timeout: 0,
-        position: CpsNotificationPosition.BOTTOMLEFT,
-        maxWidth: '700px',
-        appearance: CpsNotificationAppearance.OUTLINED,
-        maxAmount: 3
-      }
-    );
+    this._notifService.success(`Notification message ${this.counter}`);
     this.counter += 1;
   }
 
   showErrorNotification() {
-    this._notifService.error(`Notification message ${this.counter}`, '', {
-      timeout: 0
-    });
+    this._notifService.error(`Notification message ${this.counter}`);
     this.counter += 1;
   }
 
   showWarningNotification() {
-    this._notifService.warning(
-      `Notification message ${this.counter}`,
-      'Notification details'
-    );
+    this._notifService.warning(`Notification message ${this.counter}`);
     this.counter += 1;
   }
 
   showInfoNotification() {
+    this._notifService.info(`Notification message ${this.counter}`);
+    this.counter += 1;
+  }
+
+  showInfoNotificationWithDetails() {
     this._notifService.info(
       `Notification message ${this.counter}`,
-      'Notification details'
+      'Notification details',
+      { position: CpsNotificationPosition.BOTTOM }
+    );
+    this.counter += 1;
+  }
+
+  showOutlinedBottomLeftPersistentSuccessNotification() {
+    this._notifService.success(`Notification message ${this.counter}`, '', {
+      timeout: 0,
+      position: CpsNotificationPosition.BOTTOMLEFT,
+      appearance: CpsNotificationAppearance.OUTLINED
+    });
+    this.counter += 1;
+  }
+
+  showErrorRightWithMax3Notification() {
+    this._notifService.error(
+      `Notification message ${this.counter}`,
+      'Http failure response for https://my-long-url/epic/fail: 404 Not Found Error',
+      {
+        position: CpsNotificationPosition.RIGHT,
+        maxWidth: '450px',
+        maxAmount: 3
+      }
     );
     this.counter += 1;
   }

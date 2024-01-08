@@ -16,6 +16,20 @@
     color="info"
     (clicked)="showInfoNotification()"></cps-button>
   <cps-button
+    label="Bottom info notification with details"
+    color="info"
+    (clicked)="showInfoNotificationWithDetails()"></cps-button>
+  <cps-button
+    label="Outlined bottom left persistent success notification"
+    color="success"
+    (clicked)="
+      showOutlinedBottomLeftPersistentSuccessNotification()
+    "></cps-button>
+  <cps-button
+    label="Centered error notification with max 3 in a column"
+    color="error"
+    (clicked)="showErrorRightWithMax3Notification()"></cps-button>
+  <cps-button
     label="Clear all notifications"
     icon="remove"
     type="outlined"
