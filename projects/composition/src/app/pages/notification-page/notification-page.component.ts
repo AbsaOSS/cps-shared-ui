@@ -30,17 +30,20 @@ export class NotificationPageComponent {
   showSuccessNotification() {
     this._notifService.success(
       `Notification message ${this.counter}`,
-      'Notification details',
-      { timeout: 0, position: CpsNotificationPosition.BOTTOMLEFT }
+      'Http failure response for https://aul-dev.datassetsnp.aws.dsarena.com/aul/api-v2/domain-data-access/readonly-access-requests: 0 Unknown Error',
+      {
+        timeout: 0,
+        position: CpsNotificationPosition.BOTTOMLEFT,
+        maxWidth: '700px'
+      }
     );
     this.counter += 1;
   }
 
   showErrorNotification() {
-    this._notifService.error(
-      `Notification message ${this.counter}`,
-      'Notification details'
-    );
+    this._notifService.error(`Notification message ${this.counter}`, '', {
+      timeout: 0
+    });
     this.counter += 1;
   }
 

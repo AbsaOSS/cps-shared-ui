@@ -32,23 +32,17 @@ export enum CpsNotificationPosition {
   BOTTOMRIGHT = 'bottom-right'
 }
 
-export class CpsNotificationConfig<T = any> {
-  /**
-   * An object to pass to the component loaded inside the Dialog.
-   */
-  data?: T;
+export class CpsNotificationConfig {
   /**
    * Specifies whether the user is allowed to close the notification.
    */
+  // TODO notifs support
   disableClose?: boolean;
-  /**
-   * Transition options of the animation.
-   */
-  transitionOptions?: string;
   /**
    * Category of the notification, options are "toast" or "alert".
    * @default toast
    */
+  // TODO notifs change to appearance filled and outlined
   category?: CpsNotificationCategory;
   /**
    * Type of the notification, options are "warning", "success", "error" or "info".
@@ -63,6 +57,7 @@ export class CpsNotificationConfig<T = any> {
    * Max amount of notifications that can be simultaneously visualized within a container.
    * @default undefined
    */
+  // TODO notifs support
   maxAmount?: number;
   /**
    * The duration (in milliseconds) that the toast will be displayed before automatically closing.
@@ -78,4 +73,8 @@ export class CpsNotificationConfig<T = any> {
    * Details to be displayed in the notification.
    */
   details?: string;
+  /**
+   * Max width of the notification of type number denoting pixels or string.
+   */
+  maxWidth?: string;
 }

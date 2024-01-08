@@ -5,12 +5,16 @@
   [@toastState]="{
     value: 'visible'
   }"
+  [ngStyle]="{ 'max-width': maxWidth }"
   class="cps-toast-content">
   <div class="cps-toast-icon">
     <cps-icon [icon]="'toast-' + data.type" size="normal"></cps-icon>
   </div>
   <div class="cps-toast-message">
-    <p>{{ data.message }}</p>
+    <p class="cps-toast-message-header">{{ data.message }}</p>
+    <p class="cps-toast-message-details" *ngIf="data.details">
+      {{ data.details }}
+    </p>
   </div>
   <div class="cps-toast-buttons">
     <cps-button

@@ -5,11 +5,13 @@ import {
   Input,
   NgZone,
   OnDestroy,
+  OnInit,
   Output
 } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
+import { convertSize } from '../../../../../utils/internal/size-utils';
 import {
   CpsNotificationConfig,
   CpsNotificationType
@@ -54,7 +56,7 @@ import {
     ])
   ]
 })
-export class CpsToastComponent implements AfterViewInit, OnDestroy {
+export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() data!: CpsNotificationConfig;
 
   /**
@@ -65,9 +67,14 @@ export class CpsToastComponent implements AfterViewInit, OnDestroy {
   @Output() closed = new EventEmitter();
 
   timeout: any;
+  maxWidth: string | undefined;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private zone: NgZone) {}
+
+  ngOnInit(): void {
+    this.maxWidth = convertSize(this.data?.maxWidth || '');
+  }
 
   ngAfterViewInit(): void {
     this.initiateTimeout();

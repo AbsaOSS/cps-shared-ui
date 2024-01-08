@@ -98,7 +98,7 @@ export class CpsNotificationService {
   }
 
   public clear() {
-    // TODO remove all notifications
+    // TODO notifs remove all notifications
   }
 
   private _createNotification(
@@ -127,18 +127,6 @@ export class CpsNotificationService {
     if (config.timeout === undefined) config.timeout = 5000;
     return config;
   }
-
-  // public open(
-  //   componentType: Type<any>,
-  //   config: CpsNotificationConfig
-  // ): CpsNotificationRef {
-  //   const dialogRef = this.appendNotificationToContainer(config);
-
-  //   const instance = this.notificationsRefMap.get(dialogRef)?.instance;
-  //   if (instance) instance.childComponentType = componentType;
-
-  //   return dialogRef;
-  // }
 
   private appendNotificationToContainer(config: CpsNotificationConfig) {
     const position = config.position || CpsNotificationPosition.TOPRIGHT;
