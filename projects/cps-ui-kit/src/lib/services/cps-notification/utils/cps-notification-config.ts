@@ -49,7 +49,7 @@ export class CpsNotificationConfig {
   type?: CpsNotificationType;
   /**
    * Position of the notification, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".
-   * Defaults top-right for "toast" category and bottom for "alert" category
+   * @default top-right
    */
   position?: CpsNotificationPosition;
   /**
@@ -59,7 +59,7 @@ export class CpsNotificationConfig {
   // TODO notifs support
   maxAmount?: number;
   /**
-   * The duration (in milliseconds) that the toast will be displayed before automatically closing.
+   * The duration (in milliseconds) that the notification will be displayed before automatically closing.
    * Value 0 means that the notification is persistent and will not be automatically closed.
    * @default 5000
    */
