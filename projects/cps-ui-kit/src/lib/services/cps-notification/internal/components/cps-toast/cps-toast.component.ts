@@ -27,16 +27,16 @@ import {
         })
       ),
       transition('void => *', [
-        style({ transform: '{{showTransformParams}}', opacity: 0 }),
-        animate('{{showTransitionParams}}')
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('300ms ease-out')
       ]),
       transition('* => void', [
         animate(
-          '{{hideTransitionParams}}',
+          '250ms ease-in',
           style({
             height: 0,
             opacity: 0,
-            transform: '{{hideTransformParams}}'
+            transform: 'translateY(-100%)'
           })
         )
       ])
