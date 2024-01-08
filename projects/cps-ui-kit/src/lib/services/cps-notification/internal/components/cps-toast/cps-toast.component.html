@@ -1,23 +1,24 @@
 <div
   (mouseenter)="clearTimeout()"
   (mouseleave)="initiateTimeout()"
-  [ngClass]="className()"
+  [class]="data.type"
   [@messageState]="{
     value: 'visible'
   }"
   class="cps-toast-content">
   <div class="cps-toast-icon">
-    <cps-icon [icon]="iconName()" size="normal"></cps-icon>
+    <cps-icon [icon]="'toast-' + data.type" size="normal"></cps-icon>
   </div>
   <div class="cps-toast-message">
-    <p>{{ subtitle }}</p>
+    <p>{{ data.message }}</p>
   </div>
-  <div class="cps-toast-button">
+  <div class="cps-toast-buttons">
     <cps-button
       (clicked)="close()"
-      [color]="className()"
-      class="cps-toast-close-btn"
+      [color]="colorName()"
       icon="close-x"
+      class="cps-toast-close-button"
+      width="40"
       type="borderless"></cps-button>
   </div>
 </div>

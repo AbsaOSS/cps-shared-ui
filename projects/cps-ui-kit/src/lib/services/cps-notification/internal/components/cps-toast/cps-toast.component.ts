@@ -2,7 +2,10 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
-import { CpsNotificationConfig } from '../../../utils/cps-notification-config';
+import {
+  CpsNotificationConfig,
+  CpsNotificationType
+} from '../../../utils/cps-notification-config';
 import {
   animate,
   state,
@@ -28,11 +31,11 @@ import {
       ),
       transition('void => *', [
         style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate('300ms ease-out')
+        animate('200ms ease-out')
       ]),
       transition('* => void', [
         animate(
-          '250ms ease-in',
+          '200ms ease-in',
           style({
             height: 0,
             opacity: 0,
@@ -46,8 +49,6 @@ import {
 export class CpsToastComponent {
   @Input() data!: CpsNotificationConfig;
 
-  subtitle = '';
-
   /**
    * Callback to invoke on toast close.
    * @param {any}
@@ -55,14 +56,8 @@ export class CpsToastComponent {
    */
   @Output() closed = new EventEmitter();
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor() {
-    this.subtitle = 'Hello'; // this._config.data.subtitle;
-  }
-
   close() {
     this.closed.emit();
-    // this._notifRef?.close(true);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -71,11 +66,9 @@ export class CpsToastComponent {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   initiateTimeout() {}
 
-  className() {
-    return 'success';
-  }
-
-  iconName() {
-    return 'toast-success';
+  colorName(): string {
+    return this.data.type === CpsNotificationType.WARNING
+      ? 'warn'
+      : this.data.type || CpsNotificationType.ERROR;
   }
 }

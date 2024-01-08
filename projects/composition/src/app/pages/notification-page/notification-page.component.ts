@@ -17,15 +17,44 @@ import {
 })
 export class NotificationPageComponent {
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _notifService: CpsNotificationService) {}
-
-  showSuccessNotification() {
-    this._notifService.success('Notification message', 'Notification details');
-
+  constructor(private _notifService: CpsNotificationService) {
     this._notifService.notificationClosed.subscribe(
       (data: CpsNotificationConfig) => {
         console.log('Event emitted with data:', data);
       }
     );
+  }
+
+  counter = 0;
+  showSuccessNotification() {
+    this._notifService.success(
+      `Notification message ${this.counter}`,
+      'Notification details'
+    );
+    this.counter += 1;
+  }
+
+  showErrorNotification() {
+    this._notifService.error(
+      `Notification message ${this.counter}`,
+      'Notification details'
+    );
+    this.counter += 1;
+  }
+
+  showWarningNotification() {
+    this._notifService.warning(
+      `Notification message ${this.counter}`,
+      'Notification details'
+    );
+    this.counter += 1;
+  }
+
+  showInfoNotification() {
+    this._notifService.info(
+      `Notification message ${this.counter}`,
+      'Notification details'
+    );
+    this.counter += 1;
   }
 }

@@ -30,6 +30,10 @@ $animation-duration: 150ms;
 .cps-notification-container .cps-notification-container-content {
   background: transparent;
   flex-grow: 1;
+  gap: 12px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
 }
 
 /* Top, Bottom, Left, Right, Top* and Bottom* */

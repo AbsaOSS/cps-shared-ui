@@ -1,91 +1,69 @@
 :host {
-  // .toast_container {
-  // position: fixed;
-  // z-index: 99999;
-  // min-width: 400px;
-
   .cps-toast-content {
-    display: table;
     position: relative;
     color: var(--cps-color-text-darkest);
-    border-radius: 5px;
+    border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
+    display: flex;
 
-  .success {
-    background-color: var(--cps-color-success-highlighten);
-    border: 2px solid var(--cps-color-success);
+    &.success {
+      background-color: var(--cps-color-success-bg);
+      border: 2px solid var(--cps-color-success);
 
-    .cps-toast-icon {
-      background-color: var(--cps-color-success);
+      .cps-toast-icon {
+        background-color: var(--cps-color-success);
+      }
     }
-  }
 
-  .error {
-    background-color: var(--cps-color-error-highlighten);
-    border: 2px solid var(--cps-color-error);
+    &.error {
+      background-color: var(--cps-color-error-bg);
+      border: 2px solid var(--cps-color-error);
 
-    .cps-toast-icon {
-      background-color: var(--cps-color-error);
+      .cps-toast-icon {
+        background-color: var(--cps-color-error);
+      }
     }
-  }
 
-  .warn {
-    background-color: var(--cps-color-warn-highlighten);
-    border: 2px solid var(--cps-color-warn);
+    &.warning {
+      background-color: var(--cps-color-warn-bg);
+      border: 2px solid var(--cps-color-warn);
 
-    .cps-toast-icon {
-      background-color: var(--cps-color-warn);
+      .cps-toast-icon {
+        background-color: var(--cps-color-warn);
+      }
     }
-  }
 
-  .info {
-    background-color: var(--cps-color-info-highlighten);
-    border: 2px solid var(--cps-color-info);
+    &.info {
+      background-color: var(--cps-color-info-bg);
+      border: 2px solid var(--cps-color-info);
 
-    .cps-toast-icon {
-      background-color: var(--cps-color-info);
+      .cps-toast-icon {
+        background-color: var(--cps-color-info);
+      }
     }
   }
 
   .cps-toast-icon {
-    display: table-cell;
-    vertical-align: middle;
-    width: 60px;
-    padding: 30px;
-    text-align: center;
+    display: flex;
+    padding: 20px;
     color: #fff;
-
-    > i {
-      width: 20px;
-      font-size: 20px;
-    }
   }
 
   .cps-toast-message {
-    display: table-cell;
-    vertical-align: middle;
-    padding: 20px 20px 20px;
-    margin-right: 140px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+  }
 
-    > p {
-      line-height: 1.2;
-      margin-top: 6px;
+  .cps-toast-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & .cps-toast-close-button {
+      margin: 0 8px;
     }
   }
-
-  .cps-toast-button {
-    position: relative;
-    margin: 15px 5px -10px;
-    padding: 10px 15px;
-  }
-
-  .cps-toast-close-btn {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-  }
-  // }
 
   //Toast positions
   .cps-toast-top-right {

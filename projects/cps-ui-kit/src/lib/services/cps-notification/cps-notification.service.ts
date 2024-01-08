@@ -109,17 +109,21 @@ export class CpsNotificationService {
     details?: string,
     config?: CpsNotificationConfig
   ) {
-    config = this._initConfig(type, config);
+    config = this._initConfig(type, message, details, config);
 
     this.appendNotificationToContainer(config);
   }
 
   private _initConfig(
     type: CpsNotificationType,
+    message: string,
+    details?: string,
     config?: CpsNotificationConfig
   ): CpsNotificationConfig {
     if (!config) config = new CpsNotificationConfig();
     config.type = type;
+    if (!config.message) config.message = message;
+    if (!config.details) config.details = details;
     if (!config.category) config.category = CpsNotificationCategory.TOAST;
     if (!config.position) config.position = CpsNotificationPosition.TOPRIGHT;
     if (!config.timeout) config.timeout = 5000;

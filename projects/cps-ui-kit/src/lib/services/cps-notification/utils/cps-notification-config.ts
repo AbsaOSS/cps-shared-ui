@@ -69,4 +69,12 @@ export class CpsNotificationConfig<T = any> {
    * @default 5000
    */
   timeout?: number;
+  /**
+   * Message to be displayed in the notification.
+   */
+  message?: string;
+  /**
+   * Details to be displayed in the notification.
+   */
+  details?: string;
 }

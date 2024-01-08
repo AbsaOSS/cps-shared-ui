@@ -91,14 +91,11 @@ export class CpsNotificationContainerComponent
   }
 
   addNotification(notification: CpsNotificationConfig) {
-    this.notifications.push(notification);
+    this.notifications.unshift(notification);
   }
 
   onCloseNotification(notification: CpsNotificationConfig, index: number) {
     this.notifications.splice(index, 1);
-    // this.notifications = this.notifications.filter(
-    //   (ntf) => ntf !== notification
-    // );
     this.closed.emit(notification);
   }
 
