@@ -29,7 +29,8 @@ export class NotificationPageComponent {
   showSuccessNotification() {
     this._notifService.success(
       `Notification message ${this.counter}`,
-      'Notification details'
+      'Notification details',
+      { timeout: 0 }
     );
     this.counter += 1;
   }

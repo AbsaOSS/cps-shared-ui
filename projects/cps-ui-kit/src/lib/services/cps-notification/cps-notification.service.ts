@@ -1,6 +1,5 @@
 import {
   Injectable,
-  Injector,
   EmbeddedViewRef,
   ComponentRef,
   Inject,
@@ -43,7 +42,6 @@ export class CpsNotificationService {
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private viewContainerRef: ViewContainerRef,
-    private injector: Injector,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -126,7 +124,7 @@ export class CpsNotificationService {
     if (!config.details) config.details = details;
     if (!config.category) config.category = CpsNotificationCategory.TOAST;
     if (!config.position) config.position = CpsNotificationPosition.TOPRIGHT;
-    if (!config.timeout) config.timeout = 5000;
+    if (config.timeout === undefined) config.timeout = 5000;
     return config;
   }
 

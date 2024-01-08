@@ -1,10 +1,10 @@
 :host {
   .cps-toast-content {
-    position: relative;
     color: var(--cps-color-text-darkest);
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     display: flex;
+    overflow: hidden;
 
     &.success {
       background-color: var(--cps-color-success-bg);

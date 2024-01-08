@@ -29,7 +29,7 @@ import {
   templateUrl: './cps-toast.component.html',
   styleUrls: ['./cps-toast.component.scss'],
   animations: [
-    trigger('messageState', [
+    trigger('toastState', [
       state(
         'visible',
         style({
@@ -83,6 +83,7 @@ export class CpsToastComponent implements AfterViewInit, OnDestroy {
   }
 
   initiateTimeout() {
+    if (this.data?.timeout === 0) return;
     this.zone.runOutsideAngular(() => {
       this.timeout = setTimeout(() => {
         this.close();

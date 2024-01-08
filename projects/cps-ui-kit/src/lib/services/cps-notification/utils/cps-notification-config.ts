@@ -66,6 +66,7 @@ export class CpsNotificationConfig<T = any> {
   maxAmount?: number;
   /**
    * The duration (in milliseconds) that the toast will be displayed before automatically closing.
+   * Value 0 means that the notification is persistent and will not be automatically closed.
    * @default 5000
    */
   timeout?: number;
