@@ -3,13 +3,45 @@ import { CpsButtonComponent } from '../../../../../components/cps-button/cps-but
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 import { CpsNotificationConfig } from '../../../utils/cps-notification-config';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 
 @Component({
   standalone: true,
   imports: [CommonModule, CpsButtonComponent, CpsIconComponent],
   selector: 'cps-toast',
   templateUrl: './cps-toast.component.html',
-  styleUrls: ['./cps-toast.component.scss']
+  styleUrls: ['./cps-toast.component.scss'],
+  animations: [
+    trigger('messageState', [
+      state(
+        'visible',
+        style({
+          transform: 'translateY(0)',
+          opacity: 1
+        })
+      ),
+      transition('void => *', [
+        style({ transform: '{{showTransformParams}}', opacity: 0 }),
+        animate('{{showTransitionParams}}')
+      ]),
+      transition('* => void', [
+        animate(
+          '{{hideTransitionParams}}',
+          style({
+            height: 0,
+            opacity: 0,
+            transform: '{{hideTransformParams}}'
+          })
+        )
+      ])
+    ])
+  ]
 })
 export class CpsToastComponent {
   @Input() data!: CpsNotificationConfig;

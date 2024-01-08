@@ -74,6 +74,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/menu'
     },
     {
+      title: 'Notifications',
+      url: '/notifications'
+    },
+    {
       title: 'Paginator',
       url: '/paginator'
     },
@@ -116,10 +120,6 @@ export class NavigationSidebarComponent implements OnInit {
     {
       title: 'Timepicker',
       url: '/timepicker'
-    },
-    {
-      title: 'Notifications',
-      url: '/notifications'
     },
     {
       title: 'Tooltip directive',

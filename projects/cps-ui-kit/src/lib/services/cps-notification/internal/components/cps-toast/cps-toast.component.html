@@ -2,6 +2,15 @@
   (mouseenter)="clearTimeout()"
   (mouseleave)="initiateTimeout()"
   [ngClass]="className()"
+  [@messageState]="{
+    value: 'visible',
+    params: {
+      showTransformParams: 'translateY(100%)',
+      hideTransformParams: 'translateY(-100%)',
+      showTransitionParams: '300ms ease-out',
+      hideTransitionParams: '250ms ease-in'
+    }
+  }"
   class="cps-toast-content">
   <div class="cps-toast-icon">
     <cps-icon [icon]="iconName()" size="normal"></cps-icon>

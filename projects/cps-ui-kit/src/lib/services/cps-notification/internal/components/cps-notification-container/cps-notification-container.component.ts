@@ -1,12 +1,3 @@
-import {
-  animate,
-  animation,
-  AnimationEvent,
-  style,
-  transition,
-  trigger,
-  useAnimation
-} from '@angular/animations';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
@@ -26,7 +17,6 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { PrimeNGConfig, SharedModule } from 'primeng/api';
-import { DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
 import {
   CpsNotificationConfig,
@@ -36,15 +26,6 @@ import { CpsButtonComponent } from '../../../../../components/cps-button/cps-but
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CpsToastComponent } from '../cps-toast/cps-toast.component';
-
-const showAnimation = animation([
-  style({ transform: '{{transform}}', opacity: 0 }),
-  animate('{{transition}}', style({ transform: 'none', opacity: 1 }))
-]);
-
-const hideAnimation = animation([
-  animate('{{transition}}', style({ transform: '{{transform}}', opacity: 0 }))
-]);
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
@@ -62,12 +43,6 @@ type VoidListener = () => void | null | undefined;
   ],
   templateUrl: './cps-notification-container.component.html',
   styleUrls: ['./cps-notification-container.component.scss'],
-  animations: [
-    trigger('animation', [
-      transition('void => visible', [useAnimation(showAnimation)]),
-      transition('visible => void', [useAnimation(hideAnimation)])
-    ])
-  ],
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None
 })
@@ -95,8 +70,6 @@ export class CpsNotificationContainerComponent
 
   CpsNotificationPosition = CpsNotificationPosition;
 
-  visible = true;
-
   componentRef: Nullable<ComponentRef<any>>;
 
   _style: any = {};
@@ -105,7 +78,7 @@ export class CpsNotificationContainerComponent
 
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
 
-  container: Nullable<HTMLDivElement>;
+  @ViewChild('container') container: Nullable<ElementRef>;
 
   wrapper: Nullable<HTMLElement>;
 
@@ -114,8 +87,6 @@ export class CpsNotificationContainerComponent
   maskClickListener!: VoidListener | null;
 
   transformOptions = 'scale(0.7)';
-
-  _openStateChanged = new EventEmitter<void>();
 
   notifications: CpsNotificationConfig[] = [];
 
@@ -148,7 +119,11 @@ export class CpsNotificationContainerComponent
 
   ngAfterViewInit() {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this._cdRef.detectChanges();
+    this.wrapper = (
+      this.container?.nativeElement as HTMLDivElement
+    ).parentElement;
+    this.moveOnTop();
+    // this._cdRef.detectChanges();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -156,66 +131,31 @@ export class CpsNotificationContainerComponent
     this.notifications.push(notification);
   }
 
-  onCloseNotification(notification: CpsNotificationConfig) {
-    this.notifications = this.notifications.filter(
-      (ntf) => ntf !== notification
-    );
+  onCloseNotification(notification: CpsNotificationConfig, index: number) {
+    this.notifications.splice(index, 1);
+    // this.notifications = this.notifications.filter(
+    //   (ntf) => ntf !== notification
+    // );
     this.closed.emit(notification);
   }
 
   moveOnTop() {
-    ZIndexUtils.set('modal', this.container, this.primeNGConfig.zIndex.modal);
-    (this.wrapper as HTMLElement).style.zIndex = String(
-      parseInt((this.container as HTMLDivElement).style.zIndex, 10) - 1
+    ZIndexUtils.set(
+      'modal',
+      this.container?.nativeElement,
+      this.primeNGConfig.zIndex.modal
     );
-  }
-
-  onAnimationStart(event: AnimationEvent) {
-    switch (event.toState) {
-      case 'visible':
-        this.container = event.element;
-        this.wrapper = (this.container as HTMLDivElement).parentElement;
-        this.moveOnTop();
-        this.focus();
-        break;
-
-      case 'void':
-      default:
-        break;
-    }
-  }
-
-  onAnimationEnd(event: AnimationEvent) {
-    if (event.toState === 'void') {
-      this.onContainerDestroy();
-    } else {
-      this._openStateChanged.emit();
-    }
+    (this.wrapper as HTMLElement).style.zIndex = String(
+      parseInt(
+        (this.container?.nativeElement as HTMLDivElement).style.zIndex,
+        10
+      ) - 1
+    );
   }
 
   onContainerDestroy() {
-    if (this.container) {
-      ZIndexUtils.clear(this.container);
-    }
-    this.container = null;
-  }
-
-  close() {
-    this.visible = false;
-    this._cdRef.markForCheck();
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  hide() {}
-
-  focus() {
-    const focusable = DomHandler.getFocusableElements(
-      this.container as HTMLDivElement
-    );
-    if (focusable && focusable.length > 0) {
-      this.zone.runOutsideAngular(() => {
-        setTimeout(() => focusable[0].focus(), 5);
-      });
+    if (this.container?.nativeElement) {
+      ZIndexUtils.clear(this.container.nativeElement);
     }
   }
 

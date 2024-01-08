@@ -18,25 +18,12 @@
     'cps-notification-container-bottom-right':
       position === CpsNotificationPosition.BOTTOMRIGHT
   }">
-  <div
-    #container
-    class="cps-notification-container"
-    [@animation]="{
-      value: 'visible',
-      params: {
-        transform: transformOptions,
-        transition: '150ms cubic-bezier(0, 0, 0.2, 1)'
-      }
-    }"
-    (@animation.start)="onAnimationStart($event)"
-    (@animation.done)="onAnimationEnd($event)"
-    role="notification"
-    *ngIf="visible">
+  <div #container class="cps-notification-container" role="notification">
     <div #content class="cps-notification-container-content">
-      <ng-container *ngFor="let notification of notifications">
+      <ng-container *ngFor="let notification of notifications; let i = index">
         <cps-toast
           [data]="notification"
-          (closed)="onCloseNotification(notification)">
+          (closed)="onCloseNotification(notification, i)">
         </cps-toast>
       </ng-container>
     </div>
