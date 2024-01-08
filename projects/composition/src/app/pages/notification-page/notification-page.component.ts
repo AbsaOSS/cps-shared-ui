@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
   CpsButtonComponent,
   CpsNotificationConfig,
+  CpsNotificationPosition,
   CpsNotificationService
 } from 'cps-ui-kit';
 
@@ -30,7 +31,7 @@ export class NotificationPageComponent {
     this._notifService.success(
       `Notification message ${this.counter}`,
       'Notification details',
-      { timeout: 0 }
+      { timeout: 0, position: CpsNotificationPosition.BOTTOMLEFT }
     );
     this.counter += 1;
   }

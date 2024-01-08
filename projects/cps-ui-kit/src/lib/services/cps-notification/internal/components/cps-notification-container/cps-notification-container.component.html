@@ -18,7 +18,18 @@
       position === CpsNotificationPosition.BOTTOMRIGHT
   }">
   <div #container class="cps-notification-container" role="notification">
-    <div #content class="cps-notification-container-content">
+    <div
+      #content
+      class="cps-notification-container-content"
+      [ngStyle]="{
+        'align-items': [
+          CpsNotificationPosition.RIGHT,
+          CpsNotificationPosition.TOPRIGHT,
+          CpsNotificationPosition.BOTTOMRIGHT
+        ].includes(position)
+          ? 'flex-end'
+          : 'flex-start'
+      }">
       <ng-container *ngFor="let notification of notifications; let i = index">
         <cps-toast
           [data]="notification"
