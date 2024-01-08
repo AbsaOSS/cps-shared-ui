@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -80,7 +81,8 @@ export class CpsNotificationContainerComponent
   constructor(
     public renderer: Renderer2,
     public zone: NgZone,
-    public primeNGConfig: PrimeNGConfig
+    public primeNGConfig: PrimeNGConfig,
+    private _cdRef: ChangeDetectorRef
   ) {}
 
   ngAfterViewInit() {
@@ -97,6 +99,7 @@ export class CpsNotificationContainerComponent
   onCloseNotification(notification: CpsNotificationConfig, index: number) {
     this.notifications.splice(index, 1);
     this.closed.emit(notification);
+    this._cdRef.detectChanges();
   }
 
   moveOnTop() {

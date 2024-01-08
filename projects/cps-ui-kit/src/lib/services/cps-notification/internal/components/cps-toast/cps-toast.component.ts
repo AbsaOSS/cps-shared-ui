@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
@@ -46,7 +54,7 @@ import {
     ])
   ]
 })
-export class CpsToastComponent {
+export class CpsToastComponent implements AfterViewInit, OnDestroy {
   @Input() data!: CpsNotificationConfig;
 
   /**
@@ -56,15 +64,38 @@ export class CpsToastComponent {
    */
   @Output() closed = new EventEmitter();
 
+  timeout: any;
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private zone: NgZone) {}
+
+  ngAfterViewInit(): void {
+    this.initiateTimeout();
+  }
+
+  ngOnDestroy() {
+    this.clearTimeout();
+  }
+
   close() {
+    this.clearTimeout();
     this.closed.emit();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  clearTimeout() {}
+  initiateTimeout() {
+    this.zone.runOutsideAngular(() => {
+      this.timeout = setTimeout(() => {
+        this.close();
+      }, this.data?.timeout || 5000);
+    });
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  initiateTimeout() {}
+  clearTimeout() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+      this.timeout = null;
+    }
+  }
 
   colorName(): string {
     return this.data.type === CpsNotificationType.WARNING
