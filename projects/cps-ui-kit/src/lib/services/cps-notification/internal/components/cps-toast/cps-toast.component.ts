@@ -13,6 +13,7 @@ import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.co
 import { CommonModule } from '@angular/common';
 import { convertSize } from '../../../../../utils/internal/size-utils';
 import {
+  CpsNotificationAppearance,
   CpsNotificationConfig,
   CpsNotificationType
 } from '../../../utils/cps-notification-config';
@@ -68,12 +69,19 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   timeout: any;
   maxWidth: string | undefined;
+  filled = true;
+  color = '';
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private zone: NgZone) {}
 
   ngOnInit(): void {
     this.maxWidth = convertSize(this.data?.maxWidth || '');
+    this.filled = this.data?.appearance === CpsNotificationAppearance.FILLED;
+    this.color =
+      this.data?.type === CpsNotificationType.WARNING
+        ? 'warn'
+        : this.data?.type || CpsNotificationType.ERROR;
   }
 
   ngAfterViewInit(): void {
@@ -103,11 +111,5 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
       clearTimeout(this.timeout);
       this.timeout = null;
     }
-  }
-
-  colorName(): string {
-    return this.data.type === CpsNotificationType.WARNING
-      ? 'warn'
-      : this.data.type || CpsNotificationType.ERROR;
   }
 }

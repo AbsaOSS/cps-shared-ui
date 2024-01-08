@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   CpsButtonComponent,
+  CpsNotificationAppearance,
   CpsNotificationConfig,
   CpsNotificationPosition,
   CpsNotificationService
@@ -34,7 +35,8 @@ export class NotificationPageComponent {
       {
         timeout: 0,
         position: CpsNotificationPosition.BOTTOMLEFT,
-        maxWidth: '700px'
+        maxWidth: '700px',
+        appearance: CpsNotificationAppearance.OUTLINED
       }
     );
     this.counter += 1;

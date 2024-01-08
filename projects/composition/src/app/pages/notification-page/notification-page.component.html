@@ -1,17 +1,23 @@
 <div class="notification-btns-group">
   <cps-button
-    label="Show success toast"
-    (clicked)="showSuccessNotification()"></cps-button>
-  <cps-button
-    label="Show error toast"
-    (clicked)="showErrorNotification()"></cps-button>
-  <cps-button
-    label="Show warning toast"
+    label="Warning notification"
+    color="warn"
     (clicked)="showWarningNotification()"></cps-button>
   <cps-button
-    label="Show info toast"
+    label="Success notification"
+    color="success"
+    (clicked)="showSuccessNotification()"></cps-button>
+  <cps-button
+    label="Error notification"
+    color="error"
+    (clicked)="showErrorNotification()"></cps-button>
+  <cps-button
+    label="Info notification"
+    color="info"
     (clicked)="showInfoNotification()"></cps-button>
   <cps-button
     label="Clear all notifications"
+    icon="remove"
+    type="outlined"
     (clicked)="clearNotifications()"></cps-button>
 </div>

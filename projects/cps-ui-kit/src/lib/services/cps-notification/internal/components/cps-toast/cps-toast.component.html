@@ -7,11 +7,14 @@
   }"
   [ngStyle]="{ 'max-width': maxWidth }"
   class="cps-toast-content">
-  <div class="cps-toast-icon">
-    <cps-icon [icon]="'toast-' + data.type" size="normal"></cps-icon>
+  <div class="cps-toast-icon" [ngClass]="{ filled: filled }">
+    <cps-icon
+      [icon]="'toast-' + data.type"
+      [color]="filled ? '#fff' : color"
+      size="normal"></cps-icon>
   </div>
   <div class="cps-toast-message">
-    <p class="cps-toast-message-header">{{ data.message }}</p>
+    <p class="cps-toast-message-header">{{ data.message || '' }}</p>
     <p class="cps-toast-message-details" *ngIf="data.details">
       {{ data.details }}
     </p>
@@ -19,7 +22,7 @@
   <div class="cps-toast-buttons">
     <cps-button
       (clicked)="close()"
-      [color]="colorName()"
+      [color]="color"
       icon="close-x"
       class="cps-toast-close-button"
       width="40"

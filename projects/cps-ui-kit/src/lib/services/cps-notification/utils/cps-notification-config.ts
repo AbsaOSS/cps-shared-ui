@@ -10,11 +10,11 @@ export enum CpsNotificationType {
 }
 
 /**
- * An enumeration of notifications categories that can be displayed.
+ * An enumeration of appearances of notifications.
  */
-export enum CpsNotificationCategory {
-  TOAST = 'toast',
-  ALERT = 'alert'
+export enum CpsNotificationAppearance {
+  FILLED = 'filled',
+  OUTLINED = 'outlined'
 }
 
 /**
@@ -39,11 +39,10 @@ export class CpsNotificationConfig {
   // TODO notifs support
   disableClose?: boolean;
   /**
-   * Category of the notification, options are "toast" or "alert".
-   * @default toast
+   * Appearance of the notification, options are "filled" or "outlined".
+   * @default filled
    */
-  // TODO notifs change to appearance filled and outlined
-  category?: CpsNotificationCategory;
+  appearance?: CpsNotificationAppearance;
   /**
    * Type of the notification, options are "warning", "success", "error" or "info".
    */

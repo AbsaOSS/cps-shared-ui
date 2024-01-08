@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
-  CpsNotificationCategory,
+  CpsNotificationAppearance,
   CpsNotificationConfig,
   CpsNotificationPosition,
   CpsNotificationType
@@ -127,7 +127,8 @@ export class CpsNotificationService {
     config.type = type;
     if (!config.message) config.message = message;
     if (!config.details) config.details = details;
-    if (!config.category) config.category = CpsNotificationCategory.TOAST;
+    if (!config.appearance)
+      config.appearance = CpsNotificationAppearance.FILLED;
     if (!config.position) config.position = CpsNotificationPosition.TOPRIGHT;
     if (config.timeout === undefined) config.timeout = 5000;
     return config;

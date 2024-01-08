@@ -10,7 +10,7 @@
       background-color: var(--cps-color-success-bg);
       border: 2px solid var(--cps-color-success);
 
-      .cps-toast-icon {
+      .cps-toast-icon.filled {
         background-color: var(--cps-color-success);
       }
     }
@@ -19,7 +19,7 @@
       background-color: var(--cps-color-error-bg);
       border: 2px solid var(--cps-color-error);
 
-      .cps-toast-icon {
+      .cps-toast-icon.filled {
         background-color: var(--cps-color-error);
       }
     }
@@ -28,7 +28,7 @@
       background-color: var(--cps-color-warn-bg);
       border: 2px solid var(--cps-color-warn);
 
-      .cps-toast-icon {
+      .cps-toast-icon.filled {
         background-color: var(--cps-color-warn);
       }
     }
@@ -37,7 +37,7 @@
       background-color: var(--cps-color-info-bg);
       border: 2px solid var(--cps-color-info);
 
-      .cps-toast-icon {
+      .cps-toast-icon.filled {
         background-color: var(--cps-color-info);
       }
     }
@@ -47,7 +47,6 @@
     display: flex;
     align-items: center;
     padding: 20px;
-    color: #fff;
   }
 
   .cps-toast-message {
