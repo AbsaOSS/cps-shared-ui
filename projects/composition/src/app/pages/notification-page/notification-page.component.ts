@@ -36,7 +36,8 @@ export class NotificationPageComponent {
         timeout: 0,
         position: CpsNotificationPosition.BOTTOMLEFT,
         maxWidth: '700px',
-        appearance: CpsNotificationAppearance.OUTLINED
+        appearance: CpsNotificationAppearance.OUTLINED,
+        maxAmount: 3
       }
     );
     this.counter += 1;

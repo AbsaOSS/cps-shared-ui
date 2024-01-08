@@ -93,6 +93,12 @@ export class CpsNotificationContainerComponent
   }
 
   addNotification(notification: CpsNotificationConfig) {
+    if (
+      this.notifications.length > 0 &&
+      this.notifications.length === this.maxAmount
+    ) {
+      this.notifications.pop();
+    }
     this.notifications.unshift(notification);
   }
 

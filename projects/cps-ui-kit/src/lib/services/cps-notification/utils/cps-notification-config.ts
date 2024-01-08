@@ -18,7 +18,7 @@ export enum CpsNotificationAppearance {
 }
 
 /**
- * An enumeration of notifications positions.
+ * An enumeration of positions of notifications.
  */
 export enum CpsNotificationPosition {
   CENTER = 'center',
@@ -34,15 +34,13 @@ export enum CpsNotificationPosition {
 
 export class CpsNotificationConfig {
   /**
-   * Specifies whether the user is allowed to close the notification.
+   * Message to be displayed in the notification.
    */
-  // TODO notifs support
-  disableClose?: boolean;
+  message?: string;
   /**
-   * Appearance of the notification, options are "filled" or "outlined".
-   * @default filled
+   * Details to be displayed in the notification.
    */
-  appearance?: CpsNotificationAppearance;
+  details?: string;
   /**
    * Type of the notification, options are "warning", "success", "error" or "info".
    */
@@ -53,11 +51,10 @@ export class CpsNotificationConfig {
    */
   position?: CpsNotificationPosition;
   /**
-   * Max amount of notifications that can be simultaneously visualized within a container.
-   * @default undefined
+   * Appearance of the notification, options are "filled" or "outlined".
+   * @default filled
    */
-  // TODO notifs support
-  maxAmount?: number;
+  appearance?: CpsNotificationAppearance;
   /**
    * The duration (in milliseconds) that the notification will be displayed before automatically closing.
    * Value 0 means that the notification is persistent and will not be automatically closed.
@@ -65,13 +62,10 @@ export class CpsNotificationConfig {
    */
   timeout?: number;
   /**
-   * Message to be displayed in the notification.
+   * Max amount of notifications that can be simultaneously visualized within a container.
+   * @default undefined
    */
-  message?: string;
-  /**
-   * Details to be displayed in the notification.
-   */
-  details?: string;
+  maxAmount?: number;
   /**
    * Max width of the notification of type number denoting pixels or string.
    */
