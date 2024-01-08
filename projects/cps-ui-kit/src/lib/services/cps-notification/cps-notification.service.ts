@@ -3,7 +3,8 @@ import {
   EmbeddedViewRef,
   ComponentRef,
   Inject,
-  ViewContainerRef
+  ApplicationRef,
+  createComponent
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -41,7 +42,7 @@ export class CpsNotificationService {
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    private viewContainerRef: ViewContainerRef,
+    private _appRef: ApplicationRef,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -134,11 +135,14 @@ export class CpsNotificationService {
     let containerComponentRef = this.containersMap.get(position);
 
     if (!containerComponentRef) {
-      containerComponentRef = this.viewContainerRef.createComponent(
-        CpsNotificationContainerComponent
+      containerComponentRef = createComponent(
+        CpsNotificationContainerComponent,
+        { environmentInjector: this._appRef.injector }
       );
       containerComponentRef.setInput('position', position);
       containerComponentRef.setInput('maxAmount', config.maxAmount);
+
+      this._appRef.attachView(containerComponentRef.hostView);
 
       const domElem = (containerComponentRef.hostView as EmbeddedViewRef<any>)
         .rootNodes[0] as HTMLElement;
@@ -164,9 +168,7 @@ export class CpsNotificationService {
       return;
 
     if (container) {
-      this.viewContainerRef.detach(
-        this.viewContainerRef.indexOf(container.hostView)
-      );
+      this._appRef.detachView(container.hostView);
       container.destroy();
       this.containersMap.delete(position);
     }

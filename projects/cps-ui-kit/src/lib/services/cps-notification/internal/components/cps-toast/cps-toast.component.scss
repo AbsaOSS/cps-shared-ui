@@ -73,44 +73,4 @@
       margin: 0 8px;
     }
   }
-
-  //Toast positions
-  .cps-toast-top-right {
-    top: 20px;
-    right: 20px;
-  }
-
-  .cps-toast-top-left {
-    top: 20px;
-    left: 20px;
-  }
-
-  .cps-toast-bottom-left {
-    bottom: 20px;
-    left: 20px;
-  }
-
-  .cps-toast-bottom-right {
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .cps-toast-top-center {
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .cps-toast-bottom-center {
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .cps-toast-center {
-    left: 50%;
-    top: 50%;
-    min-width: 20vw;
-    transform: translate(-50%, -50%);
-  }
 }
