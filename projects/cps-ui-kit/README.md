@@ -12,6 +12,7 @@
 - Datepicker
 - Dialog
 - Expansion panel
+- File upload
 - Icon
 - Info circle
 - Input

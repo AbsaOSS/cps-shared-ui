@@ -30,6 +30,7 @@ import { TreeTablePageComponent } from './pages/tree-table-page/tree-table-page.
 import { DialogPageComponent } from './pages/dialog-page/dialog-page.component';
 import { TimepickerPageComponent } from './pages/timepicker-page/timepicker-page.component';
 import { NotificationPageComponent } from './pages/notification-page/notification-page.component';
+import { FileUploadPageComponent } from './pages/file-upload-page/file-upload-page.component';
 
 const routes: Routes = [
   {
@@ -126,6 +127,11 @@ const routes: Routes = [
     path: 'expansion-panel',
     title: 'Expansion panel',
     component: ExpansionPanelPageComponent
+  },
+  {
+    path: 'file-upload',
+    title: 'File upload',
+    component: FileUploadPageComponent
   },
   {
     path: 'progress-circular',
