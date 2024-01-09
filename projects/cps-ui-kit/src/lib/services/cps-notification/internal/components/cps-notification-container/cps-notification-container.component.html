@@ -32,9 +32,10 @@
       }">
       <cps-toast
         *ngFor="let notification of notifications; let i = index"
-        [data]="notification"
+        [data]="notification.data"
+        [config]="notification.config"
         @notificationAnimation
-        (closed)="onCloseNotification(notification, i)">
+        (closed)="onCloseNotification(i)">
       </cps-toast>
     </div>
   </div>

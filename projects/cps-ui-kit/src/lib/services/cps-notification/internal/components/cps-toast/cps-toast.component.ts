@@ -14,9 +14,12 @@ import { CommonModule } from '@angular/common';
 import { convertSize } from '../../../../../utils/internal/size-utils';
 import {
   CpsNotificationAppearance,
-  CpsNotificationConfig,
-  CpsNotificationType
+  CpsNotificationConfig
 } from '../../../utils/cps-notification-config';
+import {
+  CpsNotificationData,
+  CpsNotificationType
+} from '../../../utils/internal/cps-notification-data';
 import {
   animate,
   state,
@@ -58,7 +61,8 @@ import {
   ]
 })
 export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() data!: CpsNotificationConfig;
+  @Input() config!: CpsNotificationConfig;
+  @Input() data!: CpsNotificationData;
 
   /**
    * Callback to invoke on toast close.
@@ -76,8 +80,8 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private zone: NgZone) {}
 
   ngOnInit(): void {
-    this.maxWidth = convertSize(this.data?.maxWidth || '');
-    this.filled = this.data?.appearance === CpsNotificationAppearance.FILLED;
+    this.maxWidth = convertSize(this.config?.maxWidth || '');
+    this.filled = this.config?.appearance === CpsNotificationAppearance.FILLED;
     this.color =
       this.data?.type === CpsNotificationType.WARNING
         ? 'warn'
@@ -98,11 +102,11 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initiateTimeout() {
-    if (this.data?.timeout === 0) return;
+    if (this.config?.timeout === 0) return;
     this.zone.runOutsideAngular(() => {
       this.timeout = setTimeout(() => {
         this.close();
-      }, this.data?.timeout || 5000);
+      }, this.config?.timeout || 5000);
     });
   }
 

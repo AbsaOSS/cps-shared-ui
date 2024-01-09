@@ -19,6 +19,7 @@ import {
   CpsNotificationConfig,
   CpsNotificationPosition
 } from '../../../utils/cps-notification-config';
+import { CpsNotificationData } from '../../../utils/internal/cps-notification-data';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
@@ -67,7 +68,7 @@ export class CpsNotificationContainerComponent
    * @param {CpsNotificationConfig} CpsNotificationConfig - notification closed.
    * @group Emits
    */
-  @Output() closed = new EventEmitter<CpsNotificationConfig>();
+  @Output() closed = new EventEmitter();
 
   CpsNotificationPosition = CpsNotificationPosition;
 
@@ -75,7 +76,10 @@ export class CpsNotificationContainerComponent
 
   wrapper: Nullable<HTMLElement>;
 
-  notifications: CpsNotificationConfig[] = [];
+  notifications: {
+    data: CpsNotificationData;
+    config: CpsNotificationConfig;
+  }[] = [];
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -92,19 +96,19 @@ export class CpsNotificationContainerComponent
     this.moveOnTop();
   }
 
-  addNotification(notification: CpsNotificationConfig) {
+  addNotification(config: CpsNotificationConfig, data: CpsNotificationData) {
     if (
       this.notifications.length > 0 &&
       this.notifications.length === this.maxAmount
     ) {
       this.notifications.pop();
     }
-    this.notifications.unshift(notification);
+    this.notifications.unshift({ data, config });
   }
 
-  onCloseNotification(notification: CpsNotificationConfig, index: number) {
+  onCloseNotification(index: number) {
     this.notifications.splice(index, 1);
-    this.closed.emit(notification);
+    this.closed.emit();
     this._cdRef.detectChanges();
   }
 

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import {
   CpsButtonComponent,
   CpsNotificationAppearance,
-  CpsNotificationConfig,
   CpsNotificationPosition,
   CpsNotificationService
 } from 'cps-ui-kit';
@@ -18,13 +17,7 @@ import {
 })
 export class NotificationPageComponent {
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _notifService: CpsNotificationService) {
-    this._notifService.notificationClosed.subscribe(
-      (data: CpsNotificationConfig) => {
-        console.log('Event emitted with data:', data);
-      }
-    );
-  }
+  constructor(private _notifService: CpsNotificationService) {}
 
   counter = 0;
   showSuccessNotification() {

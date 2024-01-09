@@ -1,13 +1,4 @@
 /* eslint-disable no-unused-vars */
-/**
- * An enumeration of the different types of notifications that can be displayed.
- */
-export enum CpsNotificationType {
-  SUCCESS = 'success',
-  ERROR = 'error',
-  WARNING = 'warning',
-  INFO = 'info'
-}
 
 /**
  * An enumeration of appearances of notifications.
@@ -34,18 +25,6 @@ export enum CpsNotificationPosition {
 
 export interface CpsNotificationConfig {
   /**
-   * Message to be displayed in the notification.
-   */
-  message?: string;
-  /**
-   * Details to be displayed in the notification.
-   */
-  details?: string;
-  /**
-   * Type of the notification, options are "warning", "success", "error" or "info".
-   */
-  type?: CpsNotificationType;
-  /**
    * Position of the notification, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".
    * @default top-right
    */
@@ -68,6 +47,7 @@ export interface CpsNotificationConfig {
   maxAmount?: number;
   /**
    * Max width of the notification of type number denoting pixels or string.
+   * @default undefined
    */
   maxWidth?: string;
 }

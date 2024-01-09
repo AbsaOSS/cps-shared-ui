@@ -10,11 +10,13 @@ import { DOCUMENT } from '@angular/common';
 import {
   CpsNotificationAppearance,
   CpsNotificationConfig,
-  CpsNotificationPosition,
-  CpsNotificationType
+  CpsNotificationPosition
 } from './utils/cps-notification-config';
+import {
+  CpsNotificationData,
+  CpsNotificationType
+} from './utils/internal/cps-notification-data';
 import { CpsNotificationContainerComponent } from './internal/components/cps-notification-container/cps-notification-container.component';
-import { Observable, Subject } from 'rxjs';
 
 /**
  * Service for showing notifications.
@@ -27,20 +29,11 @@ export class CpsNotificationService {
     ComponentRef<CpsNotificationContainerComponent>
   > = new Map();
 
-  private _notificationClosedSubject = new Subject<CpsNotificationConfig>();
-
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private _appRef: ApplicationRef,
     @Inject(DOCUMENT) private document: Document
   ) {}
-
-  /**
-   * An Observable that emits a new value whenever a notification is closed.
-   */
-  public get notificationClosed(): Observable<CpsNotificationConfig> {
-    return this._notificationClosedSubject.asObservable();
-  }
 
   public info(
     message: string,
@@ -108,29 +101,26 @@ export class CpsNotificationService {
     details?: string,
     config?: CpsNotificationConfig
   ) {
-    config = this._initConfig(type, message, details, config);
+    config = this._initConfig(config);
+    const data: CpsNotificationData = { type, message, details };
 
-    this._appendNotificationToContainer(config);
+    this._appendNotificationToContainer(data, config);
   }
 
-  private _initConfig(
-    type: CpsNotificationType,
-    message: string,
-    details?: string,
-    config?: CpsNotificationConfig
-  ): CpsNotificationConfig {
+  private _initConfig(config?: CpsNotificationConfig): CpsNotificationConfig {
     if (!config) config = {};
-    config.type = type;
-    if (message) config.message = message;
-    if (details) config.details = details;
     if (!config.appearance)
       config.appearance = CpsNotificationAppearance.FILLED;
     if (!config.position) config.position = CpsNotificationPosition.TOPRIGHT;
-    if (config.timeout === undefined) config.timeout = 5000;
+    if (config.timeout === undefined || config.timeout === null)
+      config.timeout = 5000;
     return config;
   }
 
-  private _appendNotificationToContainer(config: CpsNotificationConfig) {
+  private _appendNotificationToContainer(
+    data: CpsNotificationData,
+    config: CpsNotificationConfig
+  ) {
     const position = config.position || CpsNotificationPosition.TOPRIGHT;
 
     let containerComponentRef = this._containersMap.get(position);
@@ -150,12 +140,9 @@ export class CpsNotificationService {
         .rootNodes[0] as HTMLElement;
       this.document.body.appendChild(domElem);
 
-      containerComponentRef.instance.closed.subscribe(
-        (data: CpsNotificationConfig) => {
-          this._notificationClosedSubject.next(data);
-          this._tryRemoveContainer(position);
-        }
-      );
+      containerComponentRef.instance.closed.subscribe(() => {
+        this._tryRemoveContainer(position);
+      });
 
       this._containersMap.set(position, containerComponentRef);
     }
@@ -163,7 +150,7 @@ export class CpsNotificationService {
     if (found && config.maxAmount)
       containerComponentRef.setInput('maxAmount', config.maxAmount);
 
-    containerComponentRef.instance.addNotification(config);
+    containerComponentRef.instance.addNotification(config, data);
   }
 
   private _tryRemoveContainer(position: CpsNotificationPosition) {
