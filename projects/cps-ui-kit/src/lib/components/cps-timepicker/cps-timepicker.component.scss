@@ -1,4 +1,4 @@
-$color-error: #cc3333;
+$color-error: var(--cps-color-error);
 $timepicker-hint-color: var(--cps-color-text-mild);
 $timepicker-label-color: var(--cps-color-text-dark);
 $timepicker-label-disabled-color: var(--cps-color-text-mild);
@@ -50,7 +50,7 @@ $timepicker-delimeter-color: var(--cps-color-text-lightest);
       cursor: default;
       margin-top: 0.2rem;
     }
-    
+
     .cps-timepicker-error {
       color: $color-error;
       font-weight: bold;

@@ -1,0 +1,54 @@
+<div class="notification-btns-group">
+  <div>
+    <div class="notification-btns-group-title">Basic notifications</div>
+    <div class="notification-btns-group">
+      <cps-button
+        label="Info notification"
+        color="info"
+        (clicked)="showInfoNotification()"></cps-button>
+      <cps-button
+        label="Error notification"
+        color="error"
+        (clicked)="showErrorNotification()"></cps-button>
+      <cps-button
+        label="Success notification"
+        color="success"
+        (clicked)="showSuccessNotification()"></cps-button>
+      <cps-button
+        label="Warning notification"
+        color="warn"
+        (clicked)="showWarningNotification()"></cps-button>
+    </div>
+  </div>
+  <div class="notification-btns-last-group">
+    <div class="notification-btns-group-title">Configured notifications</div>
+    <div class="notification-btns-group">
+      <cps-button
+        label="Bottom info notification with details"
+        color="info"
+        (clicked)="showInfoNotificationWithDetails()"></cps-button>
+      <cps-button
+        label="Right error notification with max 3 in a column"
+        color="error"
+        (clicked)="showErrorRightWithMax3Notification()"></cps-button>
+      <cps-button
+        label="Bottom-left persistent outlined success notification"
+        color="success"
+        (clicked)="
+          showOutlinedBottomLeftPersistentSuccessNotification()
+        "></cps-button>
+      <cps-button
+        label="Bottom-right outlined warning notification with 2-seconds timeout"
+        color="warn"
+        (clicked)="
+          showOutlinedBottomRight2sTimeoutWarningNotification()
+        "></cps-button>
+    </div>
+  </div>
+  <cps-button
+    label="Clear all notifications"
+    icon="remove"
+    type="outlined"
+    (clicked)="clearNotifications()">
+  </cps-button>
+</div>

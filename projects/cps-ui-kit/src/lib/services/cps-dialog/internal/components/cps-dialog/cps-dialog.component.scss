@@ -181,7 +181,6 @@ $animation-duration: 150ms;
   align-items: center;
 }
 
-/* Top, Bottom, Left, Right, Top* and Bottom* */
 .cps-dialog-top .cps-dialog,
 .cps-dialog-bottom .cps-dialog,
 .cps-dialog-left .cps-dialog,
@@ -194,7 +193,6 @@ $animation-duration: 150ms;
   transform: translate3d(0px, 0px, 0px);
 }
 
-/* Maximize */
 .cps-dialog-maximized {
   -webkit-transition: none;
   transition: none;
@@ -217,7 +215,6 @@ $animation-duration: 150ms;
   }
 }
 
-/* Position */
 .cps-dialog-left {
   justify-content: flex-start;
 }
@@ -247,7 +244,6 @@ $animation-duration: 150ms;
   align-items: flex-end;
 }
 
-/* Resizable */
 .cps-dialog .cps-dialog-resizable-handle {
   position: absolute;
   display: block;

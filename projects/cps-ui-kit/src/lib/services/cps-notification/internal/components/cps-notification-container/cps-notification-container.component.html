@@ -1,0 +1,42 @@
+<div
+  [ngClass]="{
+    'cps-notification-container-mask': true,
+    'cps-notification-container-left':
+      position === CpsNotificationPosition.LEFT,
+    'cps-notification-container-right':
+      position === CpsNotificationPosition.RIGHT,
+    'cps-notification-container-top': position === CpsNotificationPosition.TOP,
+    'cps-notification-container-bottom':
+      position === CpsNotificationPosition.BOTTOM,
+    'cps-notification-container-top-left':
+      position === CpsNotificationPosition.TOPLEFT,
+    'cps-notification-container-top-right':
+      position === CpsNotificationPosition.TOPRIGHT,
+    'cps-notification-container-bottom-left':
+      position === CpsNotificationPosition.BOTTOMLEFT,
+    'cps-notification-container-bottom-right':
+      position === CpsNotificationPosition.BOTTOMRIGHT
+  }">
+  <div #container class="cps-notification-container" role="notification">
+    <div
+      #content
+      class="cps-notification-container-content"
+      [ngStyle]="{
+        'align-items': [
+          CpsNotificationPosition.RIGHT,
+          CpsNotificationPosition.TOPRIGHT,
+          CpsNotificationPosition.BOTTOMRIGHT
+        ].includes(position)
+          ? 'flex-end'
+          : 'flex-start'
+      }">
+      <cps-toast
+        *ngFor="let notification of notifications; let i = index"
+        [data]="notification.data"
+        [config]="notification.config"
+        @notificationAnimation
+        (closed)="onCloseNotification(i)">
+      </cps-toast>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@ $input-text-disabled-color: var(--cps-color-text-light);
 $input-prefix-text-color: var(--cps-color-text-mild);
 $input-prefix-icon-color: var(--cps-color-text-dark);
 
-$color-error: #cc3333;
+$color-error: var(--cps-color-error);
 $error-background: #fef3f2;
 
 $hover-transition-duration: 0.2s;
