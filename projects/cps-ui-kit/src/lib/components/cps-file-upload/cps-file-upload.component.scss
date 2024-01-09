@@ -1,0 +1,32 @@
+$color-calm: var(--cps-color-calm);
+
+:host {
+  display: flex;
+  .cps-file-upload {
+    font-family: 'Source Sans Pro', sans-serif;
+    min-height: 20px;
+    padding: 2rem;
+    text-align: center;
+    border: 2px dashed $color-calm;
+    position: relative;
+    border-radius: 1rem;
+
+    &.dragged-over {
+      background-color: var(--cps-color-highlight-selected);
+    }
+
+    input {
+      cursor: pointer;
+      opacity: 0;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+
+    span {
+      color: $color-calm;
+    }
+  }
+}

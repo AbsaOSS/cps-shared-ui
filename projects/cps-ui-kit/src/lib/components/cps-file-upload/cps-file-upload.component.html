@@ -1,1 +1,31 @@
-<p>cps-file-upload works!</p>
+<div
+  class="cps-file-upload"
+  [ngClass]="{ 'dragged-over': isDragoverFile }"
+  [ngStyle]="{ width: width }"
+  (dragend)="isDragoverFile = false"
+  (dragenter)="isDragoverFile = true"
+  (dragleave)="isDragoverFile = false"
+  (dragover)="isDragoverFile = true"
+  (mouseleave)="isDragoverFile = false"
+  (drop)="tryUploadFile($event)">
+  <input
+    (change)="tryUploadFile($event)"
+    id="fileDropRef"
+    type="file"
+    [accept]="extensionsString"
+    title="" />
+  <div *ngIf="uploadedFile?.name">
+    <h3 class="mx-auto">{{ uploadedFile?.name }}</h3>
+    <cps-icon
+      icon="delete"
+      color="calm"
+      (click)="removeUploadedFile()"></cps-icon>
+  </div>
+  <h6>Drag & Drop or <span>Choose file</span> to upload</h6>
+  <label for="fileDropRef"
+    >{{ fileDesc }}
+    {{
+      extensionsStringAsterisks ? '(' + extensionsStringAsterisks + ')' : ''
+    }}</label
+  >
+</div>
