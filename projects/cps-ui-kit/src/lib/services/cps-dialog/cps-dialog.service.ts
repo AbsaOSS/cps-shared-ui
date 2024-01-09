@@ -18,7 +18,7 @@ import { CpsConfirmationComponent } from './internal/components/cps-confirmation
  * Service for showing CpsDialog.
  * @group Services
  */
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class CpsDialogService {
   dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
     new Map();

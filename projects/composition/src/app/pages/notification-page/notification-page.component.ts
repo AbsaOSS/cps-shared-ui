@@ -14,7 +14,6 @@ import {
   imports: [CommonModule, CpsButtonComponent],
   templateUrl: './notification-page.component.html',
   styleUrls: ['./notification-page.component.scss'],
-  providers: [CpsNotificationService],
   host: { class: 'composition-page' }
 })
 export class NotificationPageComponent {
@@ -63,6 +62,19 @@ export class NotificationPageComponent {
       position: CpsNotificationPosition.BOTTOMLEFT,
       appearance: CpsNotificationAppearance.OUTLINED
     });
+    this.counter += 1;
+  }
+
+  showOutlinedBottomRight2sTimeoutWarningNotification() {
+    this._notifService.warning(
+      `Notification message ${this.counter}`,
+      'Notifications details',
+      {
+        timeout: 2000,
+        position: CpsNotificationPosition.BOTTOMRIGHT,
+        appearance: CpsNotificationAppearance.OUTLINED
+      }
+    );
     this.counter += 1;
   }
 
