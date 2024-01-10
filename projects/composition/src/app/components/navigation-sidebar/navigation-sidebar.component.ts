@@ -54,6 +54,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/expansion-panel'
     },
     {
+      title: 'File upload',
+      url: '/file-upload'
+    },
+    {
       title: 'Icon',
       url: '/icon'
     },

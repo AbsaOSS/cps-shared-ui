@@ -1,0 +1,94 @@
+$color-calm: var(--cps-color-calm);
+$border-dashed-2px: 2px dashed $color-calm;
+$border-dashed-1px: 1px dashed $color-calm;
+$text-color-dark: var(--cps-color-text-dark);
+$text-color-darkest: var(--cps-color-text-darkest);
+
+:host {
+  display: flex;
+  .cps-file-upload {
+    .cps-file-upload-dropzone {
+      font-family: 'Source Sans Pro', sans-serif;
+      min-height: 20px;
+      padding: 2rem;
+      text-align: center;
+      border: $border-dashed-2px;
+      position: relative;
+      border-radius: 1rem;
+      &:hover {
+        background-color: var(--cps-color-highlight-hover);
+      }
+      &:active {
+        background-color: var(--cps-color-highlight-selected);
+      }
+      &.dragged-over {
+        background-color: var(--cps-color-highlight-selected);
+      }
+      &.with-uploads {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom: $border-dashed-1px;
+      }
+
+      input {
+        cursor: pointer;
+        opacity: 0;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+
+      .cps-file-upload-dropzone-title {
+        font-size: 16px;
+        margin: 8px 0;
+        color: $color-calm;
+        font-weight: 600;
+      }
+
+      .cps-file-upload-dropzone-file-desc {
+        font-size: 18px;
+        color: $text-color-dark;
+      }
+      .cps-file-upload-progress-bar {
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+      }
+    }
+    .cps-file-upload-uploaded-files {
+      border-bottom: $border-dashed-2px;
+      border-left: $border-dashed-2px;
+      border-right: $border-dashed-2px;
+      border-bottom-right-radius: 16px;
+      border-bottom-left-radius: 16px;
+      background-color: var(--cps-color-highlight-hover);
+
+      .cps-file-upload-uploaded-file {
+        cursor: default;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px 8px 12px;
+        .cps-file-upload-uploaded-file-title {
+          display: flex;
+          align-items: center;
+          .cps-file-upload-uploaded-file-name {
+            color: $text-color-darkest;
+            font-size: 20px;
+            margin: 0 8px;
+          }
+        }
+        .cps-file-upload-uploaded-file-remove-icon {
+          cursor: pointer;
+          &:hover {
+            ::ng-deep .cps-icon {
+              color: var(--cps-color-error-darken1) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

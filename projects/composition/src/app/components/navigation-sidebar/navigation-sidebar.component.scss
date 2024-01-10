@@ -3,10 +3,12 @@
 :host {
   $item-hover-background: var(--cps-color-highlight-hover);
   $item-active-background: var(--cps-color-highlight-active);
+  $item-border-color: var(--cps-color-line-light);
 
-  border-right: 1px solid lightgrey;
-  background-color: white;
+  border-right: 1px solid $item-border-color;
+  background-color: var(--cps-color-bg-light);
   .sidebar {
+    background-color: white;
     width: $sidebar-width;
     height: calc(100vh - $top-tbar-height - 20px);
     overflow: auto;
@@ -16,11 +18,8 @@
         padding: 12px 0 12px 12px;
         color: $color-text;
       }
-      &-search-bar {
-        margin: 0 8px 8px 8px;
-      }
       &-item {
-        border-bottom: 1px solid lightgrey;
+        border-bottom: 1px solid $item-border-color;
         height: 42px;
         display: flex;
         align-items: center;

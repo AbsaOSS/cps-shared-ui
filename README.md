@@ -17,6 +17,7 @@ This repository consists of two projects:
 - Datepicker
 - Dialog
 - Expansion panel
+- File upload
 - Icon
 - Info circle
 - Input
