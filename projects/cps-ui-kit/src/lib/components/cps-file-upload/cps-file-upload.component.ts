@@ -47,7 +47,14 @@ export class CpsFileUploadComponent implements OnInit {
    * @param {void}
    * @group Emits
    */
-  @Output() uploadFailed = new EventEmitter();
+  @Output() fileUploadFailed = new EventEmitter();
+
+  /**
+   * Callback to invoke when uploaded file is removed.
+   * @param {string} - file name
+   * @group Emits
+   */
+  @Output() uploadedFileRemoved = new EventEmitter<string>();
 
   isDragoverFile = false;
   uploadedFile?: File;
@@ -77,7 +84,7 @@ export class CpsFileUploadComponent implements OnInit {
     }
 
     if (!this._isFileValid(this.uploadedFile)) {
-      this.uploadFailed.emit();
+      this.fileUploadFailed.emit();
       alert('UPLOAD FAILED');
       return;
     }
@@ -86,7 +93,9 @@ export class CpsFileUploadComponent implements OnInit {
   }
 
   removeUploadedFile() {
+    const name = this.uploadedFile?.name ?? '';
     this.uploadedFile = undefined;
+    this.uploadedFileRemoved.emit(name);
   }
 
   private _isFileValid(file?: File) {
