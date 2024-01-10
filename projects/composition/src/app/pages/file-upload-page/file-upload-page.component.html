@@ -1,1 +1,7 @@
-<cps-file-upload></cps-file-upload>
+<cps-file-upload
+  [extensions]="['.jpg', '.png', 'pdf']"
+  fileDesc="Pictures or PDFs"
+  [isProcessingFile]="isProcessingFile"
+  (fileUploadFailed)="onFileUploadFailed($event)"
+  (fileUploaded)="processUploadedFile($event)"
+  (uploadedFileRemoved)="onUploadedFileRemoved($event)"></cps-file-upload>

@@ -48,6 +48,11 @@ $border-dashed-1px: 1px dashed $color-calm;
       .cps-file-upload-dropzone-file-desc {
         font-size: 18px;
       }
+      .cps-file-upload-progress-bar {
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+      }
     }
     .cps-file-upload-uploaded-files {
       border-bottom: $border-dashed-2px;

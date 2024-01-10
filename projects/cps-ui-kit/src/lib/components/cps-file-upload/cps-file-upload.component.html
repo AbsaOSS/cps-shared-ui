@@ -28,24 +28,33 @@
         extensionsStringAsterisks ? '(' + extensionsStringAsterisks + ')' : ''
       }}</span
     >
+    <cps-progress-linear
+      *ngIf="isProcessingFile && uploadedFile"
+      height="3"
+      radius="4"
+      opacity="0.3"
+      class="cps-file-upload-progress-bar"
+      bgColor="transparent">
+    </cps-progress-linear>
   </div>
-  <div *ngIf="uploadedFile?.name" class="cps-file-upload-uploaded-files">
+  <div *ngIf="uploadedFile" class="cps-file-upload-uploaded-files">
     <div class="cps-file-upload-uploaded-file">
       <div class="cps-file-upload-uploaded-file-title">
         <cps-icon
-          class="cps-file-upload-uploaded-file-success-icon"
-          icon="toast-success"
-          color="success">
+          class="cps-file-upload-uploaded-file-status-icon"
+          [icon]="isProcessingFile ? 'pending' : 'toast-success'"
+          [color]="isProcessingFile ? 'warn' : 'success'">
         </cps-icon>
         <div class="cps-file-upload-uploaded-file-name">
-          {{ uploadedFile?.name }}
+          {{ uploadedFile.name }}
         </div>
       </div>
       <cps-icon
+        *ngIf="!isProcessingFile"
         class="cps-file-upload-uploaded-file-remove-icon"
         icon="remove"
         color="error"
-        (click)="removeUploadedFile()">
+        (click)="onRemoveUploadedFile()">
       </cps-icon>
     </div>
   </div>

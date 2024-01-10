@@ -10,4 +10,21 @@ import { CpsFileUploadComponent } from 'cps-ui-kit';
   styleUrls: ['./file-upload-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class FileUploadPageComponent {}
+export class FileUploadPageComponent {
+  isProcessingFile = false;
+
+  async processUploadedFile(file: any) {
+    this.isProcessingFile = true;
+    const fileContentsAsText = await file.text();
+    console.log(fileContentsAsText);
+    this.isProcessingFile = false;
+  }
+
+  onFileUploadFailed(fileName: string) {
+    console.log('File upload failed', fileName);
+  }
+
+  onUploadedFileRemoved(fileName: string) {
+    console.log('File removed: ', fileName);
+  }
+}
