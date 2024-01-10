@@ -1,6 +1,7 @@
 <cps-file-upload
   [extensions]="['.jpg', '.png', 'pdf']"
   fileDesc="Pictures or PDFs"
+  width="500"
   [fileProcessingCallback]="processUploadedFile"
   (fileUploadFailed)="onFileUploadFailed($event)"
   (fileUploaded)="onFileUploaded($event)"
