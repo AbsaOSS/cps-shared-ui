@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsFileUploadComponent } from 'cps-ui-kit';
+import { Observable, catchError, from, map, of } from 'rxjs';
 
 @Component({
   selector: 'app-file-upload-page',
@@ -11,13 +12,21 @@ import { CpsFileUploadComponent } from 'cps-ui-kit';
   host: { class: 'composition-page' }
 })
 export class FileUploadPageComponent {
-  isProcessingFile = false;
+  processUploadedFile(file: File): Observable<boolean> {
+    return from(file.text()).pipe(
+      map((fileContentsAsText) => {
+        console.log(fileContentsAsText);
+        return true;
+      }),
+      catchError((error) => {
+        console.error('Error reading file', error);
+        return of(false);
+      })
+    );
+  }
 
-  async processUploadedFile(file: any) {
-    this.isProcessingFile = true;
-    const fileContentsAsText = await file.text();
-    console.log(fileContentsAsText);
-    this.isProcessingFile = false;
+  onFileUploaded(file: File) {
+    console.log('File uploaded', file?.name);
   }
 
   onFileUploadFailed(fileName: string) {

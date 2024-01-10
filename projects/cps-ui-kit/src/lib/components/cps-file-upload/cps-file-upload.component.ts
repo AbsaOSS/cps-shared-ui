@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { Observable, take } from 'rxjs';
 
+/**
+ * CpsFileUploadComponent is an advanced uploader with dragdrop support.
+ * @group Components
+ */
 @Component({
   selector: 'cps-file-upload',
   standalone: true,
@@ -31,10 +36,11 @@ export class CpsFileUploadComponent implements OnInit {
   @Input() width: number | string = '100%';
 
   /**
-   * When enabled, a progress bar is displayed.
+   * Callback for uploaded file processing.
    * @group Props
    */
-  @Input() isProcessingFile = false;
+  @Input() fileProcessingCallback?: (file: File) => Observable<boolean> =
+    undefined;
 
   /**
    * Callback to invoke when file is uploaded.
@@ -62,6 +68,8 @@ export class CpsFileUploadComponent implements OnInit {
   extensionsString = '';
   extensionsStringAsterisks = '';
 
+  isProcessingFile = false;
+
   ngOnInit(): void {
     this.width = convertSize(this.width);
     this.extensions = this.extensions.map((ext) =>
@@ -73,15 +81,13 @@ export class CpsFileUploadComponent implements OnInit {
       .join(', ');
   }
 
-  removeUploadedFile() {
-    this.uploadedFile = undefined;
-  }
-
   tryUploadFile(event: Event) {
     event.preventDefault();
     event.stopPropagation();
+
     this.isDragoverFile = false;
     let file: File | undefined;
+
     if (event.type === 'drop') {
       file = (event as DragEvent).dataTransfer?.files.item(0) ?? undefined;
     } else {
@@ -96,12 +102,23 @@ export class CpsFileUploadComponent implements OnInit {
     }
 
     this.uploadedFile = file;
-    this.fileUploaded.emit(this.uploadedFile);
+    if (this.uploadedFile) {
+      this.fileUploaded.emit(this.uploadedFile);
+      if (this.fileProcessingCallback) {
+        this.isProcessingFile = true;
+        this.fileProcessingCallback(this.uploadedFile)
+          .pipe(take(1))
+          .subscribe((res) => {
+            if (!res) this.removeUploadedFile();
+            this.isProcessingFile = false;
+          });
+      }
+    }
   }
 
-  onRemoveUploadedFile() {
+  removeUploadedFile() {
     const name = this.uploadedFile?.name ?? '';
-    this.removeUploadedFile();
+    this.uploadedFile = undefined;
     this.uploadedFileRemoved.emit(name);
   }
 

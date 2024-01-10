@@ -1,6 +1,8 @@
 $color-calm: var(--cps-color-calm);
 $border-dashed-2px: 2px dashed $color-calm;
 $border-dashed-1px: 1px dashed $color-calm;
+$text-color-dark: var(--cps-color-text-dark);
+$text-color-darkest: var(--cps-color-text-darkest);
 
 :host {
   display: flex;
@@ -47,6 +49,7 @@ $border-dashed-1px: 1px dashed $color-calm;
 
       .cps-file-upload-dropzone-file-desc {
         font-size: 18px;
+        color: $text-color-dark;
       }
       .cps-file-upload-progress-bar {
         position: absolute;
@@ -72,12 +75,18 @@ $border-dashed-1px: 1px dashed $color-calm;
           display: flex;
           align-items: center;
           .cps-file-upload-uploaded-file-name {
+            color: $text-color-darkest;
             font-size: 20px;
             margin: 0 8px;
           }
         }
         .cps-file-upload-uploaded-file-remove-icon {
           cursor: pointer;
+          &:hover {
+            ::ng-deep .cps-icon {
+              color: var(--cps-color-error-darken1) !important;
+            }
+          }
         }
       }
     }

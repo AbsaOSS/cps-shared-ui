@@ -16,7 +16,7 @@
       type="file"
       [accept]="extensionsString"
       title="" />
-    <cps-icon icon="export" size="large"></cps-icon>
+    <cps-icon icon="export" size="large" color="text-darkest"></cps-icon>
     <div class="cps-file-upload-dropzone-title">
       Drag&Drop or choose file to upload
     </div>
@@ -54,7 +54,7 @@
         class="cps-file-upload-uploaded-file-remove-icon"
         icon="remove"
         color="error"
-        (click)="onRemoveUploadedFile()">
+        (click)="removeUploadedFile()">
       </cps-icon>
     </div>
   </div>
