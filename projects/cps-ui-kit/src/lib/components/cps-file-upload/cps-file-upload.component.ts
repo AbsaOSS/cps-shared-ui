@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
-import { Observable, take } from 'rxjs';
+import { Observable, catchError, of, take } from 'rxjs';
 
 /**
  * CpsFileUploadComponent is an advanced uploader with dragdrop support.
@@ -107,7 +107,12 @@ export class CpsFileUploadComponent implements OnInit {
       if (this.fileProcessingCallback) {
         this.isProcessingFile = true;
         this.fileProcessingCallback(this.uploadedFile)
-          .pipe(take(1))
+          .pipe(
+            take(1),
+            catchError(() => {
+              return of(false);
+            })
+          )
           .subscribe((res) => {
             if (!res) this.removeUploadedFile();
             this.isProcessingFile = false;
