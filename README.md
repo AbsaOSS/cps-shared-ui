@@ -1,6 +1,6 @@
 ## Consumer Products UI Kit
 
-### Shared components library
+### Angular shared components library
 
 This repository consists of two projects:
 
