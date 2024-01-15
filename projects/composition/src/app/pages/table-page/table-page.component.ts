@@ -356,6 +356,10 @@ export class TablePageComponent implements OnInit {
     alert(`'Remove' buttons are now ${visibilityStatus}`);
   }
 
+  onRowsToRemove(rows: any[]) {
+    this.data = this.data.filter((r) => !rows.includes(r));
+  }
+
   onReloadBtnClicked() {
     alert('Data reload button clicked');
   }

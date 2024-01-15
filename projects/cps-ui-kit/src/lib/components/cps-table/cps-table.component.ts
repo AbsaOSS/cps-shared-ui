@@ -77,12 +77,6 @@ export type CpsTableSortMode = 'single' | 'multiple';
 })
 export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   /**
-   * An array of objects to display.
-   * @group Props
-   */
-  @Input() data: any[] = [];
-
-  /**
    * An array of objects to represent dynamic columns.
    * @group Props
    */
@@ -445,6 +439,18 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
+   * An array of objects to display.
+   * @group Props
+   */
+  @Input() set data(value: any[]) {
+    this._data = [...value];
+  }
+
+  get data(): any[] {
+    return this._data;
+  }
+
+  /**
    * Callback to invoke on selection changed.
    * @param {any[]} value - selected data.
    * @group Emits
@@ -470,7 +476,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @param {any[]} any[] - array of rows removed.
    * @group Emits
    */
-  @Output() rowsRemoved = new EventEmitter<any[]>();
+  @Output() rowsToRemove = new EventEmitter<any[]>();
 
   /**
    * Callback to invoke on page changed.
@@ -563,6 +569,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   colToggleMenu!: CpsMenuComponent;
 
   @ViewChild('tUnsortDirective') tUnsortDirective!: TableUnsortDirective;
+
+  _data: any[] = [];
 
   selectedRows: any[] = [];
 
@@ -685,15 +693,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     }
 
     if (changes?.data) {
-      console.log('Data changed!!!!');
-      // TODO rows reorder should change the initial data, filtering and sorting should not.
-      // Rows removal should send the event for external removal.
-      // Defaultsortorder
-      // TODO single sorting by strings doesn't work as expected, multiple works fine
-      // TODO rework tableUnsort directive
       this.resetSortingState();
-
-      // TODO reset sorting. What if rows were removed? we don't want to update sorting state
       this.selectedRows = this.selectedRows.filter((sr) =>
         this.data.includes(sr)
       );
@@ -701,9 +701,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   resetSortingState() {
-    // this.tUnsortDirective?.resetDefaultSortOrder();
-    // this.primengTable.sortField = '_defaultSortOrder';
-    // this.primengTable.sortSingle();
+    this.tUnsortDirective?.resetDefaultSortOrder();
   }
 
   clearSelection() {
@@ -727,18 +725,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   removeSelected() {
-    const indexes: number[] = this.primengTable.selection.map(
-      (s: any) => s._defaultSortOrder
-    );
-    indexes.sort((a, b) => b - a);
-
-    this.data = this.data.filter(
-      (v: any) => !indexes.includes(v._defaultSortOrder)
-    );
-
-    this.rowsRemoved.emit(this.selectedRows);
-
-    this.clearSelection();
+    this.rowsToRemove.emit(this.selectedRows);
   }
 
   onClickAdditionalBtnOnSelect() {
@@ -820,9 +807,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onRemoveRowClicked(item: any) {
-    this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
-    this.data = this.data.filter((v: any) => v !== item);
-    this.rowsRemoved.emit([item]);
+    this.rowsToRemove.emit([item]);
   }
 
   onSort(event: any) {

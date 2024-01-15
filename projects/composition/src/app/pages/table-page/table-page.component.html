@@ -51,6 +51,7 @@
       [showActionBtn]="true"
       [showRowMenu]="true"
       [showRowRemoveButton]="isRemoveBtnVisible"
+      (rowsToRemove)="onRowsToRemove($event)"
       [showDataReloadBtn]="true"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
       (actionBtnClicked)="onActionBtnClicked()"
@@ -89,6 +90,7 @@
       sortMode="multiple"
       [striped]="false"
       [showRowMenu]="true"
+      (rowsToRemove)="onRowsToRemove($event)"
       [showColumnsToggleBtn]="true"
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked($event)"
@@ -131,6 +133,7 @@
       [data]="data"
       [selectable]="true"
       toolbarSize="small"
+      (rowsToRemove)="onRowsToRemove($event)"
       scrollHeight="calc(100vh - 300px)"
       toolbarTitle="Table with nested header and small toolbar">
       <ng-template #nestedHeader>
