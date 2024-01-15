@@ -562,6 +562,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @ViewChild('colToggleMenu')
   colToggleMenu!: CpsMenuComponent;
 
+  @ViewChild('tUnsortDirective') tUnsortDirective!: TableUnsortDirective;
+
   selectedRows: any[] = [];
 
   virtualScrollItemSize = 0;
@@ -682,14 +684,26 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
     }
 
-    const dataChanges = changes?.data;
-    if (
-      dataChanges?.previousValue?.length !== dataChanges?.currentValue?.length
-    ) {
+    if (changes?.data) {
+      console.log('Data changed!!!!');
+      // TODO rows reorder should change the initial data, filtering and sorting should not.
+      // Rows removal should send the event for external removal.
+      // Defaultsortorder
+      // TODO single sorting by strings doesn't work as expected, multiple works fine
+      // TODO rework tableUnsort directive
+      this.resetSortingState();
+
+      // TODO reset sorting. What if rows were removed? we don't want to update sorting state
       this.selectedRows = this.selectedRows.filter((sr) =>
         this.data.includes(sr)
       );
     }
+  }
+
+  resetSortingState() {
+    // this.tUnsortDirective?.resetDefaultSortOrder();
+    // this.primengTable.sortField = '_defaultSortOrder';
+    // this.primengTable.sortSingle();
   }
 
   clearSelection() {
