@@ -456,11 +456,11 @@ export class CpsTreeTableComponent
   @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
-   * Callback to invoke on selected node change.
-   * @param {any[]} array - selection changed.
+   * Callback to invoke on selected rows change.
+   * @param {any[]} any[] - selected rows.
    * @group Emits
    */
-  @Output() selectionChanged = new EventEmitter<any[]>();
+  @Output() rowsSelected = new EventEmitter<any[]>();
 
   /**
    * Callback to invoke when action button is clicked.
@@ -1313,6 +1313,6 @@ export class CpsTreeTableComponent
   }
 
   onSelectionChanged(selection: any[]) {
-    this.selectionChanged.emit(selection);
+    this.rowsSelected.emit(selection);
   }
 }
