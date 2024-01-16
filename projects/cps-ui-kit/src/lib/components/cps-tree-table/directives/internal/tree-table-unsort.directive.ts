@@ -36,11 +36,7 @@ export class TreeTableUnsortDirective {
         pTreeTable._sortField = event.field;
         pTreeTable.sortSingle();
       }
-      if (
-        pTreeTable.sortMode === 'multiple' &&
-        pTreeTable._multiSortMeta &&
-        pTreeTable.multiSortMeta
-      ) {
+      if (pTreeTable.sortMode === 'multiple') {
         let resetIndex = false;
         const sortMeta = pTreeTable.getSortMeta(event.field);
 
@@ -85,8 +81,7 @@ export class TreeTableUnsortDirective {
         pTreeTable.sortFunction.emit({
           data: nodes,
           mode: pTreeTable.sortMode,
-          field:
-            pTreeTable.sortField === null ? undefined : pTreeTable.sortField,
+          field: pTreeTable.sortField,
           order: pTreeTable.sortOrder
         });
       } else {
@@ -112,18 +107,11 @@ export class TreeTableUnsortDirective {
       }
 
       for (const node of nodes) {
-        if (node.children) {
-          pTreeTable.sortNodes(node.children);
-        }
+        pTreeTable.sortNodes(node.children);
       }
     };
-    // Todo: Use explicit type
-    pTreeTable.multisortField = (
-      node1: any,
-      node2: any,
-      multiSortMeta,
-      index
-    ) => {
+
+    pTreeTable.multisortField = (node1, node2, multiSortMeta, index) => {
       if (
         ObjectUtils.isEmpty(pTreeTable.multiSortMeta) ||
         ObjectUtils.isEmpty(multiSortMeta[index])

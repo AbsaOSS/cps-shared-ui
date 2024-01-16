@@ -107,9 +107,6 @@ export class CpsPaginatorComponent implements OnInit {
       this.paginator.first = 0;
     }
     this.paginator.rows = rows;
-    /* Todo: Use explicit type (I've inspected the PrimeNG source code and it seems it's not
-        even using the parameter, see https://github.com/primefaces/primeng/blob/64338cb87c9d354c89ad1f192a231e1a63912b60/src/app/components/paginator/paginator.ts#L473C5-L473C5)
-    */
-    this.paginator.onRppChange(rows as any);
+    this.paginator.onRppChange(rows);
   }
 }
