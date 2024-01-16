@@ -7,19 +7,7 @@ import { ObjectUtils } from 'primeng/utils';
   selector: '[ttWithUnsort]'
 })
 export class TreeTableUnsortDirective {
-  defaultSortOrderInitialized = false;
-
   constructor(@Host() @Self() @Optional() public pTreeTable: TreeTable) {
-    pTreeTable.tableService.uiUpdateSource$.subscribe((val: any[]) => {
-      if (val != null && val.length > 0 && !this.defaultSortOrderInitialized) {
-        let i = 0;
-        val.forEach((v) => {
-          v._defaultSortOrder = i++;
-        });
-        this.defaultSortOrderInitialized = true;
-      }
-    });
-
     pTreeTable.sort = (event: any) => {
       if (pTreeTable.sortMode === 'single') {
         if (

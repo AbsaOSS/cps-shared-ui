@@ -66,6 +66,7 @@
       [showRowMenu]="true"
       [showRowRemoveButton]="isRemoveBtnVisible"
       [showDataReloadBtn]="true"
+      (rowsToRemove)="onRowsToRemove($event)"
       (editRowBtnClicked)="onEditRowButtonClicked()"
       (actionBtnClicked)="onActionBtnClicked()"
       (dataReloadBtnClicked)="onReloadBtnClicked()"
@@ -104,6 +105,7 @@
       sortMode="multiple"
       [striped]="false"
       [showRowMenu]="true"
+      (rowsToRemove)="onRowsToRemove($event)"
       [showColumnsToggleBtn]="true"
       (columnsSelected)="onColumnsSelected($event)"
       (editRowBtnClicked)="onEditRowButtonClicked()"
@@ -142,6 +144,7 @@
     <cps-tree-table
       [data]="data"
       [autoLayout]="false"
+      (rowsToRemove)="onRowsToRemove($event)"
       [selectable]="true"
       toolbarSize="small"
       scrollHeight="calc(100vh - 370px)"
