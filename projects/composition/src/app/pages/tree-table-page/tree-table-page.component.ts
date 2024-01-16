@@ -524,6 +524,24 @@ export class TreeTablePageComponent implements OnInit {
     alert('Edit row button clicked');
   }
 
+  onRowsToRemove(rows: any) {
+    const names = rows.map((row: any) => row.data.name);
+    this.data = this._removeElementsByName(this.data, names);
+  }
+
+  private _removeElementsByName(dataArray: any[], namesArray: string[]) {
+    return dataArray.filter((item) => {
+      if (namesArray.includes(item.data.name)) {
+        return false;
+      }
+      if (item.children && item.children.length > 0) {
+        item.children = this._removeElementsByName(item.children, namesArray);
+      }
+
+      return true;
+    });
+  }
+
   onRowsSelectionChanged(rows: any) {
     console.log(rows);
   }
