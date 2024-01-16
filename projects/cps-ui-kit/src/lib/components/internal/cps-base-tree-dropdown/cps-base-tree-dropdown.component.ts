@@ -457,7 +457,8 @@ export class CpsBaseTreeDropdownComponent
           if (key) {
             const idx =
               this.treeList?.serializedValue?.findIndex(
-                (v) => v.node.key === key
+                // Todo: Use explicit type
+                (v: any) => v.node.key === key
               ) || -1;
             if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);
           }

@@ -747,6 +747,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   getPage(): number {
+    if (
+      this.primengTable.first === null ||
+      this.primengTable.first === undefined
+    ) {
+      throw new Error('Property first on the primengTable must be defined.');
+    }
     return Math.floor(this.primengTable.first / this.rows);
   }
 

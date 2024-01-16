@@ -32,7 +32,11 @@ export class TableUnsortDirective {
         pTable._sortField = event.field;
         pTable.sortSingle();
       }
-      if (pTable.sortMode === 'multiple') {
+      if (
+        pTable.sortMode === 'multiple' &&
+        pTable._multiSortMeta &&
+        pTable.multiSortMeta
+      ) {
         let resetIndex = false;
         const sortMeta = pTable.getSortMeta(event.field);
 

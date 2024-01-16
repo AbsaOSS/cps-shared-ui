@@ -23,7 +23,8 @@ import { FormsModule } from '@angular/forms';
 import {
   TreeTable,
   TreeTableService,
-  TreeTableModule
+  TreeTableModule,
+  TreeTableSortEvent
 } from 'primeng/treetable';
 import { DomHandler } from 'primeng/dom';
 import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
@@ -592,7 +593,8 @@ export class CpsTreeTableComponent
 
   rowOptions: { label: string; value: number }[] = [];
 
-  selectedRows: any[] = [];
+  // Todo: Use explicit type
+  selectedRows: any = [];
 
   virtualScrollItemSize = 0;
   defScrollHeight = '';
@@ -1067,23 +1069,25 @@ export class CpsTreeTableComponent
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
         this._updateVirtualScrollItemSize();
-        const itemsLen = this.primengTreeTable.serializedValue.length;
-        if (itemsLen < 1) {
-          this.scrollHeight = this.emptyBodyHeight
-            ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
-            : this.virtualScrollItemSize + 1 + 'px';
-        } else {
-          const curHeight = this.virtualScrollItemSize * itemsLen + 2;
-          if (this.defScrollHeight === 'flex') {
-            if (curHeight >= this._defScrollHeightPxInitial) {
-              this.scrollHeight = 'flex';
-              this.renderer.setStyle(this._scrollableBody, 'height', '100%');
-              this.cdRef.markForCheck();
-              return;
+        const itemsLen = this.primengTreeTable.serializedValue?.length;
+        if (itemsLen !== undefined) {
+          if (itemsLen < 1) {
+            this.scrollHeight = this.emptyBodyHeight
+              ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
+              : this.virtualScrollItemSize + 1 + 'px';
+          } else {
+            const curHeight = this.virtualScrollItemSize * itemsLen + 2;
+            if (this.defScrollHeight === 'flex') {
+              if (curHeight >= this._defScrollHeightPxInitial) {
+                this.scrollHeight = 'flex';
+                this.renderer.setStyle(this._scrollableBody, 'height', '100%');
+                this.cdRef.markForCheck();
+                return;
+              }
             }
+            this.scrollHeight =
+              Math.min(this._defScrollHeightPx, curHeight) + 'px';
           }
-          this.scrollHeight =
-            Math.min(this._defScrollHeightPx, curHeight) + 'px';
         }
         this.cdRef.markForCheck();
       }
@@ -1136,7 +1140,7 @@ export class CpsTreeTableComponent
     this.globalFilterComp?.clear();
   }
 
-  onSortFunction(event: SortEvent) {
+  onSortFunction(event: TreeTableSortEvent) {
     this.customSortFunction.emit(event);
   }
 
@@ -1163,7 +1167,9 @@ export class CpsTreeTableComponent
   }
 
   removeSelected() {
-    this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
+    this.selectedRows.forEach((row: any) =>
+      this._removeNodeFromData(row, false)
+    );
     this.data = [...this.data];
     this.rowsRemoved.emit(this.selectedRows);
     this.clearSelection();
@@ -1311,8 +1317,8 @@ export class CpsTreeTableComponent
       this._calcAutoLayoutHeaderWidths(true);
     });
   }
-
-  onSelectionChanged(selection: any[]) {
+  // Todo: Use explicit type
+  onSelectionChanged(selection: any) {
     this.selectionChanged.emit(selection);
   }
 }

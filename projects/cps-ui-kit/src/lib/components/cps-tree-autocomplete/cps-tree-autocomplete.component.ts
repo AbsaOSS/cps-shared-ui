@@ -246,7 +246,8 @@ export class CpsTreeAutocompleteComponent
       return;
     }
 
-    const found = this.treeList?.serializedValue?.find(
+    // Todo: Use explicit type
+    const found: any = this.treeList?.serializedValue?.find(
       (sv: any) => sv?.node?.label?.toLowerCase() === searchVal
     );
     if (found) {

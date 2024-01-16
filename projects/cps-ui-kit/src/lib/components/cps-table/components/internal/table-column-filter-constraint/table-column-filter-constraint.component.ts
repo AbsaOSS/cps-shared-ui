@@ -137,7 +137,11 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
             fillCats(v.children);
           });
         };
-        fillCats(this._tableInstance.value);
+        if (this._tableInstance.value !== undefined) {
+          fillCats(this._tableInstance.value);
+        } else {
+          throw new Error('Table value is undefined.');
+        }
       }
       this.categories =
         Array.from(new Set(cats))?.map((c) => ({
