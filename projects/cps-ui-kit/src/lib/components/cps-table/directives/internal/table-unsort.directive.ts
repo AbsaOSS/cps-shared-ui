@@ -36,18 +36,19 @@ export class TableUnsortDirective {
         let resetIndex = false;
         const sortMeta = pTable.getSortMeta(event.field);
 
+        // Todo: Use explicit type in the whole block
         if (sortMeta) {
-          for (let i = 0; i < pTable._multiSortMeta.length; i++) {
-            if (pTable._multiSortMeta[i].field === sortMeta.field) {
-              pTable._multiSortMeta.splice(i, 1);
+          for (let i = 0; i < (pTable._multiSortMeta as any).length; i++) {
+            if ((pTable._multiSortMeta as any)[i].field === sortMeta.field) {
+              (pTable._multiSortMeta as any).splice(i, 1);
             }
           }
           if (sortMeta.order === 1) {
             sortMeta.order = sortMeta.order * -1;
-            pTable.multiSortMeta.push(sortMeta);
+            (pTable.multiSortMeta as any).push(sortMeta);
           }
           if (pTable._multiSortMeta?.length === 0) {
-            pTable.multiSortMeta.push({
+            (pTable.multiSortMeta as any).push({
               field: '_defaultSortOrder',
               order: pTable.defaultSortOrder
             });
@@ -57,7 +58,7 @@ export class TableUnsortDirective {
           if (!pTable.multiSortMeta) {
             pTable._multiSortMeta = [];
           }
-          pTable.multiSortMeta.push({
+          (pTable.multiSortMeta as any).push({
             field: event.field,
             order: pTable.defaultSortOrder
           });

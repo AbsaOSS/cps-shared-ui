@@ -137,7 +137,8 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
             fillCats(v.children);
           });
         };
-        fillCats(this._tableInstance.value);
+        // Todo: Use explicit type
+        fillCats(this._tableInstance.value as any);
       }
       this.categories =
         Array.from(new Set(cats))?.map((c) => ({

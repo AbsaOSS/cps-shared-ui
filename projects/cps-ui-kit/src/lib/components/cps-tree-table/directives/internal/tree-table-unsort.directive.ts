@@ -40,18 +40,21 @@ export class TreeTableUnsortDirective {
         let resetIndex = false;
         const sortMeta = pTreeTable.getSortMeta(event.field);
 
+        // Todo: Use explicit type in the whole block
         if (sortMeta) {
-          for (let i = 0; i < pTreeTable._multiSortMeta.length; i++) {
-            if (pTreeTable._multiSortMeta[i].field === sortMeta.field) {
-              pTreeTable._multiSortMeta.splice(i, 1);
+          for (let i = 0; i < (pTreeTable._multiSortMeta as any).length; i++) {
+            if (
+              (pTreeTable._multiSortMeta as any)[i].field === sortMeta.field
+            ) {
+              (pTreeTable._multiSortMeta as any).splice(i, 1);
             }
           }
           if (sortMeta.order === 1) {
             sortMeta.order = sortMeta.order * -1;
-            pTreeTable.multiSortMeta.push(sortMeta);
+            (pTreeTable.multiSortMeta as any).push(sortMeta);
           }
           if (pTreeTable._multiSortMeta?.length === 0) {
-            pTreeTable.multiSortMeta.push({
+            (pTreeTable.multiSortMeta as any).push({
               field: '_defaultSortOrder',
               order: pTreeTable.defaultSortOrder
             });
@@ -61,7 +64,7 @@ export class TreeTableUnsortDirective {
           if (!pTreeTable.multiSortMeta) {
             pTreeTable._multiSortMeta = [];
           }
-          pTreeTable.multiSortMeta.push({
+          (pTreeTable.multiSortMeta as any).push({
             field: event.field,
             order: pTreeTable.defaultSortOrder
           });
@@ -81,7 +84,8 @@ export class TreeTableUnsortDirective {
         pTreeTable.sortFunction.emit({
           data: nodes,
           mode: pTreeTable.sortMode,
-          field: pTreeTable.sortField,
+          // Todo: Use explicit type
+          field: pTreeTable.sortField as any,
           order: pTreeTable.sortOrder
         });
       } else {
@@ -107,7 +111,8 @@ export class TreeTableUnsortDirective {
       }
 
       for (const node of nodes) {
-        pTreeTable.sortNodes(node.children);
+        // Todo: Use explicit type
+        pTreeTable.sortNodes(node.children as any);
       }
     };
 
@@ -120,10 +125,12 @@ export class TreeTableUnsortDirective {
       }
       const isUnsort = multiSortMeta[index].field === '_defaultSortOrder';
       const value1 = isUnsort
-        ? node1._defaultSortOrder
+        ? // Todo: Use explicit type
+          (node1 as any)._defaultSortOrder
         : ObjectUtils.resolveFieldData(node1.data, multiSortMeta[index].field);
       const value2 = isUnsort
-        ? node2._defaultSortOrder
+        ? // Todo: Use explicit type
+          (node2 as any)._defaultSortOrder
         : ObjectUtils.resolveFieldData(node2.data, multiSortMeta[index].field);
       let result = 0;
 

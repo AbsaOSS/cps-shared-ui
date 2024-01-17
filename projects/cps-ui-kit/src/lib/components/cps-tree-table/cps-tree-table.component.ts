@@ -592,7 +592,8 @@ export class CpsTreeTableComponent
 
   rowOptions: { label: string; value: number }[] = [];
 
-  selectedRows: any[] = [];
+  // Todo: Add explicit type
+  selectedRows: any = [];
 
   virtualScrollItemSize = 0;
   defScrollHeight = '';
@@ -1067,7 +1068,8 @@ export class CpsTreeTableComponent
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
         this._updateVirtualScrollItemSize();
-        const itemsLen = this.primengTreeTable.serializedValue.length;
+        // Todo: Add explicit type
+        const itemsLen = (this.primengTreeTable.serializedValue as any).length;
         if (itemsLen < 1) {
           this.scrollHeight = this.emptyBodyHeight
             ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
@@ -1136,7 +1138,8 @@ export class CpsTreeTableComponent
     this.globalFilterComp?.clear();
   }
 
-  onSortFunction(event: SortEvent) {
+  // Todo: Use explicit type
+  onSortFunction(event: SortEvent | any) {
     this.customSortFunction.emit(event);
   }
 
@@ -1163,7 +1166,10 @@ export class CpsTreeTableComponent
   }
 
   removeSelected() {
-    this.selectedRows.forEach((row) => this._removeNodeFromData(row, false));
+    // Todo: Use explicit type
+    this.selectedRows.forEach((row: any) =>
+      this._removeNodeFromData(row, false)
+    );
     this.data = [...this.data];
     this.rowsRemoved.emit(this.selectedRows);
     this.clearSelection();
@@ -1312,7 +1318,8 @@ export class CpsTreeTableComponent
     });
   }
 
-  onSelectionChanged(selection: any[]) {
+  // Todo: Add explicit type to param selection
+  onSelectionChanged(selection: any) {
     this.selectionChanged.emit(selection);
   }
 }
