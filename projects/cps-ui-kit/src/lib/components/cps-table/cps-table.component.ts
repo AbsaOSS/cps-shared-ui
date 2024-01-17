@@ -684,10 +684,6 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       classesList.push('p-datatable-gridlines');
     }
 
-    if (this.scrollHeight && !this.loading && this.data.length > 0) {
-      classesList.push('cps-table-bottom-bordered');
-    }
-
     return classesList.join(' ');
   }
 
