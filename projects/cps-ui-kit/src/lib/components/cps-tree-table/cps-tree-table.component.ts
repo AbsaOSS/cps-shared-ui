@@ -173,11 +173,17 @@ export class CpsTreeTableComponent
 
   /**
    * Determines whether the 'Remove' button should be displayed in the row menu.
-   * If true, 'Remove' button is shown. If false, it's hidden.
    * Note: This setting only takes effect if 'showRowMenu' is true.
    * @group Props
    */
   @Input() showRowRemoveButton = true;
+
+  /**
+   * Determines whether the 'Edit' button should be displayed in the row menu.
+   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * @group Props
+   */
+  @Input() showRowEditButton = true;
 
   /**
    * When enabled, a loader component is displayed.
@@ -1066,6 +1072,10 @@ export class CpsTreeTableComponent
     }
     if (this.bordered) {
       classesList.push('p-treetable-gridlines');
+    }
+
+    if (this.scrollHeight && !this.loading && this.data.length > 0) {
+      classesList.push('cps-treetable-bottom-bordered');
     }
 
     return classesList.join(' ');
