@@ -24,11 +24,11 @@
     "@angular/router": "^16.2.12",
     "@types/lodash-es": "^4.17.7",
     "lodash-es": "^4.17.21",
-    "primeng": "^16.0.0",
+    "primeng": "^17.3.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "xlsx": "^0.18.5",
-    "zone.js": "~0.13.3"
+    "zone.js": "~0.14.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.11",
@@ -57,7 +57,7 @@
     "ng-packagr": "^16.2.3",
     "prettier": "^2.8.8",
     "typedoc": "^0.25.7",
-    "typescript": "~5.1.0"
+    "typescript": "~5.2.0"
   },
   "optionalDependencies": {
     "cypress": "^12.14.0"
