@@ -1074,10 +1074,6 @@ export class CpsTreeTableComponent
       classesList.push('p-treetable-gridlines');
     }
 
-    if (this.scrollHeight && !this.loading && this.data.length > 0) {
-      classesList.push('cps-treetable-bottom-bordered');
-    }
-
     return classesList.join(' ');
   }
 
