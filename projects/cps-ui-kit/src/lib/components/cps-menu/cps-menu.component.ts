@@ -485,6 +485,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
       let arrowLeft = 0;
 
+      const containerWidth = this.container?.offsetWidth || 0;
+
       if (containerOffset.left < targetOffset.left) {
         arrowLeft =
           20 +
@@ -492,11 +494,10 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
           containerOffset.left -
           parseFloat(borderRadius) * 2;
       } else {
-        const containerWidth = this.container?.offsetWidth || 0;
         const targetWidth = this.target?.offsetWidth || 0;
         arrowLeft = Math.min(targetWidth / 2, containerWidth / 2);
       }
-      arrowLeft = Math.max(arrowLeft, 12);
+      arrowLeft = Math.min(Math.max(arrowLeft, 12), containerWidth - 12);
       this.container?.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
     }
 
