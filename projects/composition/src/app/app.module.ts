@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import {
+  BrowserModule,
+  provideClientHydration
+} from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +18,10 @@ import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
     AppRoutingModule,
     NavigationSidebarComponent
   ],
-  providers: [{ provide: TitleStrategy, useClass: AppPrefixTitleStrategy }],
+  providers: [
+    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
+    provideClientHydration()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
