@@ -1,0 +1,96 @@
+name: Build and publish the documentation app
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'projects/cps-ui-kit/**'
+      - 'projects/composition/**'
+      - '.github/**'
+
+jobs:
+  # Generate api data
+  generate-api-data:
+    if: "!contains(github.event.head_commit.message, 'Update API data')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Use Node.js v20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Generate API data
+        working-directory: projects/cps-ui-kit
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          npm run generate-json-api
+
+      - name: Commit and push
+        working-directory: projects/cps-ui-kit
+        run: |
+          git add -A
+          git commit -m "Update API data"
+          git push origin HEAD:master
+
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    needs: generate-api-data
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fetch latest commits
+        run: git pull origin master
+
+      - name: Use Node.js v20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: projects/cps-ui-kit/node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('projects/cps-ui-kit/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CPS UI Kit Component Library
+        run: npm run build:documentation
+
+  # Deploy job
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
