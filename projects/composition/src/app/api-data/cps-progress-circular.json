@@ -1,0 +1,36 @@
+{
+    "components": {
+        "CpsProgressCircularComponent": {
+            "description": "CpsProgressCircularComponent is a process status indicator in a form of a spinner.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "diameter",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "40",
+                        "description": "Diameter of the progress bar, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "strokeWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "4",
+                        "description": "Thickness of the progress bar, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "color",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "calm",
+                        "description": "Color of the progress bar."
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,207 @@
+{
+    "components": {
+        "CpsTextareaComponent": {
+            "description": "CpsTextareaComponent is a textarea component.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label of the textarea."
+                    },
+                    {
+                        "name": "placeholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Please enter",
+                        "description": "Placeholder text for the textarea."
+                    },
+                    {
+                        "name": "rows",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "5",
+                        "description": "Number of rows in the textarea."
+                    },
+                    {
+                        "name": "cols",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "20",
+                        "description": "The cols attribute specifies the visible width of a textarea."
+                    },
+                    {
+                        "name": "autofocus",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the textarea can auto focus."
+                    },
+                    {
+                        "name": "hint",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Bottom hint text for the textarea."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the textarea is disabled."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the textarea, it can be of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "clearable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a clear icon is displayed to clear the value."
+                    },
+                    {
+                        "name": "hideDetails",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Hides hint and validation errors."
+                    },
+                    {
+                        "name": "persistentClear",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the textarea should have persistent clear icon."
+                    },
+                    {
+                        "name": "error",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Error message."
+                    },
+                    {
+                        "name": "resizable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "\"vertical\" | \"none\"",
+                        "default": "vertical",
+                        "description": "Determines whether the component can be resized vertically or not."
+                    },
+                    {
+                        "name": "infoTooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "When it is not an empty string, an info icon is displayed to show text for more info."
+                    },
+                    {
+                        "name": "infoTooltipClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "Info tooltip class for styling."
+                    },
+                    {
+                        "name": "infoTooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Max width of infoTooltip, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "infoTooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the infoTooltip is persistent."
+                    },
+                    {
+                        "name": "infoTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "value",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string"
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "valueChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke on value change."
+                    },
+                    {
+                        "name": "focused",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the component receives focus."
+                    },
+                    {
+                        "name": "prefixIconClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the prefixIcon is clicked."
+                    },
+                    {
+                        "name": "blurred",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the component loses focus."
+                    }
+                ]
+            }
+        }
+    }
+}

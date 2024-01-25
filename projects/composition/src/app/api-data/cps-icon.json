@@ -1,0 +1,36 @@
+{
+    "components": {
+        "CpsIconComponent": {
+            "description": "CpsIconComponent is a component that is used for icons.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "icon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Name of the icon."
+                    },
+                    {
+                        "name": "size",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "iconSizeType",
+                        "default": "small",
+                        "description": "Size of the icon, it can be of type number denoting pixels, string or 'fill', 'xsmall', 'small', 'normal' or 'large'."
+                    },
+                    {
+                        "name": "color",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "currentColor",
+                        "description": "Color of the icon."
+                    }
+                ]
+            }
+        }
+    }
+}

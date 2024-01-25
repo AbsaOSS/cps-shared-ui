@@ -1,0 +1,267 @@
+{
+    "components": {
+        "CpsInputComponent": {
+            "description": "CpsInputComponent is used to enter values in a certain formats such as numeric, text or password.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label of the input element."
+                    },
+                    {
+                        "name": "hint",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Bottom hint text for the input field."
+                    },
+                    {
+                        "name": "placeholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Please enter",
+                        "description": "Placeholder text for the input field."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether input is disabled."
+                    },
+                    {
+                        "name": "readonly",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether input is readonly."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the input field, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "type",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "\"number\" | \"text\" | \"password\"",
+                        "default": "text",
+                        "description": "Type of the input of type 'text', 'number' or 'password'."
+                    },
+                    {
+                        "name": "loading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a loading bar is displayed."
+                    },
+                    {
+                        "name": "clearable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a clear icon is displayed to clear the value."
+                    },
+                    {
+                        "name": "prefixIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Icon before input value."
+                    },
+                    {
+                        "name": "prefixIconClickable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, prefixIcon is clickable."
+                    },
+                    {
+                        "name": "prefixIconSize",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "iconSizeType",
+                        "default": "18px",
+                        "description": "Size of icon before input value, of type number or string or it can be a value 'fill', 'xsmall', 'small', 'normal' or 'large'."
+                    },
+                    {
+                        "name": "prefixText",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Text before input value."
+                    },
+                    {
+                        "name": "hideDetails",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Hides hint and validation errors."
+                    },
+                    {
+                        "name": "persistentClear",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the component should have persistent clear icon."
+                    },
+                    {
+                        "name": "error",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Error message."
+                    },
+                    {
+                        "name": "infoTooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "When it is not an empty string, an info icon is displayed to show text for more info."
+                    },
+                    {
+                        "name": "infoTooltipClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "InfoTooltip class for styling."
+                    },
+                    {
+                        "name": "infoTooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Max width of infoTooltip, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "infoTooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the infoTooltip is persistent."
+                    },
+                    {
+                        "name": "infoTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "appearance",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsInputAppearanceType",
+                        "default": "outlined",
+                        "description": "Styling appearance of input field, it can be \"outlined\" or \"underlined\" or \"borderless\"."
+                    },
+                    {
+                        "name": "valueToDisplay",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Readonly value to display inside of input field."
+                    },
+                    {
+                        "name": "value",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string"
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "valueChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke on value change."
+                    },
+                    {
+                        "name": "focused",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the component receives focus."
+                    },
+                    {
+                        "name": "prefixIconClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the prefix icon is clicked."
+                    },
+                    {
+                        "name": "blurred",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the component loses focus."
+                    },
+                    {
+                        "name": "cleared",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when x icon is clicked."
+                    },
+                    {
+                        "name": "enterClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when enter is clicked."
+                    }
+                ]
+            }
+        }
+    }
+}

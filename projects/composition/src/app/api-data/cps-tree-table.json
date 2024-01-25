@@ -1,0 +1,649 @@
+{
+    "components": {
+        "CpsTreeTableComponent": {
+            "description": "CpsTreeTableComponent is used to display hierarchical data in tabular format.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "data",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any[]",
+                        "default": "[]",
+                        "description": "An array of objects to display."
+                    },
+                    {
+                        "name": "columns",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "Object[]",
+                        "default": "[]",
+                        "description": "An array of objects to represent dynamic columns."
+                    },
+                    {
+                        "name": "colHeaderName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "header",
+                        "description": "A key used to retrieve the header from columns."
+                    },
+                    {
+                        "name": "colFieldName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "field",
+                        "description": "A key used to retrieve the field from columns."
+                    },
+                    {
+                        "name": "minWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "",
+                        "description": "Treetable min width of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "minWidthForBodyOnly",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether minWidth prop is used for treetable body only, excluding toolbar and paginator."
+                    },
+                    {
+                        "name": "autoLayout",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the cell widths scale according to their content or not."
+                    },
+                    {
+                        "name": "striped",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the treetable should have alternating stripes."
+                    },
+                    {
+                        "name": "bordered",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the treetable should have borders."
+                    },
+                    {
+                        "name": "size",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTreeTableSize",
+                        "default": "normal",
+                        "description": "Size of treetable cells, it can be \"small\", \"normal\" or \"large\"."
+                    },
+                    {
+                        "name": "selectable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the treetable should have row selection."
+                    },
+                    {
+                        "name": "rowHover",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the treetable should have rows highlighting on hover."
+                    },
+                    {
+                        "name": "showRowMenu",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the treetable should show row menus."
+                    },
+                    {
+                        "name": "showRowRemoveButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nIf true, 'Remove' button is shown. If false, it's hidden.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                    },
+                    {
+                        "name": "loading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a loader component is displayed."
+                    },
+                    {
+                        "name": "tableStyle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "undefined",
+                        "default": "undefined",
+                        "description": "Inline style of the treetable."
+                    },
+                    {
+                        "name": "tableStyleClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Style class of the treetable."
+                    },
+                    {
+                        "name": "sortable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Makes all columns sortable if columns prop is provided."
+                    },
+                    {
+                        "name": "sortMode",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTreeTableSortMode",
+                        "default": "single",
+                        "description": "Determines whether sorting works on single column or on multiple columns."
+                    },
+                    {
+                        "name": "customSort",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to use the default sorting or a custom one using sortFunction."
+                    },
+                    {
+                        "name": "hasToolbar",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the treetable has a toolbar."
+                    },
+                    {
+                        "name": "toolbarSize",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTreeTableToolbarSize",
+                        "default": "normal",
+                        "description": "Toolbar size, it can be \"small\" or \"normal\"."
+                    },
+                    {
+                        "name": "toolbarTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Toolbar title."
+                    },
+                    {
+                        "name": "toolbarIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Toolbar icon name."
+                    },
+                    {
+                        "name": "toolbarIconColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Toolbar icon color."
+                    },
+                    {
+                        "name": "scrollable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Makes treetable scrollable."
+                    },
+                    {
+                        "name": "scrollHeight",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Height of the scroll viewport in fixed pixels or the \"flex\" keyword for a dynamic size."
+                    },
+                    {
+                        "name": "virtualScroll",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true."
+                    },
+                    {
+                        "name": "virtualScrollItemHeight",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Height of a virtual scroll item in fixed pixels."
+                    },
+                    {
+                        "name": "numToleratedItems",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "10",
+                        "description": "Determines how many additional elements to add to the DOM outside of the view."
+                    },
+                    {
+                        "name": "paginator",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the treetable should have paginator."
+                    },
+                    {
+                        "name": "alwaysShowPaginator",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show paginator even there is only one page."
+                    },
+                    {
+                        "name": "rowsPerPageOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number[]",
+                        "default": "[]",
+                        "description": "Array of integer values to display inside rows per page dropdown of paginator."
+                    },
+                    {
+                        "name": "first",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Index of the first row to be displayed."
+                    },
+                    {
+                        "name": "rows",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Number of rows to display per page."
+                    },
+                    {
+                        "name": "resetPageOnRowsChange",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to reset page on rows change."
+                    },
+                    {
+                        "name": "resetPageOnSort",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to reset page on treetable data sorting."
+                    },
+                    {
+                        "name": "totalRecords",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Number of total records."
+                    },
+                    {
+                        "name": "emptyMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "No data",
+                        "description": "Text to display when there is no data."
+                    },
+                    {
+                        "name": "emptyBodyHeight",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "",
+                        "description": "Height of treetable's body when there is no data, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "lazy",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Defines if data is loaded and interacted with in lazy manner."
+                    },
+                    {
+                        "name": "lazyLoadOnInit",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to call lazy loading on initialization."
+                    },
+                    {
+                        "name": "showGlobalFilter",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show global filter in the toolbar."
+                    },
+                    {
+                        "name": "globalFilterPlaceholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Search",
+                        "description": "Global filter placeholder."
+                    },
+                    {
+                        "name": "globalFilterFields",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string[]",
+                        "default": "[]",
+                        "description": "An array of fields to use in global filtering."
+                    },
+                    {
+                        "name": "clearGlobalFilterOnLoading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to clear global filter on data loading."
+                    },
+                    {
+                        "name": "showRemoveBtnOnSelect",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show remove button in the toolbar when rows are selected."
+                    },
+                    {
+                        "name": "removeBtnOnSelectDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether removeBtnOnSelect is disabled."
+                    },
+                    {
+                        "name": "showAdditionalBtnOnSelect",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show additional button in the toolbar when rows are selected."
+                    },
+                    {
+                        "name": "additionalBtnOnSelectTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Select action",
+                        "description": "AdditionalBtnOnSelect title."
+                    },
+                    {
+                        "name": "additionalBtnOnSelectDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether additionalBtnOnSelect is disabled."
+                    },
+                    {
+                        "name": "showActionBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show action button in the toolbar."
+                    },
+                    {
+                        "name": "actionBtnTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Action",
+                        "description": "Action button title."
+                    },
+                    {
+                        "name": "actionBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether actionBtn is disabled."
+                    },
+                    {
+                        "name": "showDataReloadBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show data reload button in the toolbar."
+                    },
+                    {
+                        "name": "dataReloadBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether dataReloadBtn is disabled."
+                    },
+                    {
+                        "name": "showColumnsToggleBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the treetable should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter."
+                    },
+                    {
+                        "name": "columnsToggleBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether columnsToggle button is disabled."
+                    },
+                    {
+                        "name": "initialColumns",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "Object[]",
+                        "default": "[]",
+                        "description": "Array of initial columns to show in the treetable. If not provided, all columns are initially visible."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "selectionChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on selected node change."
+                    },
+                    {
+                        "name": "actionBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "void"
+                            }
+                        ],
+                        "description": "Callback to invoke when action button is clicked."
+                    },
+                    {
+                        "name": "additionalBtnOnSelectClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any[]"
+                            }
+                        ],
+                        "description": "Callback to invoke when additional button on select is clicked."
+                    },
+                    {
+                        "name": "editRowBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when edit-row button is clicked."
+                    },
+                    {
+                        "name": "rowsRemoved",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any[]"
+                            }
+                        ],
+                        "description": "Callback to invoke when rows are removed."
+                    },
+                    {
+                        "name": "pageChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when page is changed."
+                    },
+                    {
+                        "name": "sorted",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when data is sorted."
+                    },
+                    {
+                        "name": "filtered",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when data is filtered."
+                    },
+                    {
+                        "name": "columnsSelected",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "Object[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on selected columns."
+                    },
+                    {
+                        "name": "lazyLoaded",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when paging, sorting or filtering happens in lazy mode."
+                    },
+                    {
+                        "name": "dataReloadBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when data reload button is clicked."
+                    },
+                    {
+                        "name": "nodeExpanded",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when a node is expanded."
+                    },
+                    {
+                        "name": "nodeCollapsed",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when a node is collapsed."
+                    },
+                    {
+                        "name": "nodeSelected",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when a node is selected."
+                    },
+                    {
+                        "name": "nodeUnselected",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when a node is unselected."
+                    },
+                    {
+                        "name": "customSortFunction",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "A function to implement custom sorting. customSort must be true."
+                    }
+                ]
+            }
+        }
+    }
+}

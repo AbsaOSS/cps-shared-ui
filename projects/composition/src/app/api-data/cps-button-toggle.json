@@ -1,0 +1,131 @@
+{
+    "components": {
+        "CpsButtonToggleComponent": {
+            "description": "CpsButtonToggleComponent is used to select values using buttons.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label of the toggle buttons."
+                    },
+                    {
+                        "name": "options",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsButtonToggleOption[]",
+                        "default": "...",
+                        "description": "An array of options."
+                    },
+                    {
+                        "name": "multiple",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Specifies if multiple values can be selected."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Specifies that the component should be disabled."
+                    },
+                    {
+                        "name": "mandatory",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether at least one of the options is mandatory."
+                    },
+                    {
+                        "name": "equalWidths",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether all buttons should have equal widths."
+                    },
+                    {
+                        "name": "optionTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "bottom",
+                        "description": "Position of the option tooltip, can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "infoTooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "When it is not an empty string, an info icon is displayed to show text for more info."
+                    },
+                    {
+                        "name": "infoTooltipClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "Info tooltip class for styling."
+                    },
+                    {
+                        "name": "infoTooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Size of infoTooltip, of type number or string."
+                    },
+                    {
+                        "name": "infoTooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the infoTooltip is persistent."
+                    },
+                    {
+                        "name": "infoTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "_value",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any",
+                        "default": "undefined",
+                        "description": "Value of the component."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "valueChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke on value change."
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "components": {
+        "CpsSidebarMenuComponent": {
+            "description": "CpsSidebarMenuComponent is a vertical menu panel component displayed at the edge of the screen.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "items",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsSidebarMenuItem[]",
+                        "default": "[]",
+                        "description": "An array of menu items."
+                    },
+                    {
+                        "name": "isExpanded",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Indicates current expansion state of the sidebar."
+                    },
+                    {
+                        "name": "exactRoutes",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the menu items should allow activating only exact links."
+                    },
+                    {
+                        "name": "height",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Height of the sidebar, of type number denoting pixels or string."
+                    }
+                ]
+            }
+        }
+    }
+}

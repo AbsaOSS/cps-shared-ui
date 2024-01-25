@@ -1,0 +1,175 @@
+{
+    "components": {
+        "CpsDatepickerComponent": {
+            "description": "CpsDatepickerComponent is an input component to provide date input.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label of the datepicker element."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether datepicker is disabled."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the datepicker of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "placeholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "MM/DD/YYYY",
+                        "description": "Placeholder text."
+                    },
+                    {
+                        "name": "hint",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Bottom hint text for the input field."
+                    },
+                    {
+                        "name": "clearable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a clear icon is displayed to clear the value."
+                    },
+                    {
+                        "name": "hideDetails",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Hides hint and validation errors."
+                    },
+                    {
+                        "name": "persistentClear",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the component should have persistent clear icon."
+                    },
+                    {
+                        "name": "showTodayButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show button to be able to select today's date."
+                    },
+                    {
+                        "name": "openOnInputFocus",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the datepicker dropdown should open on input focus."
+                    },
+                    {
+                        "name": "infoTooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "When it is not an empty string, an info icon is displayed to show text for more info."
+                    },
+                    {
+                        "name": "infoTooltipClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "InfoTooltip class for styling."
+                    },
+                    {
+                        "name": "infoTooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Size of infoTooltip, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "infoTooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the infoTooltip is persistent."
+                    },
+                    {
+                        "name": "infoTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of infoTooltip, it can be \"top\", \"bottom\", \"left\" or \"right\"."
+                    },
+                    {
+                        "name": "appearance",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsDatepickerAppearanceType",
+                        "default": "outlined",
+                        "description": "Styling appearance of datepicker input, it can be 'outlined', 'underlined' or 'borderless."
+                    },
+                    {
+                        "name": "minDate",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "Date",
+                        "description": "Minimal date availalbe for selection."
+                    },
+                    {
+                        "name": "maxDate",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "Date",
+                        "description": "Maximal date availalbe for selection."
+                    },
+                    {
+                        "name": "value",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "null | Date"
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "valueChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "null | Date"
+                            }
+                        ],
+                        "description": "Callback to invoke on value change."
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -2,7 +2,7 @@ const TypeDoc = require('typedoc');
 const path = require('path');
 const fs = require('fs');
 const rootDir = path.resolve(__dirname, '../');
-const outputPath = path.resolve(rootDir, 'generated-docs/data');
+const outputPath = path.resolve(rootDir, 'projects/composition/src/app/api-data/');
 
 const staticMessages = {
   methods: "Defines methods that can be accessed by the component's reference.",
@@ -51,7 +51,7 @@ async function main() {
 
     if (isProcessable(modules)) {
       modules.children.forEach((module) => {
-        const name = module.name.replace(/.*\//, '');
+        const name = module.name.replace(/\/.*/, '');
         if (allowed(name)) {
           if (module.groups) {
             if (!doc[name]) {
@@ -77,6 +77,7 @@ async function main() {
             const module_types_group = module.groups.find(
               (g) => g.title === 'Types'
             );
+            // Todo: Add support for type aliases
 
             if (isProcessable(module_components_group)) {
               module_components_group.children.forEach((component) => {
@@ -108,38 +109,38 @@ async function main() {
                         prop.getSignature && prop.getSignature.type
                           ? prop.getSignature.type.toString()
                           : prop.type
-                          ? prop.type.toString()
-                          : null,
+                            ? prop.type.toString()
+                            : null,
                       default:
                         prop.type &&
-                        prop.type.name === 'boolean' &&
-                        !prop.defaultValue
+                          prop.type.name === 'boolean' &&
+                          !prop.defaultValue
                           ? 'false'
                           : prop.defaultValue
-                          ? prop.defaultValue.replace(/^'|'$/g, '')
-                          : undefined,
+                            ? prop.defaultValue.replace(/^'|'$/g, '')
+                            : undefined,
                       description:
                         prop.getSignature && prop.getSignature.comment
                           ? prop.getSignature.comment.summary
-                              .map((s) => s.text || '')
-                              .join(' ')
+                            .map((s) => s.text || '')
+                            .join(' ')
                           : prop.comment &&
-                            prop.comment.summary
-                              .map((s) => s.text || '')
-                              .join(' '),
+                          prop.comment.summary
+                            .map((s) => s.text || '')
+                            .join(' '),
                       deprecated:
                         prop.getSignature &&
-                        prop.getSignature.comment &&
-                        prop.getSignature.comment.getTag('@deprecated')
+                          prop.getSignature.comment &&
+                          prop.getSignature.comment.getTag('@deprecated')
                           ? parseText(
-                              prop.getSignature.comment.getTag('@deprecated')
-                                .content[0].text
-                            )
+                            prop.getSignature.comment.getTag('@deprecated')
+                              .content[0].text
+                          )
                           : prop.comment && prop.comment.getTag('@deprecated')
-                          ? parseText(
+                            ? parseText(
                               prop.comment.getTag('@deprecated').content[0].text
                             )
-                          : undefined
+                            : undefined
                     });
                   });
                   doc[name]['components'][componentName]['props'] = props;
@@ -161,7 +162,7 @@ async function main() {
                         {
                           name:
                             extractParameter(emitter) &&
-                            extractParameter(emitter).includes('Event')
+                              extractParameter(emitter).includes('Event')
                               ? 'event'
                               : 'value',
                           type: extractParameter(emitter)
@@ -175,9 +176,9 @@ async function main() {
                       deprecated:
                         emitter.comment && emitter.comment.getTag('@deprecated')
                           ? parseText(
-                              emitter.comment.getTag('@deprecated').content[0]
-                                .text
-                            )
+                            emitter.comment.getTag('@deprecated').content[0]
+                              .text
+                          )
                           : undefined
                     });
                   });
@@ -252,9 +253,9 @@ async function main() {
                           deprecated:
                             child.comment && child.comment.getTag('@deprecated')
                               ? parseText(
-                                  child.comment.getTag('@deprecated').content[0]
-                                    .text
-                                )
+                                child.comment.getTag('@deprecated').content[0]
+                                  .text
+                              )
                               : undefined
                         }))
                     });
@@ -292,9 +293,9 @@ async function main() {
                       deprecated:
                         child.comment && child.comment.getTag('@deprecated')
                           ? parseText(
-                              child.comment.getTag('@deprecated').content[0]
-                                .text
-                            )
+                            child.comment.getTag('@deprecated').content[0]
+                              .text
+                          )
                           : undefined
                     }))
                 });
@@ -365,11 +366,11 @@ async function main() {
                         .join(' '),
                     deprecated:
                       signature.comment &&
-                      signature.comment.getTag('@deprecated')
+                        signature.comment.getTag('@deprecated')
                         ? parseText(
-                            signature.comment.getTag('@deprecated').content[0]
-                              .text
-                          )
+                          signature.comment.getTag('@deprecated').content[0]
+                            .text
+                        )
                         : undefined
                   });
                 });
@@ -407,9 +408,9 @@ async function main() {
                       deprecated:
                         child.comment && child.comment.getTag('@deprecated')
                           ? parseText(
-                              child.comment.getTag('@deprecated').content[0]
-                                .text
-                            )
+                            child.comment.getTag('@deprecated').content[0]
+                              .text
+                          )
                           : undefined
                     }))
                 });
@@ -508,10 +509,16 @@ async function main() {
       }
     }
 
-    const typedocJSON = JSON.stringify(mergedDocs, null, 4);
 
-    !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
-    fs.writeFileSync(path.resolve(outputPath, 'index.json'), typedocJSON);
+    for (const key in mergedDocs) {
+      const typedocJSON = JSON.stringify(mergedDocs[key], null, 4);
+      !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
+      fs.writeFileSync(path.resolve(outputPath, `${key}.json`), typedocJSON);
+    }
+
+    // const typedocJSON = JSON.stringify(mergedDocs, null, 4);
+    // !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
+    // fs.writeFileSync(path.resolve(outputPath, 'index.json'), typedocJSON);
   }
 }
 

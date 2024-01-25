@@ -1,0 +1,79 @@
+{
+    "components": {
+        "CpsFileUploadComponent": {
+            "description": "CpsFileUploadComponent is an advanced uploader with dragdrop support.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "extensions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string[]",
+                        "default": "[]",
+                        "description": "Expected extensions of a file to be uploaded. E.g. 'doc or .doc'."
+                    },
+                    {
+                        "name": "fileDesc",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Any file",
+                        "description": "Expected file description. E.g. 'Word document'."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the component, a number denoting pixels or a string."
+                    },
+                    {
+                        "name": "fileProcessingCallback",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "Function",
+                        "default": "undefined",
+                        "description": "Callback for uploaded file processing."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "fileUploaded",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "File"
+                            }
+                        ],
+                        "description": "Callback to invoke when file is uploaded."
+                    },
+                    {
+                        "name": "fileUploadFailed",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke when file upload fails."
+                    },
+                    {
+                        "name": "uploadedFileRemoved",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke when uploaded file is removed."
+                    }
+                ]
+            }
+        }
+    }
+}
