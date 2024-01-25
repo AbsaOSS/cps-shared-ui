@@ -1,0 +1,68 @@
+<cps-tab-group tabsBackground="bg-light" animationType="fade">
+  <cps-tab label="Examples">
+    <div class="example-content">
+      <ng-content></ng-content>
+    </div>
+  </cps-tab>
+  <cps-tab label="API">
+    <ng-container
+      *ngIf="
+        componentData &&
+        componentData.components &&
+        objectEntries(componentData.components).length > 0
+      ">
+      <div *ngFor="let data of objectEntries(componentData.components)">
+        <h1>{{ data[0] }}</h1>
+        <p>{{ data[1].description }}</p>
+        <div>
+          <h2>Properties</h2>
+          <p>{{ data[1].props.description }}</p>
+          <div>
+            <table class="data-table">
+              <thead>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Default value</th>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let prop of data[1].props.values">
+                  <td class="prop-name">
+                    <span>{{ prop.name }}</span>
+                  </td>
+                  <td class="prop-type">{{ prop.type }}</td>
+                  <td class="prop-default">
+                    <span>{{ prop.default || 'undefined' }}</span>
+                  </td>
+                  <td class="prop-description">{{ prop.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="data[1].emits">
+            <h2>Events</h2>
+            <p>{{ data[1].emits.description }}</p>
+            <div>
+              <table class="data-table">
+                <thead>
+                  <th>Name</th>
+                  <th>Parameters</th>
+                  <th>Description</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let event of data[1].emits.values">
+                    <td class="prop-name">
+                      <span>{{ event.name }}</span>
+                    </td>
+                    <td class="prop-type">{{ event.parameters[0].type }}</td>
+                    <td class="prop-description">{{ event.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </cps-tab>
+</cps-tab-group>

@@ -1,11 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
+import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
 
+import ComponetnData from '../../api-data/cps-menu.json';
 @Component({
   selector: 'app-menu-page',
   standalone: true,
-  imports: [CommonModule, CpsMenuComponent, CpsButtonComponent],
+  imports: [
+    CommonModule,
+    CpsMenuComponent,
+    CpsButtonComponent,
+    DocsViewerComponent
+  ],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],
   host: { class: 'composition-page' }
@@ -97,6 +104,7 @@ export class MenuPageComponent {
       target: '_blank'
     }
   ] as CpsMenuItem[];
+  componentData = ComponetnData;
 
   doConsoleLog(event: any) {
     console.log(event.item.title + ' clicked');

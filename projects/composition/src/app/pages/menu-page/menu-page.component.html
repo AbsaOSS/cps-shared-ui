@@ -1,45 +1,50 @@
-<div class="menu-group">
-  <cps-menu #standardMenu [items]="items" header="Menu header"> </cps-menu>
-  <cps-button label="Standard menu" (clicked)="standardMenu.toggle($event)">
-  </cps-button>
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="menu-group">
+    <cps-menu #standardMenu [items]="items" header="Menu header"> </cps-menu>
+    <cps-button label="Standard menu" (clicked)="standardMenu.toggle($event)">
+    </cps-button>
 
-  <cps-menu #standardMenuNoHeader [items]="items"> </cps-menu>
-  <cps-button
-    label="Standard menu without header"
-    (clicked)="standardMenuNoHeader.toggle($event)">
-  </cps-button>
+    <cps-menu #standardMenuNoHeader [items]="items"> </cps-menu>
+    <cps-button
+      label="Standard menu without header"
+      (clicked)="standardMenuNoHeader.toggle($event)">
+    </cps-button>
 
-  <cps-menu
-    #compressedMenu
-    [items]="items"
-    [compressed]="true"
-    [withArrow]="false">
-  </cps-menu>
-  <cps-button label="Compressed menu" (clicked)="compressedMenu.toggle($event)">
-  </cps-button>
+    <cps-menu
+      #compressedMenu
+      [items]="items"
+      [compressed]="true"
+      [withArrow]="false">
+    </cps-menu>
+    <cps-button
+      label="Compressed menu"
+      (clicked)="compressedMenu.toggle($event)">
+    </cps-button>
 
-  <cps-menu
-    #compressedMenuNoIcons
-    [items]="itemsWithoutIcons"
-    [compressed]="true"
-    [withArrow]="false">
-  </cps-menu>
-  <cps-button
-    label="Compressed menu without icons"
-    (clicked)="compressedMenuNoIcons.toggle($event)">
-  </cps-button>
+    <cps-menu
+      #compressedMenuNoIcons
+      [items]="itemsWithoutIcons"
+      [compressed]="true"
+      [withArrow]="false">
+    </cps-menu>
+    <cps-button
+      label="Compressed menu without icons"
+      (clicked)="compressedMenuNoIcons.toggle($event)">
+    </cps-button>
 
-  <cps-menu #arbitraryMenu>
-    <div class="my-menu-content">
-      <span>Provide your own contents here</span>
-      <img
-        src="https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg"
-        alt="kitten"
-        width="200" />
-    </div>
-  </cps-menu>
-  <cps-button
-    label="Menu with arbitrary contents"
-    (clicked)="arbitraryMenu.toggle($event)">
-  </cps-button>
-</div>
+    <cps-menu #arbitraryMenu>
+      <div class="my-menu-content">
+        <span>Provide your own contents here</span>
+        <img
+          src="https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg"
+          alt="kitten"
+          width="200" />
+      </div>
+    </cps-menu>
+    <cps-button
+      label="Menu with arbitrary contents"
+      (clicked)="arbitraryMenu.toggle($event)">
+    </cps-button>
+  </div>
+</app-docs-viewer>

@@ -1,15 +1,18 @@
-<div class="tags-group">
-  <cps-tag type="security" label="Security tag"></cps-tag>
-  <cps-tag type="classification" label="Classification tag"></cps-tag>
-  <cps-tag color="red" label="Custom color tag"></cps-tag>
-  <cps-tag [disabled]="true" color="red" label="Disabled tag"></cps-tag>
-  <div class="sync-val-example">
-    <cps-tag
-      [selectable]="true"
-      color="success"
-      [(ngModel)]="syncVal"
-      label="Selectable tag"></cps-tag>
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="tags-group">
+    <cps-tag type="security" label="Security tag"></cps-tag>
+    <cps-tag type="classification" label="Classification tag"></cps-tag>
+    <cps-tag color="red" label="Custom color tag"></cps-tag>
+    <cps-tag [disabled]="true" color="red" label="Disabled tag"></cps-tag>
+    <div class="sync-val-example">
+      <cps-tag
+        [selectable]="true"
+        color="success"
+        [(ngModel)]="syncVal"
+        label="Selectable tag"></cps-tag>
 
-    <div class="sync-val">Is selected: {{ syncVal }}</div>
+      <div class="sync-val">Is selected: {{ syncVal }}</div>
+    </div>
   </div>
-</div>
+</app-docs-viewer>

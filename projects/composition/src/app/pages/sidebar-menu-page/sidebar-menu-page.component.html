@@ -1,6 +1,9 @@
-<cps-sidebar-menu [items]="items" [exactRoutes]="true"></cps-sidebar-menu>
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <cps-sidebar-menu [items]="items" [exactRoutes]="true"></cps-sidebar-menu>
 
-<span class="desc"
-  >Provide your app urls into sidebar menu items or into nested menu items to
-  navigate to your routes</span
->
+  <span class="desc"
+    >Provide your app urls into sidebar menu items or into nested menu items to
+    navigate to your routes</span
+  >
+</app-docs-viewer>

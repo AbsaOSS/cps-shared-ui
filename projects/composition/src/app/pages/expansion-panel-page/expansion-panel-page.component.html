@@ -1,38 +1,42 @@
-<div class="expans-panels-group">
-  <cps-expansion-panel headerTitle="Bordered panel with transparent background">
-    <div>Some content</div>
-  </cps-expansion-panel>
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="expans-panels-group">
+    <cps-expansion-panel
+      headerTitle="Bordered panel with transparent background">
+      <div>Some content</div>
+    </cps-expansion-panel>
 
-  <cps-expansion-panel headerTitle="Disabled panel" [disabled]="true">
-    <div>Some content</div>
-  </cps-expansion-panel>
+    <cps-expansion-panel headerTitle="Disabled panel" [disabled]="true">
+      <div>Some content</div>
+    </cps-expansion-panel>
 
-  <cps-expansion-panel
-    headerTitle="Bordered panel with prefix icon and transparent background"
-    prefixIcon="construction">
-    <div>Some content</div>
-  </cps-expansion-panel>
+    <cps-expansion-panel
+      headerTitle="Bordered panel with prefix icon and transparent background"
+      prefixIcon="construction">
+      <div>Some content</div>
+    </cps-expansion-panel>
 
-  <cps-expansion-panel
-    headerTitle="Borderless panel with white background"
-    backgroundColor="white"
-    [bordered]="false">
-    <div>Some content</div>
-  </cps-expansion-panel>
+    <cps-expansion-panel
+      headerTitle="Borderless panel with white background"
+      backgroundColor="white"
+      [bordered]="false">
+      <div>Some content</div>
+    </cps-expansion-panel>
 
-  <cps-expansion-panel
-    headerTitle="Bordered panel with 4px border radius without chevron"
-    [showChevron]="false"
-    backgroundColor="white"
-    borderRadius="4px">
-    <div>Some content</div>
-  </cps-expansion-panel>
+    <cps-expansion-panel
+      headerTitle="Bordered panel with 4px border radius without chevron"
+      [showChevron]="false"
+      backgroundColor="white"
+      borderRadius="4px">
+      <div>Some content</div>
+    </cps-expansion-panel>
 
-  <cps-expansion-panel
-    headerTitle="Bordered panel with 4px border radius and 500px width"
-    backgroundColor="white"
-    borderRadius="4"
-    width="500">
-    <div>Some content</div>
-  </cps-expansion-panel>
-</div>
+    <cps-expansion-panel
+      headerTitle="Bordered panel with 4px border radius and 500px width"
+      backgroundColor="white"
+      borderRadius="4"
+      width="500">
+      <div>Some content</div>
+    </cps-expansion-panel>
+  </div>
+</app-docs-viewer>

@@ -8,9 +8,17 @@ import {
 } from '@angular/forms';
 import { CpsTreeAutocompleteComponent } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-tree-autocomplete.json';
+import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+
 @Component({
   standalone: true,
-  imports: [CpsTreeAutocompleteComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    CpsTreeAutocompleteComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    DocsViewerComponent
+  ],
   selector: 'app-tree-autocomplete-page',
   templateUrl: './tree-autocomplete-page.component.html',
   styleUrls: ['./tree-autocomplete-page.component.scss'],
@@ -114,6 +122,8 @@ export class TreeAutocompletePageComponent implements OnInit {
 
   form!: UntypedFormGroup;
   syncVal: any = null;
+
+  componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}

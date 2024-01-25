@@ -7,10 +7,17 @@ import {
   Validators
 } from '@angular/forms';
 import { CpsAutocompleteComponent } from 'cps-ui-kit';
+import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import ComponentData from '../../api-data/cps-autocomplete.json';
 
 @Component({
   standalone: true,
-  imports: [CpsAutocompleteComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    CpsAutocompleteComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    DocsViewerComponent
+  ],
   selector: 'app-autocomplete-page',
   templateUrl: './autocomplete-page.component.html',
   styleUrls: ['./autocomplete-page.component.scss'],
@@ -42,8 +49,8 @@ export class AutocompletePageComponent implements OnInit {
 
   form!: UntypedFormGroup;
   syncVal: any = [];
+  componentData = ComponentData;
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {

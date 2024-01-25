@@ -1,27 +1,30 @@
-<div class="checkboxes-group">
-  <cps-checkbox
-    label="Checkbox with tooltip"
-    [value]="false"
-    infoTooltip="Provide any information here">
-  </cps-checkbox>
-  <cps-checkbox label="Basic checkbox" [value]="true"></cps-checkbox>
-  <cps-checkbox [value]="true"></cps-checkbox>
-  <cps-checkbox
-    label="Checkbox with icon"
-    [value]="false"
-    icon="avatar"></cps-checkbox>
-  <cps-checkbox
-    label="Disabled checkbox checked"
-    [disabled]="true"
-    [value]="true"></cps-checkbox>
-  <cps-checkbox
-    label="Disabled checkbox unchecked"
-    [disabled]="true"
-    [value]="false"></cps-checkbox>
-  <div class="sync-val-example">
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="checkboxes-group">
     <cps-checkbox
-      label="Checkbox with two-way binding"
-      [(ngModel)]="syncVal"></cps-checkbox>
-    <div class="sync-val">Is checked: {{ syncVal }}</div>
+      label="Checkbox with tooltip"
+      [value]="false"
+      infoTooltip="Provide any information here">
+    </cps-checkbox>
+    <cps-checkbox label="Basic checkbox" [value]="true"></cps-checkbox>
+    <cps-checkbox [value]="true"></cps-checkbox>
+    <cps-checkbox
+      label="Checkbox with icon"
+      [value]="false"
+      icon="avatar"></cps-checkbox>
+    <cps-checkbox
+      label="Disabled checkbox checked"
+      [disabled]="true"
+      [value]="true"></cps-checkbox>
+    <cps-checkbox
+      label="Disabled checkbox unchecked"
+      [disabled]="true"
+      [value]="false"></cps-checkbox>
+    <div class="sync-val-example">
+      <cps-checkbox
+        label="Checkbox with two-way binding"
+        [(ngModel)]="syncVal"></cps-checkbox>
+      <div class="sync-val">Is checked: {{ syncVal }}</div>
+    </div>
   </div>
-</div>
+</app-docs-viewer>

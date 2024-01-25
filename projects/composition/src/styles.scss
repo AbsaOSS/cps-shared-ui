@@ -22,3 +22,7 @@ body {
   height: calc(100% - $top-tbar-height - $inner-tbar-height);
   overflow: auto;
 }
+
+.example-content {
+  padding: 15px 0;
+}

@@ -8,6 +8,9 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
+import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+
+import ComponentData from '../../api-data/cps-timepicker.json';
 
 @Component({
   selector: 'app-timepicker-page',
@@ -16,7 +19,8 @@ import {
     CommonModule,
     CpsTimepickerComponent,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    DocsViewerComponent
   ],
   templateUrl: './timepicker-page.component.html',
   styleUrls: ['./timepicker-page.component.scss'],
@@ -37,6 +41,8 @@ export class TimepickerPageComponent implements OnInit {
     minutes: '59',
     seconds: '59'
   };
+
+  componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}

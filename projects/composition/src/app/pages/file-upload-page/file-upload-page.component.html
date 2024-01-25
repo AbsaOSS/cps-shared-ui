@@ -1,9 +1,12 @@
-<cps-file-upload
-  [extensions]="['.jpg', '.png', 'pdf']"
-  fileDesc="Pictures or PDFs"
-  width="500"
-  [fileProcessingCallback]="processUploadedFile"
-  (fileUploadFailed)="onFileUploadFailed($event)"
-  (fileUploaded)="onFileUploaded($event)"
-  (uploadedFileRemoved)="onUploadedFileRemoved($event)">
-</cps-file-upload>
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <cps-file-upload
+    [extensions]="['.jpg', '.png', 'pdf']"
+    fileDesc="Pictures or PDFs"
+    width="500"
+    [fileProcessingCallback]="processUploadedFile"
+    (fileUploadFailed)="onFileUploadFailed($event)"
+    (fileUploaded)="onFileUploaded($event)"
+    (uploadedFileRemoved)="onUploadedFileRemoved($event)">
+  </cps-file-upload>
+</app-docs-viewer>

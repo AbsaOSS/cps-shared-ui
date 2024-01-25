@@ -1,68 +1,71 @@
-<form [formGroup]="form">
-  <div class="datepickers-group">
-    <cps-datepicker
-      label="Required datepicker with a tooltip"
-      [clearable]="true"
-      infoTooltip="Provide any information here"
-      formControlName="requiredDatepicker">
-    </cps-datepicker>
-    <cps-datepicker
-      label="Disabled datepicker"
-      [clearable]="true"
-      [disabled]="true"
-      hint="This datepicker is disabled"
-      [value]="today">
-    </cps-datepicker>
-    <cps-datepicker
-      label="Datepicker with a dropdown on input focus"
-      hint="This datepicker shows a calendar when input field is focused"
-      [value]="today"
-      [clearable]="true"
-      [openOnInputFocus]="true">
-    </cps-datepicker>
-    <cps-datepicker
-      label="Datepicker with restricted date range"
-      hint="This datepicker has selectable dates from 01/01/2023 to 12/31/2025"
-      [showTodayButton]="false"
-      [value]="defaultDate"
-      [clearable]="true"
-      [minDate]="minDate"
-      [maxDate]="maxDate">
-    </cps-datepicker>
-    <cps-datepicker
-      label="Datepicker without Today button"
-      [clearable]="true"
-      [showTodayButton]="false">
-    </cps-datepicker>
-    <div class="sync-val-example">
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <form [formGroup]="form">
+    <div class="datepickers-group">
       <cps-datepicker
+        label="Required datepicker with a tooltip"
         [clearable]="true"
-        label="Datepicker with two-way binding, select a date"
-        [(ngModel)]="syncVal"
-        width="350"
-        hint="This datepicker has a fixed width of 350px"
-        placeholder="Select a date"
-        [ngModelOptions]="{ standalone: true }">
+        infoTooltip="Provide any information here"
+        formControlName="requiredDatepicker">
       </cps-datepicker>
-      <div class="sync-val">{{ syncVal }}</div>
+      <cps-datepicker
+        label="Disabled datepicker"
+        [clearable]="true"
+        [disabled]="true"
+        hint="This datepicker is disabled"
+        [value]="today">
+      </cps-datepicker>
+      <cps-datepicker
+        label="Datepicker with a dropdown on input focus"
+        hint="This datepicker shows a calendar when input field is focused"
+        [value]="today"
+        [clearable]="true"
+        [openOnInputFocus]="true">
+      </cps-datepicker>
+      <cps-datepicker
+        label="Datepicker with restricted date range"
+        hint="This datepicker has selectable dates from 01/01/2023 to 12/31/2025"
+        [showTodayButton]="false"
+        [value]="defaultDate"
+        [clearable]="true"
+        [minDate]="minDate"
+        [maxDate]="maxDate">
+      </cps-datepicker>
+      <cps-datepicker
+        label="Datepicker without Today button"
+        [clearable]="true"
+        [showTodayButton]="false">
+      </cps-datepicker>
+      <div class="sync-val-example">
+        <cps-datepicker
+          [clearable]="true"
+          label="Datepicker with two-way binding, select a date"
+          [(ngModel)]="syncVal"
+          width="350"
+          hint="This datepicker has a fixed width of 350px"
+          placeholder="Select a date"
+          [ngModelOptions]="{ standalone: true }">
+        </cps-datepicker>
+        <div class="sync-val">{{ syncVal }}</div>
+      </div>
+
+      <cps-datepicker
+        label="Underlined datepicker"
+        hint="This datepicker shows a calendar when input field is focused"
+        [value]="today"
+        appearance="underlined"
+        [clearable]="true"
+        [openOnInputFocus]="true">
+      </cps-datepicker>
+
+      <cps-datepicker
+        label="Borderless datepicker"
+        hint="This datepicker shows a calendar when input field is focused"
+        [value]="today"
+        appearance="borderless"
+        [clearable]="true"
+        [openOnInputFocus]="true">
+      </cps-datepicker>
     </div>
-
-    <cps-datepicker
-      label="Underlined datepicker"
-      hint="This datepicker shows a calendar when input field is focused"
-      [value]="today"
-      appearance="underlined"
-      [clearable]="true"
-      [openOnInputFocus]="true">
-    </cps-datepicker>
-
-    <cps-datepicker
-      label="Borderless datepicker"
-      hint="This datepicker shows a calendar when input field is focused"
-      [value]="today"
-      appearance="borderless"
-      [clearable]="true"
-      [openOnInputFocus]="true">
-    </cps-datepicker>
-  </div>
-</form>
+  </form>
+</app-docs-viewer>

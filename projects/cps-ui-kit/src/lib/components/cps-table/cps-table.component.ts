@@ -11,9 +11,10 @@ import {
   Output,
   SimpleChanges,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Table, TableService, TableModule } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
@@ -893,7 +894,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
         type: EXCEL_TYPE
       });
 
-      const downloadLink = document.createElement('a');
+      const downloadLink = inject(DOCUMENT).createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
       downloadLink.download = `${this.exportFilename}.xlsx`;
       downloadLink.click();

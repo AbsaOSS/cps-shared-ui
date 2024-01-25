@@ -1,119 +1,122 @@
-<form [formGroup]="form">
-  <div class="autocompletes-group">
-    <cps-autocomplete
-      label="Required single autocomplete with a tooltip"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      infoTooltip="Provide any information here"
-      placeholder="Enter a city"
-      [clearable]="true"
-      formControlName="requiredAutocomplete">
-    </cps-autocomplete>
-    <cps-autocomplete
-      label="Loading autocomplete"
-      [loading]="true"
-      [options]="options"
-      optionLabel="name"
-      hint="This autocomplete is currently in a loading state">
-    </cps-autocomplete>
-    <cps-autocomplete
-      label="Disabled autocomplete"
-      [disabled]="true"
-      hint="This autocomplete is disabled">
-    </cps-autocomplete>
-    <cps-autocomplete
-      label="Multiple autocomplete"
-      [options]="options"
-      optionLabel="name"
-      optionValue="data"
-      optionInfo="info"
-      placeholder="Enter a city"
-      [clearable]="false"
-      [multiple]="true"
-      [chips]="false"
-      [returnObject]="false"
-      [value]="[{ code: 'CPT' }]"
-      hint="This autocomplete is not clearable"></cps-autocomplete>
-    <cps-autocomplete
-      label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
-      [options]="options"
-      hint="This autocomplete doesn't have Select All option"
-      [virtualScroll]="true"
-      [selectAll]="false"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Enter a city"
-      [clearable]="true"
-      [multiple]="true"
-      [persistentClear]="true"
-      [value]="[options[0], options[4]]"></cps-autocomplete>
-    <cps-autocomplete
-      label="Multiple autocomplete with non-closable chips"
-      [returnObject]="false"
-      [options]="options"
-      optionLabel="name"
-      optionValue="data"
-      optionInfo="info"
-      placeholder="Enter a city"
-      [clearable]="true"
-      [multiple]="true"
-      [closableChips]="false"
-      [value]="[options[0].data, options[4].data]"></cps-autocomplete>
-    <cps-autocomplete
-      label="Multiple autocomplete with prefix icon"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Enter a city"
-      [clearable]="true"
-      [multiple]="true"
-      [chips]="false"
-      prefixIcon="search"
-      [value]="[options[5]]">
-    </cps-autocomplete>
-    <div class="sync-val-example">
+<app-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <form [formGroup]="form">
+    <div class="autocompletes-group">
       <cps-autocomplete
-        width="500"
-        label="Multiple autocomplete with two-way binding and keeping initial items order"
+        label="Required single autocomplete with a tooltip"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        infoTooltip="Provide any information here"
+        placeholder="Enter a city"
+        [clearable]="true"
+        formControlName="requiredAutocomplete">
+      </cps-autocomplete>
+      <cps-autocomplete
+        label="Loading autocomplete"
+        [loading]="true"
+        [options]="options"
+        optionLabel="name"
+        hint="This autocomplete is currently in a loading state">
+      </cps-autocomplete>
+      <cps-autocomplete
+        label="Disabled autocomplete"
+        [disabled]="true"
+        hint="This autocomplete is disabled">
+      </cps-autocomplete>
+      <cps-autocomplete
+        label="Multiple autocomplete"
+        [options]="options"
+        optionLabel="name"
+        optionValue="data"
+        optionInfo="info"
+        placeholder="Enter a city"
+        [clearable]="false"
+        [multiple]="true"
+        [chips]="false"
         [returnObject]="false"
-        [options]="syncOptions"
-        [keepInitialOrder]="true"
-        optionLabel="title"
-        optionValue="val"
-        optionInfo="ticker"
-        placeholder="Enter a company"
-        hint="This autocomplete has a fixed width of 500px"
+        [value]="[{ code: 'CPT' }]"
+        hint="This autocomplete is not clearable"></cps-autocomplete>
+      <cps-autocomplete
+        label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
+        [options]="options"
+        hint="This autocomplete doesn't have Select All option"
+        [virtualScroll]="true"
+        [selectAll]="false"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Enter a city"
+        [clearable]="true"
+        [multiple]="true"
+        [persistentClear]="true"
+        [value]="[options[0], options[4]]"></cps-autocomplete>
+      <cps-autocomplete
+        label="Multiple autocomplete with non-closable chips"
+        [returnObject]="false"
+        [options]="options"
+        optionLabel="name"
+        optionValue="data"
+        optionInfo="info"
+        placeholder="Enter a city"
         [clearable]="true"
         [multiple]="true"
         [closableChips]="false"
-        [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }"></cps-autocomplete>
-      <span class="sync-val">{{ syncVal }}</span>
+        [value]="[options[0].data, options[4].data]"></cps-autocomplete>
+      <cps-autocomplete
+        label="Multiple autocomplete with prefix icon"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Enter a city"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        prefixIcon="search"
+        [value]="[options[5]]">
+      </cps-autocomplete>
+      <div class="sync-val-example">
+        <cps-autocomplete
+          width="500"
+          label="Multiple autocomplete with two-way binding and keeping initial items order"
+          [returnObject]="false"
+          [options]="syncOptions"
+          [keepInitialOrder]="true"
+          optionLabel="title"
+          optionValue="val"
+          optionInfo="ticker"
+          placeholder="Enter a company"
+          hint="This autocomplete has a fixed width of 500px"
+          [clearable]="true"
+          [multiple]="true"
+          [closableChips]="false"
+          [(ngModel)]="syncVal"
+          [ngModelOptions]="{ standalone: true }"></cps-autocomplete>
+        <span class="sync-val">{{ syncVal }}</span>
+      </div>
+      <cps-autocomplete
+        label="Underlined autocomplete"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Enter a city"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        prefixIcon="search"
+        appearance="underlined">
+      </cps-autocomplete>
+      <cps-autocomplete
+        label="Borderless autocomplete"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Enter a city"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        prefixIcon="search"
+        appearance="borderless">
+      </cps-autocomplete>
     </div>
-    <cps-autocomplete
-      label="Underlined autocomplete"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Enter a city"
-      [clearable]="true"
-      [multiple]="true"
-      [chips]="false"
-      prefixIcon="search"
-      appearance="underlined">
-    </cps-autocomplete>
-    <cps-autocomplete
-      label="Borderless autocomplete"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Enter a city"
-      [clearable]="true"
-      [multiple]="true"
-      [chips]="false"
-      prefixIcon="search"
-      appearance="borderless">
-    </cps-autocomplete>
-  </div>
-</form>
+  </form>
+</app-docs-viewer>

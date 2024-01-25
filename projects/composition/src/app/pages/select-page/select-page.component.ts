@@ -8,9 +8,17 @@ import {
 } from '@angular/forms';
 import { CpsSelectComponent } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-select.json';
+import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+
 @Component({
   standalone: true,
-  imports: [CpsSelectComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    CpsSelectComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    DocsViewerComponent
+  ],
   selector: 'app-select-page',
   templateUrl: './select-page.component.html',
   styleUrls: ['./select-page.component.scss'],
@@ -42,6 +50,7 @@ export class SelectPageComponent implements OnInit {
 
   form!: UntypedFormGroup;
   syncVal: any = [];
+  componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
