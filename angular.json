@@ -92,7 +92,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/composition",
+            "outputPath": "dist/composition/browser",
             "index": "projects/composition/src/index.html",
             "main": "projects/composition/src/main.ts",
             "polyfills": ["zone.js"],
@@ -116,12 +116,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "11kb",
+                  "maximumError": "22kb"
                 }
               ],
               "outputHashing": "all"
@@ -168,6 +168,59 @@
             "styles": ["projects/composition/src/styles.scss"],
             "scripts": []
           }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/composition/server",
+            "main": "projects/composition/server.ts",
+            "tsConfig": "projects/composition/tsconfig.server.json",
+            "inlineStyleLanguage": "scss"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false,
+              "vendorChunk": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve-ssr": {
+          "builder": "@angular-devkit/build-angular:ssr-dev-server",
+          "configurations": {
+            "development": {
+              "browserTarget": "composition:build:development",
+              "serverTarget": "composition:server:development"
+            },
+            "production": {
+              "browserTarget": "composition:build:production",
+              "serverTarget": "composition:server:production"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "prerender": {
+          "builder": "@angular-devkit/build-angular:prerender",
+          "options": {
+            "routes": ["/"]
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "composition:build:production",
+              "serverTarget": "composition:server:production"
+            },
+            "development": {
+              "browserTarget": "composition:build:development",
+              "serverTarget": "composition:server:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
