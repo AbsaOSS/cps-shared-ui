@@ -72,17 +72,31 @@
 </div>
 
 <ng-template #itemTemplate let-item="item">
-  <div class="cps-menu-item-icon" *ngIf="withIcons">
-    <cps-icon
-      *ngIf="item.icon"
-      [icon]="item.icon"
-      [color]="item.disabled ? 'text-light' : 'text-dark'"
-      [size]="compressed ? 'small' : 'normal'"></cps-icon>
-  </div>
-  <div class="cps-menu-item-content">
-    <span class="cps-menu-item-content-title">{{ item.title }}</span>
-    <span *ngIf="item.desc && !compressed" class="cps-menu-item-content-desc">{{
-      item.desc
-    }}</span>
-  </div>
+  <ng-container *ngIf="!item.loading; else spinnerMenuItem">
+    <div class="cps-menu-item-icon" *ngIf="withIcons">
+      <cps-icon
+        *ngIf="item.icon"
+        [icon]="item.icon"
+        [color]="item.disabled ? 'text-light' : 'text-dark'"
+        [size]="compressed ? 'small' : 'normal'"></cps-icon>
+    </div>
+    <div class="cps-menu-item-content">
+      <span class="cps-menu-item-content-title">{{ item.title }}</span>
+      <span
+        *ngIf="item.desc && !compressed"
+        class="cps-menu-item-content-desc"
+        >{{ item.desc }}</span
+      >
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #spinnerMenuItem>
+  <span class="cps-menu-item-spinner">
+    <cps-progress-circular
+      [strokeWidth]="2"
+      [color]="compressed ? 'prepared' : 'calm'"
+      [diameter]="16">
+    </cps-progress-circular>
+  </span>
 </ng-template>

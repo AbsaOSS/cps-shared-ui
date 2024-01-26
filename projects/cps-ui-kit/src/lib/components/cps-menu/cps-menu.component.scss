@@ -84,6 +84,13 @@
           color: var(--cps-color-text-light);
         }
       }
+
+      .cps-menu-item-spinner {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
     }
 
     .cps-menu-item.cps-menu-item-disabled {
