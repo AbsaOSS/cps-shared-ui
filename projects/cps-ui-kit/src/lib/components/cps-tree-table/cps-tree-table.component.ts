@@ -6,7 +6,6 @@ import {
   Component,
   ContentChild,
   EventEmitter,
-  Inject,
   Input,
   NgZone,
   OnChanges,
@@ -19,7 +18,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   TreeTable,
@@ -617,8 +616,7 @@ export class CpsTreeTableComponent
   constructor(
     private cdRef: ChangeDetectorRef,
     private renderer: Renderer2,
-    private ngZone: NgZone,
-    @Inject(DOCUMENT) private document: Document
+    private ngZone: NgZone
   ) {
     this._resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
@@ -852,13 +850,13 @@ export class CpsTreeTableComponent
       if (!bodyRows?.length) return;
 
       const tdWidths: number[] = [];
-      const fragment = this.document.createDocumentFragment();
-      const hiddenDiv = this.document.createElement('div');
+      const fragment = document.createDocumentFragment();
+      const hiddenDiv = document.createElement('div');
       hiddenDiv.style.visibility = 'hidden';
       hiddenDiv.style.position = 'absolute';
       hiddenDiv.style.whiteSpace = 'nowrap';
 
-      this.document.body.appendChild(hiddenDiv);
+      document.body.appendChild(hiddenDiv);
       bodyRows.forEach((tr: HTMLElement) => {
         const tds = tr?.querySelectorAll('td');
         tds?.forEach((td: HTMLElement, idx: number) => {
@@ -881,7 +879,7 @@ export class CpsTreeTableComponent
           tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
         });
       });
-      this.document.body.removeChild(hiddenDiv);
+      document.body.removeChild(hiddenDiv);
 
       if (thWidths.length !== tdWidths.length) return;
 
