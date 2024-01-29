@@ -1,1 +1,44 @@
-<p>service-docs-viewer works!</p>
+<cps-tab-group tabsBackground="bg-light" animationType="fade">
+  <cps-tab label="Examples">
+    <div class="example-content">
+      <ng-content></ng-content>
+    </div>
+  </cps-tab>
+  <cps-tab label="API">
+    <ng-container *ngIf="serviceData">
+      <div>
+        <h1>{{ serviceData.name }}</h1>
+        <p>{{ serviceData.description }}</p>
+        <div
+          *ngIf="
+            serviceData.methods?.values && serviceData.methods.values.length > 0
+          ">
+          <h2>Methods</h2>
+          <p>{{ serviceData.methods.description }}</p>
+          <div>
+            <table class="data-table">
+              <thead>
+                <th>Name</th>
+                <th>Parameters</th>
+                <th>Return type</th>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let method of serviceData.methods.values">
+                  <td class="highlighted-bg">
+                    <span>{{ method.name }}</span>
+                  </td>
+                  <td class="highlighted-text">
+                    {{ parseParameters(method.parameters) }}
+                  </td>
+                  <td class="highlighted-text">{{ method.returnType }}</td>
+                  <td class="method-description">{{ method.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </cps-tab>
+</cps-tab-group>

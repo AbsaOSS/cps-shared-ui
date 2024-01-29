@@ -20,7 +20,7 @@
       white-space: pre-line;
     }
 
-    &.prop-name {
+    &.highlighted-bg {
       span {
         color: var(--cps-color-depth-darken4);
         background-color: var(--cps-color-human-lighten5);
@@ -29,11 +29,11 @@
       }
     }
 
-    &.prop-type {
+    &.highlighted-text {
       color: var(--cps-color-calm);
     }
 
-    &.prop-default {
+    &.value-style {
       span {
         padding: 0.25rem;
         border-radius: 6px;

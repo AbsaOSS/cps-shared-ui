@@ -7,15 +7,19 @@ import {
   CpsNotificationService
 } from 'cps-ui-kit';
 
+import ServiceData from '../../api-data/cps-notification.json';
+import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
+
 @Component({
   selector: 'app-notification-page',
   standalone: true,
-  imports: [CommonModule, CpsButtonComponent],
+  imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './notification-page.component.html',
   styleUrls: ['./notification-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class NotificationPageComponent {
+  serviceData = ServiceData;
   // eslint-disable-next-line no-useless-constructor
   constructor(private _notifService: CpsNotificationService) {}
 

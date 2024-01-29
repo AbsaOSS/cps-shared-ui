@@ -11,12 +11,21 @@ import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
   imports: [CommonModule, CpsTabComponent, CpsTabGroupComponent]
 })
 export class ServiceDocsViewerComponent implements OnInit {
-  @Input() componentData?: { components: { [key: string]: ServiceAPI } };
+  @Input() serviceData?: ServiceAPI;
   objectEntries = Object.entries;
 
   ngOnInit(): void {
-    if (!this.componentData) {
-      throw new Error('Input property componentData is required');
+    if (!this.serviceData) {
+      throw new Error('Input property serviceData is required');
     }
+  }
+
+  parseParameters(
+    parameters?: { name: string; type: string; description?: string }[]
+  ): string {
+    if (!parameters) {
+      return '';
+    }
+    return parameters.map((param) => `${param.name}: ${param.type}`).join(', ');
   }
 }
