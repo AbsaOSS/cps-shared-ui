@@ -277,7 +277,7 @@ $tbar-normal-height: 72px;
       flex-wrap: wrap;
       color: $paginator-text-color;
       padding: 1rem;
-      border: solid $treetable-borders-color;
+      border: 1px solid $treetable-borders-color;
     }
 
     .p-paginator-left-content {

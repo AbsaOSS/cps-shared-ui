@@ -433,7 +433,7 @@ $tbar-normal-height: 72px;
       flex-wrap: wrap;
       color: $paginator-text-color;
       padding: 1rem;
-      border: solid $table-borders-color;
+      border: 1px solid $table-borders-color;
     }
 
     .p-paginator-left-content {
