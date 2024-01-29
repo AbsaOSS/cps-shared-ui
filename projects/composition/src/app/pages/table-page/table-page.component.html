@@ -120,7 +120,7 @@
             <td *ngSwitchCase="'d'" [style.color]="item.d ? 'green' : 'red'">
               {{ item.d ? '&#10004;' : '&#10008;' }}
             </td>
-            <td>{{ item.e }}</td>
+            <td *ngSwitchCase="'e'">{{ item.e }}</td>
           </ng-container>
         </ng-template>
 
