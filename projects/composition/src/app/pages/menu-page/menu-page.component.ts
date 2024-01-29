@@ -110,6 +110,7 @@ export class MenuPageComponent {
       target: '_blank'
     }
   ] as CpsMenuItem[];
+
   componentData = ComponetnData;
 
   doConsoleLog(event: any) {

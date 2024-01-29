@@ -1,15 +1,3 @@
-export interface ComponentAPI {
-  description: string;
-  emits?: {
-    description: string;
-    values: EmitAPI[];
-  };
-  props: {
-    description: string;
-    values: PropAPI[];
-  };
-}
-
 export interface EmitAPI {
   name: string;
   description: string;
@@ -27,4 +15,16 @@ export interface PropAPI {
   optional: boolean;
   readonly: boolean;
   type: string;
+}
+
+export interface ComponentAPI {
+  description: string;
+  emits?: {
+    description: string;
+    values: EmitAPI[];
+  };
+  props: {
+    description: string;
+    values: PropAPI[];
+  };
 }

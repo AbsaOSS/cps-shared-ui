@@ -64,5 +64,6 @@ export class SidebarMenuPageComponent {
       ]
     }
   ];
+
   componentData = ComponentData;
 }

@@ -51,6 +51,7 @@ export class AutocompletePageComponent implements OnInit {
   syncVal: any = [];
   componentData = ComponentData;
 
+  // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 
   ngOnInit(): void {

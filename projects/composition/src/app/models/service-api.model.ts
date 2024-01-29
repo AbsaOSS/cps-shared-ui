@@ -1,12 +1,3 @@
-export interface ServiceAPI {
-  name: string;
-  description: string;
-  methods: {
-    description: string;
-    values: MethodAPI[];
-  };
-}
-
 export interface MethodAPI {
   name: string;
   description: string;
@@ -16,4 +7,13 @@ export interface MethodAPI {
     description?: string;
   }[];
   returnType: string;
+}
+
+export interface ServiceAPI {
+  name: string;
+  description: string;
+  methods: {
+    description: string;
+    values: MethodAPI[];
+  };
 }

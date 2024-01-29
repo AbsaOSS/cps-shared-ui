@@ -1,4 +1,3 @@
-import { CombineLabelsPipe } from './../../../../../cps-ui-kit/src/lib/pipes/internal/combine-labels.pipe';
 import { Component } from '@angular/core';
 import { CpsProgressLinearComponent } from 'cps-ui-kit';
 
