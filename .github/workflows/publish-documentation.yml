@@ -29,12 +29,12 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Generate API data
-        working-directory: /projects/composition
+        working-directory: ./projects/composition
         run: |
           npm run generate-json-api
 
       - name: Commit and push if there are any changes
-        working-directory: projects/composition
+        working-directory: ./projects/composition
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
