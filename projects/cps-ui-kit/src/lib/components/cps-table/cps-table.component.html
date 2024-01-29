@@ -1,5 +1,6 @@
 <p-table
   #primengTable
+  #tUnsortDirective="tWithUnsort"
   tWithUnsort
   [ngClass]="{ 'cps-table-loading': loading }"
   [styleClass]="styleClass"
@@ -210,7 +211,7 @@
       <th
         style="width: 2rem"
         class="cps-table-row-menu-cell"
-        *ngIf="showRowMenu"></th>
+        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"></th>
     </tr>
   </ng-template>
 
@@ -264,11 +265,15 @@
           </td>
         </ng-container>
       </ng-container>
-      <td *ngIf="showRowMenu" class="cps-table-row-menu-cell">
+      <td
+        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"
+        class="cps-table-row-menu-cell">
         <table-row-menu
           (editRowBtnClicked)="onEditRowClicked(item)"
           (removeRowBtnClicked)="onRemoveRowClicked(item)"
-          [showRowRemoveButton]="showRowRemoveButton"></table-row-menu>
+          [showRowRemoveButton]="showRowRemoveButton"
+          [showRowEditButton]="showRowEditButton">
+        </table-row-menu>
       </td>
     </tr>
   </ng-template>

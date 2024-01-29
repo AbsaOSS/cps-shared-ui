@@ -23,7 +23,7 @@
   [lazy]="lazy"
   [(selection)]="selectedRows"
   (selectionChange)="onSelectionChanged($event)"
-  compareSelectionBy="equals"
+  compareSelectionBy="deepEquals"
   [lazyLoadOnInit]="lazyLoadOnInit"
   [styleClass]="styleClass"
   [tableStyle]="tableStyle"
@@ -198,7 +198,9 @@
           </th>
         </ng-container>
       </ng-container>
-      <th class="cps-treetable-row-menu-cell" *ngIf="showRowMenu"></th>
+      <th
+        class="cps-treetable-row-menu-cell"
+        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"></th>
     </tr>
   </ng-template>
 
@@ -241,11 +243,14 @@
           </ng-container>
         </ng-container>
       </ng-container>
-      <td *ngIf="showRowMenu" class="cps-treetable-row-menu-cell">
+      <td
+        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"
+        class="cps-treetable-row-menu-cell">
         <table-row-menu
           (editRowBtnClicked)="onEditRowClicked(rowNode.node)"
           (removeRowBtnClicked)="onRemoveRowClicked(rowNode.node)"
-          [showRowRemoveButton]="showRowRemoveButton">
+          [showRowRemoveButton]="showRowRemoveButton"
+          [showRowEditButton]="showRowEditButton">
         </table-row-menu>
       </td>
     </tr>

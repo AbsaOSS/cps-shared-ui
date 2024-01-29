@@ -57,6 +57,9 @@ export class MenuPageComponent {
       }
     },
     {
+      loading: true
+    },
+    {
       title: 'Go google',
       url: 'https://google.com',
       target: '_blank'
@@ -97,6 +100,9 @@ export class MenuPageComponent {
       action: (event: any) => {
         this.doConsoleLog(event);
       }
+    },
+    {
+      loading: true
     },
     {
       title: 'Go google',

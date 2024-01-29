@@ -31,11 +31,8 @@ export class TableRowMenuComponent implements OnInit {
    */
   @Output() removeRowBtnClicked = new EventEmitter<any>();
 
-  private _showRowRemoveButton = true;
-
   /**
    * Determines whether the 'Remove' button should be displayed in the menu.
-   * If true, 'Remove' button is shown. If false, it's hidden.
    * @group Props
    */
   @Input()
@@ -48,6 +45,23 @@ export class TableRowMenuComponent implements OnInit {
     return this._showRowRemoveButton;
   }
 
+  /**
+   * Determines whether the 'Edit' button should be displayed in the menu.
+   * @group Props
+   */
+  @Input()
+  set showRowEditButton(value: boolean) {
+    this._showRowEditButton = value;
+    this.initializeItems();
+  }
+
+  get showRowEditButton(): boolean {
+    return this._showRowEditButton;
+  }
+
+  private _showRowRemoveButton = true;
+  private _showRowEditButton = true;
+
   items: CpsMenuItem[] = [];
 
   ngOnInit(): void {
@@ -55,15 +69,17 @@ export class TableRowMenuComponent implements OnInit {
   }
 
   initializeItems() {
-    this.items = [
-      {
+    this.items = [];
+
+    if (this.showRowEditButton) {
+      this.items.push({
         title: 'Edit',
         icon: 'edit',
         action: (event: any) => {
           this.editRowBtnClicked.emit(event);
         }
-      }
-    ];
+      });
+    }
 
     if (this.showRowRemoveButton) {
       this.items.push({

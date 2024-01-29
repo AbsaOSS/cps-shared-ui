@@ -32,18 +32,20 @@ import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
 import { Subscription } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
 
 export type CpsMenuItem = {
-  title: string;
+  title?: string;
   action?: (event?: any) => void;
   icon?: string;
   desc?: string;
   url?: string;
   target?: string;
   disabled?: boolean;
+  loading?: boolean;
 };
 
 export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
@@ -54,7 +56,13 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
  */
 @Component({
   standalone: true,
-  imports: [CommonModule, SharedModule, CpsIconComponent, RouterModule],
+  imports: [
+    CommonModule,
+    SharedModule,
+    CpsIconComponent,
+    CpsProgressCircularComponent,
+    RouterModule
+  ],
   selector: 'cps-menu',
   templateUrl: './cps-menu.component.html',
   styleUrls: ['./cps-menu.component.scss'],
@@ -229,7 +237,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     this.itemsClasses = this.items.map((item, index) => {
       const res = ['cps-menu-item'];
-      if (item.disabled) res.push('cps-menu-item-disabled');
+      if (item.disabled || item.loading) res.push('cps-menu-item-disabled');
       if (index === 0) res.push('cps-menu-item-first');
       if (this.compressed) res.push('cps-menu-item-compressed');
       if (this.compressed && this.withIcons)
@@ -485,6 +493,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
       let arrowLeft = 0;
 
+      const containerWidth = this.container?.offsetWidth || 0;
+
       if (containerOffset.left < targetOffset.left) {
         arrowLeft =
           20 +
@@ -492,11 +502,10 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
           containerOffset.left -
           parseFloat(borderRadius) * 2;
       } else {
-        const containerWidth = this.container?.offsetWidth || 0;
         const targetWidth = this.target?.offsetWidth || 0;
         arrowLeft = Math.min(targetWidth / 2, containerWidth / 2);
       }
-      arrowLeft = Math.max(arrowLeft, 12);
+      arrowLeft = Math.min(Math.max(arrowLeft, 12), containerWidth - 12);
       this.container?.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
     }
 

@@ -31,7 +31,7 @@ import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 import { SortEvent } from 'primeng/api';
-import { isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from 'lodash-es';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
@@ -99,12 +99,6 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
 export class CpsTreeTableComponent
   implements OnInit, AfterViewInit, OnDestroy, AfterViewChecked, OnChanges
 {
-  /**
-   * An array of objects to display.
-   * @group Props
-   */
-  @Input() data: any[] = [];
-
   /**
    * An array of objects to represent dynamic columns.
    * @group Props
@@ -179,11 +173,17 @@ export class CpsTreeTableComponent
 
   /**
    * Determines whether the 'Remove' button should be displayed in the row menu.
-   * If true, 'Remove' button is shown. If false, it's hidden.
    * Note: This setting only takes effect if 'showRowMenu' is true.
    * @group Props
    */
   @Input() showRowRemoveButton = true;
+
+  /**
+   * Determines whether the 'Edit' button should be displayed in the row menu.
+   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * @group Props
+   */
+  @Input() showRowEditButton = true;
 
   /**
    * When enabled, a loader component is displayed.
@@ -456,11 +456,30 @@ export class CpsTreeTableComponent
   @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
-   * Callback to invoke on selected node change.
-   * @param {any[]} array - selection changed.
+   * An array of objects to display.
+   * @group Props
+   */
+  @Input() set data(value: any[]) {
+    const clone = cloneDeep(value);
+    if (clone && clone.length > 0) {
+      let i = 0;
+      clone.forEach((v: any) => {
+        v._defaultSortOrder = i++;
+      });
+    }
+    this._data = clone;
+  }
+
+  get data(): any[] {
+    return this._data;
+  }
+
+  /**
+   * Callback to invoke on selected rows change.
+   * @param {any[]} any[] - selected rows.
    * @group Emits
    */
-  @Output() selectionChanged = new EventEmitter<any[]>();
+  @Output() rowsSelected = new EventEmitter<any[]>();
 
   /**
    * Callback to invoke when action button is clicked.
@@ -485,10 +504,10 @@ export class CpsTreeTableComponent
 
   /**
    * Callback to invoke when rows are removed.
-   * @param {any} any - rows removed.
+   * @param {any[]} any[] - array of rows to remove.
    * @group Emits
    */
-  @Output() rowsRemoved = new EventEmitter<any[]>();
+  @Output() rowsToRemove = new EventEmitter<any[]>();
 
   /**
    * Callback to invoke when page is changed.
@@ -611,6 +630,8 @@ export class CpsTreeTableComponent
   private _scrollbarVisible = true;
 
   private _needRecalcAutoLayout = true;
+
+  _data: any[] = [];
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -787,9 +808,14 @@ export class CpsTreeTableComponent
     this._setMinWidthOverall();
 
     const dataChanges = changes?.data;
+
     if (dataChanges?.previousValue !== dataChanges?.currentValue) {
       this.clearSelection();
+      setTimeout(() => {
+        this._calcAutoLayoutHeaderWidths(true);
+      });
     }
+
     this._calcAutoLayoutHeaderWidths(true);
     this._recalcVirtualHeight();
   }
@@ -1049,10 +1075,6 @@ export class CpsTreeTableComponent
       classesList.push('p-treetable-gridlines');
     }
 
-    if (this.scrollHeight && !this.loading && this.data.length > 0) {
-      classesList.push('cps-treetable-bottom-bordered');
-    }
-
     return classesList.join(' ');
   }
 
@@ -1092,48 +1114,6 @@ export class CpsTreeTableComponent
     });
   }
 
-  private _removeNodeFromData(nodeToRemove: any, single = true): void {
-    const _findTopSortOrder = (_node: any): any => {
-      if (!_node) return undefined;
-      if (typeof _node._defaultSortOrder === 'number')
-        return _node._defaultSortOrder;
-      return _findTopSortOrder(_node.parent);
-    };
-
-    const _removeFromChildren = (_node: any) => {
-      if (!_node?.children) return false;
-      const idx = _node.children.indexOf(nodeToRemove);
-      if (idx >= 0) {
-        _node.children.splice(idx, 1);
-        if (_node.children.length === 0) {
-          delete _node.children;
-        }
-        return true;
-      } else {
-        for (const child of _node.children) {
-          if (_removeFromChildren(child)) return true;
-        }
-        return false;
-      }
-    };
-
-    // locate top level node
-    const sortOrder = _findTopSortOrder(nodeToRemove);
-    if (sortOrder === undefined) return;
-    const node = this.data.find((n) => n._defaultSortOrder === sortOrder);
-    if (!node) return;
-
-    // remove the node itself or remove its child
-    if (nodeToRemove === node) {
-      this.data = this.data.filter((v: any) => v !== nodeToRemove);
-    } else {
-      if (node.children) {
-        _removeFromChildren(node);
-        if (single) this.data = [...this.data];
-      }
-    }
-  }
-
   clearGlobalFilter() {
     this.globalFilterComp?.clear();
   }
@@ -1166,17 +1146,7 @@ export class CpsTreeTableComponent
   }
 
   removeSelected() {
-    // Todo: Use explicit type
-    this.selectedRows.forEach((row: any) =>
-      this._removeNodeFromData(row, false)
-    );
-    this.data = [...this.data];
-    this.rowsRemoved.emit(this.selectedRows);
-    this.clearSelection();
-    setTimeout(() => {
-      this._calcAutoLayoutHeaderWidths(true);
-    });
-    this._recalcVirtualHeight();
+    this.rowsToRemove.emit(this.selectedRows);
   }
 
   clearSelection() {
@@ -1188,13 +1158,7 @@ export class CpsTreeTableComponent
   }
 
   onRemoveRowClicked(node: any) {
-    this.selectedRows = this.selectedRows.filter((v: any) => v !== node);
-    this._removeNodeFromData(node);
-    this.rowsRemoved.emit([node]);
-    setTimeout(() => {
-      this._calcAutoLayoutHeaderWidths(true);
-    });
-    this._recalcVirtualHeight();
+    this.rowsToRemove.emit([node]);
   }
 
   toggleAllColumns() {
@@ -1318,8 +1282,7 @@ export class CpsTreeTableComponent
     });
   }
 
-  // Todo: Add explicit type to param selection
-  onSelectionChanged(selection: any) {
-    this.selectionChanged.emit(selection);
+  onSelectionChanged(selection: any[]) {
+    this.rowsSelected.emit(selection);
   }
 }

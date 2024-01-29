@@ -77,12 +77,6 @@ export type CpsTableSortMode = 'single' | 'multiple';
 })
 export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   /**
-   * An array of objects to display.
-   * @group Props
-   */
-  @Input() data: any[] = [];
-
-  /**
    * An array of objects to represent dynamic columns.
    * @group Props
    */
@@ -144,11 +138,17 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   /**
    * Determines whether the 'Remove' button should be displayed in the row menu.
-   * If true, 'Remove' button is shown. If false, it's hidden.
    * Note: This setting only takes effect if 'showRowMenu' is true.
    * @group Props
    */
   @Input() showRowRemoveButton = true;
+
+  /**
+   * Determines whether the 'Edit' button should be displayed in the row menu.
+   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * @group Props
+   */
+  @Input() showRowEditButton = true;
 
   /**
    * Determines whether the table should have re-orderable rows.
@@ -445,32 +445,58 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
-   * Callback to invoke on selection changed.
-   * @param {any[]} value - selected data.
+   * An array of objects to display.
+   * @group Props
+   */
+  @Input() set data(value: any[]) {
+    this._data = [...value];
+  }
+
+  get data(): any[] {
+    return this._data;
+  }
+
+  /**
+   * Callback to invoke on selection changed. Returns selected rows.
+   * @param {any[]} any[] - selected rows.
    * @group Emits
    */
-  @Output() selectionChanged = new EventEmitter<any[]>();
+  @Output() rowsSelected = new EventEmitter<any[]>();
+
+  /**
+   * Callback to invoke on selection changed. Returns selected rows indexes.
+   * @param {number[]} number[] - selected rows indexes.
+   * @group Emits
+   */
+  @Output() selectedRowIndexes = new EventEmitter<number[]>();
 
   /**
    * Callback to invoke when action button is clicked.
-   * @param {void} void - button clicked.
+   * @param {void} void - action button clicked.
    * @group Emits
    */
   @Output() actionBtnClicked = new EventEmitter<void>();
 
   /**
    * Callback to invoke when edit-row button is clicked.
-   * @param {any} any - button clicked.
+   * @param {{row: any, index: number}} {row: any, index: number} - edit-row button clicked.
    * @group Emits
    */
-  @Output() editRowBtnClicked = new EventEmitter<any>();
+  @Output() editRowBtnClicked = new EventEmitter<{ row: any; index: number }>();
 
   /**
-   * Callback to invoke on rows removal.
-   * @param {any[]} any[] - array of rows removed.
+   * Callback to invoke on rows removal. Returns rows.
+   * @param {any[]} any[] - array of rows to remove.
    * @group Emits
    */
-  @Output() rowsRemoved = new EventEmitter<any[]>();
+  @Output() rowsToRemove = new EventEmitter<any[]>();
+
+  /**
+   * Callback to invoke on rows removal. Returns rows indexes.
+   * @param {number[]} number[] - array of indexes of rows to remove.
+   * @group Emits
+   */
+  @Output() rowIndexesToRemove = new EventEmitter<number[]>();
 
   /**
    * Callback to invoke on page changed.
@@ -561,6 +587,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   @ViewChild('colToggleMenu')
   colToggleMenu!: CpsMenuComponent;
+
+  @ViewChild('tUnsortDirective') tUnsortDirective!: TableUnsortDirective;
+
+  _data: any[] = [];
 
   selectedRows: any[] = [];
 
@@ -660,10 +690,6 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       classesList.push('p-datatable-gridlines');
     }
 
-    if (this.scrollHeight && !this.loading && this.data.length > 0) {
-      classesList.push('cps-table-bottom-bordered');
-    }
-
     return classesList.join(' ');
   }
 
@@ -682,14 +708,16 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
     }
 
-    const dataChanges = changes?.data;
-    if (
-      dataChanges?.previousValue?.length !== dataChanges?.currentValue?.length
-    ) {
+    if (changes?.data) {
+      this.resetSortingState();
       this.selectedRows = this.selectedRows.filter((sr) =>
         this.data.includes(sr)
       );
     }
+  }
+
+  resetSortingState() {
+    this.tUnsortDirective?.resetDefaultSortOrder();
   }
 
   clearSelection() {
@@ -701,7 +729,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onSelectionChanged(selection: any[]) {
-    this.selectionChanged.emit(selection);
+    this.rowsSelected.emit(selection);
+
+    const indexes = this._getIndexes(selection);
+    this.selectedRowIndexes.emit(indexes);
   }
 
   onSortFunction(event: SortEvent) {
@@ -713,18 +744,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   removeSelected() {
-    const indexes: number[] = this.primengTable.selection.map(
-      (s: any) => s._defaultSortOrder
-    );
-    indexes.sort((a, b) => b - a);
+    this.rowsToRemove.emit(this.selectedRows);
 
-    this.data = this.data.filter(
-      (v: any) => !indexes.includes(v._defaultSortOrder)
-    );
-
-    this.rowsRemoved.emit(this.selectedRows);
-
-    this.clearSelection();
+    const indexes = this._getIndexes(this.selectedRows);
+    this.rowIndexesToRemove.emit(indexes);
   }
 
   onClickAdditionalBtnOnSelect() {
@@ -802,14 +825,16 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     this.columnsSelected.emit(this.selectedColumns);
   }
 
-  onEditRowClicked(item: any) {
-    this.editRowBtnClicked.emit(item);
+  onEditRowClicked(row: any) {
+    const [index] = this._getIndexes([row]);
+    this.editRowBtnClicked.emit({ row, index });
   }
 
   onRemoveRowClicked(item: any) {
-    this.selectedRows = this.selectedRows.filter((v: any) => v !== item);
-    this.data = this.data.filter((v: any) => v !== item);
-    this.rowsRemoved.emit([item]);
+    this.rowsToRemove.emit([item]);
+
+    const indexes = this._getIndexes([item]);
+    this.rowIndexesToRemove.emit(indexes);
   }
 
   onSort(event: any) {
@@ -843,6 +868,19 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     this.colToggleMenu?.toggle(event);
   }
 
+  private _getIndexes(rows: any[]) {
+    let indexes: number[] = rows.map((row) =>
+      this.primengTable.value.indexOf(row)
+    );
+
+    const indexesMap = this.tUnsortDirective?.sortIndices;
+    if (indexesMap && indexesMap.length > 0) {
+      indexes = indexes.map((i) => indexesMap.indexOf(i));
+    }
+
+    return indexes;
+  }
+
   exportTable(format: CpsTableExportFormat) {
     if (this.columns.length < 1) throw new Error('Columns must be defined!');
     if (this.selectedColumns.length < 1) throw new Error('Nothing to export!');
@@ -868,7 +906,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
         this.selectedColumns.map(
           (c: { [key: string]: any }) => c[this.colHeaderName]
         ),
-        ...this.data.map((item: any) =>
+        ...this.primengTable.value.map((item: any) =>
           this.selectedColumns.map(
             (c: { [key: string]: any }) => item[c[this.colFieldName]]
           )
@@ -914,7 +952,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   //   (doc as any).autoTable({
   //     headStyles: { fillColor: '#870a3c' },
   //     columns: exportColumns,
-  //     body: this.data
+  //     body: this.primengTable.value
   //   });
   //   doc.save(`${this.exportFilename}.pdf`);
   // }
