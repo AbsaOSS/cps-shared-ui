@@ -6,11 +6,9 @@ on:
       - 'master'
     paths:
       - 'api-generator/**'
-      - 'projects/cps-ui-kit/**'
+      - 'projects/cps-ui-kit/src/**'
       - 'projects/composition/**'
       - '.github/**'
-    paths-ignore:
-      - 'projects/cps-ui-kit/package.json'
 
 jobs:
   # Generate api data

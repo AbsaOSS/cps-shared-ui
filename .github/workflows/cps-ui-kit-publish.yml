@@ -19,10 +19,10 @@ jobs:
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Use Node.js v16.x
+      - name: Use Node.js v20.x
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
 
       - name: Bump version
@@ -54,10 +54,10 @@ jobs:
       - name: Fetch latest commits
         run: git pull origin master
 
-      - name: Use Node.js v16.x
+      - name: Use Node.js v20.x
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
 
       - name: Cache node_modules
