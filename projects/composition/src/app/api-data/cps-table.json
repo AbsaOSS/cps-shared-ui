@@ -215,6 +215,12 @@
                         "optional": false,
                         "readonly": false,
                         "type": "boolean"
+                    },
+                    {
+                        "name": "showRowEditButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean"
                     }
                 ]
             },
@@ -249,14 +255,6 @@
             "props": {
                 "description": "Defines the input properties of the component.",
                 "values": [
-                    {
-                        "name": "data",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "any[]",
-                        "default": "[]",
-                        "description": "An array of objects to display."
-                    },
                     {
                         "name": "columns",
                         "optional": false,
@@ -343,7 +341,15 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nIf true, 'Remove' button is shown. If false, it's hidden.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                    },
+                    {
+                        "name": "showRowEditButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
                     },
                     {
                         "name": "reorderableRows",
@@ -736,6 +742,12 @@
                         "type": "Object[]",
                         "default": "[]",
                         "description": "Array of initial columns to show in the table. If not provided, all columns are initially visible."
+                    },
+                    {
+                        "name": "data",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any[]"
                     }
                 ]
             },
@@ -743,14 +755,24 @@
                 "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
                 "values": [
                     {
-                        "name": "selectionChanged",
+                        "name": "rowsSelected",
                         "parameters": [
                             {
                                 "name": "value",
                                 "type": "any[]"
                             }
                         ],
-                        "description": "Callback to invoke on selection changed."
+                        "description": "Callback to invoke on selection changed. Returns selected rows."
+                    },
+                    {
+                        "name": "selectedRowIndexes",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "number[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on selection changed. Returns selected rows indexes."
                     },
                     {
                         "name": "actionBtnClicked",
@@ -767,20 +789,30 @@
                         "parameters": [
                             {
                                 "name": "value",
-                                "type": "any"
+                                "type": "Object"
                             }
                         ],
                         "description": "Callback to invoke when edit-row button is clicked."
                     },
                     {
-                        "name": "rowsRemoved",
+                        "name": "rowsToRemove",
                         "parameters": [
                             {
                                 "name": "value",
                                 "type": "any[]"
                             }
                         ],
-                        "description": "Callback to invoke on rows removal."
+                        "description": "Callback to invoke on rows removal. Returns rows."
+                    },
+                    {
+                        "name": "rowIndexesToRemove",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "number[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on rows removal. Returns rows indexes."
                     },
                     {
                         "name": "pageChanged",

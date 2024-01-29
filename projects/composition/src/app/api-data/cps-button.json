@@ -25,7 +25,7 @@
                         "name": "type",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"outlined\" | \"solid\" | \"borderless\"",
+                        "type": "\"outlined\" | \"borderless\" | \"solid\"",
                         "default": "solid",
                         "description": "Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'."
                     },
@@ -57,7 +57,7 @@
                         "name": "size",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"small\" | \"normal\" | \"xsmall\" | \"large\"",
+                        "type": "\"small\" | \"xsmall\" | \"normal\" | \"large\"",
                         "default": "normal",
                         "description": "Size on the button, it can be 'xsmall', 'small', 'normal' or 'large'."
                     },

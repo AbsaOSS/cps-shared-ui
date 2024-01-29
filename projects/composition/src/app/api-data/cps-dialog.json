@@ -1,6 +1,6 @@
 {
     "name": "CpsDialogService",
-    "description": "Service for showing CpsDialog.\nSecond line comment cpsdialog",
+    "description": "Service for showing CpsDialog.",
     "methods": {
         "description": "Methods used in service.",
         "values": [

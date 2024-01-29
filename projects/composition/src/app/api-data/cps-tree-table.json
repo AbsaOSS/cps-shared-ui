@@ -6,14 +6,6 @@
                 "description": "Defines the input properties of the component.",
                 "values": [
                     {
-                        "name": "data",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "any[]",
-                        "default": "[]",
-                        "description": "An array of objects to display."
-                    },
-                    {
                         "name": "columns",
                         "optional": false,
                         "readonly": false,
@@ -115,7 +107,15 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nIf true, 'Remove' button is shown. If false, it's hidden.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                    },
+                    {
+                        "name": "showRowEditButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
                     },
                     {
                         "name": "loading",
@@ -476,6 +476,12 @@
                         "type": "Object[]",
                         "default": "[]",
                         "description": "Array of initial columns to show in the treetable. If not provided, all columns are initially visible."
+                    },
+                    {
+                        "name": "data",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any[]"
                     }
                 ]
             },
@@ -483,14 +489,14 @@
                 "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
                 "values": [
                     {
-                        "name": "selectionChanged",
+                        "name": "rowsSelected",
                         "parameters": [
                             {
                                 "name": "value",
                                 "type": "any[]"
                             }
                         ],
-                        "description": "Callback to invoke on selected node change."
+                        "description": "Callback to invoke on selected rows change."
                     },
                     {
                         "name": "actionBtnClicked",
@@ -523,7 +529,7 @@
                         "description": "Callback to invoke when edit-row button is clicked."
                     },
                     {
-                        "name": "rowsRemoved",
+                        "name": "rowsToRemove",
                         "parameters": [
                             {
                                 "name": "value",
