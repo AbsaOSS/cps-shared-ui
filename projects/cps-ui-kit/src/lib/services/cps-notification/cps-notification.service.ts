@@ -35,6 +35,13 @@ export class CpsNotificationService {
     @Inject(DOCUMENT) private document: Document
   ) {}
 
+  /**
+   * Shows a notification with type 'info'.
+   * @param {string} message - Notification message.
+   * @param {string} details - Notification details.
+   * @param {CpsNotificationConfig} config - CpsNotificationConfig object.
+   * @group Method
+   */
   public info(
     message: string,
     details?: string,
@@ -48,6 +55,13 @@ export class CpsNotificationService {
     );
   }
 
+  /**
+   * Shows a notification with type 'warning'.
+   * @param {string} message - Notification message.
+   * @param {string} details - Notification details.
+   * @param {CpsNotificationConfig} config - CpsNotificationConfig object.
+   * @group Method
+   */
   public warning(
     message: string,
     details?: string,
@@ -61,6 +75,13 @@ export class CpsNotificationService {
     );
   }
 
+  /**
+   * Shows a notification with type 'success'.
+   * @param {string} message - Notification message.
+   * @param {string} details - Notification details.
+   * @param {CpsNotificationConfig} config - CpsNotificationConfig object.
+   * @group Method
+   */
   public success(
     message: string,
     details?: string,
@@ -74,6 +95,13 @@ export class CpsNotificationService {
     );
   }
 
+  /**
+   * Shows a notification with type 'error'.
+   * @param {string} message - Notification message.
+   * @param {string} details - Notification details.
+   * @param {CpsNotificationConfig} config - CpsNotificationConfig object.
+   * @group Method
+   */
   public error(
     message: string,
     details?: string,
@@ -87,6 +115,10 @@ export class CpsNotificationService {
     );
   }
 
+  /**
+   * Clears all notifications.
+   * @group Method
+   */
   public clear() {
     this._containersMap.forEach((container) => {
       this._appRef.detachView(container.hostView);
