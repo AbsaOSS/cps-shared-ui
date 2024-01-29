@@ -9,7 +9,7 @@ import {
 import { CpsSelectComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-select.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -17,7 +17,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsSelectComponent,
     FormsModule,
     ReactiveFormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-select-page',
   templateUrl: './select-page.component.html',

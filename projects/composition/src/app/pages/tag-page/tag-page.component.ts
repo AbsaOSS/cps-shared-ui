@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsTagComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tag.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsTagComponent,
     ReactiveFormsModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-tag-page',
   templateUrl: './tag-page.component.html',

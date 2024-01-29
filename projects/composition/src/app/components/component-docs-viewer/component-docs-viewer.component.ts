@@ -4,13 +4,13 @@ import { ComponentAPI } from '../../models/component-api.model';
 import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
 
 @Component({
-  selector: 'app-docs-viewer',
-  templateUrl: './docs-viewer.component.html',
-  styleUrl: './docs-viewer.component.scss',
+  selector: 'app-component-docs-viewer',
+  templateUrl: './component-docs-viewer.component.html',
+  styleUrl: './component-docs-viewer.component.scss',
   imports: [CommonModule, CpsTabComponent, CpsTabGroupComponent],
   standalone: true
 })
-export class DocsViewerComponent implements OnInit {
+export class ComponentDocsViewerComponent implements OnInit {
   @Input() componentData?: { components: { [key: string]: ComponentAPI } };
   objectEntries = Object.entries;
 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CpsButtonComponent, CpsLoaderComponent } from 'cps-ui-kit';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponentData from '../../api-data/cps-loader.json';
 
@@ -11,7 +11,7 @@ import ComponentData from '../../api-data/cps-loader.json';
     CommonModule,
     CpsLoaderComponent,
     CpsButtonComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-loader-page',
   templateUrl: './loader-page.component.html',

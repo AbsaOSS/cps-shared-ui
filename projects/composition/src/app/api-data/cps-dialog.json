@@ -1,0 +1,38 @@
+{
+    "name": "CpsDialogService",
+    "description": "Service for showing CpsDialog.\nSecond line comment cpsdialog",
+    "methods": {
+        "description": "Methods used in service.",
+        "values": [
+            {
+                "name": "open",
+                "parameters": [
+                    {
+                        "name": "componentType",
+                        "type": "Type<any>",
+                        "description": "Dynamic component for content template."
+                    },
+                    {
+                        "name": "config",
+                        "type": "CpsDialogConfig<any>",
+                        "description": "CpsDialogConfig object."
+                    }
+                ],
+                "returnType": "CpsDialogRef<any>",
+                "description": "Opens a dialog with a dynamically loaded component."
+            },
+            {
+                "name": "openConfirmationDialog",
+                "parameters": [
+                    {
+                        "name": "config",
+                        "type": "CpsDialogConfig<any>",
+                        "description": "CpsDialogConfig object."
+                    }
+                ],
+                "returnType": "CpsDialogRef<any>",
+                "description": "Opens a confirmation dialog."
+            }
+        ]
+    }
+}

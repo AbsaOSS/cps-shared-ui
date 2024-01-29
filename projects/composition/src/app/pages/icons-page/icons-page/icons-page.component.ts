@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CpsIconComponent, CpsInputComponent, iconNames } from 'cps-ui-kit';
 
 import ComponentData from '../../../api-data/cps-icon.json';
-import { DocsViewerComponent } from '../../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -13,7 +13,7 @@ import { DocsViewerComponent } from '../../../components/docs-viewer/docs-viewer
     CpsInputComponent,
     CommonModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',

@@ -105,7 +105,7 @@
                         "name": "resizable",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"vertical\" | \"none\"",
+                        "type": "\"none\" | \"vertical\"",
                         "default": "vertical",
                         "description": "Determines whether the component can be resized vertically or not."
                     },

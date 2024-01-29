@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponetnData from '../../api-data/cps-menu.json';
 @Component({
@@ -11,7 +11,7 @@ import ComponetnData from '../../api-data/cps-menu.json';
     CommonModule,
     CpsMenuComponent,
     CpsButtonComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],

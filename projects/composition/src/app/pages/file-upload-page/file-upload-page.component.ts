@@ -4,12 +4,12 @@ import { CpsFileUploadComponent } from 'cps-ui-kit';
 import { Observable, catchError, from, map, of } from 'rxjs';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   selector: 'app-file-upload-page',
   standalone: true,
-  imports: [CommonModule, CpsFileUploadComponent, DocsViewerComponent],
+  imports: [CommonModule, CpsFileUploadComponent, ComponentDocsViewerComponent],
   templateUrl: './file-upload-page.component.html',
   styleUrls: ['./file-upload-page.component.scss'],
   host: { class: 'composition-page' }

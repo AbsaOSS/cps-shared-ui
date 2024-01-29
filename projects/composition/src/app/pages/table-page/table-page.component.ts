@@ -14,7 +14,7 @@ import {
   TabChangeEvent,
   CpsColumnFilterMatchMode
 } from 'cps-ui-kit';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponentData from '../../api-data/cps-table.json';
 
@@ -31,7 +31,7 @@ import ComponentData from '../../api-data/cps-table.json';
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],

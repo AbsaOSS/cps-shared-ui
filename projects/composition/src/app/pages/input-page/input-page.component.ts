@@ -11,7 +11,7 @@ import {
 import { CpsInputComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-input.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -19,7 +19,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsInputComponent,
     ReactiveFormsModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-input-page',
   templateUrl: './input-page.component.html',

@@ -9,7 +9,7 @@ import {
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-radio-group.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -20,7 +20,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsRadioComponent,
     CpsSelectComponent,
     CpsCheckboxComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-radio-page',
   templateUrl: './radio-page.component.html',

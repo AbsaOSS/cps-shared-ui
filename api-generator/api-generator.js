@@ -20,7 +20,11 @@ async function main() {
   const app = await TypeDoc.Application.bootstrapWithPlugins({
     // typedoc options here
     name: 'cps-ui-kit',
-    entryPoints: [`projects/cps-ui-kit/src/lib/components`],
+    entryPoints: [
+      `projects/cps-ui-kit/src/lib/components`,
+      `projects/cps-ui-kit/src/lib/services`,
+      `projects/cps-ui-kit/src/lib/directives`,
+    ],
     entryPointStrategy: 'expand',
     hideGenerator: true,
     excludeExternals: true,
@@ -51,7 +55,12 @@ async function main() {
 
     if (isProcessable(modules)) {
       modules.children.forEach((module) => {
-        const name = module.name.replace(/\/.*/, '');
+        // const name = module.name.replace(/\/.*/, '');
+
+        // Regex to get only relevant directory, e.g. from
+        // components/cps-autocomplete/cps-autocomplete.component get only cps-autocomplete
+        const name = module.name.match(/\/(.*?)(\/|$)/)[1];
+
         if (allowed(name)) {
           if (module.groups) {
             if (!doc[name]) {
@@ -72,7 +81,7 @@ async function main() {
               (g) => g.title === 'Interface'
             );
             const module_service_group = module.groups.find(
-              (g) => g.title === 'Service'
+              (g) => g.title === 'Services'
             );
             const module_types_group = module.groups.find(
               (g) => g.title === 'Types'
@@ -421,10 +430,17 @@ async function main() {
 
             if (isProcessable(module_service_group)) {
               doc[name] = {
-                description: staticMessages['service']
+                // description: staticMessages['service']
               };
 
               module_service_group.children.forEach((service) => {
+                doc[name] = {
+                  name: service.name,
+                  description: service.comment &&
+                    service.comment.summary
+                      .map((s) => s.text || '')
+                      .join(' ')
+                };
                 const service_methods_group = service.groups.find(
                   (g) => g.title === 'Method'
                 );

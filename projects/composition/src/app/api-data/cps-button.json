@@ -57,7 +57,7 @@
                         "name": "size",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"small\" | \"normal\" | \"large\" | \"xsmall\"",
+                        "type": "\"small\" | \"normal\" | \"xsmall\" | \"large\"",
                         "default": "normal",
                         "description": "Size on the button, it can be 'xsmall', 'small', 'normal' or 'large'."
                     },

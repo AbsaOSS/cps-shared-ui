@@ -9,7 +9,7 @@
                         "name": "type",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"custom\" | \"security\" | \"classification\"",
+                        "type": "\"security\" | \"classification\" | \"custom\"",
                         "default": "custom",
                         "description": "Type of the tag. It can be security, classification or custom, has higher precedence over color."
                     },

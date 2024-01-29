@@ -8,7 +8,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponentData from '../../api-data/cps-timepicker.json';
 
@@ -20,7 +20,7 @@ import ComponentData from '../../api-data/cps-timepicker.json';
     CpsTimepickerComponent,
     ReactiveFormsModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   templateUrl: './timepicker-page.component.html',
   styleUrls: ['./timepicker-page.component.scss'],

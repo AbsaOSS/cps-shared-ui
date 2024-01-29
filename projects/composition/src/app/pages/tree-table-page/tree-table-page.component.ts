@@ -16,7 +16,7 @@ import {
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tree-table.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   selector: 'app-tree-table-page',
@@ -32,7 +32,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],

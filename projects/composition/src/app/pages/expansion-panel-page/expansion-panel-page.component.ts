@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { CpsExpansionPanelComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-expansion-panel.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
-  imports: [CpsExpansionPanelComponent, DocsViewerComponent],
+  imports: [CpsExpansionPanelComponent, ComponentDocsViewerComponent],
   selector: 'app-expansion-panel-page',
   templateUrl: './expansion-panel-page.component.html',
   styleUrls: ['./expansion-panel-page.component.scss'],

@@ -8,7 +8,7 @@ import {
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tab-group.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -17,7 +17,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsIconComponent,
     CpsTabGroupComponent,
     CpsTabComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-tab-group-page',
   templateUrl: './tab-group-page.component.html',

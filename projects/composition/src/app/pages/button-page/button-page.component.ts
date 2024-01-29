@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CpsButtonComponent } from 'cps-ui-kit';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponentData from '../../api-data/cps-button.json';
 
 @Component({
   standalone: true,
-  imports: [CpsButtonComponent, DocsViewerComponent],
+  imports: [CpsButtonComponent, ComponentDocsViewerComponent],
   selector: 'app-button-page',
   templateUrl: './button-page.component.html',
   styleUrls: ['./button-page.component.scss'],

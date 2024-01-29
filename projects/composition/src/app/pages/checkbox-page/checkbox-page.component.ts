@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsCheckboxComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-checkbox.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsCheckboxComponent,
     ReactiveFormsModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-checkbox-page',
   templateUrl: './checkbox-page.component.html',

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { CpsButtonComponent, CpsChipComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-chip.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CommonModule,
     CpsChipComponent,
     CpsButtonComponent,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-chip-page',
   templateUrl: './chip-page.component.html',

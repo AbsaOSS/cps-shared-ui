@@ -3,11 +3,14 @@ name: Build and publish the documentation app
 on:
   push:
     branches:
-      - 'master'
+      - master
     paths:
+      - 'api-generator/**'
       - 'projects/cps-ui-kit/**'
       - 'projects/composition/**'
       - '.github/**'
+    paths-ignore:
+      - 'projects/cps-ui-kit/package.json'
 
 jobs:
   # Generate api data
@@ -28,18 +31,20 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Generate API data
-        working-directory: projects/cps-ui-kit
+        working-directory: /projects/composition
+        run: |
+          npm run generate-json-api
+
+      - name: Commit and push if there are any changes
+        working-directory: projects/composition
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          npm run generate-json-api
-
-      - name: Commit and push
-        working-directory: projects/cps-ui-kit
-        run: |
-          git add -A
-          git commit -m "Update API data"
-          git push origin HEAD:master
+          git add ./src/app/api-data
+          if [[ -n "$(git status --porcelain)" ]]; then 
+            git commit -m "Update API data"
+            git push origin HEAD:master
+          fi
 
   # Build job
   build:
@@ -50,6 +55,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          # ssh-key: ${{ secrets.DEPLOY_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch latest commits
@@ -61,19 +67,32 @@ jobs:
           node-version: 20.x
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Cache node_modules
+      - name: Cache node modules
+        id: cache-npm
         uses: actions/cache@v4
+        env:
+          cache-name: cache-node-modules
         with:
-          path: projects/cps-ui-kit/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('projects/cps-ui-kit/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node_modules-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build CPS UI Kit Component Library
+        run: npm run build
+
+      - name: Build documentation app
         run: npm run build:documentation
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/composition/browser
 
   # Deploy job
   deploy:

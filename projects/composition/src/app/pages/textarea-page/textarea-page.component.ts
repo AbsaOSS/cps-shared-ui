@@ -9,7 +9,7 @@ import {
 import { CpsTextareaComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-textarea.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -18,7 +18,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsTextareaComponent,
     ReactiveFormsModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   templateUrl: './textarea-page.component.html',
   styleUrls: ['./textarea-page.component.scss'],

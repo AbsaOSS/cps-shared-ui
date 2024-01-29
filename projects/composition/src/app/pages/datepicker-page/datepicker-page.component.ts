@@ -7,7 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { CpsDatepickerComponent } from 'cps-ui-kit';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponentData from '../../api-data/cps-datepicker.json';
 
@@ -17,7 +17,7 @@ import ComponentData from '../../api-data/cps-datepicker.json';
     CpsDatepickerComponent,
     FormsModule,
     ReactiveFormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-datepicker-page',
   templateUrl: './datepicker-page.component.html',

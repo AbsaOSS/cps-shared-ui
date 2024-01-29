@@ -7,7 +7,7 @@ import {
   Validators
 } from '@angular/forms';
 import { CpsAutocompleteComponent } from 'cps-ui-kit';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import ComponentData from '../../api-data/cps-autocomplete.json';
 
 @Component({
@@ -16,7 +16,7 @@ import ComponentData from '../../api-data/cps-autocomplete.json';
     CpsAutocompleteComponent,
     FormsModule,
     ReactiveFormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-autocomplete-page',
   templateUrl: './autocomplete-page.component.html',

@@ -6,7 +6,7 @@ import {
 } from 'projects/cps-ui-kit/src/public-api';
 
 import ComponentData from '../../api-data/cps-button-toggle.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -14,7 +14,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsButtonToggleComponent,
     ReactiveFormsModule,
     FormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-button-toggle-page',
   templateUrl: './button-toggle-page.component.html',

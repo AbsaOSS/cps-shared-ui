@@ -9,7 +9,7 @@ import {
 import { CpsTreeSelectComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tree-select.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   standalone: true,
@@ -17,7 +17,7 @@ import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.co
     CpsTreeSelectComponent,
     FormsModule,
     ReactiveFormsModule,
-    DocsViewerComponent
+    ComponentDocsViewerComponent
   ],
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',

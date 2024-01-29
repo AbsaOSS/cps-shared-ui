@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration=production --project=cps-ui-kit",
-    "build:documentation": "ng build --configuration=production --project=composition",
+    "build:documentation": "ng build --configuration=production --project=composition --base-href '/cps-shared-ui'",
     "watch": "ng build cps-ui-kit --watch --configuration development",
     "test": "npm run cypress:run",
     "lint": "eslint \"**/*.ts\"",

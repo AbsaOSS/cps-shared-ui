@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { CpsInfoCircleComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-info-circle.json';
-import { DocsViewerComponent } from '../../components/docs-viewer/docs-viewer.component';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
   selector: 'app-info-circle-page',
   standalone: true,
-  imports: [CommonModule, CpsInfoCircleComponent, DocsViewerComponent],
+  imports: [CommonModule, CpsInfoCircleComponent, ComponentDocsViewerComponent],
   templateUrl: './info-circle-page.component.html',
   styleUrls: ['./info-circle-page.component.scss'],
   host: { class: 'composition-page' }
