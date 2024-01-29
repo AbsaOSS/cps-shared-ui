@@ -24,100 +24,11 @@
           <th cpsTColSortable="e" cpsTColFilter="e" filterType="category">E</th>
         </ng-template>
 
-      <ng-template let-item #body>
-        <td>{{ item.a | uppercase }}</td>
-        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
-        <td>{{ item.c | percent }}</td>
-        <td [style.color]="item.d ? 'green' : 'red'">
-          {{ item.d ? '&#10004;' : '&#10008;' }}
-        </td>
-        <td>{{ item.e }}</td>
-      </ng-template>
-    </cps-table>
-  </cps-tab>
-  <cps-tab label="Table 2">
-    <cps-table
-      *ngIf="selectedTabIndex === 1"
-      [showGlobalFilter]="true"
-      [data]="dataVirtual"
-      [columns]="colsVirtual"
-      [sortable]="true"
-      [virtualScroll]="true"
-      [showColumnsToggleBtn]="true"
-      scrollHeight="500px"
-      toolbarTitle="Sortable table with virtual scroller, global filter and internal columns toggle">
-    </cps-table>
-  </cps-tab>
-  <cps-tab label="Table 3">
-    <cps-table
-      [data]="data"
-      [reorderableRows]="true"
-      [showActionBtn]="true"
-      [showRowMenu]="true"
-      [showRowRemoveButton]="isRemoveBtnVisible"
-      (rowsToRemove)="onRowsToRemove($event)"
-      [showDataReloadBtn]="true"
-      (editRowBtnClicked)="onEditRowButtonClicked($event)"
-      (actionBtnClicked)="onActionBtnClicked()"
-      (dataReloadBtnClicked)="onReloadBtnClicked()"
-      toolbarTitle="Table with draggable rows, rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently {{
-        isRemoveBtnVisible ? 'visible' : 'hidden'
-      }}"
-      actionBtnTitle="{{
-        isRemoveBtnVisible ? 'Hide' : 'Show'
-      }} Remove buttons">
-      <ng-template #header>
-        <th>A</th>
-        <th>B</th>
-        <th>C</th>
-        <th>D</th>
-        <th>E</th>
-      </ng-template>
-
-      <ng-template let-item #body>
-        <td>{{ item.a | uppercase }}</td>
-        <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
-        <td>{{ item.c | percent }}</td>
-        <td [style.color]="item.d ? 'green' : 'red'">
-          {{ item.d ? '&#10004;' : '&#10008;' }}
-        </td>
-        <td>{{ item.e }}</td>
-      </ng-template>
-    </cps-table>
-  </cps-tab>
-  <cps-tab label="Table 4">
-    <cps-table
-      [data]="data"
-      dataKey="a"
-      [columns]="colsWithFilterType"
-      [selectable]="true"
-      sortMode="multiple"
-      [striped]="false"
-      [showRowMenu]="true"
-      (rowsToRemove)="onRowsToRemove($event)"
-      [showColumnsToggleBtn]="true"
-      (columnsSelected)="onColumnsSelected($event)"
-      (editRowBtnClicked)="onEditRowButtonClicked($event)"
-      (rowsSelected)="onRowsSelectionChanged($event)"
-      toolbarIcon="toast-success"
-      toolbarIconColor="success"
-      toolbarTitle="Table with toolbar icon, external columns toggle, unstriped selectable and expandable rows">
-      <ng-template #header>
-        <th
-          *ngFor="let scol of selCols"
-          [cpsTColSortable]="scol.field"
-          [cpsTColFilter]="scol.field"
-          [filterType]="scol.filterType">
-          {{ scol.header }}
-        </th>
-      </ng-template>
-
-      <ng-template let-item #body>
-        <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
-          <td *ngSwitchCase="'a'">{{ item.a | uppercase }}</td>
-          <td *ngSwitchCase="'b'">{{ item.b | date : 'MM/dd/yyyy' }}</td>
-          <td *ngSwitchCase="'c'">{{ item.c | percent }}</td>
-          <td *ngSwitchCase="'d'" [style.color]="item.d ? 'green' : 'red'">
+        <ng-template let-item #body>
+          <td>{{ item.a | uppercase }}</td>
+          <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ item.c | percent }}</td>
+          <td [style.color]="item.d ? 'green' : 'red'">
             {{ item.d ? '&#10004;' : '&#10008;' }}
           </td>
           <td>{{ item.e }}</td>
@@ -144,6 +55,7 @@
         [showActionBtn]="true"
         [showRowMenu]="true"
         [showRowRemoveButton]="isRemoveBtnVisible"
+        (rowsToRemove)="onRowsToRemove($event)"
         [showDataReloadBtn]="true"
         (editRowBtnClicked)="onEditRowButtonClicked($event)"
         (actionBtnClicked)="onActionBtnClicked()"
@@ -182,10 +94,11 @@
         sortMode="multiple"
         [striped]="false"
         [showRowMenu]="true"
+        (rowsToRemove)="onRowsToRemove($event)"
         [showColumnsToggleBtn]="true"
         (columnsSelected)="onColumnsSelected($event)"
         (editRowBtnClicked)="onEditRowButtonClicked($event)"
-        (selectionChanged)="onRowsSelectionChanged($event)"
+        (rowsSelected)="onRowsSelectionChanged($event)"
         toolbarIcon="toast-success"
         toolbarIconColor="success"
         toolbarTitle="Table with toolbar icon, external columns toggle, unstriped selectable and expandable rows">
@@ -207,7 +120,7 @@
             <td *ngSwitchCase="'d'" [style.color]="item.d ? 'green' : 'red'">
               {{ item.d ? '&#10004;' : '&#10008;' }}
             </td>
-            <td *ngSwitchCase="'e'">{{ item.e }}</td>
+            <td>{{ item.e }}</td>
           </ng-container>
         </ng-template>
 

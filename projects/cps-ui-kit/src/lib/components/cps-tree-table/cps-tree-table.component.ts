@@ -1282,7 +1282,8 @@ export class CpsTreeTableComponent
     });
   }
 
-  onSelectionChanged(selection: any[]) {
+  // Replace with explicit type
+  onSelectionChanged(selection: any[] | any) {
     this.rowsSelected.emit(selection);
   }
 }

@@ -68,7 +68,8 @@ export class TreeTableUnsortDirective {
         return;
       }
 
-      this._syncNodesParams(pTreeTable.filteredNodes, nodes);
+      // Replace with explicit type
+      this._syncNodesParams(pTreeTable.filteredNodes as any, nodes);
 
       if (pTreeTable.customSort) {
         pTreeTable.sortFunction.emit({
@@ -111,7 +112,8 @@ export class TreeTableUnsortDirective {
         return;
       }
 
-      this._syncNodesParams(pTreeTable.filteredNodes, nodes);
+      // Replace with explicit type
+      this._syncNodesParams(pTreeTable.filteredNodes as any, nodes);
 
       if (pTreeTable.customSort) {
         pTreeTable.sortFunction.emit({
@@ -124,14 +126,16 @@ export class TreeTableUnsortDirective {
           return pTreeTable.multisortField(
             node1,
             node2,
-            pTreeTable.multiSortMeta,
+            // Replace with explicit type
+            pTreeTable.multiSortMeta as any,
             0
           );
         });
       }
 
       for (const node of nodes) {
-        pTreeTable.sortMultipleNodes(node.children);
+        // Replace with explicit type
+        pTreeTable.sortMultipleNodes(node.children as any);
       }
     };
 
@@ -203,7 +207,11 @@ export class TreeTableUnsortDirective {
                 pTreeTable.globalFilterFields || pTreeTable.columns;
           }
 
-          this._syncNodesParams(pTreeTable.filteredNodes, pTreeTable.value);
+          // Replace with explicit type
+          this._syncNodesParams(
+            pTreeTable.filteredNodes as any,
+            pTreeTable.value
+          );
 
           pTreeTable.filteredNodes = [];
           const isStrictMode = pTreeTable.filterMode === 'strict';
@@ -242,12 +250,25 @@ export class TreeTableUnsortDirective {
                         copyNode,
                         paramsWithoutNode
                       ) ||
-                      pTreeTable.isFilterMatched(copyNode, paramsWithoutNode)
+                      // Replace with explicit type
+                      pTreeTable.isFilterMatched(
+                        copyNode,
+                        paramsWithoutNode as any
+                      )
                     )) ||
                   (!isStrictMode &&
                     !(
-                      pTreeTable.isFilterMatched(copyNode, paramsWithoutNode) ||
-                      pTreeTable.findFilteredNodes(copyNode, paramsWithoutNode)
+                      // Replace with explicit type
+                      (
+                        pTreeTable.isFilterMatched(
+                          copyNode,
+                          paramsWithoutNode as any
+                        ) ||
+                        pTreeTable.findFilteredNodes(
+                          copyNode,
+                          paramsWithoutNode
+                        )
+                      )
                     ))
                 ) {
                   localMatch = false;
@@ -290,12 +311,14 @@ export class TreeTableUnsortDirective {
                     ) ||
                       pTreeTable.isFilterMatched(
                         copyNodeForGlobal,
-                        paramsWithoutNode
+                        // Replace with explicit type
+                        paramsWithoutNode as any
                       ))) ||
                   (!isStrictMode &&
                     (pTreeTable.isFilterMatched(
                       copyNodeForGlobal,
-                      paramsWithoutNode
+                      // Replace with explicit type
+                      paramsWithoutNode as any
                     ) ||
                       pTreeTable.findFilteredNodes(
                         copyNodeForGlobal,
@@ -314,7 +337,8 @@ export class TreeTableUnsortDirective {
             }
 
             if (matches) {
-              copyNode._idx = idx;
+              // Replace with explicit type
+              (copyNode as any)._idx = idx;
               pTreeTable.filteredNodes.push(copyNode);
             }
 
@@ -367,7 +391,8 @@ export class TreeTableUnsortDirective {
             const copyChildNode = { ...childNode };
             if (pTreeTable.isFilterMatched(copyChildNode, paramsWithoutNode)) {
               matched = true;
-              copyChildNode._idx = idx;
+              // Replace with explicit type
+              (copyChildNode as any)._idx = idx;
               node.children.push(copyChildNode);
             }
           }
