@@ -78,8 +78,8 @@ jobs:
         working-directory: dist/cps-ui-kit
         run: npm version
 
-      # - name: Publish to NPM registry
-      #   working-directory: dist/cps-ui-kit
-      #   run: npm publish
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - name: Publish to NPM registry
+        working-directory: dist/cps-ui-kit
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
