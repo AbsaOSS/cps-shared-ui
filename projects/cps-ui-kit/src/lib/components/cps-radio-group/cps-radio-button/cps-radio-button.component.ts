@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
-import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
+import { CpsTooltipDirective } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 
 let nextUniqueId = 0;
 

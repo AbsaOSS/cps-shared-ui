@@ -30,7 +30,7 @@ import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsAutocompleteAppearanceType =

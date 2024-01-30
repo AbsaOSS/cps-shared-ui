@@ -19,7 +19,7 @@ import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils';
-import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 /**

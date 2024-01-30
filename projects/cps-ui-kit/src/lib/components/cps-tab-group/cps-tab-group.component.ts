@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
-import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipDirective } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { getCSSColor } from '../../utils/colors-utils';
 import {
   Subscription,

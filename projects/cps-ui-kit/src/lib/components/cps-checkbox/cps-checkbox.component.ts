@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 
@@ -40,7 +40,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
 
   /**
-   * When it is not an empty string, an info icon is displayed to show text for more info.
+   * When it is not an empty string, an info icon is displayed to show text for more info. test
    * @group Props
    */
   @Input() infoTooltip = '';

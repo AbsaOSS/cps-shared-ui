@@ -5,7 +5,7 @@ import {
   CpsRadioGroupComponent,
   CpsRadioOption
 } from '../cps-radio-group.component';
-import { CpsTooltipDirective } from '../../../directives/cps-tooltip.directive';
+import { CpsTooltipDirective } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
 
 /**

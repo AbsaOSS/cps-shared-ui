@@ -17,7 +17,7 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
   CpsTooltipPosition
-} from '../../directives/cps-tooltip.directive';
+} from '../../directives/cps-tooltip/cps-tooltip.directive';
 
 export type CpsButtonToggleOption = {
   value: any;

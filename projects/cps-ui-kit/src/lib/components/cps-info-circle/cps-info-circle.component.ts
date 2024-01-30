@@ -3,7 +3,7 @@ import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
   CpsTooltipPosition
-} from '../../directives/cps-tooltip.directive';
+} from '../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
  * CpsInfoCircleComponent is a component that provides information by means of the info icon with the tooltip on hover.

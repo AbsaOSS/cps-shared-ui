@@ -5,14 +5,14 @@ import {
   Input,
   OnDestroy
 } from '@angular/core';
-import { convertSize } from '../utils/internal/size-utils';
+import { convertSize } from '../../utils/internal/size-utils';
 
 export type CpsTooltipPosition = 'top' | 'bottom' | 'left' | 'right';
 export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
 /**
  * CpsTooltipDirective provides advisory information for a target element.
- * @group Directives
+ * @group Components
  */
 @Directive({
   selector: '[cpsTooltip]',

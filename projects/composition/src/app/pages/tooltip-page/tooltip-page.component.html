@@ -1,94 +1,97 @@
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">
-    Different tooltip positions (auto repositioning if doesn't fit the screen)
+<app-component-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="tooltip-elems-group">
+    <div class="tooltip-elems-group-title">
+      Different tooltip positions (auto repositioning if doesn't fit the screen)
+    </div>
+    <div class="tooltip-elems-group-row">
+      <cps-button
+        cpsTooltip="Bottom tooltip"
+        tooltipPosition="bottom"
+        label="Bottom tooltip">
+      </cps-button>
+      <cps-button
+        cpsTooltip="Left tooltip"
+        tooltipPosition="left"
+        label="Left tooltip">
+      </cps-button>
+      <cps-button
+        cpsTooltip="Right tooltip"
+        tooltipPosition="right"
+        label="Right tooltip">
+      </cps-button>
+      <cps-button
+        cpsTooltip="Top tooltip"
+        tooltipPosition="top"
+        label="Top tooltip">
+      </cps-button>
+    </div>
   </div>
-  <div class="tooltip-elems-group-row">
+
+  <div class="tooltip-elems-group">
+    <div class="tooltip-elems-group-title">Different opening methods</div>
+    <div class="tooltip-elems-group-elem-left">
+      <cps-button
+        label="Open on hover"
+        tooltipPosition="bottom"
+        cpsTooltip="Triggered on hover"
+        tooltipOpenOn="hover">
+      </cps-button>
+    </div>
+
     <cps-button
-      cpsTooltip="Bottom tooltip"
-      tooltipPosition="bottom"
-      label="Bottom tooltip">
-    </cps-button>
-    <cps-button
-      cpsTooltip="Left tooltip"
-      tooltipPosition="left"
-      label="Left tooltip">
-    </cps-button>
-    <cps-button
-      cpsTooltip="Right tooltip"
+      label="Open on click"
       tooltipPosition="right"
-      label="Right tooltip">
+      cpsTooltip="Triggered on click"
+      tooltipOpenOn="click">
     </cps-button>
+  </div>
+
+  <div class="tooltip-elems-group">
+    <div class="tooltip-elems-group-title">Long open and close delays</div>
+
+    <div class="tooltip-elems-group-elem-left">
+      <cps-button
+        cpsTooltip="1 second open delay"
+        label="Open delay"
+        tooltipPosition="bottom"
+        [tooltipOpenDelay]="1000">
+      </cps-button>
+    </div>
+
     <cps-button
-      cpsTooltip="Top tooltip"
-      tooltipPosition="top"
-      label="Top tooltip">
+      cpsTooltip="1 second close delay"
+      label="Close delay"
+      tooltipPosition="right"
+      [tooltipCloseDelay]="1000">
     </cps-button>
   </div>
-</div>
 
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Different opening methods</div>
-  <div class="tooltip-elems-group-elem-left">
+  <div class="tooltip-elems-group">
+    <div class="tooltip-elems-group-title">
+      Persistent tooltip with inner HTML and custom style
+    </div>
     <cps-button
-      label="Open on hover"
-      tooltipPosition="bottom"
-      cpsTooltip="Triggered on hover"
-      tooltipOpenOn="hover">
+      cpsTooltip="<span class='ttip-hdr'>Follow the link</span> <a href='https://www.google.com/' target=”_blank”>Google</a>"
+      tooltipPosition="right"
+      tooltipContentClass="my-tooltip-content"
+      label="Tooltip with clickable content"
+      [tooltipPersistent]="true">
     </cps-button>
   </div>
 
-  <cps-button
-    label="Open on click"
-    tooltipPosition="right"
-    cpsTooltip="Triggered on click"
-    tooltipOpenOn="click">
-  </cps-button>
-</div>
-
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Long open and close delays</div>
-
-  <div class="tooltip-elems-group-elem-left">
-    <cps-button
-      cpsTooltip="1 second open delay"
-      label="Open delay"
-      tooltipPosition="bottom"
-      [tooltipOpenDelay]="1000">
-    </cps-button>
+  <div class="tooltip-elems-group">
+    <div class="tooltip-elems-group-title">Tooltip disabled state</div>
+    <div class="tooltip-elems-group-elem-left">
+      <cps-button
+        tooltipPosition="bottom"
+        [label]="ttipEnabled ? 'Enabled tooltip' : 'Disabled tooltip'"
+        [tooltipDisabled]="!ttipEnabled"
+        cpsTooltip="<span><strong>Some bold text</strong></span>">
+      </cps-button>
+    </div>
+    <cps-checkbox
+      [(ngModel)]="ttipEnabled"
+      [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
   </div>
-
-  <cps-button
-    cpsTooltip="1 second close delay"
-    label="Close delay"
-    tooltipPosition="right"
-    [tooltipCloseDelay]="1000">
-  </cps-button>
-</div>
-
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">
-    Persistent tooltip with inner HTML and custom style
-  </div>
-  <cps-button
-    cpsTooltip="<span class='ttip-hdr'>Follow the link</span> <a href='https://www.google.com/' target=”_blank”>Google</a>"
-    tooltipPosition="right"
-    tooltipContentClass="my-tooltip-content"
-    label="Tooltip with clickable content"
-    [tooltipPersistent]="true">
-  </cps-button>
-</div>
-
-<div class="tooltip-elems-group">
-  <div class="tooltip-elems-group-title">Tooltip disabled state</div>
-  <div class="tooltip-elems-group-elem-left">
-    <cps-button
-      tooltipPosition="bottom"
-      [label]="ttipEnabled ? 'Enabled tooltip' : 'Disabled tooltip'"
-      [tooltipDisabled]="!ttipEnabled"
-      cpsTooltip="<span><strong>Some bold text</strong></span>">
-    </cps-button>
-  </div>
-  <cps-checkbox
-    [(ngModel)]="ttipEnabled"
-    [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
-</div>
+</app-component-docs-viewer>
