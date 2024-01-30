@@ -40,7 +40,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
 
   /**
-   * When it is not an empty string, an info icon is displayed to show text for more info. test
+   * When it is not an empty string, an info icon is displayed to show text for more info.
    * @group Props
    */
   @Input() infoTooltip = '';
