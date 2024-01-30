@@ -44,6 +44,7 @@ jobs:
   publish:
     needs: version-bump
     runs-on: ubuntu-latest
+    if: always() && !cancelled() && !failure()
 
     steps:
       - name: Checkout code
