@@ -23,7 +23,7 @@ import {
 export class TabGroupPageComponent {
   selectedTabIndex = 1;
 
-  changeTab({ currentTabIndex }: TabChangeEvent) {
-    console.log('Tab changed to: ' + currentTabIndex);
+  changeTab({ newIndex }: TabChangeEvent) {
+    console.log('Tab changed to: ' + newIndex);
   }
 }
