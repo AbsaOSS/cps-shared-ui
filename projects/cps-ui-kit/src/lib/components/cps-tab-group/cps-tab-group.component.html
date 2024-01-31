@@ -1,6 +1,11 @@
 <div
   class="cps-tabs"
-  [ngClass]="{ 'cps-tabs-subtabs': isSubTabs }"
+  [ngClass]="{
+    'cps-tabs-subtabs': isSubTabs,
+    'cps-tabs-center-aligned': alignment === 'center',
+    'cps-tabs-right-aligned': alignment === 'right',
+    'cps-tabs-stretched': stretched
+  }"
   [ngStyle]="{ 'background-color': tabsBackground }">
   <div
     class="nav-btn nav-btn-back"

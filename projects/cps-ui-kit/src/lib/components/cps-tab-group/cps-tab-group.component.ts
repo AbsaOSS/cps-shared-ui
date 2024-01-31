@@ -38,6 +38,7 @@ export interface TabChangeEvent {
 }
 
 export type CpsTabsAnimationType = 'slide' | 'fade';
+export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
 
 /**
  * CpsTabGroupComponent is a navigation component that displays items as tab headers.
@@ -94,6 +95,18 @@ export class CpsTabGroupComponent
    * @group Props
    */
   @Input() isSubTabs = false;
+
+  /**
+   * Horizontal alignment of tabs.
+   * @group Props
+   */
+  @Input() alignment: CpsTabsAlignmentType = 'left';
+
+  /**
+   * Determines whether to stretch tabs to fill the available horizontal space.
+   * @group Props
+   */
+  @Input() stretched = false;
 
   /**
    * Transition options of how content appears, it can be "slide" or "fade".
