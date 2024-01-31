@@ -9,6 +9,7 @@
   [ngStyle]="{ 'background-color': tabsBackground }">
   <div
     class="nav-btn nav-btn-back"
+    [ngStyle]="{ 'background-color': navButtonsBackground }"
     *ngIf="!backBtnVisible"
     #backBtn
     (click)="navBackward()">
@@ -19,7 +20,7 @@
       <li
         *ngIf="tab.tooltipText"
         class="cps-tab"
-        (click)="!tab.disabled ? selectTab(tabIndex) : ''"
+        (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
         [ngClass]="{ active: tab.active, disabled: tab.disabled }"
         [cpsTooltip]="tab.tooltipText"
         tooltipOpenDelay="1000"
@@ -39,7 +40,7 @@
       <li
         *ngIf="!tab.tooltipText"
         class="cps-tab"
-        (click)="!tab.disabled ? selectTab(tabIndex) : ''"
+        (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
         [ngClass]="{ active: tab.active, disabled: tab.disabled }">
         <ng-container
           *ngTemplateOutlet="
@@ -53,6 +54,7 @@
   </ul>
   <div
     class="nav-btn nav-btn-forward"
+    [ngStyle]="{ 'background-color': navButtonsBackground }"
     *ngIf="!forwardBtnVisible"
     #forwardBtn
     (click)="navForward()">

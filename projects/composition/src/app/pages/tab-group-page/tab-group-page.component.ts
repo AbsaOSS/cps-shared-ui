@@ -21,10 +21,9 @@ import {
   host: { class: 'composition-page' }
 })
 export class TabGroupPageComponent {
-  selectedTabIndex = 0;
+  selectedTabIndex = 1;
 
-  changeTab({ currentTabIndex }: TabChangeEvent) {
-    this.selectedTabIndex = currentTabIndex;
-    console.log('Tab changed to: ' + currentTabIndex);
+  changeTab({ newIndex }: TabChangeEvent) {
+    console.log('Tab changed to: ' + newIndex);
   }
 }
