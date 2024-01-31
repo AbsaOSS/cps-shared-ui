@@ -184,7 +184,7 @@ export class CpsTabGroupComponent
   }
 
   ngAfterContentInit() {
-    this.selectTab();
+    this.selectTab(true);
   }
 
   ngAfterViewInit() {
@@ -211,7 +211,7 @@ export class CpsTabGroupComponent
     this.selectTab();
   }
 
-  selectTab() {
+  selectTab(silent = false) {
     const _tabs = this.tabs.toArray();
     const currentSelectedTab = _tabs && _tabs[this._previousTabIndex];
 
@@ -222,10 +222,12 @@ export class CpsTabGroupComponent
       return;
     }
 
-    this.beforeTabChanged.emit({
-      previousIndex: this._previousTabIndex,
-      newIndex: this._currentTabIndex
-    });
+    if (!silent) {
+      this.beforeTabChanged.emit({
+        previousIndex: this._previousTabIndex,
+        newIndex: this._currentTabIndex
+      });
+    }
 
     if (this.animationType === 'slide') {
       this.animationState =
@@ -233,18 +235,22 @@ export class CpsTabGroupComponent
           ? 'slideLeft'
           : 'slideRight';
 
-      this.afterTabChanged.emit({
-        previousIndex: this._previousTabIndex,
-        newIndex: this._currentTabIndex
-      });
-    } else if (this.animationType === 'fade') {
-      this.animationState = 'fadeOut';
-      setTimeout(() => {
-        this.animationState = 'fadeIn';
+      if (!silent) {
         this.afterTabChanged.emit({
           previousIndex: this._previousTabIndex,
           newIndex: this._currentTabIndex
         });
+      }
+    } else if (this.animationType === 'fade') {
+      this.animationState = 'fadeOut';
+      setTimeout(() => {
+        this.animationState = 'fadeIn';
+        if (!silent) {
+          this.afterTabChanged.emit({
+            previousIndex: this._previousTabIndex,
+            newIndex: this._currentTabIndex
+          });
+        }
       }, 100);
     }
   }
