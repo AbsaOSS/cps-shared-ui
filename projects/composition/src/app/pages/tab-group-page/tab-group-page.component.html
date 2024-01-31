@@ -5,6 +5,7 @@
   </div>
   <cps-tab-group
     tabsBackground="bg-light"
+    alignment="center"
     class="tab-example--center-aligned"
     (afterTabChanged)="changeTab($event)">
     <cps-tab label="Tab 1" badgeValue="7" badgeTooltip="Badge tooltip"
@@ -91,7 +92,7 @@
 <div class="tabs-elems-group">
   <div class="tabs-elems-group-title">Right-aligned tabs with icons</div>
   <cps-tab-group
-    class="tab-example--right-aligned"
+    alignment="right"
     (afterTabChanged)="changeTab($event)"
     tabsBackground="bg-light">
     <cps-tab label="Tab 1" icon="survivorship" id="tab1"
@@ -99,6 +100,18 @@
     >
     <cps-tab label="Tab 2" icon="kris">Content of tab 2</cps-tab>
     <cps-tab label="Tab 3" icon="dq">Content of tab 3</cps-tab>
+  </cps-tab-group>
+</div>
+
+<div class="tabs-elems-group">
+  <div class="tabs-elems-group-title">Stretched tabs with slide transition</div>
+  <cps-tab-group
+    tabsBackground="bg-light"
+    [stretched]="true"
+    (afterTabChanged)="changeTab($event)">
+    <cps-tab label="Tab 1">Content of tab 1</cps-tab>
+    <cps-tab label="Tab 2">Content of tab 2</cps-tab>
+    <cps-tab label="Tab 3">Content of tab 3</cps-tab>
   </cps-tab-group>
 </div>
 

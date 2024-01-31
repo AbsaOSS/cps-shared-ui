@@ -100,6 +100,20 @@
         display: none;
       }
     }
+    &.cps-tabs-center-aligned {
+      justify-content: center;
+    }
+    &.cps-tabs-right-aligned {
+      justify-content: flex-end;
+    }
+    &.cps-tabs-stretched {
+      ul {
+        flex-grow: 1;
+        li {
+          flex-grow: 1;
+        }
+      }
+    }
   }
 
   .cps-tabs:not(.cps-tabs-subtabs) {
@@ -142,6 +156,7 @@
     padding: 10px;
     font-family: 'Source Sans Pro', sans-serif;
     color: var(--cps-color-text-dark);
+    overflow-x: hidden;
   }
 
   .cps-tab-content.cps-tab-content-subtabs {
