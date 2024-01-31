@@ -260,6 +260,8 @@ export class CpsTabGroupComponent
 
   private _getWidth(el: any): number {
     let width = el.offsetWidth;
+    if (!width) return width;
+
     const style = getComputedStyle(el);
 
     width -=
