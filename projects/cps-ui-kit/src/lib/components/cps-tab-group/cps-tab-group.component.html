@@ -9,6 +9,7 @@
   [ngStyle]="{ 'background-color': tabsBackground }">
   <div
     class="nav-btn nav-btn-back"
+    [ngStyle]="{ 'background-color': navButtonsBackground }"
     *ngIf="!backBtnVisible"
     #backBtn
     (click)="navBackward()">
@@ -53,6 +54,7 @@
   </ul>
   <div
     class="nav-btn nav-btn-forward"
+    [ngStyle]="{ 'background-color': navButtonsBackground }"
     *ngIf="!forwardBtnVisible"
     #forwardBtn
     (click)="navForward()">

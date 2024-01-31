@@ -124,7 +124,13 @@ export class CpsTabGroupComponent
   @Input() animationType: CpsTabsAnimationType = 'slide';
 
   /**
-   * Background styling of tabs.
+   * Background color of navigation buttons.
+   * @group Props
+   */
+  @Input() navButtonsBackground = 'inherit';
+
+  /**
+   * Background color of tabs.
    * @group Props
    */
   @Input() tabsBackground = 'inherit';
@@ -164,6 +170,7 @@ export class CpsTabGroupComponent
 
   ngOnInit(): void {
     this.tabsBackground = getCSSColor(this.tabsBackground);
+    this.navButtonsBackground = getCSSColor(this.navButtonsBackground);
 
     this.windowResize$ = fromEvent(window, 'resize')
       .pipe(debounceTime(50), distinctUntilChanged())
