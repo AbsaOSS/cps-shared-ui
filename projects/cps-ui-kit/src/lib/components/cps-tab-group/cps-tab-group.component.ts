@@ -15,10 +15,12 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -33,8 +35,8 @@ import {
 } from 'rxjs';
 
 export interface TabChangeEvent {
-  currentTabIndex: number;
-  newTabIndex?: number;
+  previousIndex: number;
+  newIndex: number;
 }
 
 export type CpsTabsAnimationType = 'slide' | 'fade';
@@ -82,13 +84,20 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
   ]
 })
 export class CpsTabGroupComponent
-  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
+  implements OnInit, AfterContentInit, AfterViewInit, OnChanges, OnDestroy
 {
   /**
    * Index of the selected tab.
    * @group Props
    */
-  @Input() selectedIndex = 0;
+  @Input() set selectedIndex(value: number) {
+    this._previousTabIndex = this._currentTabIndex;
+    this._currentTabIndex = value;
+  }
+
+  get selectedIndex(): number {
+    return this._currentTabIndex;
+  }
 
   /**
    * Determines whether to apply an alternative 'subtabs' styling.
@@ -122,14 +131,14 @@ export class CpsTabGroupComponent
 
   /**
    * Callback to invoke before tab change.
-   * @param {TabChangeEvent} any - tab changed.
+   * @param {TabChangeEvent} any - tab change event.
    * @group Emits
    */
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
 
   /**
    * Callback to invoke after tab change.
-   * @param {TabChangeEvent} any - tab changed.
+   * @param {TabChangeEvent} any - tab change event.
    * @group Emits
    */
   @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
@@ -147,6 +156,9 @@ export class CpsTabGroupComponent
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
 
+  private _currentTabIndex = 0;
+  private _previousTabIndex = 0;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
@@ -158,8 +170,14 @@ export class CpsTabGroupComponent
       .subscribe(() => this.onResize());
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.selectedIndex && !changes.selectedIndex.firstChange) {
+      this.selectTab();
+    }
+  }
+
   ngAfterContentInit() {
-    this.selectTab(this.selectedIndex);
+    this.selectTab();
   }
 
   ngAfterViewInit() {
@@ -181,37 +199,44 @@ export class CpsTabGroupComponent
     return this.tabs.find((t) => t.active);
   }
 
-  selectTab(newSelectedIndex: number) {
-    const _tabs = this.tabs.toArray();
-    const currentSelectedTab = _tabs && _tabs[this.selectedIndex];
+  onTabClick(index: number) {
+    this.selectedIndex = index;
+    this.selectTab();
+  }
 
-    this.beforeTabChanged.emit({
-      currentTabIndex: this.selectedIndex,
-      newTabIndex: newSelectedIndex
-    });
+  selectTab() {
+    const _tabs = this.tabs.toArray();
+    const currentSelectedTab = _tabs && _tabs[this._previousTabIndex];
 
     currentSelectedTab && (currentSelectedTab.active = false);
-    const newSelectedTab = _tabs && _tabs[newSelectedIndex];
+    const newSelectedTab = _tabs && _tabs[this._currentTabIndex];
     newSelectedTab && (newSelectedTab.active = true);
-    if (newSelectedIndex === this.selectedIndex) {
+    if (this._currentTabIndex === this._previousTabIndex) {
       return;
     }
 
+    this.beforeTabChanged.emit({
+      previousIndex: this._previousTabIndex,
+      newIndex: this._currentTabIndex
+    });
+
     if (this.animationType === 'slide') {
       this.animationState =
-        newSelectedIndex < this.selectedIndex ? 'slideLeft' : 'slideRight';
-      this.selectedIndex = newSelectedIndex;
+        this._currentTabIndex < this._previousTabIndex
+          ? 'slideLeft'
+          : 'slideRight';
 
       this.afterTabChanged.emit({
-        currentTabIndex: newSelectedIndex
+        previousIndex: this._previousTabIndex,
+        newIndex: this._currentTabIndex
       });
     } else if (this.animationType === 'fade') {
       this.animationState = 'fadeOut';
       setTimeout(() => {
         this.animationState = 'fadeIn';
-        this.selectedIndex = newSelectedIndex;
         this.afterTabChanged.emit({
-          currentTabIndex: newSelectedIndex
+          previousIndex: this._previousTabIndex,
+          newIndex: this._currentTabIndex
         });
       }, 100);
     }

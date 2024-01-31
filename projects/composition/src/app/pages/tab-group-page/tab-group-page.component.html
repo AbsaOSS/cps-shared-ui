@@ -7,6 +7,7 @@
     tabsBackground="bg-light"
     alignment="center"
     class="tab-example--center-aligned"
+    [selectedIndex]="selectedTabIndex"
     (afterTabChanged)="changeTab($event)">
     <cps-tab label="Tab 1" badgeValue="7" badgeTooltip="Badge tooltip"
       >Content of tab 1</cps-tab
