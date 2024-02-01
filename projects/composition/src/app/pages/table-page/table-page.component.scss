@@ -3,4 +3,8 @@
   .expanded-row-contents {
     color: red;
   }
+
+  ::ng-deep .cps-tab-content-wrap {
+    padding: 10px;
+  }
 }

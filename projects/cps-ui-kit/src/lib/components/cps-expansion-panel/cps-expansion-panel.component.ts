@@ -1,15 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
+  AnimationBuilder,
+  AnimationFactory,
+  AnimationPlayer,
   animate,
   state,
   style,
   transition,
   trigger
 } from '@angular/animations';
+
+const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
 
 /**
  * CpsExpansionPanelComponent is a component that provides content on expansion.
@@ -22,25 +37,6 @@ import {
   templateUrl: './cps-expansion-panel.component.html',
   styleUrls: ['./cps-expansion-panel.component.scss'],
   animations: [
-    trigger('panelContent', [
-      state(
-        'hidden',
-        style({
-          height: '0',
-          visibility: 'hidden'
-        })
-      ),
-      state(
-        'visible',
-        style({
-          height: '*'
-        })
-      ),
-      transition('visible <=> hidden', [
-        animate('0.2s cubic-bezier(0.4, 0, 0.2, 1)')
-      ]),
-      transition('void => *', animate(0))
-    ]),
     trigger('panelHeader', [
       state(
         'hidden',
@@ -55,14 +51,12 @@ import {
         }),
         { params: { borderStyle: '' } }
       ),
-      transition('visible <=> hidden', [
-        animate('0.2s cubic-bezier(0.4, 0, 0.2, 1)')
-      ]),
+      transition('visible <=> hidden', [animate(transitionType)]),
       transition('void => *', animate(0))
     ])
   ]
 })
-export class CpsExpansionPanelComponent implements OnInit {
+export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
   /**
    * Title of the expansionPanel element.
    * @group Props
@@ -137,6 +131,41 @@ export class CpsExpansionPanelComponent implements OnInit {
    */
   @Output() afterExpand: EventEmitter<void> = new EventEmitter<void>();
 
+  @ViewChild('panelContentElem') panelContentElem!: ElementRef;
+
+  private _contentExpandAnimation: AnimationFactory;
+  private _contentCollapseAnimation: AnimationFactory;
+  private _contentAnimationPlayer: AnimationPlayer | undefined;
+
+  constructor(
+    private _animationBuilder: AnimationBuilder,
+    private _renderer: Renderer2
+  ) {
+    this._contentCollapseAnimation = this._animationBuilder.build([
+      style({
+        height: '*'
+      }),
+      animate(
+        transitionType,
+        style({
+          height: 0
+        })
+      )
+    ]);
+
+    this._contentExpandAnimation = this._animationBuilder.build([
+      style({
+        height: 0
+      }),
+      animate(
+        transitionType,
+        style({
+          height: '*'
+        })
+      )
+    ]);
+  }
+
   ngOnInit(): void {
     this.borderColor = getCSSColor(this.borderColor);
     this.backgroundColor = getCSSColor(this.backgroundColor);
@@ -144,15 +173,58 @@ export class CpsExpansionPanelComponent implements OnInit {
     this.width = convertSize(this.width);
   }
 
+  ngAfterViewInit(): void {
+    if (!this.isExpanded) {
+      this._updateContentVisibilityStyles(false);
+    }
+  }
+
   toggleExpansion(): void {
-    if (!this.disabled) {
-      this.isExpanded = !this.isExpanded;
-      if (this.isExpanded) {
-        this.afterExpand.emit();
-      }
-      if (!this.isExpanded) {
-        this.afterCollapse.emit();
-      }
+    if (this.disabled || this._contentAnimationPlayer) return;
+
+    const el = this.panelContentElem?.nativeElement;
+    if (this.isExpanded) {
+      this._contentAnimationPlayer = this._contentCollapseAnimation.create(el);
+      this._contentAnimationPlayer.onDone(() => {
+        this._updateContentVisibilityStyles(false, el);
+      });
+    } else {
+      this._updateContentVisibilityStyles(true, el);
+      this._contentAnimationPlayer = this._contentExpandAnimation.create(el);
+    }
+
+    this._contentAnimationPlayer.onStart(() => {
+      this._renderer.setStyle(el, 'overflow', 'hidden');
+    });
+
+    this._contentAnimationPlayer.onDone(() => {
+      this._renderer.removeStyle(el, 'overflow');
+      this._contentAnimationPlayer?.destroy();
+      this._contentAnimationPlayer = undefined;
+    });
+
+    this._contentAnimationPlayer.play();
+
+    this.isExpanded = !this.isExpanded;
+
+    if (this.isExpanded) {
+      this.afterExpand.emit();
+    }
+    if (!this.isExpanded) {
+      this.afterCollapse.emit();
+    }
+  }
+
+  private _updateContentVisibilityStyles(isVisible: boolean, el?: any) {
+    el = el || this.panelContentElem?.nativeElement;
+    if (!el) return;
+
+    if (isVisible) {
+      this._renderer.removeStyle(el, 'height');
+      this._renderer.removeStyle(el, 'visibility');
+    } else {
+      this._renderer.setStyle(el, 'height', '0');
+      this._renderer.setStyle(el, 'visibility', 'hidden');
     }
   }
 }

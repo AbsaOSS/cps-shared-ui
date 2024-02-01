@@ -11,9 +11,13 @@
     }
 
     ::ng-deep .tab-example--center-aligned {
-      .cps-tab-content {
-        margin: 15px 20%;
+      .cps-tab-content-wrap {
+        margin: 0 20%;
       }
+    }
+
+    ::ng-deep .cps-tab-content-wrap {
+      padding: 10px;
     }
   }
 }

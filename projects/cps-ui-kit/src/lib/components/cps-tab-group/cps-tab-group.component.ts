@@ -34,7 +34,7 @@ import {
   fromEvent
 } from 'rxjs';
 
-export interface TabChangeEvent {
+export interface CpsTabChangeEvent {
   previousIndex: number;
   newIndex: number;
 }
@@ -112,6 +112,18 @@ export class CpsTabGroupComponent
   @Input() alignment: CpsTabsAlignmentType = 'left';
 
   /**
+   * Class to apply to the tab content wrapper.
+   * @group Props
+   */
+  @Input() contentWrapClass = '';
+
+  /**
+   * Class to apply to the tab header.
+   * @group Props
+   */
+  @Input() headerClass = '';
+
+  /**
    * Determines whether to stretch tabs to fill the available horizontal space.
    * @group Props
    */
@@ -137,17 +149,17 @@ export class CpsTabGroupComponent
 
   /**
    * Callback to invoke before tab change.
-   * @param {TabChangeEvent} any - tab change event.
+   * @param {CpsTabChangeEvent} any - tab change event.
    * @group Emits
    */
-  @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
+  @Output() beforeTabChanged = new EventEmitter<CpsTabChangeEvent>();
 
   /**
    * Callback to invoke after tab change.
-   * @param {TabChangeEvent} any - tab change event.
+   * @param {CpsTabChangeEvent} any - tab change event.
    * @group Emits
    */
-  @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
+  @Output() afterTabChanged = new EventEmitter<CpsTabChangeEvent>();
 
   @ViewChild('tabsList') tabsList!: ElementRef;
   @ViewChild('backBtn') backBtn?: ElementRef;
