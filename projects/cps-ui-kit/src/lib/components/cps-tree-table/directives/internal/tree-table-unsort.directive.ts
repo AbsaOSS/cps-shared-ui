@@ -358,8 +358,8 @@ export class TreeTableUnsortDirective {
             pTreeTable.totalRecords = pTreeTable.filteredNodes
               ? pTreeTable.filteredNodes.length
               : pTreeTable.value
-              ? pTreeTable.value.length
-              : 0;
+                ? pTreeTable.value.length
+                : 0;
           }
         }
       }

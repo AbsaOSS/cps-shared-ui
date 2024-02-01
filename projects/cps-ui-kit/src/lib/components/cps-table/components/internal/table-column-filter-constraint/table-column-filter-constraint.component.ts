@@ -105,7 +105,10 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
     return this.categoryAutocompleteComponent?.isOpened || false;
   }
 
-  constructor(@Optional() public dt: Table, @Optional() public tt: TreeTable) {
+  constructor(
+    @Optional() public dt: Table,
+    @Optional() public tt: TreeTable
+  ) {
     this._tableInstance = dt || tt;
   }
 

@@ -394,8 +394,8 @@ export class CpsSelectComponent
     const val = byValue
       ? option
       : this.returnObject
-      ? option
-      : option[this.optionValue];
+        ? option
+        : option[this.optionValue];
     if (this.multiple) {
       let res = [] as any;
       if (includes(this.value, val)) {
