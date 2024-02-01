@@ -4,7 +4,7 @@ import {
   CpsIconComponent,
   CpsTabGroupComponent,
   CpsTabComponent,
-  TabChangeEvent
+  CpsTabChangeEvent
 } from 'cps-ui-kit';
 
 @Component({
@@ -23,7 +23,7 @@ import {
 export class TabGroupPageComponent {
   selectedTabIndex = 1;
 
-  changeTab({ newIndex }: TabChangeEvent) {
+  changeTab({ newIndex }: CpsTabChangeEvent) {
     console.log('Tab changed to: ' + newIndex);
   }
 }
