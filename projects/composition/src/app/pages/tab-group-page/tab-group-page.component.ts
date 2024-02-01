@@ -28,7 +28,7 @@ export class TabGroupPageComponent {
   componentData = ComponentData;
   selectedTabIndex = 1;
 
-  changeTab({ newIndex }: TabChangeEvent | any) {
+  changeTab({ newIndex }: TabChangeEvent) {
     console.log('Tab changed to: ' + newIndex);
   }
 }
