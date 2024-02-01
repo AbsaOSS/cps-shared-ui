@@ -34,9 +34,7 @@
       <cps-icon icon="chevron-down" size="small" color="text-dark"> </cps-icon>
     </span>
   </div>
-  <div
-    class="cps-expansion-panel-content"
-    [@panelContent]="isExpanded ? 'visible' : 'hidden'">
+  <div class="cps-expansion-panel-content" #panelContentElem>
     <div class="cps-expansion-panel-content-inner">
       <ng-content></ng-content>
     </div>

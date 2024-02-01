@@ -63,7 +63,7 @@ $header-active-background: var(--cps-color-highlight-active);
     }
 
     &-content {
-      overflow: hidden;
+      overflow: auto;
       color: $header-text-color;
       font-size: 16px;
       &-inner {
@@ -74,9 +74,6 @@ $header-active-background: var(--cps-color-highlight-active);
     &.expanded {
       .cps-expansion-panel-content {
         max-height: 500px;
-      }
-      .cps-expansion-panel-content:not(.ng-animating) {
-        overflow: auto;
       }
       .cps-expansion-panel-chevron {
         transform: rotate(180deg);
