@@ -1,5 +1,4 @@
 :host {
-  overflow-x: hidden;
   .tabs-elems-group {
     margin-bottom: 4px;
 
@@ -12,17 +11,8 @@
     }
 
     ::ng-deep .tab-example--center-aligned {
-      .cps-tabs {
-        justify-content: center;
-      }
       .cps-tab-content {
         margin: 15px 20%;
-      }
-    }
-
-    ::ng-deep .tab-example--right-aligned {
-      .cps-tabs {
-        justify-content: right;
       }
     }
   }

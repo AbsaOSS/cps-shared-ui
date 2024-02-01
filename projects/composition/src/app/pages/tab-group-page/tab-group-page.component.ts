@@ -25,11 +25,10 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class TabGroupPageComponent {
-  selectedTabIndex = 0;
   componentData = ComponentData;
+  selectedTabIndex = 1;
 
-  changeTab({ currentTabIndex }: TabChangeEvent) {
-    this.selectedTabIndex = currentTabIndex;
-    console.log('Tab changed to: ' + currentTabIndex);
+  changeTab({ newIndex }: TabChangeEvent | any) {
+    console.log('Tab changed to: ' + newIndex);
   }
 }

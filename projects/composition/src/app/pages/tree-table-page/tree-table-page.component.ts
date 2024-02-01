@@ -552,7 +552,7 @@ export class TreeTablePageComponent implements OnInit {
     console.log(rows);
   }
 
-  changeTab({ currentTabIndex }: TabChangeEvent) {
-    this.selectedTabIndex = currentTabIndex;
+  changeTab({ newIndex }: TabChangeEvent) {
+    this.selectedTabIndex = newIndex;
   }
 }

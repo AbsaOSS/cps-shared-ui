@@ -15,10 +15,12 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -33,11 +35,12 @@ import {
 } from 'rxjs';
 
 export interface TabChangeEvent {
-  currentTabIndex: number;
-  newTabIndex?: number;
+  previousIndex: number;
+  newIndex: number;
 }
 
 export type CpsTabsAnimationType = 'slide' | 'fade';
+export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
 
 /**
  * CpsTabGroupComponent is a navigation component that displays items as tab headers.
@@ -81,13 +84,20 @@ export type CpsTabsAnimationType = 'slide' | 'fade';
   ]
 })
 export class CpsTabGroupComponent
-  implements OnInit, AfterContentInit, AfterViewInit, OnDestroy
+  implements OnInit, AfterContentInit, AfterViewInit, OnChanges, OnDestroy
 {
   /**
    * Index of the selected tab.
    * @group Props
    */
-  @Input() selectedIndex = 0;
+  @Input() set selectedIndex(value: number) {
+    this._previousTabIndex = this._currentTabIndex;
+    this._currentTabIndex = value;
+  }
+
+  get selectedIndex(): number {
+    return this._currentTabIndex;
+  }
 
   /**
    * Determines whether to apply an alternative 'subtabs' styling.
@@ -96,27 +106,45 @@ export class CpsTabGroupComponent
   @Input() isSubTabs = false;
 
   /**
+   * Horizontal alignment of tabs.
+   * @group Props
+   */
+  @Input() alignment: CpsTabsAlignmentType = 'left';
+
+  /**
+   * Determines whether to stretch tabs to fill the available horizontal space.
+   * @group Props
+   */
+  @Input() stretched = false;
+
+  /**
    * Transition options of how content appears, it can be "slide" or "fade".
    * @group Props
    */
   @Input() animationType: CpsTabsAnimationType = 'slide';
 
   /**
-   * Background styling of tabs.
+   * Background color of navigation buttons.
+   * @group Props
+   */
+  @Input() navButtonsBackground = 'inherit';
+
+  /**
+   * Background color of tabs.
    * @group Props
    */
   @Input() tabsBackground = 'inherit';
 
   /**
    * Callback to invoke before tab change.
-   * @param {TabChangeEvent} any - tab changed.
+   * @param {TabChangeEvent} any - tab change event.
    * @group Emits
    */
   @Output() beforeTabChanged = new EventEmitter<TabChangeEvent>();
 
   /**
    * Callback to invoke after tab change.
-   * @param {TabChangeEvent} any - tab changed.
+   * @param {TabChangeEvent} any - tab change event.
    * @group Emits
    */
   @Output() afterTabChanged = new EventEmitter<TabChangeEvent>();
@@ -134,19 +162,29 @@ export class CpsTabGroupComponent
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
 
+  private _currentTabIndex = 0;
+  private _previousTabIndex = 0;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.tabsBackground = getCSSColor(this.tabsBackground);
+    this.navButtonsBackground = getCSSColor(this.navButtonsBackground);
 
     this.windowResize$ = fromEvent(window, 'resize')
       .pipe(debounceTime(50), distinctUntilChanged())
       .subscribe(() => this.onResize());
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.selectedIndex && !changes.selectedIndex.firstChange) {
+      this.selectTab();
+    }
+  }
+
   ngAfterContentInit() {
-    this.selectTab(this.selectedIndex);
+    this.selectTab(true);
   }
 
   ngAfterViewInit() {
@@ -168,38 +206,51 @@ export class CpsTabGroupComponent
     return this.tabs.find((t) => t.active);
   }
 
-  selectTab(newSelectedIndex: number) {
-    const _tabs = this.tabs.toArray();
-    const currentSelectedTab = _tabs && _tabs[this.selectedIndex];
+  onTabClick(index: number) {
+    this.selectedIndex = index;
+    this.selectTab();
+  }
 
-    this.beforeTabChanged.emit({
-      currentTabIndex: this.selectedIndex,
-      newTabIndex: newSelectedIndex
-    });
+  selectTab(silent = false) {
+    const _tabs = this.tabs.toArray();
+    const currentSelectedTab = _tabs && _tabs[this._previousTabIndex];
 
     currentSelectedTab && (currentSelectedTab.active = false);
-    const newSelectedTab = _tabs && _tabs[newSelectedIndex];
+    const newSelectedTab = _tabs && _tabs[this._currentTabIndex];
     newSelectedTab && (newSelectedTab.active = true);
-    if (newSelectedIndex === this.selectedIndex) {
+    if (this._currentTabIndex === this._previousTabIndex) {
       return;
+    }
+
+    if (!silent) {
+      this.beforeTabChanged.emit({
+        previousIndex: this._previousTabIndex,
+        newIndex: this._currentTabIndex
+      });
     }
 
     if (this.animationType === 'slide') {
       this.animationState =
-        newSelectedIndex < this.selectedIndex ? 'slideLeft' : 'slideRight';
-      this.selectedIndex = newSelectedIndex;
+        this._currentTabIndex < this._previousTabIndex
+          ? 'slideLeft'
+          : 'slideRight';
 
-      this.afterTabChanged.emit({
-        currentTabIndex: newSelectedIndex
-      });
+      if (!silent) {
+        this.afterTabChanged.emit({
+          previousIndex: this._previousTabIndex,
+          newIndex: this._currentTabIndex
+        });
+      }
     } else if (this.animationType === 'fade') {
       this.animationState = 'fadeOut';
       setTimeout(() => {
         this.animationState = 'fadeIn';
-        this.selectedIndex = newSelectedIndex;
-        this.afterTabChanged.emit({
-          currentTabIndex: newSelectedIndex
-        });
+        if (!silent) {
+          this.afterTabChanged.emit({
+            previousIndex: this._previousTabIndex,
+            newIndex: this._currentTabIndex
+          });
+        }
       }, 100);
     }
   }
@@ -247,6 +298,8 @@ export class CpsTabGroupComponent
 
   private _getWidth(el: any): number {
     let width = el.offsetWidth;
+    if (!width) return width;
+
     const style = getComputedStyle(el);
 
     width -=

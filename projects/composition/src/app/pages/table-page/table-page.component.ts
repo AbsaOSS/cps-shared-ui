@@ -382,7 +382,7 @@ export class TablePageComponent implements OnInit {
     this.selCols = columns;
   }
 
-  changeTab({ currentTabIndex }: TabChangeEvent) {
-    this.selectedTabIndex = currentTabIndex;
+  changeTab({ newIndex }: TabChangeEvent) {
+    this.selectedTabIndex = newIndex;
   }
 }
