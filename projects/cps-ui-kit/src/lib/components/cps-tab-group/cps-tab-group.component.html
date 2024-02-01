@@ -74,13 +74,13 @@
         [@slideInOut]="animationState"
         *ngIf="animationType === 'slide'"
         class="cps-tab-content-inner">
-        <ng-container *ngTemplateOutlet="tab.content"></ng-container>
+        <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
       </div>
       <div
         [@fadeInOut]="animationState"
         *ngIf="animationType === 'fade'"
         class="cps-tab-content-inner">
-        <ng-container *ngTemplateOutlet="tab.content"></ng-container>
+        <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
       </div>
     </div>
   </ng-container>
