@@ -1,5 +1,9 @@
 :host {
   background-color: inherit;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
 
   .cps-tabs {
     display: flex;
@@ -149,16 +153,35 @@
     }
   }
 
-  .cps-tab-content {
+  .cps-tab-content-wrap {
+    display: flex;
     position: relative;
     min-height: 100px;
-    padding: 10px;
     font-family: 'Source Sans Pro', sans-serif;
     color: var(--cps-color-text-dark);
-    overflow-x: hidden;
+    flex: 1;
+    border-bottom: none;
+    overflow: hidden;
+    .cps-tab-content {
+      display: block;
+      position: relative;
+      overflow-x: hidden;
+      overflow-y: auto;
+      flex-grow: 1;
+      flex-basis: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      outline: 0;
+      .cps-tab-content-inner {
+        height: 100%;
+        overflow: auto;
+      }
+    }
   }
 
-  .cps-tab-content.cps-tab-content-subtabs {
+  .cps-tab-content-wrap.cps-tab-content-wrap-subtabs {
     background-color: #fff;
   }
 }

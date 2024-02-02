@@ -11,7 +11,7 @@ import {
   CpsButtonToggleComponent,
   CpsButtonToggleOption,
   CpsTableSize,
-  TabChangeEvent,
+  CpsTabChangeEvent,
   CpsColumnFilterMatchMode
 } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -382,7 +382,7 @@ export class TablePageComponent implements OnInit {
     this.selCols = columns;
   }
 
-  changeTab({ newIndex }: TabChangeEvent) {
+  changeTab({ newIndex }: CpsTabChangeEvent) {
     this.selectedTabIndex = newIndex;
   }
 }

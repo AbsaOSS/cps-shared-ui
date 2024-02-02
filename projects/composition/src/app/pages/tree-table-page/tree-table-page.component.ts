@@ -6,7 +6,7 @@ import {
   CpsTreetableRowTogglerDirective,
   CpsTreeTableColumnSortableDirective,
   CpsTreeTableColumnFilterDirective,
-  TabChangeEvent,
+  CpsTabChangeEvent,
   CpsTabComponent,
   CpsTabGroupComponent,
   CpsButtonToggleComponent,
@@ -552,7 +552,7 @@ export class TreeTablePageComponent implements OnInit {
     console.log(rows);
   }
 
-  changeTab({ newIndex }: TabChangeEvent) {
+  changeTab({ newIndex }: CpsTabChangeEvent) {
     this.selectedTabIndex = newIndex;
   }
 }
