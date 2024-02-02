@@ -3,9 +3,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CpsIconComponent, CpsInputComponent, iconNames } from 'cps-ui-kit';
 
+import ComponentData from '../../../api-data/cps-icon.json';
+import { ComponentDocsViewerComponent } from '../../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   standalone: true,
-  imports: [CpsIconComponent, CpsInputComponent, CommonModule, FormsModule],
+  imports: [
+    CpsIconComponent,
+    CpsInputComponent,
+    CommonModule,
+    FormsModule,
+    ComponentDocsViewerComponent
+  ],
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',
   styleUrls: ['./icons-page.component.scss'],
@@ -13,6 +22,7 @@ import { CpsIconComponent, CpsInputComponent, iconNames } from 'cps-ui-kit';
 })
 export class IconsPageComponent implements OnInit {
   filteredIconsList = [] as string[];
+  componentData = ComponentData;
 
   ngOnInit() {
     this.filteredIconsList = iconNames;

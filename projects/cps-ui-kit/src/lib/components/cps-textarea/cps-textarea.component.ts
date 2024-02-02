@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
  * CpsTextareaComponent is a textarea component.

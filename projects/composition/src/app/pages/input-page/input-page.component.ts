@@ -10,9 +10,17 @@ import {
 } from '@angular/forms';
 import { CpsInputComponent } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-input.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   standalone: true,
-  imports: [CpsInputComponent, ReactiveFormsModule, FormsModule],
+  imports: [
+    CpsInputComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    ComponentDocsViewerComponent
+  ],
   selector: 'app-input-page',
   templateUrl: './input-page.component.html',
   styleUrls: ['./input-page.component.scss'],
@@ -21,6 +29,7 @@ import { CpsInputComponent } from 'cps-ui-kit';
 export class InputPageComponent implements OnInit {
   form!: UntypedFormGroup;
   syncVal = '';
+  componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}

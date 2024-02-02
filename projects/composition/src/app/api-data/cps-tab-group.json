@@ -1,0 +1,187 @@
+{
+    "components": {
+        "CpsTabGroupComponent": {
+            "description": "CpsTabGroupComponent is a navigation component that displays items as tab headers.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "selectedIndex",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number"
+                    },
+                    {
+                        "name": "isSubTabs",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to apply an alternative 'subtabs' styling."
+                    },
+                    {
+                        "name": "alignment",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTabsAlignmentType",
+                        "default": "left",
+                        "description": "Horizontal alignment of tabs."
+                    },
+                    {
+                        "name": "contentWrapClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Class to apply to the tab content wrapper."
+                    },
+                    {
+                        "name": "headerClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Class to apply to the tab header."
+                    },
+                    {
+                        "name": "stretched",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to stretch tabs to fill the available horizontal space."
+                    },
+                    {
+                        "name": "animationType",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTabsAnimationType",
+                        "default": "slide",
+                        "description": "Transition options of how content appears, it can be \"slide\" or \"fade\"."
+                    },
+                    {
+                        "name": "navButtonsBackground",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "inherit",
+                        "description": "Background color of navigation buttons."
+                    },
+                    {
+                        "name": "tabsBackground",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "inherit",
+                        "description": "Background color of tabs."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "beforeTabChanged",
+                        "parameters": [
+                            {
+                                "name": "event",
+                                "type": "CpsTabChangeEvent"
+                            }
+                        ],
+                        "description": "Callback to invoke before tab change."
+                    },
+                    {
+                        "name": "afterTabChanged",
+                        "parameters": [
+                            {
+                                "name": "event",
+                                "type": "CpsTabChangeEvent"
+                            }
+                        ],
+                        "description": "Callback to invoke after tab change."
+                    }
+                ]
+            }
+        },
+        "CpsTabComponent": {
+            "description": "CpsTabComponent is a tab within a tab-group.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label of the tab."
+                    },
+                    {
+                        "name": "icon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Icon before the label."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether tab is disabled."
+                    },
+                    {
+                        "name": "tooltipText",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Determines whether to show the tooltip on tab hover."
+                    },
+                    {
+                        "name": "tooltipContentClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "Class for styling the tab tooltip."
+                    },
+                    {
+                        "name": "tooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Max width of the tooltip, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "tooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the tooltip should have persistent info."
+                    },
+                    {
+                        "name": "badgeValue",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Badge value to show on the tab after the label in a form of a circle."
+                    },
+                    {
+                        "name": "badgeTooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Tooltip text to show on badge hover."
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,117 +1,120 @@
-<form [formGroup]="form">
-  <div class="selects-group">
-    <cps-select
-      label="Required single select with a tooltip"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Select a city"
-      infoTooltip="Provide any information here"
-      [clearable]="true"
-      formControlName="requiredSelect">
-    </cps-select>
-    <cps-select
-      label="Loading select"
-      [loading]="true"
-      [options]="options"
-      optionLabel="name"
-      hint="This select is currently in a loading state">
-    </cps-select>
-    <cps-select
-      label="Disabled select"
-      [disabled]="true"
-      hint="This select is disabled">
-    </cps-select>
-    <cps-select
-      label="Multiple select"
-      [options]="options"
-      optionLabel="name"
-      optionValue="data"
-      optionInfo="info"
-      placeholder="Select a city"
-      [clearable]="false"
-      [multiple]="true"
-      [chips]="false"
-      [returnObject]="false"
-      [value]="[{ code: 'CPT' }]"
-      hint="This select is not clearable"></cps-select>
-    <cps-select
-      label="Multiple select with virtual scroll, chips and persistent clear icon"
-      hint="This select doesn't have Select All option"
-      [selectAll]="false"
-      [virtualScroll]="true"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Select a city"
-      [clearable]="true"
-      [multiple]="true"
-      [persistentClear]="true"
-      [value]="[options[0], options[4]]"></cps-select>
-    <cps-select
-      label="Multiple select with non-closable chips"
-      [returnObject]="false"
-      [options]="options"
-      optionLabel="name"
-      optionValue="data"
-      optionInfo="info"
-      placeholder="Select a city"
-      [clearable]="true"
-      [multiple]="true"
-      [closableChips]="false"
-      [value]="[options[0].data, options[4].data]"></cps-select>
-    <cps-select
-      label="Multiple select with prefix icon"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Select a city"
-      [clearable]="true"
-      [multiple]="true"
-      [chips]="false"
-      prefixIcon="plus"
-      [value]="[options[5]]">
-    </cps-select>
-    <div class="sync-val-example">
+<app-component-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <form [formGroup]="form">
+    <div class="selects-group">
       <cps-select
-        width="500"
-        label="Multiple select with two-way binding and keeping initial items order"
+        label="Required single select with a tooltip"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Select a city"
+        infoTooltip="Provide any information here"
+        [clearable]="true"
+        formControlName="requiredSelect">
+      </cps-select>
+      <cps-select
+        label="Loading select"
+        [loading]="true"
+        [options]="options"
+        optionLabel="name"
+        hint="This select is currently in a loading state">
+      </cps-select>
+      <cps-select
+        label="Disabled select"
+        [disabled]="true"
+        hint="This select is disabled">
+      </cps-select>
+      <cps-select
+        label="Multiple select"
+        [options]="options"
+        optionLabel="name"
+        optionValue="data"
+        optionInfo="info"
+        placeholder="Select a city"
+        [clearable]="false"
+        [multiple]="true"
+        [chips]="false"
         [returnObject]="false"
-        [options]="syncOptions"
-        [keepInitialOrder]="true"
-        optionLabel="title"
-        optionValue="val"
-        optionInfo="ticker"
-        placeholder="Select a company"
-        hint="This select has a fixed width of 500px"
+        [value]="[{ code: 'CPT' }]"
+        hint="This select is not clearable"></cps-select>
+      <cps-select
+        label="Multiple select with virtual scroll, chips and persistent clear icon"
+        hint="This select doesn't have Select All option"
+        [selectAll]="false"
+        [virtualScroll]="true"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Select a city"
+        [clearable]="true"
+        [multiple]="true"
+        [persistentClear]="true"
+        [value]="[options[0], options[4]]"></cps-select>
+      <cps-select
+        label="Multiple select with non-closable chips"
+        [returnObject]="false"
+        [options]="options"
+        optionLabel="name"
+        optionValue="data"
+        optionInfo="info"
+        placeholder="Select a city"
         [clearable]="true"
         [multiple]="true"
         [closableChips]="false"
-        [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }"></cps-select>
-      <span class="sync-val">{{ syncVal }}</span>
+        [value]="[options[0].data, options[4].data]"></cps-select>
+      <cps-select
+        label="Multiple select with prefix icon"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Select a city"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        prefixIcon="plus"
+        [value]="[options[5]]">
+      </cps-select>
+      <div class="sync-val-example">
+        <cps-select
+          width="500"
+          label="Multiple select with two-way binding and keeping initial items order"
+          [returnObject]="false"
+          [options]="syncOptions"
+          [keepInitialOrder]="true"
+          optionLabel="title"
+          optionValue="val"
+          optionInfo="ticker"
+          placeholder="Select a company"
+          hint="This select has a fixed width of 500px"
+          [clearable]="true"
+          [multiple]="true"
+          [closableChips]="false"
+          [(ngModel)]="syncVal"
+          [ngModelOptions]="{ standalone: true }"></cps-select>
+        <span class="sync-val">{{ syncVal }}</span>
+      </div>
+      <cps-select
+        label="Underlined select"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Select a city"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        appearance="underlined">
+      </cps-select>
+      <cps-select
+        label="Borderless select"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Select a city"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        appearance="borderless">
+      </cps-select>
     </div>
-    <cps-select
-      label="Underlined select"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Select a city"
-      [clearable]="true"
-      [multiple]="true"
-      [chips]="false"
-      appearance="underlined">
-    </cps-select>
-    <cps-select
-      label="Borderless select"
-      [options]="options"
-      optionLabel="name"
-      optionInfo="info"
-      placeholder="Select a city"
-      [clearable]="true"
-      [multiple]="true"
-      [chips]="false"
-      appearance="borderless">
-    </cps-select>
-  </div>
-</form>
+  </form>
+</app-component-docs-viewer>

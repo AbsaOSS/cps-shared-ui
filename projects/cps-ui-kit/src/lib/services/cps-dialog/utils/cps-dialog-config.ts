@@ -1,4 +1,4 @@
-import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 
 export class CpsDialogConfig<T = any> {
   /**

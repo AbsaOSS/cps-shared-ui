@@ -25,7 +25,7 @@ import {
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
-import { CpsTooltipDirective } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipDirective } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { getCSSColor } from '../../utils/colors-utils';
 import {
   Subscription,
@@ -68,7 +68,8 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
       transition('* => slideRight', [
         style({ transform: 'translateX(100%)' }),
         animate('200ms ease-in')
-      ])
+      ]),
+      transition('void => *', animate(0))
     ]),
     trigger('fadeInOut', [
       state('fadeIn', style({ opacity: 1 })),
@@ -79,7 +80,8 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
       ]),
       transition('fadeIn => fadeOut', [
         animate('0ms ease-out', style({ opacity: 0 }))
-      ])
+      ]),
+      transition('void => *', animate(0))
     ])
   ]
 })

@@ -1,18 +1,21 @@
-<div class="search-input">
-  <cps-input
-    placeholder="Search an icon"
-    (valueChanged)="onSearchChanged($event)"
-    hint="Click on any icon to copy its name"
-    prefixIcon="search"
-    [clearable]="true"></cps-input>
-</div>
-
-<div class="icon-grid">
-  <div
-    *ngFor="let name of filteredIconsList"
-    class="icon-row"
-    (click)="onCopyIconName(name)">
-    <cps-icon [icon]="name" size="normal" color="graphite"></cps-icon>
-    <span>{{ name }}</span>
+<app-component-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="search-input">
+    <cps-input
+      placeholder="Search an icon"
+      (valueChanged)="onSearchChanged($event)"
+      hint="Click on any icon to copy its name"
+      prefixIcon="search"
+      [clearable]="true"></cps-input>
   </div>
-</div>
+
+  <div class="icon-grid">
+    <div
+      *ngFor="let name of filteredIconsList"
+      class="icon-row"
+      (click)="onCopyIconName(name)">
+      <cps-icon [icon]="name" size="normal" color="graphite"></cps-icon>
+      <span>{{ name }}</span>
+    </div>
+  </div>
+</app-component-docs-viewer>

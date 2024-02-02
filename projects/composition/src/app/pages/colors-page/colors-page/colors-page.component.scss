@@ -1,5 +1,9 @@
 @import '../../../../variables.scss';
 
+:host {
+    padding: 24px;
+}
+
 .search-input {
   margin-bottom: 24px;
 }

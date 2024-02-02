@@ -770,7 +770,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   getPage(): number {
-    return Math.floor(this.primengTable.first / this.rows);
+    // Todo: Use explicit type
+    return Math.floor((this.primengTable.first as any) / this.rows);
   }
 
   changePage(p: number) {

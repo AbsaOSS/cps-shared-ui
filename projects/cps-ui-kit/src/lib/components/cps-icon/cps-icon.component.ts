@@ -162,7 +162,7 @@ export class CpsIconComponent implements OnChanges {
   @Input() color = 'currentColor';
 
   iconColor = 'currentColor';
-  url = '../../../../assets/';
+  url = 'assets/';
   cvtSize = '';
 
   classesList: string[] = ['cps-icon'];

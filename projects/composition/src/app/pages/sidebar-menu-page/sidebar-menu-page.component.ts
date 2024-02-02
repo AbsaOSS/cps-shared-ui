@@ -2,12 +2,20 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsSidebarMenuComponent, CpsSidebarMenuItem } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-sidebar-menu.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   selector: 'app-sidebar-menu-page',
   standalone: true,
-  imports: [CommonModule, CpsSidebarMenuComponent],
+  imports: [
+    CommonModule,
+    CpsSidebarMenuComponent,
+    ComponentDocsViewerComponent
+  ],
   templateUrl: './sidebar-menu-page.component.html',
-  styleUrls: ['./sidebar-menu-page.component.scss']
+  styleUrls: ['./sidebar-menu-page.component.scss'],
+  host: { class: 'composition-page' }
 })
 export class SidebarMenuPageComponent {
   items: CpsSidebarMenuItem[] = [
@@ -57,4 +65,6 @@ export class SidebarMenuPageComponent {
       ]
     }
   ];
+
+  componentData = ComponentData;
 }

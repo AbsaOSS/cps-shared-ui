@@ -31,7 +31,7 @@ import {
   VirtualScroller,
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
@@ -394,8 +394,8 @@ export class CpsSelectComponent
     const val = byValue
       ? option
       : this.returnObject
-      ? option
-      : option[this.optionValue];
+        ? option
+        : option[this.optionValue];
     if (this.multiple) {
       let res = [] as any;
       if (includes(this.value, val)) {

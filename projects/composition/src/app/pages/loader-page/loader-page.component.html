@@ -1,31 +1,34 @@
-<div class="loaders-group">
-  <cps-button
-    label="Toggle fullscreen loader"
-    (clicked)="onFullScreenClick()"></cps-button>
-  <cps-loader *ngIf="fullScreenOpened" [fullScreen]="true"></cps-loader>
+<app-component-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="loaders-group">
+    <cps-button
+      label="Toggle fullscreen loader"
+      (clicked)="onFullScreenClick()"></cps-button>
+    <cps-loader *ngIf="fullScreenOpened" [fullScreen]="true"></cps-loader>
 
-  <div>
-    <span class="loaders-group-label">Relative loader</span>
-    <div class="loader-container">
-      <cps-loader></cps-loader>
+    <div>
+      <span class="loaders-group-label">Relative loader</span>
+      <div class="loader-container">
+        <cps-loader></cps-loader>
+      </div>
+    </div>
+
+    <div>
+      <span class="loaders-group-label"
+        >Relative loader without a label and transparent overlay</span
+      >
+      <div class="loader-container">
+        <cps-loader [showLabel]="false" opacity="0"> </cps-loader>
+      </div>
+    </div>
+
+    <div>
+      <span class="loaders-group-label"
+        >Relative loader with white label and increased overlay opacity</span
+      >
+      <div class="loader-container">
+        <cps-loader labelColor="white" [opacity]="0.6"> </cps-loader>
+      </div>
     </div>
   </div>
-
-  <div>
-    <span class="loaders-group-label"
-      >Relative loader without a label and transparent overlay</span
-    >
-    <div class="loader-container">
-      <cps-loader [showLabel]="false" opacity="0"> </cps-loader>
-    </div>
-  </div>
-
-  <div>
-    <span class="loaders-group-label"
-      >Relative loader with white label and increased overlay opacity</span
-    >
-    <div class="loader-container">
-      <cps-loader labelColor="white" [opacity]="0.6"> </cps-loader>
-    </div>
-  </div>
-</div>
+</app-component-docs-viewer>

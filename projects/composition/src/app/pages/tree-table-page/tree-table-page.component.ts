@@ -15,6 +15,9 @@ import {
   CpsTreeTableSize
 } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-tree-table.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   selector: 'app-tree-table-page',
   standalone: true,
@@ -28,7 +31,8 @@ import {
     CpsTreeTableHeaderSelectableDirective,
     CpsTabGroupComponent,
     CpsTabComponent,
-    CpsButtonToggleComponent
+    CpsButtonToggleComponent,
+    ComponentDocsViewerComponent
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
@@ -472,6 +476,8 @@ export class TreeTablePageComponent implements OnInit {
   dataVirtual: any[] = [];
 
   isRemoveBtnVisible = false;
+
+  componentData = ComponentData;
 
   ngOnInit(): void {
     this.selCols = this.colsWithFilterType;

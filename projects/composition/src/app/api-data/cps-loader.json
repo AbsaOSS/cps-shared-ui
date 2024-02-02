@@ -1,0 +1,44 @@
+{
+    "components": {
+        "CpsLoaderComponent": {
+            "description": "CpsLoaderComponent is a fetch data indicator.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "fullScreen",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Option for loader component to take up the whole screen."
+                    },
+                    {
+                        "name": "opacity",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "0.1",
+                        "description": "Option to control the transparency of the loader component, of type number or string."
+                    },
+                    {
+                        "name": "labelColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "depth",
+                        "description": "Color of the label."
+                    },
+                    {
+                        "name": "showLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show 'Loading...' label."
+                    }
+                ]
+            }
+        }
+    }
+}

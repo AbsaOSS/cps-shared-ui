@@ -14,6 +14,9 @@ import {
   CpsTabChangeEvent,
   CpsColumnFilterMatchMode
 } from 'cps-ui-kit';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
+import ComponentData from '../../api-data/cps-table.json';
 
 @Component({
   selector: 'app-table-page',
@@ -27,7 +30,8 @@ import {
     CpsTableHeaderSelectableDirective,
     CpsTabGroupComponent,
     CpsTabComponent,
-    CpsButtonToggleComponent
+    CpsButtonToggleComponent,
+    ComponentDocsViewerComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
@@ -335,6 +339,8 @@ export class TablePageComponent implements OnInit {
     { field: 'b', header: 'B' },
     { field: 'c', header: 'C' }
   ];
+
+  componentData = ComponentData;
 
   ngOnInit(): void {
     this._genVirtualData();

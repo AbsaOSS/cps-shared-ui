@@ -30,6 +30,13 @@ export class CpsDialogService {
     @Inject(DOCUMENT) private document: Document
   ) {}
 
+  /**
+   * Opens a dialog with a dynamically loaded component.
+   * @param {*} componentType - Dynamic component for content template.
+   * @param {CpsDialogConfig} config - CpsDialogConfig object.
+   * @returns {CpsDialogRef} CpsDialogRef instance.
+   * @group Method
+   */
   public open(componentType: Type<any>, config: CpsDialogConfig): CpsDialogRef {
     const dialogRef = this.appendDialogComponentToBody(config);
 
@@ -39,6 +46,12 @@ export class CpsDialogService {
     return dialogRef;
   }
 
+  /**
+   * Opens a confirmation dialog.
+   * @param {CpsDialogConfig} config - CpsDialogConfig object.
+   * @returns {CpsDialogRef} CpsDialogRef instance.
+   * @group Method
+   */
   public openConfirmationDialog(config: CpsDialogConfig): CpsDialogRef {
     if (!config.headerTitle) config.headerTitle = 'Confirm the action';
     if (!config.headerIcon) config.headerIcon = 'warning';

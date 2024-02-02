@@ -387,6 +387,7 @@ $hover-transition-duration: 0.2s;
 
     .p-tree .p-tree-container .p-treenode {
       padding: unset;
+      outline: 0 none;
     }
 
     .p-tree .p-tree-container .p-treenode .p-treenode-content {
@@ -421,7 +422,7 @@ $hover-transition-duration: 0.2s;
       background: $option-hover-background;
     }
 
-    .p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
+    .p-tree .p-tree-container .p-treenode:focus > .p-treenode-content {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
@@ -429,8 +430,8 @@ $hover-transition-duration: 0.2s;
 
     .p-tree
       .p-tree-container
-      .p-treenode
-      .p-treenode-content:not(.p-highlight):focus {
+      .p-treenode:focus
+      > .p-treenode-content:not(.p-highlight) {
       background-color: $option-hover-background;
     }
 
@@ -446,8 +447,8 @@ $hover-transition-duration: 0.2s;
 
     .p-tree
       .p-tree-container
-      .p-treenode
-      .p-treenode-content.p-highlight:focus {
+      .p-treenode:focus
+      > .p-treenode-content.p-highlight {
       background: $option-highlight-selected-background;
     }
 
@@ -470,9 +471,9 @@ $hover-transition-duration: 0.2s;
 
     .p-tree
       .p-tree-container
-      .p-treenode
-      .p-treenode-content
-      .p-tree-toggler:focus {
+      .p-treenode:focus
+      > .p-treenode-content
+      .p-tree-toggler {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;

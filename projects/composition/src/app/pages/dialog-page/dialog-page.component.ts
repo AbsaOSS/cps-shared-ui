@@ -6,17 +6,21 @@ import {
   CpsDialogService
 } from 'cps-ui-kit';
 import { DialogContentComponent } from '../../components/dialog-content/dialog-content.component';
+import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
+
+import ServiceData from '../../api-data/cps-dialog.json';
 
 @Component({
   selector: 'app-dialog-page',
   standalone: true,
-  imports: [CommonModule, CpsButtonComponent],
+  imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],
   providers: [CpsDialogService],
   host: { class: 'composition-page' }
 })
 export class DialogPageComponent {
+  serviceData = ServiceData;
   // eslint-disable-next-line no-useless-constructor
   constructor(private _dialogService: CpsDialogService) {}
 

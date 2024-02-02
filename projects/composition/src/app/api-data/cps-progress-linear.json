@@ -1,0 +1,60 @@
+{
+    "components": {
+        "CpsProgressLinearComponent": {
+            "description": "CpsProgressLinearComponent is a process status indicator of a rectangular form.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the progress bar, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "height",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "0.5rem",
+                        "description": "Height of the progress bar, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "color",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "calm",
+                        "description": "Color of the progress bar."
+                    },
+                    {
+                        "name": "bgColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "white",
+                        "description": "Background color of the progress bar."
+                    },
+                    {
+                        "name": "opacity",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "1",
+                        "description": "Option to control the transparency of the progress bar, of type number or string."
+                    },
+                    {
+                        "name": "radius",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "0",
+                        "description": "Border radius of the progress bar, of type number or string."
+                    }
+                ]
+            }
+        }
+    }
+}

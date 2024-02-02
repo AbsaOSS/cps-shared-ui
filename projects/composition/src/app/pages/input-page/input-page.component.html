@@ -1,66 +1,69 @@
-<form [formGroup]="form">
-  <div class="inputs-group">
-    <cps-input
-      label="Required numeric input with a tooltip"
-      formControlName="requiredInput"
-      placeholder="Enter 8 digit value"
-      infoTooltip="Provide any information here"
-      type="number"></cps-input>
-    <cps-input
-      label="Loading input"
-      hint="This input is currently in a loading state"
-      [loading]="true"></cps-input>
-    <cps-input
-      label="Password input"
-      placeholder="Enter password"
-      [clearable]="true"
-      type="password"></cps-input>
-    <cps-input
-      label="Disabled input"
-      hint="This input is disabled"
-      [disabled]="true"></cps-input>
-    <cps-input
-      label="Readonly input"
-      hint="This input is readonly"
-      value="Value to show"
-      [readonly]="true"></cps-input>
-    <cps-input
-      label="Clearable input with persistent clear icon"
-      hint="This input is clearable"
-      value="Clear me"
-      [clearable]="true"
-      [persistentClear]="true"></cps-input>
-    <cps-input
-      label="Input with prefix icon"
-      prefixIcon="search"
-      placeholder="Search something"
-      [clearable]="true"></cps-input>
-    <cps-input
-      label="Input with prefix text"
-      prefixText="USD"
-      placeholder="Enter amount"></cps-input>
-    <div class="sync-val-example">
+<app-component-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <form [formGroup]="form">
+    <div class="inputs-group">
       <cps-input
-        width="400"
-        label="Input with two-way binding, type something in"
-        [(ngModel)]="syncVal"
-        hint="This input has a fixed width of 400px"
-        [ngModelOptions]="{ standalone: true }">
-        ></cps-input
-      >
-      <span class="sync-val">{{ syncVal }}</span>
+        label="Required numeric input with a tooltip"
+        formControlName="requiredInput"
+        placeholder="Enter 8 digit value"
+        infoTooltip="Provide any information here"
+        type="number"></cps-input>
+      <cps-input
+        label="Loading input"
+        hint="This input is currently in a loading state"
+        [loading]="true"></cps-input>
+      <cps-input
+        label="Password input"
+        placeholder="Enter password"
+        [clearable]="true"
+        type="password"></cps-input>
+      <cps-input
+        label="Disabled input"
+        hint="This input is disabled"
+        [disabled]="true"></cps-input>
+      <cps-input
+        label="Readonly input"
+        hint="This input is readonly"
+        value="Value to show"
+        [readonly]="true"></cps-input>
+      <cps-input
+        label="Clearable input with persistent clear icon"
+        hint="This input is clearable"
+        value="Clear me"
+        [clearable]="true"
+        [persistentClear]="true"></cps-input>
+      <cps-input
+        label="Input with prefix icon"
+        prefixIcon="search"
+        placeholder="Search something"
+        [clearable]="true"></cps-input>
+      <cps-input
+        label="Input with prefix text"
+        prefixText="USD"
+        placeholder="Enter amount"></cps-input>
+      <div class="sync-val-example">
+        <cps-input
+          width="400"
+          label="Input with two-way binding, type something in"
+          [(ngModel)]="syncVal"
+          hint="This input has a fixed width of 400px"
+          [ngModelOptions]="{ standalone: true }">
+          ></cps-input
+        >
+        <span class="sync-val">{{ syncVal }}</span>
+      </div>
+      <cps-input
+        label="Underlined input"
+        prefixIcon="search"
+        appearance="underlined"
+        placeholder="Search something"
+        [clearable]="true"></cps-input>
+      <cps-input
+        label="Borderless input"
+        prefixIcon="search"
+        appearance="borderless"
+        placeholder="Search something"
+        [clearable]="true"></cps-input>
     </div>
-    <cps-input
-      label="Underlined input"
-      prefixIcon="search"
-      appearance="underlined"
-      placeholder="Search something"
-      [clearable]="true"></cps-input>
-    <cps-input
-      label="Borderless input"
-      prefixIcon="search"
-      appearance="borderless"
-      placeholder="Search something"
-      [clearable]="true"></cps-input>
-  </div>
-</form>
+  </form>
+</app-component-docs-viewer>

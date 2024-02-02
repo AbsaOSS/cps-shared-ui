@@ -19,7 +19,7 @@ export class CheckOptionSelectedPipe implements PipeTransform {
         ? includes(value, option)
         : includes(value, option[optionValue])
       : returnObject
-      ? isEqual(option, value)
-      : isEqual(option[optionValue], value);
+        ? isEqual(option, value)
+        : isEqual(option[optionValue], value);
   }
 }

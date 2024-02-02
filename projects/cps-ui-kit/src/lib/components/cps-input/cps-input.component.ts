@@ -23,7 +23,7 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 
 export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 

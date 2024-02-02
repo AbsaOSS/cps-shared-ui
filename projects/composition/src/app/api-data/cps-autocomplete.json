@@ -1,0 +1,341 @@
+{
+    "components": {
+        "CpsAutocompleteComponent": {
+            "description": "CpsAutocompleteComponent is an input component that provides real-time suggestions when being typed.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label of the input element."
+                    },
+                    {
+                        "name": "placeholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Please enter",
+                        "description": "Placeholder text."
+                    },
+                    {
+                        "name": "hint",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Bottom hint text."
+                    },
+                    {
+                        "name": "returnObject",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Returns the object directly rather than the value specified with optionValue."
+                    },
+                    {
+                        "name": "multiple",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Specifies if multiple values can be selected."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether autocomplete is disabled."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the input field, a number denoting pixels or a string."
+                    },
+                    {
+                        "name": "selectAll",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Option for selecting all elements. Doesn't work with virtual scroll."
+                    },
+                    {
+                        "name": "showChevron",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the chevron icon should be displayed."
+                    },
+                    {
+                        "name": "withOptionsAliases",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the options should be filtered by aliases in addition to labels."
+                    },
+                    {
+                        "name": "useOptionsAliasesWhenNoMatch",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the options should be filtered by aliases in addition to labels only when no label match is found. Works only If withOptionsAliases is true."
+                    },
+                    {
+                        "name": "optionAlias",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "alias",
+                        "description": "Name of the alias field of an option. Needed only if withOptionsAliases is true."
+                    },
+                    {
+                        "name": "chips",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "When selecting elements, they will appear in a form of a chip."
+                    },
+                    {
+                        "name": "closableChips",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the chips can be directly removed."
+                    },
+                    {
+                        "name": "clearable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a clear icon is displayed to clear the value."
+                    },
+                    {
+                        "name": "openOnClear",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the dropdown list should open on clear."
+                    },
+                    {
+                        "name": "options",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any[]",
+                        "default": "...",
+                        "description": "An array of options."
+                    },
+                    {
+                        "name": "keepInitialOrder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "If multiple, determines whether selected options should be ordered according to the initial order of the options."
+                    },
+                    {
+                        "name": "optionLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "label",
+                        "description": "Name of the label field of an option."
+                    },
+                    {
+                        "name": "optionValue",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "value",
+                        "description": "Name of the value field of an option. Needed only if returnObject prop is false."
+                    },
+                    {
+                        "name": "optionInfo",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "info",
+                        "description": "Name of the info field of an option, shows the additional information text."
+                    },
+                    {
+                        "name": "hideDetails",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Hides hint and validation errors."
+                    },
+                    {
+                        "name": "persistentClear",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the component should have persistent clear icon."
+                    },
+                    {
+                        "name": "prefixIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Icon before input value."
+                    },
+                    {
+                        "name": "prefixIconSize",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "iconSizeType",
+                        "default": "18px",
+                        "description": "Size of icon before input value, of type number or string or 'fill' or 'xsmall' or 'small' or 'normal' or 'large'."
+                    },
+                    {
+                        "name": "loading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a loading bar is displayed."
+                    },
+                    {
+                        "name": "emptyMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "No results found",
+                        "description": "Text to display when there is no data. Defaults to 'No results found'."
+                    },
+                    {
+                        "name": "showEmptyMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the empty message should be displayed."
+                    },
+                    {
+                        "name": "virtualScroll",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether only the elements within scrollable area should be added into the DOM."
+                    },
+                    {
+                        "name": "numToleratedItems",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "10",
+                        "description": "Determines how many additional elements to add to the DOM outside of the view."
+                    },
+                    {
+                        "name": "externalError",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Externally set error message."
+                    },
+                    {
+                        "name": "infoTooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "When it is not an empty string, an info icon is displayed to show text for more info."
+                    },
+                    {
+                        "name": "infoTooltipClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "Info tooltip class for styling."
+                    },
+                    {
+                        "name": "infoTooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Max width of infoTooltip of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "infoTooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the infoTooltip is persistent."
+                    },
+                    {
+                        "name": "infoTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "appearance",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsAutocompleteAppearanceType",
+                        "default": "outlined",
+                        "description": "Styling appearance of autocomplete input, it could be 'outlined', 'underlined' or 'borderless'."
+                    },
+                    {
+                        "name": "_value",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any",
+                        "default": "undefined",
+                        "description": "Value of the autocomplete."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "valueChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke on value change."
+                    },
+                    {
+                        "name": "blurred",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the component loses focus."
+                    }
+                ]
+            }
+        }
+    }
+}

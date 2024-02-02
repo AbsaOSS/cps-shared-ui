@@ -1,0 +1,103 @@
+{
+    "name": "CpsNotificationService",
+    "description": "Service for showing notifications.",
+    "methods": {
+        "description": "Methods used in service.",
+        "values": [
+            {
+                "name": "info",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "type": "string",
+                        "description": "Notification message."
+                    },
+                    {
+                        "name": "details",
+                        "type": "string",
+                        "description": "Notification details."
+                    },
+                    {
+                        "name": "config",
+                        "type": "CpsNotificationConfig",
+                        "description": "CpsNotificationConfig object."
+                    }
+                ],
+                "returnType": "void",
+                "description": "Shows a notification with type 'info'."
+            },
+            {
+                "name": "warning",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "type": "string",
+                        "description": "Notification message."
+                    },
+                    {
+                        "name": "details",
+                        "type": "string",
+                        "description": "Notification details."
+                    },
+                    {
+                        "name": "config",
+                        "type": "CpsNotificationConfig",
+                        "description": "CpsNotificationConfig object."
+                    }
+                ],
+                "returnType": "void",
+                "description": "Shows a notification with type 'warning'."
+            },
+            {
+                "name": "success",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "type": "string",
+                        "description": "Notification message."
+                    },
+                    {
+                        "name": "details",
+                        "type": "string",
+                        "description": "Notification details."
+                    },
+                    {
+                        "name": "config",
+                        "type": "CpsNotificationConfig",
+                        "description": "CpsNotificationConfig object."
+                    }
+                ],
+                "returnType": "void",
+                "description": "Shows a notification with type 'success'."
+            },
+            {
+                "name": "error",
+                "parameters": [
+                    {
+                        "name": "message",
+                        "type": "string",
+                        "description": "Notification message."
+                    },
+                    {
+                        "name": "details",
+                        "type": "string",
+                        "description": "Notification details."
+                    },
+                    {
+                        "name": "config",
+                        "type": "CpsNotificationConfig",
+                        "description": "CpsNotificationConfig object."
+                    }
+                ],
+                "returnType": "void",
+                "description": "Shows a notification with type 'error'."
+            },
+            {
+                "name": "clear",
+                "parameters": [],
+                "returnType": "void",
+                "description": "Clears all notifications."
+            }
+        ]
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "components": {
+        "CpsPaginatorComponent": {
+            "description": "CpsPaginatorComponent is a generic component to display content in paged format.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "first",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Zero-relative number of the first row to be displayed."
+                    },
+                    {
+                        "name": "rows",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Rows count to display per page."
+                    },
+                    {
+                        "name": "totalRecords",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Number of total records."
+                    },
+                    {
+                        "name": "rowsPerPageOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number[]",
+                        "default": "[]",
+                        "description": "Array of integer values to display inside rows per page dropdown."
+                    },
+                    {
+                        "name": "alwaysShow",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show it even there is only one page."
+                    },
+                    {
+                        "name": "backgroundColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "transparent",
+                        "description": "Color of paginator background."
+                    },
+                    {
+                        "name": "resetPageOnRowsChange",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to reset page index when the number of rows per page changes."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "pageChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when page changes, the event object contains information about the new state."
+                    }
+                ]
+            }
+        }
+    }
+}

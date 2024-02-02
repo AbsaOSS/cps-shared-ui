@@ -19,7 +19,7 @@ import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils';
-import { CpsTooltipPosition } from '../../../directives/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 
 /**
@@ -457,7 +457,8 @@ export class CpsBaseTreeDropdownComponent
           if (key) {
             const idx =
               this.treeList?.serializedValue?.findIndex(
-                (v) => v.node.key === key
+                // Todo: Add explicit type
+                (v: any) => v.node.key === key
               ) || -1;
             if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);
           }
@@ -479,9 +480,8 @@ export class CpsBaseTreeDropdownComponent
     if (!this.isOpened) return;
 
     if (!this.optionFocused) {
-      const firstElem = this.treeContainerElement?.querySelector(
-        '.p-treenode-content'
-      );
+      const firstElem = this.treeContainerElement?.querySelector('.p-treenode');
+
       if (firstElem) (firstElem as HTMLElement).focus();
       this.optionFocused = true;
     }
@@ -492,7 +492,8 @@ export class CpsBaseTreeDropdownComponent
     setTimeout(() => {
       this.optionsMenu.align();
     });
-    elem?.focus();
+
+    if (elem?.parentElement) (elem?.parentElement as HTMLElement).focus();
   }
 
   private _nodeToggledWithChevron(elem: HTMLElement) {

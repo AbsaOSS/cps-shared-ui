@@ -8,9 +8,17 @@ import {
 } from '@angular/forms';
 import { CpsTreeSelectComponent } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-tree-select.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   standalone: true,
-  imports: [CpsTreeSelectComponent, FormsModule, ReactiveFormsModule],
+  imports: [
+    CpsTreeSelectComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    ComponentDocsViewerComponent
+  ],
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',
   styleUrls: ['./tree-select-page.component.scss'],
@@ -114,6 +122,8 @@ export class TreeSelectPageComponent implements OnInit {
 
   form!: UntypedFormGroup;
   syncVal: any = null;
+
+  componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}

@@ -1,192 +1,254 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TabGroupPageComponent } from 'projects/composition/src/app/pages/tab-group-page/tab-group-page.component';
-import { InputPageComponent } from './pages/input-page/input-page.component';
-import { SelectPageComponent } from './pages/select-page/select-page.component';
-import { IconsPageComponent } from './pages/icons-page/icons-page/icons-page.component';
-import { ColorsPageComponent } from './pages/colors-page/colors-page/colors-page.component';
-import { CheckboxPageComponent } from './pages/checkbox-page/checkbox-page.component';
-import { RadioPageComponent } from './pages/radio-page/radio-page.component';
-import { ButtonPageComponent } from './pages/button-page/button-page.component';
-import { TablePageComponent } from './pages/table-page/table-page.component';
-import { TagPageComponent } from './pages/tag-page/tag-page.component';
-import { ChipPageComponent } from './pages/chip-page/chip-page.component';
-import { AutocompletePageComponent } from './pages/autocomplete-page/autocomplete-page.component';
-import { ProgressLinearPageComponent } from './pages/progress-linear-page/progress-linear-page.component';
-import { DatepickerPageComponent } from './pages/datepicker-page/datepicker-page.component';
-import { LoaderPageComponent } from './pages/loader-page/loader-page.component';
-import { ExpansionPanelPageComponent } from './pages/expansion-panel-page/expansion-panel-page.component';
-import { TreeAutocompletePageComponent } from './pages/tree-autocomplete-page/tree-autocomplete-page.component';
-import { TreeSelectPageComponent } from './pages/tree-select-page/tree-select-page.component';
-import { TextareaPageComponent } from './pages/textarea-page/textarea-page.component';
-import { ButtonTogglePageComponent } from './pages/button-toggle-page/button-toggle-page.component';
-import { InfoCirclePageComponent } from './pages/info-circle-page/info-circle-page.component';
-import { TooltipPageComponent } from './pages/tooltip-page/tooltip-page.component';
-import { ProgressCircularPageComponent } from './pages/progress-circular-page/progress-circular-page.component';
-import { PaginatorPageComponent } from './pages/paginator-page/paginator-page.component';
-import { MenuPageComponent } from './pages/menu-page/menu-page.component';
-import { SidebarMenuPageComponent } from './pages/sidebar-menu-page/sidebar-menu-page.component';
-import { TreeTablePageComponent } from './pages/tree-table-page/tree-table-page.component';
-import { DialogPageComponent } from './pages/dialog-page/dialog-page.component';
-import { TimepickerPageComponent } from './pages/timepicker-page/timepicker-page.component';
-import { NotificationPageComponent } from './pages/notification-page/notification-page.component';
-import { FileUploadPageComponent } from './pages/file-upload-page/file-upload-page.component';
 
 const routes: Routes = [
   {
     path: 'colors',
     title: 'Color pack',
-    component: ColorsPageComponent
+    loadComponent: () =>
+      import('./pages/colors-page/colors-page/colors-page.component').then(
+        (mod) => mod.ColorsPageComponent
+      )
   },
   {
     path: 'icon',
     title: 'Icon',
-    component: IconsPageComponent
+    loadComponent: () =>
+      import('./pages/icons-page/icons-page/icons-page.component').then(
+        (mod) => mod.IconsPageComponent
+      )
   },
   {
     path: 'input',
     title: 'Input',
-    component: InputPageComponent
+    loadComponent: () =>
+      import('./pages/input-page/input-page.component').then(
+        (mod) => mod.InputPageComponent
+      )
   },
   {
     path: 'select',
     title: 'Select',
-    component: SelectPageComponent
+    loadComponent: () =>
+      import('./pages/select-page/select-page.component').then(
+        (mod) => mod.SelectPageComponent
+      )
   },
   {
     path: 'sidebar-menu',
     title: 'Sidebar menu',
-    component: SidebarMenuPageComponent
+    loadComponent: () =>
+      import('./pages/sidebar-menu-page/sidebar-menu-page.component').then(
+        (mod) => mod.SidebarMenuPageComponent
+      )
   },
   {
     path: 'tabs',
     title: 'Tabs',
-    component: TabGroupPageComponent
+    loadComponent: () =>
+      import('./pages/tab-group-page/tab-group-page.component').then(
+        (mod) => mod.TabGroupPageComponent
+      )
   },
   {
     path: 'tree-select',
     title: 'Tree select',
-    component: TreeSelectPageComponent
+    loadComponent: () =>
+      import('./pages/tree-select-page/tree-select-page.component').then(
+        (mod) => mod.TreeSelectPageComponent
+      )
   },
   {
     path: 'autocomplete',
     title: 'Autocomplete',
-    component: AutocompletePageComponent
+    loadComponent: () =>
+      import('./pages/autocomplete-page/autocomplete-page.component').then(
+        (mod) => mod.AutocompletePageComponent
+      )
   },
   {
     path: 'tree-autocomplete',
     title: 'Tree autocomplete',
-    component: TreeAutocompletePageComponent
+    loadComponent: () =>
+      import(
+        './pages/tree-autocomplete-page/tree-autocomplete-page.component'
+      ).then((mod) => mod.TreeAutocompletePageComponent)
   },
   {
     path: 'button',
     title: 'Button',
-    component: ButtonPageComponent
+    loadComponent: () =>
+      import('./pages/button-page/button-page.component').then(
+        (mod) => mod.ButtonPageComponent
+      )
   },
   {
     path: 'button-toggles',
     title: 'Button toggles',
-    component: ButtonTogglePageComponent
+    loadComponent: () =>
+      import('./pages/button-toggle-page/button-toggle-page.component').then(
+        (mod) => mod.ButtonTogglePageComponent
+      )
   },
   {
     path: 'checkbox',
     title: 'Checkbox',
-    component: CheckboxPageComponent
+    loadComponent: () =>
+      import('./pages/checkbox-page/checkbox-page.component').then(
+        (mod) => mod.CheckboxPageComponent
+      )
   },
   {
     path: 'radio',
     title: 'Radio',
-    component: RadioPageComponent
+    loadComponent: () =>
+      import('./pages/radio-page/radio-page.component').then(
+        (mod) => mod.RadioPageComponent
+      )
   },
   {
     path: 'table',
     title: 'Table',
-    component: TablePageComponent
+    loadComponent: () =>
+      import('./pages/table-page/table-page.component').then(
+        (mod) => mod.TablePageComponent
+      )
   },
   {
     path: 'tree-table',
     title: 'Tree table',
-    component: TreeTablePageComponent
+    loadComponent: () =>
+      import('./pages/tree-table-page/tree-table-page.component').then(
+        (mod) => mod.TreeTablePageComponent
+      )
   },
   {
     path: 'tag',
     title: 'Tag',
-    component: TagPageComponent
+    loadComponent: () =>
+      import('./pages/tag-page/tag-page.component').then(
+        (mod) => mod.TagPageComponent
+      )
   },
   {
     path: 'chip',
     title: 'Chip',
-    component: ChipPageComponent
+    loadComponent: () =>
+      import('./pages/chip-page/chip-page.component').then(
+        (mod) => mod.ChipPageComponent
+      )
   },
   {
     path: 'loader',
     title: 'Loader',
-    component: LoaderPageComponent
+    loadComponent: () =>
+      import('./pages/loader-page/loader-page.component').then(
+        (mod) => mod.LoaderPageComponent
+      )
   },
   {
     path: 'expansion-panel',
     title: 'Expansion panel',
-    component: ExpansionPanelPageComponent
+    loadComponent: () =>
+      import(
+        './pages/expansion-panel-page/expansion-panel-page.component'
+      ).then((mod) => mod.ExpansionPanelPageComponent)
   },
   {
     path: 'file-upload',
     title: 'File upload',
-    component: FileUploadPageComponent
+    loadComponent: () =>
+      import('./pages/file-upload-page/file-upload-page.component').then(
+        (mod) => mod.FileUploadPageComponent
+      )
   },
   {
     path: 'progress-circular',
     title: 'Progress circular',
-    component: ProgressCircularPageComponent
+    loadComponent: () =>
+      import(
+        './pages/progress-circular-page/progress-circular-page.component'
+      ).then((mod) => mod.ProgressCircularPageComponent)
   },
   {
     path: 'progress-linear',
     title: 'Progress linear',
-    component: ProgressLinearPageComponent
+    loadComponent: () =>
+      import(
+        './pages/progress-linear-page/progress-linear-page.component'
+      ).then((mod) => mod.ProgressLinearPageComponent)
   },
   {
     path: 'info-circle',
     title: 'Info circle',
-    component: InfoCirclePageComponent
+    loadComponent: () =>
+      import('./pages/info-circle-page/info-circle-page.component').then(
+        (mod) => mod.InfoCirclePageComponent
+      )
   },
   {
     path: 'datepicker',
     title: 'Datepicker',
-    component: DatepickerPageComponent
+    loadComponent: () =>
+      import('./pages/datepicker-page/datepicker-page.component').then(
+        (mod) => mod.DatepickerPageComponent
+      )
   },
   {
     path: 'dialog',
     title: 'Dialog',
-    component: DialogPageComponent
+    loadComponent: () =>
+      import('./pages/dialog-page/dialog-page.component').then(
+        (mod) => mod.DialogPageComponent
+      )
   },
   {
     path: 'menu',
     title: 'Menu',
-    component: MenuPageComponent
+    loadComponent: () =>
+      import('./pages/menu-page/menu-page.component').then(
+        (mod) => mod.MenuPageComponent
+      )
   },
   {
     path: 'notifications',
     title: 'Notifications',
-    component: NotificationPageComponent
+    loadComponent: () =>
+      import('./pages/notification-page/notification-page.component').then(
+        (mod) => mod.NotificationPageComponent
+      )
   },
   {
     path: 'paginator',
     title: 'Paginator',
-    component: PaginatorPageComponent
+    loadComponent: () =>
+      import('./pages/paginator-page/paginator-page.component').then(
+        (mod) => mod.PaginatorPageComponent
+      )
   },
   {
     path: 'textarea',
     title: 'Textarea',
-    component: TextareaPageComponent
+    loadComponent: () =>
+      import('./pages/textarea-page/textarea-page.component').then(
+        (mod) => mod.TextareaPageComponent
+      )
   },
   {
     path: 'timepicker',
     title: 'Timepicker',
-    component: TimepickerPageComponent
+    loadComponent: () =>
+      import('./pages/timepicker-page/timepicker-page.component').then(
+        (mod) => mod.TimepickerPageComponent
+      )
   },
   {
     path: 'tooltip',
     title: 'Tooltip directive',
-    component: TooltipPageComponent
+    loadComponent: () =>
+      import('./pages/tooltip-page/tooltip-page.component').then(
+        (mod) => mod.TooltipPageComponent
+      )
   },
   { path: '**', redirectTo: 'colors' }
 ];

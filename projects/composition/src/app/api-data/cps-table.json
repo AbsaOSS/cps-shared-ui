@@ -1,0 +1,911 @@
+{
+    "components": {
+        "TableColumnFilterConstraintComponent": {
+            "description": "TableColumnFilterConstraintComponent is an internal filtering constraint component in table and treetable.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "type",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsColumnFilterType",
+                        "default": "text",
+                        "description": "Type of filter constraint."
+                    },
+                    {
+                        "name": "field",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "undefined | string",
+                        "description": "Column name."
+                    },
+                    {
+                        "name": "filterConstraint",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "undefined | FilterMetadata",
+                        "description": "Constraint data."
+                    },
+                    {
+                        "name": "categoryOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string[] | CpsColumnFilterCategoryOption[]",
+                        "default": "[]",
+                        "description": "An array of category options."
+                    },
+                    {
+                        "name": "asButtonToggle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show category filter as button toggles."
+                    },
+                    {
+                        "name": "singleSelection",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Single selection for category filter."
+                    },
+                    {
+                        "name": "placeholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Placeholder for input field."
+                    },
+                    {
+                        "name": "hasApplyButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the filter should have an apply button."
+                    }
+                ]
+            }
+        },
+        "TableColumnFilterComponent": {
+            "description": "TableColumnFilterComponent is an internal filter component in table and treetable.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "field",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "undefined | string",
+                        "description": "Name of the column to be filtered."
+                    },
+                    {
+                        "name": "type",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsColumnFilterType",
+                        "default": "text",
+                        "description": "Type of filter in table, it can be of type \"number\", \"boolean\", \"text\", \"date\" or \"category\"."
+                    },
+                    {
+                        "name": "persistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the filter menu should be persistent."
+                    },
+                    {
+                        "name": "showClearButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the filter should have clear button."
+                    },
+                    {
+                        "name": "showApplyButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the filter should have apply button."
+                    },
+                    {
+                        "name": "showCloseButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the filter should have close button."
+                    },
+                    {
+                        "name": "showMatchModes",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the filter should have match modes."
+                    },
+                    {
+                        "name": "matchModes",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsColumnFilterMatchMode[]",
+                        "default": "[]",
+                        "description": "Match modes for filter."
+                    },
+                    {
+                        "name": "showOperator",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the filter should have operator."
+                    },
+                    {
+                        "name": "maxConstraints",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "2",
+                        "description": "Maximum number of constraints."
+                    },
+                    {
+                        "name": "headerTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Title of the filter."
+                    },
+                    {
+                        "name": "hideOnClear",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the filter should hide on clear."
+                    },
+                    {
+                        "name": "categoryOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string[] | CpsColumnFilterCategoryOption[]",
+                        "default": "[]",
+                        "description": "Options for category filter."
+                    },
+                    {
+                        "name": "asButtonToggle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show category filter as button toggles."
+                    },
+                    {
+                        "name": "singleSelection",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Single selection for category filter."
+                    },
+                    {
+                        "name": "placeholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Placeholder for filter constraints."
+                    }
+                ]
+            }
+        },
+        "TableRowMenuComponent": {
+            "description": "TableRowMenuComponent is an internal component which applies the menu to each row.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "showRowRemoveButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "showRowEditButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean"
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "editRowBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when edit-row button is clicked."
+                    },
+                    {
+                        "name": "removeRowBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when remove-row button is clicked."
+                    }
+                ]
+            }
+        },
+        "CpsTableComponent": {
+            "description": "CpsTableComponent displays data in tabular format.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "columns",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "Object[]",
+                        "default": "[]",
+                        "description": "An array of objects to represent dynamic columns."
+                    },
+                    {
+                        "name": "colHeaderName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "header",
+                        "description": "A key used to retrieve the header from columns."
+                    },
+                    {
+                        "name": "colFieldName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "field",
+                        "description": "A key used to retrieve the field from columns."
+                    },
+                    {
+                        "name": "striped",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the table should have alternating stripes."
+                    },
+                    {
+                        "name": "bordered",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the table should have borders."
+                    },
+                    {
+                        "name": "size",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTableSize",
+                        "default": "normal",
+                        "description": "Size of table cells, it can be \"small\", \"normal\" or \"large\"."
+                    },
+                    {
+                        "name": "selectable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the table should have row selection."
+                    },
+                    {
+                        "name": "rowHover",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the table should have rows highlighting on hover."
+                    },
+                    {
+                        "name": "dataKey",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Field, that uniquely identifies a record in data (needed for expandable rows)."
+                    },
+                    {
+                        "name": "showRowMenu",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the table should show row menus."
+                    },
+                    {
+                        "name": "showRowRemoveButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                    },
+                    {
+                        "name": "showRowEditButton",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                    },
+                    {
+                        "name": "reorderableRows",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the table should have re-orderable rows."
+                    },
+                    {
+                        "name": "loading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a loader component is displayed."
+                    },
+                    {
+                        "name": "tableStyle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "undefined",
+                        "default": "undefined",
+                        "description": "Inline style of the table."
+                    },
+                    {
+                        "name": "tableStyleClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Style class of the table."
+                    },
+                    {
+                        "name": "sortable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Makes all columns sortable if columns prop is provided."
+                    },
+                    {
+                        "name": "sortMode",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTableSortMode",
+                        "default": "single",
+                        "description": "Determines whether sorting works on single column or on multiple columns."
+                    },
+                    {
+                        "name": "customSort",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to use the default sorting or a custom one using sortFunction."
+                    },
+                    {
+                        "name": "hasToolbar",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the table has a toolbar."
+                    },
+                    {
+                        "name": "toolbarSize",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTableToolbarSize",
+                        "default": "normal",
+                        "description": "Toolbar size, it can be \"small\" or \"normal\"."
+                    },
+                    {
+                        "name": "toolbarTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Toolbar title."
+                    },
+                    {
+                        "name": "toolbarIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Toolbar icon name."
+                    },
+                    {
+                        "name": "toolbarIconColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Toolbar icon color."
+                    },
+                    {
+                        "name": "scrollable",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Makes table scrollable."
+                    },
+                    {
+                        "name": "scrollHeight",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Height of the scroll viewport in fixed pixels or the \"flex\" keyword for a dynamic size."
+                    },
+                    {
+                        "name": "virtualScroll",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether only the elements within scrollable area should be added into the DOM. Works only if scrollable prop is true."
+                    },
+                    {
+                        "name": "numToleratedItems",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "10",
+                        "description": "Determines how many additional elements to add to the DOM outside of the view."
+                    },
+                    {
+                        "name": "paginator",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the table should have paginator."
+                    },
+                    {
+                        "name": "alwaysShowPaginator",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show paginator even if there is only one page."
+                    },
+                    {
+                        "name": "rowsPerPageOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number[]",
+                        "default": "[]",
+                        "description": "Array of integer values to display inside rows per page dropdown of paginator."
+                    },
+                    {
+                        "name": "first",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Index of the first row to be displayed."
+                    },
+                    {
+                        "name": "rows",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Number of rows to display per page."
+                    },
+                    {
+                        "name": "resetPageOnRowsChange",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to reset page on rows change."
+                    },
+                    {
+                        "name": "resetPageOnSort",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to reset page on table data sorting."
+                    },
+                    {
+                        "name": "totalRecords",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "0",
+                        "description": "Number of total records."
+                    },
+                    {
+                        "name": "emptyMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "No data",
+                        "description": "Text to display when there is no data."
+                    },
+                    {
+                        "name": "emptyBodyHeight",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "",
+                        "description": "Height of table's body when there is no data, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "lazy",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Defines if data is loaded and interacted with in lazy manner."
+                    },
+                    {
+                        "name": "lazyLoadOnInit",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to call lazy loading on initialization."
+                    },
+                    {
+                        "name": "showGlobalFilter",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show global filter in the toolbar."
+                    },
+                    {
+                        "name": "globalFilterPlaceholder",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Search",
+                        "description": "Global filter placeholder."
+                    },
+                    {
+                        "name": "globalFilterFields",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string[]",
+                        "default": "[]",
+                        "description": "An array of fields to use in global filtering."
+                    },
+                    {
+                        "name": "clearGlobalFilterOnLoading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to clear global filter on data loading."
+                    },
+                    {
+                        "name": "showRemoveBtnOnSelect",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show remove button in the toolbar when rows are selected."
+                    },
+                    {
+                        "name": "removeBtnOnSelectDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether removeBtnOnSelect is disabled."
+                    },
+                    {
+                        "name": "showAdditionalBtnOnSelect",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show additional button in the toolbar when rows are selected."
+                    },
+                    {
+                        "name": "additionalBtnOnSelectTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Select action",
+                        "description": "AdditionalBtnOnSelect title."
+                    },
+                    {
+                        "name": "additionalBtnOnSelectDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether additionalBtnOnSelect is disabled."
+                    },
+                    {
+                        "name": "showActionBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show action button in the toolbar."
+                    },
+                    {
+                        "name": "actionBtnTitle",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Action",
+                        "description": "Action button title."
+                    },
+                    {
+                        "name": "actionBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether actionBtn is disabled."
+                    },
+                    {
+                        "name": "showExportBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show export button in the toolbar."
+                    },
+                    {
+                        "name": "exportBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether exportBtn is disabled."
+                    },
+                    {
+                        "name": "exportFilename",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "download",
+                        "description": "Name of the exported file."
+                    },
+                    {
+                        "name": "csvSeparator",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": ",",
+                        "description": "Character to use as the csv separator."
+                    },
+                    {
+                        "name": "showDataReloadBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to show data reload button in the toolbar."
+                    },
+                    {
+                        "name": "dataReloadBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether dataReloadBtn is disabled."
+                    },
+                    {
+                        "name": "showColumnsToggleBtn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the table should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter."
+                    },
+                    {
+                        "name": "columnsToggleBtnDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether columnsToggle button is disabled."
+                    },
+                    {
+                        "name": "initialColumns",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "Object[]",
+                        "default": "[]",
+                        "description": "Array of initial columns to show in the table. If not provided, all columns are initially visible."
+                    },
+                    {
+                        "name": "data",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any[]"
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "rowsSelected",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on selection changed. Returns selected rows."
+                    },
+                    {
+                        "name": "selectedRowIndexes",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "number[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on selection changed. Returns selected rows indexes."
+                    },
+                    {
+                        "name": "actionBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "void"
+                            }
+                        ],
+                        "description": "Callback to invoke when action button is clicked."
+                    },
+                    {
+                        "name": "editRowBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "Object"
+                            }
+                        ],
+                        "description": "Callback to invoke when edit-row button is clicked."
+                    },
+                    {
+                        "name": "rowsToRemove",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on rows removal. Returns rows."
+                    },
+                    {
+                        "name": "rowIndexesToRemove",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "number[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on rows removal. Returns rows indexes."
+                    },
+                    {
+                        "name": "pageChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke on page changed."
+                    },
+                    {
+                        "name": "sorted",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when data is sorted."
+                    },
+                    {
+                        "name": "filtered",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when data is filtered."
+                    },
+                    {
+                        "name": "rowsReordered",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when rows are reordered."
+                    },
+                    {
+                        "name": "columnsSelected",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "Object[]"
+                            }
+                        ],
+                        "description": "Callback to invoke on columns selection."
+                    },
+                    {
+                        "name": "lazyLoaded",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when paging, sorting or filtering happens in lazy mode."
+                    },
+                    {
+                        "name": "dataReloadBtnClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when data-reload button is clicked."
+                    },
+                    {
+                        "name": "additionalBtnOnSelectClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any[]"
+                            }
+                        ],
+                        "description": "Callback to invoke when additional button on select is clicked."
+                    },
+                    {
+                        "name": "customSortFunction",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "A function to implement custom sorting. customSort must be true."
+                    }
+                ]
+            }
+        }
+    }
+}

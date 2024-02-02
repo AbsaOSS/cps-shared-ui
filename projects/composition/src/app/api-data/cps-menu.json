@@ -1,0 +1,129 @@
+{
+    "components": {
+        "CpsMenuComponent": {
+            "description": "CpsMenuComponent is a popup element, that contains menu items or arbitrary content.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "header",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Header title of the menu."
+                    },
+                    {
+                        "name": "items",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsMenuItem[]",
+                        "default": "[]",
+                        "description": "An array of menu items."
+                    },
+                    {
+                        "name": "withArrow",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to include top pointing arrow on the menu."
+                    },
+                    {
+                        "name": "compressed",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Menu with prepared-colored items, without header and items description."
+                    },
+                    {
+                        "name": "focusOnShow",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the menu should show on target element focus."
+                    },
+                    {
+                        "name": "persistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the menu should be persistent."
+                    },
+                    {
+                        "name": "containerClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Styling class of the menu container."
+                    },
+                    {
+                        "name": "showTransitionOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": ".12s cubic-bezier(0, 0, 0.2, 1)",
+                        "description": "Transition options of the show animation."
+                    },
+                    {
+                        "name": "hideTransitionOptions",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": ".12s cubic-bezier(0, 0, 0.2, 1)",
+                        "description": "Transition options of the hide animation."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "menuShown",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when menu is shown."
+                    },
+                    {
+                        "name": "menuHidden",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when menu is hidden."
+                    },
+                    {
+                        "name": "beforeMenuHidden",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke before menu is hidden."
+                    },
+                    {
+                        "name": "contentClicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when content is clicked."
+                    }
+                ]
+            }
+        }
+    }
+}

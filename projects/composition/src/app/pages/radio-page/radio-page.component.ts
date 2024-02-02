@@ -8,6 +8,9 @@ import {
   CpsRadioOption
 } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-radio-group.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   standalone: true,
   imports: [
@@ -16,7 +19,8 @@ import {
     FormsModule,
     CpsRadioComponent,
     CpsSelectComponent,
-    CpsCheckboxComponent
+    CpsCheckboxComponent,
+    ComponentDocsViewerComponent
   ],
   selector: 'app-radio-page',
   templateUrl: './radio-page.component.html',
@@ -69,4 +73,6 @@ export class RadioPageComponent {
     name: n,
     data: { code: n }
   }));
+
+  componentData = ComponentData;
 }

@@ -1,0 +1,83 @@
+{
+    "components": {
+        "CpsTooltipDirective": {
+            "description": "CpsTooltipDirective provides advisory information for a target element.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "tooltip",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Tooltip text or html to show."
+                    },
+                    {
+                        "name": "tooltipOpenDelay",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "300",
+                        "description": "Delay to show the tooltip in milliseconds, it can be of type string or number."
+                    },
+                    {
+                        "name": "tooltipCloseDelay",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "300",
+                        "description": "Delay to hide the tooltip in milliseconds, it can be of type string or number."
+                    },
+                    {
+                        "name": "tooltipOpenOn",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipOpenOn",
+                        "default": "hover",
+                        "description": "Determines whether the tooltip should open on hover, click or focus."
+                    },
+                    {
+                        "name": "tooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of the tooltip, it can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "tooltipPersistent",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the tooltip is persistent."
+                    },
+                    {
+                        "name": "tooltipDisabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When present, it specifies that the tooltip should be disabled."
+                    },
+                    {
+                        "name": "tooltipMaxWidth",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Max width of the tooltip of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "tooltipContentClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "cps-tooltip-content",
+                        "description": "Tooltip content class for styling."
+                    }
+                ]
+            }
+        }
+    }
+}

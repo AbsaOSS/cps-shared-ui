@@ -14,7 +14,7 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import {
   CpsTooltipDirective,
   CpsTooltipPosition
-} from '../../directives/cps-tooltip.directive';
+} from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 
 export type CpsRadioOption = {

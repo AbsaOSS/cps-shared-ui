@@ -5,9 +5,17 @@ import {
   CpsButtonToggleOption
 } from 'projects/cps-ui-kit/src/public-api';
 
+import ComponentData from '../../api-data/cps-button-toggle.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   standalone: true,
-  imports: [CpsButtonToggleComponent, ReactiveFormsModule, FormsModule],
+  imports: [
+    CpsButtonToggleComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    ComponentDocsViewerComponent
+  ],
   selector: 'app-button-toggle-page',
   templateUrl: './button-toggle-page.component.html',
   styleUrls: ['./button-toggle-page.component.scss'],
@@ -59,4 +67,5 @@ export class ButtonTogglePageComponent {
 
   syncVal = 'first';
   multiSyncVal = ['third', 'fourth'];
+  componentData = ComponentData;
 }

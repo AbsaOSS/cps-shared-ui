@@ -7,13 +7,17 @@ import {
   CpsTabChangeEvent
 } from 'cps-ui-kit';
 
+import ComponentData from '../../api-data/cps-tab-group.json';
+import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     CpsIconComponent,
     CpsTabGroupComponent,
-    CpsTabComponent
+    CpsTabComponent,
+    ComponentDocsViewerComponent
   ],
   selector: 'app-tab-group-page',
   templateUrl: './tab-group-page.component.html',
@@ -21,6 +25,7 @@ import {
   host: { class: 'composition-page' }
 })
 export class TabGroupPageComponent {
+  componentData = ComponentData;
   selectedTabIndex = 1;
 
   changeTab({ newIndex }: CpsTabChangeEvent) {

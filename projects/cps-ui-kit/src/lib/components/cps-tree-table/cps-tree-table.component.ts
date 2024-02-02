@@ -611,7 +611,8 @@ export class CpsTreeTableComponent
 
   rowOptions: { label: string; value: number }[] = [];
 
-  selectedRows: any[] = [];
+  // Todo: Add explicit type
+  selectedRows: any = [];
 
   virtualScrollItemSize = 0;
   defScrollHeight = '';
@@ -1089,7 +1090,8 @@ export class CpsTreeTableComponent
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
         this._updateVirtualScrollItemSize();
-        const itemsLen = this.primengTreeTable.serializedValue.length;
+        // Todo: Add explicit type
+        const itemsLen = (this.primengTreeTable.serializedValue as any).length;
         if (itemsLen < 1) {
           this.scrollHeight = this.emptyBodyHeight
             ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
@@ -1116,7 +1118,8 @@ export class CpsTreeTableComponent
     this.globalFilterComp?.clear();
   }
 
-  onSortFunction(event: SortEvent) {
+  // Todo: Use explicit type
+  onSortFunction(event: SortEvent | any) {
     this.customSortFunction.emit(event);
   }
 
@@ -1279,7 +1282,8 @@ export class CpsTreeTableComponent
     });
   }
 
-  onSelectionChanged(selection: any[]) {
+  // Replace with explicit type
+  onSelectionChanged(selection: any[] | any) {
     this.rowsSelected.emit(selection);
   }
 }

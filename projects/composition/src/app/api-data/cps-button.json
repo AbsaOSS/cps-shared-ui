@@ -1,0 +1,115 @@
+{
+    "components": {
+        "CpsButtonComponent": {
+            "description": "CpsButtonComponent is a button element.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "color",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "calm",
+                        "description": "Color of the button."
+                    },
+                    {
+                        "name": "contentColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "white",
+                        "description": "Color of content on the button. Works only with 'solid' type."
+                    },
+                    {
+                        "name": "type",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "\"outlined\" | \"borderless\" | \"solid\"",
+                        "default": "solid",
+                        "description": "Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'."
+                    },
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Label or text on the button."
+                    },
+                    {
+                        "name": "icon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Name of the icon on the button."
+                    },
+                    {
+                        "name": "iconPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "\"before\" | \"after\"",
+                        "default": "before",
+                        "description": "Position of the icon on the button, it can be 'before' or 'after'."
+                    },
+                    {
+                        "name": "size",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "\"small\" | \"xsmall\" | \"normal\" | \"large\"",
+                        "default": "normal",
+                        "description": "Size on the button, it can be 'xsmall', 'small', 'normal' or 'large'."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "0",
+                        "description": "Width on the button, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "height",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "0",
+                        "description": "Height on the button, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When present, it specifies that the component should be disabled."
+                    },
+                    {
+                        "name": "loading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "When enabled, a cps-progress-circular bar is displayed."
+                    }
+                ]
+            },
+            "emits": {
+                "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
+                "values": [
+                    {
+                        "name": "clicked",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to execute when button is clicked."
+                    }
+                ]
+            }
+        }
+    }
+}

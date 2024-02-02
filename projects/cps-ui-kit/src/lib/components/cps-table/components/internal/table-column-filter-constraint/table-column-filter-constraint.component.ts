@@ -105,7 +105,10 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
     return this.categoryAutocompleteComponent?.isOpened || false;
   }
 
-  constructor(@Optional() public dt: Table, @Optional() public tt: TreeTable) {
+  constructor(
+    @Optional() public dt: Table,
+    @Optional() public tt: TreeTable
+  ) {
     this._tableInstance = dt || tt;
   }
 
@@ -137,7 +140,8 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
             fillCats(v.children);
           });
         };
-        fillCats(this._tableInstance.value);
+        // Todo: Use explicit type
+        fillCats(this._tableInstance.value as any);
       }
       this.categories =
         Array.from(new Set(cats))?.map((c) => ({
