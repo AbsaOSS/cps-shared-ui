@@ -9,9 +9,7 @@
                         "name": "selectedIndex",
                         "optional": false,
                         "readonly": false,
-                        "type": "number",
-                        "default": "0",
-                        "description": "Index of the selected tab."
+                        "type": "number"
                     },
                     {
                         "name": "isSubTabs",
@@ -22,6 +20,38 @@
                         "description": "Determines whether to apply an alternative 'subtabs' styling."
                     },
                     {
+                        "name": "alignment",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTabsAlignmentType",
+                        "default": "left",
+                        "description": "Horizontal alignment of tabs."
+                    },
+                    {
+                        "name": "contentWrapClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Class to apply to the tab content wrapper."
+                    },
+                    {
+                        "name": "headerClass",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Class to apply to the tab header."
+                    },
+                    {
+                        "name": "stretched",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to stretch tabs to fill the available horizontal space."
+                    },
+                    {
                         "name": "animationType",
                         "optional": false,
                         "readonly": false,
@@ -30,12 +60,20 @@
                         "description": "Transition options of how content appears, it can be \"slide\" or \"fade\"."
                     },
                     {
+                        "name": "navButtonsBackground",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "inherit",
+                        "description": "Background color of navigation buttons."
+                    },
+                    {
                         "name": "tabsBackground",
                         "optional": false,
                         "readonly": false,
                         "type": "string",
                         "default": "inherit",
-                        "description": "Background styling of tabs."
+                        "description": "Background color of tabs."
                     }
                 ]
             },
@@ -47,7 +85,7 @@
                         "parameters": [
                             {
                                 "name": "event",
-                                "type": "TabChangeEvent"
+                                "type": "CpsTabChangeEvent"
                             }
                         ],
                         "description": "Callback to invoke before tab change."
@@ -57,7 +95,7 @@
                         "parameters": [
                             {
                                 "name": "event",
-                                "type": "TabChangeEvent"
+                                "type": "CpsTabChangeEvent"
                             }
                         ],
                         "description": "Callback to invoke after tab change."

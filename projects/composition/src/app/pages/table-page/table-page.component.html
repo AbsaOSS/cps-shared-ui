@@ -1,6 +1,8 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <cps-tab-group
+    [isSubTabs]="true"
+    contentWrapClass="table-page--sub-tabs"
     tabsBackground="bg-light"
     (afterTabChanged)="changeTab($event)">
     <cps-tab label="Table 1">
@@ -138,7 +140,7 @@
         [selectable]="true"
         toolbarSize="small"
         (rowsToRemove)="onRowsToRemove($event)"
-        scrollHeight="calc(100vh - 300px)"
+        scrollHeight="calc(100vh - 310px)"
         toolbarTitle="Table with nested header and small toolbar">
         <ng-template #nestedHeader>
           <tr>

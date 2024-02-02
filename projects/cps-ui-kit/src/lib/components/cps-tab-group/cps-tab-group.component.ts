@@ -68,7 +68,8 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
       transition('* => slideRight', [
         style({ transform: 'translateX(100%)' }),
         animate('200ms ease-in')
-      ])
+      ]),
+      transition('void => *', animate(0))
     ]),
     trigger('fadeInOut', [
       state('fadeIn', style({ opacity: 1 })),
@@ -79,7 +80,8 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
       ]),
       transition('fadeIn => fadeOut', [
         animate('0ms ease-out', style({ opacity: 0 }))
-      ])
+      ]),
+      transition('void => *', animate(0))
     ])
   ]
 })

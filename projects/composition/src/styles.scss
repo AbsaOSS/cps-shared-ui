@@ -16,7 +16,7 @@ body {
 }
 
 .composition-page {
-  padding: 24px;
+  padding: 0 24px 24px 24px;
   position: absolute;
   width: calc(100% - $sidebar-width - 1px);
   height: calc(100% - $top-tbar-height - $inner-tbar-height);
@@ -24,5 +24,5 @@ body {
 }
 
 .example-content {
-  padding: 15px 0;
+  padding: 24px 0;
 }

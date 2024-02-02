@@ -1,6 +1,8 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <cps-tab-group
+    [isSubTabs]="true"
+    contentWrapClass="treetable-page--sub-tabs"
     tabsBackground="bg-light"
     (afterTabChanged)="changeTab($event)">
     <cps-tab label="Tree table 1">

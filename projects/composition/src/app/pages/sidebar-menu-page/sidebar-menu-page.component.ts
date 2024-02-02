@@ -14,7 +14,8 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
     ComponentDocsViewerComponent
   ],
   templateUrl: './sidebar-menu-page.component.html',
-  styleUrls: ['./sidebar-menu-page.component.scss']
+  styleUrls: ['./sidebar-menu-page.component.scss'],
+  host: { class: 'composition-page' }
 })
 export class SidebarMenuPageComponent {
   items: CpsSidebarMenuItem[] = [

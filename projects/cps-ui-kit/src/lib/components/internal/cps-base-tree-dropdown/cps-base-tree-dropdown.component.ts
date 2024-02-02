@@ -480,9 +480,8 @@ export class CpsBaseTreeDropdownComponent
     if (!this.isOpened) return;
 
     if (!this.optionFocused) {
-      const firstElem = this.treeContainerElement?.querySelector(
-        '.p-treenode-content'
-      );
+      const firstElem = this.treeContainerElement?.querySelector('.p-treenode');
+
       if (firstElem) (firstElem as HTMLElement).focus();
       this.optionFocused = true;
     }
@@ -493,7 +492,8 @@ export class CpsBaseTreeDropdownComponent
     setTimeout(() => {
       this.optionsMenu.align();
     });
-    elem?.focus();
+
+    if (elem?.parentElement) (elem?.parentElement as HTMLElement).focus();
   }
 
   private _nodeToggledWithChevron(elem: HTMLElement) {
