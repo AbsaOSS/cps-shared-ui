@@ -6,6 +6,7 @@ on:
       - 'master'
     paths:
       - 'package.json'
+      - 'angular.json'
       - 'tsconfig.generator.json'
       - 'api-generator/**'
       - 'projects/cps-ui-kit/src/**'
