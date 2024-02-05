@@ -6,7 +6,7 @@ on:
       - 'master'
     paths:
       - 'projects/cps-ui-kit/**'
-      - '.github/**'
+      - '.github/workflows/cps-ui-kit-publish.yml'
 
 jobs:
   version-bump:
