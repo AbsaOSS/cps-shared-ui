@@ -43,28 +43,22 @@ const isDark = (color: string): boolean => {
 };
 
 export const getCpsColors = (): [string, string][] =>
-  [...(document.styleSheets as any)]
-    .filter(isSameDomain)
-    .reduce(
-      (finalArr, sheet) =>
-        finalArr.concat(
-          [...sheet.cssRules].filter(isStyleRule).reduce((propValArr, rule) => {
-            const props = [...rule.style]
-              .map((propName) => [
-                propName.trim(),
-                rule.style.getPropertyValue(propName).trim()
-              ])
-              .filter(([propName]) => propName.indexOf('--cps-color') === 0);
+  [...(document.styleSheets as any)].filter(isSameDomain).reduce(
+    (finalArr, sheet) =>
+      finalArr.concat(
+        [...sheet.cssRules].filter(isStyleRule).reduce((propValArr, rule) => {
+          const props = [...rule.style]
+            .map((propName) => [
+              propName.trim(),
+              rule.style.getPropertyValue(propName).trim()
+            ])
+            .filter(([propName]) => propName.indexOf('--cps-color') === 0);
 
-            return [...propValArr, ...props];
-          }, [])
-        ),
-      []
-    )
-    .filter(
-      (value: [string, string], index: number, array: [string, string][]) =>
-        array.findIndex((val) => val[0] === value[0]) === index
-    );
+          return [...propValArr, ...props];
+        }, [])
+      ),
+    []
+  );
 
 export const getCSSColor = (val: string): string => {
   if (!val) return '';
