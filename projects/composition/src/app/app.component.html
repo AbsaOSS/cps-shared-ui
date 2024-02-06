@@ -6,9 +6,19 @@
   >
 </div>
 <div class="composition-container">
-  <app-navigation-sidebar></app-navigation-sidebar>
-  <div class="composition-body">
-    <div class="composition-body-toolbar">{{ componentTitle }}</div>
+  <app-navigation-sidebar
+    [isExpanded]="sidebarExpanded"></app-navigation-sidebar>
+  <div
+    class="composition-body"
+    [ngClass]="{ 'composition-body-collapsed': !sidebarExpanded }">
+    <div class="composition-body-toolbar">
+      <cps-icon
+        icon="burger-arrow"
+        color="white"
+        class="sidebar-toggle-icon"
+        (click)="toggleSidebar()"></cps-icon>
+      <span class="composition-body-toolbar-title">{{ componentTitle }}</span>
+    </div>
     <router-outlet></router-outlet>
   </div>
 </div>

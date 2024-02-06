@@ -1,5 +1,8 @@
 @import '../../../variables.scss';
 :host {
+  app-component-docs-viewer {
+    height: 100%;
+  }
   padding: 0 24px 0 24px;
   .desc {
     margin-top: 24px;
