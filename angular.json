@@ -99,7 +99,6 @@
             "tsConfig": "projects/composition/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/composition/src/favicon.ico",
               "projects/composition/src/assets",
               {
                 "glob": "**/*",
@@ -165,10 +164,7 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/composition/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/composition/src/favicon.ico",
-              "projects/composition/src/assets"
-            ],
+            "assets": ["projects/composition/src/assets"],
             "styles": ["projects/composition/src/styles.scss"],
             "scripts": []
           }
