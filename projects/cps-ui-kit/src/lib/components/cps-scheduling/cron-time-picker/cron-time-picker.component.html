@@ -1,0 +1,34 @@
+<cps-select
+  width="70px"
+  [disabled]="disabled"
+  [returnObject]="false"
+  [hideDetails]="true"
+  (valueChanged)="onValueChanged()"
+  [(ngModel)]="time.hours"
+  [options]="hours"
+  class="time-form-control">
+</cps-select>
+:
+<cps-select
+  width="70px"
+  [disabled]="disabled"
+  [returnObject]="false"
+  [hideDetails]="true"
+  (valueChanged)="onValueChanged()"
+  [(ngModel)]="time.minutes"
+  [options]="minutes"
+  class="time-form-control">
+</cps-select>
+
+<cps-select
+  *ngIf="!use24HourTime"
+  width="70px"
+  [disabled]="disabled"
+  placeholder=""
+  [returnObject]="false"
+  [hideDetails]="true"
+  (valueChanged)="onValueChanged()"
+  [(ngModel)]="time.hourTypes"
+  [options]="hourTypes"
+  class="time-form-control">
+</cps-select>

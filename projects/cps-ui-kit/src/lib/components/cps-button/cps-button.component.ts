@@ -79,7 +79,7 @@ export class CpsButtonComponent implements OnInit {
   @Input() height: number | string = 0;
 
   /**
-   * When present, it specifies that the component should be disabled.
+   * Determines whether the button is disabled.
    * @group Props
    */
   @Input() disabled = false;

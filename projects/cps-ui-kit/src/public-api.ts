@@ -42,6 +42,7 @@ export * from './lib/components/cps-tab-group/cps-tab-group.component';
 export * from './lib/components/cps-tab-group/cps-tab/cps-tab.component';
 export * from './lib/components/cps-timepicker/cps-timepicker.component';
 export * from './lib/components/cps-file-upload/cps-file-upload.component';
+export * from './lib/components/cps-scheduling/cps-scheduling.component';
 
 export * from './lib/directives/cps-tooltip/cps-tooltip.directive';
 

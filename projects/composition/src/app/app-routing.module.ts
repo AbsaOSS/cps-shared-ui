@@ -250,6 +250,14 @@ const routes: Routes = [
         (mod) => mod.TooltipPageComponent
       )
   },
+  {
+    path: 'scheduling',
+    title: 'Scheduling',
+    loadComponent: () =>
+      import('./pages/scheduling-page/scheduling-page.component').then(
+        (mod) => mod.SchedulingPageComponent
+      )
+  },
   { path: '**', redirectTo: 'colors' }
 ];
 

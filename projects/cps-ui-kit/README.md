@@ -23,6 +23,7 @@
 - Progress circular (indeterminate)
 - Progress linear (indeterminate)
 - Radio
+- Scheduling
 - Select
 - Sidebar menu
 - Table

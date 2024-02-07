@@ -1,0 +1,47 @@
+:host {
+  .cron-freq-selector {
+    margin-bottom: 24px;
+  }
+
+  ::ng-deep cps-radio-group {
+    .cps-radio-group-content {
+      margin-left: 0px !important;
+    }
+  }
+
+  .cron-editor-container {
+    margin-top: 10px;
+    margin-left: 16px;
+
+    .cron-select-control {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+
+    .days-checkbox-group {
+      max-width: 700px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-rows: 1fr 1fr;
+      grid-gap: 20px;
+      margin-bottom: 16px;
+    }
+
+    .tab-pane {
+      margin-bottom: 28px;
+
+      &-row {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .near-weekday-checkbox {
+    margin-left: 16px;
+  }
+
+  .cron-editor-container .advanced-cron-editor-label {
+    font-weight: 200;
+  }
+}
