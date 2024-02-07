@@ -1,5 +1,5 @@
 :host {
-  .cron-freq-selector {
+  .cps-scheduler-freq-selector {
     margin-bottom: 24px;
   }
 
@@ -9,16 +9,16 @@
     }
   }
 
-  .cron-editor-container {
+  .cps-scheduler-container {
     margin-top: 10px;
     margin-left: 16px;
 
-    .cron-select-control {
+    .cps-scheduler-select-control {
       margin-left: 8px;
       margin-right: 8px;
     }
 
-    .days-checkbox-group {
+    .cps-scheduler-days-checkbox-group {
       max-width: 700px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -27,21 +27,17 @@
       margin-bottom: 16px;
     }
 
-    .tab-pane {
+    .cps-scheduler-tab-pane {
       margin-bottom: 28px;
 
       &-row {
         display: flex;
         align-items: center;
       }
+
+      .cps-scheduler-nearest-weekday-checkbox {
+        margin-left: 16px;
+      }
     }
-  }
-
-  .near-weekday-checkbox {
-    margin-left: 16px;
-  }
-
-  .cron-editor-container .advanced-cron-editor-label {
-    font-weight: 200;
   }
 }

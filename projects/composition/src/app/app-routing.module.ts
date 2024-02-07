@@ -251,11 +251,11 @@ const routes: Routes = [
       )
   },
   {
-    path: 'scheduling',
-    title: 'Scheduling',
+    path: 'scheduler',
+    title: 'Scheduler',
     loadComponent: () =>
-      import('./pages/scheduling-page/scheduling-page.component').then(
-        (mod) => mod.SchedulingPageComponent
+      import('./pages/scheduler-page/scheduler-page.component').then(
+        (mod) => mod.SchedulerPageComponent
       )
   },
   { path: '**', redirectTo: 'colors' }

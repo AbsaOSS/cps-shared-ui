@@ -1,7 +1,7 @@
 {
     "components": {
-        "CpsSchedulingComponent": {
-            "description": "CpsSchedulingComponent is a component designed to facilitate the creation of CRON expressions.",
+        "CpsSchedulerComponent": {
+            "description": "CpsSchedulerComponent is a component designed to facilitate the creation of CRON expressions.",
             "props": {
                 "description": "Defines the input properties of the component.",
                 "values": [
@@ -14,12 +14,36 @@
                         "description": "Determines whether the component is disabled."
                     },
                     {
-                        "name": "options",
+                        "name": "defaultTime",
                         "optional": false,
                         "readonly": false,
-                        "type": "CronOptions",
-                        "default": "...",
-                        "description": "Options for the component."
+                        "type": "string",
+                        "default": "00:00:00",
+                        "description": "Default time format for the component."
+                    },
+                    {
+                        "name": "use24HourTime",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to use 24-hour time format."
+                    },
+                    {
+                        "name": "hideNotSet",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to hide the 'Not set' tab."
+                    },
+                    {
+                        "name": "hideAdvanced",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether to hide the 'Advanced' tab."
                     },
                     {
                         "name": "infoTooltip",

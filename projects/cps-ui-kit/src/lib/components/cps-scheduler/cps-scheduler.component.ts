@@ -63,11 +63,11 @@ enum Months {
 }
 
 /**
- * CpsSchedulingComponent is a component designed to facilitate the creation of CRON expressions.
+ * CpsSchedulerComponent is a component designed to facilitate the creation of CRON expressions.
  * @group Components
  */
 @Component({
-  selector: 'cps-scheduling',
+  selector: 'cps-scheduler',
   standalone: true,
   imports: [
     CommonModule,
@@ -81,10 +81,10 @@ enum Months {
     CpsInputComponent,
     CronTimePickerComponent
   ],
-  templateUrl: './cps-scheduling.component.html',
-  styleUrl: './cps-scheduling.component.scss'
+  templateUrl: './cps-scheduler.component.html',
+  styleUrl: './cps-scheduler.component.scss'
 })
-export class CpsSchedulingComponent implements OnInit, OnChanges {
+export class CpsSchedulerComponent implements OnInit, OnChanges {
   /**
    * Determines whether the component is disabled.
    * @group Props

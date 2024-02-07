@@ -1,4 +1,4 @@
-<div class="cron-freq-selector">
+<div class="cps-scheduler-freq-selector">
   <cps-button-toggle
     [options]="scheduleTypes"
     label="Frequency"
@@ -8,12 +8,12 @@
   </cps-button-toggle>
 </div>
 
-<div [ngSwitch]="activeScheduleType" class="cron-editor-container">
+<div [ngSwitch]="activeScheduleType" class="cps-scheduler-container">
   <!--Not set-->
-  <div *ngSwitchCase="'Not set'" class="tab-pane"></div>
+  <div *ngSwitchCase="'Not set'" class="cps-scheduler-tab-pane"></div>
   <!--Minutes-->
-  <div *ngSwitchCase="'Minutes'" class="tab-pane">
-    <div class="tab-pane-row">
+  <div *ngSwitchCase="'Minutes'" class="cps-scheduler-tab-pane">
+    <div class="cps-scheduler-tab-pane-row">
       Every
       <cps-select
         width="70px"
@@ -23,14 +23,14 @@
         (valueChanged)="regenerateCron()"
         [(ngModel)]="state.minutes.minutes"
         [options]="selectOptions.minutes"
-        class="cron-select-control">
+        class="cps-scheduler-select-control">
       </cps-select>
       minute(s)
     </div>
   </div>
   <!--Hourly-->
-  <div *ngSwitchCase="'Hourly'" class="tab-pane">
-    <div class="tab-pane-row">
+  <div *ngSwitchCase="'Hourly'" class="cps-scheduler-tab-pane">
+    <div class="cps-scheduler-tab-pane-row">
       Every
       <cps-select
         width="70px"
@@ -40,7 +40,7 @@
         (valueChanged)="regenerateCron()"
         [(ngModel)]="state.hourly.hours"
         [options]="selectOptions.hours"
-        class="cron-select-control">
+        class="cps-scheduler-select-control">
       </cps-select>
       hour(s) on minute
       <cps-select
@@ -51,18 +51,18 @@
         (valueChanged)="regenerateCron()"
         [(ngModel)]="state.hourly.minutes"
         [options]="selectOptions.fullMinutes"
-        class="cron-select-control">
+        class="cps-scheduler-select-control">
       </cps-select>
     </div>
   </div>
   <!--Daily-->
-  <div *ngSwitchCase="'Daily'" class="tab-pane">
+  <div *ngSwitchCase="'Daily'" class="cps-scheduler-tab-pane">
     <cps-radio-group
       [(ngModel)]="state.daily.subTab"
       (valueChanged)="regenerateCron()"
       [vertical]="true">
       <cps-radio [option]="{ value: 'everyDays', disabled: disabled }">
-        <div class="tab-pane-row">
+        <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
             width="70px"
@@ -72,11 +72,11 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.daily.everyDays.days"
             [options]="selectOptions.monthDays"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           day(s) at
           <cron-time-picker
-            class="tab-pane-row"
+            class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.daily.subTab !== 'everyDays'"
             (timeChange)="regenerateCron()"
             [(time)]="state.daily.everyDays"
@@ -85,10 +85,10 @@
         </div>
       </cps-radio>
       <cps-radio [option]="{ value: 'everyWeekDay', disabled: disabled }">
-        <div class="tab-pane-row">
+        <div class="cps-scheduler-tab-pane-row">
           Every working day at
           <cron-time-picker
-            class="tab-pane-row"
+            class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.daily.everyWeekDay"
@@ -99,8 +99,8 @@
     </cps-radio-group>
   </div>
   <!--Weekly-->
-  <div *ngSwitchCase="'Weekly'" class="tab-pane">
-    <div class="days-checkbox-group">
+  <div *ngSwitchCase="'Weekly'" class="cps-scheduler-tab-pane">
+    <div class="cps-scheduler-days-checkbox-group">
       <cps-checkbox
         (valueChanged)="regenerateCron()"
         [disabled]="disabled"
@@ -144,10 +144,10 @@
         [(ngModel)]="state.weekly.SUN">
       </cps-checkbox>
     </div>
-    <div class="tab-pane-row">
+    <div class="cps-scheduler-tab-pane-row">
       at
       <cron-time-picker
-        class="tab-pane-row"
+        class="cps-scheduler-tab-pane-row"
         [disabled]="disabled"
         (timeChange)="regenerateCron()"
         [(time)]="state.weekly"
@@ -156,13 +156,13 @@
     </div>
   </div>
   <!--Monthly-->
-  <div *ngSwitchCase="'Monthly'" class="tab-pane">
+  <div *ngSwitchCase="'Monthly'" class="cps-scheduler-tab-pane">
     <cps-radio-group
       [(ngModel)]="state.monthly.subTab"
       (valueChanged)="regenerateCron()"
       [vertical]="true">
       <cps-radio [option]="{ value: 'specificDay', disabled: disabled }">
-        <div class="tab-pane-row">
+        <div class="cps-scheduler-tab-pane-row">
           On the
           <cps-select
             width="120px"
@@ -172,7 +172,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.monthly.specificDay.day"
             [options]="selectOptions.monthDaysWithLasts"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           of every
           <cps-select
@@ -183,11 +183,11 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.monthly.specificDay.months"
             [options]="selectOptions.monthsNumeric"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           month(s) at
           <cron-time-picker
-            class="tab-pane-row"
+            class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.monthly.specificDay"
@@ -198,13 +198,13 @@
             [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
             label="During the nearest weekday"
             [(ngModel)]="state.monthly.runOnWeekday"
-            class="near-weekday-checkbox">
+            class="cps-scheduler-nearest-weekday-checkbox">
           </cps-checkbox>
         </div>
       </cps-radio>
 
       <cps-radio [option]="{ value: 'specificWeekDay', disabled: disabled }">
-        <div class="tab-pane-row">
+        <div class="cps-scheduler-tab-pane-row">
           On the
           <cps-select
             width="106px"
@@ -214,7 +214,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.monthly.specificWeekDay.monthWeek"
             [options]="selectOptions.monthWeeks"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           <cps-select
             width="130px"
@@ -224,7 +224,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.monthly.specificWeekDay.day"
             [options]="selectOptions.days"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           of every
           <cps-select
@@ -235,7 +235,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.monthly.specificWeekDay.months"
             [options]="selectOptions.monthsNumeric"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           month(s) starting in
           <cps-select
@@ -246,11 +246,11 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.monthly.specificWeekDay.startMonth"
             [options]="selectOptions.months"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           at
           <cron-time-picker
-            class="tab-pane-row"
+            class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.monthly.specificWeekDay"
@@ -261,13 +261,13 @@
     </cps-radio-group>
   </div>
   <!--Yearly-->
-  <div *ngSwitchCase="'Yearly'" class="tab-pane">
+  <div *ngSwitchCase="'Yearly'" class="cps-scheduler-tab-pane">
     <cps-radio-group
       [(ngModel)]="state.yearly.subTab"
       (valueChanged)="regenerateCron()"
       [vertical]="true">
       <cps-radio [option]="{ value: 'specificMonthDay', disabled: disabled }">
-        <div class="tab-pane-row">
+        <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
             width="120px"
@@ -277,7 +277,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.yearly.specificMonthDay.month"
             [options]="selectOptions.months"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           on the
           <cps-select
@@ -288,11 +288,11 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.yearly.specificMonthDay.day"
             [options]="selectOptions.monthDaysWithLasts"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           at
           <cron-time-picker
-            class="tab-pane-row"
+            class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.yearly.specificMonthDay"
@@ -303,13 +303,13 @@
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
             label="During the nearest weekday"
             [(ngModel)]="state.yearly.runOnWeekday"
-            class="near-weekday-checkbox">
+            class="cps-scheduler-nearest-weekday-checkbox">
           </cps-checkbox>
         </div>
       </cps-radio>
 
       <cps-radio [option]="{ value: 'specificMonthWeek', disabled: disabled }">
-        <div class="tab-pane-row">
+        <div class="cps-scheduler-tab-pane-row">
           On the
           <cps-select
             width="106px"
@@ -319,7 +319,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.yearly.specificMonthWeek.monthWeek"
             [options]="selectOptions.monthWeeks"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           <cps-select
             width="120px"
@@ -329,7 +329,7 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.yearly.specificMonthWeek.day"
             [options]="selectOptions.days"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           of
           <cps-select
@@ -340,11 +340,11 @@
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.yearly.specificMonthWeek.month"
             [options]="selectOptions.months"
-            class="cron-select-control">
+            class="cps-scheduler-select-control">
           </cps-select>
           at
           <cron-time-picker
-            class="tab-pane-row"
+            class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
             (timeChange)="regenerateCron()"
             [(time)]="state.yearly.specificMonthWeek"

@@ -100,8 +100,8 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/radio'
     },
     {
-      title: 'Scheduling',
-      url: '/scheduling'
+      title: 'Scheduler',
+      url: '/scheduler'
     },
     {
       title: 'Select',
