@@ -369,50 +369,22 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  formatTimeValue(value: any): CpsTime {
-    return {
-      hours: this._numToString(value.hours),
-      minutes: this._numToString(value.minutes)
-    };
-  }
-
   onTimeZoneChanged(value: string): void {
     if (!this.showTimeZone) return;
     this.timeZoneChanged.emit(value);
   }
 
-  onDailyEveryDayTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.daily.everyDays);
-  }
-
-  onDailyEveryWorkDayTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.daily.everyWeekDay);
-  }
-
-  onWeeklyTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.weekly);
-  }
-
-  onMonthlySpecificDayTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.monthly.specificDay);
-  }
-
-  onMonthlySpecificWeekDayTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.monthly.specificWeekDay);
-  }
-
-  onYearlySpecificMonthDayTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.yearly.specificMonthDay);
-  }
-
-  onYearlySpecificMonthWeekTimeChanged(value: CpsTime): void {
-    this._onTimeChanged(value, this.state.yearly.specificMonthWeek);
-  }
-
-  private _onTimeChanged(value: CpsTime, target: any): void {
+  onTimeChanged(value: CpsTime, target: any): void {
     target.hours = this._stringToNum(value.hours);
     target.minutes = this._stringToNum(value.minutes);
     this.regenerateCron();
+  }
+
+  formatTimeValue(value: any): CpsTime {
+    return {
+      hours: this._numToString(value.hours),
+      minutes: this._numToString(value.minutes)
+    };
   }
 
   private _isValidCron(cron: string): boolean {

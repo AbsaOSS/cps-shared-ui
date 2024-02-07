@@ -89,7 +89,7 @@
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.daily.everyDays)"
             [hideDetails]="true"
-            (valueChanged)="onDailyEveryDayTimeChanged($event)">
+            (valueChanged)="onTimeChanged($event, state.daily.everyDays)">
           </cps-timepicker>
         </div>
       </cps-radio>
@@ -107,7 +107,7 @@
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.daily.everyWeekDay)"
             [hideDetails]="true"
-            (valueChanged)="onDailyEveryWorkDayTimeChanged($event)">
+            (valueChanged)="onTimeChanged($event, state.daily.everyWeekDay)">
           </cps-timepicker>
         </div>
       </cps-radio>
@@ -167,7 +167,7 @@
         [mandatoryValue]="true"
         [value]="formatTimeValue(state.weekly)"
         [hideDetails]="true"
-        (valueChanged)="onWeeklyTimeChanged($event)">
+        (valueChanged)="onTimeChanged($event, state.weekly)">
       </cps-timepicker>
     </div>
   </div>
@@ -213,7 +213,7 @@
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.monthly.specificDay)"
             [hideDetails]="true"
-            (valueChanged)="onMonthlySpecificDayTimeChanged($event)">
+            (valueChanged)="onTimeChanged($event, state.monthly.specificDay)">
           </cps-timepicker>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
@@ -282,7 +282,9 @@
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.monthly.specificWeekDay)"
             [hideDetails]="true"
-            (valueChanged)="onMonthlySpecificWeekDayTimeChanged($event)">
+            (valueChanged)="
+              onTimeChanged($event, state.monthly.specificWeekDay)
+            ">
           </cps-timepicker>
         </div>
       </cps-radio>
@@ -330,7 +332,9 @@
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.yearly.specificMonthDay)"
             [hideDetails]="true"
-            (valueChanged)="onYearlySpecificMonthDayTimeChanged($event)">
+            (valueChanged)="
+              onTimeChanged($event, state.yearly.specificMonthDay)
+            ">
           </cps-timepicker>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
@@ -388,7 +392,9 @@
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.yearly.specificMonthWeek)"
             [hideDetails]="true"
-            (valueChanged)="onYearlySpecificMonthWeekTimeChanged($event)">
+            (valueChanged)="
+              onTimeChanged($event, state.yearly.specificMonthWeek)
+            ">
           </cps-timepicker>
         </div>
       </cps-radio>
