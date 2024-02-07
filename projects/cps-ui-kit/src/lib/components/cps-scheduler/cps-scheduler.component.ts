@@ -17,11 +17,13 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
+import { timeZones } from './cps-scheduler.utils';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsRadioGroupComponent } from '../cps-radio-group/cps-radio-group.component';
 import { CpsRadioComponent } from '../cps-radio-group/cps-radio/cps-radio.component';
 import { CpsCheckboxComponent } from '../cps-checkbox/cps-checkbox.component';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 import {
   CpsButtonToggleComponent,
   CpsButtonToggleOption
@@ -66,7 +68,7 @@ enum Months {
 }
 
 /**
- * CpsSchedulerComponent is a component designed to facilitate the creation of CRON expressions.
+ * CpsSchedulerComponent is a component designed to facilitate the creation of Amazon EventBridge CRON expressions.
  * @group Components
  */
 @Component({
@@ -82,7 +84,8 @@ enum Months {
     CpsRadioComponent,
     CpsCheckboxComponent,
     CpsInputComponent,
-    CpsTimepickerComponent
+    CpsTimepickerComponent,
+    CpsAutocompleteComponent
   ],
   templateUrl: './cps-scheduler.component.html',
   styleUrl: './cps-scheduler.component.scss'
@@ -107,16 +110,28 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   @Input() use24HourTime = true;
 
   /**
-   * Determines whether to hide the 'Not set' tab.
+   * Determines whether to show the 'Not set' tab.
    * @group Props
    */
-  @Input() hideNotSet = false;
+  @Input() showNotSet = true;
 
   /**
-   * Determines whether to hide the 'Advanced' tab.
+   * Determines whether to show the 'Advanced' tab.
    * @group Props
    */
-  @Input() hideAdvanced = false;
+  @Input() showAdvanced = true;
+
+  /**
+   * Determines whether to show the time zone selector.
+   * @group Props
+   */
+  @Input() showTimeZone = false;
+
+  /**
+   * Time zone.
+   * @group Props
+   */
+  @Input() timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
   /**
    * Information tooltip for the component.
@@ -125,17 +140,31 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   @Input() infoTooltip = '';
 
   /**
-   * Cron expression.
+   * Cron expression value.
    * @group Props
    */
   @Input() set cron(value: string) {
-    this.localCron = value;
-    this.valueChanged.emit(this.localCron);
+    this._cron = value;
+    this.cronChanged.emit(this._cron);
   }
 
   get cron(): string {
-    return this.localCron;
+    return this._cron;
   }
+
+  /**
+   * Callback to invoke on cron value change.
+   * @param {string} string - cron value changed.
+   * @group Emits
+   */
+  @Output() cronChanged = new EventEmitter<string>();
+
+  /**
+   * Callback to invoke on time zone change.
+   * @param {string} string - time zone changed.
+   * @group Emits
+   */
+  @Output() timeZoneChanged = new EventEmitter<string>();
 
   activeScheduleType = 'Not set';
 
@@ -150,20 +179,17 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     { label: 'Advanced', value: 'Advanced' }
   ] as CpsButtonToggleOption[];
 
-  /**
-   * Callback to invoke on value change.
-   * @param {string} string - value changed.
-   * @group Emits
-   */
-  @Output() valueChanged = new EventEmitter<string>();
-
-  private localCron = '';
-  private isDirty = false;
-
   selectOptions = this._getSelectOptions();
+
+  timeZoneOptions = timeZones.map((tz) => ({ label: tz, value: tz }));
+
   state: any;
 
   form!: UntypedFormGroup;
+
+  private _cron = '';
+
+  private _isDirty = false;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -171,14 +197,14 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     private _cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit() {
-    if (this.hideNotSet) {
+  ngOnInit(): void {
+    if (!this.showNotSet) {
       this.scheduleTypes.shift();
       this.activeScheduleType = 'Minutes';
-      this.localCron = '0/1 * 1/1 * ? *';
+      this._cron = '0/1 * 1/1 * ? *';
     }
 
-    if (this.hideAdvanced) {
+    if (!this.showAdvanced) {
       this.scheduleTypes.pop();
     }
 
@@ -193,14 +219,14 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const newCron = changes.cron;
+  ngOnChanges(changes: SimpleChanges): void {
+    const newCron = changes.value;
     if (newCron && !newCron.firstChange) {
       this._handleModelChange(this.cron);
     }
   }
 
-  setActiveScheduleType(value: string) {
+  setActiveScheduleType(value: string): void {
     if (!this.disabled) {
       this.activeScheduleType = value;
       this.regenerateCron(true);
@@ -216,8 +242,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  regenerateCron(tabChange?: boolean) {
-    this.isDirty = true;
+  regenerateCron(tabChange?: boolean): void {
+    this._isDirty = true;
 
     switch (this.activeScheduleType) {
       case 'Minutes':
@@ -343,70 +369,61 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         this.form.controls.advanced.setValue(this.cron);
         break;
       default:
-        if (!this.hideNotSet) this.cron = '';
+        if (this.showNotSet) this.cron = '';
         else throw new Error('Invalid cron type');
     }
   }
 
-  formatTimeValue(value: any) {
+  formatTimeValue(value: any): CpsTime {
     return {
       hours: this._numToString(value.hours),
       minutes: this._numToString(value.minutes)
-    } as CpsTime;
+    };
   }
 
-  onDailyEveryDayTimeChanged(value: CpsTime) {
-    this.state.daily.everyDays.hours = this._stringToNum(value.hours);
-    this.state.daily.everyDays.minutes = this._stringToNum(value.minutes);
-    this.regenerateCron();
+  onTimeZoneChanged(value: string): void {
+    if (!this.showTimeZone) return;
+    this.timeZoneChanged.emit(value);
   }
 
-  onDailyEveryWorkDayTimeChanged(value: CpsTime) {
-    this.state.daily.everyWeekDay.hours = this._stringToNum(value.hours);
-    this.state.daily.everyWeekDay.minutes = this._stringToNum(value.minutes);
-    this.regenerateCron();
+  onDailyEveryDayTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.daily.everyDays);
   }
 
-  onWeeklyTimeChanged(value: CpsTime) {
-    this.state.weekly.hours = this._stringToNum(value.hours);
-    this.state.weekly.minutes = this._stringToNum(value.minutes);
-    this.regenerateCron();
+  onDailyEveryWorkDayTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.daily.everyWeekDay);
   }
 
-  onMonthlySpecificDayTimeChanged(value: CpsTime) {
-    this.state.monthly.specificDay.hours = this._stringToNum(value.hours);
-    this.state.monthly.specificDay.minutes = this._stringToNum(value.minutes);
-    this.regenerateCron();
+  onWeeklyTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.weekly);
   }
 
-  onMonthlySpecificWeekDayTimeChanged(value: CpsTime) {
-    this.state.monthly.specificWeekDay.hours = this._stringToNum(value.hours);
-    this.state.monthly.specificWeekDay.minutes = this._stringToNum(
-      value.minutes
-    );
-    this.regenerateCron();
+  onMonthlySpecificDayTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.monthly.specificDay);
   }
 
-  onYearlySpecificMonthDayTimeChanged(value: CpsTime) {
-    this.state.yearly.specificMonthDay.hours = this._stringToNum(value.hours);
-    this.state.yearly.specificMonthDay.minutes = this._stringToNum(
-      value.minutes
-    );
-    this.regenerateCron();
+  onMonthlySpecificWeekDayTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.monthly.specificWeekDay);
   }
 
-  onYearlySpecificMonthWeekTimeChanged(value: CpsTime) {
-    this.state.yearly.specificMonthWeek.hours = this._stringToNum(value.hours);
-    this.state.yearly.specificMonthWeek.minutes = this._stringToNum(
-      value.minutes
-    );
+  onYearlySpecificMonthDayTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.yearly.specificMonthDay);
+  }
+
+  onYearlySpecificMonthWeekTimeChanged(value: CpsTime): void {
+    this._onTimeChanged(value, this.state.yearly.specificMonthWeek);
+  }
+
+  private _onTimeChanged(value: CpsTime, target: any): void {
+    target.hours = this._stringToNum(value.hours);
+    target.minutes = this._stringToNum(value.minutes);
     this.regenerateCron();
   }
 
   private _isValidCron(cron: string): boolean {
     if (typeof cron !== 'string') return false;
 
-    if (this.hideNotSet) {
+    if (!this.showNotSet) {
       if (!cron) return false;
     } else if (cron === '') return true;
 
@@ -446,15 +463,15 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       : { invalidExpression: 'Invalid expression' };
   }
 
-  private _getAmPmHour(hour: number) {
+  private _getAmPmHour(hour: number): number {
     return this.use24HourTime ? hour : ((hour + 11) % 12) + 1;
   }
 
-  private _getHourType(hour: number) {
+  private _getHourType(hour: number): string | undefined {
     return this.use24HourTime ? undefined : hour >= 12 ? 'PM' : 'AM';
   }
 
-  private _hourToCron(hour: number, hourType: string) {
+  private _hourToCron(hour: number, hourType: string): number {
     if (this.use24HourTime) {
       return hour;
     } else {
@@ -468,18 +485,18 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  private _handleModelChange(cron: string) {
+  private _handleModelChange(cron: string): void {
     if (!this._isValidCron(cron)) {
       console.error('Invalid cron value:', cron);
-      this.cron = this.hideNotSet ? '0/1 * 1/1 * ? *' : '';
+      this.cron = this.showNotSet ? '' : '0/1 * 1/1 * ? *';
       return;
     }
 
-    if (this.isDirty) {
-      this.isDirty = false;
+    if (this._isDirty) {
+      this._isDirty = false;
       return;
     } else {
-      this.isDirty = false;
+      this._isDirty = false;
     }
 
     const emptyCron = cron?.length < 1;
@@ -716,7 +733,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     };
   }
 
-  private _getRange(startFrom: number, until: number) {
+  private _getRange(startFrom: number, until: number): number[] {
     return Array.from(
       { length: until + 1 - startFrom },
       (_, k) => k + startFrom
@@ -805,11 +822,11 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  private _numToString(value: number) {
+  private _numToString(value: number): string {
     return value >= 0 && value <= 9 ? '0' + value : value.toString();
   }
 
-  private _stringToNum(value: string) {
+  private _stringToNum(value: string): number {
     const res = Number(value);
     return isNaN(res) ? 0 : res;
   }

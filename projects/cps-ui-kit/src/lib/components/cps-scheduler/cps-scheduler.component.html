@@ -407,4 +407,13 @@
       </cps-input>
     </form>
   </div>
+  <div class="cps-scheduler-time-zone" *ngIf="cron && showTimeZone">
+    <cps-autocomplete
+      label="Time zone"
+      [(ngModel)]="timeZone"
+      (valueChanged)="onTimeZoneChanged($event)"
+      [returnObject]="false"
+      width="300"
+      [options]="timeZoneOptions"></cps-autocomplete>
+  </div>
 </div>
