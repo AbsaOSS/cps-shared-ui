@@ -1,7 +1,7 @@
 {
     "components": {
         "CpsSchedulerComponent": {
-            "description": "CpsSchedulerComponent is a component designed to facilitate the creation of CRON expressions.",
+            "description": "CpsSchedulerComponent is a component designed to facilitate the creation of Amazon EventBridge CRON expressions.",
             "props": {
                 "description": "Defines the input properties of the component.",
                 "values": [
@@ -18,7 +18,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "00:00:00",
+                        "default": "00:00",
                         "description": "Default time format for the component."
                     },
                     {
@@ -30,20 +30,36 @@
                         "description": "Determines whether to use 24-hour time format."
                     },
                     {
-                        "name": "hideNotSet",
+                        "name": "showNotSet",
                         "optional": false,
                         "readonly": false,
                         "type": "boolean",
-                        "default": "false",
-                        "description": "Determines whether to hide the 'Not set' tab."
+                        "default": "true",
+                        "description": "Determines whether to show the 'Not set' tab."
                     },
                     {
-                        "name": "hideAdvanced",
+                        "name": "showAdvanced",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show the 'Advanced' tab."
+                    },
+                    {
+                        "name": "showTimeZone",
                         "optional": false,
                         "readonly": false,
                         "type": "boolean",
                         "default": "false",
-                        "description": "Determines whether to hide the 'Advanced' tab."
+                        "description": "Determines whether to show the time zone selector."
+                    },
+                    {
+                        "name": "timeZone",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "...",
+                        "description": "Time zone."
                     },
                     {
                         "name": "infoTooltip",
@@ -65,14 +81,24 @@
                 "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
                 "values": [
                     {
-                        "name": "valueChanged",
+                        "name": "cronChanged",
                         "parameters": [
                             {
                                 "name": "value",
                                 "type": "string"
                             }
                         ],
-                        "description": "Callback to invoke on value change."
+                        "description": "Callback to invoke on cron value change."
+                    },
+                    {
+                        "name": "timeZoneChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke on time zone change."
                     }
                 ]
             }
