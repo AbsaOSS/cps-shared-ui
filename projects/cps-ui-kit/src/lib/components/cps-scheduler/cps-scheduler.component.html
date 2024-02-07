@@ -1,4 +1,4 @@
-<div class="cps-scheduler-freq-selector">
+<div class="cps-scheduler-selector">
   <cps-button-toggle
     [options]="scheduleTypes"
     [disabled]="disabled"
@@ -65,7 +65,12 @@
       (valueChanged)="regenerateCron()"
       [vertical]="true">
       <cps-radio [option]="{ value: 'everyDays', disabled: disabled }">
-        <div class="cps-scheduler-tab-pane-row">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.daily.subTab !== 'everyDays'
+          }">
           Every
           <cps-select
             width="70px"
@@ -89,7 +94,12 @@
         </div>
       </cps-radio>
       <cps-radio [option]="{ value: 'everyWeekDay', disabled: disabled }">
-        <div class="cps-scheduler-tab-pane-row">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.daily.subTab !== 'everyWeekDay'
+          }">
           Every working day at
           <cps-timepicker
             [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
@@ -168,7 +178,12 @@
       (valueChanged)="regenerateCron()"
       [vertical]="true">
       <cps-radio [option]="{ value: 'specificDay', disabled: disabled }">
-        <div class="cps-scheduler-tab-pane-row">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.monthly.subTab !== 'specificDay'
+          }">
           On the
           <cps-select
             width="120px"
@@ -211,7 +226,12 @@
       </cps-radio>
 
       <cps-radio [option]="{ value: 'specificWeekDay', disabled: disabled }">
-        <div class="cps-scheduler-tab-pane-row">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.monthly.subTab !== 'specificWeekDay'
+          }">
           On the
           <cps-select
             width="106px"
@@ -275,7 +295,12 @@
       (valueChanged)="regenerateCron()"
       [vertical]="true">
       <cps-radio [option]="{ value: 'specificMonthDay', disabled: disabled }">
-        <div class="cps-scheduler-tab-pane-row">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.yearly.subTab !== 'specificMonthDay'
+          }">
           Every
           <cps-select
             width="120px"
@@ -318,7 +343,12 @@
       </cps-radio>
 
       <cps-radio [option]="{ value: 'specificMonthWeek', disabled: disabled }">
-        <div class="cps-scheduler-tab-pane-row">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.yearly.subTab !== 'specificMonthWeek'
+          }">
           On the
           <cps-select
             width="106px"

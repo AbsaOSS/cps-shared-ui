@@ -1,12 +1,6 @@
 :host {
-  .cps-scheduler-freq-selector {
+  .cps-scheduler-selector {
     margin-bottom: 24px;
-  }
-
-  ::ng-deep cps-radio-group {
-    .cps-radio-group-content {
-      margin-left: 0px !important;
-    }
   }
 
   .cps-scheduler-container {
@@ -30,14 +24,25 @@
     .cps-scheduler-tab-pane {
       margin-bottom: 28px;
 
-      &-row {
+      cps-radio-group {
+        ::ng-deep .cps-radio-group-content {
+          margin-left: 0px !important;
+        }
+      }
+
+      .cps-scheduler-tab-pane-row {
         display: flex;
         align-items: center;
+
+        &-disabled {
+          color: var(--cps-color-text-light);
+        }
       }
 
       .cps-scheduler-nearest-weekday-checkbox {
         margin-left: 16px;
       }
+
       cps-timepicker {
         margin-left: 8px;
       }
