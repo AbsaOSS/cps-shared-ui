@@ -10,9 +10,9 @@
 
 <div [ngSwitch]="activeScheduleType" class="cron-editor-container">
   <!--Not set-->
-  <div *ngSwitchCase="scheduleTypes[0].value" class="tab-pane"></div>
+  <div *ngSwitchCase="'Not set'" class="tab-pane"></div>
   <!--Minutes-->
-  <div *ngSwitchCase="scheduleTypes[1].value" class="tab-pane">
+  <div *ngSwitchCase="'Minutes'" class="tab-pane">
     <div class="tab-pane-row">
       Every
       <cps-select
@@ -29,7 +29,7 @@
     </div>
   </div>
   <!--Hourly-->
-  <div *ngSwitchCase="scheduleTypes[2].value" class="tab-pane">
+  <div *ngSwitchCase="'Hourly'" class="tab-pane">
     <div class="tab-pane-row">
       Every
       <cps-select
@@ -56,7 +56,7 @@
     </div>
   </div>
   <!--Daily-->
-  <div *ngSwitchCase="scheduleTypes[3].value" class="tab-pane">
+  <div *ngSwitchCase="'Daily'" class="tab-pane">
     <cps-radio-group
       [(ngModel)]="state.daily.subTab"
       (valueChanged)="regenerateCron()"
@@ -80,7 +80,7 @@
             [disabled]="disabled || state.daily.subTab !== 'everyDays'"
             (timeChange)="regenerateCron()"
             [(time)]="state.daily.everyDays"
-            [use24HourTime]="options.use24HourTime">
+            [use24HourTime]="use24HourTime">
           </cron-time-picker>
         </div>
       </cps-radio>
@@ -92,14 +92,14 @@
             [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.daily.everyWeekDay"
-            [use24HourTime]="options.use24HourTime">
+            [use24HourTime]="use24HourTime">
           </cron-time-picker>
         </div>
       </cps-radio>
     </cps-radio-group>
   </div>
   <!--Weekly-->
-  <div *ngSwitchCase="scheduleTypes[4].value" class="tab-pane">
+  <div *ngSwitchCase="'Weekly'" class="tab-pane">
     <div class="days-checkbox-group">
       <cps-checkbox
         (valueChanged)="regenerateCron()"
@@ -151,12 +151,12 @@
         [disabled]="disabled"
         (timeChange)="regenerateCron()"
         [(time)]="state.weekly"
-        [use24HourTime]="options.use24HourTime">
+        [use24HourTime]="use24HourTime">
       </cron-time-picker>
     </div>
   </div>
   <!--Monthly-->
-  <div *ngSwitchCase="scheduleTypes[5].value" class="tab-pane">
+  <div *ngSwitchCase="'Monthly'" class="tab-pane">
     <cps-radio-group
       [(ngModel)]="state.monthly.subTab"
       (valueChanged)="regenerateCron()"
@@ -191,7 +191,7 @@
             [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.monthly.specificDay"
-            [use24HourTime]="options.use24HourTime">
+            [use24HourTime]="use24HourTime">
           </cron-time-picker>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
@@ -254,14 +254,14 @@
             [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.monthly.specificWeekDay"
-            [use24HourTime]="options.use24HourTime">
+            [use24HourTime]="use24HourTime">
           </cron-time-picker>
         </div>
       </cps-radio>
     </cps-radio-group>
   </div>
   <!--Yearly-->
-  <div *ngSwitchCase="scheduleTypes[6].value" class="tab-pane">
+  <div *ngSwitchCase="'Yearly'" class="tab-pane">
     <cps-radio-group
       [(ngModel)]="state.yearly.subTab"
       (valueChanged)="regenerateCron()"
@@ -296,7 +296,7 @@
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
             (timeChange)="regenerateCron()"
             [(time)]="state.yearly.specificMonthDay"
-            [use24HourTime]="options.use24HourTime">
+            [use24HourTime]="use24HourTime">
           </cron-time-picker>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
@@ -348,14 +348,14 @@
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
             (timeChange)="regenerateCron()"
             [(time)]="state.yearly.specificMonthWeek"
-            [use24HourTime]="options.use24HourTime">
+            [use24HourTime]="use24HourTime">
           </cron-time-picker>
         </div>
       </cps-radio>
     </cps-radio-group>
   </div>
   <!--Advanced-->
-  <div *ngSwitchCase="scheduleTypes[7].value">
+  <div *ngSwitchCase="'Advanced'">
     <form [formGroup]="form">
       <cps-input
         label=""

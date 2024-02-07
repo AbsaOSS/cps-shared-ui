@@ -5,7 +5,8 @@ import {
   Input,
   Output,
   EventEmitter,
-  SimpleChanges
+  SimpleChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -27,7 +28,7 @@ import { CronTimePickerComponent } from './cron-time-picker/cron-time-picker.com
 import { CpsCheckboxComponent } from '../cps-checkbox/cps-checkbox.component';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 
-export const Days = {
+const Days = {
   MON: 'Monday',
   TUE: 'Tuesday',
   WED: 'Wednesday',
@@ -37,7 +38,7 @@ export const Days = {
   SUN: 'Sunday'
 };
 
-export const MonthWeeks = {
+const MonthWeeks = {
   '#1': 'First',
   '#2': 'Second',
   '#3': 'Third',
@@ -46,7 +47,7 @@ export const MonthWeeks = {
   L: 'Last'
 };
 
-export enum Months {
+enum Months {
   January = 1,
   February,
   March,
@@ -59,19 +60,6 @@ export enum Months {
   October,
   November,
   December
-}
-
-export interface CronOptions {
-  defaultTime: string;
-  use24HourTime: boolean;
-
-  hideMinutesTab: boolean;
-  hideHourlyTab: boolean;
-  hideDailyTab: boolean;
-  hideWeeklyTab: boolean;
-  hideMonthlyTab: boolean;
-  hideYearlyTab: boolean;
-  hideAdvancedTab: boolean;
 }
 
 /**
@@ -104,20 +92,28 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
   @Input() disabled = false;
 
   /**
-   * Options for the component.
+   * Default time format for the component.
    * @group Props
    */
-  @Input() options: CronOptions = {
-    defaultTime: '00:00:00',
-    use24HourTime: true,
-    hideMinutesTab: false,
-    hideHourlyTab: false,
-    hideDailyTab: false,
-    hideWeeklyTab: false,
-    hideMonthlyTab: false,
-    hideYearlyTab: false,
-    hideAdvancedTab: false
-  };
+  @Input() defaultTime = '00:00:00';
+
+  /**
+   * Determines whether to use 24-hour time format.
+   * @group Props
+   */
+  @Input() use24HourTime = true;
+
+  /**
+   * Determines whether to hide the 'Not set' tab.
+   * @group Props
+   */
+  @Input() hideNotSet = false;
+
+  /**
+   * Determines whether to hide the 'Advanced' tab.
+   * @group Props
+   */
+  @Input() hideAdvanced = false;
 
   /**
    * Information tooltip for the component.
@@ -167,9 +163,22 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
   form!: UntypedFormGroup;
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _fb: UntypedFormBuilder) {}
+  constructor(
+    private _fb: UntypedFormBuilder,
+    private _cdr: ChangeDetectorRef
+  ) {}
 
   public ngOnInit() {
+    if (this.hideNotSet) {
+      this.scheduleTypes.shift();
+      this.activeScheduleType = 'Minutes';
+      this.localCron = '0/1 * 1/1 * ? *';
+    }
+
+    if (this.hideAdvanced) {
+      this.scheduleTypes.pop();
+    }
+
     this.state = this.getDefaultState();
     this.handleModelChange(this.cron);
 
@@ -186,6 +195,21 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
     if (newCron && !newCron.firstChange) {
       this.handleModelChange(this.cron);
     }
+  }
+
+  private _isValidCron(cron: string): boolean {
+    if (typeof cron !== 'string') return false;
+
+    if (this.hideNotSet) {
+      if (!cron) return false;
+    } else if (cron === '') return true;
+
+    const parts = cron.split(' ');
+    if (parts.length !== 6) {
+      return false;
+    }
+
+    return true;
   }
 
   private _validateAdvancedExpr(c: FormControl) {
@@ -221,7 +245,7 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
       this.activeScheduleType = value;
       this.regenerateCron(true);
     }
-    if (value) {
+    if (value && this.form) {
       if (value === 'Advanced') {
         this.form.controls.advanced.addValidators(Validators.required);
         this.form.controls.advanced.updateValueAndValidity();
@@ -359,20 +383,21 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
         this.form.controls.advanced.setValue(this.cron);
         break;
       default:
-        this.cron = '';
+        if (!this.hideNotSet) this.cron = '';
+        else throw new Error('Invalid cron type');
     }
   }
 
   private getAmPmHour(hour: number) {
-    return this.options.use24HourTime ? hour : ((hour + 11) % 12) + 1;
+    return this.use24HourTime ? hour : ((hour + 11) % 12) + 1;
   }
 
   private getHourType(hour: number) {
-    return this.options.use24HourTime ? undefined : hour >= 12 ? 'PM' : 'AM';
+    return this.use24HourTime ? undefined : hour >= 12 ? 'PM' : 'AM';
   }
 
   private hourToCron(hour: number, hourType: string) {
-    if (this.options.use24HourTime) {
+    if (this.use24HourTime) {
       return hour;
     } else {
       return hourType === 'AM'
@@ -386,6 +411,12 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
   }
 
   private handleModelChange(cron: string) {
+    if (!this._isValidCron(cron)) {
+      console.error('Invalid cron value:', cron);
+      this.cron = this.hideNotSet ? '0/1 * 1/1 * ? *' : '';
+      return;
+    }
+
     if (this.isDirty) {
       this.isDirty = false;
       return;
@@ -471,8 +502,8 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
         /\d+ \d+ \d+ \? \d+\/\d+ (MON|TUE|WED|THU|FRI|SAT|SUN)((#[1-5])|L) \*/
       )
     ) {
-      const day = dayOfWeek.substr(0, 3);
-      const monthWeek = dayOfWeek.substr(3);
+      const day = dayOfWeek.substring(0, 3);
+      const monthWeek = dayOfWeek.substring(3);
       this.activeScheduleType = 'Monthly';
       this.state.monthly.subTab = 'specificWeekDay';
       this.state.monthly.specificWeekDay.monthWeek = monthWeek;
@@ -513,8 +544,8 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
         /\d+ \d+ \d+ \? \d+ (MON|TUE|WED|THU|FRI|SAT|SUN)((#[1-5])|L) \*/
       )
     ) {
-      const day = dayOfWeek.substr(0, 3);
-      const monthWeek = dayOfWeek.substr(3);
+      const day = dayOfWeek.substring(0, 3);
+      const monthWeek = dayOfWeek.substring(3);
       this.activeScheduleType = 'Yearly';
       this.state.yearly.subTab = 'specificMonthWeek';
       this.state.yearly.specificMonthWeek.monthWeek = monthWeek;
@@ -530,11 +561,13 @@ export class CpsSchedulingComponent implements OnInit, OnChanges {
       this.activeScheduleType = 'Advanced';
       this.form.controls.advanced.setValue(cron);
     }
+    this._cdr.detectChanges();
   }
 
   private getDefaultState() {
-    const [defaultHours, defaultMinutes, defaultSeconds] =
-      this.options.defaultTime.split(':').map(Number);
+    const [defaultHours, defaultMinutes, defaultSeconds] = this.defaultTime
+      .split(':')
+      .map(Number);
 
     return {
       minutes: {
