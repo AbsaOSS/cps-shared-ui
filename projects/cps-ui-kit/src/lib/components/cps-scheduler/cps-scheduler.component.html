@@ -1,6 +1,7 @@
 <div class="cps-scheduler-freq-selector">
   <cps-button-toggle
     [options]="scheduleTypes"
+    [disabled]="disabled"
     label="Frequency"
     [infoTooltip]="infoTooltip"
     [(ngModel)]="activeScheduleType"
@@ -8,7 +9,10 @@
   </cps-button-toggle>
 </div>
 
-<div [ngSwitch]="activeScheduleType" class="cps-scheduler-container">
+<div
+  [ngSwitch]="activeScheduleType"
+  class="cps-scheduler-container"
+  [ngClass]="{ 'cps-scheduler-container-disabled': disabled }">
   <!--Not set-->
   <div *ngSwitchCase="'Not set'" class="cps-scheduler-tab-pane"></div>
   <!--Minutes-->
@@ -359,6 +363,7 @@
     <form [formGroup]="form">
       <cps-input
         label=""
+        [disabled]="disabled"
         width="500px"
         placeholder="Please enter"
         formControlName="advanced"

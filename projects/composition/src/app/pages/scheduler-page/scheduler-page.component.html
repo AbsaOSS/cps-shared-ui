@@ -1,6 +1,8 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <cps-scheduler
+    [disabled]="false"
+    cron="0 0 1/1 * ? *"
     [hideAdvanced]="false"
     [hideNotSet]="false"
     infoTooltip="Provide frequency of which dataset will run."></cps-scheduler>

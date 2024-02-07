@@ -39,5 +39,9 @@
         margin-left: 16px;
       }
     }
+
+    &-disabled {
+      color: var(--cps-color-text-light);
+    }
   }
 }
