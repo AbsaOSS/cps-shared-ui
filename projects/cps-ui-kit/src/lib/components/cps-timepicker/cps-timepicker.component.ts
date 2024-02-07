@@ -131,6 +131,12 @@ export class CpsTimepickerComponent
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
+   * Determines whether the timepicker input fields can be cleared.
+   * @group Props
+   */
+  @Input() mandatoryValue = false;
+
+  /**
    * Value of the timepicker.
    * @group Props
    */
