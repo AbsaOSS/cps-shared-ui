@@ -24,9 +24,13 @@ import {
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsRadioGroupComponent } from '../cps-radio-group/cps-radio-group.component';
 import { CpsRadioComponent } from '../cps-radio-group/cps-radio/cps-radio.component';
-import { CronTimePickerComponent } from './cron-time-picker/cron-time-picker.component';
 import { CpsCheckboxComponent } from '../cps-checkbox/cps-checkbox.component';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
+import {
+  CpsTime,
+  CpsTimepickerComponent
+} from '../cps-timepicker/cps-timepicker.component';
+import { CronTimePickerComponent } from './cron-time-picker/cron-time-picker.component';
 
 const Days = {
   MON: 'Monday',
@@ -79,6 +83,7 @@ enum Months {
     CpsRadioComponent,
     CpsCheckboxComponent,
     CpsInputComponent,
+    CpsTimepickerComponent,
     CronTimePickerComponent
   ],
   templateUrl: './cps-scheduler.component.html',
@@ -154,11 +159,11 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
    */
   @Output() valueChanged = new EventEmitter<string>();
 
-  public selectOptions = this.getSelectOptions();
-  public state: any;
-
   private localCron = '';
   private isDirty = false;
+
+  selectOptions = this._getSelectOptions();
+  state: any;
 
   form!: UntypedFormGroup;
 
@@ -168,7 +173,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     private _cdr: ChangeDetectorRef
   ) {}
 
-  public ngOnInit() {
+  ngOnInit() {
     if (this.hideNotSet) {
       this.scheduleTypes.shift();
       this.activeScheduleType = 'Minutes';
@@ -179,8 +184,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       this.scheduleTypes.pop();
     }
 
-    this.state = this.getDefaultState();
-    this.handleModelChange(this.cron);
+    this.state = this._getDefaultState();
+    this._handleModelChange(this.cron);
 
     this.form = this._fb.group({
       advanced: [
@@ -190,10 +195,10 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     });
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     const newCron = changes.cron;
     if (newCron && !newCron.firstChange) {
-      this.handleModelChange(this.cron);
+      this._handleModelChange(this.cron);
     }
   }
 
@@ -240,7 +245,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       : { invalidExpression: 'Invalid expression' };
   }
 
-  public setActiveScheduleType(value: string) {
+  setActiveScheduleType(value: string) {
     if (!this.disabled) {
       this.activeScheduleType = value;
       this.regenerateCron(true);
@@ -256,7 +261,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  public regenerateCron(tabChange?: boolean) {
+  regenerateCron(tabChange?: boolean) {
     this.isDirty = true;
 
     switch (this.activeScheduleType) {
@@ -274,7 +279,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             // tslint:disable-next-line:max-line-length
             this.cron = `${
               this.state.daily.everyDays.minutes
-            } ${this.hourToCron(
+            } ${this._hourToCron(
               this.state.daily.everyDays.hours,
               this.state.daily.everyDays.hourType
             )} 1/${this.state.daily.everyDays.days} * ?`;
@@ -285,7 +290,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             // tslint:disable-next-line:max-line-length
             this.cron = `${
               this.state.daily.everyWeekDay.minutes
-            } ${this.hourToCron(
+            } ${this._hourToCron(
               this.state.daily.everyWeekDay.hours,
               this.state.daily.everyWeekDay.hourType
             )} ? * MON-FRI`;
@@ -303,7 +308,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             [] as string[]
           )
           .join(',');
-        this.cron = `${this.state.weekly.minutes} ${this.hourToCron(
+        this.cron = `${this.state.weekly.minutes} ${this._hourToCron(
           this.state.weekly.hours,
           this.state.weekly.hourType
         )} ? * ${days}`;
@@ -319,7 +324,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             // tslint:disable-next-line:max-line-length
             this.cron = `${
               this.state.monthly.specificDay.minutes
-            } ${this.hourToCron(
+            } ${this._hourToCron(
               this.state.monthly.specificDay.hours,
               this.state.monthly.specificDay.hourType
             )} ${day} 1/${this.state.monthly.specificDay.months} ?`;
@@ -330,7 +335,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             // tslint:disable-next-line:max-line-length
             this.cron = `${
               this.state.monthly.specificWeekDay.minutes
-            } ${this.hourToCron(
+            } ${this._hourToCron(
               this.state.monthly.specificWeekDay.hours,
               this.state.monthly.specificWeekDay.hourType
             )} ? ${this.state.monthly.specificWeekDay.startMonth}/${
@@ -355,7 +360,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             // tslint:disable-next-line:max-line-length
             this.cron = `${
               this.state.yearly.specificMonthDay.minutes
-            } ${this.hourToCron(
+            } ${this._hourToCron(
               this.state.yearly.specificMonthDay.hours,
               this.state.yearly.specificMonthDay.hourType
             )} ${day} ${this.state.yearly.specificMonthDay.month} ?`;
@@ -366,7 +371,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             // tslint:disable-next-line:max-line-length
             this.cron = `${
               this.state.yearly.specificMonthWeek.minutes
-            } ${this.hourToCron(
+            } ${this._hourToCron(
               this.state.yearly.specificMonthWeek.hours,
               this.state.yearly.specificMonthWeek.hourType
             )} ? ${this.state.yearly.specificMonthWeek.month} ${
@@ -388,15 +393,15 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  private getAmPmHour(hour: number) {
+  private _getAmPmHour(hour: number) {
     return this.use24HourTime ? hour : ((hour + 11) % 12) + 1;
   }
 
-  private getHourType(hour: number) {
+  private _getHourType(hour: number) {
     return this.use24HourTime ? undefined : hour >= 12 ? 'PM' : 'AM';
   }
 
-  private hourToCron(hour: number, hourType: string) {
+  private _hourToCron(hour: number, hourType: string) {
     if (this.use24HourTime) {
       return hour;
     } else {
@@ -410,7 +415,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     }
   }
 
-  private handleModelChange(cron: string) {
+  private _handleModelChange(cron: string) {
     if (!this._isValidCron(cron)) {
       console.error('Invalid cron value:', cron);
       this.cron = this.hideNotSet ? '0/1 * 1/1 * ? *' : '';
@@ -450,8 +455,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       this.state.daily.subTab = 'everyDays';
       this.state.daily.everyDays.days = Number(dayOfMonth.substring(2));
       const parsedHours = Number(hours);
-      this.state.daily.everyDays.hours = this.getAmPmHour(parsedHours);
-      this.state.daily.everyDays.hourType = this.getHourType(parsedHours);
+      this.state.daily.everyDays.hours = this._getAmPmHour(parsedHours);
+      this.state.daily.everyDays.hourType = this._getHourType(parsedHours);
       this.state.daily.everyDays.minutes = Number(minutes);
       this.state.daily.everyDays.seconds = Number(seconds);
     } else if (cronSeven.match(/\d+ \d+ \d+ \? \* MON-FRI \*/)) {
@@ -459,8 +464,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
       this.state.daily.subTab = 'everyWeekDay';
       const parsedHours = Number(hours);
-      this.state.daily.everyWeekDay.hours = this.getAmPmHour(parsedHours);
-      this.state.daily.everyWeekDay.hourType = this.getHourType(parsedHours);
+      this.state.daily.everyWeekDay.hours = this._getAmPmHour(parsedHours);
+      this.state.daily.everyWeekDay.hourType = this._getHourType(parsedHours);
       this.state.daily.everyWeekDay.minutes = Number(minutes);
       this.state.daily.everyWeekDay.seconds = Number(seconds);
     } else if (
@@ -476,8 +481,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         .split(',')
         .forEach((weekDay) => (this.state.weekly[weekDay] = true));
       const parsedHours = Number(hours);
-      this.state.weekly.hours = this.getAmPmHour(parsedHours);
-      this.state.weekly.hourType = this.getHourType(parsedHours);
+      this.state.weekly.hours = this._getAmPmHour(parsedHours);
+      this.state.weekly.hourType = this._getHourType(parsedHours);
       this.state.weekly.minutes = Number(minutes);
       this.state.weekly.seconds = Number(seconds);
     } else if (cronSeven.match(/\d+ \d+ \d+ (\d+|L|LW|1W) 1\/\d+ \? \*/)) {
@@ -493,8 +498,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
       this.state.monthly.specificDay.months = Number(month.substring(2));
       const parsedHours = Number(hours);
-      this.state.monthly.specificDay.hours = this.getAmPmHour(parsedHours);
-      this.state.monthly.specificDay.hourType = this.getHourType(parsedHours);
+      this.state.monthly.specificDay.hours = this._getAmPmHour(parsedHours);
+      this.state.monthly.specificDay.hourType = this._getHourType(parsedHours);
       this.state.monthly.specificDay.minutes = Number(minutes);
       this.state.monthly.specificDay.seconds = Number(seconds);
     } else if (
@@ -516,9 +521,9 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       }
 
       const parsedHours = Number(hours);
-      this.state.monthly.specificWeekDay.hours = this.getAmPmHour(parsedHours);
+      this.state.monthly.specificWeekDay.hours = this._getAmPmHour(parsedHours);
       this.state.monthly.specificWeekDay.hourType =
-        this.getHourType(parsedHours);
+        this._getHourType(parsedHours);
       this.state.monthly.specificWeekDay.minutes = Number(minutes);
       this.state.monthly.specificWeekDay.seconds = Number(seconds);
     } else if (cronSeven.match(/\d+ \d+ \d+ (\d+|L|LW|1W) \d+ \? \*/)) {
@@ -534,9 +539,9 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       }
 
       const parsedHours = Number(hours);
-      this.state.yearly.specificMonthDay.hours = this.getAmPmHour(parsedHours);
+      this.state.yearly.specificMonthDay.hours = this._getAmPmHour(parsedHours);
       this.state.yearly.specificMonthDay.hourType =
-        this.getHourType(parsedHours);
+        this._getHourType(parsedHours);
       this.state.yearly.specificMonthDay.minutes = Number(minutes);
       this.state.yearly.specificMonthDay.seconds = Number(seconds);
     } else if (
@@ -552,9 +557,10 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       this.state.yearly.specificMonthWeek.day = day;
       this.state.yearly.specificMonthWeek.month = Number(month);
       const parsedHours = Number(hours);
-      this.state.yearly.specificMonthWeek.hours = this.getAmPmHour(parsedHours);
+      this.state.yearly.specificMonthWeek.hours =
+        this._getAmPmHour(parsedHours);
       this.state.yearly.specificMonthWeek.hourType =
-        this.getHourType(parsedHours);
+        this._getHourType(parsedHours);
       this.state.yearly.specificMonthWeek.minutes = Number(minutes);
       this.state.yearly.specificMonthWeek.seconds = Number(seconds);
     } else {
@@ -564,7 +570,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     this._cdr.detectChanges();
   }
 
-  private getDefaultState() {
+  private _getDefaultState() {
     const [defaultHours, defaultMinutes, defaultSeconds] = this.defaultTime
       .split(':')
       .map(Number);
@@ -583,16 +589,16 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         subTab: 'everyDays',
         everyDays: {
           days: 1,
-          hours: this.getAmPmHour(defaultHours),
+          hours: this._getAmPmHour(defaultHours),
           minutes: defaultMinutes,
           seconds: defaultSeconds,
-          hourType: this.getHourType(defaultHours)
+          hourType: this._getHourType(defaultHours)
         },
         everyWeekDay: {
-          hours: this.getAmPmHour(defaultHours),
+          hours: this._getAmPmHour(defaultHours),
           minutes: defaultMinutes,
           seconds: defaultSeconds,
-          hourType: this.getHourType(defaultHours)
+          hourType: this._getHourType(defaultHours)
         }
       },
       weekly: {
@@ -603,10 +609,10 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         FRI: false,
         SAT: false,
         SUN: false,
-        hours: this.getAmPmHour(defaultHours),
+        hours: this._getAmPmHour(defaultHours),
         minutes: defaultMinutes,
         seconds: defaultSeconds,
-        hourType: this.getHourType(defaultHours)
+        hourType: this._getHourType(defaultHours)
       },
       monthly: {
         subTab: 'specificDay',
@@ -614,20 +620,20 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         specificDay: {
           day: '1',
           months: 1,
-          hours: this.getAmPmHour(defaultHours),
+          hours: this._getAmPmHour(defaultHours),
           minutes: defaultMinutes,
           seconds: defaultSeconds,
-          hourType: this.getHourType(defaultHours)
+          hourType: this._getHourType(defaultHours)
         },
         specificWeekDay: {
           monthWeek: '#1',
           day: 'MON',
           startMonth: 1,
           months: 1,
-          hours: this.getAmPmHour(defaultHours),
+          hours: this._getAmPmHour(defaultHours),
           minutes: defaultMinutes,
           seconds: defaultSeconds,
-          hourType: this.getHourType(defaultHours)
+          hourType: this._getHourType(defaultHours)
         }
       },
       yearly: {
@@ -636,19 +642,19 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         specificMonthDay: {
           month: 1,
           day: '1',
-          hours: this.getAmPmHour(defaultHours),
+          hours: this._getAmPmHour(defaultHours),
           minutes: defaultMinutes,
           seconds: defaultSeconds,
-          hourType: this.getHourType(defaultHours)
+          hourType: this._getHourType(defaultHours)
         },
         specificMonthWeek: {
           monthWeek: '#1',
           day: 'MON',
           month: 1,
-          hours: this.getAmPmHour(defaultHours),
+          hours: this._getAmPmHour(defaultHours),
           minutes: defaultMinutes,
           seconds: defaultSeconds,
-          hourType: this.getHourType(defaultHours)
+          hourType: this._getHourType(defaultHours)
         }
       },
       advanced: {
@@ -664,7 +670,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     );
   }
 
-  private getSelectOptions() {
+  private _getSelectOptions() {
     return {
       monthsNumeric: this._getRange(1, 12).map((month) => ({
         label: month,
@@ -744,5 +750,28 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
       return `${month}${suffix} day`;
     }
+  }
+
+  private _numToString(value: number) {
+    return value >= 0 && value <= 9 ? '0' + value : value.toString();
+  }
+
+  private _stringToNum(value: string) {
+    const res = Number(value);
+    return isNaN(res) ? 0 : res;
+  }
+
+  formatTimeValue(value: any) {
+    // TODO convert to pipe
+    return {
+      hours: this._numToString(value.hours),
+      minutes: this._numToString(value.minutes)
+    } as CpsTime;
+  }
+
+  onDailyEveryDaysChange(value: CpsTime) {
+    this.state.daily.everyDays.hours = this._stringToNum(value.hours);
+    this.state.daily.everyDays.minutes = this._stringToNum(value.minutes);
+    this.regenerateCron();
   }
 }

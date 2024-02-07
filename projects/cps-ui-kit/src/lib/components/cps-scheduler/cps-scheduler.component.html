@@ -13,9 +13,8 @@
   [ngSwitch]="activeScheduleType"
   class="cps-scheduler-container"
   [ngClass]="{ 'cps-scheduler-container-disabled': disabled }">
-  <!--Not set-->
   <div *ngSwitchCase="'Not set'" class="cps-scheduler-tab-pane"></div>
-  <!--Minutes-->
+
   <div *ngSwitchCase="'Minutes'" class="cps-scheduler-tab-pane">
     <div class="cps-scheduler-tab-pane-row">
       Every
@@ -32,7 +31,7 @@
       minute(s)
     </div>
   </div>
-  <!--Hourly-->
+
   <div *ngSwitchCase="'Hourly'" class="cps-scheduler-tab-pane">
     <div class="cps-scheduler-tab-pane-row">
       Every
@@ -59,7 +58,7 @@
       </cps-select>
     </div>
   </div>
-  <!--Daily-->
+
   <div *ngSwitchCase="'Daily'" class="cps-scheduler-tab-pane">
     <cps-radio-group
       [(ngModel)]="state.daily.subTab"
@@ -79,13 +78,22 @@
             class="cps-scheduler-select-control">
           </cps-select>
           day(s) at
-          <cron-time-picker
+          <!-- <cron-time-picker
             class="cps-scheduler-tab-pane-row"
             [disabled]="disabled || state.daily.subTab !== 'everyDays'"
             (timeChange)="regenerateCron()"
             [(time)]="state.daily.everyDays"
             [use24HourTime]="use24HourTime">
-          </cron-time-picker>
+          </cron-time-picker> -->
+          <cps-timepicker
+            class="cps-scheduler-timepicker"
+            [disabled]="disabled || state.daily.subTab !== 'everyDays'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.daily.everyDays)"
+            [hideDetails]="true"
+            (valueChanged)="onDailyEveryDaysChange($event)">
+          </cps-timepicker>
         </div>
       </cps-radio>
       <cps-radio [option]="{ value: 'everyWeekDay', disabled: disabled }">
@@ -102,7 +110,7 @@
       </cps-radio>
     </cps-radio-group>
   </div>
-  <!--Weekly-->
+
   <div *ngSwitchCase="'Weekly'" class="cps-scheduler-tab-pane">
     <div class="cps-scheduler-days-checkbox-group">
       <cps-checkbox
@@ -159,7 +167,7 @@
       </cron-time-picker>
     </div>
   </div>
-  <!--Monthly-->
+
   <div *ngSwitchCase="'Monthly'" class="cps-scheduler-tab-pane">
     <cps-radio-group
       [(ngModel)]="state.monthly.subTab"
@@ -264,7 +272,7 @@
       </cps-radio>
     </cps-radio-group>
   </div>
-  <!--Yearly-->
+
   <div *ngSwitchCase="'Yearly'" class="cps-scheduler-tab-pane">
     <cps-radio-group
       [(ngModel)]="state.yearly.subTab"
@@ -358,7 +366,7 @@
       </cps-radio>
     </cps-radio-group>
   </div>
-  <!--Advanced-->
+
   <div *ngSwitchCase="'Advanced'">
     <form [formGroup]="form">
       <cps-input
