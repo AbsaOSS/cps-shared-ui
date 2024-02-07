@@ -17,20 +17,19 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import {
-  CpsButtonToggleComponent,
-  CpsButtonToggleOption
-} from '../cps-button-toggle/cps-button-toggle.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsRadioGroupComponent } from '../cps-radio-group/cps-radio-group.component';
 import { CpsRadioComponent } from '../cps-radio-group/cps-radio/cps-radio.component';
 import { CpsCheckboxComponent } from '../cps-checkbox/cps-checkbox.component';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import {
-  CpsTime,
-  CpsTimepickerComponent
+  CpsButtonToggleComponent,
+  CpsButtonToggleOption
+} from '../cps-button-toggle/cps-button-toggle.component';
+import {
+  CpsTimepickerComponent,
+  CpsTime
 } from '../cps-timepicker/cps-timepicker.component';
-import { CronTimePickerComponent } from './cron-time-picker/cron-time-picker.component';
 
 const Days = {
   MON: 'Monday',
@@ -83,8 +82,7 @@ enum Months {
     CpsRadioComponent,
     CpsCheckboxComponent,
     CpsInputComponent,
-    CpsTimepickerComponent,
-    CronTimePickerComponent
+    CpsTimepickerComponent
   ],
   templateUrl: './cps-scheduler.component.html',
   styleUrl: './cps-scheduler.component.scss'
@@ -200,49 +198,6 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     if (newCron && !newCron.firstChange) {
       this._handleModelChange(this.cron);
     }
-  }
-
-  private _isValidCron(cron: string): boolean {
-    if (typeof cron !== 'string') return false;
-
-    if (this.hideNotSet) {
-      if (!cron) return false;
-    } else if (cron === '') return true;
-
-    const parts = cron.split(' ');
-    if (parts.length !== 6) {
-      return false;
-    }
-
-    return true;
-  }
-
-  private _validateAdvancedExpr(c: FormControl) {
-    const cron = c.value;
-    if (!cron) return null;
-
-    const splits = cron?.split(' ') || [];
-    if (splits.length !== 6) return { invalidExpression: 'Invalid expression' };
-
-    const cronSeven = `0 ${cron}`;
-
-    return cronSeven.match(/\d+ 0\/\d+ \* 1\/1 \* \? \*/) ||
-      cronSeven.match(/\d+ \d+ 0\/\d+ 1\/1 \* \? \*/) ||
-      cronSeven.match(/\d+ \d+ \d+ 1\/\d+ \* \? \*/) ||
-      cronSeven.match(/\d+ \d+ \d+ \? \* MON-FRI \*/) ||
-      cronSeven.match(
-        /\d+ \d+ \d+ \? \* (MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))* \*/
-      ) ||
-      cronSeven.match(/\d+ \d+ \d+ (\d+|L|LW|1W) 1\/\d+ \? \*/) ||
-      cronSeven.match(
-        /\d+ \d+ \d+ \? \d+\/\d+ (MON|TUE|WED|THU|FRI|SAT|SUN)((#[1-5])|L) \*/
-      ) ||
-      cronSeven.match(/\d+ \d+ \d+ (\d+|L|LW|1W) \d+ \? \*/) ||
-      cronSeven.match(
-        /\d+ \d+ \d+ \? \d+ (MON|TUE|WED|THU|FRI|SAT|SUN)((#[1-5])|L) \*/
-      )
-      ? null
-      : { invalidExpression: 'Invalid expression' };
   }
 
   setActiveScheduleType(value: string) {
@@ -391,6 +346,104 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         if (!this.hideNotSet) this.cron = '';
         else throw new Error('Invalid cron type');
     }
+  }
+
+  formatTimeValue(value: any) {
+    return {
+      hours: this._numToString(value.hours),
+      minutes: this._numToString(value.minutes)
+    } as CpsTime;
+  }
+
+  onDailyEveryDayTimeChanged(value: CpsTime) {
+    this.state.daily.everyDays.hours = this._stringToNum(value.hours);
+    this.state.daily.everyDays.minutes = this._stringToNum(value.minutes);
+    this.regenerateCron();
+  }
+
+  onDailyEveryWorkDayTimeChanged(value: CpsTime) {
+    this.state.daily.everyWeekDay.hours = this._stringToNum(value.hours);
+    this.state.daily.everyWeekDay.minutes = this._stringToNum(value.minutes);
+    this.regenerateCron();
+  }
+
+  onWeeklyTimeChanged(value: CpsTime) {
+    this.state.weekly.hours = this._stringToNum(value.hours);
+    this.state.weekly.minutes = this._stringToNum(value.minutes);
+    this.regenerateCron();
+  }
+
+  onMonthlySpecificDayTimeChanged(value: CpsTime) {
+    this.state.monthly.specificDay.hours = this._stringToNum(value.hours);
+    this.state.monthly.specificDay.minutes = this._stringToNum(value.minutes);
+    this.regenerateCron();
+  }
+
+  onMonthlySpecificWeekDayTimeChanged(value: CpsTime) {
+    this.state.monthly.specificWeekDay.hours = this._stringToNum(value.hours);
+    this.state.monthly.specificWeekDay.minutes = this._stringToNum(
+      value.minutes
+    );
+    this.regenerateCron();
+  }
+
+  onYearlySpecificMonthDayTimeChanged(value: CpsTime) {
+    this.state.yearly.specificMonthDay.hours = this._stringToNum(value.hours);
+    this.state.yearly.specificMonthDay.minutes = this._stringToNum(
+      value.minutes
+    );
+    this.regenerateCron();
+  }
+
+  onYearlySpecificMonthWeekTimeChanged(value: CpsTime) {
+    this.state.yearly.specificMonthWeek.hours = this._stringToNum(value.hours);
+    this.state.yearly.specificMonthWeek.minutes = this._stringToNum(
+      value.minutes
+    );
+    this.regenerateCron();
+  }
+
+  private _isValidCron(cron: string): boolean {
+    if (typeof cron !== 'string') return false;
+
+    if (this.hideNotSet) {
+      if (!cron) return false;
+    } else if (cron === '') return true;
+
+    const parts = cron.split(' ');
+    if (parts.length !== 6) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private _validateAdvancedExpr(c: FormControl) {
+    const cron = c.value;
+    if (!cron) return null;
+
+    const splits = cron?.split(' ') || [];
+    if (splits.length !== 6) return { invalidExpression: 'Invalid expression' };
+
+    const cronSeven = `0 ${cron}`;
+
+    return cronSeven.match(/\d+ 0\/\d+ \* 1\/1 \* \? \*/) ||
+      cronSeven.match(/\d+ \d+ 0\/\d+ 1\/1 \* \? \*/) ||
+      cronSeven.match(/\d+ \d+ \d+ 1\/\d+ \* \? \*/) ||
+      cronSeven.match(/\d+ \d+ \d+ \? \* MON-FRI \*/) ||
+      cronSeven.match(
+        /\d+ \d+ \d+ \? \* (MON|TUE|WED|THU|FRI|SAT|SUN)(,(MON|TUE|WED|THU|FRI|SAT|SUN))* \*/
+      ) ||
+      cronSeven.match(/\d+ \d+ \d+ (\d+|L|LW|1W) 1\/\d+ \? \*/) ||
+      cronSeven.match(
+        /\d+ \d+ \d+ \? \d+\/\d+ (MON|TUE|WED|THU|FRI|SAT|SUN)((#[1-5])|L) \*/
+      ) ||
+      cronSeven.match(/\d+ \d+ \d+ (\d+|L|LW|1W) \d+ \? \*/) ||
+      cronSeven.match(
+        /\d+ \d+ \d+ \? \d+ (MON|TUE|WED|THU|FRI|SAT|SUN)((#[1-5])|L) \*/
+      )
+      ? null
+      : { invalidExpression: 'Invalid expression' };
   }
 
   private _getAmPmHour(hour: number) {
@@ -759,19 +812,5 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   private _stringToNum(value: string) {
     const res = Number(value);
     return isNaN(res) ? 0 : res;
-  }
-
-  formatTimeValue(value: any) {
-    // TODO convert to pipe
-    return {
-      hours: this._numToString(value.hours),
-      minutes: this._numToString(value.minutes)
-    } as CpsTime;
-  }
-
-  onDailyEveryDaysChange(value: CpsTime) {
-    this.state.daily.everyDays.hours = this._stringToNum(value.hours);
-    this.state.daily.everyDays.minutes = this._stringToNum(value.minutes);
-    this.regenerateCron();
   }
 }

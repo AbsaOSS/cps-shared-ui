@@ -78,34 +78,27 @@
             class="cps-scheduler-select-control">
           </cps-select>
           day(s) at
-          <!-- <cron-time-picker
-            class="cps-scheduler-tab-pane-row"
-            [disabled]="disabled || state.daily.subTab !== 'everyDays'"
-            (timeChange)="regenerateCron()"
-            [(time)]="state.daily.everyDays"
-            [use24HourTime]="use24HourTime">
-          </cron-time-picker> -->
           <cps-timepicker
-            class="cps-scheduler-timepicker"
             [disabled]="disabled || state.daily.subTab !== 'everyDays'"
             [use24HourTime]="use24HourTime"
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.daily.everyDays)"
             [hideDetails]="true"
-            (valueChanged)="onDailyEveryDaysChange($event)">
+            (valueChanged)="onDailyEveryDayTimeChanged($event)">
           </cps-timepicker>
         </div>
       </cps-radio>
       <cps-radio [option]="{ value: 'everyWeekDay', disabled: disabled }">
         <div class="cps-scheduler-tab-pane-row">
           Every working day at
-          <cron-time-picker
-            class="cps-scheduler-tab-pane-row"
+          <cps-timepicker
             [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
-            (timeChange)="regenerateCron()"
-            [(time)]="state.daily.everyWeekDay"
-            [use24HourTime]="use24HourTime">
-          </cron-time-picker>
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.daily.everyWeekDay)"
+            [hideDetails]="true"
+            (valueChanged)="onDailyEveryWorkDayTimeChanged($event)">
+          </cps-timepicker>
         </div>
       </cps-radio>
     </cps-radio-group>
@@ -158,13 +151,14 @@
     </div>
     <div class="cps-scheduler-tab-pane-row">
       at
-      <cron-time-picker
-        class="cps-scheduler-tab-pane-row"
+      <cps-timepicker
         [disabled]="disabled"
-        (timeChange)="regenerateCron()"
-        [(time)]="state.weekly"
-        [use24HourTime]="use24HourTime">
-      </cron-time-picker>
+        [use24HourTime]="use24HourTime"
+        [mandatoryValue]="true"
+        [value]="formatTimeValue(state.weekly)"
+        [hideDetails]="true"
+        (valueChanged)="onWeeklyTimeChanged($event)">
+      </cps-timepicker>
     </div>
   </div>
 
@@ -198,13 +192,14 @@
             class="cps-scheduler-select-control">
           </cps-select>
           month(s) at
-          <cron-time-picker
-            class="cps-scheduler-tab-pane-row"
+          <cps-timepicker
             [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
-            (timeChange)="regenerateCron()"
-            [(time)]="state.monthly.specificDay"
-            [use24HourTime]="use24HourTime">
-          </cron-time-picker>
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.monthly.specificDay)"
+            [hideDetails]="true"
+            (valueChanged)="onMonthlySpecificDayTimeChanged($event)">
+          </cps-timepicker>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
@@ -261,13 +256,14 @@
             class="cps-scheduler-select-control">
           </cps-select>
           at
-          <cron-time-picker
-            class="cps-scheduler-tab-pane-row"
+          <cps-timepicker
             [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
-            (timeChange)="regenerateCron()"
-            [(time)]="state.monthly.specificWeekDay"
-            [use24HourTime]="use24HourTime">
-          </cron-time-picker>
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.monthly.specificWeekDay)"
+            [hideDetails]="true"
+            (valueChanged)="onMonthlySpecificWeekDayTimeChanged($event)">
+          </cps-timepicker>
         </div>
       </cps-radio>
     </cps-radio-group>
@@ -303,13 +299,14 @@
             class="cps-scheduler-select-control">
           </cps-select>
           at
-          <cron-time-picker
-            class="cps-scheduler-tab-pane-row"
+          <cps-timepicker
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
-            (timeChange)="regenerateCron()"
-            [(time)]="state.yearly.specificMonthDay"
-            [use24HourTime]="use24HourTime">
-          </cron-time-picker>
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.yearly.specificMonthDay)"
+            [hideDetails]="true"
+            (valueChanged)="onYearlySpecificMonthDayTimeChanged($event)">
+          </cps-timepicker>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
@@ -355,13 +352,14 @@
             class="cps-scheduler-select-control">
           </cps-select>
           at
-          <cron-time-picker
-            class="cps-scheduler-tab-pane-row"
+          <cps-timepicker
             [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
-            (timeChange)="regenerateCron()"
-            [(time)]="state.yearly.specificMonthWeek"
-            [use24HourTime]="use24HourTime">
-          </cron-time-picker>
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.yearly.specificMonthWeek)"
+            [hideDetails]="true"
+            (valueChanged)="onYearlySpecificMonthWeekTimeChanged($event)">
+          </cps-timepicker>
         </div>
       </cps-radio>
     </cps-radio-group>
