@@ -10,7 +10,11 @@ import packageJson from 'projects/cps-ui-kit/package.json';
 })
 export class AppComponent {
   componentTitle = '';
+
+  sidebarExpanded = true;
+
   version = packageJson?.version;
+
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute
@@ -25,5 +29,9 @@ export class AppComponent {
       .subscribe((data: any) => {
         this.componentTitle = data?.title?.toUpperCase() || '';
       });
+  }
+
+  toggleSidebar() {
+    this.sidebarExpanded = !this.sidebarExpanded;
   }
 }

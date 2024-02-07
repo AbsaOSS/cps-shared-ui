@@ -255,6 +255,7 @@
   --cps-color-highlight-selected-dark: #e6d4d9;
 
   //Backgrounds
+  --cps-color-bg-lightest: #fbfbfb;
   --cps-color-bg-light: #f9f8f8;
   --cps-color-bg-mid: #f4f3f3;
   --cps-color-bg-dark: #eeeded;
@@ -263,11 +264,12 @@
   --cps-color-line-light: #e3e2e2;
   --cps-color-line-mid: #d7d5d5;
   --cps-color-line-dark: #cac7c7;
+  --cps-color-line-darkest: #bebaba;
 
   //Text
-  --cps-color-text-darkest: #2d2323;
-  --cps-color-text-dark: #524a4a;
-  --cps-color-text-mild: #787272;
-  --cps-color-text-light: #9a9595;
   --cps-color-text-lightest: #b5b2b2;
+  --cps-color-text-light: #9a9595;
+  --cps-color-text-mild: #787272;
+  --cps-color-text-dark: #524a4a;
+  --cps-color-text-darkest: #2d2323;
 }

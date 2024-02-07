@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { TitleStrategy } from '@angular/router';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
+import { CpsIconComponent } from 'cps-ui-kit';
 
 @NgModule({
   declarations: [AppComponent],
@@ -16,7 +17,8 @@ import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    NavigationSidebarComponent
+    NavigationSidebarComponent,
+    CpsIconComponent
   ],
   providers: [
     { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },

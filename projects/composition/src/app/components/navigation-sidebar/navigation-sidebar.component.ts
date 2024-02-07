@@ -1,17 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CpsInputComponent } from 'cps-ui-kit';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, CommonModule, CpsInputComponent, FormsModule],
+  imports: [RouterModule, CommonModule, FormsModule, CpsInputComponent],
   selector: 'app-navigation-sidebar',
   templateUrl: './navigation-sidebar.component.html',
   styleUrls: ['./navigation-sidebar.component.scss']
 })
 export class NavigationSidebarComponent implements OnInit {
+  @Input() isExpanded = true;
+
   styles = [
     {
       title: 'Color pack',

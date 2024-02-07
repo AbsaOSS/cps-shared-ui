@@ -90,7 +90,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/composition/browser",
             "index": "projects/composition/src/index.html",
@@ -99,7 +99,6 @@
             "tsConfig": "projects/composition/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "projects/composition/src/favicon.ico",
               "projects/composition/src/assets",
               {
                 "glob": "**/*",
@@ -134,7 +133,6 @@
             "development": {
               "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -166,10 +164,7 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "projects/composition/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/composition/src/favicon.ico",
-              "projects/composition/src/assets"
-            ],
+            "assets": ["projects/composition/src/assets"],
             "styles": ["projects/composition/src/styles.scss"],
             "scripts": []
           }

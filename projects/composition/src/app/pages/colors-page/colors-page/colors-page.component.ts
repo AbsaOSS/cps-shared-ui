@@ -24,8 +24,8 @@ export class ColorsPageComponent implements OnInit {
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
     { name: 'Highlights', colors: [[], [], [], []] },
-    { name: 'Backgrounds', colors: [[], [], []] },
-    { name: 'Lines', colors: [[], [], []] },
+    { name: 'Backgrounds', colors: [[], [], [], []] },
+    { name: 'Lines', colors: [[], [], [], []] },
     { name: 'Text', colors: [[], [], [], [], []] }
   ];
 
@@ -37,8 +37,8 @@ export class ColorsPageComponent implements OnInit {
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
     { name: 'Highlights', colors: [[], [], [], []] },
-    { name: 'Backgrounds', colors: [[], [], []] },
-    { name: 'Lines', colors: [[], [], []] },
+    { name: 'Backgrounds', colors: [[], [], [], []] },
+    { name: 'Lines', colors: [[], [], [], []] },
     { name: 'Text', colors: [[], [], [], [], []] }
   ];
 
@@ -108,27 +108,31 @@ export class ColorsPageComponent implements OnInit {
         this.colorsList[3].colors[2].push({ name, value });
       } else if (name === 'highlight-selected-dark') {
         this.colorsList[3].colors[3].push({ name, value });
-      } else if (name === 'bg-light') {
+      } else if (name === 'bg-lightest') {
         this.colorsList[4].colors[0].push({ name, value });
-      } else if (name === 'bg-mid') {
+      } else if (name === 'bg-light') {
         this.colorsList[4].colors[1].push({ name, value });
-      } else if (name === 'bg-dark') {
+      } else if (name === 'bg-mid') {
         this.colorsList[4].colors[2].push({ name, value });
+      } else if (name === 'bg-dark') {
+        this.colorsList[4].colors[3].push({ name, value });
       } else if (name === 'line-light') {
         this.colorsList[5].colors[0].push({ name, value });
       } else if (name === 'line-mid') {
         this.colorsList[5].colors[1].push({ name, value });
       } else if (name === 'line-dark') {
         this.colorsList[5].colors[2].push({ name, value });
-      } else if (name === 'text-darkest') {
+      } else if (name === 'line-darkest') {
+        this.colorsList[5].colors[3].push({ name, value });
+      } else if (name === 'text-lightest') {
         this.colorsList[6].colors[0].push({ name, value });
-      } else if (name === 'text-dark') {
+      } else if (name === 'text-light') {
         this.colorsList[6].colors[1].push({ name, value });
       } else if (name === 'text-mild') {
         this.colorsList[6].colors[2].push({ name, value });
-      } else if (name === 'text-light') {
+      } else if (name === 'text-dark') {
         this.colorsList[6].colors[3].push({ name, value });
-      } else if (name === 'text-lightest') {
+      } else if (name === 'text-darkest') {
         this.colorsList[6].colors[4].push({ name, value });
       }
     });

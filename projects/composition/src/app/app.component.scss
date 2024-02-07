@@ -22,16 +22,36 @@
   height: calc(100vh - $top-tbar-height);
 
   .composition-body {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    overflow-x: auto;
     background-color: $composition-background;
-    &-toolbar {
+    .composition-body-toolbar {
       height: $inner-tbar-height;
       background: $color-calm;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       color: white;
       font-size: 20px;
+      .composition-body-toolbar-title {
+        margin: 0 auto;
+      }
+      .sidebar-toggle-icon {
+        margin-left: 12px;
+        margin-right: 8px;
+        cursor: pointer;
+      }
+    }
+  }
+  .composition-body-collapsed {
+    width: 100%;
+    .composition-body-toolbar {
+      .sidebar-toggle-icon {
+        transform: rotate(180deg);
+        transition: 0.2s;
+      }
     }
   }
 }

@@ -17,12 +17,13 @@ body {
 
 .composition-page {
   padding: 0 24px 24px 24px;
-  position: absolute;
-  width: calc(100% - $sidebar-width - 1px);
-  height: calc(100% - $top-tbar-height - $inner-tbar-height);
+  width: 100%;
+  height: calc(100% - $inner-tbar-height);
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .example-content {
-  padding: 24px 0;
+  padding-top: 24px;
 }
