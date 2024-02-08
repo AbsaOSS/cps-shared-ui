@@ -32,7 +32,9 @@
                   </td>
                   <td class="highlighted-text">{{ prop.type }}</td>
                   <td class="value-style">
-                    <span>{{ prop.default || 'undefined' }}</span>
+                    <span>{{
+                      (prop.default === '' ? "''" : prop.default) ?? 'undefined'
+                    }}</span>
                   </td>
                   <td>{{ prop.description }}</td>
                 </tr>
