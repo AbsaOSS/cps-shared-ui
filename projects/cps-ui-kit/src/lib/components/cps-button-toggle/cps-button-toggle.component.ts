@@ -56,7 +56,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    * An array of options.
    * @group Props
    */
-  @Input() options = [] as CpsButtonToggleOption[];
+  @Input() options: CpsButtonToggleOption[] = [];
 
   /**
    * Specifies if multiple values can be selected.

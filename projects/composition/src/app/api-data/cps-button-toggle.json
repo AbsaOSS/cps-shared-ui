@@ -18,7 +18,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "CpsButtonToggleOption[]",
-                        "default": "...",
+                        "default": "[]",
                         "description": "An array of options."
                     },
                     {
