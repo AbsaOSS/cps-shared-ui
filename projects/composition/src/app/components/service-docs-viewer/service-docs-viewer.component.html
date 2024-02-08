@@ -29,7 +29,7 @@
                     <span>{{ method.name }}</span>
                   </td>
                   <td class="highlighted-text">
-                    {{ parseParameters(method.parameters) }}
+                    {{ parseParameters(method.parameters) || 'null' }}
                   </td>
                   <td class="highlighted-text">{{ method.returnType }}</td>
                   <td class="method-description">{{ method.description }}</td>
