@@ -56,7 +56,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "CpsRadioOption[]",
-                        "default": "...",
+                        "default": "[]",
                         "description": "An array of options."
                     },
                     {
@@ -127,7 +127,8 @@
                         "name": "value",
                         "optional": false,
                         "readonly": false,
-                        "type": "any"
+                        "type": "any",
+                        "description": "Value of the radio group."
                     }
                 ]
             },

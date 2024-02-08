@@ -9,7 +9,8 @@
                         "name": "selectedIndex",
                         "optional": false,
                         "readonly": false,
-                        "type": "number"
+                        "type": "number",
+                        "description": "Index of the selected tab."
                     },
                     {
                         "name": "isSubTabs",

@@ -214,13 +214,15 @@
                         "name": "showRowRemoveButton",
                         "optional": false,
                         "readonly": false,
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Determines whether the 'Remove' button should be displayed in the menu."
                     },
                     {
                         "name": "showRowEditButton",
                         "optional": false,
                         "readonly": false,
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Determines whether the 'Edit' button should be displayed in the menu."
                     }
                 ]
             },
@@ -747,7 +749,8 @@
                         "name": "data",
                         "optional": false,
                         "readonly": false,
-                        "type": "any[]"
+                        "type": "any[]",
+                        "description": "An array of objects to display."
                     }
                 ]
             },
