@@ -65,7 +65,7 @@ export class CpsAutocompleteComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * Label of the input element.
+   * Label of the autocomplete component.
    * @group Props
    */
   @Input() label = '';
@@ -101,7 +101,7 @@ export class CpsAutocompleteComponent
   @Input() disabled = false;
 
   /**
-   * Width of the input field, a number denoting pixels or a string.
+   * Width of the autocomplete component, a number denoting pixels or a string.
    * @group Props
    */
   @Input() width: number | string = '100%';
