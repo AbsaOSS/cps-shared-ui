@@ -28,13 +28,13 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class RadioPageComponent {
-  options = [
+  options: CpsRadioOption[] = [
     { label: 'Option 1', value: 'first' },
     { label: 'Option 2', value: 'second' },
     { label: 'Option 3', value: 'third' }
-  ] as CpsRadioOption[];
+  ];
 
-  partiallyDisabledOptions = [
+  partiallyDisabledOptions: CpsRadioOption[] = [
     {
       label: 'Option 1',
       value: 'first',
@@ -49,7 +49,7 @@ export class RadioPageComponent {
       tooltip: 'Third option is currently unavailable'
     },
     { label: 'Option 4', value: 'fourth' }
-  ] as CpsRadioOption[];
+  ];
 
   syncVal = 'first';
 

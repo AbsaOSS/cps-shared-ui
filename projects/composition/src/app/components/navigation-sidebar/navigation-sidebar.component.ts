@@ -150,10 +150,10 @@ export class NavigationSidebarComponent implements OnInit {
     // extend this list
   ];
 
-  filteredComponents = [] as {
+  filteredComponents: {
     title: string;
     url: string;
-  }[];
+  }[] = [];
 
   searchVal = '';
 

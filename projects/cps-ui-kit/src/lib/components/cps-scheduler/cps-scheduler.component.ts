@@ -168,7 +168,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
   activeScheduleType = 'Not set';
 
-  scheduleTypes = [
+  scheduleTypes: CpsButtonToggleOption[] = [
     { label: 'Not set', value: 'Not set' },
     { label: 'Minutes', value: 'Minutes' },
     { label: 'Hourly', value: 'Hourly' },
@@ -177,7 +177,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     { label: 'Monthly', value: 'Monthly' },
     { label: 'Yearly', value: 'Yearly' },
     { label: 'Advanced', value: 'Advanced' }
-  ] as CpsButtonToggleOption[];
+  ];
 
   selectOptions = this._getSelectOptions();
 

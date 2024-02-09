@@ -397,7 +397,7 @@ export class CpsSelectComponent
         ? option
         : option[this.optionValue];
     if (this.multiple) {
-      let res = [] as any;
+      let res = [];
       if (includes(this.value, val)) {
         res = this.value.filter((v: any) => !isEqual(v, val));
       } else {

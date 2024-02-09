@@ -114,7 +114,7 @@ export class CpsTooltipDirective implements OnDestroy {
     if (noAnimation) {
       removeFromDOM();
     } else {
-      const popup = this._popup as HTMLDivElement;
+      const popup: HTMLDivElement = this._popup;
       requestAnimationFrame(function () {
         popup.style.opacity = '0';
       });
@@ -159,7 +159,7 @@ export class CpsTooltipDirective implements OnDestroy {
       );
     }
 
-    let positions = ['top', 'bottom', 'left', 'right'] as CpsTooltipPosition[];
+    let positions: CpsTooltipPosition[] = ['top', 'bottom', 'left', 'right'];
     positions = positions.filter((item) => item !== this.tooltipPosition);
     positions.unshift(this.tooltipPosition);
 

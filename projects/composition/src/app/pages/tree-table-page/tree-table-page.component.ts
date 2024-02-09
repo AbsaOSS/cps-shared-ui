@@ -41,11 +41,11 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 export class TreeTablePageComponent implements OnInit {
   selectedTabIndex = 0;
 
-  sizesOptions = [
+  sizesOptions: CpsButtonToggleOption[] = [
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
     { label: 'Large', value: 'large' }
-  ] as CpsButtonToggleOption[];
+  ];
 
   selSize: CpsTreeTableSize = 'small';
 

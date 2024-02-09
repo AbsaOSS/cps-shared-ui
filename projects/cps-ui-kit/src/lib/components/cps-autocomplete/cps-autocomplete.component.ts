@@ -342,7 +342,7 @@ export class CpsAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   inputText = '';
-  filteredOptions = [] as any[];
+  filteredOptions: any[] = [];
   backspaceClickedOnce = false;
   activeSingle = false;
   optionHighlightedIndex = -1;
@@ -416,7 +416,7 @@ export class CpsAutocompleteComponent
         ? option
         : option[this.optionValue];
     if (this.multiple) {
-      let res = [] as any;
+      let res = [];
       if (includes(this.value, val)) {
         res = this.value.filter((v: any) => !isEqual(v, val));
       } else {

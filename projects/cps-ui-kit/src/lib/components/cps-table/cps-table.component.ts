@@ -600,7 +600,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   selectedColumns: { [key: string]: any }[] = [];
 
-  exportMenuItems = [
+  exportMenuItems: CpsMenuItem[] = [
     {
       title: 'CSV',
       icon: 'csv',
@@ -622,7 +622,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     //     this.exportTable('pdf');
     //   }
     // }
-  ] as CpsMenuItem[];
+  ];
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private cdRef: ChangeDetectorRef) {}
@@ -808,7 +808,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onSelectColumn(col: any) {
-    let res = [] as any;
+    let res: any[] = [];
     if (this.isColumnSelected(col)) {
       res = this.selectedColumns.filter((v: any) => !isEqual(v, col));
     } else {

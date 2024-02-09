@@ -18,7 +18,7 @@ import ComponetnData from '../../api-data/cps-menu.json';
   host: { class: 'composition-page' }
 })
 export class MenuPageComponent {
-  items = [
+  items: CpsMenuItem[] = [
     {
       title: 'First item',
       desc: 'First item description',
@@ -64,9 +64,9 @@ export class MenuPageComponent {
       url: 'https://google.com',
       target: '_blank'
     }
-  ] as CpsMenuItem[];
+  ];
 
-  itemsWithoutIcons = [
+  itemsWithoutIcons: CpsMenuItem[] = [
     {
       title: 'First item',
       desc: 'First item description',
@@ -109,7 +109,7 @@ export class MenuPageComponent {
       url: 'https://google.com',
       target: '_blank'
     }
-  ] as CpsMenuItem[];
+  ];
 
   componentData = ComponetnData;
 
