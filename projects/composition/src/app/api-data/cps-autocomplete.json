@@ -11,7 +11,7 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "Label of the input element."
+                        "description": "Label of the autocomplete component."
                     },
                     {
                         "name": "placeholder",
@@ -59,7 +59,7 @@
                         "readonly": false,
                         "type": "string | number",
                         "default": "100%",
-                        "description": "Width of the input field, a number denoting pixels or a string."
+                        "description": "Width of the autocomplete component, a number denoting pixels or a string."
                     },
                     {
                         "name": "selectAll",

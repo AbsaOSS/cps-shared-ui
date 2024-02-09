@@ -73,7 +73,8 @@
                         "name": "cron",
                         "optional": false,
                         "readonly": false,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Cron expression value."
                     }
                 ]
             },
