@@ -153,7 +153,8 @@
                         "name": "value",
                         "optional": false,
                         "readonly": false,
-                        "type": "string"
+                        "type": "string",
+                        "description": "Value of the textarea."
                     }
                 ]
             },

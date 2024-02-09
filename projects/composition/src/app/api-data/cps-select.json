@@ -106,7 +106,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "any[]",
-                        "default": "...",
+                        "default": "[]",
                         "description": "An array of options."
                     },
                     {

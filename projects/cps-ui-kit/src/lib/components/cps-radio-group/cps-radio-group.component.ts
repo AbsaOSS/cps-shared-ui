@@ -55,7 +55,7 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
    * An array of options.
    * @group Props
    */
-  @Input() options = [] as CpsRadioOption[];
+  @Input() options: CpsRadioOption[] = [];
 
   /**
    * Label of the radio group.

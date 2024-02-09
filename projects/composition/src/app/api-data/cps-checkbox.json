@@ -81,7 +81,8 @@
                         "name": "value",
                         "optional": false,
                         "readonly": false,
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Value of the checkbox."
                     }
                 ]
             },

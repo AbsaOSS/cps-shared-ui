@@ -51,6 +51,11 @@ async function main() {
       return text.replace(/&#123;/g, '{').replace(/&#125;/g, '}');
     };
 
+    const getDeprecatedText = (signature) => {
+      const deprecatedTag = signature?.comment?.getTag('@deprecated');
+      return deprecatedTag ? parseText(deprecatedTag.content[0].text) : undefined;
+    };
+
     const modules = project.groups.find((g) => g.title === 'Modules');
 
     if (isProcessable(modules)) {
@@ -128,28 +133,10 @@ async function main() {
                           : prop.defaultValue
                             ? prop.defaultValue.replace(/^'|'$/g, '')
                             : undefined,
-                      description:
-                        prop.getSignature && prop.getSignature.comment
-                          ? prop.getSignature.comment.summary
-                            .map((s) => s.text || '')
-                            .join(' ')
-                          : prop.comment &&
-                          prop.comment.summary
-                            .map((s) => s.text || '')
-                            .join(' '),
-                      deprecated:
-                        prop.getSignature &&
-                          prop.getSignature.comment &&
-                          prop.getSignature.comment.getTag('@deprecated')
-                          ? parseText(
-                            prop.getSignature.comment.getTag('@deprecated')
-                              .content[0].text
-                          )
-                          : prop.comment && prop.comment.getTag('@deprecated')
-                            ? parseText(
-                              prop.comment.getTag('@deprecated').content[0].text
-                            )
-                            : undefined
+                      description: ((prop.getSignature?.comment?.summary || prop.setSignature?.comment?.summary) || prop.comment?.summary)?.map((s) => s.text || '').join(' '),
+                      deprecated: getDeprecatedText(prop.getSignature)
+                        || getDeprecatedText(prop.setSignature)
+                        || getDeprecatedText(prop.comment)
                     });
                   });
                   doc[name]['components'][componentName]['props'] = props;
@@ -182,13 +169,7 @@ async function main() {
                         emitter.comment.summary
                           .map((s) => s.text || '')
                           .join(' '),
-                      deprecated:
-                        emitter.comment && emitter.comment.getTag('@deprecated')
-                          ? parseText(
-                            emitter.comment.getTag('@deprecated').content[0]
-                              .text
-                          )
-                          : undefined
+                      deprecated: getDeprecatedText(emitter)
                     });
                   });
 
@@ -259,13 +240,7 @@ async function main() {
                             child.comment.summary
                               .map((s) => s.text || '')
                               .join(' '),
-                          deprecated:
-                            child.comment && child.comment.getTag('@deprecated')
-                              ? parseText(
-                                child.comment.getTag('@deprecated').content[0]
-                                  .text
-                              )
-                              : undefined
+                          deprecated: getDeprecatedText(child)
                         }))
                     });
                   });
@@ -299,13 +274,7 @@ async function main() {
                         child.comment.summary
                           .map((s) => s.text || '')
                           .join(' '),
-                      deprecated:
-                        child.comment && child.comment.getTag('@deprecated')
-                          ? parseText(
-                            child.comment.getTag('@deprecated').content[0]
-                              .text
-                          )
-                          : undefined
+                      deprecated: getDeprecatedText(child)
                     }))
                 });
               });
@@ -373,14 +342,7 @@ async function main() {
                       signature.comment.summary
                         .map((s) => s.text || '')
                         .join(' '),
-                    deprecated:
-                      signature.comment &&
-                        signature.comment.getTag('@deprecated')
-                        ? parseText(
-                          signature.comment.getTag('@deprecated').content[0]
-                            .text
-                        )
-                        : undefined
+                    deprecated: getDeprecatedText(signature)
                   });
                 });
               });
@@ -414,13 +376,7 @@ async function main() {
                         child.comment.summary
                           .map((s) => s.text || '')
                           .join(' '),
-                      deprecated:
-                        child.comment && child.comment.getTag('@deprecated')
-                          ? parseText(
-                            child.comment.getTag('@deprecated').content[0]
-                              .text
-                          )
-                          : undefined
+                      deprecated: getDeprecatedText(child)
                     }))
                 });
               });

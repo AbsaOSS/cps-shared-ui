@@ -139,7 +139,7 @@ export class CpsSelectComponent
    * An array of options.
    * @group Props
    */
-  @Input() options = [] as any[];
+  @Input() options: any[] = [];
 
   /**
    * If multiple, determines whether selected options should be ordered according to the initial order of the options.

@@ -105,7 +105,8 @@
                         "name": "value",
                         "optional": false,
                         "readonly": false,
-                        "type": "undefined | CpsTime"
+                        "type": "undefined | CpsTime",
+                        "description": "Value of the timepicker."
                     }
                 ]
             },
