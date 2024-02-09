@@ -708,12 +708,12 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
         label: value,
         value: key
       })),
-      minutes: this._getRange(0, 59).map((min) => ({
+      minutes: this._getRange(1, 59).map((min) => ({
         label: min,
         value: min
       })),
       fullMinutes: this._getRange(0, 59).map((min) => ({
-        label: min,
+        label: this._numToString(min),
         value: min
       })),
       hours: this._getRange(1, 23).map((hour) => ({
