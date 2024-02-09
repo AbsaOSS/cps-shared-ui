@@ -13,4 +13,15 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 })
 export class SchedulerPageComponent {
   componentData = ComponentData;
+
+  cronExpression = '30 9 ? 7/4 WED#5 *';
+  timeZone = 'UTC';
+
+  onCronExpressionChanged(cron: string) {
+    console.log('CRON expression', cron);
+  }
+
+  onTimezoneChanged(tz: string) {
+    console.log('Time zone', tz);
+  }
 }

@@ -64,7 +64,7 @@ export class CpsSelectComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * The label of the select component.
+   * Label of the select component.
    * @group Props
    */
   @Input() label = '';

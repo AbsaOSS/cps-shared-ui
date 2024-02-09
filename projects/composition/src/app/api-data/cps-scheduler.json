@@ -6,28 +6,28 @@
                 "description": "Defines the input properties of the component.",
                 "values": [
                     {
-                        "name": "disabled",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "boolean",
-                        "default": "false",
-                        "description": "Determines whether the component is disabled."
-                    },
-                    {
-                        "name": "defaultTime",
+                        "name": "label",
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "00:00",
-                        "description": "Default time format for the component."
+                        "default": "",
+                        "description": "Label of the component."
                     },
                     {
-                        "name": "use24HourTime",
+                        "name": "cron",
                         "optional": false,
                         "readonly": false,
-                        "type": "boolean",
-                        "default": "true",
-                        "description": "Determines whether to use 24-hour time format."
+                        "type": "string",
+                        "default": "",
+                        "description": "Cron expression value."
+                    },
+                    {
+                        "name": "timeZone",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "...",
+                        "description": "Time zone value."
                     },
                     {
                         "name": "showNotSet",
@@ -54,12 +54,28 @@
                         "description": "Determines whether to show the time zone selector."
                     },
                     {
-                        "name": "timeZone",
+                        "name": "defaultTime",
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "...",
-                        "description": "Time zone."
+                        "default": "00:00",
+                        "description": "Default time format for the component."
+                    },
+                    {
+                        "name": "use24HourTime",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to use 24-hour time format."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the component is disabled."
                     },
                     {
                         "name": "infoTooltip",
@@ -68,13 +84,6 @@
                         "type": "string",
                         "default": "",
                         "description": "Information tooltip for the component."
-                    },
-                    {
-                        "name": "cron",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "string",
-                        "description": "Cron expression value."
                     }
                 ]
             },
@@ -82,17 +91,17 @@
                 "description": "Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.",
                 "values": [
                     {
-                        "name": "cronChanged",
+                        "name": "cronChange",
                         "parameters": [
                             {
                                 "name": "value",
                                 "type": "string"
                             }
                         ],
-                        "description": "Callback to invoke on cron value change."
+                        "description": "Callback to invoke on cron expression value change."
                     },
                     {
-                        "name": "timeZoneChanged",
+                        "name": "timeZoneChange",
                         "parameters": [
                             {
                                 "name": "value",

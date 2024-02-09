@@ -92,22 +92,22 @@ enum Months {
 })
 export class CpsSchedulerComponent implements OnInit, OnChanges {
   /**
-   * Determines whether the component is disabled.
+   * Label of the component.
    * @group Props
    */
-  @Input() disabled = false;
+  @Input() label = '';
 
   /**
-   * Default time format for the component.
+   * Cron expression value.
    * @group Props
    */
-  @Input() defaultTime = '00:00';
+  @Input() cron = '';
 
   /**
-   * Determines whether to use 24-hour time format.
+   * Time zone value.
    * @group Props
    */
-  @Input() use24HourTime = true;
+  @Input() timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
   /**
    * Determines whether to show the 'Not set' tab.
@@ -128,10 +128,22 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   @Input() showTimeZone = false;
 
   /**
-   * Time zone.
+   * Default time format for the component.
    * @group Props
    */
-  @Input() timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
+  @Input() defaultTime = '00:00';
+
+  /**
+   * Determines whether to use 24-hour time format.
+   * @group Props
+   */
+  @Input() use24HourTime = true;
+
+  /**
+   * Determines whether the component is disabled.
+   * @group Props
+   */
+  @Input() disabled = false;
 
   /**
    * Information tooltip for the component.
@@ -140,33 +152,18 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   @Input() infoTooltip = '';
 
   /**
-   * Cron expression value.
-   * @group Props
-   */
-  @Input() set cron(value: string) {
-    this._cron = value;
-    this.cronChanged.emit(this._cron);
-  }
-
-  get cron(): string {
-    return this._cron;
-  }
-
-  /**
-   * Callback to invoke on cron value change.
-   * @param {string} string - cron value changed.
+   * Callback to invoke on cron expression value change.
+   * @param {string} string - cron expression value changed.
    * @group Emits
    */
-  @Output() cronChanged = new EventEmitter<string>();
+  @Output() cronChange = new EventEmitter<string>();
 
   /**
    * Callback to invoke on time zone change.
    * @param {string} string - time zone changed.
    * @group Emits
    */
-  @Output() timeZoneChanged = new EventEmitter<string>();
-
-  activeScheduleType = 'Not set';
+  @Output() timeZoneChange = new EventEmitter<string>();
 
   scheduleTypes: CpsButtonToggleOption[] = [
     { label: 'Not set', value: 'Not set' },
@@ -179,17 +176,14 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     { label: 'Advanced', value: 'Advanced' }
   ];
 
+  activeScheduleType = 'Not set';
   selectOptions = this._getSelectOptions();
-
   timeZoneOptions = timeZones.map((tz) => ({ label: tz, value: tz }));
-
   state: any;
-
   form!: UntypedFormGroup;
 
-  private _cron = '';
-
   private _isDirty = false;
+  private _minutesDefault = '0/1 * 1/1 * ? *';
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -198,17 +192,17 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    if (!this.showNotSet) {
-      this.scheduleTypes.shift();
-      this.activeScheduleType = 'Minutes';
-      this._cron = '0/1 * 1/1 * ? *';
-    }
+    this.state = this._getDefaultState();
 
     if (!this.showAdvanced) {
       this.scheduleTypes.pop();
     }
 
-    this.state = this._getDefaultState();
+    if (!this.showNotSet) {
+      this.scheduleTypes.shift();
+      if (!this.cron) this.cron = this._minutesDefault;
+    }
+
     this._handleModelChange(this.cron);
 
     this.form = this._fb.group({
@@ -247,33 +241,31 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
     switch (this.activeScheduleType) {
       case 'Minutes':
-        this.cron = `0/${this.state.minutes.minutes} * 1/1 * ?`;
-        this.cron = `${this.cron} *`;
+        this._updateCron(`0/${this.state.minutes.minutes} * 1/1 * ? *`);
         break;
       case 'Hourly':
-        this.cron = `${this.state.hourly.minutes} 0/${this.state.hourly.hours} 1/1 * ?`;
-        this.cron = `${this.cron} *`;
+        this._updateCron(
+          `${this.state.hourly.minutes} 0/${this.state.hourly.hours} 1/1 * ? *`
+        );
         break;
       case 'Daily':
         switch (this.state.daily.subTab) {
           case 'everyDays':
-            this.cron = `${
-              this.state.daily.everyDays.minutes
-            } ${this._hourToCron(
-              this.state.daily.everyDays.hours,
-              this.state.daily.everyDays.hourType
-            )} 1/${this.state.daily.everyDays.days} * ?`;
-            this.cron = `${this.cron} *`;
+            this._updateCron(
+              `${this.state.daily.everyDays.minutes} ${this._hourToCron(
+                this.state.daily.everyDays.hours,
+                this.state.daily.everyDays.hourType
+              )} 1/${this.state.daily.everyDays.days} * ? *`
+            );
 
             break;
           case 'everyWeekDay':
-            this.cron = `${
-              this.state.daily.everyWeekDay.minutes
-            } ${this._hourToCron(
-              this.state.daily.everyWeekDay.hours,
-              this.state.daily.everyWeekDay.hourType
-            )} ? * MON-FRI`;
-            this.cron = `${this.cron} *`;
+            this._updateCron(
+              `${this.state.daily.everyWeekDay.minutes} ${this._hourToCron(
+                this.state.daily.everyWeekDay.hours,
+                this.state.daily.everyWeekDay.hourType
+              )} ? * MON-FRI *`
+            );
             break;
           default:
             throw new Error('Invalid cron daily subtab selection');
@@ -287,11 +279,12 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
             [] as string[]
           )
           .join(',');
-        this.cron = `${this.state.weekly.minutes} ${this._hourToCron(
-          this.state.weekly.hours,
-          this.state.weekly.hourType
-        )} ? * ${days}`;
-        this.cron = `${this.cron} *`;
+        this._updateCron(
+          `${this.state.weekly.minutes} ${this._hourToCron(
+            this.state.weekly.hours,
+            this.state.weekly.hourType
+          )} ? * ${days} *`
+        );
         break;
       }
       case 'Monthly': {
@@ -301,27 +294,25 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
               ? `${this.state.monthly.specificDay.day}W`
               : this.state.monthly.specificDay.day;
 
-            this.cron = `${
-              this.state.monthly.specificDay.minutes
-            } ${this._hourToCron(
-              this.state.monthly.specificDay.hours,
-              this.state.monthly.specificDay.hourType
-            )} ${day} 1/${this.state.monthly.specificDay.months} ?`;
-            this.cron = `${this.cron} *`;
+            this._updateCron(
+              `${this.state.monthly.specificDay.minutes} ${this._hourToCron(
+                this.state.monthly.specificDay.hours,
+                this.state.monthly.specificDay.hourType
+              )} ${day} 1/${this.state.monthly.specificDay.months} ? *`
+            );
             break;
           }
           case 'specificWeekDay':
-            this.cron = `${
-              this.state.monthly.specificWeekDay.minutes
-            } ${this._hourToCron(
-              this.state.monthly.specificWeekDay.hours,
-              this.state.monthly.specificWeekDay.hourType
-            )} ? ${this.state.monthly.specificWeekDay.startMonth}/${
-              this.state.monthly.specificWeekDay.months
-            } ${this.state.monthly.specificWeekDay.day}${
-              this.state.monthly.specificWeekDay.monthWeek
-            }`;
-            this.cron = `${this.cron} *`;
+            this._updateCron(
+              `${this.state.monthly.specificWeekDay.minutes} ${this._hourToCron(
+                this.state.monthly.specificWeekDay.hours,
+                this.state.monthly.specificWeekDay.hourType
+              )} ? ${this.state.monthly.specificWeekDay.startMonth}/${
+                this.state.monthly.specificWeekDay.months
+              } ${this.state.monthly.specificWeekDay.day}${
+                this.state.monthly.specificWeekDay.monthWeek
+              } *`
+            );
             break;
           default:
             throw new Error('Invalid cron monthly subtab selection');
@@ -335,43 +326,43 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
               ? `${this.state.yearly.specificMonthDay.day}W`
               : this.state.yearly.specificMonthDay.day;
 
-            this.cron = `${
-              this.state.yearly.specificMonthDay.minutes
-            } ${this._hourToCron(
-              this.state.yearly.specificMonthDay.hours,
-              this.state.yearly.specificMonthDay.hourType
-            )} ${day} ${this.state.yearly.specificMonthDay.month} ?`;
-            this.cron = `${this.cron} *`;
+            this._updateCron(
+              `${this.state.yearly.specificMonthDay.minutes} ${this._hourToCron(
+                this.state.yearly.specificMonthDay.hours,
+                this.state.yearly.specificMonthDay.hourType
+              )} ${day} ${this.state.yearly.specificMonthDay.month} ? *`
+            );
             break;
           }
           case 'specificMonthWeek':
-            this.cron = `${
-              this.state.yearly.specificMonthWeek.minutes
-            } ${this._hourToCron(
-              this.state.yearly.specificMonthWeek.hours,
-              this.state.yearly.specificMonthWeek.hourType
-            )} ? ${this.state.yearly.specificMonthWeek.month} ${
-              this.state.yearly.specificMonthWeek.day
-            }${this.state.yearly.specificMonthWeek.monthWeek}`;
-            this.cron = `${this.cron} *`;
+            this._updateCron(
+              `${
+                this.state.yearly.specificMonthWeek.minutes
+              } ${this._hourToCron(
+                this.state.yearly.specificMonthWeek.hours,
+                this.state.yearly.specificMonthWeek.hourType
+              )} ? ${this.state.yearly.specificMonthWeek.month} ${
+                this.state.yearly.specificMonthWeek.day
+              }${this.state.yearly.specificMonthWeek.monthWeek} *`
+            );
             break;
           default:
             throw new Error('Invalid cron yearly subtab selection');
         }
         break;
       case 'Advanced':
-        if (!tabChange) this.cron = this.form.value.advanced || '';
+        if (!tabChange) this._updateCron(this.form.value.advanced || '');
         this.form.controls.advanced.setValue(this.cron);
         break;
       default:
-        if (this.showNotSet) this.cron = '';
+        if (this.showNotSet) this._updateCron('');
         else throw new Error('Invalid cron type');
     }
   }
 
   onTimeZoneChanged(value: string): void {
     if (!this.showTimeZone) return;
-    this.timeZoneChanged.emit(value);
+    this.timeZoneChange.emit(value);
   }
 
   onTimeChanged(value: CpsTime, target: any): void {
@@ -385,6 +376,12 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       hours: this._numToString(value.hours),
       minutes: this._numToString(value.minutes)
     };
+  }
+
+  private _updateCron(value: string): void {
+    if (this.cron === value) return;
+    this.cron = value;
+    this.cronChange.emit(this.cron);
   }
 
   private _isValidCron(cron: string): boolean {
@@ -455,7 +452,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   private _handleModelChange(cron: string): void {
     if (!this._isValidCron(cron)) {
       console.error('Invalid cron value:', cron);
-      this.cron = this.showNotSet ? '' : '0/1 * 1/1 * ? *';
+      this.cron = this.showNotSet ? '' : this._minutesDefault;
       return;
     }
 

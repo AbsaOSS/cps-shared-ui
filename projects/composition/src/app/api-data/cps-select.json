@@ -11,7 +11,7 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "The label of the select component."
+                        "description": "Label of the select component."
                     },
                     {
                         "name": "placeholder",

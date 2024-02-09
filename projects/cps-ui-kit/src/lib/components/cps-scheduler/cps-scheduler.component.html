@@ -2,7 +2,7 @@
   <cps-button-toggle
     [options]="scheduleTypes"
     [disabled]="disabled"
-    label="Frequency"
+    [label]="label"
     [infoTooltip]="infoTooltip"
     [(ngModel)]="activeScheduleType"
     (ngModelChange)="setActiveScheduleType($event)">

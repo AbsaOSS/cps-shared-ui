@@ -1,10 +1,15 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <cps-scheduler
+    label="Frequency"
     [disabled]="false"
-    cron="0 0 1/1 * ? *"
+    [(cron)]="cronExpression"
+    (cronChange)="onCronExpressionChanged($event)"
+    [(timeZone)]="timeZone"
+    (timeZoneChange)="onTimezoneChanged($event)"
     [showAdvanced]="true"
+    [use24HourTime]="true"
     [showNotSet]="true"
     [showTimeZone]="true"
-    infoTooltip="Provide frequency of which dataset will run."></cps-scheduler>
+    infoTooltip="Provide frequency"></cps-scheduler>
 </app-component-docs-viewer>
