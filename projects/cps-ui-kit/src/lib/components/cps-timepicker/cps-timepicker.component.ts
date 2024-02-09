@@ -48,10 +48,10 @@ export interface CpsTime {
 export class CpsTimepickerComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  dayPeriodOptions = [
+  dayPeriodOptions: CpsButtonToggleOption[] = [
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' }
-  ] as CpsButtonToggleOption[];
+  ];
 
   hoursOptions: { label: string; value: string }[] = [];
 

@@ -679,7 +679,7 @@ export class CpsBaseTreeDropdownComponent
     if (!value) return this.multiple ? [] : undefined;
 
     if (this.multiple) {
-      const res = [] as TreeNode[];
+      const res: TreeNode[] = [];
       value.forEach((v: any) => {
         const key = getKey(v, this.originalOptionsMap);
         if (key) res.push(this.optionsMap.get(key) as TreeNode);
