@@ -83,7 +83,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "false",
-                        "description": "When present, it specifies that the component should be disabled."
+                        "description": "Determines whether the button is disabled."
                     },
                     {
                         "name": "loading",

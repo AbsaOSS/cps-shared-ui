@@ -1,0 +1,425 @@
+<div class="cps-scheduler-selector">
+  <cps-button-toggle
+    [options]="scheduleTypes"
+    [disabled]="disabled"
+    [label]="label"
+    [infoTooltip]="infoTooltip"
+    [(ngModel)]="activeScheduleType"
+    (ngModelChange)="setActiveScheduleType($event)">
+  </cps-button-toggle>
+</div>
+
+<div
+  [ngSwitch]="activeScheduleType"
+  class="cps-scheduler-container"
+  [ngClass]="{ 'cps-scheduler-container-disabled': disabled }">
+  <div *ngSwitchCase="'Not set'" class="cps-scheduler-tab-pane"></div>
+
+  <div *ngSwitchCase="'Minutes'" class="cps-scheduler-tab-pane">
+    <div class="cps-scheduler-tab-pane-row">
+      Every
+      <cps-select
+        width="70px"
+        [disabled]="disabled"
+        [returnObject]="false"
+        [hideDetails]="true"
+        (valueChanged)="regenerateCron()"
+        [(ngModel)]="state.minutes.minutes"
+        [options]="selectOptions.minutes"
+        class="cps-scheduler-select-control">
+      </cps-select>
+      minute(s)
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'Hourly'" class="cps-scheduler-tab-pane">
+    <div class="cps-scheduler-tab-pane-row">
+      Every
+      <cps-select
+        width="70px"
+        [disabled]="disabled"
+        [returnObject]="false"
+        [hideDetails]="true"
+        (valueChanged)="regenerateCron()"
+        [(ngModel)]="state.hourly.hours"
+        [options]="selectOptions.hours"
+        class="cps-scheduler-select-control">
+      </cps-select>
+      hour(s) on minute
+      <cps-select
+        width="70px"
+        [disabled]="disabled"
+        [returnObject]="false"
+        [hideDetails]="true"
+        (valueChanged)="regenerateCron()"
+        [(ngModel)]="state.hourly.minutes"
+        [options]="selectOptions.fullMinutes"
+        class="cps-scheduler-select-control">
+      </cps-select>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'Daily'" class="cps-scheduler-tab-pane">
+    <cps-radio-group
+      [(ngModel)]="state.daily.subTab"
+      (valueChanged)="regenerateCron()"
+      [vertical]="true">
+      <cps-radio [option]="{ value: 'everyDays', disabled: disabled }">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.daily.subTab !== 'everyDays'
+          }">
+          Every
+          <cps-select
+            width="70px"
+            [disabled]="disabled || state.daily.subTab !== 'everyDays'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.daily.everyDays.days"
+            [options]="selectOptions.monthDays"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          day(s) at
+          <cps-timepicker
+            [disabled]="disabled || state.daily.subTab !== 'everyDays'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.daily.everyDays)"
+            [hideDetails]="true"
+            (valueChanged)="onTimeChanged($event, state.daily.everyDays)">
+          </cps-timepicker>
+        </div>
+      </cps-radio>
+      <cps-radio [option]="{ value: 'everyWeekDay', disabled: disabled }">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.daily.subTab !== 'everyWeekDay'
+          }">
+          Every working day at
+          <cps-timepicker
+            [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.daily.everyWeekDay)"
+            [hideDetails]="true"
+            (valueChanged)="onTimeChanged($event, state.daily.everyWeekDay)">
+          </cps-timepicker>
+        </div>
+      </cps-radio>
+    </cps-radio-group>
+  </div>
+
+  <div *ngSwitchCase="'Weekly'" class="cps-scheduler-tab-pane">
+    <div class="cps-scheduler-days-checkbox-group">
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Monday"
+        [(ngModel)]="state.weekly.MON">
+      </cps-checkbox>
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Tuesday"
+        [(ngModel)]="state.weekly.TUE">
+      </cps-checkbox>
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Wednesday"
+        [(ngModel)]="state.weekly.WED">
+      </cps-checkbox>
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Thursday"
+        [(ngModel)]="state.weekly.THU">
+      </cps-checkbox>
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Friday"
+        [(ngModel)]="state.weekly.FRI">
+      </cps-checkbox>
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Saturday"
+        [(ngModel)]="state.weekly.SAT">
+      </cps-checkbox>
+      <cps-checkbox
+        (valueChanged)="regenerateCron()"
+        [disabled]="disabled"
+        label="Sunday"
+        [(ngModel)]="state.weekly.SUN">
+      </cps-checkbox>
+    </div>
+    <div class="cps-scheduler-tab-pane-row">
+      at
+      <cps-timepicker
+        [disabled]="disabled"
+        [use24HourTime]="use24HourTime"
+        [mandatoryValue]="true"
+        [value]="formatTimeValue(state.weekly)"
+        [hideDetails]="true"
+        (valueChanged)="onTimeChanged($event, state.weekly)">
+      </cps-timepicker>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'Monthly'" class="cps-scheduler-tab-pane">
+    <cps-radio-group
+      [(ngModel)]="state.monthly.subTab"
+      (valueChanged)="regenerateCron()"
+      [vertical]="true">
+      <cps-radio [option]="{ value: 'specificDay', disabled: disabled }">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.monthly.subTab !== 'specificDay'
+          }">
+          On the
+          <cps-select
+            width="120px"
+            [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.monthly.specificDay.day"
+            [options]="selectOptions.monthDaysWithLasts"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          of every
+          <cps-select
+            width="70px"
+            [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.monthly.specificDay.months"
+            [options]="selectOptions.monthsNumeric"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          month(s) at
+          <cps-timepicker
+            [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.monthly.specificDay)"
+            [hideDetails]="true"
+            (valueChanged)="onTimeChanged($event, state.monthly.specificDay)">
+          </cps-timepicker>
+          <cps-checkbox
+            (valueChanged)="regenerateCron()"
+            [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
+            label="During the nearest weekday"
+            [(ngModel)]="state.monthly.runOnWeekday"
+            class="cps-scheduler-nearest-weekday-checkbox">
+          </cps-checkbox>
+        </div>
+      </cps-radio>
+
+      <cps-radio [option]="{ value: 'specificWeekDay', disabled: disabled }">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.monthly.subTab !== 'specificWeekDay'
+          }">
+          On the
+          <cps-select
+            width="106px"
+            [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.monthly.specificWeekDay.monthWeek"
+            [options]="selectOptions.monthWeeks"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          <cps-select
+            width="130px"
+            [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.monthly.specificWeekDay.day"
+            [options]="selectOptions.days"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          of every
+          <cps-select
+            width="90px"
+            [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.monthly.specificWeekDay.months"
+            [options]="selectOptions.monthsNumeric"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          month(s) starting in
+          <cps-select
+            width="120px"
+            [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.monthly.specificWeekDay.startMonth"
+            [options]="selectOptions.months"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          at
+          <cps-timepicker
+            [disabled]="disabled || state.monthly.subTab !== 'specificWeekDay'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.monthly.specificWeekDay)"
+            [hideDetails]="true"
+            (valueChanged)="
+              onTimeChanged($event, state.monthly.specificWeekDay)
+            ">
+          </cps-timepicker>
+        </div>
+      </cps-radio>
+    </cps-radio-group>
+  </div>
+
+  <div *ngSwitchCase="'Yearly'" class="cps-scheduler-tab-pane">
+    <cps-radio-group
+      [(ngModel)]="state.yearly.subTab"
+      (valueChanged)="regenerateCron()"
+      [vertical]="true">
+      <cps-radio [option]="{ value: 'specificMonthDay', disabled: disabled }">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.yearly.subTab !== 'specificMonthDay'
+          }">
+          Every
+          <cps-select
+            width="120px"
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.yearly.specificMonthDay.month"
+            [options]="selectOptions.months"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          on the
+          <cps-select
+            width="120px"
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.yearly.specificMonthDay.day"
+            [options]="selectOptions.monthDaysWithLasts"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          at
+          <cps-timepicker
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.yearly.specificMonthDay)"
+            [hideDetails]="true"
+            (valueChanged)="
+              onTimeChanged($event, state.yearly.specificMonthDay)
+            ">
+          </cps-timepicker>
+          <cps-checkbox
+            (valueChanged)="regenerateCron()"
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthDay'"
+            label="During the nearest weekday"
+            [(ngModel)]="state.yearly.runOnWeekday"
+            class="cps-scheduler-nearest-weekday-checkbox">
+          </cps-checkbox>
+        </div>
+      </cps-radio>
+
+      <cps-radio [option]="{ value: 'specificMonthWeek', disabled: disabled }">
+        <div
+          class="cps-scheduler-tab-pane-row"
+          [ngClass]="{
+            'cps-scheduler-tab-pane-row-disabled':
+              state.yearly.subTab !== 'specificMonthWeek'
+          }">
+          On the
+          <cps-select
+            width="106px"
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.yearly.specificMonthWeek.monthWeek"
+            [options]="selectOptions.monthWeeks"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          <cps-select
+            width="120px"
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.yearly.specificMonthWeek.day"
+            [options]="selectOptions.days"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          of
+          <cps-select
+            width="120px"
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
+            [returnObject]="false"
+            [hideDetails]="true"
+            (valueChanged)="regenerateCron()"
+            [(ngModel)]="state.yearly.specificMonthWeek.month"
+            [options]="selectOptions.months"
+            class="cps-scheduler-select-control">
+          </cps-select>
+          at
+          <cps-timepicker
+            [disabled]="disabled || state.yearly.subTab !== 'specificMonthWeek'"
+            [use24HourTime]="use24HourTime"
+            [mandatoryValue]="true"
+            [value]="formatTimeValue(state.yearly.specificMonthWeek)"
+            [hideDetails]="true"
+            (valueChanged)="
+              onTimeChanged($event, state.yearly.specificMonthWeek)
+            ">
+          </cps-timepicker>
+        </div>
+      </cps-radio>
+    </cps-radio-group>
+  </div>
+
+  <div *ngSwitchCase="'Advanced'">
+    <form [formGroup]="form">
+      <cps-input
+        label=""
+        [disabled]="disabled"
+        width="500px"
+        placeholder="Please enter"
+        formControlName="advanced"
+        (valueChanged)="regenerateCron()">
+      </cps-input>
+    </form>
+  </div>
+  <div class="cps-scheduler-time-zone" *ngIf="cron && showTimeZone">
+    <cps-autocomplete
+      label="Time zone"
+      [(ngModel)]="timeZone"
+      (valueChanged)="onTimeZoneChanged($event)"
+      [returnObject]="false"
+      width="300"
+      [options]="timeZoneOptions"></cps-autocomplete>
+  </div>
+</div>

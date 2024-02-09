@@ -65,7 +65,7 @@ export class CpsAutocompleteComponent
   implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
 {
   /**
-   * Label of the input element.
+   * Label of the autocomplete component.
    * @group Props
    */
   @Input() label = '';
@@ -101,7 +101,7 @@ export class CpsAutocompleteComponent
   @Input() disabled = false;
 
   /**
-   * Width of the input field, a number denoting pixels or a string.
+   * Width of the autocomplete component, a number denoting pixels or a string.
    * @group Props
    */
   @Input() width: number | string = '100%';
@@ -287,6 +287,12 @@ export class CpsAutocompleteComponent
   @Input() appearance: CpsAutocompleteAppearanceType = 'outlined';
 
   /**
+   * Index of empty value in options array. Applicable only if multiple is false.
+   * @group Props
+   */
+  @Input() emptyOptionIndex = -1;
+
+  /**
    * Value of the autocomplete.
    * @group Props
    */
@@ -336,7 +342,7 @@ export class CpsAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   inputText = '';
-  filteredOptions = [] as any[];
+  filteredOptions: any[] = [];
   backspaceClickedOnce = false;
   activeSingle = false;
   optionHighlightedIndex = -1;
@@ -369,6 +375,10 @@ export class CpsAutocompleteComponent
     this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
+    }
+
+    if (!this.multiple && this._value === undefined) {
+      this._value = this._getEmptyValue();
     }
 
     this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
@@ -406,7 +416,7 @@ export class CpsAutocompleteComponent
         ? option
         : option[this.optionValue];
     if (this.multiple) {
-      let res = [] as any;
+      let res = [];
       if (includes(this.value, val)) {
         res = this.value.filter((v: any) => !isEqual(v, val));
       } else {
@@ -534,7 +544,7 @@ export class CpsAutocompleteComponent
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
-      const val = this.multiple ? [] : undefined;
+      const val = this.multiple ? [] : this._getEmptyValue();
       this.updateValue(val);
     }
     this._clearInput();
@@ -647,6 +657,24 @@ export class CpsAutocompleteComponent
       this.virtualScrollItemSize * currentLen,
       240
     );
+  }
+
+  isEmptyValue(): boolean {
+    return (
+      this.value === null ||
+      this.value === undefined ||
+      (typeof this.value === 'string' && this.value.trim() === '') ||
+      Number.isNaN(this.value)
+    );
+  }
+
+  private _getEmptyValue() {
+    const option = this.options[this.emptyOptionIndex];
+    return !option
+      ? undefined
+      : this.returnObject
+        ? option
+        : option[this.optionValue];
   }
 
   private _toggleOptions(show?: boolean): void {
@@ -825,7 +853,7 @@ export class CpsAutocompleteComponent
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
       if (this.multiple) return;
-      this.updateValue(undefined);
+      this.updateValue(this._getEmptyValue());
       this._closeAndClear();
       return;
     }
@@ -869,14 +897,5 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       this.focusInput();
     }, 0);
-  }
-
-  isEmptyValue(): boolean {
-    return (
-      this.value === null ||
-      this.value === undefined ||
-      (typeof this.value === 'string' && this.value.trim() === '') ||
-      Number.isNaN(this.value)
-    );
   }
 }

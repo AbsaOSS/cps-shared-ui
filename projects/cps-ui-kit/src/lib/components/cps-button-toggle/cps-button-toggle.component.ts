@@ -185,7 +185,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     }
 
     if (this.multiple) {
-      let res = [] as any;
+      let res = [];
       if (!check) {
         res = this.value.filter((v: any) => !isEqual(v, val));
       } else {

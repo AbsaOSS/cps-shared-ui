@@ -20,6 +20,7 @@
       #hoursField
       (keypress)="numberOnly($event)"
       width="60"
+      [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="hoursOptions"
       [withOptionsAliases]="!use24HourTime"
       [useOptionsAliasesWhenNoMatch]="true"
@@ -38,6 +39,7 @@
       #minutesField
       (keypress)="numberOnly($event)"
       width="60"
+      [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="minutesOptions"
       [hideDetails]="true"
       [disabled]="disabled"
@@ -55,6 +57,7 @@
       #secondsField
       (keypress)="numberOnly($event)"
       width="60"
+      [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="secondsOptions"
       [hideDetails]="true"
       [disabled]="disabled"

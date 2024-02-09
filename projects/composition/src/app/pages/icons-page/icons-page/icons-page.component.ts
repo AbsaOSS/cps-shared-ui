@@ -21,7 +21,7 @@ import { ComponentDocsViewerComponent } from '../../../components/component-docs
   host: { class: 'composition-page' }
 })
 export class IconsPageComponent implements OnInit {
-  filteredIconsList = [] as string[];
+  filteredIconsList: string[] = [];
   componentData = ComponentData;
 
   ngOnInit() {

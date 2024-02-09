@@ -94,6 +94,14 @@
                         "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
                     },
                     {
+                        "name": "mandatoryValue",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the timepicker input fields can be cleared."
+                    },
+                    {
                         "name": "value",
                         "optional": false,
                         "readonly": false,

@@ -48,10 +48,10 @@ export interface CpsTime {
 export class CpsTimepickerComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  dayPeriodOptions = [
+  dayPeriodOptions: CpsButtonToggleOption[] = [
     { label: 'AM', value: 'AM' },
     { label: 'PM', value: 'PM' }
-  ] as CpsButtonToggleOption[];
+  ];
 
   hoursOptions: { label: string; value: string }[] = [];
 
@@ -129,6 +129,12 @@ export class CpsTimepickerComponent
    * @group Props
    */
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * Determines whether the timepicker input fields can be cleared.
+   * @group Props
+   */
+  @Input() mandatoryValue = false;
 
   /**
    * Value of the timepicker.

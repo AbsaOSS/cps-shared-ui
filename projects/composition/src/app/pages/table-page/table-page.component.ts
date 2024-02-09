@@ -45,11 +45,11 @@ export class TablePageComponent implements OnInit {
     CpsColumnFilterMatchMode.DATE_AFTER
   ];
 
-  sizesOptions = [
+  sizesOptions: CpsButtonToggleOption[] = [
     { label: 'Small', value: 'small' },
     { label: 'Normal', value: 'normal' },
     { label: 'Large', value: 'large' }
-  ] as CpsButtonToggleOption[];
+  ];
 
   selSize: CpsTableSize = 'small';
 

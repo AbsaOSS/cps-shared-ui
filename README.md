@@ -28,6 +28,7 @@ This repository consists of two projects:
 - Progress circular (indeterminate)
 - Progress linear (indeterminate)
 - Radio
+- Scheduler
 - Select
 - Sidebar menu
 - Table

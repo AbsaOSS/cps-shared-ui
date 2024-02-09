@@ -100,6 +100,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/radio'
     },
     {
+      title: 'Scheduler',
+      url: '/scheduler'
+    },
+    {
       title: 'Select',
       url: '/select'
     },
@@ -146,10 +150,10 @@ export class NavigationSidebarComponent implements OnInit {
     // extend this list
   ];
 
-  filteredComponents = [] as {
+  filteredComponents: {
     title: string;
     url: string;
-  }[];
+  }[] = [];
 
   searchVal = '';
 

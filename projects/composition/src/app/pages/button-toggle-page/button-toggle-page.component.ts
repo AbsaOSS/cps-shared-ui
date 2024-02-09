@@ -22,26 +22,26 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class ButtonTogglePageComponent {
-  options = [
+  options: CpsButtonToggleOption[] = [
     { label: 'Option 1', value: 'first' },
     { label: 'Option 2', value: 'second' },
     { label: 'Option 3', value: 'third' },
     { label: 'Option 4', value: 'fourth' }
-  ] as CpsButtonToggleOption[];
+  ];
 
-  iconOptions = [
+  iconOptions: CpsButtonToggleOption[] = [
     { label: 'Succeeded', value: 'second', icon: 'toast-success' },
     { label: 'Failed', value: 'third', icon: 'toast-error' },
     { label: 'Pending', value: 'first', icon: 'pending' }
-  ] as CpsButtonToggleOption[];
+  ];
 
-  iconOnlyOptions = [
+  iconOnlyOptions: CpsButtonToggleOption[] = [
     { value: 'second', icon: 'toast-success', tooltip: 'Succeeded' },
     { value: 'third', icon: 'toast-error', tooltip: 'Failed' },
     { value: 'first', icon: 'pending', tooltip: 'Pending' }
-  ] as CpsButtonToggleOption[];
+  ];
 
-  partiallyDisabledOptions = [
+  partiallyDisabledOptions: CpsButtonToggleOption[] = [
     {
       label: 'Option 1',
       value: 'first',
@@ -63,7 +63,7 @@ export class ButtonTogglePageComponent {
       disabled: true,
       tooltip: 'Sixth option is currently unavailable'
     }
-  ] as CpsButtonToggleOption[];
+  ];
 
   syncVal = 'first';
   multiSyncVal = ['third', 'fourth'];
