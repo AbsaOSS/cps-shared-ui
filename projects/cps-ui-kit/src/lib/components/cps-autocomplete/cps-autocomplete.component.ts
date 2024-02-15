@@ -33,6 +33,10 @@ import {
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+/**
+ * CpsAutocompleteAppearanceType is used to define the border of the autocomplete input.
+ * @group Types
+ */
 export type CpsAutocompleteAppearanceType =
   | 'outlined'
   | 'underlined'

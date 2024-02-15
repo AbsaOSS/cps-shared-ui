@@ -19,6 +19,10 @@ import { TreeNode } from 'primeng/api';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown/cps-base-tree-dropdown.component';
 
+/**
+ * CpsTreeAutocompleteAppearanceType is used to define the border of the tree autocomplete input field.
+ * @group Types
+ */
 export type CpsTreeAutocompleteAppearanceType =
   | 'outlined'
   | 'underlined'

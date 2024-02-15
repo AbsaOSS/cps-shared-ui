@@ -34,6 +34,10 @@ import {
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+/**
+ * CpsSelectAppearanceType is used to define the border of the select input.
+ * @group Types
+ */
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
 /**

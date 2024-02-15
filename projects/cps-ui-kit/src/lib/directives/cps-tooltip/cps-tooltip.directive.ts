@@ -7,7 +7,16 @@ import {
 } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 
+/**
+ * CpsTooltipPosition is used to define the position of the tooltip.
+ * @group Types
+ */
 export type CpsTooltipPosition = 'top' | 'bottom' | 'left' | 'right';
+
+/**
+ * CpsTooltipOpenOn is used to define the event on which the tooltip should open.
+ * @group Types
+ */
 export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
 /**

@@ -39,7 +39,16 @@ export interface CpsTabChangeEvent {
   newIndex: number;
 }
 
+/**
+ * CpsTabsAnimationType is used to define the transition options of how content appears.
+ * @group Types
+ */
 export type CpsTabsAnimationType = 'slide' | 'fade';
+
+/**
+ * CpsTabsAlignmentType is used to define the horizontal alignment of tabs.
+ * @group Types
+ */
 export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
 
 /**

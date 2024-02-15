@@ -25,6 +25,10 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 
+/**
+ * CpsInputAppearanceType is used to define the border of the input field.
+ * @group Types
+ */
 export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
 /**
