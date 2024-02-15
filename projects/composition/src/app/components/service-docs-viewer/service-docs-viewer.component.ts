@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ServiceAPI } from '../../models/service-api.model';
 import { CommonModule } from '@angular/common';
 import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
+import { ViewerComponent } from '../viewer/viewer.component';
 
 @Component({
   selector: 'app-service-docs-viewer',
@@ -10,13 +11,14 @@ import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
   standalone: true,
   imports: [CommonModule, CpsTabComponent, CpsTabGroupComponent]
 })
-export class ServiceDocsViewerComponent implements OnInit {
+export class ServiceDocsViewerComponent extends ViewerComponent {
   @Input() serviceData?: ServiceAPI;
 
-  ngOnInit(): void {
+  override ngOnInit(): void {
     if (!this.serviceData) {
       throw new Error('Input property serviceData is required');
     }
+    super.ngOnInit();
   }
 
   parseParameters(

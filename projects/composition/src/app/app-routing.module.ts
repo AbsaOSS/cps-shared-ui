@@ -1,5 +1,27 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
+
+const pathMatcher: (path: string) => UrlMatcher = (path: string) => (url) => {
+  if (url.length === 1) {
+    if (url[0].path === path) {
+      return { consumed: url };
+    }
+  }
+
+  if (url.length === 2) {
+    if (
+      url[0].path === path &&
+      (url[1].path === 'api' || url[1].path === 'examples')
+    ) {
+      return {
+        consumed: url,
+        posParams: { type: new UrlSegment(url[1].path, {}) }
+      };
+    }
+  }
+
+  return null;
+};
 
 const routes: Routes = [
   {
@@ -11,7 +33,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'icon',
+    matcher: pathMatcher('icon'),
     title: 'Icon',
     loadComponent: () =>
       import('./pages/icons-page/icons-page/icons-page.component').then(
@@ -19,7 +41,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'input',
+    matcher: pathMatcher('input'),
     title: 'Input',
     loadComponent: () =>
       import('./pages/input-page/input-page.component').then(
@@ -27,7 +49,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'select',
+    matcher: pathMatcher('select'),
     title: 'Select',
     loadComponent: () =>
       import('./pages/select-page/select-page.component').then(
@@ -35,7 +57,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'sidebar-menu',
+    matcher: pathMatcher('sidebar-menu'),
     title: 'Sidebar menu',
     loadComponent: () =>
       import('./pages/sidebar-menu-page/sidebar-menu-page.component').then(
@@ -43,7 +65,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'tabs',
+    matcher: pathMatcher('tabs'),
     title: 'Tabs',
     loadComponent: () =>
       import('./pages/tab-group-page/tab-group-page.component').then(
@@ -51,7 +73,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'tree-select',
+    matcher: pathMatcher('tree-select'),
     title: 'Tree select',
     loadComponent: () =>
       import('./pages/tree-select-page/tree-select-page.component').then(
@@ -59,7 +81,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'autocomplete',
+    matcher: pathMatcher('autocomplete'),
     title: 'Autocomplete',
     loadComponent: () =>
       import('./pages/autocomplete-page/autocomplete-page.component').then(
@@ -67,7 +89,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'tree-autocomplete',
+    matcher: pathMatcher('tree-autocomplete'),
     title: 'Tree autocomplete',
     loadComponent: () =>
       import(
@@ -75,7 +97,7 @@ const routes: Routes = [
       ).then((mod) => mod.TreeAutocompletePageComponent)
   },
   {
-    path: 'button',
+    matcher: pathMatcher('button'),
     title: 'Button',
     loadComponent: () =>
       import('./pages/button-page/button-page.component').then(
@@ -83,7 +105,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'button-toggles',
+    matcher: pathMatcher('button-toggles'),
     title: 'Button toggles',
     loadComponent: () =>
       import('./pages/button-toggle-page/button-toggle-page.component').then(
@@ -91,7 +113,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'checkbox',
+    matcher: pathMatcher('checkbox'),
     title: 'Checkbox',
     loadComponent: () =>
       import('./pages/checkbox-page/checkbox-page.component').then(
@@ -99,7 +121,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'radio',
+    matcher: pathMatcher('radio'),
     title: 'Radio',
     loadComponent: () =>
       import('./pages/radio-page/radio-page.component').then(
@@ -107,7 +129,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'table',
+    matcher: pathMatcher('table'),
     title: 'Table',
     loadComponent: () =>
       import('./pages/table-page/table-page.component').then(
@@ -115,7 +137,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'tree-table',
+    matcher: pathMatcher('tree-table'),
     title: 'Tree table',
     loadComponent: () =>
       import('./pages/tree-table-page/tree-table-page.component').then(
@@ -123,7 +145,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'tag',
+    matcher: pathMatcher('tag'),
     title: 'Tag',
     loadComponent: () =>
       import('./pages/tag-page/tag-page.component').then(
@@ -131,7 +153,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'chip',
+    matcher: pathMatcher('chip'),
     title: 'Chip',
     loadComponent: () =>
       import('./pages/chip-page/chip-page.component').then(
@@ -139,7 +161,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'loader',
+    matcher: pathMatcher('loader'),
     title: 'Loader',
     loadComponent: () =>
       import('./pages/loader-page/loader-page.component').then(
@@ -147,7 +169,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'expansion-panel',
+    matcher: pathMatcher('expansion-panel'),
     title: 'Expansion panel',
     loadComponent: () =>
       import(
@@ -155,7 +177,7 @@ const routes: Routes = [
       ).then((mod) => mod.ExpansionPanelPageComponent)
   },
   {
-    path: 'file-upload',
+    matcher: pathMatcher('file-upload'),
     title: 'File upload',
     loadComponent: () =>
       import('./pages/file-upload-page/file-upload-page.component').then(
@@ -163,7 +185,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'progress-circular',
+    matcher: pathMatcher('progress-circular'),
     title: 'Progress circular',
     loadComponent: () =>
       import(
@@ -171,7 +193,7 @@ const routes: Routes = [
       ).then((mod) => mod.ProgressCircularPageComponent)
   },
   {
-    path: 'progress-linear',
+    matcher: pathMatcher('progress-linear'),
     title: 'Progress linear',
     loadComponent: () =>
       import(
@@ -179,7 +201,7 @@ const routes: Routes = [
       ).then((mod) => mod.ProgressLinearPageComponent)
   },
   {
-    path: 'info-circle',
+    matcher: pathMatcher('info-circle'),
     title: 'Info circle',
     loadComponent: () =>
       import('./pages/info-circle-page/info-circle-page.component').then(
@@ -187,7 +209,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'datepicker',
+    matcher: pathMatcher('datepicker'),
     title: 'Datepicker',
     loadComponent: () =>
       import('./pages/datepicker-page/datepicker-page.component').then(
@@ -195,7 +217,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'dialog',
+    matcher: pathMatcher('dialog'),
     title: 'Dialog',
     loadComponent: () =>
       import('./pages/dialog-page/dialog-page.component').then(
@@ -203,7 +225,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'menu',
+    matcher: pathMatcher('menu'),
     title: 'Menu',
     loadComponent: () =>
       import('./pages/menu-page/menu-page.component').then(
@@ -211,7 +233,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'notifications',
+    matcher: pathMatcher('notifications'),
     title: 'Notifications',
     loadComponent: () =>
       import('./pages/notification-page/notification-page.component').then(
@@ -219,7 +241,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'paginator',
+    matcher: pathMatcher('paginator'),
     title: 'Paginator',
     loadComponent: () =>
       import('./pages/paginator-page/paginator-page.component').then(
@@ -227,7 +249,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'textarea',
+    matcher: pathMatcher('textarea'),
     title: 'Textarea',
     loadComponent: () =>
       import('./pages/textarea-page/textarea-page.component').then(
@@ -235,7 +257,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'timepicker',
+    matcher: pathMatcher('timepicker'),
     title: 'Timepicker',
     loadComponent: () =>
       import('./pages/timepicker-page/timepicker-page.component').then(
@@ -243,7 +265,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'tooltip',
+    matcher: pathMatcher('tooltip'),
     title: 'Tooltip directive',
     loadComponent: () =>
       import('./pages/tooltip-page/tooltip-page.component').then(
@@ -251,7 +273,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'scheduler',
+    matcher: pathMatcher('scheduler'),
     title: 'Scheduler',
     loadComponent: () =>
       import('./pages/scheduler-page/scheduler-page.component').then(

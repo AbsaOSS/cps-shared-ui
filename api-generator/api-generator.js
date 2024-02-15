@@ -46,6 +46,7 @@ async function main() {
 
   if (project) {
     let doc = {};
+    let typesMap = {};
 
     const parseText = (text) => {
       return text.replace(/&#123;/g, '{').replace(/&#125;/g, '}');
@@ -449,6 +450,10 @@ async function main() {
                     t.comment.summary &&
                     t.comment.summary.map((s) => s.text || '').join(' ')
                 });
+                typesMap[t.name] = t.comment.blockTags?.find(
+                  tag => tag.tag === "@customPath"
+                )?.content?.map((s) => s.text || '').join(' ')
+                  ?? name.replace("cps-", "");
               });
 
               doc[name]['types'] = types;
@@ -486,6 +491,12 @@ async function main() {
       const typedocJSON = JSON.stringify(mergedDocs[key], null, 4);
       !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
       fs.writeFileSync(path.resolve(outputPath, `${key}.json`), typedocJSON);
+    }
+
+    if (Object.entries(typesMap).length) {
+      const typesMapJSON = JSON.stringify(typesMap, null, 4);
+      !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
+      fs.writeFileSync(path.resolve(outputPath, `types_map.json`), typesMapJSON);
     }
 
     // const typedocJSON = JSON.stringify(mergedDocs, null, 4);

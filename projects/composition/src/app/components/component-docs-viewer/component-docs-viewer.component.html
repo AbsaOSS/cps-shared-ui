@@ -1,4 +1,8 @@
-<cps-tab-group tabsBackground="bg-light" animationType="fade">
+<cps-tab-group
+  tabsBackground="bg-light"
+  animationType="fade"
+  (afterTabChanged)="changeTab($event)"
+  [selectedIndex]="selectedTabIndex">
   <cps-tab label="Examples">
     <div class="example-content">
       <ng-content></ng-content>
@@ -31,7 +35,15 @@
                     <td class="highlighted-bg">
                       <span>{{ prop.name }}</span>
                     </td>
-                    <td class="highlighted-text">{{ prop.type }}</td>
+                    <td class="highlighted-text">
+                      <!-- <a
+                        [routerLink]="'/' + TypesMap[prop.type]"
+                        fragment="{{ prop.type }}"
+                        >{{ prop.type }}
+                        {{ '/' + TypesMap[prop.type] + '#' + prop.type }}</a
+                      > -->
+                      <span>{{ prop.type }}</span>
+                    </td>
                     <td class="value-style">
                       <span>{{
                         (prop.default === '' ? "''" : prop.default) ??
@@ -87,7 +99,9 @@
                 <th>Description</th>
               </thead>
               <tbody>
-                <tr *ngFor="let type of componentData.types.values">
+                <tr
+                  *ngFor="let type of componentData.types.values"
+                  id="{{ type.name }}">
                   <td class="highlighted-bg">
                     <span>{{ type.name }}</span>
                   </td>

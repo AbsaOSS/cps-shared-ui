@@ -1,4 +1,8 @@
-<cps-tab-group tabsBackground="bg-light" animationType="fade">
+<cps-tab-group
+  tabsBackground="bg-light"
+  animationType="fade"
+  (afterTabChanged)="changeTab($event)"
+  [selectedIndex]="selectedTabIndex">
   <cps-tab label="Examples">
     <div class="example-content">
       <ng-content></ng-content>
