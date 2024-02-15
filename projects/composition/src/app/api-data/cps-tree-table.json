@@ -652,5 +652,25 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsTreeTableSize",
+                "value": "\"small\" | \"normal\" | \"large\"",
+                "description": "CpsTreeTableSize is used to define the size of the tree table."
+            },
+            {
+                "name": "CpsTreeTableToolbarSize",
+                "value": "\"small\" | \"normal\"",
+                "description": "CpsTreeTableToolbarSize is used to define the size of the tree table toolbar."
+            },
+            {
+                "name": "CpsTreeTableSortMode",
+                "value": "\"single\" | \"multiple\"",
+                "description": "CpsTreeTableSortMode is used to define the sorting mode of the tree table."
+            }
+        ]
     }
 }

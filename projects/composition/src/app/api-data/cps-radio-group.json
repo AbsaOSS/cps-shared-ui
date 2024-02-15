@@ -163,5 +163,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsRadioOption",
+                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "description": "CpsRadioOption is used to define the options of the CpsRadioGroupComponent."
+            }
+        ]
     }
 }

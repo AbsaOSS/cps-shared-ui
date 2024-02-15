@@ -184,5 +184,20 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsTabsAnimationType",
+                "value": "\"slide\" | \"fade\"",
+                "description": "CpsTabsAnimationType is used to define the transition options of how content appears."
+            },
+            {
+                "name": "CpsTabsAlignmentType",
+                "value": "\"left\" | \"center\" | \"right\"",
+                "description": "CpsTabsAlignmentType is used to define the horizontal alignment of tabs."
+            }
+        ]
     }
 }

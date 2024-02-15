@@ -279,5 +279,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsSelectAppearanceType",
+                "value": "\"outlined\" | \"underlined\" | \"borderless\"",
+                "description": "CpsSelectAppearanceType is used to define the border of the select input."
+            }
+        ]
     }
 }
