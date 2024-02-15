@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { ComponentAPI } from '../../models/component-api.model';
+import { ComponentAPI, TypesAPI } from '../../models/component-api.model';
 import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
 import { ObjectEntriesPipe } from '../../pipes/object-entries.pipe';
 
@@ -17,7 +17,10 @@ import { ObjectEntriesPipe } from '../../pipes/object-entries.pipe';
   standalone: true
 })
 export class ComponentDocsViewerComponent implements OnInit {
-  @Input() componentData?: { components: { [key: string]: ComponentAPI } };
+  @Input() componentData?: {
+    components: { [key: string]: ComponentAPI };
+    types?: TypesAPI;
+  };
 
   ngOnInit(): void {
     if (!this.componentData) {

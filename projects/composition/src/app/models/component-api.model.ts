@@ -28,3 +28,12 @@ export interface ComponentAPI {
     values: PropAPI[];
   };
 }
+
+export interface TypesAPI {
+  description: string;
+  values: {
+    name: string;
+    description: string;
+    value?: string;
+  }[];
+}
