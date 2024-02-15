@@ -12,7 +12,6 @@ import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
 })
 export class ServiceDocsViewerComponent implements OnInit {
   @Input() serviceData?: ServiceAPI;
-  objectEntries = Object.entries;
 
   ngOnInit(): void {
     if (!this.serviceData) {

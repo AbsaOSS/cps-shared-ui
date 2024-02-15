@@ -9,9 +9,9 @@
       *ngIf="
         componentData &&
         componentData.components &&
-        objectEntries(componentData.components).length > 0
+        (componentData.components | objectEntries).length > 0
       ">
-      <div *ngFor="let data of objectEntries(componentData.components)">
+      <div *ngFor="let data of componentData.components | objectEntries">
         <h1>{{ data[0] }}</h1>
         <p>{{ data[1].description }}</p>
         <div>
