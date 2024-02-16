@@ -36,7 +36,17 @@
                   <td class="highlighted-text">
                     {{ parseParameters(method.parameters) || 'null' }}
                   </td>
-                  <td class="highlighted-text">{{ method.returnType }}</td>
+                  <td class="highlighted-text">
+                    <a
+                      *ngIf="TypesMap[method.returnType]"
+                      [routerLink]="'/' + TypesMap[method.returnType] + '/api'"
+                      fragment="{{ method.returnType }}"
+                      >{{ method.returnType }}</a
+                    >
+                    <span *ngIf="!TypesMap[method.returnType]">{{
+                      method.returnType
+                    }}</span>
+                  </td>
                   <td class="method-description">{{ method.description }}</td>
                 </tr>
               </tbody>

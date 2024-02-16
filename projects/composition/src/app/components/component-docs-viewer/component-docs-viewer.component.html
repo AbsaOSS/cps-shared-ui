@@ -36,13 +36,13 @@
                       <span>{{ prop.name }}</span>
                     </td>
                     <td class="highlighted-text">
-                      <!-- <a
-                        [routerLink]="'/' + TypesMap[prop.type]"
+                      <a
+                        *ngIf="TypesMap[prop.type]"
+                        [routerLink]="'/' + TypesMap[prop.type] + '/api'"
                         fragment="{{ prop.type }}"
-                        >{{ prop.type }}
-                        {{ '/' + TypesMap[prop.type] + '#' + prop.type }}</a
-                      > -->
-                      <span>{{ prop.type }}</span>
+                        >{{ prop.type }}</a
+                      >
+                      <span *ngIf="!TypesMap[prop.type]">{{ prop.type }}</span>
                     </td>
                     <td class="value-style">
                       <span>{{

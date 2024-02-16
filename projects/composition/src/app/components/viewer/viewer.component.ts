@@ -1,11 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { CpsTabChangeEvent } from 'cps-ui-kit';
 
 @Component({
   template: ''
 })
-export abstract class ViewerComponent implements OnInit {
+export abstract class ViewerComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
   protected selectedTabIndex = 0;
@@ -29,6 +29,35 @@ export abstract class ViewerComponent implements OnInit {
       this._router.navigate(['../api'], { relativeTo: this._route });
     }
   }
-}
 
-// TODO: Add scrolling to †he type
+  ngAfterViewInit(): void {
+    this._router.events.subscribe((event: any) => {
+      if (event instanceof Scroll && event.anchor) {
+        setTimeout(() => {
+          this._scroll('#' + event.anchor);
+        });
+      }
+    });
+  }
+
+  private _scroll(query: string) {
+    const targetElement = document.querySelector(query);
+    if (!targetElement) {
+      window.scrollTo(0, 0);
+    } else if (!this._isInViewport(targetElement)) {
+      targetElement.scrollIntoView();
+    }
+  }
+
+  private _isInViewport = (elem: any) => {
+    const bounding = elem.getBoundingClientRect();
+    return (
+      bounding.top >= 0 &&
+      bounding.left >= 0 &&
+      bounding.bottom <=
+        (window.innerHeight || document.documentElement.clientHeight) &&
+      bounding.right <=
+        (window.innerWidth || document.documentElement.clientWidth)
+    );
+  };
+}

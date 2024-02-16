@@ -32,6 +32,14 @@
 
       &.highlighted-text {
         color: var(--cps-color-calm);
+
+        a {
+          color: var(--cps-color-calm);
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
       }
 
       &.value-style {
