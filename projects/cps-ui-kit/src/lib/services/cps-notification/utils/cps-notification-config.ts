@@ -23,6 +23,10 @@ export enum CpsNotificationPosition {
   BOTTOMRIGHT = 'bottom-right'
 }
 
+/**
+ * Configuration for the notification service.
+ * @group Interface
+ */
 export interface CpsNotificationConfig {
   /**
    * Position of the notification, options are "center", "top", "bottom", "left", "right", "top-left", "top-right", "bottom-left" or "bottom-right".

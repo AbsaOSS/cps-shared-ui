@@ -126,5 +126,40 @@
                 ]
             }
         }
+    },
+    "interfaces": {
+        "description": "Defines the custom interfaces used by the module.",
+        "values": [
+            {
+                "name": "CpsTime",
+                "description": "CpsTime is used to define the time format.",
+                "props": [
+                    {
+                        "name": "hours",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "minutes",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "seconds",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "dayPeriod",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "\"AM\" | \"PM\""
+                    }
+                ]
+            }
+        ]
     }
 }

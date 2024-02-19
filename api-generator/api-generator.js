@@ -380,9 +380,23 @@ async function main() {
                       deprecated: getDeprecatedText(child)
                     }))
                 });
+                typesMap[int.name] = int.comment.blockTags?.find(
+                  tag => tag.tag === "@customPath"
+                )?.content?.map((s) => s.text || '').join(' ')
+                  ?? name.replace("cps-", "");
               });
 
-              doc[name]['interfaces'] = interfaces;
+              if (doc[name]?.interfaces) {
+                doc[name]['interfaces'] = {
+                  ...doc[name]['interfaces'],
+                  values: [
+                    ...doc[name]['interfaces'].values,
+                    ...interfaces.values
+                  ]
+                };
+              } else {
+                doc[name]['interfaces'] = interfaces;
+              }
             }
 
             if (isProcessable(module_service_group)) {
@@ -456,7 +470,17 @@ async function main() {
                   ?? name.replace("cps-", "");
               });
 
-              doc[name]['types'] = types;
+              if (doc[name]?.types) {
+                doc[name]['types'] = {
+                  ...doc[name]['types'],
+                  values: [
+                    ...doc[name]['types'].values,
+                    ...types.values
+                  ]
+                };
+              } else {
+                doc[name]['types'] = types;
+              }
             }
           }
         }

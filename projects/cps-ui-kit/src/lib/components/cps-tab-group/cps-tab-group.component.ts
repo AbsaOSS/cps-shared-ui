@@ -34,6 +34,10 @@ import {
   fromEvent
 } from 'rxjs';
 
+/**
+ * CpsTabChangeEvent is used to define the tab change event.
+ * @group Interface
+ */
 export interface CpsTabChangeEvent {
   previousIndex: number;
   newIndex: number;

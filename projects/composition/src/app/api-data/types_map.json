@@ -10,6 +10,7 @@
     "CpsRadioOption": "radio-group",
     "CpsSelectAppearanceType": "select",
     "CpsSidebarMenuItem": "sidebar-menu",
+    "CpsTabChangeEvent": "tab-group",
     "CpsTabsAnimationType": "tab-group",
     "CpsTabsAlignmentType": "tab-group",
     "CpsColumnFilterCategoryOption": "table",
@@ -18,11 +19,14 @@
     "CpsTableSize": "table",
     "CpsTableToolbarSize": "table",
     "CpsTableSortMode": "table",
+    "CpsTime": "timepicker",
     "CpsTreeAutocompleteAppearanceType": "tree-autocomplete",
     "CpsTreeSelectAppearanceType": "tree-select",
     "CpsTreeTableSize": "tree-table",
     "CpsTreeTableToolbarSize": "tree-table",
     "CpsTreeTableSortMode": "tree-table",
     "CpsTooltipPosition": "tooltip",
-    "CpsTooltipOpenOn": "tooltip"
+    "CpsTooltipOpenOn": "tooltip",
+    "CpsNotificationConfig": "notification",
+    "CpsNotificationData": "notification"
 }

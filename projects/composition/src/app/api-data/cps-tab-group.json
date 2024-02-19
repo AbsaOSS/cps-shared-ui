@@ -185,6 +185,29 @@
             }
         }
     },
+    "interfaces": {
+        "description": "Defines the custom interfaces used by the module.",
+        "values": [
+            {
+                "name": "CpsTabChangeEvent",
+                "description": "CpsTabChangeEvent is used to define the tab change event.",
+                "props": [
+                    {
+                        "name": "previousIndex",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number"
+                    },
+                    {
+                        "name": "newIndex",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number"
+                    }
+                ]
+            }
+        ]
+    },
     "types": {
         "description": "Defines the custom types used by the module.",
         "values": [
