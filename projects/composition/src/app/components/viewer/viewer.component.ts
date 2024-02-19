@@ -44,20 +44,12 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
     const targetElement = document.querySelector(query);
     if (!targetElement) {
       window.scrollTo(0, 0);
-    } else if (!this._isInViewport(targetElement)) {
+    } else {
       targetElement.scrollIntoView();
+      targetElement.classList.add('anchor-highlight');
+      setTimeout(() => {
+        targetElement.classList.remove('anchor-highlight');
+      }, 500);
     }
   }
-
-  private _isInViewport = (elem: any) => {
-    const bounding = elem.getBoundingClientRect();
-    return (
-      bounding.top >= 0 &&
-      bounding.left >= 0 &&
-      bounding.bottom <=
-        (window.innerHeight || document.documentElement.clientHeight) &&
-      bounding.right <=
-        (window.innerWidth || document.documentElement.clientWidth)
-    );
-  };
 }
