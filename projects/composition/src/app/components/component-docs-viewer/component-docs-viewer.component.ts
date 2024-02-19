@@ -7,6 +7,7 @@ import { ObjectEntriesPipe } from '../../pipes/object-entries.pipe';
 import TypesMap from '../../api-data/types_map.json';
 import { RouterModule } from '@angular/router';
 import { ViewerComponent } from '../viewer/viewer.component';
+import { DetectTypePipe } from '../../pipes/detect-type.pipe';
 
 @Component({
   selector: 'app-component-docs-viewer',
@@ -17,7 +18,8 @@ import { ViewerComponent } from '../viewer/viewer.component';
     CpsTabComponent,
     CpsTabGroupComponent,
     ObjectEntriesPipe,
-    RouterModule
+    RouterModule,
+    DetectTypePipe
   ],
   standalone: true
 })

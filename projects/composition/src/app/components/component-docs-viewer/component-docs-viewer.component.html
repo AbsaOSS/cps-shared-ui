@@ -37,12 +37,17 @@
                     </td>
                     <td class="highlighted-text">
                       <a
-                        *ngIf="TypesMap[prop.type]"
-                        [routerLink]="'/' + TypesMap[prop.type] + '/api'"
-                        fragment="{{ prop.type }}"
+                        *ngIf="
+                          prop.type | detectType: TypesMap as type;
+                          else simpleType
+                        "
+                        [routerLink]="'/' + TypesMap[type] + '/api'"
+                        fragment="{{ type }}"
                         >{{ prop.type }}</a
                       >
-                      <span *ngIf="!TypesMap[prop.type]">{{ prop.type }}</span>
+                      <ng-template #simpleType>
+                        <span>{{ prop.type }}</span>
+                      </ng-template>
                     </td>
                     <td class="value-style">
                       <span>{{

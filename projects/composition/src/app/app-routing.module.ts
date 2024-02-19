@@ -105,8 +105,8 @@ const routes: Routes = [
       )
   },
   {
-    matcher: pathMatcher('button-toggles'),
-    title: 'Button toggles',
+    matcher: pathMatcher('button-toggle'),
+    title: 'Button toggle',
     loadComponent: () =>
       import('./pages/button-toggle-page/button-toggle-page.component').then(
         (mod) => mod.ButtonTogglePageComponent

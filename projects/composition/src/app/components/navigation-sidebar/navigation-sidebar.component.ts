@@ -32,8 +32,8 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/button'
     },
     {
-      title: 'Button toggles',
-      url: '/button-toggles'
+      title: 'Button toggle',
+      url: '/button-toggle'
     },
     {
       title: 'Checkbox',
