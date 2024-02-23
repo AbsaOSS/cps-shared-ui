@@ -156,7 +156,7 @@ export class CpsRadioGroupComponent
    */
   @Output() focused = new EventEmitter();
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
   private _value: any = undefined;
 
   error = '';
@@ -172,7 +172,7 @@ export class CpsRadioGroupComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
   }
 
   ngOnDestroy() {
