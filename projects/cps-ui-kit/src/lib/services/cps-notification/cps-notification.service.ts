@@ -156,15 +156,12 @@ export class CpsNotificationService {
     const position = config.position || CpsNotificationPosition.TOPRIGHT;
 
     let containerComponentRef = this._containersMap.get(position);
-    const found = !!containerComponentRef;
-
     if (!containerComponentRef) {
       containerComponentRef = createComponent(
         CpsNotificationContainerComponent,
         { environmentInjector: this._appRef.injector }
       );
       containerComponentRef.setInput('position', position);
-      containerComponentRef.setInput('maxAmount', config.maxAmount);
 
       this._appRef.attachView(containerComponentRef.hostView);
 
@@ -178,9 +175,6 @@ export class CpsNotificationService {
 
       this._containersMap.set(position, containerComponentRef);
     }
-
-    if (found && config.maxAmount)
-      containerComponentRef.setInput('maxAmount', config.maxAmount);
 
     containerComponentRef.instance.addNotification(config, data);
   }
