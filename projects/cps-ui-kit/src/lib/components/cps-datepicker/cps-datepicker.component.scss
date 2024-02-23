@@ -62,7 +62,10 @@ $disabled-day-color: var(--cps-color-text-lightest);
       border: 0 none;
       background: transparent;
       border-radius: 50%;
-      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        box-shadow 0.2s;
     }
     .p-datepicker .p-datepicker-header .p-datepicker-prev:enabled:hover,
     .p-datepicker .p-datepicker-header .p-datepicker-next:enabled:hover {
@@ -82,7 +85,10 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year,
     .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
       color: $text-color;
-      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        box-shadow 0.2s;
       font-weight: 600;
       padding: 0.5rem;
     }
@@ -163,7 +169,10 @@ $disabled-day-color: var(--cps-color-text-lightest);
       border: 0 none;
       background: transparent;
       border-radius: 50%;
-      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        box-shadow 0.2s;
     }
     .p-datepicker .p-timepicker button:enabled:hover {
       color: $color-calm;
@@ -325,7 +334,10 @@ $disabled-day-color: var(--cps-color-text-lightest);
       position: relative;
       padding: 0.75rem 1.25rem;
       font-size: 1rem;
-      transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s,
         box-shadow 0.2s;
       border-radius: 6px;
       &:focus {
@@ -341,6 +353,17 @@ $disabled-day-color: var(--cps-color-text-lightest);
       .p-button-label {
         font-weight: 700;
       }
+    }
+
+    .p-hidden-accessible {
+      border: 0;
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
     }
   }
 }
