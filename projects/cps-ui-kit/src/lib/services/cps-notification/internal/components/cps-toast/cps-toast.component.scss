@@ -59,6 +59,7 @@
     cursor: default;
 
     & .cps-toast-message-details {
+      white-space: pre-line;
       margin-top: 0;
       font-size: 14px;
     }

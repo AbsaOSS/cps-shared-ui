@@ -58,12 +58,6 @@ export class CpsNotificationContainerComponent
   @Input() position = CpsNotificationPosition.TOPRIGHT;
 
   /**
-   * Max amount of notifications to be displayed within the container.
-   * @group Props
-   */
-  @Input() maxAmount?: number;
-
-  /**
    * Callback to invoke on notification close.
    * @param {CpsNotificationConfig} CpsNotificationConfig - notification closed.
    * @group Emits
@@ -97,9 +91,18 @@ export class CpsNotificationContainerComponent
   }
 
   addNotification(config: CpsNotificationConfig, data: CpsNotificationData) {
+    if (!config.allowDuplicates) {
+      const duplicate = this.notifications.find(
+        (notification) =>
+          notification.data.message === data.message &&
+          notification.data.details === data.details
+      );
+      if (duplicate) return;
+    }
+
     if (
       this.notifications.length > 0 &&
-      this.notifications.length === this.maxAmount
+      this.notifications.length === config.maxAmount
     ) {
       this.notifications.pop();
     }
