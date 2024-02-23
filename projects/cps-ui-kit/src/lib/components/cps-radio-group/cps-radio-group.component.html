@@ -37,7 +37,15 @@
       [option]="option"
       [checked]="option.value === value"
       [groupDisabled]="disabled"
+      (blurred)="onBlur()"
+      (focused)="onFocus()"
       (updateValueEvent)="updateValueEvent($event)">
     </cps-radio-button>
+  </div>
+  <div *ngIf="!error && !hideDetails" class="cps-radio-hint">
+    {{ hint }}
+  </div>
+  <div *ngIf="error && !hideDetails" class="cps-radio-error">
+    {{ error }}
   </div>
 </div>

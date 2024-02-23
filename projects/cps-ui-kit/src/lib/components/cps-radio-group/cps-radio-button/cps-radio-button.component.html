@@ -29,7 +29,9 @@
     [disabled]="option.disabled || groupDisabled"
     [value]="option.value"
     [checked]="checked"
-    (change)="updateValue($event)" />
+    (change)="updateValue($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()" />
   <div #contentRef class="content">
     <ng-content></ng-content>
   </div>
