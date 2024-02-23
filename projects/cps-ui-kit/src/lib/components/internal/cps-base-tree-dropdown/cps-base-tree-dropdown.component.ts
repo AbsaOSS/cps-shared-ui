@@ -232,7 +232,7 @@ export class CpsBaseTreeDropdownComponent
   @ViewChild('boxEl')
   boxEl!: ElementRef;
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
 
   _options: TreeNode[] = [];
   optionsMap = new Map<string, TreeNode>();
@@ -282,7 +282,7 @@ export class CpsBaseTreeDropdownComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
   }
 
   ngAfterViewInit() {

@@ -44,6 +44,20 @@ export class CpsRadioButtonComponent {
    */
   @Output() updateValueEvent = new EventEmitter<Event>();
 
+  /**
+   * Callback to invoke when the radio button loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
+
+  /**
+   * Callback to invoke when the radio button receives focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() focused = new EventEmitter();
+
   get inputId(): string {
     return `${this._uniqueId}-input`;
   }
@@ -52,5 +66,13 @@ export class CpsRadioButtonComponent {
     event.preventDefault();
     if (this.option.disabled) return;
     this.updateValueEvent.emit(this.option.value);
+  }
+
+  onBlur() {
+    this.blurred.emit();
+  }
+
+  onFocus() {
+    this.focused.emit();
   }
 }

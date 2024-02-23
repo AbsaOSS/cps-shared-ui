@@ -336,7 +336,7 @@ export class CpsAutocompleteComponent
   @ViewChild('optionsList')
   optionsList!: ElementRef;
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
 
   error = '';
   cvtWidth = '';
@@ -385,7 +385,7 @@ export class CpsAutocompleteComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
 
     this.recalcVirtualListHeight();
   }

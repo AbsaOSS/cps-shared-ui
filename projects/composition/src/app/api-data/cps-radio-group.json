@@ -42,6 +42,26 @@
                             }
                         ],
                         "description": "Callback to invoke on value update."
+                    },
+                    {
+                        "name": "blurred",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the radio button loses focus."
+                    },
+                    {
+                        "name": "focused",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the radio button receives focus."
                     }
                 ]
             }
@@ -124,6 +144,22 @@
                         "description": "Position of infoTooltip, it can be \"top\", \"bottom\", \"left\" or \"right\"."
                     },
                     {
+                        "name": "hint",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Bottom hint text for the radio group."
+                    },
+                    {
+                        "name": "hideDetails",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Hides hint and validation errors."
+                    },
+                    {
                         "name": "value",
                         "optional": false,
                         "readonly": false,
@@ -144,6 +180,26 @@
                             }
                         ],
                         "description": "Callback to invoke on value change."
+                    },
+                    {
+                        "name": "blurred",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the radio group loses focus."
+                    },
+                    {
+                        "name": "focused",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the radio group receives focus."
                     }
                 ]
             }

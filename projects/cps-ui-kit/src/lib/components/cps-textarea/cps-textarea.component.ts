@@ -181,7 +181,7 @@ export class CpsTextareaComponent
    */
   @Output() blurred = new EventEmitter();
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
   private _value = '';
 
   cvtWidth = '';
@@ -202,7 +202,7 @@ export class CpsTextareaComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
   }
 
   ngOnDestroy() {

@@ -185,7 +185,7 @@ export class CpsDatepickerComponent
   error = '';
   cvtWidth = '';
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
   private _value!: Date | null;
 
   constructor(@Self() @Optional() private _control: NgControl) {
@@ -201,7 +201,7 @@ export class CpsDatepickerComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
   }
 
   ngOnDestroy() {
