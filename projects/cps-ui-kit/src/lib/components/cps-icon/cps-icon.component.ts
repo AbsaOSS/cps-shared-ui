@@ -66,6 +66,7 @@ export const iconNames = [
   'jpeg',
   'kris',
   'last-seen-product',
+  'left',
   'like',
   'line-vertical',
   'lock',
