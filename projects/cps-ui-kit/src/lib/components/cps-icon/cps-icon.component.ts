@@ -89,6 +89,7 @@ export const iconNames = [
   'refresh',
   'remove',
   'right',
+  'save',
   'schema',
   'schema_filter',
   'search',
