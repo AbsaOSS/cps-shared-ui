@@ -61,6 +61,7 @@
 
   <div *ngSwitchCase="'Daily'" class="cps-scheduler-tab-pane">
     <cps-radio-group
+      [hideDetails]="true"
       [(ngModel)]="state.daily.subTab"
       (valueChanged)="regenerateCron()"
       [vertical]="true">
@@ -174,6 +175,7 @@
 
   <div *ngSwitchCase="'Monthly'" class="cps-scheduler-tab-pane">
     <cps-radio-group
+      [hideDetails]="true"
       [(ngModel)]="state.monthly.subTab"
       (valueChanged)="regenerateCron()"
       [vertical]="true">
@@ -293,6 +295,7 @@
 
   <div *ngSwitchCase="'Yearly'" class="cps-scheduler-tab-pane">
     <cps-radio-group
+      [hideDetails]="true"
       [(ngModel)]="state.yearly.subTab"
       (valueChanged)="regenerateCron()"
       [vertical]="true">

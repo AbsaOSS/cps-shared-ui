@@ -250,7 +250,7 @@ export class CpsInputComponent
   prefixWidth = '';
   cvtWidth = '';
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
   private _value = '';
 
   constructor(
@@ -271,7 +271,7 @@ export class CpsInputComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
   }
 
   ngAfterViewInit() {

@@ -5,6 +5,8 @@ import {
   EventEmitter,
   InjectionToken,
   Input,
+  OnDestroy,
+  OnInit,
   Optional,
   Output,
   Self
@@ -16,6 +18,7 @@ import {
   CpsTooltipPosition
 } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
+import { Subscription } from 'rxjs';
 
 /**
  * CpsRadioOption is used to define the options of the CpsRadioGroupComponent.
@@ -54,7 +57,9 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
     }
   ]
 })
-export class CpsRadioGroupComponent implements ControlValueAccessor {
+export class CpsRadioGroupComponent
+  implements ControlValueAccessor, OnInit, OnDestroy
+{
   /**
    * An array of options.
    * @group Props
@@ -110,6 +115,18 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
   @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
+   * Bottom hint text for the radio group.
+   * @group Props
+   */
+  @Input() hint = '';
+
+  /**
+   * Hides hint and validation errors.
+   * @group Props
+   */
+  @Input() hideDetails = false;
+
+  /**
    * Value of the radio group.
    * @group Props
    */
@@ -129,12 +146,41 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
    */
   @Output() valueChanged = new EventEmitter<boolean>();
 
+  /**
+   * Callback to invoke when the radio group loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
+
+  /**
+   * Callback to invoke when the radio group receives focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() focused = new EventEmitter();
+
+  private _statusChangesSubscription?: Subscription;
   private _value: any = undefined;
+
+  error = '';
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
+  }
+
+  ngOnInit(): void {
+    this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
+      () => {
+        this._checkErrors();
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this._statusChangesSubscription?.unsubscribe();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -167,4 +213,38 @@ export class CpsRadioGroupComponent implements ControlValueAccessor {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
+
+  onBlur() {
+    this._control?.control?.markAsTouched();
+    this._checkErrors();
+    this.blurred.emit();
+  }
+
+  onFocus() {
+    this.focused.emit();
+  }
+
+  private _checkErrors() {
+    if (!this._control) return;
+    const errors = this._control?.errors;
+
+    if (!this._control?.control?.touched || !errors) {
+      this.error = '';
+      return;
+    }
+
+    if ('required' in errors) {
+      this.error = 'Field is required';
+      return;
+    }
+
+    const errArr = Object.values(errors);
+    if (errArr.length < 1) {
+      this.error = '';
+      return;
+    }
+    const message = errArr.find((msg) => typeof msg === 'string');
+
+    this.error = message || 'Unknown error';
+  }
 }

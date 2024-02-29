@@ -1,4 +1,6 @@
 $group-label-color: var(--cps-color-text-dark);
+$radio-hint-color: var(--cps-color-text-mild);
+$color-error: var(--cps-color-error);
 
 :host {
   width: fit-content;
@@ -44,6 +46,25 @@ $group-label-color: var(--cps-color-text-dark);
       .content:empty {
         display: none;
       }
+    }
+
+    .cps-radio-hint {
+      margin-top: 4px;
+      color: $radio-hint-color;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      line-height: 1.125rem;
+      cursor: default;
+    }
+
+    .cps-radio-error {
+      margin-top: 4px;
+      color: $color-error;
+      font-weight: bold;
+      font-size: 0.75rem;
+      min-height: 1.125rem;
+      line-height: 1.125rem;
+      cursor: default;
     }
   }
 }

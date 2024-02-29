@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormsModule,
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import {
   CpsCheckboxComponent,
   CpsRadioComponent,
@@ -27,7 +35,9 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   styleUrls: ['./radio-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class RadioPageComponent {
+export class RadioPageComponent implements OnInit {
+  form!: UntypedFormGroup;
+
   options: CpsRadioOption[] = [
     { label: 'Option 1', value: 'first' },
     { label: 'Option 2', value: 'second' },
@@ -75,4 +85,30 @@ export class RadioPageComponent {
   }));
 
   componentData = ComponentData;
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private _formBuilder: UntypedFormBuilder) {}
+
+  ngOnInit() {
+    this.form = this._formBuilder.group({
+      requiredRadio: [
+        '',
+        [
+          Validators.required,
+          (control: AbstractControl): ValidationErrors | null =>
+            this._checkThirdSelected(control)
+        ]
+      ]
+    });
+  }
+
+  private _checkThirdSelected(control: AbstractControl) {
+    const val = control.value;
+    if (!val) return null;
+
+    if (val !== 'third') {
+      return { mustMatch8Dig: 'Only third option must be selected' };
+    }
+    return null;
+  }
 }

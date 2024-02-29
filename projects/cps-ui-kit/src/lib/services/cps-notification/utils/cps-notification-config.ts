@@ -45,6 +45,11 @@ export interface CpsNotificationConfig {
    */
   timeout?: number;
   /**
+   * Whether to allow duplicates of the same notification to be displayed within a positioned container.
+   * @default undefined
+   */
+  allowDuplicates?: boolean;
+  /**
    * Max amount of notifications that can be simultaneously visualized within a positioned container.
    * @default undefined
    */

@@ -290,7 +290,7 @@ export class CpsSelectComponent
   @ViewChild('optionsList')
   optionsList!: ElementRef;
 
-  private _statusChangesSubscription: Subscription = new Subscription();
+  private _statusChangesSubscription?: Subscription;
 
   error = '';
   cvtWidth = '';
@@ -325,7 +325,7 @@ export class CpsSelectComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
 
     this._recalcVirtualListHeight();
   }

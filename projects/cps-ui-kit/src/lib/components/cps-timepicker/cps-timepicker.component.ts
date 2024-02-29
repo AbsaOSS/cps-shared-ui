@@ -52,22 +52,6 @@ export interface CpsTime {
 export class CpsTimepickerComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
-  dayPeriodOptions: CpsButtonToggleOption[] = [
-    { label: 'AM', value: 'AM' },
-    { label: 'PM', value: 'PM' }
-  ];
-
-  hoursOptions: { label: string; value: string }[] = [];
-
-  minutesOptions = this._getRange(0, 59).map((m) => ({
-    value: m.toString().padStart(2, '0'),
-    label: m.toString().padStart(2, '0')
-  }));
-
-  secondsOptions: { label: string; value: string }[] = [];
-
-  private _statusChangesSubscription: Subscription = new Subscription();
-
   /**
    * Label of the timepicker.
    * @group Props
@@ -170,6 +154,22 @@ export class CpsTimepickerComponent
   @ViewChild('secondsField')
   secondsField?: CpsAutocompleteComponent;
 
+  dayPeriodOptions: CpsButtonToggleOption[] = [
+    { label: 'AM', value: 'AM' },
+    { label: 'PM', value: 'PM' }
+  ];
+
+  hoursOptions: { label: string; value: string }[] = [];
+
+  minutesOptions = this._getRange(0, 59).map((m) => ({
+    value: m.toString().padStart(2, '0'),
+    label: m.toString().padStart(2, '0')
+  }));
+
+  secondsOptions: { label: string; value: string }[] = [];
+
+  private _statusChangesSubscription?: Subscription;
+
   error = '';
   hoursError = '';
   minutesError = '';
@@ -197,7 +197,7 @@ export class CpsTimepickerComponent
       () => {
         this._checkErrors();
       }
-    ) as Subscription;
+    );
   }
 
   ngAfterViewInit(): void {

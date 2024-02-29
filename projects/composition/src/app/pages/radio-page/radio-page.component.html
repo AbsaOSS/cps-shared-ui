@@ -1,6 +1,13 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <div class="radiogroups-group">
+    <form [formGroup]="form">
+      <cps-radio-group
+        groupLabel="Radio group where 3rd option must be selected"
+        formControlName="requiredRadio"
+        [options]="options">
+      </cps-radio-group>
+    </form>
     <cps-radio-group
       groupLabel="Radio group with a tooltip"
       [options]="options"
