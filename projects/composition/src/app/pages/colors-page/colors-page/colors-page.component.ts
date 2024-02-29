@@ -50,6 +50,7 @@ export class ColorsPageComponent implements OnInit {
 
   colorNameColor: { [key: string]: string } = {};
 
+  // eslint-disable-next-line no-useless-constructor
   constructor(private _notificationService: CpsNotificationService) {}
 
   ngOnInit(): void {

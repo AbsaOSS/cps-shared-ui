@@ -30,6 +30,7 @@ export class IconsPageComponent implements OnInit {
   filteredIconsList: string[] = [];
   componentData = ComponentData;
 
+  // eslint-disable-next-line no-useless-constructor
   constructor(private _notificationService: CpsNotificationService) {}
 
   ngOnInit() {

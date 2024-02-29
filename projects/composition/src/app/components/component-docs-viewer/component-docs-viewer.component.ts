@@ -33,6 +33,7 @@ export class ComponentDocsViewerComponent extends ViewerComponent {
     types?: TypesAPI;
     interfaces?: InterfaceAPI;
   };
+
   TypesMap: Record<string, string> = TypesMap;
 
   override ngOnInit(): void {
