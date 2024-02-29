@@ -37,3 +37,13 @@ export interface TypesAPI {
     value?: string;
   }[];
 }
+
+export interface InterfaceAPI {
+  description: string;
+  values: {
+    name: string;
+    description: string;
+    value?: string;
+    props?: PropAPI[];
+  }[];
+}

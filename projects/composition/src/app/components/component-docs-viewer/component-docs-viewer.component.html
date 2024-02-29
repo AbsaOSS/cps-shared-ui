@@ -77,7 +77,19 @@
                         <span>{{ event.name }}</span>
                       </td>
                       <td class="highlighted-text">
-                        {{ event.parameters[0].type }}
+                        <a
+                          *ngIf="
+                            event.parameters[0].type
+                              | detectType: TypesMap as type;
+                            else simpleType
+                          "
+                          [routerLink]="'/' + TypesMap[type] + '/api'"
+                          fragment="{{ type }}"
+                          >{{ event.parameters[0].type }}</a
+                        >
+                        <ng-template #simpleType>
+                          <span>{{ event.parameters[0].type }}</span>
+                        </ng-template>
                       </td>
                       <td>{{ event.description }}</td>
                     </tr>
@@ -120,6 +132,54 @@
           </div>
         </div>
       </ng-container>
+      <!-- Interfaces -->
+      <div
+        *ngIf="
+          componentData.interfaces &&
+          componentData.interfaces.values &&
+          componentData.interfaces.values.length > 0
+        ">
+        <h2>Interfaces</h2>
+        <p>{{ componentData.interfaces.description }}</p>
+        @for (
+          interface of componentData.interfaces.values;
+          track interface.name
+        ) {
+          <div id="{{ interface.name }}" class="interface">
+            <h3>{{ interface.name }}</h3>
+            <p>{{ interface.description }}</p>
+            <table class="data-table">
+              <thead>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let prop of interface.props">
+                  <td class="highlighted-bg">
+                    <span>{{ prop.name }}</span>
+                  </td>
+                  <td class="highlighted-text">
+                    <a
+                      *ngIf="
+                        prop.type | detectType: TypesMap as type;
+                        else simpleType
+                      "
+                      [routerLink]="'/' + TypesMap[type] + '/api'"
+                      fragment="{{ type }}"
+                      >{{ prop.type }}</a
+                    >
+                    <ng-template #simpleType>
+                      <span>{{ prop.type }}</span>
+                    </ng-template>
+                  </td>
+                  <td>{{ prop.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
     </ng-container>
   </cps-tab>
 </cps-tab-group>

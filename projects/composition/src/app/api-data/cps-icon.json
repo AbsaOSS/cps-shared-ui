@@ -38,6 +38,7 @@
         "values": [
             {
                 "name": "IconType",
+                "value": "typeof iconNames[number]",
                 "description": "IconType is used to define the type of the icon."
             },
             {

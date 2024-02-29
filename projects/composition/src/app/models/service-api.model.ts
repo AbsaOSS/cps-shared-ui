@@ -1,4 +1,4 @@
-import { TypesAPI } from './component-api.model';
+import { InterfaceAPI, TypesAPI } from './component-api.model';
 
 export interface MethodAPI {
   name: string;
@@ -19,4 +19,5 @@ export interface ServiceAPI {
     values: MethodAPI[];
   };
   types?: TypesAPI;
+  interfaces?: InterfaceAPI;
 }

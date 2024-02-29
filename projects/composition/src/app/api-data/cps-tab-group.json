@@ -196,13 +196,15 @@
                         "name": "previousIndex",
                         "optional": false,
                         "readonly": false,
-                        "type": "number"
+                        "type": "number",
+                        "description": "Index of the previous tab."
                     },
                     {
                         "name": "newIndex",
                         "optional": false,
                         "readonly": false,
-                        "type": "number"
+                        "type": "number",
+                        "description": "Index of the new tab."
                     }
                 ]
             }

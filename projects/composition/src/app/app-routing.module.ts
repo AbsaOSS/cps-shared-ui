@@ -65,7 +65,7 @@ const routes: Routes = [
       )
   },
   {
-    matcher: pathMatcher('tabs'),
+    matcher: pathMatcher('tab-group'),
     title: 'Tabs',
     loadComponent: () =>
       import('./pages/tab-group-page/tab-group-page.component').then(
@@ -121,7 +121,7 @@ const routes: Routes = [
       )
   },
   {
-    matcher: pathMatcher('radio'),
+    matcher: pathMatcher('radio-group'),
     title: 'Radio',
     loadComponent: () =>
       import('./pages/radio-page/radio-page.component').then(

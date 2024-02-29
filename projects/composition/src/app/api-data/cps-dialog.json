@@ -1,4 +1,5 @@
 {
+    "components": {},
     "name": "CpsDialogService",
     "description": "Service for showing CpsDialog.",
     "methods": {

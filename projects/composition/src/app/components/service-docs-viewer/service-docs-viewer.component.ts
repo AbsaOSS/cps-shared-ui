@@ -5,13 +5,20 @@ import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
 import { ViewerComponent } from '../viewer/viewer.component';
 import TypesMap from '../../api-data/types_map.json';
 import { RouterLink } from '@angular/router';
+import { DetectTypePipe } from '../../pipes/detect-type.pipe';
 
 @Component({
   selector: 'app-service-docs-viewer',
   templateUrl: './service-docs-viewer.component.html',
   styleUrl: './service-docs-viewer.component.scss',
   standalone: true,
-  imports: [CommonModule, CpsTabComponent, CpsTabGroupComponent, RouterLink]
+  imports: [
+    CommonModule,
+    CpsTabComponent,
+    CpsTabGroupComponent,
+    RouterLink,
+    DetectTypePipe
+  ]
 })
 export class ServiceDocsViewerComponent extends ViewerComponent {
   @Input() serviceData?: ServiceAPI;

@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ComponentAPI, TypesAPI } from '../../models/component-api.model';
+import {
+  ComponentAPI,
+  InterfaceAPI,
+  TypesAPI
+} from '../../models/component-api.model';
 import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
 import { ObjectEntriesPipe } from '../../pipes/object-entries.pipe';
 
@@ -27,6 +31,7 @@ export class ComponentDocsViewerComponent extends ViewerComponent {
   @Input() componentData?: {
     components: { [key: string]: ComponentAPI };
     types?: TypesAPI;
+    interfaces?: InterfaceAPI;
   };
   TypesMap: Record<string, string> = TypesMap;
 

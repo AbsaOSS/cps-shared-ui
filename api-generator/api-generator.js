@@ -351,6 +351,59 @@ async function main() {
               doc[name]['templates'] = templates;
             }
 
+            if (isProcessable(module_service_group)) {
+              doc[name] = {
+                ...doc[name]
+                // description: staticMessages['service']
+              };
+
+              module_service_group.children.forEach((service) => {
+                doc[name] = {
+                  ...doc[name],
+                  name: service.name,
+                  description: service.comment &&
+                    service.comment.summary
+                      .map((s) => s.text || '')
+                      .join(' ')
+                };
+                const service_methods_group = service.groups.find(
+                  (g) => g.title === 'Method'
+                );
+                if (isProcessable(service_methods_group)) {
+                  const methods = {
+                    description: 'Methods used in service.',
+                    values: []
+                  };
+
+                  service_methods_group.children.forEach((method) => {
+                    const signature = method.getAllSignatures()[0];
+                    methods.values.push({
+                      name: signature.name,
+                      parameters: signature.parameters.map((param) => {
+                        return {
+                          name: param.name,
+                          type: param.type.toString(),
+                          description:
+                            param.comment &&
+                            param.comment.summary
+                              .map((s) => s.text || '')
+                              .join(' ')
+                        };
+                      }),
+                      returnType: signature.type.toString(),
+                      description:
+                        signature.comment &&
+                        signature.comment.summary
+                          .map((s) => s.text || '')
+                          .join(' ')
+                    });
+                  });
+
+                  doc[name]['methods'] = methods;
+                }
+              });
+            }
+
             if (isProcessable(module_interface_group)) {
               const interfaces = {
                 description: staticMessages['interfaces'],
@@ -399,56 +452,6 @@ async function main() {
               }
             }
 
-            if (isProcessable(module_service_group)) {
-              doc[name] = {
-                // description: staticMessages['service']
-              };
-
-              module_service_group.children.forEach((service) => {
-                doc[name] = {
-                  name: service.name,
-                  description: service.comment &&
-                    service.comment.summary
-                      .map((s) => s.text || '')
-                      .join(' ')
-                };
-                const service_methods_group = service.groups.find(
-                  (g) => g.title === 'Method'
-                );
-                if (isProcessable(service_methods_group)) {
-                  const methods = {
-                    description: 'Methods used in service.',
-                    values: []
-                  };
-
-                  service_methods_group.children.forEach((method) => {
-                    const signature = method.getAllSignatures()[0];
-                    methods.values.push({
-                      name: signature.name,
-                      parameters: signature.parameters.map((param) => {
-                        return {
-                          name: param.name,
-                          type: param.type.toString(),
-                          description:
-                            param.comment &&
-                            param.comment.summary
-                              .map((s) => s.text || '')
-                              .join(' ')
-                        };
-                      }),
-                      returnType: signature.type.toString(),
-                      description:
-                        signature.comment &&
-                        signature.comment.summary
-                          .map((s) => s.text || '')
-                          .join(' ')
-                    });
-                  });
-
-                  doc[name]['methods'] = methods;
-                }
-              });
-            }
 
             if (isProcessable(module_types_group)) {
               const types = {
@@ -592,6 +595,8 @@ const getTypesValue = (typeobj) => {
 
       return JSON.stringify(Object.assign({}, ...values), null, 4);
     }
+    // TODO: Handle "typeof iconNames[number] properly
+    return type.toString();
   }
 };
 

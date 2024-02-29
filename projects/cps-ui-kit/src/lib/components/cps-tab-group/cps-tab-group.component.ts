@@ -39,7 +39,13 @@ import {
  * @group Interface
  */
 export interface CpsTabChangeEvent {
+  /**
+   * Index of the previous tab.
+   */
   previousIndex: number;
+  /**
+   * Index of the new tab.
+   */
   newIndex: number;
 }
 
