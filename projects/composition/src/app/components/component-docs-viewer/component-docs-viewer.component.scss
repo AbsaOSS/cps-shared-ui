@@ -10,6 +10,10 @@
       border-bottom: 1px solid var(--cps-color-line-light);
     }
 
+    tr {
+      transition: background-color 0.5s ease-in;
+    }
+
     td {
       padding: 0.75rem 1rem;
       border-bottom: 1px solid var(--cps-color-line-light);
@@ -32,6 +36,14 @@
 
       &.highlighted-text {
         color: var(--cps-color-calm);
+
+        a {
+          color: var(--cps-color-calm);
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
       }
 
       &.value-style {
@@ -51,5 +63,9 @@
         }
       }
     }
+  }
+
+  .interface {
+    transition: background-color 0.5s ease-in;
   }
 }

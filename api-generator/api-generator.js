@@ -46,6 +46,7 @@ async function main() {
 
   if (project) {
     let doc = {};
+    let typesMap = {};
 
     const parseText = (text) => {
       return text.replace(/&#123;/g, '{').replace(/&#125;/g, '}');
@@ -350,47 +351,15 @@ async function main() {
               doc[name]['templates'] = templates;
             }
 
-            if (isProcessable(module_interface_group)) {
-              const interfaces = {
-                description: staticMessages['interfaces'],
-                values: []
-              };
-
-              module_interface_group.children.forEach((int) => {
-                interfaces.values.push({
-                  name: int.name,
-                  description:
-                    int.comment &&
-                    int.comment.summary.map((s) => s.text || '').join(' '),
-                  props:
-                    int.children &&
-                    int.children.map((child) => ({
-                      name: child.name,
-                      optional: child.flags.isOptional,
-                      readonly: child.flags.isReadonly,
-                      type: child.type
-                        ? child.type.toString()
-                        : extractParameter(int),
-                      description:
-                        child.comment &&
-                        child.comment.summary
-                          .map((s) => s.text || '')
-                          .join(' '),
-                      deprecated: getDeprecatedText(child)
-                    }))
-                });
-              });
-
-              doc[name]['interfaces'] = interfaces;
-            }
-
             if (isProcessable(module_service_group)) {
               doc[name] = {
+                ...doc[name]
                 // description: staticMessages['service']
               };
 
               module_service_group.children.forEach((service) => {
                 doc[name] = {
+                  ...doc[name],
                   name: service.name,
                   description: service.comment &&
                     service.comment.summary
@@ -435,6 +404,55 @@ async function main() {
               });
             }
 
+            if (isProcessable(module_interface_group)) {
+              const interfaces = {
+                description: staticMessages['interfaces'],
+                values: []
+              };
+
+              module_interface_group.children.forEach((int) => {
+                interfaces.values.push({
+                  name: int.name,
+                  description:
+                    int.comment &&
+                    int.comment.summary.map((s) => s.text || '').join(' '),
+                  props:
+                    int.children &&
+                    int.children.map((child) => ({
+                      name: child.name,
+                      optional: child.flags.isOptional,
+                      readonly: child.flags.isReadonly,
+                      type: child.type
+                        ? child.type.toString()
+                        : extractParameter(int),
+                      description:
+                        child.comment &&
+                        child.comment.summary
+                          .map((s) => s.text || '')
+                          .join(' '),
+                      deprecated: getDeprecatedText(child)
+                    }))
+                });
+                typesMap[int.name] = int.comment.blockTags?.find(
+                  tag => tag.tag === "@customPath"
+                )?.content?.map((s) => s.text || '').join(' ')
+                  ?? name.replace("cps-", "");
+              });
+
+              if (doc[name]?.interfaces) {
+                doc[name]['interfaces'] = {
+                  ...doc[name]['interfaces'],
+                  values: [
+                    ...doc[name]['interfaces'].values,
+                    ...interfaces.values
+                  ]
+                };
+              } else {
+                doc[name]['interfaces'] = interfaces;
+              }
+            }
+
+
             if (isProcessable(module_types_group)) {
               const types = {
                 description: staticMessages['types'],
@@ -449,9 +467,23 @@ async function main() {
                     t.comment.summary &&
                     t.comment.summary.map((s) => s.text || '').join(' ')
                 });
+                typesMap[t.name] = t.comment.blockTags?.find(
+                  tag => tag.tag === "@customPath"
+                )?.content?.map((s) => s.text || '').join(' ')
+                  ?? name.replace("cps-", "");
               });
 
-              doc[name]['types'] = types;
+              if (doc[name]?.types) {
+                doc[name]['types'] = {
+                  ...doc[name]['types'],
+                  values: [
+                    ...doc[name]['types'].values,
+                    ...types.values
+                  ]
+                };
+              } else {
+                doc[name]['types'] = types;
+              }
             }
           }
         }
@@ -486,6 +518,12 @@ async function main() {
       const typedocJSON = JSON.stringify(mergedDocs[key], null, 4);
       !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
       fs.writeFileSync(path.resolve(outputPath, `${key}.json`), typedocJSON);
+    }
+
+    if (Object.entries(typesMap).length) {
+      const typesMapJSON = JSON.stringify(typesMap, null, 4);
+      !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
+      fs.writeFileSync(path.resolve(outputPath, `types_map.json`), typesMapJSON);
     }
 
     // const typedocJSON = JSON.stringify(mergedDocs, null, 4);
@@ -557,6 +595,8 @@ const getTypesValue = (typeobj) => {
 
       return JSON.stringify(Object.assign({}, ...values), null, 4);
     }
+    // TODO: Handle "typeof iconNames[number] properly
+    return type.toString();
   }
 };
 

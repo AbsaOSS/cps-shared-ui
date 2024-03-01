@@ -37,6 +37,10 @@ import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progr
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
 
+/**
+ * CpsMenuItem is used to define the items of the CpsMenuComponent.
+ * @group Types
+ */
 export type CpsMenuItem = {
   title?: string;
   action?: (event?: any) => void;
@@ -48,6 +52,10 @@ export type CpsMenuItem = {
   loading?: boolean;
 };
 
+/**
+ * CpsMenuAttachPosition is used to define attachment position of the CpsMenuComponent.
+ * @group Types
+ */
 export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
 
 /**

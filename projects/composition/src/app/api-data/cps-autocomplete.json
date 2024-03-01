@@ -345,5 +345,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsAutocompleteAppearanceType",
+                "value": "\"outlined\" | \"underlined\" | \"borderless\"",
+                "description": "CpsAutocompleteAppearanceType is used to define the border of the autocomplete input."
+            }
+        ]
     }
 }

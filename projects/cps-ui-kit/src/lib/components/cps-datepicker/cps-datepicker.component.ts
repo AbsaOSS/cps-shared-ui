@@ -18,6 +18,10 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 
+/**
+ * CpsDatepickerAppearanceType is used to define the border of the datepicker input.
+ * @group Types
+ */
 export type CpsDatepickerAppearanceType =
   | 'outlined'
   | 'underlined'

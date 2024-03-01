@@ -10,6 +10,10 @@ export enum CpsNotificationType {
   INFO = 'info'
 }
 
+/**
+ * Defines data type for the notification data.
+ * @group Interface
+ */
 export interface CpsNotificationData {
   /**
    * Message to be displayed in the notification.

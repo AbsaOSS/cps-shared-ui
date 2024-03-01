@@ -51,8 +51,22 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
 }
 
+/**
+ * CpsTreeTableSize is used to define the size of the tree table.
+ * @group Types
+ */
 export type CpsTreeTableSize = 'small' | 'normal' | 'large';
+
+/**
+ * CpsTreeTableToolbarSize is used to define the size of the tree table toolbar.
+ * @group Types
+ */
 export type CpsTreeTableToolbarSize = 'small' | 'normal';
+
+/**
+ * CpsTreeTableSortMode is used to define the sorting mode of the tree table.
+ * @group Types
+ */
 export type CpsTreeTableSortMode = 'single' | 'multiple';
 
 /**

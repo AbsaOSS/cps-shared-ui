@@ -32,8 +32,8 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/button'
     },
     {
-      title: 'Button toggles',
-      url: '/button-toggles'
+      title: 'Button toggle',
+      url: '/button-toggle'
     },
     {
       title: 'Checkbox',
@@ -97,7 +97,7 @@ export class NavigationSidebarComponent implements OnInit {
     },
     {
       title: 'Radio',
-      url: '/radio'
+      url: '/radio-group'
     },
     {
       title: 'Scheduler',
@@ -117,7 +117,7 @@ export class NavigationSidebarComponent implements OnInit {
     },
     {
       title: 'Tabs',
-      url: '/tabs'
+      url: '/tab-group'
     },
     {
       title: 'Tag',

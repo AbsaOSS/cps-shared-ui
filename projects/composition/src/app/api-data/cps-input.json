@@ -264,5 +264,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsInputAppearanceType",
+                "value": "\"outlined\" | \"underlined\" | \"borderless\"",
+                "description": "CpsInputAppearanceType is used to define the border of the input field."
+            }
+        ]
     }
 }

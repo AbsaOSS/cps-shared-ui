@@ -20,6 +20,10 @@ import {
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 import { Subscription } from 'rxjs';
 
+/**
+ * CpsRadioOption is used to define the options of the CpsRadioGroupComponent.
+ * @group Types
+ */
 export type CpsRadioOption = {
   value: any;
   label?: string;

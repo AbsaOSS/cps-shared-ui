@@ -184,5 +184,45 @@
                 ]
             }
         }
+    },
+    "interfaces": {
+        "description": "Defines the custom interfaces used by the module.",
+        "values": [
+            {
+                "name": "CpsTabChangeEvent",
+                "description": "CpsTabChangeEvent is used to define the tab change event.",
+                "props": [
+                    {
+                        "name": "previousIndex",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "description": "Index of the previous tab."
+                    },
+                    {
+                        "name": "newIndex",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "description": "Index of the new tab."
+                    }
+                ]
+            }
+        ]
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsTabsAnimationType",
+                "value": "\"slide\" | \"fade\"",
+                "description": "CpsTabsAnimationType is used to define the transition options of how content appears."
+            },
+            {
+                "name": "CpsTabsAlignmentType",
+                "value": "\"left\" | \"center\" | \"right\"",
+                "description": "CpsTabsAlignmentType is used to define the horizontal alignment of tabs."
+            }
+        ]
     }
 }

@@ -79,5 +79,20 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsTooltipPosition",
+                "value": "\"top\" | \"bottom\" | \"left\" | \"right\"",
+                "description": "CpsTooltipPosition is used to define the position of the tooltip."
+            },
+            {
+                "name": "CpsTooltipOpenOn",
+                "value": "\"hover\" | \"click\" | \"focus\"",
+                "description": "CpsTooltipOpenOn is used to define the event on which the tooltip should open."
+            }
+        ]
     }
 }

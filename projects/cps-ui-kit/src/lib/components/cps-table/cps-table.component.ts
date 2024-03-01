@@ -36,9 +36,28 @@ export function tableFactory(tableComponent: CpsTableComponent) {
   return tableComponent.primengTable;
 }
 
+/**
+ * CpsTableExportFormat is used to define the format of the exported file.
+ * @group Types
+ */
 export type CpsTableExportFormat = 'csv' | 'xlsx'; // | 'pdf';
+
+/**
+ * CpsTableAppearanceType is used to define the border of the table.
+ * @group Types
+ */
 export type CpsTableSize = 'small' | 'normal' | 'large';
+
+/**
+ * CpsTableToolbarSize is used to define the size of the toolbar.
+ * @group Types
+ */
 export type CpsTableToolbarSize = 'small' | 'normal';
+
+/**
+ * CpsTableSortMode is used to define the sorting mode of the table.
+ * @group Types
+ */
 export type CpsTableSortMode = 'single' | 'multiple';
 
 /**

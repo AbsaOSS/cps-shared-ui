@@ -32,5 +32,20 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "IconType",
+                "value": "typeof iconNames[number]",
+                "description": "IconType is used to define the type of the icon."
+            },
+            {
+                "name": "iconSizeType",
+                "value": "number | string | \"fill\" | \"xsmall\" | \"small\" | \"normal\" | \"large\"",
+                "description": "iconSizeType is used to define the size of the icon."
+            }
+        ]
     }
 }

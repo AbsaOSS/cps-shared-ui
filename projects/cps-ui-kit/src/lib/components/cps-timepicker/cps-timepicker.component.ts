@@ -21,6 +21,10 @@ import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.c
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 
+/**
+ * CpsTime is used to define the time format.
+ * @group Interface
+ */
 export interface CpsTime {
   hours: string;
   minutes: string;

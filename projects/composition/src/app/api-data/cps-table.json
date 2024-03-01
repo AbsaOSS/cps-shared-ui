@@ -910,5 +910,40 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsColumnFilterCategoryOption",
+                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"icon\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "description": "CpsColumnFilterCategoryOption is used to define the options of the CpsColumnFilterCategoryComponent."
+            },
+            {
+                "name": "CpsColumnFilterType",
+                "value": "\"text\" | \"number\" | \"date\" | \"boolean\" | \"category\"",
+                "description": "CpsColumnFilterType is used to define the type of the column filter."
+            },
+            {
+                "name": "CpsTableExportFormat",
+                "value": "\"csv\" | \"xlsx\"",
+                "description": "CpsTableExportFormat is used to define the format of the exported file."
+            },
+            {
+                "name": "CpsTableSize",
+                "value": "\"small\" | \"normal\" | \"large\"",
+                "description": "CpsTableAppearanceType is used to define the border of the table."
+            },
+            {
+                "name": "CpsTableToolbarSize",
+                "value": "\"small\" | \"normal\"",
+                "description": "CpsTableToolbarSize is used to define the size of the toolbar."
+            },
+            {
+                "name": "CpsTableSortMode",
+                "value": "\"single\" | \"multiple\"",
+                "description": "CpsTableSortMode is used to define the sorting mode of the table."
+            }
+        ]
     }
 }

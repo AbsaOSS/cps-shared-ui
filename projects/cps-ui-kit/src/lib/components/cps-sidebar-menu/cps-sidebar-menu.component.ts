@@ -18,6 +18,10 @@ import {
   trigger
 } from '@angular/animations';
 
+/**
+ * CpsSidebarMenuItem is used to define the items of the CpsSidebarMenuComponent.
+ * @group Types
+ */
 export type CpsSidebarMenuItem = {
   title: string;
   icon: string;

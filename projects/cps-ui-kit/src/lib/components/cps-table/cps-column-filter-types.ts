@@ -22,6 +22,10 @@ export enum CpsColumnFilterMatchMode {
   DATE_AFTER = 'dateAfter'
 }
 
+/**
+ * CpsColumnFilterCategoryOption is used to define the options of the CpsColumnFilterCategoryComponent.
+ * @group Types
+ */
 export type CpsColumnFilterCategoryOption = {
   value: any;
   label?: string;
@@ -30,6 +34,10 @@ export type CpsColumnFilterCategoryOption = {
   tooltip?: string;
 };
 
+/**
+ * CpsColumnFilterType is used to define the type of the column filter.
+ * @group Types
+ */
 export type CpsColumnFilterType =
   | 'text'
   | 'number'

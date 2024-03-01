@@ -19,6 +19,10 @@ import {
   CpsTooltipPosition
 } from '../../directives/cps-tooltip/cps-tooltip.directive';
 
+/**
+ * CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent.
+ * @group Types
+ */
 export type CpsButtonToggleOption = {
   value: any;
   label?: string;

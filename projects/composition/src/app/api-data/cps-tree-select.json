@@ -254,5 +254,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsTreeSelectAppearanceType",
+                "value": "\"outlined\" | \"underlined\" | \"borderless\"",
+                "description": "CpsTreeSelectAppearanceType is used to define the border of the tree select input field."
+            }
+        ]
     }
 }

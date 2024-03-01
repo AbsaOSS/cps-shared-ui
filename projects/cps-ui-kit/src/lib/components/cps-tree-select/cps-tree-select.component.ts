@@ -18,6 +18,10 @@ import { TreeModule } from 'primeng/tree';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown/cps-base-tree-dropdown.component';
 
+/**
+ * CpsTreeSelectAppearanceType is used to define the border of the tree select input field.
+ * @group Types
+ */
 export type CpsTreeSelectAppearanceType =
   | 'outlined'
   | 'underlined'

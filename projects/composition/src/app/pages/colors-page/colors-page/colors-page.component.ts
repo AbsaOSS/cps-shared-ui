@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { CpsInputComponent, getCpsColors, getTextColor } from 'cps-ui-kit';
+import {
+  CpsInputComponent,
+  CpsNotificationPosition,
+  CpsNotificationService,
+  getCpsColors,
+  getTextColor
+} from 'cps-ui-kit';
 
 type colorGroupsType = {
   name: string;
@@ -43,6 +49,9 @@ export class ColorsPageComponent implements OnInit {
   ];
 
   colorNameColor: { [key: string]: string } = {};
+
+  // eslint-disable-next-line no-useless-constructor
+  constructor(private _notificationService: CpsNotificationService) {}
 
   ngOnInit(): void {
     const customColors = getCpsColors();
@@ -174,10 +183,21 @@ export class ColorsPageComponent implements OnInit {
   onCopyColor(color: string) {
     navigator.clipboard.writeText(color).then(
       () => {
-        console.log('Color copied to clipboard');
+        this._notificationService.success(
+          `Color ${color} copied to clipboard`,
+          undefined,
+          { position: CpsNotificationPosition.BOTTOM, timeout: 1000 }
+        );
       },
       () => {
-        console.error('Failed to copy color to clickboard');
+        this._notificationService.error(
+          'Failed to copy color to clickboard',
+          undefined,
+          {
+            position: CpsNotificationPosition.BOTTOM,
+            timeout: 1000
+          }
+        );
       }
     );
   }

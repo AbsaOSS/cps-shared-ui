@@ -34,12 +34,31 @@ import {
   fromEvent
 } from 'rxjs';
 
+/**
+ * CpsTabChangeEvent is used to define the tab change event.
+ * @group Interface
+ */
 export interface CpsTabChangeEvent {
+  /**
+   * Index of the previous tab.
+   */
   previousIndex: number;
+  /**
+   * Index of the new tab.
+   */
   newIndex: number;
 }
 
+/**
+ * CpsTabsAnimationType is used to define the transition options of how content appears.
+ * @group Types
+ */
 export type CpsTabsAnimationType = 'slide' | 'fade';
+
+/**
+ * CpsTabsAlignmentType is used to define the horizontal alignment of tabs.
+ * @group Types
+ */
 export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
 
 /**

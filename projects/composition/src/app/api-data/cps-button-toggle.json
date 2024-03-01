@@ -127,5 +127,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsButtonToggleOption",
+                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"icon\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "description": "CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent."
+            }
+        ]
     }
 }
