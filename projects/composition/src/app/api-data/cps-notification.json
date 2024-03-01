@@ -151,33 +151,6 @@
                         "description": "Max width of the notification of type number denoting pixels or string."
                     }
                 ]
-            },
-            {
-                "name": "CpsNotificationData",
-                "description": "Defines data type for the notification data.",
-                "props": [
-                    {
-                        "name": "message",
-                        "optional": true,
-                        "readonly": false,
-                        "type": "string",
-                        "description": "Message to be displayed in the notification."
-                    },
-                    {
-                        "name": "details",
-                        "optional": true,
-                        "readonly": false,
-                        "type": "string",
-                        "description": "Details to be displayed in the notification."
-                    },
-                    {
-                        "name": "type",
-                        "optional": true,
-                        "readonly": false,
-                        "type": "CpsNotificationType",
-                        "description": "Type of the notification, options are \"warning\", \"success\", \"error\" or \"info\"."
-                    }
-                ]
             }
         ]
     }

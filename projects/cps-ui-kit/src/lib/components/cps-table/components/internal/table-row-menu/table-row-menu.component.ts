@@ -7,7 +7,6 @@ import {
 
 /**
  * TableRowMenuComponent is an internal component which applies the menu to each row.
- * @group Components
  */
 @Component({
   selector: 'table-row-menu',

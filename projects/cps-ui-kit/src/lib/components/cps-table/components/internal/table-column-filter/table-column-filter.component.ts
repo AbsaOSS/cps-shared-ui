@@ -28,7 +28,6 @@ import { TableColumnFilterConstraintComponent } from '../table-column-filter-con
 
 /**
  * TableColumnFilterComponent is an internal filter component in table and treetable.
- * @group Components
  */
 @Component({
   selector: 'table-column-filter',
