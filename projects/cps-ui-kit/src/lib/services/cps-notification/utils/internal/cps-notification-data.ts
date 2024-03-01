@@ -12,7 +12,6 @@ export enum CpsNotificationType {
 
 /**
  * Defines data type for the notification data.
- * @group Interface
  */
 export interface CpsNotificationData {
   /**

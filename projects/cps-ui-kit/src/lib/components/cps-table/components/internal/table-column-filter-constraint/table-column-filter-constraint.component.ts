@@ -24,7 +24,6 @@ import {
 
 /**
  * TableColumnFilterConstraintComponent is an internal filtering constraint component in table and treetable.
- * @group Components
  */
 @Component({
   selector: 'table-column-filter-constraint',

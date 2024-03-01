@@ -27,6 +27,5 @@
     "CpsTreeTableSortMode": "tree-table",
     "CpsTooltipPosition": "tooltip",
     "CpsTooltipOpenOn": "tooltip",
-    "CpsNotificationConfig": "notification",
-    "CpsNotificationData": "notification"
+    "CpsNotificationConfig": "notification"
 }
