@@ -133,7 +133,7 @@
         border-bottom: 3px solid var(--cps-color-line-light);
       }
 
-      &:active:not(.disabled) {
+      &:active:not(.disabled, .active) {
         border-bottom: 3px solid var(--cps-color-line-mid);
       }
     }

@@ -6,14 +6,6 @@
                 "description": "Defines the input properties of the component.",
                 "values": [
                     {
-                        "name": "type",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "\"security\" | \"classification\" | \"custom\"",
-                        "default": "custom",
-                        "description": "Type of the tag. It can be security, classification or custom, has higher precedence over color."
-                    },
-                    {
                         "name": "label",
                         "optional": false,
                         "readonly": false,
@@ -26,7 +18,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "",
+                        "default": "calm",
                         "description": "Color of the tag."
                     },
                     {

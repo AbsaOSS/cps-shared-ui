@@ -6,10 +6,11 @@
     (click)="onClick($event)"
     [class.loading]="loading"
     [ngStyle]="{
-    'background-color': type==='solid' ? buttonColor : 'transparent',
-    color: textColor,
-    height: cvtHeight || 'none',
-  }">
+      backgroundColor: type === 'solid' ? buttonColor : 'transparent',
+      color: textColor,
+      height: cvtHeight || 'none',
+      borderRadius: borderRadius
+    }">
     <div class="cps-button__spinner">
       <cps-progress-circular
         *ngIf="loading"

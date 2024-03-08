@@ -24,12 +24,6 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 })
 export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   /**
-   * Type of the tag. It can be security, classification or custom, has higher precedence over color.
-   * @group Props
-   */
-  @Input() type: 'security' | 'classification' | 'custom' = 'custom';
-
-  /**
    * Label of the tag.
    * @group Props
    */
@@ -39,7 +33,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
    * Color of the tag.
    * @group Props
    */
-  @Input() color = '';
+  @Input() color = 'calm';
 
   /**
    * Determines whether the tag should be disabled.
@@ -74,7 +68,6 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   @Output() valueChanged = new EventEmitter<boolean>();
 
   classesList: string[] = [];
-  tagColor = '';
 
   private _value = false;
 
@@ -85,6 +78,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   }
 
   ngOnChanges(): void {
+    this.color = getCSSColor(this.color);
     this.setClasses();
   }
 
@@ -96,18 +90,6 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
     }
     if (this.disabled) {
       this.classesList.push('cps-tag--disabled');
-    }
-    switch (this.type) {
-      case 'security': {
-        this.classesList.push('cps-tag--security');
-        break;
-      }
-      case 'classification': {
-        this.classesList.push('cps-tag--classification');
-        break;
-      }
-      default:
-        if (this.color) this.tagColor = getCSSColor(this.color);
     }
   }
 

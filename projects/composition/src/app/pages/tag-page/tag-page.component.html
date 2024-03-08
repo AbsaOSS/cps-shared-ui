@@ -1,14 +1,12 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <div class="tags-group">
-    <cps-tag type="security" label="Security tag"></cps-tag>
-    <cps-tag type="classification" label="Classification tag"></cps-tag>
-    <cps-tag color="red" label="Custom color tag"></cps-tag>
+    <cps-tag color="warn" label="Regular tag"></cps-tag>
     <cps-tag [disabled]="true" color="red" label="Disabled tag"></cps-tag>
     <div class="sync-val-example">
       <cps-tag
         [selectable]="true"
-        color="success"
+        color="info"
         [(ngModel)]="syncVal"
         label="Selectable tag"></cps-tag>
 

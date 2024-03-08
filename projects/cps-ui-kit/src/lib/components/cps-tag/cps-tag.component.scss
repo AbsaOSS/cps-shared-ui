@@ -16,14 +16,6 @@
     border: solid 1px;
     border-left: solid 4px;
 
-    &.cps-tag--security {
-      border-color: var(--cps-color-warn);
-    }
-
-    &.cps-tag--classification {
-      border-color: var(--cps-color-info);
-    }
-
     &.cps-tag--selectable {
       cursor: pointer;
       &:not(:active):not(:disabled) {
