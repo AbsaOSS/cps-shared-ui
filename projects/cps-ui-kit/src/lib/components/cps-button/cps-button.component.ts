@@ -4,7 +4,7 @@ import {
   EventEmitter,
   HostBinding,
   Input,
-  OnInit,
+  OnChanges,
   Output
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -23,7 +23,7 @@ import { convertSize, parseSize } from '../../utils/internal/size-utils';
   templateUrl: './cps-button.component.html',
   styleUrls: ['./cps-button.component.scss']
 })
-export class CpsButtonComponent implements OnInit {
+export class CpsButtonComponent implements OnChanges {
   /**
    * Color of the button.
    * @group Props
@@ -35,6 +35,12 @@ export class CpsButtonComponent implements OnInit {
    * @group Props
    */
   @Input() contentColor = 'white';
+
+  /**
+   * Border radius of the button, of type number denoting pixels or string.
+   * @group Props
+   */
+  @Input() borderRadius: number | string = 4;
 
   /**
    * Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'.
@@ -109,8 +115,9 @@ export class CpsButtonComponent implements OnInit {
 
   classesList: string[] = [];
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.buttonColor = getCSSColor(this.color);
+    this.borderRadius = convertSize(this.borderRadius);
     this.textColor =
       this.type === 'solid' ? getCSSColor(this.contentColor) : this.buttonColor;
     this.setClasses();
