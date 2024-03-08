@@ -22,6 +22,14 @@
                         "description": "Color of content on the button. Works only with 'solid' type."
                     },
                     {
+                        "name": "borderRadius",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "4",
+                        "description": "Border radius of the button, of type number denoting pixels or string."
+                    },
+                    {
                         "name": "type",
                         "optional": false,
                         "readonly": false,
