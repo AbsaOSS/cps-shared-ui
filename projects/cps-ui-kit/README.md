@@ -26,6 +26,7 @@
 - Scheduler
 - Select
 - Sidebar menu
+- Switch
 - Table
 - Tabs
 - Tag

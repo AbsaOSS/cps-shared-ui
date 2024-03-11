@@ -112,6 +112,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/sidebar-menu'
     },
     {
+      title: 'Switch',
+      url: '/switch'
+    },
+    {
       title: 'Table',
       url: '/table'
     },

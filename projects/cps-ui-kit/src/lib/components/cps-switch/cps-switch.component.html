@@ -1,0 +1,26 @@
+<div class="cps-switch-container">
+  <label class="cps-switch">
+    <input
+      type="checkbox"
+      [disabled]="disabled"
+      [checked]="value"
+      (change)="updateValueEvent($event)" />
+    <span class="cps-switch-slider"></span>
+  </label>
+  <span
+    *ngIf="label"
+    class="cps-switch-label"
+    [ngClass]="{ 'cps-switch-label-disabled': disabled }"
+    >{{ label }}</span
+  >
+  <cps-info-circle
+    *ngIf="infoTooltip"
+    class="cps-switch-info-circle"
+    size="xsmall"
+    [tooltipPosition]="infoTooltipPosition"
+    [tooltipContentClass]="infoTooltipClass"
+    [tooltipMaxWidth]="infoTooltipMaxWidth"
+    [tooltipPersistent]="infoTooltipPersistent"
+    [tooltipText]="infoTooltip">
+  </cps-info-circle>
+</div>
