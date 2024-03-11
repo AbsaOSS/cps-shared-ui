@@ -31,6 +31,7 @@ This repository consists of two projects:
 - Scheduler
 - Select
 - Sidebar menu
+- Switch
 - Table
 - Tabs
 - Tag

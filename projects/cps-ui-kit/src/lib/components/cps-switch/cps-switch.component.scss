@@ -1,0 +1,102 @@
+:host {
+  $color-calm: var(--cps-color-calm);
+  $label-color: var(--cps-color-text-dark);
+  $disabled-label-color: var(--cps-color-text-light);
+  $disabled-slider-color: var(--cps-color-text-lightest);
+  $transition-time: 0.2s;
+
+  min-width: max-content;
+  display: inline-block;
+
+  .cps-switch-container {
+    line-height: normal;
+    display: flex;
+    align-items: center;
+
+    .cps-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+
+    .cps-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .cps-switch-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: white;
+      transition: $transition-time;
+      border: 1px solid $color-calm;
+      border-radius: 30px;
+    }
+
+    .cps-switch-label {
+      font-size: 16px;
+      font-family: 'Source Sans Pro', sans-serif;
+      font-style: normal;
+      color: $label-color;
+      margin-left: 10px;
+      cursor: default;
+    }
+    .cps-switch-label-disabled {
+      color: $disabled-label-color;
+    }
+
+    .cps-switch-slider:before {
+      position: absolute;
+      content: '';
+      height: 14px;
+      width: 14px;
+      border-radius: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: $color-calm;
+      transition: $transition-time;
+    }
+
+    input:checked + .cps-switch-slider {
+      background-color: $color-calm;
+    }
+
+    input:focus + .cps-switch-slider {
+      box-shadow: 0 0 1px $color-calm;
+    }
+
+    input:checked + .cps-switch-slider:before {
+      transform: translateX(24px);
+      background-color: white;
+    }
+
+    input:disabled ~ .cps-switch-slider {
+      cursor: default;
+      border-color: $disabled-slider-color;
+    }
+
+    input:disabled:checked ~ .cps-switch-slider {
+      background-color: $disabled-slider-color;
+    }
+
+    input:disabled:not(:checked) ~ .cps-switch-slider:before {
+      background-color: $disabled-slider-color;
+    }
+
+    .cps-switch-info-circle {
+      margin-left: 8px;
+      ::ng-deep cps-icon {
+        i {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}

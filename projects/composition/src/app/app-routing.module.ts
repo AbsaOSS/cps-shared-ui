@@ -121,6 +121,14 @@ const routes: Routes = [
       )
   },
   {
+    matcher: pathMatcher('switch'),
+    title: 'Switch',
+    loadComponent: () =>
+      import('./pages/switch-page/switch-page.component').then(
+        (mod) => mod.SwitchPageComponent
+      )
+  },
+  {
     matcher: pathMatcher('radio-group'),
     title: 'Radio',
     loadComponent: () =>

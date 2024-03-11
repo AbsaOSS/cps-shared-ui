@@ -1,0 +1,11 @@
+.switches-group {
+  gap: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sync-val-example {
+  .sync-val {
+    margin-top: 16px;
+  }
+}

@@ -1,0 +1,26 @@
+<app-component-docs-viewer [componentData]="componentData">
+  <!-- Example of component's usage -->
+  <div class="switches-group">
+    <cps-switch
+      label="Switch with tooltip"
+      [value]="false"
+      infoTooltip="Provide any information here">
+    </cps-switch>
+    <cps-switch label="Basic switch" [value]="true"></cps-switch>
+    <cps-switch [value]="true"></cps-switch>
+    <cps-switch
+      label="Disabled switch checked"
+      [disabled]="true"
+      [value]="true"></cps-switch>
+    <cps-switch
+      label="Disabled switch unchecked"
+      [disabled]="true"
+      [value]="false"></cps-switch>
+    <div class="sync-val-example">
+      <cps-switch
+        label="Switch with two-way binding"
+        [(ngModel)]="syncVal"></cps-switch>
+      <div class="sync-val">Is checked: {{ syncVal }}</div>
+    </div>
+  </div>
+</app-component-docs-viewer>
