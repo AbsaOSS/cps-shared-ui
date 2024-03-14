@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  CpsButtonComponent,
-  CpsDialogConfig,
-  CpsDialogService
-} from 'cps-ui-kit';
+import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
 import { DialogContentComponent } from '../../components/dialog-content/dialog-content.component';
 import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
 
@@ -16,7 +12,6 @@ import ServiceData from '../../api-data/cps-dialog.json';
   imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],
-  providers: [CpsDialogService],
   host: { class: 'composition-page' }
 })
 export class DialogPageComponent {
@@ -29,7 +24,7 @@ export class DialogPageComponent {
       data: {
         subtitle: 'Are you really sure you want to break the law?'
       }
-    } as CpsDialogConfig);
+    });
 
     dialogRef.onClose.subscribe((result: boolean) => {
       console.log(result);
@@ -43,7 +38,7 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
 
     dialogRef.onOpen.subscribe(() => {
       console.log('opened');
@@ -66,7 +61,7 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
   }
 
   openDraggableDialog() {
@@ -79,7 +74,7 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
 
     dialogRef.onDragStart.subscribe((event) => {
       console.log('onDragStart', event);
@@ -100,7 +95,7 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
 
     dialogRef.onMaximize.subscribe((value) => {
       console.log('onMaximize', value);
@@ -124,7 +119,7 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
 
     dialogRef.onResizeStart.subscribe((event) => {
       console.log('onResizeStart', event);
@@ -144,7 +139,7 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
   }
 
   openBottomRightPositionedDialog() {
@@ -156,6 +151,6 @@ export class DialogPageComponent {
         info: 'Greetings from the dialog content component',
         icon: 'like'
       }
-    } as CpsDialogConfig);
+    });
   }
 }
