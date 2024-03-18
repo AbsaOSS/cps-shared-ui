@@ -107,7 +107,6 @@ export class CpsPaginatorComponent implements OnInit {
       this.paginator.first = 0;
     }
     this.paginator.rows = rows;
-    // Todo: Use explicit type
-    this.paginator.onRppChange(rows as any);
+    this.paginator.changePage(this.paginator.getPage());
   }
 }
