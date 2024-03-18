@@ -1,5 +1,11 @@
-.open-dlg-btns-group {
-  gap: 35px;
+.open-dlg-btns-group, .close-dlg-btns-group {
+  gap: 30px;
   display: flex;
   flex-direction: column;
+}
+
+.open-dlg-btns-group {
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid lightgrey;
 }
