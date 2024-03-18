@@ -153,4 +153,8 @@ export class DialogPageComponent {
       }
     });
   }
+
+  closeAllDialogs(force = false): void {
+    this._dialogService.closeAll(force);
+  }
 }

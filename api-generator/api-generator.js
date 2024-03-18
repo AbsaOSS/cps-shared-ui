@@ -387,7 +387,8 @@ async function main() {
                             param.comment &&
                             param.comment.summary
                               .map((s) => s.text || '')
-                              .join(' ')
+                              .join(' '),
+                          defaultValue: param.defaultValue
                         };
                       }),
                       returnType: signature.type.toString(),

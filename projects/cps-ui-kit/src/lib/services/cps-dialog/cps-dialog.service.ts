@@ -67,12 +67,23 @@ export class CpsDialogService {
     return dialogRef;
   }
 
-  private appendDialogComponentToBody(config: CpsDialogConfig) {
-    const map = new WeakMap();
-    map.set(CpsDialogConfig, config);
+  /**
+   * Closes all dialogs.
+   * @param {boolean} [force=false] - If true closes all dialogs even if they have disableClose set to true.
+   * @group Method
+   */
+  public closeAll(force = false): void {
+    this.dialogComponentRefMap.forEach((_, key) => {
+      if (force) {
+        key.destroy();
+      } else {
+        key.close();
+      }
+    });
+  }
 
+  private appendDialogComponentToBody(config: CpsDialogConfig) {
     const dialogRef = new CpsDialogRef();
-    map.set(CpsDialogRef, dialogRef);
 
     const sub = dialogRef.onClose.subscribe(() => {
       this.dialogComponentRefMap.get(dialogRef)?.instance.close();

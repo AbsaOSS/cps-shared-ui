@@ -33,6 +33,19 @@
                 ],
                 "returnType": "CpsDialogRef<any>",
                 "description": "Opens a confirmation dialog."
+            },
+            {
+                "name": "closeAll",
+                "parameters": [
+                    {
+                        "name": "force",
+                        "type": "boolean",
+                        "description": "If true closes all dialogs even if they have disableClose set to true.",
+                        "defaultValue": "false"
+                    }
+                ],
+                "returnType": "void",
+                "description": "Closes all dialogs."
             }
         ]
     }
