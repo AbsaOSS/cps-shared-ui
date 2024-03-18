@@ -32,11 +32,21 @@ export class ServiceDocsViewerComponent extends ViewerComponent {
   }
 
   parseParameters(
-    parameters?: { name: string; type: string; description?: string, defaultValue?: string }[]
+    parameters?: {
+      name: string;
+      type: string;
+      description?: string;
+      defaultValue?: string;
+    }[]
   ): string {
     if (!parameters) {
       return '';
     }
-    return parameters.map((param) => `${param.name}: ${param.type}${(param.defaultValue ? ' = ' + param.defaultValue : '')}`).join(', ');
+    return parameters
+      .map(
+        (param) =>
+          `${param.name}: ${param.type}${param.defaultValue ? ' = ' + param.defaultValue : ''}`
+      )
+      .join(', ');
   }
 }
