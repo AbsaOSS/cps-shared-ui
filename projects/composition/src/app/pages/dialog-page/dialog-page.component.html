@@ -25,9 +25,15 @@
       (clicked)="openBottomRightPositionedDialog()"></cps-button>
     <cps-button
       label="Close all dialogs"
-      (clicked)="closeAllDialogs()"></cps-button>
+      icon="close-x"
+      type="outlined"
+      (clicked)="closeAllDialogs()">
+    </cps-button>
     <cps-button
       label="Close all dialogs (forced)"
-      (clicked)="closeAllDialogs(true)"></cps-button>
+      icon="close-x"
+      type="outlined"
+      (clicked)="closeAllDialogs(true)">
+    </cps-button>
   </div>
 </app-service-docs-viewer>
