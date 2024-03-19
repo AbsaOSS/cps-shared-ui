@@ -250,7 +250,7 @@ export class CpsTreeAutocompleteComponent
       return;
     }
 
-    // Todo: Add explicit type
+    // https://github.com/primefaces/primeng/blob/v16.4.3/src/app/components/tree/tree.ts#L1125
     const found: any = this.treeList?.serializedValue?.find(
       (sv: any) => sv?.node?.label?.toLowerCase() === searchVal
     );

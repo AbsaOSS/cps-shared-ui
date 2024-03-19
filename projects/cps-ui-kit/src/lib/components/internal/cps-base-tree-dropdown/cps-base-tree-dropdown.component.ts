@@ -411,6 +411,7 @@ export class CpsBaseTreeDropdownComponent
       this.virtualScrollItemSize * currentLen,
       240
     );
+    this._setTreeListHeight(this.virtualListHeight + 'px');
   }
 
   toggleOptions(show?: boolean): void {
@@ -437,6 +438,7 @@ export class CpsBaseTreeDropdownComponent
       this._expandToNodes(
         this.multiple ? this.treeSelection : [this.treeSelection]
       );
+      this._setTreeListHeight('');
       this.updateOptions();
       setTimeout(() => {
         this.recalcVirtualListHeight();
@@ -457,7 +459,7 @@ export class CpsBaseTreeDropdownComponent
           if (key) {
             const idx =
               this.treeList?.serializedValue?.findIndex(
-                // Todo: Add explicit type
+                // https://github.com/primefaces/primeng/blob/v16.4.3/src/app/components/tree/tree.ts#L1125
                 (v: any) => v.node.key === key
               ) || -1;
             if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);
@@ -485,6 +487,11 @@ export class CpsBaseTreeDropdownComponent
       if (firstElem) (firstElem as HTMLElement).focus();
       this.optionFocused = true;
     }
+  }
+
+  private _setTreeListHeight(height: string) {
+    if (this.treeList?.scroller?.style)
+      this.treeList.scroller.style.height = height;
   }
 
   private _nodeToggled(elem: HTMLElement) {
@@ -694,6 +701,6 @@ export class CpsBaseTreeDropdownComponent
   // this is a fix of primeng change detection bug when virtual scroller is enabled
   updateOptions() {
     if (!this.virtualScroll) return;
-    this.options = [...this.options];
+    this.treeList?.updateSerializedValue();
   }
 }

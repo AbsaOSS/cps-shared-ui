@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FilterMetadata } from 'primeng/api';
+import { FilterMetadata, TreeNode } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { TreeTable } from 'primeng/treetable';
 import { CpsInputComponent } from '../../../../cps-input/cps-input.component';
@@ -133,14 +133,13 @@ export class TableColumnFilterConstraintComponent implements OnChanges {
         cats =
           this._tableInstance.value?.map((v) => v[this.field as string]) || [];
       } else {
-        const fillCats = (nodes: any[]) => {
+        const fillCats = (nodes: TreeNode<any>[] | undefined) => {
           nodes?.forEach((v) => {
             cats.push(v.data[this.field as string]);
             fillCats(v.children);
           });
         };
-        // Todo: Use explicit type
-        fillCats(this._tableInstance.value as any);
+        fillCats(this._tableInstance.value);
       }
       this.categories =
         Array.from(new Set(cats))?.map((c) => ({
