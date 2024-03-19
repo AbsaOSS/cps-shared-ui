@@ -64,6 +64,6 @@
     "typescript": "^5.4.2"
   },
   "optionalDependencies": {
-    "cypress": "^12.17.4"
+    "cypress": "^13.7.0"
   }
 }
