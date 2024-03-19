@@ -22,6 +22,7 @@ body {
   overflow: auto;
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth;
 }
 
 .example-content {

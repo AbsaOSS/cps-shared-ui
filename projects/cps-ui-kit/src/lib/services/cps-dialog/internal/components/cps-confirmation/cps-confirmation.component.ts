@@ -19,7 +19,7 @@ export class CpsConfirmationComponent {
     private _dialogRef: CpsDialogRef,
     private _config: CpsDialogConfig
   ) {
-    this.subtitle = this._config.data.subtitle;
+    this.subtitle = this._config.data?.subtitle;
   }
 
   close(confirm: boolean) {
