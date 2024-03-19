@@ -459,7 +459,7 @@ export class CpsBaseTreeDropdownComponent
           if (key) {
             const idx =
               this.treeList?.serializedValue?.findIndex(
-                // Todo: Add explicit type
+                // https://github.com/primefaces/primeng/blob/v16.4.3/src/app/components/tree/tree.ts#L1125
                 (v: any) => v.node.key === key
               ) || -1;
             if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);

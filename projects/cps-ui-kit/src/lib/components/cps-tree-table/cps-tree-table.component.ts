@@ -23,14 +23,14 @@ import { FormsModule } from '@angular/forms';
 import {
   TreeTable,
   TreeTableService,
-  TreeTableModule
+  TreeTableModule,
+  TreeTableSortEvent
 } from 'primeng/treetable';
 import { DomHandler } from 'primeng/dom';
 import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
 import { AngleLeftIcon } from 'primeng/icons/angleleft';
 import { AngleRightIcon } from 'primeng/icons/angleright';
 import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
-import { SortEvent } from 'primeng/api';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
@@ -625,7 +625,6 @@ export class CpsTreeTableComponent
 
   rowOptions: { label: string; value: number }[] = [];
 
-  // Todo: Add explicit type
   selectedRows: any = [];
 
   virtualScrollItemSize = 0;
@@ -1104,8 +1103,7 @@ export class CpsTreeTableComponent
     setTimeout(() => {
       if (this.virtualScroll && this.defScrollHeight) {
         this._updateVirtualScrollItemSize();
-        // Todo: Add explicit type
-        const itemsLen = (this.primengTreeTable.serializedValue as any).length;
+        const itemsLen = this.primengTreeTable.serializedValue?.length || 0;
         if (itemsLen < 1) {
           this.scrollHeight = this.emptyBodyHeight
             ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
@@ -1132,8 +1130,7 @@ export class CpsTreeTableComponent
     this.globalFilterComp?.clear();
   }
 
-  // Todo: Use explicit type
-  onSortFunction(event: SortEvent | any) {
+  onSortFunction(event: TreeTableSortEvent) {
     this.customSortFunction.emit(event);
   }
 
@@ -1296,8 +1293,8 @@ export class CpsTreeTableComponent
     });
   }
 
-  // Replace with explicit type
-  onSelectionChanged(selection: any[] | any) {
+  onSelectionChanged(selection: any) {
+    if (selection && !Array.isArray(selection)) selection = [selection];
     this.rowsSelected.emit(selection);
   }
 }

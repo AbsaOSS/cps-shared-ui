@@ -28,21 +28,18 @@ export class TreeTableUnsortDirective {
         let resetIndex = false;
         const sortMeta = pTreeTable.getSortMeta(event.field);
 
-        // Todo: Use explicit type in the whole block
-        if (sortMeta) {
-          for (let i = 0; i < (pTreeTable._multiSortMeta as any).length; i++) {
-            if (
-              (pTreeTable._multiSortMeta as any)[i].field === sortMeta.field
-            ) {
-              (pTreeTable._multiSortMeta as any).splice(i, 1);
+        if (sortMeta && pTreeTable.multiSortMeta) {
+          for (let i = 0; i < pTreeTable.multiSortMeta.length; i++) {
+            if (pTreeTable.multiSortMeta[i].field === sortMeta.field) {
+              pTreeTable.multiSortMeta.splice(i, 1);
             }
           }
           if (sortMeta.order === 1) {
             sortMeta.order = sortMeta.order * -1;
-            (pTreeTable.multiSortMeta as any).push(sortMeta);
+            pTreeTable.multiSortMeta.push(sortMeta);
           }
-          if (pTreeTable._multiSortMeta?.length === 0) {
-            (pTreeTable.multiSortMeta as any).push({
+          if (pTreeTable.multiSortMeta.length === 0) {
+            pTreeTable.multiSortMeta.push({
               field: '_defaultSortOrder',
               order: pTreeTable.defaultSortOrder
             });
@@ -50,16 +47,16 @@ export class TreeTableUnsortDirective {
           }
         } else {
           if (!pTreeTable.multiSortMeta) {
-            pTreeTable._multiSortMeta = [];
+            pTreeTable.multiSortMeta = [];
           }
-          (pTreeTable.multiSortMeta as any).push({
+          pTreeTable.multiSortMeta.push({
             field: event.field,
             order: pTreeTable.defaultSortOrder
           });
         }
 
         pTreeTable.sortMultiple();
-        if (resetIndex) pTreeTable._multiSortMeta = [];
+        if (resetIndex) pTreeTable.multiSortMeta = [];
       }
     };
 
@@ -68,15 +65,13 @@ export class TreeTableUnsortDirective {
         return;
       }
 
-      // Replace with explicit type
-      this._syncNodesParams(pTreeTable.filteredNodes as any, nodes);
+      this._syncNodesParams(pTreeTable.filteredNodes, nodes);
 
       if (pTreeTable.customSort) {
         pTreeTable.sortFunction.emit({
           data: nodes,
           mode: pTreeTable.sortMode,
-          // Todo: Use explicit type
-          field: pTreeTable.sortField as any,
+          field: pTreeTable.sortField || undefined,
           order: pTreeTable.sortOrder
         });
       } else {
@@ -102,8 +97,7 @@ export class TreeTableUnsortDirective {
       }
 
       for (const node of nodes) {
-        // Todo: Use explicit type
-        pTreeTable.sortNodes(node.children as any);
+        if (node.children) pTreeTable.sortNodes(node.children);
       }
     };
 
@@ -112,8 +106,7 @@ export class TreeTableUnsortDirective {
         return;
       }
 
-      // Replace with explicit type
-      this._syncNodesParams(pTreeTable.filteredNodes as any, nodes);
+      this._syncNodesParams(pTreeTable.filteredNodes, nodes);
 
       if (pTreeTable.customSort) {
         pTreeTable.sortFunction.emit({
@@ -126,16 +119,14 @@ export class TreeTableUnsortDirective {
           return pTreeTable.multisortField(
             node1,
             node2,
-            // Replace with explicit type
-            pTreeTable.multiSortMeta as any,
+            pTreeTable.multiSortMeta || [],
             0
           );
         });
       }
 
       for (const node of nodes) {
-        // Replace with explicit type
-        pTreeTable.sortMultipleNodes(node.children as any);
+        if (node.children) pTreeTable.sortMultipleNodes(node.children);
       }
     };
 
@@ -148,12 +139,10 @@ export class TreeTableUnsortDirective {
       }
       const isUnsort = multiSortMeta[index].field === '_defaultSortOrder';
       const value1 = isUnsort
-        ? // Todo: Use explicit type
-          (node1 as any)._defaultSortOrder
+        ? (node1 as any)._defaultSortOrder
         : ObjectUtils.resolveFieldData(node1.data, multiSortMeta[index].field);
       const value2 = isUnsort
-        ? // Todo: Use explicit type
-          (node2 as any)._defaultSortOrder
+        ? (node2 as any)._defaultSortOrder
         : ObjectUtils.resolveFieldData(node2.data, multiSortMeta[index].field);
       let result = 0;
 
@@ -207,11 +196,7 @@ export class TreeTableUnsortDirective {
                 pTreeTable.globalFilterFields || pTreeTable.columns;
           }
 
-          // Replace with explicit type
-          this._syncNodesParams(
-            pTreeTable.filteredNodes as any,
-            pTreeTable.value
-          );
+          this._syncNodesParams(pTreeTable.filteredNodes, pTreeTable.value);
 
           pTreeTable.filteredNodes = [];
           const isStrictMode = pTreeTable.filterMode === 'strict';
@@ -250,7 +235,6 @@ export class TreeTableUnsortDirective {
                         copyNode,
                         paramsWithoutNode
                       ) ||
-                      // Replace with explicit type
                       pTreeTable.isFilterMatched(
                         copyNode,
                         paramsWithoutNode as any
@@ -258,17 +242,11 @@ export class TreeTableUnsortDirective {
                     )) ||
                   (!isStrictMode &&
                     !(
-                      // Replace with explicit type
-                      (
-                        pTreeTable.isFilterMatched(
-                          copyNode,
-                          paramsWithoutNode as any
-                        ) ||
-                        pTreeTable.findFilteredNodes(
-                          copyNode,
-                          paramsWithoutNode
-                        )
-                      )
+                      pTreeTable.isFilterMatched(
+                        copyNode,
+                        paramsWithoutNode as any
+                      ) ||
+                      pTreeTable.findFilteredNodes(copyNode, paramsWithoutNode)
                     ))
                 ) {
                   localMatch = false;
@@ -311,13 +289,11 @@ export class TreeTableUnsortDirective {
                     ) ||
                       pTreeTable.isFilterMatched(
                         copyNodeForGlobal,
-                        // Replace with explicit type
                         paramsWithoutNode as any
                       ))) ||
                   (!isStrictMode &&
                     (pTreeTable.isFilterMatched(
                       copyNodeForGlobal,
-                      // Replace with explicit type
                       paramsWithoutNode as any
                     ) ||
                       pTreeTable.findFilteredNodes(
@@ -337,7 +313,6 @@ export class TreeTableUnsortDirective {
             }
 
             if (matches) {
-              // Replace with explicit type
               (copyNode as any)._idx = idx;
               pTreeTable.filteredNodes.push(copyNode);
             }
@@ -391,7 +366,6 @@ export class TreeTableUnsortDirective {
             const copyChildNode = { ...childNode };
             if (pTreeTable.isFilterMatched(copyChildNode, paramsWithoutNode)) {
               matched = true;
-              // Replace with explicit type
               (copyChildNode as any)._idx = idx;
               node.children.push(copyChildNode);
             }
@@ -405,7 +379,10 @@ export class TreeTableUnsortDirective {
     };
   }
 
-  private _syncNodesParams(from: any[] | undefined, to: any[] | undefined) {
+  private _syncNodesParams(
+    from: any[] | undefined | null,
+    to: any[] | undefined
+  ) {
     if (!from || !to) return;
 
     from.forEach((source) => {

@@ -32,34 +32,33 @@ export class TableUnsortDirective {
         let resetIndex = false;
         const sortMeta = pTable.getSortMeta(event.field);
 
-        // Todo: Use explicit type in the whole block
-        if (sortMeta) {
-          for (let i = 0; i < (pTable._multiSortMeta as any).length; i++) {
-            if ((pTable._multiSortMeta as any)[i].field === sortMeta.field) {
-              (pTable._multiSortMeta as any).splice(i, 1);
+        if (sortMeta && pTable.multiSortMeta) {
+          for (let i = 0; i < pTable.multiSortMeta.length; i++) {
+            if (pTable.multiSortMeta[i].field === sortMeta.field) {
+              pTable.multiSortMeta.splice(i, 1);
             }
           }
           if (sortMeta.order === 1) {
             sortMeta.order = sortMeta.order * -1;
-            (pTable.multiSortMeta as any).push(sortMeta);
+            pTable.multiSortMeta.push(sortMeta);
           }
-          if (pTable._multiSortMeta?.length === 0) {
-            (pTable.multiSortMeta as any) = null;
+          if (pTable.multiSortMeta.length === 0) {
+            pTable.multiSortMeta = null;
             this.resetSorting = true;
             resetIndex = true;
           }
         } else {
           if (!pTable.multiSortMeta) {
-            pTable._multiSortMeta = [];
+            pTable.multiSortMeta = [];
           }
-          (pTable.multiSortMeta as any).push({
+          pTable.multiSortMeta.push({
             field: event.field,
             order: pTable.defaultSortOrder
           });
         }
 
         pTable.sortMultiple();
-        if (resetIndex) pTable._multiSortMeta = [];
+        if (resetIndex) pTable.multiSortMeta = [];
       }
 
       if (pTable.isStateful()) {
@@ -124,13 +123,12 @@ export class TableUnsortDirective {
 
     pTable.sortMultiple = () => {
       if (pTable.groupRowsBy) {
-        if (!pTable._multiSortMeta)
-          pTable._multiSortMeta = [pTable.getGroupRowsMeta()];
-        // Replace with explicit type
-        else if ((pTable.multiSortMeta as any)[0].field !== pTable.groupRowsBy)
-          pTable._multiSortMeta = [
+        if (!pTable.multiSortMeta)
+          pTable.multiSortMeta = [pTable.getGroupRowsMeta()];
+        else if (pTable.multiSortMeta[0].field !== pTable.groupRowsBy)
+          pTable.multiSortMeta = [
             pTable.getGroupRowsMeta(),
-            ...pTable._multiSortMeta
+            ...pTable.multiSortMeta
           ];
       }
 
@@ -159,8 +157,7 @@ export class TableUnsortDirective {
         pTable.onSort.emit({
           multisortmeta: pTable.multiSortMeta
         });
-        // Replace with explicit type
-        pTable.tableService.onSort(pTable.multiSortMeta as any);
+        pTable.tableService.onSort(pTable.multiSortMeta || null);
       }
     };
   }
@@ -211,27 +208,24 @@ export class TableUnsortDirective {
   }
 
   private _multisortField(data1: any, data2: any, index: number): number {
+    if (!this.pTable.multiSortMeta) return 1;
     const value1 = ObjectUtils.resolveFieldData(
       data1[0],
-      // Replace with explicit type
-      (this.pTable.multiSortMeta as any)[index].field
+      this.pTable.multiSortMeta[index].field
     );
     const value2 = ObjectUtils.resolveFieldData(
       data2[0],
-      // Replace with explicit type
-      (this.pTable.multiSortMeta as any)[index].field
+      this.pTable.multiSortMeta[index].field
     );
     if (ObjectUtils.compare(value1, value2, this.pTable.filterLocale) === 0) {
-      // Replace with explicit type
-      return (this.pTable.multiSortMeta as any).length - 1 > index
+      return this.pTable.multiSortMeta.length - 1 > index
         ? this._multisortField(data1, data2, index + 1)
         : 0;
     }
     return this.pTable.compareValuesOnSort(
       value1,
       value2,
-      // Replace with explicit type
-      (this.pTable.multiSortMeta as any)[index].order
+      this.pTable.multiSortMeta[index].order
     );
   }
 }
