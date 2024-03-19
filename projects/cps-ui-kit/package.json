@@ -9,7 +9,7 @@
     "zone.js": "^0.14.4",
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
-    "primeng": "^17.5.0",
+    "primeng": "^17.11.0",
     "xlsx": "^0.18.5"
   },
   "repository": {
