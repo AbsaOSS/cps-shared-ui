@@ -19,7 +19,7 @@
   "homepage": "https://github.com/AbsaOSS/cps-shared-ui",
   "license": "Apache License 2.0",
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.6.2"
   },
   "sideEffects": false
 }
