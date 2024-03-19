@@ -24,4 +24,18 @@
       label="Bottom-right positioned dialog"
       (clicked)="openBottomRightPositionedDialog()"></cps-button>
   </div>
+  <div class="close-dlg-btns-group">
+    <cps-button
+      label="Close all dialogs"
+      icon="close-x"
+      type="outlined"
+      (clicked)="closeAllDialogs()">
+    </cps-button>
+    <cps-button
+      label="Close all dialogs (forced)"
+      icon="close-x"
+      type="outlined"
+      (clicked)="closeAllDialogs(true)">
+    </cps-button>
+  </div>
 </app-service-docs-viewer>

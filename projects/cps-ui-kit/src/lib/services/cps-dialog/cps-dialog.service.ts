@@ -1,13 +1,14 @@
 import {
   Injectable,
-  Injector,
   Type,
   EmbeddedViewRef,
   ComponentRef,
   Inject,
-  ViewContainerRef
+  ApplicationRef,
+  createComponent,
+  EnvironmentInjector,
+  createEnvironmentInjector
 } from '@angular/core';
-import { DynamicDialogInjector } from 'primeng/dynamicdialog';
 import { DOCUMENT } from '@angular/common';
 import { CpsDialogRef } from './utils/cps-dialog-ref';
 import { CpsDialogConfig } from './utils/cps-dialog-config';
@@ -18,15 +19,15 @@ import { CpsConfirmationComponent } from './internal/components/cps-confirmation
  * Service for showing CpsDialog.
  * @group Services
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CpsDialogService {
   dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
     new Map();
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    private viewContainerRef: ViewContainerRef,
-    private injector: Injector,
+    private _appRef: ApplicationRef,
+    private _environmentInjector: EnvironmentInjector,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -66,12 +67,23 @@ export class CpsDialogService {
     return dialogRef;
   }
 
-  private appendDialogComponentToBody(config: CpsDialogConfig) {
-    const map = new WeakMap();
-    map.set(CpsDialogConfig, config);
+  /**
+   * Closes all dialogs.
+   * @param {boolean} [force=false] - If true closes all dialogs even if they have disableClose set to true.
+   * @group Method
+   */
+  public closeAll(force = false): void {
+    this.dialogComponentRefMap.forEach((_, key) => {
+      if (force) {
+        key.destroy();
+      } else {
+        key.close();
+      }
+    });
+  }
 
+  private appendDialogComponentToBody(config: CpsDialogConfig) {
     const dialogRef = new CpsDialogRef();
-    map.set(CpsDialogRef, dialogRef);
 
     const sub = dialogRef.onClose.subscribe(() => {
       this.dialogComponentRefMap.get(dialogRef)?.instance.close();
@@ -83,10 +95,17 @@ export class CpsDialogService {
       sub.unsubscribe();
     });
 
-    const componentRef = this.viewContainerRef.createComponent(
-      CpsDialogComponent,
-      { injector: new DynamicDialogInjector(this.injector, map) }
-    );
+    const componentRef = createComponent(CpsDialogComponent, {
+      environmentInjector: createEnvironmentInjector(
+        [
+          { provide: CpsDialogConfig, useValue: config },
+          { provide: CpsDialogRef, useValue: dialogRef }
+        ],
+        this._environmentInjector
+      )
+    });
+
+    this._appRef.attachView(componentRef.hostView);
 
     const domElem = (componentRef.hostView as EmbeddedViewRef<any>)
       .rootNodes[0] as HTMLElement;
@@ -105,9 +124,7 @@ export class CpsDialogService {
 
     const dialogComponentRef = this.dialogComponentRefMap.get(dialogRef);
     if (dialogComponentRef) {
-      this.viewContainerRef.detach(
-        this.viewContainerRef.indexOf(dialogComponentRef.hostView)
-      );
+      this._appRef.detachView(dialogComponentRef.hostView);
       dialogComponentRef.destroy();
       this.dialogComponentRefMap.delete(dialogRef);
     }

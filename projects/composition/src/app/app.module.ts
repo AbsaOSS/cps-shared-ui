@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import {
-  BrowserModule,
-  provideClientHydration
+  BrowserModule
+  // provideClientHydration
 } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,8 +21,8 @@ import { CpsIconComponent } from 'cps-ui-kit';
     CpsIconComponent
   ],
   providers: [
-    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
-    provideClientHydration()
+    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy }
+    // provideClientHydration()
   ],
   bootstrap: [AppComponent]
 })
