@@ -309,45 +309,6 @@ export class CpsBaseTreeDropdownComponent
     this.resizeObserver?.disconnect();
   }
 
-  private _initContainerClickListener() {
-    this.treeContainerElement =
-      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
-    if (this.treeContainerElement) {
-      this.treeContainerElement.addEventListener(
-        'click',
-        this._handleOnContainerClick.bind(this)
-      );
-    }
-  }
-
-  private _handleOnContainerClick(event: any) {
-    function getParentWithClass(
-      element: HTMLElement | null,
-      className: string
-    ) {
-      let currentElement = element;
-      while (currentElement) {
-        if (currentElement.classList.contains(className)) {
-          return currentElement;
-        }
-        currentElement = currentElement.parentElement;
-      }
-      return null;
-    }
-
-    this.optionFocused = true;
-
-    const elem = event.target.classList.contains('p-treenode-content')
-      ? event.target
-      : getParentWithClass(event.target, 'p-treenode-content');
-
-    if (
-      elem?.parentElement?.classList?.contains('cps-tree-node-fully-expandable')
-    ) {
-      this.onClickFullyExpandable(elem);
-    }
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
 
@@ -369,10 +330,40 @@ export class CpsBaseTreeDropdownComponent
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setDisabledState(disabled: boolean) {}
+
+  onBlur() {
+    this.control?.control?.markAsTouched();
+    this._checkErrors();
+  }
+
+  focus() {
+    this.componentContainer?.nativeElement?.focus();
+    this.toggleOptions(true);
+  }
+
   updateValue(value: any): void {
     this.writeValue(value, true);
     this.onChange(value);
     this.valueChanged.emit(value);
+  }
+
+  clear(event?: any): void {
+    event?.stopPropagation();
+
+    if (
+      (!this.multiple && this.treeSelection) ||
+      (this.multiple && this.treeSelection?.length > 0)
+    ) {
+      if (this.openOnClear) {
+        this.toggleOptions(true);
+      }
+      const val = this.multiple ? [] : undefined;
+      this.treeSelection = val;
+      this.updateValue(val);
+    }
+    this.optionFocused = false;
   }
 
   onSelectNode() {
@@ -394,16 +385,6 @@ export class CpsBaseTreeDropdownComponent
     setTimeout(() => {
       this._nodeToggled(elem);
     });
-  }
-
-  private _getHTMLElementKey(elem: any): string {
-    if (!elem?.classList) return '';
-    const classList = [...elem.classList];
-    const key = classList.find((className: string) => {
-      return className.startsWith('key-');
-    });
-    if (!key) return '';
-    return key.replace('key-', '');
   }
 
   treeSelectionChanged(selection: any) {
@@ -495,6 +476,82 @@ export class CpsBaseTreeDropdownComponent
     }
   }
 
+  onNodeExpand(event: any) {
+    this._nodeToggledWithChevron(
+      event?.originalEvent?.currentTarget?.parentElement
+    );
+  }
+
+  onNodeCollapse(event: any) {
+    this._nodeToggledWithChevron(
+      event?.originalEvent?.currentTarget?.parentElement
+    );
+  }
+
+  treeSelectionToValue(selection: any) {
+    if (!selection) return this.multiple ? [] : undefined;
+    if (this.multiple) {
+      return selection.map((s: any) => this.originalOptionsMap.get(s.key));
+    } else {
+      return this.originalOptionsMap.get(selection.key);
+    }
+  }
+
+  // this is a fix of primeng change detection bug when virtual scroller is enabled
+  updateOptions() {
+    if (!this.virtualScroll) return;
+    this.treeList?.updateSerializedValue();
+  }
+
+  private _initContainerClickListener() {
+    this.treeContainerElement =
+      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
+    if (this.treeContainerElement) {
+      this.treeContainerElement.addEventListener(
+        'click',
+        this._handleOnContainerClick.bind(this)
+      );
+    }
+  }
+
+  private _handleOnContainerClick(event: any) {
+    function getParentWithClass(
+      element: HTMLElement | null,
+      className: string
+    ) {
+      let currentElement = element;
+      while (currentElement) {
+        if (currentElement.classList.contains(className)) {
+          return currentElement;
+        }
+        currentElement = currentElement.parentElement;
+      }
+      return null;
+    }
+
+    this.optionFocused = true;
+
+    const elem = event.target.classList.contains('p-treenode-content')
+      ? event.target
+      : getParentWithClass(event.target, 'p-treenode-content');
+
+    if (
+      elem?.parentElement?.classList?.contains('cps-tree-node-fully-expandable')
+    ) {
+      this.onClickFullyExpandable(elem);
+    }
+  }
+
+  private _getHTMLElementKey(elem: any): string {
+    if (!elem?.classList) return '';
+    const classList = [...elem.classList];
+    const key = classList.find((className: string) => {
+      return className.startsWith('key-');
+    });
+    if (!key) return '';
+    return key.replace('key-', '');
+  }
+
   private _setTreeListHeight(height: string) {
     if (this.treeList?.scroller?.style)
       this.treeList.scroller.style.height = height;
@@ -513,35 +570,6 @@ export class CpsBaseTreeDropdownComponent
     this._nodeToggled(elem);
     // fix primeng tree event stop propagation
     this.optionsMenu.selfClick = false;
-  }
-
-  onNodeExpand(event: any) {
-    this._nodeToggledWithChevron(
-      event?.originalEvent?.currentTarget?.parentElement
-    );
-  }
-
-  onNodeCollapse(event: any) {
-    this._nodeToggledWithChevron(
-      event?.originalEvent?.currentTarget?.parentElement
-    );
-  }
-
-  clear(event: any): void {
-    event.stopPropagation();
-
-    if (
-      (!this.multiple && this.treeSelection) ||
-      (this.multiple && this.treeSelection?.length > 0)
-    ) {
-      if (this.openOnClear) {
-        this.toggleOptions(true);
-      }
-      const val = this.multiple ? [] : undefined;
-      this.treeSelection = val;
-      this.updateValue(val);
-    }
-    this.optionFocused = false;
   }
 
   private _checkErrors(): void {
@@ -565,19 +593,6 @@ export class CpsBaseTreeDropdownComponent
     const message = errArr.find((msg) => typeof msg === 'string');
 
     this.error = message || 'Unknown error';
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
-
-  onBlur() {
-    this.control?.control?.markAsTouched();
-    this._checkErrors();
-  }
-
-  focus() {
-    this.componentContainer?.nativeElement?.focus();
-    this.toggleOptions(true);
   }
 
   private _expandToNodes(nodes: any[]) {
@@ -670,15 +685,6 @@ export class CpsBaseTreeDropdownComponent
     return nodeMap;
   }
 
-  treeSelectionToValue(selection: any) {
-    if (!selection) return this.multiple ? [] : undefined;
-    if (this.multiple) {
-      return selection.map((s: any) => this.originalOptionsMap.get(s.key));
-    } else {
-      return this.originalOptionsMap.get(selection.key);
-    }
-  }
-
   private _valueToTreeSelection(value: any) {
     function getKey(v: any, map: Map<string, any>): string {
       for (const [key, val] of map.entries()) {
@@ -702,11 +708,5 @@ export class CpsBaseTreeDropdownComponent
       const key = getKey(value, this.originalOptionsMap);
       return key ? this.optionsMap.get(key) : undefined;
     }
-  }
-
-  // this is a fix of primeng change detection bug when virtual scroller is enabled
-  updateOptions() {
-    if (!this.virtualScroll) return;
-    this.treeList?.updateSerializedValue();
   }
 }
