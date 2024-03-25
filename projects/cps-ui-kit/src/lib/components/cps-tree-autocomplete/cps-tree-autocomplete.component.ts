@@ -161,33 +161,7 @@ export class CpsTreeAutocompleteComponent
     }, 0);
   }
 
-  private _select(option: TreeNode): void {
-    function includes(array: any[], val: any): boolean {
-      return array?.some((item) => isEqual(item, val)) || false;
-    }
-
-    this.backspaceClickedOnce = false;
-
-    if (this.multiple) {
-      if (includes(this.treeSelection, option)) {
-        this.treeSelection = this.treeSelection.filter(
-          (v: TreeNode) => !isEqual(v, option)
-        );
-      } else {
-        this.treeSelection.push(option);
-      }
-    } else {
-      this.treeSelection = option;
-    }
-    this.updateValue(this.treeSelectionToValue(this.treeSelection));
-
-    this._clearInput();
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
-  }
-
-  override clear(event: any): void {
+  override clear(event?: any): void {
     super.clear(event);
 
     this._clearInput();
@@ -218,6 +192,32 @@ export class CpsTreeAutocompleteComponent
 
     if (!searchVal) this.treeList.resetFilter();
     else this.treeList._filter(searchVal);
+  }
+
+  private _select(option: TreeNode): void {
+    function includes(array: any[], val: any): boolean {
+      return array?.some((item) => isEqual(item, val)) || false;
+    }
+
+    this.backspaceClickedOnce = false;
+
+    if (this.multiple) {
+      if (includes(this.treeSelection, option)) {
+        this.treeSelection = this.treeSelection.filter(
+          (v: TreeNode) => !isEqual(v, option)
+        );
+      } else {
+        this.treeSelection.push(option);
+      }
+    } else {
+      this.treeSelection = option;
+    }
+    this.updateValue(this.treeSelectionToValue(this.treeSelection));
+
+    this._clearInput();
+    setTimeout(() => {
+      this.focusInput();
+    }, 0);
   }
 
   private _getValueLabel() {
