@@ -111,6 +111,7 @@
               (click)="clear($event)"></cps-icon>
           </span>
           <span
+            *ngIf="showChevron"
             class="cps-treeautocomplete-box-chevron"
             (mousedown)="onChevronClick($event)">
             <cps-icon

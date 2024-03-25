@@ -183,6 +183,12 @@ export class CpsBaseTreeDropdownComponent
   @Input() initialExpandAll = false;
 
   /**
+   * Determines whether the chevron icon should be displayed.
+   * @group Props
+   */
+  @Input() showChevron = true;
+
+  /**
    * An array of objects to display as the available options.
    * @group Props
    */

@@ -55,6 +55,8 @@
         label="Multiple tree select with non-closable chips"
         [options]="options"
         optionInfo="attrType"
+        hint="This tree select doesn't have a chevron icon"
+        [showChevron]="false"
         [clearable]="true"
         [multiple]="true"
         [value]="[options[1].children[0], options[2].children[0]]"
