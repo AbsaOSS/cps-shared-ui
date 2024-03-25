@@ -55,9 +55,7 @@
           >
           <div *ngIf="multiple && !chips" class="text-group">
             <span class="text-group-item">
-              {{
-                treeSelection | combineLabels : options : '' : 'label' : true
-              }}
+              {{ treeSelection | combineLabels: options : '' : 'label' : true }}
             </span>
           </div>
 
@@ -89,7 +87,7 @@
             size="small"
             (click)="clear($event)"></cps-icon>
         </span>
-        <span class="cps-treeselect-box-chevron">
+        <span *ngIf="showChevron" class="cps-treeselect-box-chevron">
           <cps-icon
             icon="chevron-down"
             size="small"

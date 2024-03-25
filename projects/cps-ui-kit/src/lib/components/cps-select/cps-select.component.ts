@@ -254,6 +254,12 @@ export class CpsSelectComponent
   @Input() appearance: CpsSelectAppearanceType = 'outlined';
 
   /**
+   * Determines whether the chevron icon should be displayed.
+   * @group Props
+   */
+  @Input() showChevron = true;
+
+  /**
    * Value of the select component.
    * @group Props
    */

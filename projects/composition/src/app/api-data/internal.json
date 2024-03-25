@@ -206,6 +206,14 @@
                         "description": "When set, it expands all options initially."
                     },
                     {
+                        "name": "showChevron",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the chevron icon should be displayed."
+                    },
+                    {
                         "name": "options",
                         "optional": false,
                         "readonly": false,

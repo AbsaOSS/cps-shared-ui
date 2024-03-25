@@ -254,6 +254,14 @@
                         "description": "Styling appearance of select input, it can be 'outlined', 'underlined' or 'borderless'."
                     },
                     {
+                        "name": "showChevron",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the chevron icon should be displayed."
+                    },
+                    {
                         "name": "_value",
                         "optional": false,
                         "readonly": false,
