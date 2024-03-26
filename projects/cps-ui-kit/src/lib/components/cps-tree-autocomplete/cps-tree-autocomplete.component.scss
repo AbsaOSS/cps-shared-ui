@@ -337,7 +337,8 @@ $hover-transition-duration: 0.2s;
         box-sizing: border-box;
         position: relative;
         flex-shrink: 0;
-        transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+        transition:
+          border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
           background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
         margin-right: 8px;
         opacity: 0;
@@ -388,6 +389,7 @@ $hover-transition-duration: 0.2s;
     .p-tree .p-tree-container .p-treenode {
       padding: unset;
       outline: 0 none;
+      min-width: fit-content;
     }
 
     .p-tree .p-tree-container .p-treenode .p-treenode-content {
@@ -412,7 +414,10 @@ $hover-transition-duration: 0.2s;
       border: 0 none;
       background: transparent;
       border-radius: 50%;
-      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        box-shadow 0.2s;
     }
 
     .p-tree

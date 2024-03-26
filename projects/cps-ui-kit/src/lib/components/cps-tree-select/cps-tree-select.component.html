@@ -55,7 +55,10 @@
           >
           <div *ngIf="multiple && !chips" class="text-group">
             <span class="text-group-item">
-              {{ treeSelection | combineLabels: options : '' : 'label' : true }}
+              {{
+                treeSelection
+                  | combineLabels: innerOptions : '' : 'label' : true
+              }}
             </span>
           </div>
 
@@ -116,7 +119,7 @@
           (onNodeSelect)="onSelectNode()"
           (onNodeExpand)="onNodeExpand($event)"
           (onNodeCollapse)="onNodeCollapse($event)"
-          [value]="options"
+          [value]="innerOptions"
           [(selection)]="treeSelection"
           (selectionChange)="treeSelectionChanged($event)"
           [metaKeySelection]="multiple ? false : true"

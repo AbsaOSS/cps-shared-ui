@@ -233,7 +233,8 @@
                         "name": "options",
                         "optional": false,
                         "readonly": false,
-                        "type": "TreeNode<any>[]",
+                        "type": "any[]",
+                        "default": "[]",
                         "description": "An array of objects to display as the available options."
                     },
                     {
