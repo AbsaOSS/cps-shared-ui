@@ -5,11 +5,13 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
@@ -30,7 +32,7 @@ import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
   template: ''
 })
 export class CpsBaseTreeDropdownComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   /**
    * Label of the component.
@@ -192,18 +194,7 @@ export class CpsBaseTreeDropdownComponent
    * An array of objects to display as the available options.
    * @group Props
    */
-  @Input() set options(options: any[]) {
-    if (options?.some((o) => o.inner)) {
-      this._options = options;
-      return;
-    }
-
-    this._options = this._toInnerOptions(options);
-  }
-
-  get options(): TreeNode[] {
-    return this._options;
-  }
+  @Input() options: any[] = [];
 
   /**
    * Value of the component.
@@ -240,7 +231,7 @@ export class CpsBaseTreeDropdownComponent
 
   private _statusChangesSubscription?: Subscription;
 
-  _options: TreeNode[] = [];
+  innerOptions: TreeNode[] = [];
   optionsMap = new Map<string, TreeNode>();
   originalOptionsMap = new Map<string, any>();
 
@@ -291,6 +282,12 @@ export class CpsBaseTreeDropdownComponent
     );
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.options) {
+      this.innerOptions = this._toInnerOptions(this.options);
+    }
+  }
+
   ngAfterViewInit() {
     this._initContainerClickListener();
     this.recalcVirtualListHeight();
@@ -307,6 +304,18 @@ export class CpsBaseTreeDropdownComponent
     );
 
     this.resizeObserver?.disconnect();
+  }
+
+  expandAll() {
+    this.optionsMap?.forEach((value) => {
+      if (value.children) value.expanded = true;
+    });
+  }
+
+  collapseAll() {
+    this.optionsMap?.forEach((value) => {
+      if (value.children) value.expanded = false;
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -377,7 +386,7 @@ export class CpsBaseTreeDropdownComponent
     const key = this._getHTMLElementKey(parent);
     if (!key) return;
 
-    const treeNode = this.options.find((o) => o.key === key);
+    const treeNode = this.innerOptions.find((o) => o.key === key);
     if (!treeNode) return;
 
     treeNode.expanded = !treeNode.expanded;
@@ -631,19 +640,15 @@ export class CpsBaseTreeDropdownComponent
         styleClass: 'key-' + key
       } as TreeNode;
 
-      if (this.initialExpandAll) {
-        inner.expanded = true;
-      }
-
       if (o.isDirectory) {
         inner.type = 'directory';
         inner.selectable = false;
         inner.styleClass += ' cps-tree-node-fully-expandable';
-        if (this.initialExpandDirectories) {
-          inner.expanded = true;
-        }
+        if (this.initialExpandDirectories) inner.expanded = true;
       }
       if (o.children) {
+        if (this.initialExpandAll) inner.expanded = true;
+
         inner.children = o.children.map((c: any, index: number) => {
           return mapOption(
             c,
