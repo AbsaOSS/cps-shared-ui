@@ -1,7 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { ServiceAPI } from '../../models/service-api.model';
 import { CommonModule } from '@angular/common';
-import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
+import {
+  CpsTabComponent,
+  CpsTabGroupComponent,
+  CpsTooltipDirective
+} from 'cps-ui-kit';
 import { ViewerComponent } from '../viewer/viewer.component';
 import TypesMap from '../../api-data/types_map.json';
 import { RouterLink } from '@angular/router';
@@ -17,7 +21,8 @@ import { DetectTypePipe } from '../../pipes/detect-type.pipe';
     CpsTabComponent,
     CpsTabGroupComponent,
     RouterLink,
-    DetectTypePipe
+    DetectTypePipe,
+    CpsTooltipDirective
   ]
 })
 export class ServiceDocsViewerComponent extends ViewerComponent {

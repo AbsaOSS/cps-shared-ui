@@ -34,7 +34,29 @@
                     <span>{{ method.name }}</span>
                   </td>
                   <td class="highlighted-text">
-                    {{ parseParameters(method.parameters) || 'null' }}
+                    <div class="parameters">
+                      @for (param of method.parameters; track param.name) {
+                        <span>
+                          <strong [cpsTooltip]="param.description || ''">
+                            {{ param.name }}:
+                          </strong>
+                          <a
+                            *ngIf="
+                              param.type | detectType: TypesMap as type;
+                              else simpleType
+                            "
+                            [routerLink]="'/' + TypesMap[type] + '/api'"
+                            fragment="{{ type }}">
+                            {{ param.type }}
+                          </a>
+                          <ng-template #simpleType>
+                            <span>{{ param.type }}</span>
+                          </ng-template>
+                        </span>
+                      } @empty {
+                        null
+                      }
+                    </div>
                   </td>
                   <td class="highlighted-text">
                     <a
