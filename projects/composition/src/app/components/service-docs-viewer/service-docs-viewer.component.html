@@ -37,8 +37,8 @@
                     <div class="parameters">
                       @for (param of method.parameters; track param.name) {
                         <span>
-                          <strong [cpsTooltip]="param.description || ''"
-                            >{{ param.name }}:
+                          <strong [cpsTooltip]="param.description || ''">
+                            {{ param.name }}:
                           </strong>
                           <a
                             *ngIf="
