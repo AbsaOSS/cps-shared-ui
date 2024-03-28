@@ -13,7 +13,8 @@ const staticMessages = {
   interfaces: 'Defines the custom interfaces used by the module.',
   types: 'Defines the custom types used by the module.',
   props: 'Defines the input properties of the component.',
-  service: 'Defines the service used by the component'
+  service: 'Defines the service used by the component.',
+  enums: 'Defines enums used by the component or service.'
 };
 
 async function main() {
@@ -100,6 +101,9 @@ async function main() {
             );
             const module_types_group = module.groups.find(
               (g) => g.title === 'Types'
+            );
+            const module_enums_group = module.groups.find(
+              (g) => g.title === 'Enums'
             );
             // Todo: Add support for type aliases
 
@@ -493,6 +497,39 @@ async function main() {
                 };
               } else {
                 doc[name]['types'] = types;
+              }
+            }
+
+            if (isProcessable(module_enums_group)) {
+              const enums = {
+                description: staticMessages['enums'],
+                values: []
+              };
+
+              module_enums_group.children.forEach((e) => {
+                enums.values.push({
+                  name: e.name,
+                  description:
+                    e.comment.summary &&
+                    e.comment.summary.map((s) => s.text || '').join(' '),
+                  values: e.children.map(value => ({ name: value.escapedName, value: value.type.value }))
+                });
+                typesMap[e.name] = e.comment.blockTags?.find(
+                  tag => tag.tag === "@customPath"
+                )?.content?.map((s) => s.text || '').join(' ')
+                  ?? name.replace("cps-", "");
+              });
+
+              if (doc[name]?.enums) {
+                doc[name]['enums'] = {
+                  ...doc[name]['enums'],
+                  values: [
+                    ...doc[name]['enums'].values,
+                    ...enums.values
+                  ]
+                };
+              } else {
+                doc[name]['enums'] = enums;
               }
             }
           }
