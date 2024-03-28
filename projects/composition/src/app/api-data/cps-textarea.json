@@ -154,6 +154,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string",
+                        "default": "''",
                         "description": "Value of the textarea."
                     }
                 ]

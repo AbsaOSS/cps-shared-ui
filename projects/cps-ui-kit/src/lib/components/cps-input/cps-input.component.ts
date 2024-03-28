@@ -190,6 +190,7 @@ export class CpsInputComponent
 
   /**
    * Value of the input.
+   * @default ''
    * @group Props
    */
   @Input() set value(value: string) {

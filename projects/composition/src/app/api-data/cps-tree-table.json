@@ -482,6 +482,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "any[]",
+                        "default": "[]",
                         "description": "An array of objects to display."
                     }
                 ]

@@ -141,6 +141,7 @@ export class CpsTextareaComponent
 
   /**
    * Value of the textarea.
+   * @default ''
    * @group Props
    */
   @Input() set value(value: string) {

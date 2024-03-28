@@ -109,6 +109,7 @@ export class CpsTabGroupComponent
 {
   /**
    * Index of the selected tab.
+   * @default 0
    * @group Props
    */
   @Input() set selectedIndex(value: number) {
