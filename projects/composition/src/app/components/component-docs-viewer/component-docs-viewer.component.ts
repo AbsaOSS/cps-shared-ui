@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import {
   ComponentAPI,
+  EnumsAPI,
   InterfaceAPI,
   TypesAPI
 } from '../../models/component-api.model';
@@ -12,6 +13,7 @@ import TypesMap from '../../api-data/types_map.json';
 import { RouterModule } from '@angular/router';
 import { ViewerComponent } from '../viewer/viewer.component';
 import { DetectTypePipe } from '../../pipes/detect-type.pipe';
+import { EnumsComponent } from '../shared/enums/enums.component';
 
 @Component({
   selector: 'app-component-docs-viewer',
@@ -23,7 +25,8 @@ import { DetectTypePipe } from '../../pipes/detect-type.pipe';
     CpsTabGroupComponent,
     ObjectEntriesPipe,
     RouterModule,
-    DetectTypePipe
+    DetectTypePipe,
+    EnumsComponent
   ],
   standalone: true
 })
@@ -32,6 +35,7 @@ export class ComponentDocsViewerComponent extends ViewerComponent {
     components: { [key: string]: ComponentAPI };
     types?: TypesAPI;
     interfaces?: InterfaceAPI;
+    enums?: EnumsAPI;
   };
 
   TypesMap: Record<string, string> = TypesMap;
