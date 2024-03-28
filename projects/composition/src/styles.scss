@@ -53,6 +53,12 @@ body {
     border-bottom: 1px solid var(--cps-color-line-light);
     white-space: pre-line;
 
+    span {
+      display: flex;
+      max-width: min-content;
+      white-space: pre-line;
+    }
+
     &.highlighted-bg {
       span {
         color: var(--cps-color-depth-darken4);
