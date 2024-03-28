@@ -152,6 +152,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "null | Date",
+                        "default": "null",
                         "description": "Value of the datepicker."
                     }
                 ]
