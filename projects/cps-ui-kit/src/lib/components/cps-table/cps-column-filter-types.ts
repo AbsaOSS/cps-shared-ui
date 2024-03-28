@@ -1,4 +1,9 @@
 /* eslint-disable no-unused-vars */
+
+/**
+ * CpsColumnFilterMatchMode is used to define how the filter value should be matched.
+ * @group Enums
+ */
 export enum CpsColumnFilterMatchMode {
   STARTS_WITH = 'startsWith',
   CONTAINS = 'contains',
