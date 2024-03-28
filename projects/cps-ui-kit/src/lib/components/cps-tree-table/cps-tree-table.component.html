@@ -5,7 +5,7 @@
     'cps-treetable-loading': loading,
     'cps-treetable-flex': defScrollHeight === 'flex',
     'cps-treetable-nonvirtual': !virtualScroll,
-    'cps-treetable-autolayout-calced': autoLayout && scrollable,
+    'cps-treetable-autolayout-calced': autoLayout && scrollable
   }"
   [value]="data"
   [autoLayout]="autoLayout && !scrollable"
@@ -93,6 +93,7 @@
             [disabled]="additionalBtnOnSelectDisabled"
             color="prepared"
             type="borderless"
+            [icon]="additionalBtnOnSelectIcon"
             [size]="toolbarSize"
             (clicked)="onClickAdditionalBtnOnSelect()">
           </cps-button>
@@ -103,6 +104,7 @@
             [disabled]="actionBtnDisabled"
             color="prepared"
             type="outlined"
+            [icon]="actionBtnIcon"
             [size]="toolbarSize"
             (clicked)="onClickActionBtn()">
           </cps-button>
@@ -164,9 +166,9 @@
   <ng-template pTemplate="header" *ngIf="nestedHeaderTemplate" let-columns>
     <ng-container
       *ngTemplateOutlet="
-      nestedHeaderTemplate;
+        nestedHeaderTemplate;
         context: {
-          $implicit: columns,
+          $implicit: columns
         }
       "></ng-container>
   </ng-template>
@@ -180,7 +182,7 @@
           *ngTemplateOutlet="
             headerTemplate;
             context: {
-              $implicit: columns,
+              $implicit: columns
             }
           "></ng-container>
       </ng-container>
