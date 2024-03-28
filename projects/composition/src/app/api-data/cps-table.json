@@ -390,6 +390,14 @@
                         "description": "AdditionalBtnOnSelect title."
                     },
                     {
+                        "name": "additionalBtnOnSelectIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "AdditionalBtnOnSelect icon."
+                    },
+                    {
                         "name": "additionalBtnOnSelectDisabled",
                         "optional": false,
                         "readonly": false,
@@ -412,6 +420,14 @@
                         "type": "string",
                         "default": "Action",
                         "description": "Action button title."
+                    },
+                    {
+                        "name": "actionBtnIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Action button icon."
                     },
                     {
                         "name": "actionBtnDisabled",
