@@ -27,30 +27,30 @@ export class SidebarMenuPageComponent {
     {
       title: 'Favourites',
       icon: 'star',
-      url: '/sidebar-menu'
+      url: '/sidebar-menu/examples'
     },
     {
       title: 'Categories disabled',
       icon: 'book',
-      url: '/ghi',
+      url: '/',
       disabled: true
     },
     {
       title: 'Access menu',
-      icon: 'access-menu',
+      icon: 'access-lock',
       items: [
-        { title: 'Requests', desc: 'Apply for access', url: '/jkl' },
+        { title: 'Requests', desc: 'Apply for access', url: '/' },
         {
           title: 'Approval',
           desc: 'Approve or reject access requests',
-          url: '/mno'
+          url: '/'
         }
       ]
     },
     {
       title: 'Community menu',
       icon: 'users',
-      items: [{ title: 'Questions', desc: 'See all questions', url: '/pqr' }]
+      items: [{ title: 'Questions', desc: 'See all questions', url: '/' }]
     },
     {
       title: 'Bookmarks menu disabled',
@@ -60,7 +60,7 @@ export class SidebarMenuPageComponent {
         {
           title: 'Disabled cat',
           desc: 'This is not visible',
-          url: '/stu'
+          url: '/'
         }
       ]
     }
