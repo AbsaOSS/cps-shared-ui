@@ -416,6 +416,12 @@ export class CpsTreeTableComponent
   @Input() additionalBtnOnSelectTitle = 'Select action';
 
   /**
+   * AdditionalBtnOnSelect icon.
+   * @group Props
+   */
+  @Input() additionalBtnOnSelectIcon = '';
+
+  /**
    * Determines whether additionalBtnOnSelect is disabled.
    * @group Props
    */
@@ -432,6 +438,12 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() actionBtnTitle = 'Action';
+
+  /**
+   * Action button icon.
+   * @group Props
+   */
+  @Input() actionBtnIcon = '';
 
   /**
    * Determines whether actionBtn is disabled.

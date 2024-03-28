@@ -25,6 +25,7 @@ import { CpsMenuComponent } from '../../../../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from '../table-column-filter-constraint/table-column-filter-constraint.component';
+import { Subscription } from 'rxjs';
 
 /**
  * TableColumnFilterComponent is an internal filter component in table and treetable.
@@ -198,7 +199,8 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   @ViewChild('columnFilterMenu')
   columnFilterMenu!: CpsMenuComponent;
 
-  _tableInstance: Table | TreeTable;
+  private _tableInstance: Table | TreeTable;
+  private _onFilterSub?: Subscription;
 
   isFilterApplied = false;
 
@@ -219,9 +221,11 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     if (this.matchModes.length > 0) {
       this.filterMatchModeOptions[this.type] = this.matchModes;
     }
-    this._tableInstance?.onFilter?.subscribe((value) =>
+
+    this._onFilterSub = this._tableInstance?.onFilter?.subscribe((value) =>
       this._updateFilterApplied(value)
     );
+
     if (!this._tableInstance.filters[<string>this.field]) {
       this._initFieldFilterConstraint();
     }
@@ -239,6 +243,10 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
         return { label: this.matchModeLabels[key], value: key };
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this._onFilterSub?.unsubscribe();
   }
 
   private _updateFilterApplied(value: any) {
@@ -259,7 +267,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   private _initFieldFilterConstraint() {
-    const defaultMatchMode = this.getDefaultMatchMode();
+    const defaultMatchMode = this._getDefaultMatchMode();
     if (this._tableInstance instanceof Table) {
       this._tableInstance.filters[<string>this.field] = [
         {
@@ -276,47 +284,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCloseClick() {
-    this.hide();
-  }
-
-  onMenuMatchModeChange(value: any, filterMeta: FilterMetadata) {
-    filterMeta.matchMode = value;
-
-    if (!this.showApplyButton) {
-      this._tableInstance._filter();
-    }
-  }
-
-  addConstraint() {
-    (<FilterMetadata[]>this._tableInstance.filters[<string>this.field]).push({
-      value: null,
-      matchMode: this.getDefaultMatchMode(),
-      operator: this.getDefaultOperator()
-    });
-  }
-
-  removeConstraint(filterMeta: FilterMetadata) {
-    this._tableInstance.filters[<string>this.field] = (<FilterMetadata[]>(
-      this._tableInstance.filters[<string>this.field]
-    )).filter((meta) => meta !== filterMeta);
-    this._tableInstance._filter();
-  }
-
-  onOperatorChange(value: any) {
-    (<FilterMetadata[]>this._tableInstance.filters[<string>this.field]).forEach(
-      (filterMeta) => {
-        filterMeta.operator = value;
-        this.operator = value;
-      }
-    );
-
-    if (!this.showApplyButton) {
-      this._tableInstance._filter();
-    }
-  }
-
-  getDefaultMatchMode(): string {
+  private _getDefaultMatchMode(): string {
     const getMatchMode = (val: CpsColumnFilterMatchMode) => {
       if (this.type in this.filterMatchModeOptions) {
         return this.filterMatchModeOptions[this.type].includes(val)
@@ -343,12 +311,69 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     }
   }
 
-  getDefaultOperator(): string | undefined {
+  private _getDefaultOperator(): string | undefined {
     return this._tableInstance.filters
       ? (<FilterMetadata[]>(
           this._tableInstance.filters[<string>(<string>this.field)]
         ))[0].operator
       : this.operator;
+  }
+
+  private _updateSortIconColor(color: string) {
+    const unsortedUp =
+      this.elementRef?.nativeElement?.parentElement?.querySelector(
+        '.sort-unsorted-arrow-up'
+      );
+    if (unsortedUp) {
+      unsortedUp.style.borderBottomColor = color;
+    }
+    const unsortedDown =
+      this.elementRef?.nativeElement?.parentElement?.querySelector(
+        '.sort-unsorted-arrow-down'
+      );
+    if (unsortedDown) {
+      unsortedDown.style.borderTopColor = color;
+    }
+  }
+
+  onCloseClick() {
+    this.hide();
+  }
+
+  onMenuMatchModeChange(value: any, filterMeta: FilterMetadata) {
+    filterMeta.matchMode = value;
+
+    if (!this.showApplyButton) {
+      this._tableInstance._filter();
+    }
+  }
+
+  addConstraint() {
+    (<FilterMetadata[]>this._tableInstance.filters[<string>this.field]).push({
+      value: null,
+      matchMode: this._getDefaultMatchMode(),
+      operator: this._getDefaultOperator()
+    });
+  }
+
+  removeConstraint(filterMeta: FilterMetadata) {
+    this._tableInstance.filters[<string>this.field] = (<FilterMetadata[]>(
+      this._tableInstance.filters[<string>this.field]
+    )).filter((meta) => meta !== filterMeta);
+    this._tableInstance._filter();
+  }
+
+  onOperatorChange(value: any) {
+    (<FilterMetadata[]>this._tableInstance.filters[<string>this.field]).forEach(
+      (filterMeta) => {
+        filterMeta.operator = value;
+        this.operator = value;
+      }
+    );
+
+    if (!this.showApplyButton) {
+      this._tableInstance._filter();
+    }
   }
 
   get fieldConstraints(): FilterMetadata[] | undefined | null {
@@ -424,32 +449,11 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  private _updateSortIconColor(color: string) {
-    const unsortedUp =
-      this.elementRef?.nativeElement?.parentElement?.querySelector(
-        '.sort-unsorted-arrow-up'
-      );
-    if (unsortedUp) {
-      unsortedUp.style.borderBottomColor = color;
-    }
-    const unsortedDown =
-      this.elementRef?.nativeElement?.parentElement?.querySelector(
-        '.sort-unsorted-arrow-down'
-      );
-    if (unsortedDown) {
-      unsortedDown.style.borderTopColor = color;
-    }
-  }
-
   @HostListener('mouseenter') onMouseOver() {
     this._updateSortIconColor('var(--cps-color-line-dark)');
   }
 
   @HostListener('mouseleave') onMouseLeave() {
     this._updateSortIconColor('');
-  }
-
-  ngOnDestroy(): void {
-    this._tableInstance?.onFilter?.unsubscribe();
   }
 }
