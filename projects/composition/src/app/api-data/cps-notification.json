@@ -153,5 +153,66 @@
                 ]
             }
         ]
+    },
+    "enums": {
+        "description": "Defines enums used by the component or service.",
+        "values": [
+            {
+                "name": "CpsNotificationAppearance",
+                "description": "An enumeration of appearances of notifications.",
+                "values": [
+                    {
+                        "name": "FILLED",
+                        "value": "filled"
+                    },
+                    {
+                        "name": "OUTLINED",
+                        "value": "outlined"
+                    }
+                ]
+            },
+            {
+                "name": "CpsNotificationPosition",
+                "description": "An enumeration of positions of notifications.",
+                "values": [
+                    {
+                        "name": "CENTER",
+                        "value": "center"
+                    },
+                    {
+                        "name": "TOP",
+                        "value": "top"
+                    },
+                    {
+                        "name": "BOTTOM",
+                        "value": "bottom"
+                    },
+                    {
+                        "name": "LEFT",
+                        "value": "left"
+                    },
+                    {
+                        "name": "RIGHT",
+                        "value": "right"
+                    },
+                    {
+                        "name": "TOPLEFT",
+                        "value": "top-left"
+                    },
+                    {
+                        "name": "TOPRIGHT",
+                        "value": "top-right"
+                    },
+                    {
+                        "name": "BOTTOMLEFT",
+                        "value": "bottom-left"
+                    },
+                    {
+                        "name": "BOTTOMRIGHT",
+                        "value": "bottom-right"
+                    }
+                ]
+            }
+        ]
     }
 }

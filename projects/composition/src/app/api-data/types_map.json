@@ -15,6 +15,7 @@
     "CpsTabsAlignmentType": "tab-group",
     "CpsColumnFilterCategoryOption": "table",
     "CpsColumnFilterType": "table",
+    "CpsColumnFilterMatchMode": "table",
     "CpsTableExportFormat": "table",
     "CpsTableSize": "table",
     "CpsTableToolbarSize": "table",
@@ -27,5 +28,7 @@
     "CpsTreeTableSortMode": "tree-table",
     "CpsTooltipPosition": "tooltip",
     "CpsTooltipOpenOn": "tooltip",
-    "CpsNotificationConfig": "notification"
+    "CpsNotificationConfig": "notification",
+    "CpsNotificationAppearance": "notification",
+    "CpsNotificationPosition": "notification"
 }

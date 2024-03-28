@@ -710,5 +710,96 @@
                 "description": "CpsTableSortMode is used to define the sorting mode of the table."
             }
         ]
+    },
+    "enums": {
+        "description": "Defines enums used by the component or service.",
+        "values": [
+            {
+                "name": "CpsColumnFilterMatchMode",
+                "description": "CpsColumnFilterMatchMode is used to define how the filter value should be matched.",
+                "values": [
+                    {
+                        "name": "STARTS_WITH",
+                        "value": "startsWith"
+                    },
+                    {
+                        "name": "CONTAINS",
+                        "value": "contains"
+                    },
+                    {
+                        "name": "NOT_CONTAINS",
+                        "value": "notContains"
+                    },
+                    {
+                        "name": "ENDS_WITH",
+                        "value": "endsWith"
+                    },
+                    {
+                        "name": "EQUALS",
+                        "value": "equals"
+                    },
+                    {
+                        "name": "NOT_EQUALS",
+                        "value": "notEquals"
+                    },
+                    {
+                        "name": "IN",
+                        "value": "in"
+                    },
+                    {
+                        "name": "LESS_THAN",
+                        "value": "lt"
+                    },
+                    {
+                        "name": "LESS_THAN_OR_EQUAL_TO",
+                        "value": "lte"
+                    },
+                    {
+                        "name": "GREATER_THAN",
+                        "value": "gt"
+                    },
+                    {
+                        "name": "GREATER_THAN_OR_EQUAL_TO",
+                        "value": "gte"
+                    },
+                    {
+                        "name": "BETWEEN",
+                        "value": "between"
+                    },
+                    {
+                        "name": "IS",
+                        "value": "is"
+                    },
+                    {
+                        "name": "IS_NOT",
+                        "value": "isNot"
+                    },
+                    {
+                        "name": "BEFORE",
+                        "value": "before"
+                    },
+                    {
+                        "name": "AFTER",
+                        "value": "after"
+                    },
+                    {
+                        "name": "DATE_IS",
+                        "value": "dateIs"
+                    },
+                    {
+                        "name": "DATE_IS_NOT",
+                        "value": "dateIsNot"
+                    },
+                    {
+                        "name": "DATE_BEFORE",
+                        "value": "dateBefore"
+                    },
+                    {
+                        "name": "DATE_AFTER",
+                        "value": "dateAfter"
+                    }
+                ]
+            }
+        ]
     }
 }
