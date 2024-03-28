@@ -241,7 +241,7 @@ const routes: Routes = [
       )
   },
   {
-    matcher: pathMatcher('notifications'),
+    matcher: pathMatcher('notification'),
     title: 'Notifications',
     loadComponent: () =>
       import('./pages/notification-page/notification-page.component').then(

@@ -81,7 +81,7 @@ export class NavigationSidebarComponent implements OnInit {
     },
     {
       title: 'Notifications',
-      url: '/notifications'
+      url: '/notification'
     },
     {
       title: 'Paginator',
