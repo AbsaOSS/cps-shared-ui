@@ -2,6 +2,7 @@
 
 /**
  * An enumeration of appearances of notifications.
+ * @group Enums
  */
 export enum CpsNotificationAppearance {
   FILLED = 'filled',
@@ -10,6 +11,7 @@ export enum CpsNotificationAppearance {
 
 /**
  * An enumeration of positions of notifications.
+ * @group Enums
  */
 export enum CpsNotificationPosition {
   CENTER = 'center',

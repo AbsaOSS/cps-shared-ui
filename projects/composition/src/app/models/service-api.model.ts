@@ -1,4 +1,4 @@
-import { InterfaceAPI, TypesAPI } from './component-api.model';
+import { EnumsAPI, InterfaceAPI, TypesAPI } from './component-api.model';
 
 export interface MethodAPI {
   name: string;
@@ -20,4 +20,5 @@ export interface ServiceAPI {
   };
   types?: TypesAPI;
   interfaces?: InterfaceAPI;
+  enums?: EnumsAPI;
 }

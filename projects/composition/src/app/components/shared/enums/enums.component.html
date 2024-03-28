@@ -1,0 +1,32 @@
+@if (enums && enums.values && enums.values.length > 0) {
+  <div>
+    <h2>Enums</h2>
+    <p>{{ enums.description }}</p>
+    <div>
+      <table class="data-table">
+        <thead>
+          <th>Name</th>
+          <th>Values</th>
+          <th>Description</th>
+        </thead>
+        <tbody>
+          @for (enum of enums.values; track enum.name) {
+            <tr id="{{ enum.name }}">
+              <td class="highlighted-bg">
+                <span>{{ enum.name }}</span>
+              </td>
+              <td class="highlighted-text inlined-content enum-values">
+                @for (value of enum.values | enumValues; track $index) {
+                  <div>
+                    <strong>{{ value.name }}: {{ value.value }}</strong>
+                  </div>
+                }
+              </td>
+              <td>{{ enum.description }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

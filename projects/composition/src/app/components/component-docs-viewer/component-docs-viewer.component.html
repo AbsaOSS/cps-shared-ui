@@ -145,7 +145,7 @@
           interface of componentData.interfaces.values;
           track interface.name
         ) {
-          <div id="{{ interface.name }}" class="interface">
+          <div id="{{ interface.name }}">
             <h3>{{ interface.name }}</h3>
             <p>{{ interface.description }}</p>
             <table class="data-table">
@@ -180,6 +180,8 @@
           </div>
         }
       </div>
+      <!-- Enums -->
+      <app-enums [enums]="componentData.enums"></app-enums>
     </ng-container>
   </cps-tab>
 </cps-tab-group>

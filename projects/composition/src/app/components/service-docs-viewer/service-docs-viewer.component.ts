@@ -10,6 +10,7 @@ import { ViewerComponent } from '../viewer/viewer.component';
 import TypesMap from '../../api-data/types_map.json';
 import { RouterLink } from '@angular/router';
 import { DetectTypePipe } from '../../pipes/detect-type.pipe';
+import { EnumsComponent } from '../shared/enums/enums.component';
 
 @Component({
   selector: 'app-service-docs-viewer',
@@ -22,7 +23,8 @@ import { DetectTypePipe } from '../../pipes/detect-type.pipe';
     CpsTabGroupComponent,
     RouterLink,
     DetectTypePipe,
-    CpsTooltipDirective
+    CpsTooltipDirective,
+    EnumsComponent
   ]
 })
 export class ServiceDocsViewerComponent extends ViewerComponent {

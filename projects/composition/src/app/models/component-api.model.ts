@@ -9,7 +9,6 @@ export interface EmitAPI {
 
 export interface PropAPI {
   default?: string;
-  // TODO: investigate why there is no description for setters props
   description?: string;
   name: string;
   optional: boolean;
@@ -46,4 +45,18 @@ export interface InterfaceAPI {
     value?: string;
     props?: PropAPI[];
   }[];
+}
+
+interface EnumAPI {
+  name: string;
+  description: string;
+  values: {
+    name: string;
+    value: string | number;
+  }[];
+}
+
+export interface EnumsAPI {
+  description: string;
+  values: EnumAPI[];
 }
