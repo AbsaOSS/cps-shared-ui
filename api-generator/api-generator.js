@@ -48,13 +48,22 @@ async function main() {
     let doc = {};
     let typesMap = {};
 
-    const parseText = (text) => {
-      return text.replace(/&#123;/g, '{').replace(/&#125;/g, '}');
+    const parseText = (content) => {
+      if (content.kind === 'text') {
+        return content.text.replace(/&#123;/g, '{').replace(/&#125;/g, '}');
+      } else if (content.kind === 'code') {
+        return content.text.replace(/^```ts\n/g, '').replace(/\n```$/g, '');
+      }
     };
 
     const getDeprecatedText = (signature) => {
       const deprecatedTag = signature?.comment?.getTag('@deprecated');
-      return deprecatedTag ? parseText(deprecatedTag.content[0].text) : undefined;
+      return deprecatedTag ? parseText(deprecatedTag.content[0]) : undefined;
+    };
+
+    const getDefaultValue = (signature) => {
+      const defaultValueTag = signature?.comment?.getTag('@default') ?? signature?.comment?.getTag('@defaultValue');
+      return defaultValueTag ? parseText(defaultValueTag.content[0]) : undefined;
     };
 
     const modules = project.groups.find((g) => g.title === 'Modules');
@@ -127,13 +136,13 @@ async function main() {
                             ? prop.type.toString()
                             : null,
                       default:
-                        prop.type &&
+                        (prop.type &&
                           prop.type.name === 'boolean' &&
                           !prop.defaultValue
                           ? 'false'
                           : prop.defaultValue
                             ? prop.defaultValue.replace(/^'|'$/g, '')
-                            : undefined,
+                            : undefined) ?? getDefaultValue(prop.setSignature) ?? getDefaultValue(prop.getSignature),
                       description: ((prop.getSignature?.comment?.summary || prop.setSignature?.comment?.summary) || prop.comment?.summary)?.map((s) => s.text || '').join(' '),
                       deprecated: getDeprecatedText(prop.getSignature)
                         || getDeprecatedText(prop.setSignature)
