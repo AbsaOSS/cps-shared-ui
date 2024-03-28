@@ -68,6 +68,7 @@ export class CpsSwitchComponent implements ControlValueAccessor {
 
   /**
    * Value of the switch component.
+   * @default false
    * @group Props
    */
   @Input() set value(value: boolean) {

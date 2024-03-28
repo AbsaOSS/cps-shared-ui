@@ -10,6 +10,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "number",
+                        "default": "0",
                         "description": "Index of the selected tab."
                     },
                     {

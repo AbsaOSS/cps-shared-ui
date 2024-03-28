@@ -159,6 +159,7 @@ export class CpsDatepickerComponent
 
   /**
    * Value of the datepicker.
+   * @default null
    * @group Props
    */
   @Input() set value(value: Date | null) {
@@ -190,7 +191,7 @@ export class CpsDatepickerComponent
   cvtWidth = '';
 
   private _statusChangesSubscription?: Subscription;
-  private _value!: Date | null;
+  private _value: Date | null = null;
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {

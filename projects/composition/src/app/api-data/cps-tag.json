@@ -42,6 +42,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "boolean",
+                        "default": "false",
                         "description": "Tag value."
                     }
                 ]

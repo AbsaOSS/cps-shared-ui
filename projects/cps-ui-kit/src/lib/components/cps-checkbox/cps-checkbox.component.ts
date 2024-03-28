@@ -83,6 +83,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
 
   /**
    * Value of the checkbox.
+   * @default false
    * @group Props
    */
   @Input() set value(value: boolean) {

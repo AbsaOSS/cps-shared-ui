@@ -49,6 +49,7 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   /**
    * Tag value.
+   * @default false
    * @group Props
    */
   @Input() set value(value: boolean) {
