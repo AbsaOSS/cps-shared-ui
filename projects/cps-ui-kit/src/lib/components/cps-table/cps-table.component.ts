@@ -465,6 +465,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   /**
    * An array of objects to display.
+   * @default []
    * @group Props
    */
   @Input() set data(value: any[]) {

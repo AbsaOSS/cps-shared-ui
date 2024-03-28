@@ -471,6 +471,7 @@ export class CpsTreeTableComponent
 
   /**
    * An array of objects to display.
+   * @default []
    * @group Props
    */
   @Input() set data(value: any[]) {
