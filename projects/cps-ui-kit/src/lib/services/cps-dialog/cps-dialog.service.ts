@@ -7,7 +7,8 @@ import {
   ApplicationRef,
   createComponent,
   EnvironmentInjector,
-  createEnvironmentInjector
+  createEnvironmentInjector,
+  Injector
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { CpsDialogRef } from './utils/cps-dialog-ref';
@@ -28,6 +29,7 @@ export class CpsDialogService {
   constructor(
     private _appRef: ApplicationRef,
     private _environmentInjector: EnvironmentInjector,
+    private _injector: Injector,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -102,7 +104,11 @@ export class CpsDialogService {
           { provide: CpsDialogRef, useValue: dialogRef }
         ],
         this._environmentInjector
-      )
+      ),
+      elementInjector:
+        this._injector !== this._environmentInjector
+          ? this._injector
+          : undefined
     });
 
     this._appRef.attachView(componentRef.hostView);
