@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { TitleStrategy } from '@angular/router';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
-import { CpsIconComponent } from 'cps-ui-kit';
+import { CpsDialogService, CpsIconComponent } from 'cps-ui-kit';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +21,8 @@ import { CpsIconComponent } from 'cps-ui-kit';
     CpsIconComponent
   ],
   providers: [
-    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy }
+    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
+    CpsDialogService
     // provideClientHydration()
   ],
   bootstrap: [AppComponent]

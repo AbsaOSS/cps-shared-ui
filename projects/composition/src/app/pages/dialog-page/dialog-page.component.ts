@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
 import { DialogContentComponent } from '../../components/dialog-content/dialog-content.component';
@@ -12,12 +12,16 @@ import ServiceData from '../../api-data/cps-dialog.json';
   imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],
-  host: { class: 'composition-page' }
+  host: { class: 'composition-page' },
+  providers: [CpsDialogService]
 })
 export class DialogPageComponent {
   serviceData = ServiceData;
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _dialogService: CpsDialogService) {}
+  constructor(
+    public _dialogService: CpsDialogService,
+    @SkipSelf() public _dialogServiceRoot: CpsDialogService
+  ) {}
 
   openConfirmationDialog() {
     const dialogRef = this._dialogService.openConfirmationDialog({
@@ -149,6 +153,18 @@ export class DialogPageComponent {
       modal: false,
       data: {
         info: 'Greetings from the dialog content component',
+        icon: 'like'
+      }
+    });
+  }
+
+  openDialogFromRootInstance() {
+    this._dialogServiceRoot.open(DialogContentComponent, {
+      headerTitle: 'Top-left positioned dialog opened from root instance',
+      position: 'top-left',
+      modal: false,
+      data: {
+        info: 'Greetings from the dialog content component opened from root instance',
         icon: 'like'
       }
     });

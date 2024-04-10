@@ -8,7 +8,10 @@ import {
   createComponent,
   EnvironmentInjector,
   createEnvironmentInjector,
-  Injector
+  Injector,
+  Optional,
+  SkipSelf,
+  OnDestroy
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { CpsDialogRef } from './utils/cps-dialog-ref';
@@ -20,17 +23,26 @@ import { CpsConfirmationComponent } from './internal/components/cps-confirmation
  * Service for showing CpsDialog.
  * @group Services
  */
-@Injectable({ providedIn: 'root' })
-export class CpsDialogService {
+@Injectable()
+export class CpsDialogService implements OnDestroy {
+  get openDialogs(): CpsDialogRef<any>[] {
+    return this._parentDialogService
+      ? this._parentDialogService.openDialogs
+      : this._openDialogsAtThisLevel;
+  }
+
   dialogComponentRefMap: Map<CpsDialogRef, ComponentRef<CpsDialogComponent>> =
     new Map();
+
+  private _openDialogsAtThisLevel: CpsDialogRef<any>[] = [];
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private _appRef: ApplicationRef,
     private _environmentInjector: EnvironmentInjector,
     private _injector: Injector,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    @Optional() @SkipSelf() private _parentDialogService: CpsDialogService
   ) {}
 
   /**
@@ -75,11 +87,11 @@ export class CpsDialogService {
    * @group Method
    */
   public closeAll(force = false): void {
-    this.dialogComponentRefMap.forEach((_, key) => {
+    this._reverseForEach(this.openDialogs, (dialogRef) => {
       if (force) {
-        key.destroy();
+        dialogRef.destroy();
       } else {
-        key.close();
+        dialogRef.close();
       }
     });
   }
@@ -118,6 +130,7 @@ export class CpsDialogService {
     this.document.body.appendChild(domElem);
 
     this.dialogComponentRefMap.set(dialogRef, componentRef);
+    this.openDialogs.push(dialogRef);
     dialogRef._setContainerInstance(componentRef.instance);
 
     return dialogRef;
@@ -133,6 +146,29 @@ export class CpsDialogService {
       this._appRef.detachView(dialogComponentRef.hostView);
       dialogComponentRef.destroy();
       this.dialogComponentRefMap.delete(dialogRef);
+    }
+
+    const index = this.openDialogs.indexOf(dialogRef);
+
+    if (index > -1) {
+      this.openDialogs.splice(index, 1);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._reverseForEach(this._openDialogsAtThisLevel, (dialogRef) =>
+      dialogRef.destroy()
+    );
+  }
+
+  private _reverseForEach<T>(
+    items: T[] | readonly T[],
+    callback: (current: T) => void
+  ) {
+    let i = items.length;
+
+    while (i--) {
+      callback(items[i]);
     }
   }
 }
