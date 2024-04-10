@@ -226,7 +226,7 @@ export class CpsTimepickerComponent
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
 
-  writeValue(value: CpsTime) {
+  writeValue(value: CpsTime | undefined) {
     this.value = value;
   }
 
@@ -236,7 +236,8 @@ export class CpsTimepickerComponent
   }
 
   updateHours(hours: string) {
-    const userInput = this.hoursField?.inputText || hours || '';
+    hours = hours || '';
+    const userInput = this.hoursField?.inputText || hours;
     if (userInput) {
       this._initValue();
       const h = parseInt(userInput, 10);
@@ -250,7 +251,7 @@ export class CpsTimepickerComponent
     if (this.value?.hours !== hours) {
       if (this.value) this.value.hours = hours;
     }
-    this._tryUpdateValue();
+    this._updateValue(this.value);
   }
 
   updateMinutes(minutes: string) {
@@ -259,7 +260,7 @@ export class CpsTimepickerComponent
     if (this.value?.minutes !== minutes) {
       if (this.value) this.value.minutes = minutes;
     }
-    this._tryUpdateValue();
+    this._updateValue(this.value);
   }
 
   updateSeconds(seconds: string) {
@@ -268,7 +269,7 @@ export class CpsTimepickerComponent
     if (this.value?.seconds !== seconds) {
       if (this.value) this.value.seconds = seconds;
     }
-    this._tryUpdateValue();
+    this._updateValue(this.value);
   }
 
   updateDayPeriod(dayPeriod: 'AM' | 'PM') {
@@ -276,7 +277,7 @@ export class CpsTimepickerComponent
     if (this.value?.dayPeriod !== dayPeriod) {
       if (this.value) this.value.dayPeriod = dayPeriod;
     }
-    this._tryUpdateValue();
+    this._updateValue(this.value);
   }
 
   numberOnly(event: any): boolean {
@@ -373,20 +374,10 @@ export class CpsTimepickerComponent
     });
   }
 
-  private _updateValue(value: CpsTime) {
+  private _updateValue(value: CpsTime | undefined) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
-  }
-
-  private _tryUpdateValue() {
-    if (
-      this.value?.hours &&
-      this.value?.minutes &&
-      (!this.withSeconds || (this.withSeconds && this.value?.seconds)) &&
-      (this.use24HourTime || (!this.use24HourTime && this.value?.dayPeriod))
-    )
-      this._updateValue(this.value);
   }
 
   private _getRange(startFrom: number, until: number) {
