@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { TitleStrategy } from '@angular/router';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
-import { CpsDialogService, CpsIconComponent } from 'cps-ui-kit';
+import { CpsIconComponent } from 'cps-ui-kit';
 
 @NgModule({
   declarations: [AppComponent],
