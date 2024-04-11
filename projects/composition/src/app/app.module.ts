@@ -21,8 +21,7 @@ import { CpsDialogService, CpsIconComponent } from 'cps-ui-kit';
     CpsIconComponent
   ],
   providers: [
-    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
-    CpsDialogService
+    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy }
     // provideClientHydration()
   ],
   bootstrap: [AppComponent]

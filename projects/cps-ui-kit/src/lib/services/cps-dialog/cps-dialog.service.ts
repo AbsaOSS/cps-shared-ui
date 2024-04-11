@@ -23,7 +23,7 @@ import { CpsConfirmationComponent } from './internal/components/cps-confirmation
  * Service for showing CpsDialog.
  * @group Services
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CpsDialogService implements OnDestroy {
   get openDialogs(): CpsDialogRef<any>[] {
     return this._parentDialogService
