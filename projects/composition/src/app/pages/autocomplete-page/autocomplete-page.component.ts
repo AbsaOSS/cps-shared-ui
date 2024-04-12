@@ -131,10 +131,7 @@ export class AutocompletePageComponent implements OnInit {
 
   private _getOptionsFromServer(val: string): Observable<any> {
     const filteredRes = this.options.filter((option) => {
-      return (
-        option.name?.toLowerCase()?.includes(val) ||
-        option.info?.toLowerCase()?.includes(val)
-      );
+      return option.name?.toLowerCase()?.includes(val);
     });
     return of(filteredRes).pipe(delay(1000));
   }
