@@ -221,13 +221,19 @@ export class CpsAutocompleteComponent
   @Input() loading = false;
 
   /**
-   * Text to display when options list is loading. Defaults to 'Loading...'.
+   * Text to display when options list is loading.
    * @group Props
    */
   @Input() loadingMessage = 'Loading...';
 
   /**
-   * Text to display when there is no data. Defaults to 'No results found'.
+   * Determines whether the loading message should be displayed.
+   * @group Props
+   */
+  @Input() showLoadingMessage = false;
+
+  /**
+   * Text to display when there is no data.
    * @group Props
    */
   @Input() emptyMessage = 'No results found';

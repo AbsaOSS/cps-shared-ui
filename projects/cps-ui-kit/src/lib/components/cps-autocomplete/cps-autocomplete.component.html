@@ -151,7 +151,9 @@
         [ngStyle]="{
           width: autocompleteBoxWidth + 'px'
         }">
-        <div *ngIf="loading" class="cps-autocomplete-options-loading">
+        <div
+          *ngIf="loading && showLoadingMessage"
+          class="cps-autocomplete-options-loading">
           {{ loadingMessage }}
         </div>
         <div
