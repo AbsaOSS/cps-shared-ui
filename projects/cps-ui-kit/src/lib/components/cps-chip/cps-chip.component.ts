@@ -39,7 +39,7 @@ export class CpsChipComponent implements OnChanges {
   @Input() iconColor = 'text-darkest';
 
   /**
-   * Position of the icon, it can be 'before' or 'after'. Defaults to 'before'.
+   * Position of the icon, it can be 'before' or 'after'.
    * @group Props
    */
   @Input() iconPosition: 'before' | 'after' = 'before';

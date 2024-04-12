@@ -105,7 +105,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   @Input() infoTooltipClass = 'cps-tooltip-content';
 
   /**
-   * Size of infoTooltip, of type number or string.
+   * Size of infoTooltip, of type number denoting pixels or string.
    * @group Props
    */
   @Input() infoTooltipMaxWidth: number | string = '100%';

@@ -188,7 +188,7 @@ export class CpsSelectComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Size of icon before input value, of type number or string or value 'fill', 'xsmall', 'small', 'normal' or 'large'.
+   * Size of icon before input value.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';

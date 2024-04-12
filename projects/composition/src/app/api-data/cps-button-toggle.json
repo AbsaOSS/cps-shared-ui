@@ -83,7 +83,7 @@
                         "readonly": false,
                         "type": "string | number",
                         "default": "100%",
-                        "description": "Size of infoTooltip, of type number or string."
+                        "description": "Size of infoTooltip, of type number denoting pixels or string."
                     },
                     {
                         "name": "infoTooltipPersistent",

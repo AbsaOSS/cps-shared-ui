@@ -5,15 +5,17 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
   CpsIconComponent,
@@ -66,7 +68,7 @@ export type CpsAutocompleteAppearanceType =
   styleUrls: ['./cps-autocomplete.component.scss']
 })
 export class CpsAutocompleteComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   /**
    * Label of the autocomplete component.
@@ -165,12 +167,6 @@ export class CpsAutocompleteComponent
   @Input() openOnClear = true;
 
   /**
-   * An array of options.
-   * @group Props
-   */
-  @Input() options: any[] = [];
-
-  /**
    * If multiple, determines whether selected options should be ordered according to the initial order of the options.
    * @group Props
    */
@@ -213,7 +209,7 @@ export class CpsAutocompleteComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Size of icon before input value, of type number or string or 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
+   * Size of icon before input value.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';
@@ -225,7 +221,19 @@ export class CpsAutocompleteComponent
   @Input() loading = false;
 
   /**
-   * Text to display when there is no data. Defaults to 'No results found'.
+   * Text to display when options list is loading.
+   * @group Props
+   */
+  @Input() loadingMessage = 'Loading...';
+
+  /**
+   * Determines whether the loading message should be displayed.
+   * @group Props
+   */
+  @Input() showLoadingMessage = true;
+
+  /**
+   * Text to display when there is no data.
    * @group Props
    */
   @Input() emptyMessage = 'No results found';
@@ -297,6 +305,12 @@ export class CpsAutocompleteComponent
   @Input() emptyOptionIndex = -1;
 
   /**
+   * Debounce time for inputChanged event.
+   * @group Props
+   */
+  @Input() inputChangeDebounceTime = 500;
+
+  /**
    * Value of the autocomplete.
    * @group Props
    */
@@ -312,11 +326,30 @@ export class CpsAutocompleteComponent
   }
 
   /**
+   * An array of options.
+   * @group Props
+   */
+  @Input() set options(opts: any[] | undefined) {
+    this._options = opts || [];
+  }
+
+  get options(): any[] {
+    return this._options;
+  }
+
+  /**
    * Callback to invoke on value change.
    * @param {any} any - value changed.
    * @group Emits
    */
   @Output() valueChanged = new EventEmitter<any>();
+
+  /**
+   * Callback to invoke on field input change.
+   * @param {string} string - input changed.
+   * @group Emits
+   */
+  @Output() inputChanged = new EventEmitter<string>();
 
   /**
    * Callback to invoke when the component loses focus.
@@ -340,12 +373,11 @@ export class CpsAutocompleteComponent
   @ViewChild('optionsList')
   optionsList!: ElementRef;
 
-  private _statusChangesSubscription?: Subscription;
-
   error = '';
   cvtWidth = '';
   isOpened = false;
   inputText = '';
+  inputTextDebounced = '';
   filteredOptions: any[] = [];
   backspaceClickedOnce = false;
   activeSingle = false;
@@ -358,6 +390,11 @@ export class CpsAutocompleteComponent
   resizeObserver: ResizeObserver;
 
   isTimePickerField = false;
+
+  private _inputChangeSubject$ = new Subject<string>();
+  private _destroy$ = new Subject<void>();
+
+  private _options: any[] = [];
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -375,7 +412,6 @@ export class CpsAutocompleteComponent
   }
 
   ngOnInit() {
-    this.filteredOptions = this.options;
     this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
@@ -385,13 +421,29 @@ export class CpsAutocompleteComponent
       this._value = this._getEmptyValue();
     }
 
-    this._statusChangesSubscription = this._control?.statusChanges?.subscribe(
-      () => {
+    this._control?.statusChanges
+      ?.pipe(takeUntil(this._destroy$))
+      ?.subscribe(() => {
         this._checkErrors();
-      }
-    );
+      });
 
-    this.recalcVirtualListHeight();
+    this._inputChangeSubject$
+      .pipe(
+        debounceTime(this.inputChangeDebounceTime),
+        distinctUntilChanged(),
+        takeUntil(this._destroy$)
+      )
+      .subscribe((val) => {
+        this.inputTextDebounced = this.inputText;
+        this.inputChanged.emit(val);
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.options) {
+      this.filteredOptions = this.options;
+      this.recalcVirtualListHeight();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -399,8 +451,9 @@ export class CpsAutocompleteComponent
   }
 
   ngOnDestroy() {
-    this._statusChangesSubscription?.unsubscribe();
     this.resizeObserver?.disconnect();
+    this._destroy$.next();
+    this._destroy$.complete();
   }
 
   select(
@@ -497,12 +550,15 @@ export class CpsAutocompleteComponent
   }
 
   filterOptions(event: any) {
+    const searchVal = (event?.target?.value || '').toLowerCase().trim();
+    this.inputTextDebounced = '';
+    this._inputChangeSubject$.next(searchVal);
+
     if (!this.isOpened) {
       this._toggleOptions(true);
     }
     this._dehighlightOption();
     this.backspaceClickedOnce = false;
-    const searchVal = (event?.target?.value || '').toLowerCase();
 
     let _filteredOptions = this.options.filter((o: any) => {
       let res = o[this.optionLabel].toLowerCase().includes(searchVal);
@@ -780,6 +836,7 @@ export class CpsAutocompleteComponent
   private _clearInput() {
     this.filteredOptions = this.options;
     this.inputText = '';
+    this.inputTextDebounced = '';
     this.activeSingle = false;
     this.recalcVirtualListHeight();
   }

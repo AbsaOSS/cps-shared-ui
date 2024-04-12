@@ -54,7 +54,7 @@
               <span [style.opacity]="activeSingle ? 0 : 1">{{
                 returnObject
                   ? value[optionLabel]
-                  : (value | labelByValue : options : optionValue : optionLabel)
+                  : (value | labelByValue: options : optionValue : optionLabel)
               }}</span>
             </div>
             <ng-container
@@ -76,7 +76,7 @@
               {{
                 returnObject
                   ? val[optionLabel]
-                  : (val | labelByValue : options : optionValue : optionLabel)
+                  : (val | labelByValue: options : optionValue : optionLabel)
               }}{{ !last ? ',' : '' }}
             </div>
             <ng-container
@@ -98,7 +98,7 @@
               [label]="
                 returnObject
                   ? val[optionLabel]
-                  : (val | labelByValue : options : optionValue : optionLabel)
+                  : (val | labelByValue: options : optionValue : optionLabel)
               ">
             </cps-chip>
             <ng-container
@@ -152,11 +152,21 @@
           width: autocompleteBoxWidth + 'px'
         }">
         <div
-          *ngIf="showEmptyMessage && filteredOptions.length < 1"
+          *ngIf="loading && showLoadingMessage"
+          class="cps-autocomplete-options-loading">
+          {{ loadingMessage }}
+        </div>
+        <div
+          *ngIf="
+            showEmptyMessage &&
+            filteredOptions.length < 1 &&
+            !loading &&
+            inputTextDebounced
+          "
           class="cps-autocomplete-options-empty">
           {{ emptyMessage }}
         </div>
-        <ng-container *ngIf="!virtualScroll">
+        <ng-container *ngIf="!virtualScroll && !loading">
           <div
             class="cps-autocomplete-options-option select-all-option"
             [class.allselected]="value?.length === options.length"
@@ -187,7 +197,7 @@
               "></ng-container>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="virtualScroll">
+        <ng-container *ngIf="virtualScroll && !loading">
           <p-virtualScroller
             #virtualList
             [value]="filteredOptions"
@@ -254,7 +264,7 @@
     class="cps-autocomplete-options-option"
     (click)="onOptionClick(item)"
     [class.selected]="
-      item | checkOptionSelected : value : multiple : returnObject : optionValue
+      item | checkOptionSelected: value : multiple : returnObject : optionValue
     ">
     <span class="cps-autocomplete-options-option-left">
       <span *ngIf="multiple" class="cps-autocomplete-options-option-check">

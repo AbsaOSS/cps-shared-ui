@@ -43,7 +43,7 @@
                         "readonly": false,
                         "type": "string | number",
                         "default": "1",
-                        "description": "Option to control the transparency of the progress bar, of type number or string."
+                        "description": "Option to control the opacity of the progress bar."
                     },
                     {
                         "name": "radius",
@@ -51,7 +51,7 @@
                         "readonly": false,
                         "type": "string | number",
                         "default": "0",
-                        "description": "Border radius of the progress bar, of type number or string."
+                        "description": "Border radius of the progress bar, of type number denoting pixels or string."
                     }
                 ]
             }

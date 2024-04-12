@@ -134,14 +134,6 @@
                         "description": "Determines whether the dropdown list should open on clear."
                     },
                     {
-                        "name": "options",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "any[]",
-                        "default": "[]",
-                        "description": "An array of options."
-                    },
-                    {
                         "name": "keepInitialOrder",
                         "optional": false,
                         "readonly": false,
@@ -203,7 +195,7 @@
                         "readonly": false,
                         "type": "iconSizeType",
                         "default": "18px",
-                        "description": "Size of icon before input value, of type number or string or 'fill' or 'xsmall' or 'small' or 'normal' or 'large'."
+                        "description": "Size of icon before input value."
                     },
                     {
                         "name": "loading",
@@ -214,12 +206,28 @@
                         "description": "When enabled, a loading bar is displayed."
                     },
                     {
+                        "name": "loadingMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading...",
+                        "description": "Text to display when options list is loading."
+                    },
+                    {
+                        "name": "showLoadingMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether the loading message should be displayed."
+                    },
+                    {
                         "name": "emptyMessage",
                         "optional": false,
                         "readonly": false,
                         "type": "string",
                         "default": "No results found",
-                        "description": "Text to display when there is no data. Defaults to 'No results found'."
+                        "description": "Text to display when there is no data."
                     },
                     {
                         "name": "showEmptyMessage",
@@ -310,12 +318,27 @@
                         "description": "Index of empty value in options array. Applicable only if multiple is false."
                     },
                     {
+                        "name": "inputChangeDebounceTime",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "500",
+                        "description": "Debounce time for inputChanged event."
+                    },
+                    {
                         "name": "_value",
                         "optional": false,
                         "readonly": false,
                         "type": "any",
                         "default": "undefined",
                         "description": "Value of the autocomplete."
+                    },
+                    {
+                        "name": "options",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "any[]",
+                        "description": "An array of options."
                     }
                 ]
             },
@@ -331,6 +354,16 @@
                             }
                         ],
                         "description": "Callback to invoke on value change."
+                    },
+                    {
+                        "name": "inputChanged",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke on field input change."
                     },
                     {
                         "name": "blurred",

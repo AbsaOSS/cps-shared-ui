@@ -13,11 +13,33 @@
         formControlName="requiredAutocomplete">
       </cps-autocomplete>
       <cps-autocomplete
-        label="Loading autocomplete"
-        [loading]="true"
-        [options]="options"
+        label="Single search autocomplete with fetched options list"
+        hint="This autocomplete fetches matching options list from the server side based on user input"
+        [options]="singleOptionsObservable$ | async"
         optionLabel="name"
-        hint="This autocomplete is currently in a loading state">
+        optionInfo="info"
+        placeholder="Search a city"
+        [infoTooltip]="availableOptionInfo"
+        [clearable]="true"
+        [loading]="isSingleLoading"
+        loadingMessage="Loading cities..."
+        emptyMessage="No cities found"
+        (inputChanged)="onSingleInputChanged($event)">
+      </cps-autocomplete>
+      <cps-autocomplete
+        label="Multiple search autocomplete with fetched options list"
+        hint="This autocomplete fetches matching options list from the server side based on user input"
+        [options]="multiOptionsObservable$ | async"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Search cities"
+        [infoTooltip]="availableOptionInfo"
+        [clearable]="true"
+        [multiple]="true"
+        [loading]="isMultiLoading"
+        loadingMessage="Loading cities..."
+        emptyMessage="No cities found"
+        (inputChanged)="onMultiInputChanged($event)">
       </cps-autocomplete>
       <cps-autocomplete
         label="Disabled autocomplete"
