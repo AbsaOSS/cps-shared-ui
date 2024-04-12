@@ -19,7 +19,7 @@
                         "readonly": false,
                         "type": "string | number",
                         "default": "0.1",
-                        "description": "Option to control the transparency of the loader component, of type number or string."
+                        "description": "Option to control the opacity of the loader component."
                     },
                     {
                         "name": "labelColor",

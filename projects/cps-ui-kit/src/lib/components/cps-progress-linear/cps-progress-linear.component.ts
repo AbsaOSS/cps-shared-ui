@@ -40,13 +40,13 @@ export class CpsProgressLinearComponent implements OnInit {
   @Input() bgColor = 'white';
 
   /**
-   * Option to control the transparency of the progress bar, of type number or string.
+   * Option to control the opacity of the progress bar.
    * @group Props
    */
   @Input() opacity: number | string = 1;
 
   /**
-   * Border radius of the progress bar, of type number or string.
+   * Border radius of the progress bar, of type number denoting pixels or string.
    * @group Props
    */
   @Input() radius: number | string = 0;

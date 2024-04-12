@@ -195,7 +195,7 @@
                         "readonly": false,
                         "type": "iconSizeType",
                         "default": "18px",
-                        "description": "Size of icon before input value, of type number or string or 'fill' or 'xsmall' or 'small' or 'normal' or 'large'."
+                        "description": "Size of icon before input value."
                     },
                     {
                         "name": "loading",

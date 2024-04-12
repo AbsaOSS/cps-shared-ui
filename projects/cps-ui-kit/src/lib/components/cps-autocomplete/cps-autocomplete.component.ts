@@ -209,7 +209,7 @@ export class CpsAutocompleteComponent
   @Input() prefixIcon: IconType = '';
 
   /**
-   * Size of icon before input value, of type number or string or 'fill' or 'xsmall' or 'small' or 'normal' or 'large'.
+   * Size of icon before input value.
    * @group Props
    */
   @Input() prefixIconSize: iconSizeType = '18px';

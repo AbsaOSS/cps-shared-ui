@@ -99,7 +99,7 @@
                         "readonly": false,
                         "type": "iconSizeType",
                         "default": "18px",
-                        "description": "Size of icon before input value, of type number or string or it can be a value 'fill', 'xsmall', 'small', 'normal' or 'large'."
+                        "description": "Size of icon before input value."
                     },
                     {
                         "name": "prefixText",
