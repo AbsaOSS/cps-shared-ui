@@ -9,6 +9,16 @@ import {
 import { CpsAutocompleteComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import ComponentData from '../../api-data/cps-autocomplete.json';
+import {
+  Observable,
+  Subject,
+  catchError,
+  delay,
+  finalize,
+  of,
+  switchMap
+} from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -16,7 +26,8 @@ import ComponentData from '../../api-data/cps-autocomplete.json';
     CpsAutocompleteComponent,
     FormsModule,
     ReactiveFormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CommonModule
   ],
   selector: 'app-autocomplete-page',
   templateUrl: './autocomplete-page.component.html',
@@ -51,6 +62,19 @@ export class AutocompletePageComponent implements OnInit {
   syncVal: any = [];
   componentData = ComponentData;
 
+  isSingleLoading = false;
+  isMultiLoading = false;
+
+  private _singleFilterOptionSubject$ = new Subject<string>();
+  singleOptionsObservable$?: Observable<any>;
+
+  private _multiFilterOptionSubject$ = new Subject<string>();
+  multiOptionsObservable$?: Observable<any>;
+
+  get availableOptionInfo() {
+    return this.options.map((option) => option.name).join(', ');
+  }
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 
@@ -58,5 +82,60 @@ export class AutocompletePageComponent implements OnInit {
     this.form = this._formBuilder.group({
       requiredAutocomplete: [this.options[1], [Validators.required]]
     });
+
+    this.singleOptionsObservable$ = this._defineOptionsObservable(
+      this._singleFilterOptionSubject$,
+      true
+    );
+
+    this.multiOptionsObservable$ = this._defineOptionsObservable(
+      this._multiFilterOptionSubject$,
+      false
+    );
+  }
+
+  onSingleInputChanged(val: string) {
+    this._inputChanged(val, this._singleFilterOptionSubject$);
+  }
+
+  onMultiInputChanged(val: string) {
+    this._inputChanged(val, this._multiFilterOptionSubject$);
+  }
+
+  private _inputChanged(val: string, subject$: Subject<string>) {
+    if (!val) return;
+    subject$.next(val);
+  }
+
+  private _defineOptionsObservable(
+    subject$: Subject<string>,
+    single: boolean
+  ): Observable<any> | undefined {
+    return subject$.pipe(
+      switchMap((value) => {
+        if (single) this.isSingleLoading = true;
+        else this.isMultiLoading = true;
+        return this._getOptionsFromServer(value).pipe(
+          catchError((error) => {
+            console.error('Failed to retrieve options list', error);
+            return of([]);
+          }),
+          finalize(() => {
+            if (single) this.isSingleLoading = false;
+            else this.isMultiLoading = false;
+          })
+        );
+      })
+    );
+  }
+
+  private _getOptionsFromServer(val: string): Observable<any> {
+    const filteredRes = this.options.filter((option) => {
+      return (
+        option.name?.toLowerCase()?.includes(val) ||
+        option.info?.toLowerCase()?.includes(val)
+      );
+    });
+    return of(filteredRes).pipe(delay(1000));
   }
 }

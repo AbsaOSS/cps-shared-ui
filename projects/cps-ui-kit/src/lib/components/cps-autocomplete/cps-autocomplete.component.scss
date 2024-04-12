@@ -303,7 +303,8 @@ $hover-transition-duration: 0.2s;
   max-height: 242px;
   overflow-y: auto;
 
-  .cps-autocomplete-options-empty {
+  .cps-autocomplete-options-empty,
+  .cps-autocomplete-options-loading {
     padding: 11px;
     font-size: 16px;
     cursor: default;
@@ -346,7 +347,8 @@ $hover-transition-duration: 0.2s;
       box-sizing: border-box;
       position: relative;
       flex-shrink: 0;
-      transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+      transition:
+        border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
         background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
       margin-right: 8px;
       opacity: 0;
