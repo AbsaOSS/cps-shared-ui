@@ -211,7 +211,15 @@
                         "readonly": false,
                         "type": "string",
                         "default": "Loading...",
-                        "description": "Text to display when options list is loading. Defaults to 'Loading...'."
+                        "description": "Text to display when options list is loading."
+                    },
+                    {
+                        "name": "showLoadingMessage",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the loading message should be displayed."
                     },
                     {
                         "name": "emptyMessage",
@@ -219,7 +227,7 @@
                         "readonly": false,
                         "type": "string",
                         "default": "No results found",
-                        "description": "Text to display when there is no data. Defaults to 'No results found'."
+                        "description": "Text to display when there is no data."
                     },
                     {
                         "name": "showEmptyMessage",

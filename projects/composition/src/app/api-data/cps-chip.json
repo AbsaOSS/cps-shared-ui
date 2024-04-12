@@ -35,7 +35,7 @@
                         "readonly": false,
                         "type": "\"before\" | \"after\"",
                         "default": "before",
-                        "description": "Position of the icon, it can be 'before' or 'after'. Defaults to 'before'."
+                        "description": "Position of the icon, it can be 'before' or 'after'."
                     },
                     {
                         "name": "closable",
