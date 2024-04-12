@@ -230,7 +230,7 @@ export class CpsAutocompleteComponent
    * Determines whether the loading message should be displayed.
    * @group Props
    */
-  @Input() showLoadingMessage = false;
+  @Input() showLoadingMessage = true;
 
   /**
    * Text to display when there is no data.
