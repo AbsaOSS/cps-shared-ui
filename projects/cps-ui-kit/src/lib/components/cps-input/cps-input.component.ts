@@ -386,18 +386,18 @@ export class CpsInputComponent
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
 
-  onBlur() {
-    this._control?.control?.markAsTouched();
-    this._checkErrors();
-    this.blurred.emit();
-  }
-
   onClickPrefixIcon() {
     if (!this.prefixIconClickable || this.readonly || this.disabled) return;
     this.prefixIconClicked.emit();
   }
 
+  onBlur() {
+    this._checkErrors();
+    this.blurred.emit();
+  }
+
   onFocus() {
+    this._control?.control?.markAsTouched();
     this.focused.emit();
   }
 

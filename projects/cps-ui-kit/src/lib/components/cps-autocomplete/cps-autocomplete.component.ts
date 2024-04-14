@@ -352,6 +352,13 @@ export class CpsAutocompleteComponent
   @Output() inputChanged = new EventEmitter<string>();
 
   /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() focused = new EventEmitter();
+
+  /**
    * Callback to invoke when the component loses focus.
    * @param {any}
    * @group Emits
@@ -594,8 +601,8 @@ export class CpsAutocompleteComponent
     this.value = value;
   }
 
-  clear(event: any): void {
-    event.stopPropagation();
+  clear(event?: any): void {
+    event?.stopPropagation();
 
     if (
       (!this.multiple && !this.isEmptyValue()) ||
@@ -618,9 +625,13 @@ export class CpsAutocompleteComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
-    this._control?.control?.markAsTouched();
     this._checkErrors();
     this.blurred.emit();
+  }
+
+  onFocus() {
+    this._control?.control?.markAsTouched();
+    this.focused.emit();
   }
 
   onBeforeOptionsHidden() {
@@ -837,6 +848,7 @@ export class CpsAutocompleteComponent
     this.filteredOptions = this.options;
     this.inputText = '';
     this.inputTextDebounced = '';
+    this._inputChangeSubject$.next('');
     this.activeSingle = false;
     this.recalcVirtualListHeight();
   }

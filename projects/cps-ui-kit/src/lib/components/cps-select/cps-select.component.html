@@ -5,6 +5,7 @@
   [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
   #selectContainer
   (keydown)="onKeyDown($event)"
+  (focus)="onFocus()"
   (blur)="onBlur()">
   <div class="cps-select-label" *ngIf="label">
     <label>{{ label }}</label>

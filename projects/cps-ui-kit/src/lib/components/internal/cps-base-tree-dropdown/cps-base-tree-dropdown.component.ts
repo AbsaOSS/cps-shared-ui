@@ -218,6 +218,20 @@ export class CpsBaseTreeDropdownComponent
    */
   @Output() valueChanged = new EventEmitter<any>();
 
+  /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() focused = new EventEmitter();
+
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
+
   @ViewChild('componentContainer')
   componentContainer!: ElementRef;
 
@@ -343,8 +357,13 @@ export class CpsBaseTreeDropdownComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
-    this.control?.control?.markAsTouched();
     this._checkErrors();
+    this.blurred.emit();
+  }
+
+  onFocus() {
+    this.control?.control?.markAsTouched();
+    this.focused.emit();
   }
 
   focus() {

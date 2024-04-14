@@ -5,6 +5,7 @@
   [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
   #componentContainer
   (keydown)="onKeyDown($event)"
+  (focus)="onFocus()"
   (blur)="onBlur()">
   <div class="cps-treeselect-label" *ngIf="label">
     <label>{{ label }}</label>
