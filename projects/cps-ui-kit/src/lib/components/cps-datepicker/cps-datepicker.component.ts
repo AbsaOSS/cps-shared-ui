@@ -342,9 +342,13 @@ export class CpsDatepickerComponent
 
   onInputBlur() {
     if (this.isOpened) return;
-    this._control?.control?.markAsTouched();
     this._updateValueFromInputString();
     this._checkErrors();
+  }
+
+  onInputFocus() {
+    this._control?.control?.markAsTouched();
+    if (this.openOnInputFocus) this.toggleCalendar(true);
   }
 
   onInputEnterClicked() {
@@ -365,10 +369,6 @@ export class CpsDatepickerComponent
     if (this.disabled || !this.isOpened) return;
     this._updateValueFromInputString();
     this.toggleCalendar(false);
-  }
-
-  onInputFocus() {
-    if (this.openOnInputFocus) this.toggleCalendar(true);
   }
 
   onInputClear() {

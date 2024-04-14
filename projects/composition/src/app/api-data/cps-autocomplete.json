@@ -366,6 +366,16 @@
                         "description": "Callback to invoke on field input change."
                     },
                     {
+                        "name": "focused",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "any"
+                            }
+                        ],
+                        "description": "Callback to invoke when the component receives focus."
+                    },
+                    {
                         "name": "blurred",
                         "parameters": [
                             {

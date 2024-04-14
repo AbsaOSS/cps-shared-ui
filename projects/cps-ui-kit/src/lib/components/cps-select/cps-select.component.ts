@@ -281,6 +281,20 @@ export class CpsSelectComponent
    */
   @Output() valueChanged = new EventEmitter<any>();
 
+  /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() focused = new EventEmitter();
+
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
+
   @ViewChild('selectBox')
   selectBox!: ElementRef;
 
@@ -609,8 +623,8 @@ export class CpsSelectComponent
     this.valueChanged.emit(value);
   }
 
-  clear(event: any): void {
-    event.stopPropagation();
+  clear(event?: any): void {
+    event?.stopPropagation();
 
     if (
       (!this.multiple && !this.isEmptyValue()) ||
@@ -629,8 +643,13 @@ export class CpsSelectComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
-    this._control?.control?.markAsTouched();
     this._checkErrors();
+    this.blurred.emit();
+  }
+
+  onFocus() {
+    this._control?.control?.markAsTouched();
+    this.focused.emit();
   }
 
   focus() {

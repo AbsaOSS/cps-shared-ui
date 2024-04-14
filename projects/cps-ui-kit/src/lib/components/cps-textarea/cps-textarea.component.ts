@@ -288,12 +288,12 @@ export class CpsTextareaComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
-    this._control?.control?.markAsTouched();
     this._checkErrors();
     this.blurred.emit();
   }
 
   onFocus() {
+    this._control?.control?.markAsTouched();
     this.focused.emit();
   }
 

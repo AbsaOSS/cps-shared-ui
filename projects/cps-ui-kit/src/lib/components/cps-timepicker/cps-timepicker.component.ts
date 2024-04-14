@@ -145,6 +145,20 @@ export class CpsTimepickerComponent
    */
   @Output() valueChanged = new EventEmitter<CpsTime>();
 
+  /**
+   * Callback to invoke when the component receives focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() focused = new EventEmitter();
+
+  /**
+   * Callback to invoke when the component loses focus.
+   * @param {any}
+   * @group Emits
+   */
+  @Output() blurred = new EventEmitter();
+
   @ViewChild('hoursField')
   hoursField!: CpsAutocompleteComponent;
 
@@ -231,8 +245,13 @@ export class CpsTimepickerComponent
   }
 
   onFieldBlur() {
-    this._control?.control?.markAsTouched();
     this._checkErrors();
+    this.blurred.emit();
+  }
+
+  onFieldFocus() {
+    this._control?.control?.markAsTouched();
+    this.focused.emit();
   }
 
   updateHours(hours: string) {
