@@ -52,6 +52,10 @@ export class NavigationSidebarComponent implements OnInit {
       url: '/dialog'
     },
     {
+      title: 'Divider',
+      url: '/divider'
+    },
+    {
       title: 'Expansion panel',
       url: '/expansion-panel'
     },

@@ -233,6 +233,14 @@ const routes: Routes = [
       )
   },
   {
+    matcher: pathMatcher('divider'),
+    title: 'Divider',
+    loadComponent: () =>
+      import('./pages/divider-page/divider-page.component').then(
+        (mod) => mod.DividerPageComponent
+      )
+  },
+  {
     matcher: pathMatcher('menu'),
     title: 'Menu',
     loadComponent: () =>

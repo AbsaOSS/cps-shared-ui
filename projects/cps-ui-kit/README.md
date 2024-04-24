@@ -11,6 +11,7 @@
 - Chip
 - Datepicker
 - Dialog
+- Divider
 - Expansion panel
 - File upload
 - Icon

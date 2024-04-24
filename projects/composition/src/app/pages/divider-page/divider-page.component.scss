@@ -1,0 +1,15 @@
+:host {
+  .section-title {
+    color: var(--cps-color-calm);
+    margin-top: 0;
+  }
+
+  .section-title:not(:first-child) {
+    margin-top: 48px;
+  }
+
+  .vertical-section {
+    display: flex;
+    column-gap: 12px;
+  }
+}

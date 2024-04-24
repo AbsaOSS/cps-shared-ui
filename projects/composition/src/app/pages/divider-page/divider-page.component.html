@@ -1,0 +1,22 @@
+<app-component-docs-viewer [componentData]="componentData">
+  <h2 class="section-title">Horizontal divider</h2>
+  <div>
+    <p>First row</p>
+    <cps-divider></cps-divider>
+    <p>Second row</p>
+  </div>
+  <h2 class="section-title">Vertical divider</h2>
+  <div class="vertical-section">
+    <p>First column</p>
+    <cps-divider [vertical]="true"></cps-divider>
+    <p>Second column</p>
+    <cps-divider [vertical]="true"></cps-divider>
+    <p>Third column</p>
+  </div>
+  <h2 class="section-title">Custom thick and red divider</h2>
+  <div>
+    <p>First row</p>
+    <cps-divider thickness="4" color="red"></cps-divider>
+    <p>Second row</p>
+  </div>
+</app-component-docs-viewer>

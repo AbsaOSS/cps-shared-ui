@@ -44,6 +44,7 @@ export * from './lib/components/cps-timepicker/cps-timepicker.component';
 export * from './lib/components/cps-file-upload/cps-file-upload.component';
 export * from './lib/components/cps-scheduler/cps-scheduler.component';
 export * from './lib/components/cps-switch/cps-switch.component';
+export * from './lib/components/cps-divider/cps-divider.component';
 
 export * from './lib/directives/cps-tooltip/cps-tooltip.directive';
 

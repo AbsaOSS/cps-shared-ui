@@ -265,6 +265,12 @@ $tbar-normal-height: 72px;
       background: $row-hover-background;
     }
 
+    .p-datatable .p-datatable-tbody .cps-table-row-expanded-content {
+      td {
+        border-left: 4px solid $color-surprise !important;
+      }
+    }
+
     .p-datatable .p-datatable-tbody > tr {
       background: #ffffff;
       color: $body-text-color;
@@ -369,7 +375,10 @@ $tbar-normal-height: 72px;
       color: $body-text-color;
       border: 2px solid $checkbox-border-color;
       border-radius: 2px;
-      transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+      transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s,
         box-shadow 0.2s;
     }
 
@@ -707,7 +716,8 @@ $tbar-normal-height: 72px;
       box-sizing: border-box;
       position: relative;
       flex-shrink: 0;
-      transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+      transition:
+        border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
         background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
       margin-right: 8px;
       opacity: 0;
