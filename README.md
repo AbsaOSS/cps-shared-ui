@@ -69,6 +69,9 @@ Make sure `ng build cps-ui-kit --watch` is running, so the library will be rebui
 - there is no need to test composition pages, so manually delete `componentname-page.component.cy.ts` file (can't be done automatically with Angular CLI flag, since cypress is used)
 - provide `host: { class: 'composition-page' }` into page `@Component`
 - import the components for the composition page from `cps-ui-kit`, provide them to imports array of `@Component`
+- include `ComponentDocsViewerComponent` into `@Component` `imports` array in case of a new component page, include `ServiceDocsViewerComponent` into `@Component` `imports` array in case of a new service page
+- import `ComponentData or ServiceData` from '../../api-data/cps-componentname.json' once it is generated
+- wrap page html template contents into `<app-component-docs-viewer [componentData]="componentData">...</app-component-docs-viewer>` in case of a new component page, wrap page html template contents into `<app-service-docs-viewer [serviceData]="serviceData">...</app-service-docs-viewer>` in case of a new service page
 - go to `projects/composition/src/app/components/navigation-sidebar.component.ts` file and extend `_components` array (keep alphabetical order!)
 - go to `projects/composition/src/app/app-routing.module.ts` and add a new route for a new page
 - update available components list in `/README.md` (keep alphabetical order!)
