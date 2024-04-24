@@ -1,0 +1,36 @@
+{
+    "components": {
+        "CpsDividerComponent": {
+            "description": "CpsDividerComponent is a component that can be used to separate content.",
+            "props": {
+                "description": "Defines the input properties of the component.",
+                "values": [
+                    {
+                        "name": "vertical",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "InputSignal<boolean>",
+                        "default": "...",
+                        "description": "Determines whether the divider is vertically aligned."
+                    },
+                    {
+                        "name": "color",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "InputSignal<string>",
+                        "default": "...",
+                        "description": "Color of the divider."
+                    },
+                    {
+                        "name": "thickness",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "InputSignal<string | number>",
+                        "default": "...",
+                        "description": "Thickness of the divider, a number denoting pixels or a string."
+                    }
+                ]
+            }
+        }
+    }
+}

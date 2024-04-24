@@ -1,0 +1,12 @@
+.cps-divider {
+  display: block;
+  margin: 0;
+
+  &.cps-divider-horizontal {
+    border-top-style: solid;
+  }
+
+  &.cps-divider-vertical {
+    border-right-style: solid;
+  }
+}
