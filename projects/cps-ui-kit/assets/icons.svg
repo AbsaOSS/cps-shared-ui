@@ -57,6 +57,7 @@
     <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/>
     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2" d="M24 3v42M3 24h42"/>
   </symbol>
+  <symbol id="burger" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='currentColor' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></symbol>
   <symbol id="burger-arrow" viewBox="0 0 20 13">
     <path fill="currentColor" d="M1.137 13h12.505c.625 0 1.137-.488 1.137-1.083 0-.596-.512-1.084-1.137-1.084H1.137c-.625 0-1.137.488-1.137 1.084C0 12.512.512 13 1.137 13Zm0-5.417h9.095c.625 0 1.136-.487 1.136-1.083s-.511-1.083-1.136-1.083H1.137C.512 5.417 0 5.904 0 6.5s.512 1.083 1.137 1.083ZM0 1.083c0 .596.512 1.084 1.137 1.084h12.505c.625 0 1.137-.488 1.137-1.084C14.779.488 14.267 0 13.642 0H1.137C.512 0 0 .487 0 1.083ZM19.668 9.62 16.393 6.5l3.274-3.12a1.043 1.043 0 0 0 0-1.527 1.172 1.172 0 0 0-1.603 0l-4.08 3.889a1.043 1.043 0 0 0 0 1.527l4.08 3.89c.444.422 1.16.422 1.604 0a1.065 1.065 0 0 0 0-1.539Z"/>
   </symbol>

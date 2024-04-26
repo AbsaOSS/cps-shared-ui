@@ -18,6 +18,7 @@ export const iconNames = [
   'book',
   'bookmark',
   'browse',
+  'burger',
   'burger-arrow',
   'caret-down',
   'change',
