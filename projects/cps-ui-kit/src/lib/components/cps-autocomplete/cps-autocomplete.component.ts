@@ -33,7 +33,10 @@ import {
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import {
+  CpsMenuComponent,
+  CpsMenuHideReason
+} from '../cps-menu/cps-menu.component';
 
 /**
  * CpsAutocompleteAppearanceType is used to define the border of the autocomplete input.
@@ -380,6 +383,9 @@ export class CpsAutocompleteComponent
   @ViewChild('optionsList')
   optionsList!: ElementRef;
 
+  @ViewChild('autocompleteInput')
+  autocompleteInput!: ElementRef;
+
   error = '';
   cvtWidth = '';
   isOpened = false;
@@ -625,6 +631,11 @@ export class CpsAutocompleteComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
+    if (!this.isOpened) {
+      this._confirmInput(this.inputText || '', false);
+      this._closeAndClear();
+    }
+
     this._checkErrors();
     this.blurred.emit();
   }
@@ -634,7 +645,18 @@ export class CpsAutocompleteComponent
     this.focused.emit();
   }
 
-  onBeforeOptionsHidden() {
+  isFocused() {
+    return (
+      this.isOpened ||
+      document.activeElement === this.autocompleteInput?.nativeElement
+    );
+  }
+
+  onBeforeOptionsHidden(reason: CpsMenuHideReason) {
+    if (reason === CpsMenuHideReason.SCROLL) {
+      this._toggleOptions(false);
+      return;
+    }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
     this.onBlur();
@@ -654,12 +676,8 @@ export class CpsAutocompleteComponent
 
   onContainerKeyDown(event: any) {
     const code = event.keyCode;
-    // escape
-    if (code === 27) {
-      this._closeAndClear();
-    }
     // enter
-    else if (code === 13) {
+    if (code === 13) {
       let idx = this.optionHighlightedIndex;
       if (
         this.multiple &&
