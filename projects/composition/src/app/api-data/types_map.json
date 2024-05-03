@@ -7,6 +7,7 @@
     "CpsInputAppearanceType": "input",
     "CpsMenuItem": "menu",
     "CpsMenuAttachPosition": "menu",
+    "CpsMenuHideReason": "menu",
     "CpsRadioOption": "radio-group",
     "CpsSelectAppearanceType": "select",
     "CpsSidebarMenuItem": "sidebar-menu",

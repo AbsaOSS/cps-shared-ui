@@ -53,6 +53,21 @@ export type CpsMenuItem = {
 };
 
 /**
+ * An enumeration of the different reasons for hiding the menu.
+ * @group Enums
+ */
+export enum CpsMenuHideReason {
+  FORCED = 'forced',
+  TOGGLE = 'toggle',
+  CLICK_ITEM = 'click-item',
+  CLICK_OUTSIDE = 'click-outside',
+  KEYDOWN_ESCAPE = 'keydown-escape',
+  SCROLL = 'scroll',
+  RESIZE = 'resize',
+  TARGET_NOT_CONNECTED = 'target-not-connected'
+}
+
+/**
  * CpsMenuAttachPosition is used to define attachment position of the CpsMenuComponent.
  * @group Types
  */
@@ -167,15 +182,17 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   /**
    * Callback to invoke when menu is hidden.
+   * @param {CpsMenuHideReason} CpsMenuHideReason - reason for hiding the menu.
    * @group Emits
    */
-  @Output() menuHidden = new EventEmitter();
+  @Output() menuHidden = new EventEmitter<CpsMenuHideReason>();
 
   /**
    * Callback to invoke before menu is hidden.
+   * @param {CpsMenuHideReason} CpsMenuHideReason - reason for hiding the menu.
    * @group Emits
    */
-  @Output() beforeMenuHidden = new EventEmitter();
+  @Output() beforeMenuHidden = new EventEmitter<CpsMenuHideReason>();
 
   /**
    * Callback to invoke when content is clicked.
@@ -208,6 +225,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   resizeObserver: ResizeObserver;
 
   itemsClasses: string[] = [];
+
+  hideReason: CpsMenuHideReason | undefined;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
@@ -267,7 +286,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
         };
       }
 
-      this.hide();
+      this.hide(CpsMenuHideReason.TOGGLE);
     } else {
       this.show(event, target, pos);
     }
@@ -287,7 +306,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.cd.markForCheck();
   }
 
-  hide() {
+  hide(reason?: CpsMenuHideReason) {
+    if (!this.overlayVisible) return;
+    this.hideReason = reason ?? CpsMenuHideReason.FORCED;
     this.overlayVisible = false;
     this.cd.markForCheck();
   }
@@ -304,7 +325,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
         item
       });
     }
-    this.hide();
+    this.hide(CpsMenuHideReason.CLICK_ITEM);
   }
 
   bindDocumentKeydownListener() {
@@ -323,7 +344,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
               // escape
               if (event.keyCode === 27) {
                 this.zone.run(() => {
-                  if (this.overlayVisible) this.hide();
+                  if (this.overlayVisible)
+                    this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
                 });
               }
             }
@@ -361,7 +383,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
                 !this.selfClick
               ) {
                 this.zone.run(() => {
-                  this.hide();
+                  this.hide(CpsMenuHideReason.CLICK_OUTSIDE);
                 });
               }
 
@@ -474,7 +496,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   align() {
     if (!this.target.isConnected) {
-      this.hide();
+      this.hide(CpsMenuHideReason.TARGET_NOT_CONNECTED);
       this._destroy();
       return;
     }
@@ -524,7 +546,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   onAnimationStart(event: AnimationEvent) {
     if (event.toState === 'close') {
-      this.beforeMenuHidden.emit(null);
+      this.beforeMenuHidden.emit(this.hideReason);
     } else if (event.toState === 'open') {
       this.container = event.element;
       if (this.container) this.resizeObserver.observe(this.container);
@@ -577,7 +599,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
         }
 
         this.onContainerDestroy();
-        this.menuHidden.emit({});
+        this.menuHidden.emit(this.hideReason);
         this.render = false;
         break;
     }
@@ -596,7 +618,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   onWindowResize() {
     if (this.overlayVisible && !DomHandler.isTouchDevice()) {
-      this.hide();
+      this.hide(CpsMenuHideReason.RESIZE);
     }
   }
 
@@ -627,7 +649,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
           this.target,
           () => {
             if (this.overlayVisible) {
-              this.hide();
+              this.hide(CpsMenuHideReason.SCROLL);
             }
           }
         );
