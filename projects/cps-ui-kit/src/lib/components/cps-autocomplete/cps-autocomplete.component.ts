@@ -457,6 +457,15 @@ export class CpsAutocompleteComponent
       this.filteredOptions = this.options;
       this.recalcVirtualListHeight();
     }
+    const loadChanges = changes.loading;
+    if (
+      loadChanges &&
+      !loadChanges.firstChange &&
+      !loadChanges.currentValue &&
+      loadChanges.previousValue
+    ) {
+      this._toggleOptions(true);
+    }
   }
 
   ngAfterViewInit(): void {
