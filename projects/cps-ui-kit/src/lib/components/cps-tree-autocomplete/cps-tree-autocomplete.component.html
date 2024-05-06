@@ -2,7 +2,7 @@
   [ngStyle]="{ width: cvtWidth }"
   class="cps-treeautocomplete"
   tabindex="1"
-  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
+  [ngClass]="{ disabled: disabled, error: error, active: isActive() }"
   #componentContainer>
   <div class="cps-treeautocomplete-label" *ngIf="label">
     <label>{{ label }}</label>
@@ -20,7 +20,7 @@
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-treeautocomplete-container"
-    [class.focused]="isOpened"
+    [class.focused]="isActive()"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',
@@ -40,7 +40,7 @@
           *ngIf="
             (treeSelection && !multiple) ||
               (treeSelection?.length > 0 && multiple);
-            else treeAutocompleteInput
+            else treeAutocompleteInputTemplate
           ">
           <span *ngIf="!multiple" class="single-item">
             <div class="single-item-selection">
@@ -50,7 +50,7 @@
             </div>
             <ng-container
               *ngTemplateOutlet="
-                treeAutocompleteInput;
+                treeAutocompleteInputTemplate;
                 context: {
                   inputClass: 'single-item-input',
                   inputStyle: activeSingle ? 'opacity: 1' : null
@@ -68,7 +68,7 @@
             </div>
             <ng-container
               *ngTemplateOutlet="
-                treeAutocompleteInput;
+                treeAutocompleteInputTemplate;
                 context: {
                   inputClass: 'multi-item-input'
                 }
@@ -86,7 +86,7 @@
             </cps-chip>
             <ng-container
               *ngTemplateOutlet="
-                treeAutocompleteInput;
+                treeAutocompleteInputTemplate;
                 context: {
                   inputClass: 'multi-chip-input'
                 }
@@ -126,7 +126,7 @@
     <cps-menu
       #optionsMenu
       [withArrow]="false"
-      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      (beforeMenuHidden)="onBeforeOptionsHidden($event)"
       hideTransitionOptions="0s linear"
       containerClass="cps-treeautocomplete-options-menu">
       <div
@@ -196,10 +196,11 @@
 </div>
 
 <ng-template
-  #treeAutocompleteInput
+  #treeAutocompleteInputTemplate
   let-inputClass="inputClass"
   let-inputStyle="inputStyle">
   <input
+    #treeAutocompleteInput
     class="cps-treeautocomplete-box-input"
     spellcheck="false"
     [class]="inputClass"
