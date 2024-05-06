@@ -643,7 +643,6 @@ export class CpsAutocompleteComponent
 
   onBlur() {
     if (!this.isOpened) {
-      this._confirmInput(this.inputText || '', false);
       this._closeAndClear();
     }
 
