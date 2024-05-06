@@ -75,3 +75,7 @@ Make sure `ng build cps-ui-kit --watch` is running, so the library will be rebui
 - go to `projects/composition/src/app/components/navigation-sidebar.component.ts` file and extend `_components` array (keep alphabetical order!)
 - go to `projects/composition/src/app/app-routing.module.ts` and add a new route for a new page
 - update available components list in `/README.md` (keep alphabetical order!)
+
+#### Generate API documentation
+
+Execute `npm run generate-json-api` to generate documentation for any changes in the components' API.
