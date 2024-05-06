@@ -6,7 +6,7 @@
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
-    active: isFocused()
+    active: isActive()
   }"
   #autocompleteContainer>
   <div class="cps-autocomplete-label" *ngIf="label">
@@ -25,7 +25,7 @@
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
-    [class.focused]="isFocused()"
+    [class.focused]="isActive()"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -411,6 +412,7 @@ export class CpsAutocompleteComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
+    private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
     if (this._control) {
@@ -654,7 +656,7 @@ export class CpsAutocompleteComponent
     this.focused.emit();
   }
 
-  isFocused() {
+  isActive() {
     return (
       this.isOpened ||
       document.activeElement === this.autocompleteInput?.nativeElement
@@ -662,7 +664,7 @@ export class CpsAutocompleteComponent
   }
 
   onBeforeOptionsHidden(reason: CpsMenuHideReason) {
-    if (reason === CpsMenuHideReason.SCROLL) {
+    if ([CpsMenuHideReason.SCROLL, CpsMenuHideReason.RESIZE].includes(reason)) {
       this._toggleOptions(false);
       return;
     }
@@ -822,7 +824,7 @@ export class CpsAutocompleteComponent
   }
 
   private _clickOption(option: any) {
-    this.select(option, false);
+    this.select(option, false, true, this.multiple);
     if (!this.multiple) {
       this._toggleOptions(false);
     }
@@ -954,6 +956,7 @@ export class CpsAutocompleteComponent
     if (!searchVal) {
       if (this.multiple) return;
       this.updateValue(this._getEmptyValue());
+      this.cdRef.detectChanges();
       this._closeAndClear();
       return;
     }
@@ -963,6 +966,7 @@ export class CpsAutocompleteComponent
     );
     if (found) {
       this.select(found, false, true, needFocusInput);
+      this.cdRef.detectChanges();
       this._toggleOptions(this.multiple);
     } else {
       if (!this.multiple) {
