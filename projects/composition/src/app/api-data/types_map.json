@@ -2,6 +2,7 @@
     "CpsAutocompleteAppearanceType": "autocomplete",
     "CpsButtonToggleOption": "button-toggle",
     "CpsDatepickerAppearanceType": "datepicker",
+    "CpsDividerType": "divider",
     "IconType": "icon",
     "iconSizeType": "icon",
     "CpsInputAppearanceType": "input",
