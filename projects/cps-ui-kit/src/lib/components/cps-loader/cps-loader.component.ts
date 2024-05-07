@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 
 /**
@@ -40,8 +40,11 @@ export class CpsLoaderComponent implements OnInit {
 
   backgroundColor = 'rgba(0, 0, 0, 0.1)';
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   ngOnInit(): void {
     this.backgroundColor = `rgba(0, 0, 0, ${this.opacity})`;
-    this.labelColor = getCSSColor(this.labelColor);
+    this.labelColor = getCSSColor(this.labelColor, this.document);
   }
 }

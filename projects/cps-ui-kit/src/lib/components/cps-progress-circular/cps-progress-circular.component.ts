@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
 
@@ -33,10 +33,13 @@ export class CpsProgressCircularComponent implements OnInit {
    */
   @Input() color = 'calm';
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   ngOnInit(): void {
     this.diameter = convertSize(this.diameter);
     this.strokeWidth = convertSize(this.strokeWidth);
 
-    this.color = getCSSColor(this.color);
+    this.color = getCSSColor(this.color, this.document);
   }
 }

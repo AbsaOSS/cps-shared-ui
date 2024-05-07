@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   EventEmitter,
   HostBinding,
+  Inject,
   Input,
   OnChanges,
   Output
@@ -115,11 +116,16 @@ export class CpsButtonComponent implements OnChanges {
 
   classesList: string[] = [];
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   ngOnChanges(): void {
-    this.buttonColor = getCSSColor(this.color);
+    this.buttonColor = getCSSColor(this.color, this.document);
     this.borderRadius = convertSize(this.borderRadius);
     this.textColor =
-      this.type === 'solid' ? getCSSColor(this.contentColor) : this.buttonColor;
+      this.type === 'solid'
+        ? getCSSColor(this.contentColor, this.document)
+        : this.buttonColor;
     this.setClasses();
   }
 

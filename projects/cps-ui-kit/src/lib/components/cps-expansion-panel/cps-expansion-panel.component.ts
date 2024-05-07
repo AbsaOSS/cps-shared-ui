@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
@@ -139,6 +140,7 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
 
   constructor(
     private _animationBuilder: AnimationBuilder,
+    @Inject(DOCUMENT) private document: Document,
     private _renderer: Renderer2
   ) {
     this._contentCollapseAnimation = this._animationBuilder.build([
@@ -167,8 +169,8 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.borderColor = getCSSColor(this.borderColor);
-    this.backgroundColor = getCSSColor(this.backgroundColor);
+    this.borderColor = getCSSColor(this.borderColor, this.document);
+    this.backgroundColor = getCSSColor(this.backgroundColor, this.document);
     this.borderRadius = convertSize(this.borderRadius);
     this.width = convertSize(this.width);
   }
