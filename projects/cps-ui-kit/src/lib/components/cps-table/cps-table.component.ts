@@ -5,6 +5,7 @@ import {
   Component,
   ContentChild,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
   OnInit,
@@ -13,7 +14,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Table, TableService, TableModule } from 'primeng/table';
 import { SortEvent } from 'primeng/api';
@@ -657,7 +658,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   ];
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
@@ -964,7 +968,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
         type: EXCEL_TYPE
       });
 
-      const downloadLink = document.createElement('a');
+      const downloadLink = this.document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
       downloadLink.download = `${this.exportFilename}.xlsx`;
       downloadLink.click();

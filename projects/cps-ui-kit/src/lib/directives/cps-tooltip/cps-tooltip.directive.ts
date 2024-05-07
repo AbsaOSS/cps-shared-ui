@@ -2,10 +2,12 @@ import {
   Directive,
   ElementRef,
   HostListener,
+  Inject,
   Input,
   OnDestroy
 } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * CpsTooltipPosition is used to define the position of the tooltip.
@@ -86,8 +88,14 @@ export class CpsTooltipDirective implements OnDestroy {
   private _showTimeout?: any;
   private _hideTimeout?: any;
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _elementRef: ElementRef<HTMLElement>) {}
+  private window: Window;
+
+  constructor(
+    private _elementRef: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT) private document: Document
+  ) {
+    this.window = this.document.defaultView as Window;
+  }
 
   ngOnDestroy(): void {
     this._destroyTooltip();
@@ -98,13 +106,13 @@ export class CpsTooltipDirective implements OnDestroy {
 
     if (this.tooltipDisabled) return;
 
-    this._popup = document.createElement('div');
+    this._popup = this.document.createElement('div');
     this._constructElement(this._popup);
 
     if (this.tooltipPersistent)
       this._popup.addEventListener('click', this._destroyTooltip);
 
-    window.addEventListener('scroll', this._destroyTooltip, true);
+    this.window.addEventListener('scroll', this._destroyTooltip, true);
   };
 
   private _destroyTooltip = (event: any = undefined) => {
@@ -113,7 +121,7 @@ export class CpsTooltipDirective implements OnDestroy {
       this._popup = undefined;
     };
 
-    window.removeEventListener('scroll', this._destroyTooltip, true);
+    this.window.removeEventListener('scroll', this._destroyTooltip, true);
     if (!this._popup) return;
 
     this._popup.removeEventListener('click', this._destroyTooltip);
@@ -135,7 +143,7 @@ export class CpsTooltipDirective implements OnDestroy {
   };
 
   private _constructElement(popup: HTMLDivElement) {
-    const popupContent = document.createElement('div');
+    const popupContent = this.document.createElement('div');
     popupContent.innerHTML = this.tooltip || 'Add your text to this tooltip';
     popupContent.classList.add(this.tooltipContentClass);
     popup.appendChild(popupContent);
@@ -143,7 +151,7 @@ export class CpsTooltipDirective implements OnDestroy {
     popup.classList.add('cps-tooltip');
     popup.style.maxWidth = convertSize(this.tooltipMaxWidth);
 
-    document.body.appendChild(popup);
+    this.document.body.appendChild(popup);
     requestAnimationFrame(function () {
       popup.style.opacity = '1';
     });
@@ -159,14 +167,14 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _getCoords(): { left: number; top: number } | undefined {
-    function isInsideScreen(coords: { left: number; top: number }): boolean {
+    const isInsideScreen = (coords: { left: number; top: number }): boolean => {
       return (
         coords.top >= 0 &&
         coords.left >= 0 &&
-        coords.left + popupRect.width <= window.innerWidth &&
-        coords.top + popupRect.height <= window.innerHeight
+        coords.left + popupRect.width <= this.window.innerWidth &&
+        coords.top + popupRect.height <= this.window.innerHeight
       );
-    }
+    };
 
     let positions: CpsTooltipPosition[] = ['top', 'bottom', 'left', 'right'];
     positions = positions.filter((item) => item !== this.tooltipPosition);
@@ -206,33 +214,33 @@ export class CpsTooltipDirective implements OnDestroy {
         return {
           left:
             targetElRect.left +
-            window.scrollX +
+            this.window.scrollX +
             (targetEl.offsetWidth - popupRect.width) / 2,
-          top: targetElRect.bottom + window.scrollY + 8
+          top: targetElRect.bottom + this.window.scrollY + 8
         };
       case 'left':
         return {
-          left: targetElRect.left - window.scrollX - popupRect.width - 8,
+          left: targetElRect.left - this.window.scrollX - popupRect.width - 8,
           top:
             targetElRect.top +
-            window.scrollY +
+            this.window.scrollY +
             (targetEl.offsetHeight - popupRect.height) / 2
         };
       case 'right':
         return {
-          left: targetElRect.right + window.scrollX + 8,
+          left: targetElRect.right + this.window.scrollX + 8,
           top:
             targetElRect.top +
-            window.scrollY +
+            this.window.scrollY +
             (targetEl.offsetHeight - popupRect.height) / 2
         };
       default:
         return {
           left:
             targetElRect.left +
-            window.scrollX +
+            this.window.scrollX +
             (targetEl.offsetWidth - popupRect.width) / 2,
-          top: targetElRect.top + window.scrollY - popupRect.height - 8
+          top: targetElRect.top + this.window.scrollY - popupRect.height - 8
         };
     }
   }

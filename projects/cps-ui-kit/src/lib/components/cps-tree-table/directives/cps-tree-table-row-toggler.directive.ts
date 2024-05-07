@@ -1,7 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import {
   ComponentRef,
   Directive,
   ElementRef,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -28,6 +30,7 @@ export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
 
   constructor(
     private elementRef: ElementRef,
+    @Inject(DOCUMENT) private document: Document,
     private viewContainerRef: ViewContainerRef
   ) {
     this.togglerCompRef =
@@ -40,7 +43,7 @@ export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
     );
     this.togglerCompRef.setInput('rowNode', this.rowNode);
 
-    const spanElement = document.createElement('span');
+    const spanElement = this.document.createElement('span');
     spanElement.style.display = 'flex';
 
     while (this.elementRef.nativeElement.firstChild) {

@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -84,6 +85,7 @@ export class CpsTreeAutocompleteComponent
 
   constructor(
     @Optional() public override control: NgControl,
+    @Inject(DOCUMENT) private document: Document,
     public override cdRef: ChangeDetectorRef
   ) {
     super(control, cdRef);
@@ -174,7 +176,7 @@ export class CpsTreeAutocompleteComponent
   isActive() {
     return (
       this.isOpened ||
-      document.activeElement === this.treeAutocompleteInput?.nativeElement
+      this.document.activeElement === this.treeAutocompleteInput?.nativeElement
     );
   }
 
