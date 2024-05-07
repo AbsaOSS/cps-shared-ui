@@ -369,14 +369,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     if (isPlatformBrowser(this.platformId)) {
       if (!this.documentClickListener && this.dismissable) {
         this.zone.runOutsideAngular(() => {
-          const documentEvent = DomHandler.isIOS() ? 'touchstart' : 'mousedown';
           const documentTarget: any = this.el
             ? this.el.nativeElement.ownerDocument
             : this.document;
 
           this.documentClickListener = this.renderer.listen(
             documentTarget,
-            documentEvent,
+            'mousedown',
             (event) => {
               if (
                 !this.persistent &&
