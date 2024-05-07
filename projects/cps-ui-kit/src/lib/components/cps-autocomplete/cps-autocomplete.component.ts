@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -33,7 +34,10 @@ import {
   VirtualScrollerModule
 } from 'primeng/virtualscroller';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import {
+  CpsMenuComponent,
+  CpsMenuHideReason
+} from '../cps-menu/cps-menu.component';
 
 /**
  * CpsAutocompleteAppearanceType is used to define the border of the autocomplete input.
@@ -380,6 +384,9 @@ export class CpsAutocompleteComponent
   @ViewChild('optionsList')
   optionsList!: ElementRef;
 
+  @ViewChild('autocompleteInput')
+  autocompleteInput!: ElementRef;
+
   error = '';
   cvtWidth = '';
   isOpened = false;
@@ -405,6 +412,7 @@ export class CpsAutocompleteComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
+    private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
     if (this._control) {
@@ -450,6 +458,15 @@ export class CpsAutocompleteComponent
     if (changes.options) {
       this.filteredOptions = this.options;
       this.recalcVirtualListHeight();
+    }
+    const loadChanges = changes.loading;
+    if (
+      loadChanges &&
+      !loadChanges.firstChange &&
+      !loadChanges.currentValue &&
+      loadChanges.previousValue
+    ) {
+      this._toggleOptions(true);
     }
   }
 
@@ -625,6 +642,10 @@ export class CpsAutocompleteComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
+    if (!this.isOpened) {
+      this._closeAndClear();
+    }
+
     this._checkErrors();
     this.blurred.emit();
   }
@@ -634,7 +655,18 @@ export class CpsAutocompleteComponent
     this.focused.emit();
   }
 
-  onBeforeOptionsHidden() {
+  isActive() {
+    return (
+      this.isOpened ||
+      document.activeElement === this.autocompleteInput?.nativeElement
+    );
+  }
+
+  onBeforeOptionsHidden(reason: CpsMenuHideReason) {
+    if ([CpsMenuHideReason.SCROLL, CpsMenuHideReason.RESIZE].includes(reason)) {
+      this._toggleOptions(false);
+      return;
+    }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
     this.onBlur();
@@ -654,12 +686,8 @@ export class CpsAutocompleteComponent
 
   onContainerKeyDown(event: any) {
     const code = event.keyCode;
-    // escape
-    if (code === 27) {
-      this._closeAndClear();
-    }
     // enter
-    else if (code === 13) {
+    if (code === 13) {
       let idx = this.optionHighlightedIndex;
       if (
         this.multiple &&
@@ -795,7 +823,7 @@ export class CpsAutocompleteComponent
   }
 
   private _clickOption(option: any) {
-    this.select(option, false);
+    this.select(option, false, true, this.multiple);
     if (!this.multiple) {
       this._toggleOptions(false);
     }
@@ -927,6 +955,7 @@ export class CpsAutocompleteComponent
     if (!searchVal) {
       if (this.multiple) return;
       this.updateValue(this._getEmptyValue());
+      this.cdRef.detectChanges();
       this._closeAndClear();
       return;
     }
@@ -936,6 +965,7 @@ export class CpsAutocompleteComponent
     );
     if (found) {
       this.select(found, false, true, needFocusInput);
+      this.cdRef.detectChanges();
       this._toggleOptions(this.multiple);
     } else {
       if (!this.multiple) {

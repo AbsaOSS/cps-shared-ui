@@ -6,7 +6,7 @@
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
-    active: isOpened
+    active: isActive()
   }"
   #autocompleteContainer>
   <div class="cps-autocomplete-label" *ngIf="label">
@@ -25,7 +25,7 @@
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
-    [class.focused]="isOpened"
+    [class.focused]="isActive()"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',
@@ -47,7 +47,7 @@
           class="cps-autocomplete-box-items"
           *ngIf="
             (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple);
-            else autocompleteInput
+            else autocompleteInputTemplate
           ">
           <span *ngIf="!multiple" class="single-item">
             <div class="single-item-selection">
@@ -59,7 +59,7 @@
             </div>
             <ng-container
               *ngTemplateOutlet="
-                autocompleteInput;
+                autocompleteInputTemplate;
                 context: {
                   inputClass: 'single-item-input',
                   inputStyle: activeSingle ? 'opacity: 1' : null
@@ -81,7 +81,7 @@
             </div>
             <ng-container
               *ngTemplateOutlet="
-                autocompleteInput;
+                autocompleteInputTemplate;
                 context: {
                   inputClass: 'multi-item-input'
                 }
@@ -103,7 +103,7 @@
             </cps-chip>
             <ng-container
               *ngTemplateOutlet="
-                autocompleteInput;
+                autocompleteInputTemplate;
                 context: {
                   inputClass: 'multi-chip-input'
                 }
@@ -142,7 +142,7 @@
     <cps-menu
       #optionsMenu
       [withArrow]="false"
-      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      (beforeMenuHidden)="onBeforeOptionsHidden($event)"
       hideTransitionOptions="0s linear"
       containerClass="cps-autocomplete-options-menu">
       <div
@@ -240,10 +240,11 @@
 </div>
 
 <ng-template
-  #autocompleteInput
+  #autocompleteInputTemplate
   let-inputClass="inputClass"
   let-inputStyle="inputStyle">
   <input
+    #autocompleteInput
     class="cps-autocomplete-box-input"
     spellcheck="false"
     [class]="inputClass"

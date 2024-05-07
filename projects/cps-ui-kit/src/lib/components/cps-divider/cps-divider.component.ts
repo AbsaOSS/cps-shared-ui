@@ -3,6 +3,12 @@ import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
 
 /**
+ * CpsDividerType is used to define the type of the divider.
+ * @group Types
+ */
+export type CpsDividerType = 'solid' | 'dashed' | 'dotted';
+
+/**
  * CpsDividerComponent is a component that can be used to separate content.
  * @group Components
  */
@@ -10,10 +16,8 @@ import { convertSize } from '../../utils/internal/size-utils';
   selector: 'cps-divider',
   host: {
     class: 'cps-divider',
-    '[class.cps-divider-vertical]': 'vertical()',
-    '[class.cps-divider-horizontal]': '!vertical()',
-    '[style.border-color]': '_dividerColor()',
-    '[style.border-width]': '_dividerThickness()'
+    '[style.border-top]': '_borderTop()',
+    '[style.border-right]': '_borderRight()'
   },
   standalone: true,
   template: '',
@@ -34,16 +38,28 @@ export class CpsDividerComponent {
   color = input('line-mid');
 
   /**
+   * Type of the divider.
+   * @group Props
+   */
+  type = input<CpsDividerType>('solid');
+
+  /**
    * Thickness of the divider, a number denoting pixels or a string.
    * @group Props
    */
   thickness = input<number | string>('1px');
 
-  private _dividerColor = computed(() => {
-    return getCSSColor(this.color());
+  private _borderTop = computed(() => {
+    return this._constructBorder(!this.vertical());
   });
 
-  private _dividerThickness = computed(() => {
-    return convertSize(this.thickness());
+  private _borderRight = computed(() => {
+    return this._constructBorder(this.vertical());
   });
+
+  private _constructBorder(isVertical: boolean) {
+    return isVertical
+      ? `${convertSize(this.thickness())} ${this.type()} ${getCSSColor(this.color())}`
+      : '';
+  }
 }

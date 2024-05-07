@@ -3,10 +3,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Input,
   OnDestroy,
   OnInit,
-  Optional
+  Optional,
+  ViewChild
 } from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -16,7 +18,10 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import {
+  CpsMenuComponent,
+  CpsMenuHideReason
+} from '../cps-menu/cps-menu.component';
 import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown/cps-base-tree-dropdown.component';
 
 /**
@@ -70,6 +75,9 @@ export class CpsTreeAutocompleteComponent
    */
   @Input() placeholder = 'Please enter';
 
+  @ViewChild('treeAutocompleteInput')
+  treeAutocompleteInput!: ElementRef;
+
   inputText = '';
   backspaceClickedOnce = false;
   activeSingle = false;
@@ -100,7 +108,18 @@ export class CpsTreeAutocompleteComponent
     super.onSelectNode();
   }
 
-  onBeforeOptionsHidden() {
+  override onBlur() {
+    if (!this.isOpened) {
+      this._closeAndClear();
+    }
+    super.onBlur();
+  }
+
+  onBeforeOptionsHidden(reason: CpsMenuHideReason) {
+    if ([CpsMenuHideReason.SCROLL, CpsMenuHideReason.RESIZE].includes(reason)) {
+      this.toggleOptions(false);
+      return;
+    }
     this._closeAndClear();
   }
 
@@ -150,6 +169,13 @@ export class CpsTreeAutocompleteComponent
     } else {
       this.onBoxClick();
     }
+  }
+
+  isActive() {
+    return (
+      this.isOpened ||
+      document.activeElement === this.treeAutocompleteInput?.nativeElement
+    );
   }
 
   override remove(option: TreeNode): void {
@@ -246,6 +272,7 @@ export class CpsTreeAutocompleteComponent
       if (this.multiple) return;
       this.treeSelection = undefined;
       this.updateValue(undefined);
+      this.cdRef.detectChanges();
       this._closeAndClear();
       return;
     }

@@ -97,7 +97,7 @@
                         "parameters": [
                             {
                                 "name": "value",
-                                "type": "any"
+                                "type": "CpsMenuHideReason"
                             }
                         ],
                         "description": "Callback to invoke when menu is hidden."
@@ -107,7 +107,7 @@
                         "parameters": [
                             {
                                 "name": "value",
-                                "type": "any"
+                                "type": "CpsMenuHideReason"
                             }
                         ],
                         "description": "Callback to invoke before menu is hidden."
@@ -138,6 +138,49 @@
                 "name": "CpsMenuAttachPosition",
                 "value": "\"tr\" | \"br\" | \"tl\" | \"bl\" | \"default\"",
                 "description": "CpsMenuAttachPosition is used to define attachment position of the CpsMenuComponent."
+            }
+        ]
+    },
+    "enums": {
+        "description": "Defines enums used by the component or service.",
+        "values": [
+            {
+                "name": "CpsMenuHideReason",
+                "description": "An enumeration of the different reasons for hiding the menu.",
+                "values": [
+                    {
+                        "name": "FORCED",
+                        "value": "forced"
+                    },
+                    {
+                        "name": "TOGGLE",
+                        "value": "toggle"
+                    },
+                    {
+                        "name": "CLICK_ITEM",
+                        "value": "click-item"
+                    },
+                    {
+                        "name": "CLICK_OUTSIDE",
+                        "value": "click-outside"
+                    },
+                    {
+                        "name": "KEYDOWN_ESCAPE",
+                        "value": "keydown-escape"
+                    },
+                    {
+                        "name": "SCROLL",
+                        "value": "scroll"
+                    },
+                    {
+                        "name": "RESIZE",
+                        "value": "resize"
+                    },
+                    {
+                        "name": "TARGET_NOT_CONNECTED",
+                        "value": "target-not-connected"
+                    }
+                ]
             }
         ]
     }

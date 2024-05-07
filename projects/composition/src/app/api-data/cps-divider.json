@@ -22,6 +22,14 @@
                         "description": "Color of the divider."
                     },
                     {
+                        "name": "type",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "InputSignal<CpsDividerType>",
+                        "default": "...",
+                        "description": "Type of the divider."
+                    },
+                    {
                         "name": "thickness",
                         "optional": false,
                         "readonly": false,
@@ -32,5 +40,15 @@
                 ]
             }
         }
+    },
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsDividerType",
+                "value": "\"solid\" | \"dashed\" | \"dotted\"",
+                "description": "CpsDividerType is used to define the type of the divider."
+            }
+        ]
     }
 }
