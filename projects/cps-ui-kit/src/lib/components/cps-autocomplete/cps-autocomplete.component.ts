@@ -1,10 +1,11 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -412,6 +413,7 @@ export class CpsAutocompleteComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
+    @Inject(DOCUMENT) private document: Document,
     private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
@@ -658,7 +660,7 @@ export class CpsAutocompleteComponent
   isActive() {
     return (
       this.isOpened ||
-      document.activeElement === this.autocompleteInput?.nativeElement
+      this.document.activeElement === this.autocompleteInput?.nativeElement
     );
   }
 

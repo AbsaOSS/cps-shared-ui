@@ -1,8 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Optional,
@@ -106,6 +107,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
 
   constructor(
     @Self() @Optional() private _control: NgControl,
+    @Inject(DOCUMENT) private document: Document,
     private _elementRef: ElementRef<HTMLElement>
   ) {
     if (this._control) {
@@ -114,7 +116,7 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
   }
 
   ngOnInit(): void {
-    this.iconColor = getCSSColor(this.iconColor);
+    this.iconColor = getCSSColor(this.iconColor, this.document);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

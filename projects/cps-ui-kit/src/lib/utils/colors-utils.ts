@@ -1,16 +1,16 @@
-const isSameDomain = (styleSheet: any): boolean => {
+const isSameDomain = (styleSheet: any, _window: Window): boolean => {
   if (!styleSheet.href) {
     return true;
   }
 
-  return styleSheet.href.indexOf(window.location.origin) === 0;
+  return styleSheet.href.indexOf(_window.location.origin) === 0;
 };
 
 const isStyleRule = (rule: any): boolean => rule.type === 1;
 
-const isValidCSSColor = (val: string): boolean => {
+const isValidCSSColor = (val: string, _document: Document): boolean => {
   if (val === 'currentColor') return true;
-  const element = document.createElement('div');
+  const element = _document.createElement('div');
   element.style.backgroundColor = val;
   return element && element.style.backgroundColor !== '';
 };
@@ -42,27 +42,31 @@ const isDark = (color: string): boolean => {
   return hsp <= 127.5;
 };
 
-export const getCpsColors = (): [string, string][] =>
-  [...(document.styleSheets as any)].filter(isSameDomain).reduce(
-    (finalArr, sheet) =>
-      finalArr.concat(
-        [...sheet.cssRules].filter(isStyleRule).reduce((propValArr, rule) => {
-          const props = [...rule.style]
-            .map((propName) => [
-              propName.trim(),
-              rule.style.getPropertyValue(propName).trim()
-            ])
-            .filter(([propName]) => propName.indexOf('--cps-color') === 0);
+export const getCpsColors = (_document: Document): [string, string][] =>
+  [...(_document.styleSheets as any)]
+    .filter((sheet: any) =>
+      isSameDomain(sheet, _document.defaultView as Window)
+    )
+    .reduce(
+      (finalArr, sheet) =>
+        finalArr.concat(
+          [...sheet.cssRules].filter(isStyleRule).reduce((propValArr, rule) => {
+            const props = [...rule.style]
+              .map((propName) => [
+                propName.trim(),
+                rule.style.getPropertyValue(propName).trim()
+              ])
+              .filter(([propName]) => propName.indexOf('--cps-color') === 0);
 
-          return [...propValArr, ...props];
-        }, [])
-      ),
-    []
-  );
+            return [...propValArr, ...props];
+          }, [])
+        ),
+      []
+    );
 
-export const getCSSColor = (val: string): string => {
+export const getCSSColor = (val: string, _document: Document): string => {
   if (!val) return '';
-  return isValidCSSColor(val) ? val : `var(--cps-color-${val})`;
+  return isValidCSSColor(val, _document) ? val : `var(--cps-color-${val})`;
 };
 
 export const getTextColor = (backgroundColor: string): string => {

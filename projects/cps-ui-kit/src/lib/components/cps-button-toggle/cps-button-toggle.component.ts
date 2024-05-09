@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Optional,
@@ -148,6 +149,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
   constructor(
     @Self() @Optional() private _control: NgControl,
+    @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2
   ) {
     if (this._control) {
@@ -233,7 +235,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
       '"Source Sans Pro", sans-serif'
     );
 
-    this.renderer.appendChild(document.body, hiddenSpan);
+    this.renderer.appendChild(this.document.body, hiddenSpan);
 
     this.largestButtonWidth = 0;
     this.options.forEach((opt) => {
@@ -252,7 +254,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
       this.renderer.removeChild(hiddenSpan, text);
     });
 
-    this.renderer.removeChild(document.body, hiddenSpan);
+    this.renderer.removeChild(this.document.body, hiddenSpan);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

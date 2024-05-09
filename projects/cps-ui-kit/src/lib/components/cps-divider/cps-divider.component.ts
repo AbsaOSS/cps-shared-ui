@@ -1,6 +1,13 @@
-import { Component, ViewEncapsulation, computed, input } from '@angular/core';
+import {
+  Component,
+  Inject,
+  ViewEncapsulation,
+  computed,
+  input
+} from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
+import { DOCUMENT } from '@angular/common';
 
 /**
  * CpsDividerType is used to define the type of the divider.
@@ -49,6 +56,9 @@ export class CpsDividerComponent {
    */
   thickness = input<number | string>('1px');
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   private _borderTop = computed(() => {
     return this._constructBorder(!this.vertical());
   });
@@ -59,7 +69,7 @@ export class CpsDividerComponent {
 
   private _constructBorder(isVertical: boolean) {
     return isVertical
-      ? `${convertSize(this.thickness())} ${this.type()} ${getCSSColor(this.color())}`
+      ? `${convertSize(this.thickness())} ${this.type()} ${getCSSColor(this.color(), this.document)}`
       : '';
   }
 }

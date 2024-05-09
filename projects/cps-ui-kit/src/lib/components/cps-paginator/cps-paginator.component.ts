@@ -1,12 +1,13 @@
 import {
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -77,8 +78,11 @@ export class CpsPaginatorComponent implements OnInit {
 
   rowOptions: { label: string; value: number }[] = [];
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   ngOnInit(): void {
-    this.backgroundColor = getCSSColor(this.backgroundColor);
+    this.backgroundColor = getCSSColor(this.backgroundColor, this.document);
     if (this.rowsPerPageOptions.length < 1)
       this.rowsPerPageOptions = [5, 10, 25, 50];
 

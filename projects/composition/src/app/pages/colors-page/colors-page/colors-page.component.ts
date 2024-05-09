@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   CpsInputComponent,
   CpsNotificationPosition,
@@ -51,10 +51,13 @@ export class ColorsPageComponent implements OnInit {
   colorNameColor: { [key: string]: string } = {};
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _notificationService: CpsNotificationService) {}
+  constructor(
+    private _notificationService: CpsNotificationService,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
-    const customColors = getCpsColors();
+    const customColors = getCpsColors(this.document);
     customColors.forEach((clr) => {
       const name = clr[0].replace(/^--cps-color-/, '');
       const value = clr[1];

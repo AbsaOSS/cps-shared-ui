@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
 
@@ -51,12 +51,15 @@ export class CpsProgressLinearComponent implements OnInit {
    */
   @Input() radius: number | string = 0;
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   ngOnInit(): void {
     this.width = convertSize(this.width);
     this.height = convertSize(this.height);
     this.radius = convertSize(this.radius);
 
-    this.color = getCSSColor(this.color);
-    this.bgColor = getCSSColor(this.bgColor);
+    this.color = getCSSColor(this.color, this.document);
+    this.bgColor = getCSSColor(this.bgColor, this.document);
   }
 }

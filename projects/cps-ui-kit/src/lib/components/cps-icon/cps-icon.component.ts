@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnChanges } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
 
@@ -178,8 +178,11 @@ export class CpsIconComponent implements OnChanges {
 
   classesList: string[] = ['cps-icon'];
 
+  // eslint-disable-next-line no-useless-constructor
+  constructor(@Inject(DOCUMENT) private document: Document) {}
+
   ngOnChanges(): void {
-    this.iconColor = getCSSColor(this.color);
+    this.iconColor = getCSSColor(this.color, this.document);
     this.setClasses();
   }
 

@@ -5,7 +5,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -14,6 +14,7 @@ import {
   ContentChildren,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -200,11 +201,17 @@ export class CpsTabGroupComponent
   private _previousTabIndex = 0;
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(
+    private cdRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   ngOnInit(): void {
-    this.tabsBackground = getCSSColor(this.tabsBackground);
-    this.navButtonsBackground = getCSSColor(this.navButtonsBackground);
+    this.tabsBackground = getCSSColor(this.tabsBackground, this.document);
+    this.navButtonsBackground = getCSSColor(
+      this.navButtonsBackground,
+      this.document
+    );
 
     this.windowResize$ = fromEvent(window, 'resize')
       .pipe(debounceTime(50), distinctUntilChanged())

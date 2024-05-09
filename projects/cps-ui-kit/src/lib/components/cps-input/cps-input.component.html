@@ -30,6 +30,7 @@
       *ngIf="!valueToDisplay"
       spellcheck="false"
       [type]="currentType"
+      autocomplete="off"
       [value]="value"
       (input)="updateValueEvent($event)"
       [placeholder]="placeholder"

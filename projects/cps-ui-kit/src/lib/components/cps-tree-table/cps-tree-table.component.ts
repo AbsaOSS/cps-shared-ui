@@ -6,6 +6,7 @@ import {
   Component,
   ContentChild,
   EventEmitter,
+  Inject,
   Input,
   NgZone,
   OnChanges,
@@ -18,7 +19,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   TreeTable,
@@ -657,14 +658,18 @@ export class CpsTreeTableComponent
 
   private _needRecalcAutoLayout = true;
 
-  _data: any[] = [];
+  private _data: any[] = [];
+
+  private window: Window;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private cdRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     private ngZone: NgZone
   ) {
+    this.window = this.document.defaultView as Window;
     this._resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         const body = entry.target;
@@ -706,7 +711,7 @@ export class CpsTreeTableComponent
 
     this.defScrollHeight = this.scrollHeight;
     if (this.virtualScroll) {
-      window.addEventListener('resize', this._onWindowResize.bind(this));
+      this.window.addEventListener('resize', this._onWindowResize.bind(this));
 
       if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
         this._defScrollHeightPx = parseInt(this.scrollHeight, 10);
@@ -850,7 +855,10 @@ export class CpsTreeTableComponent
     this._resizeObserver?.disconnect();
     if (this.virtualScroll) {
       if (this.autoLayout) this._scrollSubscription?.unsubscribe();
-      window.removeEventListener('resize', this._onWindowResize.bind(this));
+      this.window.removeEventListener(
+        'resize',
+        this._onWindowResize.bind(this)
+      );
     }
   }
 
@@ -902,13 +910,13 @@ export class CpsTreeTableComponent
       if (!bodyRows?.length) return;
 
       const tdWidths: number[] = [];
-      const fragment = document.createDocumentFragment();
-      const hiddenDiv = document.createElement('div');
+      const fragment = this.document.createDocumentFragment();
+      const hiddenDiv = this.document.createElement('div');
       hiddenDiv.style.visibility = 'hidden';
       hiddenDiv.style.position = 'absolute';
       hiddenDiv.style.whiteSpace = 'nowrap';
 
-      document.body.appendChild(hiddenDiv);
+      this.document.body.appendChild(hiddenDiv);
       bodyRows.forEach((tr: HTMLElement) => {
         const tds = tr?.querySelectorAll('td');
         tds?.forEach((td: HTMLElement, idx: number) => {
@@ -931,7 +939,7 @@ export class CpsTreeTableComponent
           tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
         });
       });
-      document.body.removeChild(hiddenDiv);
+      this.document.body.removeChild(hiddenDiv);
 
       if (thWidths.length !== tdWidths.length) return;
 

@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { CpsTabChangeEvent } from 'cps-ui-kit';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   template: ''
@@ -8,6 +9,7 @@ import { CpsTabChangeEvent } from 'cps-ui-kit';
 export abstract class ViewerComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
+  private _document = inject(DOCUMENT);
   protected selectedTabIndex = 0;
 
   ngOnInit(): void {
@@ -41,9 +43,9 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
   }
 
   private _scroll(query: string) {
-    const targetElement = document.querySelector(query);
+    const targetElement = this._document.querySelector(query);
     if (!targetElement) {
-      window.scrollTo(0, 0);
+      (this._document.defaultView as Window).scrollTo(0, 0);
     } else {
       targetElement.scrollIntoView();
       targetElement.classList.add('anchor-highlight');

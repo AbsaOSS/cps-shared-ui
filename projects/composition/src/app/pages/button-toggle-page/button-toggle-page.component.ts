@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  CpsButtonToggleComponent,
-  CpsButtonToggleOption
-} from 'projects/cps-ui-kit/src/public-api';
+import { CpsButtonToggleComponent, CpsButtonToggleOption } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-button-toggle.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';

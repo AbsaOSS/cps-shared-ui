@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
   Optional,
@@ -72,14 +73,17 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
 
   private _value = false;
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
   }
 
   ngOnChanges(): void {
-    this.color = getCSSColor(this.color);
+    this.color = getCSSColor(this.color, this.document);
     this.setClasses();
   }
 

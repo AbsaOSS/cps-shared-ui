@@ -228,6 +228,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   hideReason: CpsMenuHideReason | undefined;
 
+  private window: Window;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -239,6 +241,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     public config: PrimeNGConfig,
     public overlayService: OverlayService
   ) {
+    this.window = this.document.defaultView as Window;
     this.resizeObserver = new ResizeObserver((entries) => {
       if (this.target) {
         entries.forEach((entry) => {
@@ -366,14 +369,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     if (isPlatformBrowser(this.platformId)) {
       if (!this.documentClickListener && this.dismissable) {
         this.zone.runOutsideAngular(() => {
-          const documentEvent = DomHandler.isIOS() ? 'touchstart' : 'mousedown';
           const documentTarget: any = this.el
             ? this.el.nativeElement.ownerDocument
             : this.document;
 
           this.documentClickListener = this.renderer.listen(
             documentTarget,
-            documentEvent,
+            'mousedown',
             (event) => {
               if (
                 !this.persistent &&
@@ -457,14 +459,14 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
             ),
             left: Math.min(
               targetOffset.left + target.offsetWidth,
-              window.innerWidth - element.offsetWidth
+              this.window.innerWidth - element.offsetWidth
             )
           };
         case 'tl':
           return {
             top: Math.min(
               targetOffset.top,
-              window.innerHeight - element.offsetHeight
+              this.window.innerHeight - element.offsetHeight
             ),
             left: Math.max(0, targetOffset.left - element.offsetWidth)
           };
@@ -472,11 +474,11 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
           return {
             top: Math.min(
               targetOffset.top,
-              window.innerHeight - element.offsetHeight
+              this.window.innerHeight - element.offsetHeight
             ),
             left: Math.min(
               targetOffset.left + target.offsetWidth,
-              window.innerWidth - element.offsetWidth
+              this.window.innerWidth - element.offsetWidth
             )
           };
         case 'default':
