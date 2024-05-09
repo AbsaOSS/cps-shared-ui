@@ -477,6 +477,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() initialColumns: { [key: string]: any }[] = [];
 
   /**
+   * If set to true, row data are rendered using innerHTML.
+   * @group Props
+   */
+  @Input() renderDataAsHTML = false;
+
+  /**
    * An array of objects to display.
    * @default []
    * @group Props

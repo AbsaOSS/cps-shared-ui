@@ -55,6 +55,21 @@ export class TablePageComponent implements OnInit {
 
   isRemoveBtnVisible = false;
 
+  renderAsHTML = true;
+
+  dataWithHTML = [
+    {
+      a: '<h1>hello</h1>',
+      b: '<h2>world</2>',
+      c: '<a href="https://www.github.com">link to github</a>'
+    },
+    {
+      a: 'this is sanitized <script>console.log("pwned")</script>',
+      b: '<img src="/assets/ui_logo.svg" width="100" />',
+      c: '<code>null === undefined</code>'
+    }
+  ];
+
   data = [
     {
       a: 'a1',

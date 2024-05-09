@@ -248,5 +248,17 @@
         toolbarTitle="Table in data loading state">
       </cps-table>
     </cps-tab>
+    <cps-tab label="Table 10">
+      <cps-table
+        [data]="dataWithHTML"
+        scrollHeight="400px"
+        [columns]="colsVirtual"
+        [renderDataAsHTML]="renderAsHTML"
+        [showActionBtn]="true"
+        toolbarTitle="Table containing HTML"
+        actionBtnTitle="renderAsHTML is set to {{ renderAsHTML ? 'true' : 'false' }}"
+        (actionBtnClicked)="renderAsHTML = !renderAsHTML">
+      </cps-table>
+    </cps-tab>
   </cps-tab-group>
 </app-component-docs-viewer>

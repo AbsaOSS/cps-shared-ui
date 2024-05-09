@@ -510,6 +510,14 @@
                         "description": "Array of initial columns to show in the table. If not provided, all columns are initially visible."
                     },
                     {
+                        "name": "renderDataAsHTML",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "If set to true, row data are rendered using innerHTML."
+                    },
+                    {
                         "name": "data",
                         "optional": false,
                         "readonly": false,

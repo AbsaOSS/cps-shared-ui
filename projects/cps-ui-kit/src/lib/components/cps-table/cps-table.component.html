@@ -262,9 +262,15 @@
       </ng-container>
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
-          <td *ngFor="let col of columns">
-            {{ rowData[col[colFieldName]] }}
-          </td>
+          @if (renderDataAsHTML) {
+            <td
+              *ngFor="let col of columns"
+              [innerHTML]="rowData[col[colFieldName]]"></td>
+          } @else {
+            <td *ngFor="let col of columns">
+              {{ rowData[col[colFieldName]] }}
+            </td>
+          }
         </ng-container>
       </ng-container>
       <td
