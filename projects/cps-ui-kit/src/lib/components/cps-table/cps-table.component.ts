@@ -125,6 +125,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() colFilterTypeName = 'filterType';
 
   /**
+   * A key used to retrieve the date format from columns.
+   * @group Props
+   */
+  @Input() colDateFormatName = 'dateFormat';
+
+  /**
    * Determines whether the table should have alternating stripes.
    * @group Props
    */

@@ -299,7 +299,11 @@
               [innerHTML]="rowData[col[colFieldName]]"></td>
           } @else {
             <td *ngFor="let col of columns">
-              {{ rowData[col[colFieldName]] }}
+              {{
+                col[colDateFormatName]
+                  ? (rowData[col[colFieldName]] | date: col[colDateFormatName])
+                  : rowData[col[colFieldName]]
+              }}
             </td>
           }
         </ng-container>

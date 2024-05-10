@@ -38,6 +38,14 @@
                         "description": "A key used to retrieve the filter type from columns."
                     },
                     {
+                        "name": "colDateFormatName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "dateFormat",
+                        "description": "A key used to retrieve the date format from columns."
+                    },
+                    {
                         "name": "striped",
                         "optional": false,
                         "readonly": false,

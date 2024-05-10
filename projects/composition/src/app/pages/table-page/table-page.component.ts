@@ -360,12 +360,13 @@ export class TablePageComponent implements OnInit {
     { field: 'a', header: 'String' },
     { field: 'b', header: 'String (only 5 distinct values)' },
     { field: 'c', header: 'Number' },
-    { field: 'd', header: 'Date' },
+    { field: 'd', header: 'Date', dateFormat: 'dd. MM. yyyy' },
     { field: 'e', header: 'Boolean' },
     {
       field: 'f',
       header: 'Date but with category filter',
-      filterType: 'category'
+      filterType: 'category',
+      dateFormat: 'yyyy/MM/dd HH:mm:ss'
     }
   ];
 
