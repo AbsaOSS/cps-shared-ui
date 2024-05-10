@@ -163,7 +163,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "If true, automatically detects filter type based on values, otherwise sets string filter type for all columns.\nNote: This setting only takes effect if 'filterableByColumns' is true."
+                        "description": "If true, automatically detects filter type based on values, otherwise sets 'text' filter type for all columns.\nNote: This setting only takes effect if 'filterableByColumns' is true."
                     },
                     {
                         "name": "sortMode",
