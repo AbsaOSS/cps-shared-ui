@@ -212,7 +212,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   /**
    * If true, automatically detects filter type based on values, otherwise sets string filter type for all columns.
-   * Only applied when filterableByColumns is true.
+   * Note: This setting only takes effect if 'filterableByColumns' is true.
    * @group Props
    */
   @Input() autoColumnFilterType = true;
