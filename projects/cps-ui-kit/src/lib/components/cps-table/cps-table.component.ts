@@ -119,6 +119,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() colFieldName = 'field';
 
   /**
+   * A key used to retrieve the filter type from columns.
+   * @group Props
+   */
+  @Input() colFilterTypeName = 'filterType';
+
+  /**
    * Determines whether the table should have alternating stripes.
    * @group Props
    */

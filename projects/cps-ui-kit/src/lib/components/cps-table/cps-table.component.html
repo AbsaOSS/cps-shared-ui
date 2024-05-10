@@ -206,9 +206,10 @@
               [cpsTColSortable]="col[colFieldName]"
               [cpsTColFilter]="col[colFieldName]"
               [filterType]="
-                autoColumnFilterType
+                col[colFilterTypeName] ??
+                (autoColumnFilterType
                   ? (data | cpsDetectFilterType: col[colFieldName])
-                  : 'text'
+                  : 'text')
               ">
               {{ col[colHeaderName] }}
             </th>
@@ -226,9 +227,10 @@
               *ngFor="let col of columns"
               [cpsTColFilter]="col[colFieldName]"
               [filterType]="
-                autoColumnFilterType
+                col[colFilterTypeName] ??
+                (autoColumnFilterType
                   ? (data | cpsDetectFilterType: col[colFieldName])
-                  : 'text'
+                  : 'text')
               ">
               {{ col[colHeaderName] }}
             </th>
