@@ -347,12 +347,14 @@ export class TablePageComponent implements OnInit {
 
   selCols: { [key: string]: any }[] = [];
 
-  dataVirtual: { a: string; b: string; c: number }[] = [];
+  dataVirtual: { a: string; b: string; c: number; d: Date; e: boolean }[] = [];
 
   colsVirtual = [
-    { field: 'a', header: 'A' },
-    { field: 'b', header: 'B' },
-    { field: 'c', header: 'C' }
+    { field: 'a', header: 'String' },
+    { field: 'b', header: 'String (only 5 distinct values)' },
+    { field: 'c', header: 'Number' },
+    { field: 'd', header: 'Date' },
+    { field: 'e', header: 'Boolean' }
   ];
 
   componentData = ComponentData;
@@ -365,7 +367,13 @@ export class TablePageComponent implements OnInit {
   private _genVirtualData() {
     let c = 0.0;
     for (let i = 0; i <= 1000; i++) {
-      this.dataVirtual.push({ a: 'a' + i, b: 'b' + i, c });
+      this.dataVirtual.push({
+        a: 'a' + i,
+        b: 'b' + (i % 5),
+        c,
+        d: new Date(new Date().valueOf() - Math.random() * 1e12),
+        e: Math.random() > 0.5
+      });
 
       c = parseFloat((c += 0.1).toFixed(1));
     }

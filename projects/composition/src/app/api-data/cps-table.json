@@ -142,6 +142,22 @@
                         "description": "Makes all columns sortable if columns prop is provided."
                     },
                     {
+                        "name": "filterableByColumns",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Enable filtering on all columns."
+                    },
+                    {
+                        "name": "autoColumnFilterType",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "If true, automatically detect filter type based on values, otherwise sets string filter type for all columns.\nOnly applied when filterableByColumns is true."
+                    },
+                    {
                         "name": "sortMode",
                         "optional": false,
                         "readonly": false,

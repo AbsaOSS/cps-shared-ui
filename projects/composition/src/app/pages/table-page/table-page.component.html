@@ -28,7 +28,7 @@
 
         <ng-template let-item #body>
           <td>{{ item.a | uppercase }}</td>
-          <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
           <td [style.color]="item.d ? 'green' : 'red'">
             {{ item.d ? '&#10004;' : '&#10008;' }}
@@ -47,7 +47,8 @@
         [virtualScroll]="true"
         [showColumnsToggleBtn]="true"
         scrollHeight="500px"
-        toolbarTitle="Sortable table with virtual scroller, global filter and internal columns toggle">
+        toolbarTitle="Sortable table with virtual scroller, global filter, internal columns toggle and with column filtering enabled"
+        [filterableByColumns]="true">
       </cps-table>
     </cps-tab>
     <cps-tab label="Table 3">
@@ -78,7 +79,7 @@
 
         <ng-template let-item #body>
           <td>{{ item.a | uppercase }}</td>
-          <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
           <td [style.color]="item.d ? 'green' : 'red'">
             {{ item.d ? '&#10004;' : '&#10008;' }}
@@ -117,7 +118,7 @@
         <ng-template let-item #body>
           <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
             <td *ngSwitchCase="'a'">{{ item.a | uppercase }}</td>
-            <td *ngSwitchCase="'b'">{{ item.b | date : 'MM/dd/yyyy' }}</td>
+            <td *ngSwitchCase="'b'">{{ item.b | date: 'MM/dd/yyyy' }}</td>
             <td *ngSwitchCase="'c'">{{ item.c | percent }}</td>
             <td *ngSwitchCase="'d'" [style.color]="item.d ? 'green' : 'red'">
               {{ item.d ? '&#10004;' : '&#10008;' }}
@@ -164,7 +165,7 @@
         </ng-template>
         <ng-template let-item #body>
           <td>{{ item.a | uppercase }}</td>
-          <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
           <td [style.color]="item.d ? 'green' : 'red'">
             {{ item.d ? '&#10004;' : '&#10008;' }}
@@ -193,7 +194,7 @@
 
         <ng-template let-item #body>
           <td>{{ item.a | uppercase }}</td>
-          <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
           <td [style.color]="item.d ? 'green' : 'red'">
             {{ item.d ? '&#10004;' : '&#10008;' }}
@@ -219,7 +220,7 @@
 
         <ng-template let-item #body>
           <td>{{ item.a | uppercase }}</td>
-          <td>{{ item.b | date : 'MM/dd/yyyy' }}</td>
+          <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
           <td [style.color]="item.d ? 'green' : 'red'">
             {{ item.d ? '&#10004;' : '&#10008;' }}
@@ -256,7 +257,9 @@
         [renderDataAsHTML]="renderAsHTML"
         [showActionBtn]="true"
         toolbarTitle="Table containing HTML"
-        actionBtnTitle="renderAsHTML is set to {{ renderAsHTML ? 'true' : 'false' }}"
+        actionBtnTitle="renderAsHTML is set to {{
+          renderAsHTML ? 'true' : 'false'
+        }}"
         (actionBtnClicked)="renderAsHTML = !renderAsHTML">
       </cps-table>
     </cps-tab>

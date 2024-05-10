@@ -29,6 +29,8 @@ import { CpsTableColumnSortableDirective } from './directives/cps-table-column-s
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
 import { convertSize } from '../../utils/internal/size-utils';
 import { isEqual } from 'lodash-es';
+import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
+import { CpsDetectFilterTypePipe } from './pipes/cps-detect-filter-type.pipe';
 
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -81,7 +83,9 @@ export type CpsTableSortMode = 'single' | 'multiple';
     CpsMenuComponent,
     CpsLoaderComponent,
     TableRowMenuComponent,
-    CpsTableColumnSortableDirective
+    CpsTableColumnSortableDirective,
+    CpsTableColumnFilterDirective,
+    CpsDetectFilterTypePipe
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],
@@ -199,6 +203,19 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Props
    */
   @Input() sortable = false;
+
+  /**
+   * Enable filtering on all columns.
+   * @group Props
+   */
+  @Input() filterableByColumns = false;
+
+  /**
+   * If true, automatically detect filter type based on values, otherwise sets string filter type for all columns.
+   * Only applied when filterableByColumns is true.
+   * @group Props
+   */
+  @Input() autoColumnFilterType = true;
 
   /**
    * Determines whether sorting works on single column or on multiple columns.
