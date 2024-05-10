@@ -200,14 +200,45 @@
       </ng-container>
       <ng-container *ngIf="!headerTemplate && columns.length > 0">
         <ng-container *ngIf="sortable">
-          <th *ngFor="let col of columns" [cpsTColSortable]="col[colFieldName]">
-            {{ col[colHeaderName] }}
-          </th>
+          @if (filterableByColumns) {
+            <th
+              *ngFor="let col of columns"
+              [cpsTColSortable]="col[colFieldName]"
+              [cpsTColFilter]="col[colFieldName]"
+              [filterType]="
+                col[colFilterTypeName] ??
+                (autoColumnFilterType
+                  ? (data | cpsDetectFilterType: col[colFieldName])
+                  : 'text')
+              ">
+              {{ col[colHeaderName] }}
+            </th>
+          } @else {
+            <th
+              *ngFor="let col of columns"
+              [cpsTColSortable]="col[colFieldName]">
+              {{ col[colHeaderName] }}
+            </th>
+          }
         </ng-container>
         <ng-container *ngIf="!sortable">
-          <th *ngFor="let col of columns">
-            {{ col[colHeaderName] }}
-          </th>
+          @if (filterableByColumns) {
+            <th
+              *ngFor="let col of columns"
+              [cpsTColFilter]="col[colFieldName]"
+              [filterType]="
+                col[colFilterTypeName] ??
+                (autoColumnFilterType
+                  ? (data | cpsDetectFilterType: col[colFieldName])
+                  : 'text')
+              ">
+              {{ col[colHeaderName] }}
+            </th>
+          } @else {
+            <th *ngFor="let col of columns">
+              {{ col[colHeaderName] }}
+            </th>
+          }
         </ng-container>
       </ng-container>
       <th
@@ -262,9 +293,19 @@
       </ng-container>
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
-          <td *ngFor="let col of columns">
-            {{ rowData[col[colFieldName]] }}
-          </td>
+          @if (renderDataAsHTML) {
+            <td
+              *ngFor="let col of columns"
+              [innerHTML]="rowData[col[colFieldName]]"></td>
+          } @else {
+            <td *ngFor="let col of columns">
+              {{
+                col[colDateFormatName]
+                  ? (rowData[col[colFieldName]] | date: col[colDateFormatName])
+                  : rowData[col[colFieldName]]
+              }}
+            </td>
+          }
         </ng-container>
       </ng-container>
       <td

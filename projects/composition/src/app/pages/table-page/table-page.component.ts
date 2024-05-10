@@ -55,6 +55,21 @@ export class TablePageComponent implements OnInit {
 
   isRemoveBtnVisible = false;
 
+  renderAsHTML = true;
+
+  dataWithHTML = [
+    {
+      a: '<h1>hello</h1>',
+      b: '<h2>world</2>',
+      c: '<a href="https://www.github.com">link to github</a>'
+    },
+    {
+      a: 'this is sanitized <script>console.log("pwned")</script>',
+      b: '<img src="/assets/ui_logo.svg" width="100" />',
+      c: '<code>null === undefined</code>'
+    }
+  ];
+
   data = [
     {
       a: 'a1',
@@ -332,12 +347,27 @@ export class TablePageComponent implements OnInit {
 
   selCols: { [key: string]: any }[] = [];
 
-  dataVirtual: { a: string; b: string; c: number }[] = [];
+  dataVirtual: {
+    a: string;
+    b: string;
+    c: number;
+    d: Date;
+    e: boolean;
+    f: Date;
+  }[] = [];
 
   colsVirtual = [
-    { field: 'a', header: 'A' },
-    { field: 'b', header: 'B' },
-    { field: 'c', header: 'C' }
+    { field: 'a', header: 'String' },
+    { field: 'b', header: 'String (only 5 distinct values)' },
+    { field: 'c', header: 'Number' },
+    { field: 'd', header: 'Date', dateFormat: 'dd. MM. yyyy' },
+    { field: 'e', header: 'Boolean' },
+    {
+      field: 'f',
+      header: 'Date but with category filter',
+      filterType: 'category',
+      dateFormat: 'yyyy/MM/dd HH:mm:ss'
+    }
   ];
 
   componentData = ComponentData;
@@ -348,9 +378,20 @@ export class TablePageComponent implements OnInit {
   }
 
   private _genVirtualData() {
+    const sevenRandomDates = Array.from(
+      { length: 7 },
+      () => new Date(Math.round(Math.random() * 1e12))
+    );
     let c = 0.0;
     for (let i = 0; i <= 1000; i++) {
-      this.dataVirtual.push({ a: 'a' + i, b: 'b' + i, c });
+      this.dataVirtual.push({
+        a: 'a' + i,
+        b: 'b' + (i % 5),
+        c,
+        d: new Date(new Date().valueOf() - Math.random() * 1e12),
+        e: Math.random() > 0.5,
+        f: sevenRandomDates[i % 7]
+      });
 
       c = parseFloat((c += 0.1).toFixed(1));
     }

@@ -30,6 +30,22 @@
                         "description": "A key used to retrieve the field from columns."
                     },
                     {
+                        "name": "colFilterTypeName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "filterType",
+                        "description": "A key used to retrieve the filter type from columns."
+                    },
+                    {
+                        "name": "colDateFormatName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "dateFormat",
+                        "description": "A key used to retrieve the date format from columns."
+                    },
+                    {
                         "name": "striped",
                         "optional": false,
                         "readonly": false,
@@ -140,6 +156,22 @@
                         "type": "boolean",
                         "default": "false",
                         "description": "Makes all columns sortable if columns prop is provided."
+                    },
+                    {
+                        "name": "filterableByColumns",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Enable filtering on all columns."
+                    },
+                    {
+                        "name": "autoColumnFilterType",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "If true, automatically detects filter type based on values, otherwise sets 'text' filter type for all columns.\nNote: This setting only takes effect if 'filterableByColumns' is true."
                     },
                     {
                         "name": "sortMode",
@@ -508,6 +540,14 @@
                         "type": "Object[]",
                         "default": "[]",
                         "description": "Array of initial columns to show in the table. If not provided, all columns are initially visible."
+                    },
+                    {
+                        "name": "renderDataAsHTML",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "If set to true, row data are rendered using innerHTML."
                     },
                     {
                         "name": "data",
