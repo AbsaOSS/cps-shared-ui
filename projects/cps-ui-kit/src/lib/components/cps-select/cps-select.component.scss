@@ -247,7 +247,11 @@ $hover-transition-duration: 0.2s;
 
     &-right {
       color: $select-option-info-color;
-      text-align: right;
+      display: flex;
+      align-items: center;
+      &-icon {
+        margin-left: 8px;
+      }
     }
 
     &-check {
@@ -261,7 +265,8 @@ $hover-transition-duration: 0.2s;
       box-sizing: border-box;
       position: relative;
       flex-shrink: 0;
-      transition: border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+      transition:
+        border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
         background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
       margin-right: 8px;
       opacity: 0;

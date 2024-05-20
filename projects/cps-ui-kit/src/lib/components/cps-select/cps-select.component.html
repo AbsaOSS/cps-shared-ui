@@ -196,8 +196,14 @@
 
     <span
       class="cps-select-options-option-right"
-      [class.virtual-row]="virtualScroll"
-      >{{ item[optionInfo] }}</span
-    >
+      [class.virtual-row]="virtualScroll">
+      {{ item[optionInfo] }}
+      <cps-icon
+        *ngIf="item[optionIcon]"
+        [icon]="item[optionIcon]"
+        [color]="item[optionIconColor] || 'text-light'"
+        class="cps-select-options-option-right-icon">
+      </cps-icon>
+    </span>
   </div>
 </ng-template>
