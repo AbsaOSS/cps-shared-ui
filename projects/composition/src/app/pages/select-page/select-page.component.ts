@@ -38,6 +38,13 @@ export class SelectPageComponent implements OnInit {
     { name: 'Berlin', data: { code: 'BER' } }
   ];
 
+  statusOptions = [
+    { name: 'Success', icon: 'circle', color: 'success' },
+    { name: 'Pending', icon: 'circle', color: 'info' },
+    { name: 'Warning', icon: 'circle', color: 'warn' },
+    { name: 'Failed', icon: 'circle', color: 'error' }
+  ];
+
   syncOptions = [
     { title: 'Amazon', val: 'AMZN', ticker: 'AMZN' },
     { title: 'Apple', val: 'AAPL', ticker: 'AAPL' },

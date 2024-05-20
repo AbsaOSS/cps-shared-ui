@@ -142,6 +142,22 @@
                         "description": "Name of the info field of an option, shows the additional information text."
                     },
                     {
+                        "name": "optionIcon",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "icon",
+                        "description": "Name of the icon field of an option, shows the icon."
+                    },
+                    {
+                        "name": "optionIconColor",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "iconColor",
+                        "description": "Name of the icon color field of an option, sets the icon color."
+                    },
+                    {
                         "name": "hideDetails",
                         "optional": false,
                         "readonly": false,

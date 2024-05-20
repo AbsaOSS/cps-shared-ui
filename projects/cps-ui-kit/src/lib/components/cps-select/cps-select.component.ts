@@ -170,6 +170,18 @@ export class CpsSelectComponent
   @Input() optionInfo = 'info';
 
   /**
+   * Name of the icon field of an option, shows the icon.
+   * @group Props
+   */
+  @Input() optionIcon = 'icon';
+
+  /**
+   * Name of the icon color field of an option, sets the icon color.
+   * @group Props
+   */
+  @Input() optionIconColor = 'iconColor';
+
+  /**
    * Hides hint and validation errors.
    * @group Props
    */
