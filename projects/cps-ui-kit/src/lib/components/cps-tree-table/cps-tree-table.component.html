@@ -188,16 +188,45 @@
       </ng-container>
       <ng-container *ngIf="!headerTemplate && columns.length > 0">
         <ng-container *ngIf="sortable">
-          <th
-            *ngFor="let col of columns"
-            [cpsTTColSortable]="col[colFieldName]">
-            {{ col[colHeaderName] }}
-          </th>
+          @if (filterableByColumns) {
+            <th
+              *ngFor="let col of columns"
+              [cpsTTColSortable]="col[colFieldName]"
+              [cpsTTColFilter]="col[colFieldName]"
+              [filterType]="
+                col[colFilterTypeName] ??
+                (autoColumnFilterType
+                  ? (data | cpsTTDetectFilterType: col[colFieldName])
+                  : 'text')
+              ">
+              {{ col[colHeaderName] }}
+            </th>
+          } @else {
+            <th
+              *ngFor="let col of columns"
+              [cpsTTColSortable]="col[colFieldName]">
+              {{ col[colHeaderName] }}
+            </th>
+          }
         </ng-container>
         <ng-container *ngIf="!sortable">
-          <th *ngFor="let col of columns">
-            {{ col[colHeaderName] }}
-          </th>
+          @if (filterableByColumns) {
+            <th
+              *ngFor="let col of columns"
+              [cpsTTColFilter]="col[colFieldName]"
+              [filterType]="
+                col[colFilterTypeName] ??
+                (autoColumnFilterType
+                  ? (data | cpsTTDetectFilterType: col[colFieldName])
+                  : 'text')
+              ">
+              {{ col[colHeaderName] }}
+            </th>
+          } @else {
+            <th *ngFor="let col of columns">
+              {{ col[colHeaderName] }}
+            </th>
+          }
         </ng-container>
       </ng-container>
       <th
@@ -237,12 +266,34 @@
       </ng-container>
       <ng-container *ngIf="!bodyTemplate">
         <ng-container *ngIf="columns.length > 0">
-          <ng-container *ngFor="let col of columns; let i = index">
-            <td *ngIf="i === 0" [cpsTTRowToggler]="rowNode">
-              {{ rowData[col[colFieldName]] }}
-            </td>
-            <td *ngIf="i > 0">{{ rowData[col[colFieldName]] }}</td>
-          </ng-container>
+          @if (renderDataAsHTML) {
+            <ng-container *ngFor="let col of columns; let i = index">
+              <td
+                *ngIf="i === 0"
+                [cpsTTRowToggler]="rowNode"
+                [innerHTML]="rowData[col[colFieldName]]"></td>
+              <td *ngIf="i > 0" [innerHTML]="rowData[col[colFieldName]]"></td>
+            </ng-container>
+          } @else {
+            <ng-container *ngFor="let col of columns; let i = index">
+              <td *ngIf="i === 0" [cpsTTRowToggler]="rowNode">
+                {{
+                  col[colDateFormatName]
+                    ? (rowData[col[colFieldName]]
+                      | date: col[colDateFormatName])
+                    : rowData[col[colFieldName]]
+                }}
+              </td>
+              <td *ngIf="i > 0">
+                {{
+                  col[colDateFormatName]
+                    ? (rowData[col[colFieldName]]
+                      | date: col[colDateFormatName])
+                    : rowData[col[colFieldName]]
+                }}
+              </td>
+            </ng-container>
+          }
         </ng-container>
       </ng-container>
       <td

@@ -60,7 +60,7 @@ export class TablePageComponent implements OnInit {
   dataWithHTML = [
     {
       a: '<h1>hello</h1>',
-      b: '<h2>world</2>',
+      b: '<h2>world</h2>',
       c: '<a href="https://www.github.com">link to github</a>'
     },
     {
@@ -369,6 +369,8 @@ export class TablePageComponent implements OnInit {
       dateFormat: 'yyyy/MM/dd HH:mm:ss'
     }
   ];
+
+  colsHTML = this.colsVirtual.slice(0, 3);
 
   componentData = ComponentData;
 

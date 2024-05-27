@@ -30,7 +30,7 @@ import { TableUnsortDirective } from './directives/internal/table-unsort.directi
 import { convertSize } from '../../utils/internal/size-utils';
 import { isEqual } from 'lodash-es';
 import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
-import { CpsDetectFilterTypePipe } from './pipes/cps-detect-filter-type.pipe';
+import { CpsTableDetectFilterTypePipe } from './pipes/cps-table-detect-filter-type.pipe';
 
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -85,7 +85,7 @@ export type CpsTableSortMode = 'single' | 'multiple';
     TableRowMenuComponent,
     CpsTableColumnSortableDirective,
     CpsTableColumnFilterDirective,
-    CpsDetectFilterTypePipe
+    CpsTableDetectFilterTypePipe
   ],
   templateUrl: './cps-table.component.html',
   styleUrls: ['./cps-table.component.scss'],

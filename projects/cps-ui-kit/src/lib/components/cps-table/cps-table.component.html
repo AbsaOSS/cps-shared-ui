@@ -208,7 +208,7 @@
               [filterType]="
                 col[colFilterTypeName] ??
                 (autoColumnFilterType
-                  ? (data | cpsDetectFilterType: col[colFieldName])
+                  ? (data | cpsTableDetectFilterType: col[colFieldName])
                   : 'text')
               ">
               {{ col[colHeaderName] }}
@@ -229,7 +229,7 @@
               [filterType]="
                 col[colFilterTypeName] ??
                 (autoColumnFilterType
-                  ? (data | cpsDetectFilterType: col[colFieldName])
+                  ? (data | cpsTableDetectFilterType: col[colFieldName])
                   : 'text')
               ">
               {{ col[colHeaderName] }}

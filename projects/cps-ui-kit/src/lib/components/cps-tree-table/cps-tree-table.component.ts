@@ -47,6 +47,8 @@ import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-tab
 import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
 import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler.directive';
 import { Subscription, fromEvent } from 'rxjs';
+import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter.directive';
+import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type.pipe';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -93,11 +95,13 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     AngleRightIcon,
     AngleDoubleRightIcon,
     CpsTreeTableColumnSortableDirective,
+    CpsTreeTableColumnFilterDirective,
     CpsTreeTableHeaderSelectableDirective,
     CpsTreeTableRowSelectableDirective,
     CpsTreetableRowTogglerDirective,
     TreeTableUnsortDirective,
-    TableRowMenuComponent
+    TableRowMenuComponent,
+    CpsTreeTableDetectFilterTypePipe
   ],
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],
@@ -131,6 +135,18 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() colFieldName = 'field';
+
+  /**
+   * A key used to retrieve the filter type from columns.
+   * @group Props
+   */
+  @Input() colFilterTypeName = 'filterType';
+
+  /**
+   * A key used to retrieve the date format from columns.
+   * @group Props
+   */
+  @Input() colDateFormatName = 'dateFormat';
 
   /**
    * Treetable min width of type number denoting pixels or string.
@@ -481,6 +497,25 @@ export class CpsTreeTableComponent
    * @group Props
    */
   @Input() initialColumns: { [key: string]: any }[] = [];
+
+  /**
+   * Enable filtering on all columns.
+   * @group Props
+   */
+  @Input() filterableByColumns = false;
+
+  /**
+   * If true, automatically detects filter type based on values, otherwise sets 'text' filter type for all columns.
+   * Note: This setting only takes effect if 'filterableByColumns' is true.
+   * @group Props
+   */
+  @Input() autoColumnFilterType = true;
+
+  /**
+   * If set to true, row data are rendered using innerHTML.
+   * @group Props
+   */
+  @Input() renderDataAsHTML = false;
 
   /**
    * An array of objects to display.

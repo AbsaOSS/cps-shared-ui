@@ -468,7 +468,22 @@ export class TreeTablePageComponent implements OnInit {
   colsVirtual = [
     { field: 'name', header: 'Name' },
     { field: 'size', header: 'Size' },
-    { field: 'tag', header: 'Tag' }
+    { field: 'tag', header: 'Tag' },
+    { field: 'type', header: 'String (only 5 distinct values)' },
+    { field: 'date', header: 'Date', dateFormat: 'dd. MM. yyyy' },
+    { field: 'sizeEven', header: 'Boolean' },
+    {
+      field: 'date2',
+      header: 'Date but with category filter',
+      filterType: 'category',
+      dateFormat: 'yyyy/MM/dd HH:mm:ss'
+    }
+  ];
+
+  colsHTML = [
+    { field: 'a', header: 'Header A' },
+    { field: 'b', header: 'Header B' },
+    { field: 'c', header: 'Header C' }
   ];
 
   selCols: { [key: string]: any }[] = [];
@@ -478,6 +493,25 @@ export class TreeTablePageComponent implements OnInit {
   isRemoveBtnVisible = false;
 
   componentData = ComponentData;
+
+  treeDataWithHTML = [
+    {
+      data: {
+        a: '<strong>hello</strong>',
+        b: '<h2>world</h2>',
+        c: '<a href="https://www.github.com">link to github</a>'
+      },
+      children: [
+        {
+          data: {
+            a: 'this is sanitized <script>console.log("pwned")</script>',
+            b: '<img src="/assets/ui_logo.svg" width="100" />',
+            c: '<code>null === undefined</code>'
+          }
+        }
+      ]
+    }
+  ];
 
   ngOnInit(): void {
     this.selCols = this.colsWithFilterType;
@@ -490,21 +524,33 @@ export class TreeTablePageComponent implements OnInit {
         data: {
           name: `Folder${i}`,
           size: i,
-          tag: i * 3
+          tag: i * 3,
+          type: `Type-${i % 5}`,
+          date: new Date(2020, 1, i),
+          sizeEven: i % 2 === 0,
+          date2: new Date(2020, 1, i, 12, 30, 0)
         },
         children: [
           {
             data: {
               name: 'primefaces.mkv',
               size: 1000,
-              tag: 7
+              tag: 7,
+              type: `Type-${i % 5}`,
+              date: new Date(2020, 1, i),
+              sizeEven: i % 2 === 0,
+              date2: new Date(2020, 1, i, 12, 30, 0)
             }
           },
           {
             data: {
               name: 'intro.avi',
               size: 500,
-              tag: 9
+              tag: 9,
+              type: `Type-${i % 5}`,
+              date: new Date(2020, 1, i),
+              sizeEven: i % 2 === 0,
+              date2: new Date(2020, 1, i, 12, 30, 0)
             }
           }
         ]

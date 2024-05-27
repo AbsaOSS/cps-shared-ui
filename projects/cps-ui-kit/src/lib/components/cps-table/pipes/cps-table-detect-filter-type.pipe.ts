@@ -2,10 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { CpsColumnFilterType } from '../cps-column-filter-types';
 
 @Pipe({
-  name: 'cpsDetectFilterType',
+  name: 'cpsTableDetectFilterType',
   standalone: true
 })
-export class CpsDetectFilterTypePipe implements PipeTransform {
+export class CpsTableDetectFilterTypePipe implements PipeTransform {
   transform(
     data: { [key: string]: unknown }[],
     column: string
