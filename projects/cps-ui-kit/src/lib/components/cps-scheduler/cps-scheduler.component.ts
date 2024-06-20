@@ -10,11 +10,11 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
+  FormBuilder,
   FormControl,
+  FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  UntypedFormBuilder,
-  UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { timeZones } from './cps-scheduler.utils';
@@ -180,7 +180,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   selectOptions = this._getSelectOptions();
   timeZoneOptions = timeZones.map((tz) => ({ label: tz, value: tz }));
   state: any;
-  form: UntypedFormGroup = this._fb.group({
+  form: FormGroup = this._fb.group({
     advanced: ['', [this._validateAdvancedExpr]]
   });
 
@@ -189,7 +189,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
-    private _fb: UntypedFormBuilder,
+    private _fb: FormBuilder,
     private _cdr: ChangeDetectorRef
   ) {}
 
@@ -204,10 +204,6 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       this.scheduleTypes.shift();
       if (!this.cron) this.cron = this._minutesDefault;
     }
-
-    this.form.setValue({
-      advanced: this.state.advanced.expression ?? ''
-    });
     this._handleModelChange(this.cron);
   }
 
