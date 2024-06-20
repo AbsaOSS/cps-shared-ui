@@ -1,5 +1,27 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
+
+  <cps-button-toggle
+    label="File extension"
+    [options]="fileUploadOptions"
+    [value]="selectedFileUploadType.value"
+    (valueChanged)="onFileExtensionChanged($event)"
+    [mandatory]="false">
+  </cps-button-toggle>
+  <br/>
+  <cps-file-upload
+    [extensions]="[selectedFileUploadType.value]"
+    [fileDesc]="selectedFileUploadType!.label || ''"
+    width="500"
+    [fileProcessingCallback]="processUploadedFile"
+    (fileUploadFailed)="onFileUploadFailed($event)"
+    (fileUploaded)="onFileUploaded($event)"
+    (uploadedFileRemoved)="onUploadedFileRemoved($event)">
+  </cps-file-upload>
+
+  <br/>
+  <hr/>
+  <br/>
   <cps-file-upload
     [extensions]="['.jpg', '.png', 'pdf']"
     fileDesc="Pictures or PDFs"
@@ -8,5 +30,7 @@
     (fileUploadFailed)="onFileUploadFailed($event)"
     (fileUploaded)="onFileUploaded($event)"
     (uploadedFileRemoved)="onUploadedFileRemoved($event)">
+    <cps-icon color="calm" icon="info-circle" size="xsmall"></cps-icon>
+    The file should be a small sample file to<br />infer the schema, which will be shown in<br />the next step
   </cps-file-upload>
 </app-component-docs-viewer>

@@ -2,6 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsFileUploadComponent } from 'cps-ui-kit';
 import { Observable, catchError, from, map, of } from 'rxjs';
+import {
+  CpsButtonToggleComponent,
+  CpsButtonToggleOption
+} from '../../../../../cps-ui-kit/src/lib/components/cps-button-toggle/cps-button-toggle.component';
+import { CpsIconComponent } from '../../../../../cps-ui-kit/src/lib/components/cps-icon/cps-icon.component';
+import componentData from '../../api-data/cps-file-upload.json';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -9,13 +15,25 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 @Component({
   selector: 'app-file-upload-page',
   standalone: true,
-  imports: [CommonModule, CpsFileUploadComponent, ComponentDocsViewerComponent],
+  imports: [
+    CommonModule,
+    CpsIconComponent,
+    CpsButtonToggleComponent,
+    CpsFileUploadComponent,
+    ComponentDocsViewerComponent
+  ],
   templateUrl: './file-upload-page.component.html',
   styleUrls: ['./file-upload-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class FileUploadPageComponent {
   componentData = ComponentData;
+  fileUploadOptions: CpsButtonToggleOption[] = [
+    { label: 'Pictures', value: '.jpg' },
+    { label: 'Documents', value: '.pdf' },
+    { label: 'Pictures', value: '.png' }
+  ];
+  selectedFileUploadType: CpsButtonToggleOption = this.fileUploadOptions[0];
 
   processUploadedFile(file: File): Observable<boolean> {
     return from(file.text()).pipe(
@@ -40,5 +58,14 @@ export class FileUploadPageComponent {
 
   onUploadedFileRemoved(fileName: string) {
     console.log('File removed: ', fileName);
+  }
+
+  onFileExtensionChanged(event: string) {
+    const foundSelectedItem = this.fileUploadOptions.find(
+      (item) => item.value === event
+    );
+    if (foundSelectedItem) {
+      this.selectedFileUploadType = foundSelectedItem;
+    }
   }
 }

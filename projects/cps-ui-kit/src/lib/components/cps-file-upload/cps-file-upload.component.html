@@ -12,6 +12,7 @@
     (mouseleave)="isDragoverFile = false"
     (drop)="tryUploadFile($event)">
     <input
+      #fileInput
       (change)="tryUploadFile($event)"
       type="file"
       [accept]="extensionsString"
@@ -28,6 +29,9 @@
         extensionsStringAsterisks ? '(' + extensionsStringAsterisks + ')' : ''
       }}</span
     >
+    <div class="cps-file-upload-dropzone-content">
+      <ng-content></ng-content>
+    </div>
     <cps-progress-linear
       *ngIf="isProcessingFile && uploadedFile"
       height="3"

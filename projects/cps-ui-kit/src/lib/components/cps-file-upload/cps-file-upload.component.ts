@@ -1,9 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { convertSize } from '../../utils/internal/size-utils';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
+import { catchError, Observable, of, take } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
-import { Observable, catchError, of, take } from 'rxjs';
 
 /**
  * CpsFileUploadComponent is an advanced uploader with dragdrop support.
@@ -69,9 +75,19 @@ export class CpsFileUploadComponent implements OnInit {
   extensionsStringAsterisks = '';
 
   isProcessingFile = false;
+  fileInput?: HTMLInputElement;
 
   ngOnInit(): void {
-    this.width = convertSize(this.width);
+    this.updateExtensionsString();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.extensions) {
+      this.updateExtensionsString();
+    }
+  }
+
+  updateExtensionsString(): void {
     this.extensions = this.extensions.map((ext) =>
       ext.startsWith('.') ? ext : '.' + ext
     );
@@ -124,6 +140,11 @@ export class CpsFileUploadComponent implements OnInit {
   removeUploadedFile() {
     const name = this.uploadedFile?.name ?? '';
     this.uploadedFile = undefined;
+
+    if (this.fileInput) {
+      this.fileInput.value = '';
+    }
+
     this.uploadedFileRemoved.emit(name);
   }
 
