@@ -203,14 +203,13 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       if (!this.cron) this.cron = this._minutesDefault;
     }
 
-    this._handleModelChange(this.cron);
-
     this.form = this._fb.group({
       advanced: [
         this.state.advanced.expression ?? '',
         [this._validateAdvancedExpr]
       ]
     });
+    this._handleModelChange(this.cron);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
