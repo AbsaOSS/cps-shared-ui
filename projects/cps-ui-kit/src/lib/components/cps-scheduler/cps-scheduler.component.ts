@@ -180,7 +180,9 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   selectOptions = this._getSelectOptions();
   timeZoneOptions = timeZones.map((tz) => ({ label: tz, value: tz }));
   state: any;
-  form!: UntypedFormGroup;
+  form: UntypedFormGroup = this._fb.group({
+    advanced: ['', [this._validateAdvancedExpr]]
+  });
 
   private _isDirty = false;
   private _minutesDefault = '0/1 * 1/1 * ? *';
@@ -203,11 +205,8 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
       if (!this.cron) this.cron = this._minutesDefault;
     }
 
-    this.form = this._fb.group({
-      advanced: [
-        this.state.advanced.expression ?? '',
-        [this._validateAdvancedExpr]
-      ]
+    this.form.setValue({
+      advanced: this.state.advanced.expression ?? ''
     });
     this._handleModelChange(this.cron);
   }
