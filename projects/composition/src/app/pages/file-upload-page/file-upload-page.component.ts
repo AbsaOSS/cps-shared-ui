@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsFileUploadComponent } from 'cps-ui-kit';
-import { Observable, catchError, from, map, of } from 'rxjs';
 import {
+  CpsFileUploadComponent,
   CpsButtonToggleComponent,
-  CpsButtonToggleOption
-} from '../../../../../cps-ui-kit/src/lib/components/cps-button-toggle/cps-button-toggle.component';
-import { CpsIconComponent } from '../../../../../cps-ui-kit/src/lib/components/cps-icon/cps-icon.component';
-import componentData from '../../api-data/cps-file-upload.json';
+  CpsButtonToggleOption,
+  CpsIconComponent,
+  CpsDividerComponent
+} from 'cps-ui-kit';
+import { Observable, catchError, from, map, of } from 'rxjs';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -20,7 +20,8 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
     CpsIconComponent,
     CpsButtonToggleComponent,
     CpsFileUploadComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CpsDividerComponent
   ],
   templateUrl: './file-upload-page.component.html',
   styleUrls: ['./file-upload-page.component.scss'],
@@ -29,10 +30,11 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 export class FileUploadPageComponent {
   componentData = ComponentData;
   fileUploadOptions: CpsButtonToggleOption[] = [
-    { label: 'Pictures', value: '.jpg' },
-    { label: 'Documents', value: '.pdf' },
-    { label: 'Pictures', value: '.png' }
+    { label: 'JPG image', value: '.jpg' },
+    { label: 'PDF document', value: '.pdf' },
+    { label: 'PNG image', value: '.png' }
   ];
+
   selectedFileUploadType: CpsButtonToggleOption = this.fileUploadOptions[0];
 
   processUploadedFile(file: File): Observable<boolean> {

@@ -41,6 +41,7 @@ export class CpsFileUploadComponent implements OnInit {
    */
   @Input() width: number | string = '100%';
 
+  @Input() fileInfo = '';
   /**
    * Callback for uploaded file processing.
    * @group Props
@@ -75,7 +76,6 @@ export class CpsFileUploadComponent implements OnInit {
   extensionsStringAsterisks = '';
 
   isProcessingFile = false;
-  fileInput?: HTMLInputElement;
 
   ngOnInit(): void {
     this.updateExtensionsString();
@@ -140,11 +140,6 @@ export class CpsFileUploadComponent implements OnInit {
   removeUploadedFile() {
     const name = this.uploadedFile?.name ?? '';
     this.uploadedFile = undefined;
-
-    if (this.fileInput) {
-      this.fileInput.value = '';
-    }
-
     this.uploadedFileRemoved.emit(name);
   }
 
