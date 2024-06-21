@@ -36,6 +36,8 @@ export class FileUploadPageComponent {
   ];
 
   selectedFileUploadType: CpsButtonToggleOption = this.fileUploadOptions[0];
+  fileInfo: string =
+    'The file should be a small sample file to infer the schema, which will be shown in the next step';
 
   processUploadedFile(file: File): Observable<boolean> {
     return from(file.text()).pipe(

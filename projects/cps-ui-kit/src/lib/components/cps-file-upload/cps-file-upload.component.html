@@ -1,4 +1,4 @@
-<div class="cps-file-upload" [ngStyle]="{ width: width }">
+<div class="cps-file-upload" [ngStyle]="{ width: cvtWidth }">
   <div
     class="cps-file-upload-dropzone"
     [ngClass]="{
@@ -31,7 +31,7 @@
     @if(fileInfo) {
       <div class="cps-file-upload-dropzone-content">
         <cps-icon color="calm" icon="info-circle" size="xsmall"></cps-icon>
-        {{fileInfo}
+        {{fileInfo}}
       </div>
     }
     <cps-progress-linear

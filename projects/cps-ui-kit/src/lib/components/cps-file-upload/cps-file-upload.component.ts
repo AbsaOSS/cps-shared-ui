@@ -8,6 +8,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { catchError, Observable, of, take } from 'rxjs';
+import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 
@@ -41,7 +42,12 @@ export class CpsFileUploadComponent implements OnInit {
    */
   @Input() width: number | string = '100%';
 
-  @Input() fileInfo = '';
+  /**
+   * Expected file info block, explaining some extra stuff about file.
+   * @group Props
+   */
+  @Input() fileInfo: string = '';
+
   /**
    * Callback for uploaded file processing.
    * @group Props
@@ -74,11 +80,13 @@ export class CpsFileUploadComponent implements OnInit {
   uploadedFile?: File;
   extensionsString = '';
   extensionsStringAsterisks = '';
+  cvtWidth = '';
 
   isProcessingFile = false;
 
   ngOnInit(): void {
     this.updateExtensionsString();
+    this.cvtWidth = convertSize(this.width);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
