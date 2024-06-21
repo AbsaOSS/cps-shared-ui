@@ -29,6 +29,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 })
 export class FileUploadPageComponent {
   componentData = ComponentData;
+
   fileUploadOptions: CpsButtonToggleOption[] = [
     { label: 'JPG image', value: '.jpg' },
     { label: 'PDF document', value: '.pdf' },
@@ -36,6 +37,7 @@ export class FileUploadPageComponent {
   ];
 
   selectedFileUploadType: CpsButtonToggleOption = this.fileUploadOptions[0];
+
   fileInfo: string =
     'The file should be a small sample file to infer the schema, which will be shown in the next step';
 
