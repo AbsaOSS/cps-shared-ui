@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
   SimpleChanges
@@ -23,7 +24,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
   templateUrl: './cps-file-upload.component.html',
   styleUrls: ['./cps-file-upload.component.scss']
 })
-export class CpsFileUploadComponent implements OnInit {
+export class CpsFileUploadComponent implements OnInit, OnChanges {
   /**
    * Expected extensions of a file to be uploaded. E.g. 'doc or .doc'.
    * @group Props
