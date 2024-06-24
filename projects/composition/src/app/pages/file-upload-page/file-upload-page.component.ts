@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CpsFileUploadComponent } from 'cps-ui-kit';
+import {
+  CpsFileUploadComponent,
+  CpsButtonToggleComponent,
+  CpsButtonToggleOption,
+  CpsIconComponent,
+  CpsDividerComponent
+} from 'cps-ui-kit';
 import { Observable, catchError, from, map, of } from 'rxjs';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
@@ -9,13 +15,31 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 @Component({
   selector: 'app-file-upload-page',
   standalone: true,
-  imports: [CommonModule, CpsFileUploadComponent, ComponentDocsViewerComponent],
+  imports: [
+    CommonModule,
+    CpsIconComponent,
+    CpsButtonToggleComponent,
+    CpsFileUploadComponent,
+    ComponentDocsViewerComponent,
+    CpsDividerComponent
+  ],
   templateUrl: './file-upload-page.component.html',
   styleUrls: ['./file-upload-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class FileUploadPageComponent {
   componentData = ComponentData;
+
+  fileUploadOptions: CpsButtonToggleOption[] = [
+    { label: 'JPG image', value: '.jpg' },
+    { label: 'PDF document', value: '.pdf' },
+    { label: 'PNG image', value: '.png' }
+  ];
+
+  selectedFileUploadType: CpsButtonToggleOption = this.fileUploadOptions[0];
+
+  fileInfo: string =
+    'The file should be a small sample file to infer the schema, which will be shown in the next step';
 
   processUploadedFile(file: File): Observable<boolean> {
     return from(file.text()).pipe(
@@ -40,5 +64,14 @@ export class FileUploadPageComponent {
 
   onUploadedFileRemoved(fileName: string) {
     console.log('File removed: ', fileName);
+  }
+
+  onFileExtensionChanged(event: string) {
+    const foundSelectedItem = this.fileUploadOptions.find(
+      (item) => item.value === event
+    );
+    if (foundSelectedItem) {
+      this.selectedFileUploadType = foundSelectedItem;
+    }
   }
 }

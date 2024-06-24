@@ -1,9 +1,17 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
+import { catchError, Observable, of, take } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
-import { Observable, catchError, of, take } from 'rxjs';
 
 /**
  * CpsFileUploadComponent is an advanced uploader with dragdrop support.
@@ -16,7 +24,7 @@ import { Observable, catchError, of, take } from 'rxjs';
   templateUrl: './cps-file-upload.component.html',
   styleUrls: ['./cps-file-upload.component.scss']
 })
-export class CpsFileUploadComponent implements OnInit {
+export class CpsFileUploadComponent implements OnInit, OnChanges {
   /**
    * Expected extensions of a file to be uploaded. E.g. 'doc or .doc'.
    * @group Props
@@ -34,6 +42,12 @@ export class CpsFileUploadComponent implements OnInit {
    * @group Props
    */
   @Input() width: number | string = '100%';
+
+  /**
+   * Expected file info block, explaining some extra stuff about file.
+   * @group Props
+   */
+  @Input() fileInfo: string = '';
 
   /**
    * Callback for uploaded file processing.
@@ -67,11 +81,22 @@ export class CpsFileUploadComponent implements OnInit {
   uploadedFile?: File;
   extensionsString = '';
   extensionsStringAsterisks = '';
+  cvtWidth = '';
 
   isProcessingFile = false;
 
   ngOnInit(): void {
-    this.width = convertSize(this.width);
+    this.updateExtensionsString();
+    this.cvtWidth = convertSize(this.width);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.extensions) {
+      this.updateExtensionsString();
+    }
+  }
+
+  updateExtensionsString(): void {
     this.extensions = this.extensions.map((ext) =>
       ext.startsWith('.') ? ext : '.' + ext
     );

@@ -30,6 +30,14 @@
                         "description": "Width of the component, a number denoting pixels or a string."
                     },
                     {
+                        "name": "fileInfo",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Expected file info block, explaining some extra stuff about file."
+                    },
+                    {
                         "name": "fileProcessingCallback",
                         "optional": true,
                         "readonly": false,

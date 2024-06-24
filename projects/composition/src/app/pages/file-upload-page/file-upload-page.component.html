@@ -1,12 +1,44 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <cps-file-upload
-    [extensions]="['.jpg', '.png', 'pdf']"
-    fileDesc="Pictures or PDFs"
-    width="500"
-    [fileProcessingCallback]="processUploadedFile"
-    (fileUploadFailed)="onFileUploadFailed($event)"
-    (fileUploaded)="onFileUploaded($event)"
-    (uploadedFileRemoved)="onUploadedFileRemoved($event)">
-  </cps-file-upload>
+  <h2 class="section-title">File upload component with the dependency on selected file extension</h2>
+  <div>
+    <p>
+      <cps-button-toggle
+        label="File extension"
+        [options]="fileUploadOptions"
+        [value]="selectedFileUploadType.value"
+        (valueChanged)="onFileExtensionChanged($event)"
+        [mandatory]="false">
+      </cps-button-toggle>
+      <br/>
+      <cps-file-upload
+        [extensions]="[selectedFileUploadType.value]"
+        [fileDesc]="selectedFileUploadType!.label || ''"
+        width="400"
+        [fileProcessingCallback]="processUploadedFile"
+        (fileUploadFailed)="onFileUploadFailed($event)"
+        (fileUploaded)="onFileUploaded($event)"
+        (uploadedFileRemoved)="onUploadedFileRemoved($event)">
+      </cps-file-upload>
+    </p>
+  </div>
+
+  <cps-divider/>
+
+  <h2 class="section-title">File upload component with extra info</h2>
+  <div>
+    <p>
+      <cps-file-upload
+        [extensions]="['.jpg', '.png', 'pdf']"
+        [fileInfo]="fileInfo"
+        fileDesc="Pictures or PDFs"
+        width="500"
+        [fileProcessingCallback]="processUploadedFile"
+        (fileUploadFailed)="onFileUploadFailed($event)"
+        (fileUploaded)="onFileUploaded($event)"
+        (uploadedFileRemoved)="onUploadedFileRemoved($event)">
+      </cps-file-upload>
+    </p>
+  </div>
+
 </app-component-docs-viewer>
