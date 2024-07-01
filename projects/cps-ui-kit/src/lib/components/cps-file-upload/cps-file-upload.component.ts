@@ -100,7 +100,7 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
    */
   @Output() uploadedFileRemoved = new EventEmitter<string>();
 
-  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
 
   isDragoverFile = false;
   uploadedFile?: File;
