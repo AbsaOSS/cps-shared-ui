@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import { catchError, Observable, of, take } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
@@ -76,6 +78,8 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
    * @group Emits
    */
   @Output() uploadedFileRemoved = new EventEmitter<string>();
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   isDragoverFile = false;
   uploadedFile?: File;
@@ -150,6 +154,10 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     const name = this.uploadedFile?.name ?? '';
     this.uploadedFile = undefined;
     this.uploadedFileRemoved.emit(name);
+
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   private _isFileExtensionValid(file?: File) {
