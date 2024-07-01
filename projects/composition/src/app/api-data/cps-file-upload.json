@@ -44,6 +44,22 @@
                         "type": "Function",
                         "default": "undefined",
                         "description": "Callback for uploaded file processing."
+                    },
+                    {
+                        "name": "infoTooltipPosition",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "default": "top",
+                        "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
+                    },
+                    {
+                        "name": "tooltipOffset",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "12",
+                        "description": "Tooltip offset for styling."
                     }
                 ]
             },

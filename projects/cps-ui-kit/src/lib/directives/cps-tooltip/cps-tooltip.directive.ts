@@ -222,7 +222,7 @@ export class CpsTooltipDirective implements OnDestroy {
             targetElRect.left +
             this.window.scrollX +
             (targetEl.offsetWidth - popupRect.width) / 2,
-          top: targetElRect.bottom + this.window.scrollY + tooltipOffset
+          top: targetElRect.bottom + this.window.scrollY + this.tooltipOffset
         };
       case 'left':
         return {
@@ -230,7 +230,7 @@ export class CpsTooltipDirective implements OnDestroy {
             targetElRect.left -
             this.window.scrollX -
             popupRect.width -
-            tooltipOffset,
+            this.tooltipOffset,
           top:
             targetElRect.top +
             this.window.scrollY +
@@ -238,7 +238,7 @@ export class CpsTooltipDirective implements OnDestroy {
         };
       case 'right':
         return {
-          left: targetElRect.right + this.window.scrollX + tooltipOffset,
+          left: targetElRect.right + this.window.scrollX + this.tooltipOffset,
           top:
             targetElRect.top +
             this.window.scrollY +
@@ -254,7 +254,7 @@ export class CpsTooltipDirective implements OnDestroy {
             targetElRect.top +
             this.window.scrollY -
             popupRect.height -
-            tooltipOffset
+            this.tooltipOffset
         };
     }
   }
