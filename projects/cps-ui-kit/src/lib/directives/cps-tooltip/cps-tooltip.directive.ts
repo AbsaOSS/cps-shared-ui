@@ -84,6 +84,12 @@ export class CpsTooltipDirective implements OnDestroy {
    */
   @Input() tooltipContentClass = 'cps-tooltip-content';
 
+  /**
+   * Tooltip offset for styling.
+   * @group Props
+   */
+  @Input() tooltipOffset: number = 8;
+
   private _popup?: HTMLDivElement;
   private _showTimeout?: any;
   private _hideTimeout?: any;
@@ -216,11 +222,15 @@ export class CpsTooltipDirective implements OnDestroy {
             targetElRect.left +
             this.window.scrollX +
             (targetEl.offsetWidth - popupRect.width) / 2,
-          top: targetElRect.bottom + this.window.scrollY + 8
+          top: targetElRect.bottom + this.window.scrollY + tooltipOffset
         };
       case 'left':
         return {
-          left: targetElRect.left - this.window.scrollX - popupRect.width - 8,
+          left:
+            targetElRect.left -
+            this.window.scrollX -
+            popupRect.width -
+            tooltipOffset,
           top:
             targetElRect.top +
             this.window.scrollY +
@@ -228,7 +238,7 @@ export class CpsTooltipDirective implements OnDestroy {
         };
       case 'right':
         return {
-          left: targetElRect.right + this.window.scrollX + 8,
+          left: targetElRect.right + this.window.scrollX + tooltipOffset,
           top:
             targetElRect.top +
             this.window.scrollY +
@@ -240,7 +250,11 @@ export class CpsTooltipDirective implements OnDestroy {
             targetElRect.left +
             this.window.scrollX +
             (targetEl.offsetWidth - popupRect.width) / 2,
-          top: targetElRect.top + this.window.scrollY - popupRect.height - 8
+          top:
+            targetElRect.top +
+            this.window.scrollY -
+            popupRect.height -
+            tooltipOffset
         };
     }
   }

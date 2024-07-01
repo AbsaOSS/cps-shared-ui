@@ -7,14 +7,14 @@
         label="File extension"
         [options]="fileUploadOptions"
         [value]="selectedFileUploadType.value"
-        (valueChanged)="onFileExtensionChanged($event)"
-        [mandatory]="false">
+        (valueChanged)="onFileExtensionChanged($event)">
       </cps-button-toggle>
       <br/>
       <cps-file-upload
         [extensions]="[selectedFileUploadType.value]"
         [fileDesc]="selectedFileUploadType!.label || ''"
         width="400"
+        infoTooltipPosition="bottom"
         [fileProcessingCallback]="processUploadedFile"
         (fileUploadFailed)="onFileUploadFailed($event)"
         (fileUploaded)="onFileUploaded($event)"

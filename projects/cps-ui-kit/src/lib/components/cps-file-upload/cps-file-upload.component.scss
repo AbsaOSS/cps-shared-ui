@@ -80,14 +80,22 @@ $text-color-darkest: var(--cps-color-text-darkest);
         .cps-file-upload-uploaded-file-title {
           display: flex;
           align-items: center;
+          flex: 1;
+          min-width: 0;
           .cps-file-upload-uploaded-file-name {
             color: $text-color-darkest;
             font-size: 20px;
             margin: 0 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: calc(100% - 60px);
           }
         }
         .cps-file-upload-uploaded-file-remove-icon {
           cursor: pointer;
+          flex-shrink: 0;
+          margin-left: 8px;
           &:hover {
             ::ng-deep .cps-icon {
               color: var(--cps-color-error-darken1) !important;

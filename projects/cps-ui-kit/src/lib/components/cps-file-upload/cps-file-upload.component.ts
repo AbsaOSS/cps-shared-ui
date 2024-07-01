@@ -13,6 +13,10 @@ import {
 import { catchError, Observable, of, take } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsTooltipDirective,
+  CpsTooltipPosition
+} from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 
 /**
@@ -22,7 +26,12 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 @Component({
   selector: 'cps-file-upload',
   standalone: true,
-  imports: [CommonModule, CpsIconComponent, CpsProgressLinearComponent],
+  imports: [
+    CommonModule,
+    CpsIconComponent,
+    CpsProgressLinearComponent,
+    CpsTooltipDirective
+  ],
   templateUrl: './cps-file-upload.component.html',
   styleUrls: ['./cps-file-upload.component.scss']
 })
@@ -57,6 +66,18 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
    */
   @Input() fileProcessingCallback?: (file: File) => Observable<boolean> =
     undefined;
+
+  /**
+   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
+  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * Tooltip offset for styling.
+   * @group Props
+   */
+  @Input() tooltipOffset: number = 12;
 
   /**
    * Callback to invoke when file is uploaded.
