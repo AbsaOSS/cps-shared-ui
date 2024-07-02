@@ -75,6 +75,14 @@
                         "type": "string",
                         "default": "cps-tooltip-content",
                         "description": "Tooltip content class for styling."
+                    },
+                    {
+                        "name": "tooltipOffset",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number",
+                        "default": "8",
+                        "description": "Tooltip offset for styling."
                     }
                 ]
             }

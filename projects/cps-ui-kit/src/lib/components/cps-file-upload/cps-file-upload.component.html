@@ -12,6 +12,7 @@
     (mouseleave)="isDragoverFile = false"
     (drop)="tryUploadFile($event)">
     <input
+      #fileInput
       (change)="tryUploadFile($event)"
       type="file"
       [accept]="extensionsString"
@@ -51,7 +52,11 @@
           [icon]="isProcessingFile ? 'pending' : 'toast-success'"
           [color]="isProcessingFile ? 'warn' : 'success'">
         </cps-icon>
-        <div class="cps-file-upload-uploaded-file-name">
+        <div class="cps-file-upload-uploaded-file-name"
+             cpsTooltip="{{ uploadedFile.name }}"
+             [tooltipPosition]="fileNameTooltipPosition"
+             [tooltipOffset]="fileNameTooltipOffset"
+             tooltipOpenOn="hover">
           {{ uploadedFile.name }}
         </div>
       </div>

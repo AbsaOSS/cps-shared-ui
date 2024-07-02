@@ -1,16 +1,23 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
+  numberAttribute,
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import { catchError, Observable, of, take } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsTooltipDirective,
+  CpsTooltipPosition
+} from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 
 /**
@@ -20,7 +27,12 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 @Component({
   selector: 'cps-file-upload',
   standalone: true,
-  imports: [CommonModule, CpsIconComponent, CpsProgressLinearComponent],
+  imports: [
+    CommonModule,
+    CpsIconComponent,
+    CpsProgressLinearComponent,
+    CpsTooltipDirective
+  ],
   templateUrl: './cps-file-upload.component.html',
   styleUrls: ['./cps-file-upload.component.scss']
 })
@@ -57,6 +69,18 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     undefined;
 
   /**
+   * Position of file name tooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * @group Props
+   */
+  @Input() fileNameTooltipPosition: CpsTooltipPosition = 'top';
+
+  /**
+   * File name tooltip offset for styling.
+   * @group Props
+   */
+  @Input({ transform: numberAttribute }) fileNameTooltipOffset: number = 12;
+
+  /**
    * Callback to invoke when file is uploaded.
    * @param {File} File
    * @group Emits
@@ -76,6 +100,8 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
    * @group Emits
    */
   @Output() uploadedFileRemoved = new EventEmitter<string>();
+
+  @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
 
   isDragoverFile = false;
   uploadedFile?: File;
@@ -150,6 +176,10 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     const name = this.uploadedFile?.name ?? '';
     this.uploadedFile = undefined;
     this.uploadedFileRemoved.emit(name);
+
+    if (this.fileInput) {
+      this.fileInput.nativeElement.value = '';
+    }
   }
 
   private _isFileExtensionValid(file?: File) {
