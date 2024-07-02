@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  numberAttribute,
   OnChanges,
   OnInit,
   Output,
@@ -68,16 +69,16 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     undefined;
 
   /**
-   * Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'.
+   * Position of file name tooltip, it can be 'top', 'bottom', 'left' or 'right'.
    * @group Props
    */
-  @Input() infoTooltipPosition: CpsTooltipPosition = 'top';
+  @Input() fileNameTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
-   * Tooltip offset for styling.
+   * File name tooltip offset for styling.
    * @group Props
    */
-  @Input() tooltipOffset: number = 12;
+  @Input({ transform: numberAttribute }) fileNameTooltipOffset: number = 12;
 
   /**
    * Callback to invoke when file is uploaded.
