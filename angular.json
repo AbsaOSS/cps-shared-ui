@@ -90,12 +90,15 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/composition/browser",
+            "outputPath": {
+              "base": "dist/composition"
+            },
             "index": "projects/composition/src/index.html",
-            "main": "projects/composition/src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "projects/composition/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -106,8 +109,11 @@
                 "output": "assets"
               }
             ],
-            "styles": ["projects/composition/src/styles.scss"],
-            "scripts": []
+            "styles": [
+              "projects/composition/src/styles.scss"
+            ],
+            "scripts": [],
+            "browser": "projects/composition/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -131,7 +137,6 @@
               }
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -168,59 +173,6 @@
             "styles": ["projects/composition/src/styles.scss"],
             "scripts": []
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/composition/server",
-            "main": "projects/composition/server.ts",
-            "tsConfig": "projects/composition/tsconfig.server.json",
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "outputHashing": "media"
-            },
-            "development": {
-              "buildOptimizer": false,
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "composition:build:development",
-              "serverTarget": "composition:server:development"
-            },
-            "production": {
-              "browserTarget": "composition:build:production",
-              "serverTarget": "composition:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "routes": ["/"]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "composition:build:production",
-              "serverTarget": "composition:server:production"
-            },
-            "development": {
-              "browserTarget": "composition:build:development",
-              "serverTarget": "composition:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }
