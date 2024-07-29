@@ -45,6 +45,20 @@ export class TableRowMenuComponent implements OnInit {
   }
 
   /**
+   * Custom items to be displayed in the menu.
+   * @group Props
+   */
+  @Input()
+  set customItems(value: CpsMenuItem[] | undefined) {
+    this._customRowMenuItems = value;
+    this.initializeItems();
+  }
+
+  get customItems(): CpsMenuItem[] | undefined {
+    return this._customRowMenuItems;
+  }
+
+  /**
    * Determines whether the 'Edit' button should be displayed in the menu.
    * @group Props
    */
@@ -60,6 +74,7 @@ export class TableRowMenuComponent implements OnInit {
 
   private _showRowRemoveButton = true;
   private _showRowEditButton = true;
+  private _customRowMenuItems?: CpsMenuItem[];
 
   items: CpsMenuItem[] = [];
 
@@ -70,24 +85,28 @@ export class TableRowMenuComponent implements OnInit {
   initializeItems() {
     this.items = [];
 
-    if (this.showRowEditButton) {
-      this.items.push({
-        title: 'Edit',
-        icon: 'edit',
-        action: (event: any) => {
-          this.editRowBtnClicked.emit(event);
-        }
-      });
-    }
+    if (this._customRowMenuItems) {
+      this.items = this._customRowMenuItems;
+    } else {
+      if (this.showRowEditButton) {
+        this.items.push({
+          title: 'Edit',
+          icon: 'edit',
+          action: (event: any) => {
+            this.editRowBtnClicked.emit(event);
+          }
+        });
+      }
 
-    if (this.showRowRemoveButton) {
-      this.items.push({
-        title: 'Remove',
-        icon: 'remove',
-        action: (event: any) => {
-          this.removeRowBtnClicked.emit(event);
-        }
-      });
+      if (this.showRowRemoveButton) {
+        this.items.push({
+          title: 'Remove',
+          icon: 'remove',
+          action: (event: any) => {
+            this.removeRowBtnClicked.emit(event);
+          }
+        });
+      }
     }
   }
 }
