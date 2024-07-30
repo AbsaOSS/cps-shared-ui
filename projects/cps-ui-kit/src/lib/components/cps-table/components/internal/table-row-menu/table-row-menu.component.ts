@@ -83,11 +83,10 @@ export class TableRowMenuComponent implements OnInit {
   }
 
   initializeItems() {
-    this.items = [];
-
     if (this._customRowMenuItems) {
       this.items = this._customRowMenuItems;
     } else {
+      this.items = [];
       if (this.showRowEditButton) {
         this.items.push({
           title: 'Edit',
