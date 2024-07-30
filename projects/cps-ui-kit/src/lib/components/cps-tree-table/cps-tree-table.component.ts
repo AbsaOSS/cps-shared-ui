@@ -35,7 +35,7 @@ import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
 import { cloneDeep, isEqual } from 'lodash-es';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
@@ -204,17 +204,24 @@ export class CpsTreeTableComponent
 
   /**
    * Determines whether the 'Remove' button should be displayed in the row menu.
-   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * Note: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set.
    * @group Props
    */
   @Input() showRowRemoveButton = true;
 
   /**
    * Determines whether the 'Edit' button should be displayed in the row menu.
-   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * Note: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set.
    * @group Props
    */
   @Input() showRowEditButton = true;
+
+  /**
+   * Custom items to be displayed in the row menu.
+   * Note: This setting only takes effect if 'showRowMenu' is true.
+   * @group Props
+   */
+  @Input() rowMenuItems?: CpsMenuItem[];
 
   /**
    * When enabled, a loader component is displayed.

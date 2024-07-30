@@ -12,7 +12,8 @@ import {
   CpsButtonToggleOption,
   CpsTableSize,
   CpsTabChangeEvent,
-  CpsColumnFilterMatchMode
+  CpsColumnFilterMatchMode,
+  CpsMenuItem
 } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
@@ -373,6 +374,23 @@ export class TablePageComponent implements OnInit {
   colsHTML = this.colsVirtual.slice(0, 3);
 
   componentData = ComponentData;
+
+  customRowMenuItems: CpsMenuItem[] = [
+    {
+      title: 'Custom menu item',
+      icon: 'heart',
+      action: (row: any) => {
+        console.log('Custom menu item clicked', row);
+      }
+    },
+    {
+      title: 'Edit row',
+      icon: 'edit',
+      action: (row: any) => {
+        this.onEditRowButtonClicked(row);
+      }
+    }
+  ];
 
   ngOnInit(): void {
     this._genVirtualData();
