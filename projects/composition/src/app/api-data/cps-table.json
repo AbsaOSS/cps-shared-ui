@@ -107,7 +107,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set."
                     },
                     {
                         "name": "showRowEditButton",
@@ -115,7 +115,14 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set."
+                    },
+                    {
+                        "name": "rowMenuItems",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "CpsMenuItem[]",
+                        "description": "Custom items to be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
                     },
                     {
                         "name": "reorderableRows",

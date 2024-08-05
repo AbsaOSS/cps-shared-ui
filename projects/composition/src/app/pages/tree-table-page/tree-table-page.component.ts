@@ -12,7 +12,8 @@ import {
   CpsButtonToggleComponent,
   CpsTreeTableHeaderSelectableDirective,
   CpsButtonToggleOption,
-  CpsTreeTableSize
+  CpsTreeTableSize,
+  CpsMenuItem
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tree-table.json';
@@ -510,6 +511,23 @@ export class TreeTablePageComponent implements OnInit {
           }
         }
       ]
+    }
+  ];
+
+  customRowMenuItems: CpsMenuItem[] = [
+    {
+      title: 'Custom menu item',
+      icon: 'heart',
+      action: (_) => {
+        console.log('Custom menu item clicked');
+      }
+    },
+    {
+      title: 'Edit row',
+      icon: 'edit',
+      action: (_) => {
+        this.onEditRowButtonClicked();
+      }
     }
   ];
 
