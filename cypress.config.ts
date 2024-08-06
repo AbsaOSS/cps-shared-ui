@@ -4,7 +4,16 @@ export default defineConfig({
   component: {
     devServer: {
       framework: 'angular',
-      bundler: 'webpack'
+      bundler: 'webpack',
+      options: {
+        projectConfig: {
+          root: './',
+          sourceRoot: 'src',
+          buildOptions: {
+            outputPath: 'dist/composition'
+          }
+        }
+      }
     },
     specPattern: 'projects/cps-ui-kit/**/*.cy.ts',
     video: false
