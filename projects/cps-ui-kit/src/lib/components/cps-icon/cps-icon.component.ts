@@ -31,6 +31,7 @@ export const iconNames = [
   'columns',
   'construction',
   'controls',
+  'copy',
   'csv',
   'cube',
   'database',
