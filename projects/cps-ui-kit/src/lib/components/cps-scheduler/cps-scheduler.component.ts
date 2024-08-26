@@ -122,6 +122,12 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   @Input() showAdvanced = true;
 
   /**
+   * Determines whether to show the 'Minutes' tab.
+   * @group Props
+   */
+  @Input() showMinutes = true;
+
+  /**
    * Determines whether to show the time zone selector.
    * @group Props
    */
@@ -198,6 +204,15 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
     if (!this.showAdvanced) {
       this.scheduleTypes.pop();
+    }
+
+    if (!this.showMinutes) {
+      const minutesIndex = this.scheduleTypes.findIndex(
+        (option) => option.value === 'Minutes'
+      );
+      if (minutesIndex !== -1) {
+        this.scheduleTypes.splice(minutesIndex, 1);
+      }
     }
 
     if (!this.showNotSet) {

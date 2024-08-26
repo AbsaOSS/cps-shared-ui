@@ -46,6 +46,14 @@
                         "description": "Determines whether to show the 'Advanced' tab."
                     },
                     {
+                        "name": "showMinutes",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "Determines whether to show the 'Minutes' tab."
+                    },
+                    {
                         "name": "showTimeZone",
                         "optional": false,
                         "readonly": false,
