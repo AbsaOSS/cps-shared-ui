@@ -80,6 +80,11 @@ Make sure `ng build cps-ui-kit --watch` is running, so the library will be rebui
 
 Execute `npm run generate-json-api` to generate documentation for any changes in the components' API.
 
-#### Run cypress tests
+#### Run Jest unit tests
 
 `npm run test`
+
+
+#### Run Cypress e2e tests
+
+`npm run cypress:run` (headless run) or you can open Cypress tests using `npm run cypress:open`
