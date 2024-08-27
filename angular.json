@@ -33,11 +33,7 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "projects/cps-ui-kit/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
+          "builder": "@angular-builders/jest:run"
         },
         "cypress-run": {
           "builder": "@cypress/schematic:cypress",
@@ -96,9 +92,7 @@
               "base": "dist/composition"
             },
             "index": "projects/composition/src/index.html",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/composition/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -109,9 +103,7 @@
                 "output": "assets"
               }
             ],
-            "styles": [
-              "projects/composition/src/styles.scss"
-            ],
+            "styles": ["projects/composition/src/styles.scss"],
             "scripts": [],
             "browser": "projects/composition/src/main.ts"
           },
@@ -164,15 +156,7 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/composition/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": ["projects/composition/src/assets"],
-            "styles": ["projects/composition/src/styles.scss"],
-            "scripts": []
-          }
+          "builder": "@angular-builders/jest:run"
         }
       }
     }
