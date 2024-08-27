@@ -8,9 +8,6 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
-        },
-        "@cypress/schematic:component": {
-          "style": "scss"
         }
       },
       "root": "projects/cps-ui-kit",
@@ -34,40 +31,6 @@
         },
         "test": {
           "builder": "@angular-builders/jest:run"
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "cps-ui-kit:serve",
-            "configFile": "cypress.config.ts"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "cps-ui-kit:serve:production"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false,
-            "configFile": "cypress.config.ts"
-          }
-        },
-        "ct": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "cps-ui-kit:serve",
-            "watch": true,
-            "headless": false,
-            "testingType": "component"
-          },
-          "configurations": {
-            "development": {
-              "devServerTarget": "cps-ui-kit:serve:development"
-            }
-          }
         }
       }
     },
@@ -75,9 +38,6 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
-        },
-        "@cypress/schematic:component": {
           "style": "scss"
         }
       },
@@ -162,7 +122,7 @@
     }
   },
   "cli": {
-    "schematicCollections": ["@cypress/schematic", "@schematics/angular"],
+    "schematicCollections": ["@schematics/angular"],
     "analytics": false
   }
 }
