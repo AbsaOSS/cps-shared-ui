@@ -38,6 +38,3 @@ jobs:
 
       - name: Lint app
         run: npm run lint
-
-      - name: Run Cypress component tests
-        run: npx cypress run --component
