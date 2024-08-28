@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {
-      "cps-ui-kit": ["dist/cps-ui-kit"]
+      "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

@@ -11,10 +11,13 @@ module.exports = {
   plugins: ['@typescript-eslint', 'cypress', 'prettier'],
   rules: {
     'prettier/prettier': ['error'],
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": "warn"
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn'
   },
   globals: {
     Cypress: 'readonly'
+  },
+  env: {
+    jest: true
   }
 };

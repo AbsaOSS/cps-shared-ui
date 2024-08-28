@@ -8,9 +8,6 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
-        },
-        "@cypress/schematic:component": {
-          "style": "scss"
         }
       },
       "root": "projects/cps-ui-kit",
@@ -33,45 +30,7 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "tsConfig": "projects/cps-ui-kit/tsconfig.spec.json",
-            "polyfills": ["zone.js", "zone.js/testing"]
-          }
-        },
-        "cypress-run": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "cps-ui-kit:serve",
-            "configFile": "cypress.config.ts"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "cps-ui-kit:serve:production"
-            }
-          }
-        },
-        "cypress-open": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "watch": true,
-            "headless": false,
-            "configFile": "cypress.config.ts"
-          }
-        },
-        "ct": {
-          "builder": "@cypress/schematic:cypress",
-          "options": {
-            "devServerTarget": "cps-ui-kit:serve",
-            "watch": true,
-            "headless": false,
-            "testingType": "component"
-          },
-          "configurations": {
-            "development": {
-              "devServerTarget": "cps-ui-kit:serve:development"
-            }
-          }
+          "builder": "@angular-builders/jest:run"
         }
       }
     },
@@ -79,9 +38,6 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
-        },
-        "@cypress/schematic:component": {
           "style": "scss"
         }
       },
@@ -96,9 +52,7 @@
               "base": "dist/composition"
             },
             "index": "projects/composition/src/index.html",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/composition/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -109,9 +63,7 @@
                 "output": "assets"
               }
             ],
-            "styles": [
-              "projects/composition/src/styles.scss"
-            ],
+            "styles": ["projects/composition/src/styles.scss"],
             "scripts": [],
             "browser": "projects/composition/src/main.ts"
           },
@@ -164,21 +116,13 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "projects/composition/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": ["projects/composition/src/assets"],
-            "styles": ["projects/composition/src/styles.scss"],
-            "scripts": []
-          }
+          "builder": "@angular-builders/jest:run"
         }
       }
     }
   },
   "cli": {
-    "schematicCollections": ["@cypress/schematic", "@schematics/angular"],
+    "schematicCollections": ["@schematics/angular"],
     "analytics": false
   }
 }

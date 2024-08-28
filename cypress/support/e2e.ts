@@ -1,5 +1,5 @@
 // ***********************************************************
-// This example support/component.ts is processed and
+// This example support/e2e.ts is processed and
 // loaded automatically before your test files.
 //
 // This is a great place to put global configuration and
@@ -16,20 +16,5 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
-import { mount } from 'cypress/angular';
-
-// Augment the Cypress.Chainable interface to include type definitions for
-// your custom command.
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Cypress {
-    interface Chainable {
-      mount: typeof mount;
-    }
-  }
-}
-
-Cypress.Commands.add('mount', mount);
-
-// Example use:
-// cy.mount(MyComponent)
+// Alternatively you can use CommonJS syntax:
+// require('./commands')
