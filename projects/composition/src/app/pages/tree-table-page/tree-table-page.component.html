@@ -11,30 +11,43 @@
         [paginator]="true"
         [scrollable]="false"
         sortMode="multiple"
-        toolbarTitle="Tree table with a paginator, multiple sorting and individual filtering">
+        [resizableColumns]="true"
+        [columnResizeMode]="'expand'"
+        toolbarTitle="Tree table with a paginator, resizable columns, multiple sorting and individual filtering">
         <ng-template #header>
-          <th cpsTTColSortable="name" cpsTTColFilter="name" filterType="text">
+          <th
+            cpsTTColSortable="name"
+            cpsTTColFilter="name"
+            filterType="text"
+            cpsTTColResizable>
             Name
           </th>
-          <th cpsTTColSortable="size" cpsTTColFilter="size" filterType="number">
+          <th
+            cpsTTColSortable="size"
+            cpsTTColFilter="size"
+            filterType="number"
+            cpsTTColResizable>
             Size
           </th>
           <th
             cpsTTColSortable="modified"
             cpsTTColFilter="modified"
-            filterType="date">
+            filterType="date"
+            cpsTTColResizable>
             Modified
           </th>
           <th
             cpsTTColSortable="encrypted"
             cpsTTColFilter="encrypted"
-            filterType="boolean">
+            filterType="boolean"
+            cpsTTColResizable>
             Encrypted
           </th>
           <th
             cpsTTColSortable="importance"
             cpsTTColFilter="importance"
-            filterType="category">
+            filterType="category"
+            cpsTTColResizable>
             Importance
           </th>
         </ng-template>
@@ -62,8 +75,14 @@
         [virtualScroll]="true"
         [showColumnsToggleBtn]="true"
         [filterableByColumns]="true"
+        [resizableColumns]="true"
         scrollHeight="500px"
-        toolbarTitle="Sortable tree table with virtual scroller, global filter, internal columns toggle and with column filtering enabled">
+        toolbarTitle="Sortable tree table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled">
+        <ng-template #colgroup>
+          <colgroup>
+            <col *ngFor="let col of colsVirtual" />
+          </colgroup>
+        </ng-template>
       </cps-tree-table>
     </cps-tab>
     <cps-tab label="Tree table 3">

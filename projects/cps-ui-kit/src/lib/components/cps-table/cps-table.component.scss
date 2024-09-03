@@ -39,6 +39,10 @@ $tbar-normal-height: 72px;
     }
     .p-datatable {
       position: relative;
+
+      .p-column-resizer-helper {
+        background: $color-calm;
+      }
     }
 
     .p-datatable.p-datatable-gridlines .p-datatable-header {

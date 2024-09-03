@@ -31,6 +31,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { isEqual } from 'lodash-es';
 import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
 import { CpsTableDetectFilterTypePipe } from './pipes/cps-table-detect-filter-type.pipe';
+import { CpsTableColumnResizableDirective } from './directives/cps-table-column-resizable.directive';
 
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -85,6 +86,7 @@ export type CpsTableSortMode = 'single' | 'multiple';
     TableRowMenuComponent,
     CpsTableColumnSortableDirective,
     CpsTableColumnFilterDirective,
+    CpsTableColumnResizableDirective,
     CpsTableDetectFilterTypePipe
   ],
   templateUrl: './cps-table.component.html',
@@ -530,6 +532,21 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   get data(): any[] {
     return this._data;
   }
+
+  /**
+   * Determines whether columns are resizable.
+   * In case of using a custom template for columns, it is also needed to add cpsTColResizable directive to th elements.
+   * @group Props
+   */
+  @Input() resizableColumns = false;
+
+  /**
+   * Determines how the columns are resized. It can be 'fit' (total width of the table stays the same) or 'expand' (total width of the table changes when resizing columns).
+   * Note: This setting only takes effect if 'resizableColumns' is true.
+   *
+   * @group Props
+   */
+  @Input() columnResizeMode: 'fit' | 'expand' = 'fit';
 
   /**
    * Callback to invoke on selection changed. Returns selected rows.

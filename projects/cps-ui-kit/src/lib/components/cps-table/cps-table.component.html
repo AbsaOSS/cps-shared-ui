@@ -35,6 +35,8 @@
   [sortMode]="sortMode"
   [exportFilename]="exportFilename"
   [csvSeparator]="csvSeparator"
+  [resizableColumns]="resizableColumns"
+  [columnResizeMode]="columnResizeMode"
   (onPage)="onPageChange($event)"
   (onLazyLoad)="onLazyLoaded($event)"
   (sortFunction)="onSortFunction($event)"
@@ -184,9 +186,21 @@
 
   <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
-      <th style="width: 3rem" *ngIf="rowExpansionTemplate"></th>
-      <th style="width: 3rem" *ngIf="reorderableRows"></th>
-      <th style="width: 4rem" *ngIf="selectable">
+      <th
+        style="width: 3rem"
+        *ngIf="rowExpansionTemplate"
+        cpsTColResizable
+        [cpsTColResizableDisabled]="!resizableColumns"></th>
+      <th
+        style="width: 3rem"
+        *ngIf="reorderableRows"
+        cpsTColResizable
+        [cpsTColResizableDisabled]="!resizableColumns"></th>
+      <th
+        style="width: 4rem"
+        *ngIf="selectable"
+        cpsTColResizable
+        [cpsTColResizableDisabled]="!resizableColumns">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
       </th>
       <ng-container *ngIf="headerTemplate">
@@ -210,13 +224,17 @@
                 (autoColumnFilterType
                   ? (data | cpsTableDetectFilterType: col[colFieldName])
                   : 'text')
-              ">
+              "
+              cpsTColResizable
+              [cpsTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           } @else {
             <th
               *ngFor="let col of columns"
-              [cpsTColSortable]="col[colFieldName]">
+              [cpsTColSortable]="col[colFieldName]"
+              cpsTColResizable
+              [cpsTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           }
@@ -231,20 +249,27 @@
                 (autoColumnFilterType
                   ? (data | cpsTableDetectFilterType: col[colFieldName])
                   : 'text')
-              ">
+              "
+              cpsTColResizable
+              [cpsTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           } @else {
-            <th *ngFor="let col of columns">
+            <th
+              *ngFor="let col of columns"
+              cpsTColResizable
+              [cpsTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           }
         </ng-container>
       </ng-container>
       <th
+        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"
         style="width: 2rem"
         class="cps-table-row-menu-cell"
-        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"></th>
+        cpsTColResizable
+        [cpsTColResizableDisabled]="!resizableColumns"></th>
     </tr>
   </ng-template>
 
