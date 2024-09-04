@@ -13,7 +13,8 @@ import {
   CpsTreeTableHeaderSelectableDirective,
   CpsButtonToggleOption,
   CpsTreeTableSize,
-  CpsMenuItem
+  CpsMenuItem,
+  CpsTreeTableColumnResizableDirective
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tree-table.json';
@@ -30,6 +31,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
     CpsTreeTableColumnSortableDirective,
     CpsTreeTableColumnFilterDirective,
     CpsTreeTableHeaderSelectableDirective,
+    CpsTreeTableColumnResizableDirective,
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent,

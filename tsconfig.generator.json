@@ -3,5 +3,9 @@
   "compilerOptions": {
     "skipLibCheck": true
   },
-  "exclude": ["projects/composition/**", "./node_modules/**"]
+  "exclude": [
+    "projects/composition/**",
+    "./node_modules/**",
+    "projects/cps-ui-kit/**/*.spec.ts"
+  ]
 }

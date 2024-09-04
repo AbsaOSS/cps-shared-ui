@@ -49,6 +49,7 @@ import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row
 import { Subscription, fromEvent } from 'rxjs';
 import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter.directive';
 import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type.pipe';
+import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable.directive';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -99,6 +100,7 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     CpsTreeTableHeaderSelectableDirective,
     CpsTreeTableRowSelectableDirective,
     CpsTreetableRowTogglerDirective,
+    CpsTreeTableColumnResizableDirective,
     TreeTableUnsortDirective,
     TableRowMenuComponent,
     CpsTreeTableDetectFilterTypePipe
@@ -545,6 +547,21 @@ export class CpsTreeTableComponent
   }
 
   /**
+   * Determines whether columns are resizable.
+   * In case of using a custom template for columns, it is also needed to add cpsTTColResizable directive to th elements.
+   * @group Props
+   */
+  @Input() resizableColumns = false;
+
+  /**
+   * Determines how the columns are resized. It can be 'fit' (total width of the table stays the same) or 'expand' (total width of the table changes when resizing columns).
+   * Note: This setting only takes effect if 'resizableColumns' is true.
+   *
+   * @group Props
+   */
+  @Input() columnResizeMode: 'fit' | 'expand' = 'fit';
+
+  /**
    * Callback to invoke on selected rows change.
    * @param {any[]} any[] - selected rows.
    * @group Emits
@@ -667,6 +684,9 @@ export class CpsTreeTableComponent
 
   @ContentChild('body', { static: false })
   public bodyTemplate!: TemplateRef<any>;
+
+  @ContentChild('colgroup', { static: false })
+  public colgroupTemplate?: TemplateRef<any>;
 
   @ViewChild('primengTreeTable', { static: true })
   primengTreeTable!: TreeTable;

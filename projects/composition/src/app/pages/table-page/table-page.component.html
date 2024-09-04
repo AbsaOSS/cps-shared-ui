@@ -47,8 +47,9 @@
         [virtualScroll]="true"
         [showColumnsToggleBtn]="true"
         scrollHeight="500px"
-        toolbarTitle="Sortable table with virtual scroller, global filter, internal columns toggle and with column filtering enabled"
-        [filterableByColumns]="true">
+        toolbarTitle="Sortable table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled"
+        [filterableByColumns]="true"
+        [resizableColumns]="true">
       </cps-table>
     </cps-tab>
     <cps-tab label="Table 3">
@@ -63,18 +64,20 @@
         (editRowBtnClicked)="onEditRowButtonClicked($event)"
         (actionBtnClicked)="onActionBtnClicked()"
         (dataReloadBtnClicked)="onReloadBtnClicked()"
-        toolbarTitle="Table with draggable rows, rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently {{
+        toolbarTitle="Table with resizable columns (expand mode), draggable rows, rows menus, action and data reload buttons. Each row menu has a 'Remove' button, which is currently {{
           isRemoveBtnVisible ? 'visible' : 'hidden'
         }}"
         actionBtnTitle="{{
           isRemoveBtnVisible ? 'Hide' : 'Show'
-        }} Remove buttons">
+        }} Remove buttons"
+        [resizableColumns]="true"
+        [columnResizeMode]="'expand'">
         <ng-template #header>
-          <th>A</th>
-          <th>B</th>
-          <th>C</th>
-          <th>D</th>
-          <th>E</th>
+          <th cpsTColResizable>A</th>
+          <th cpsTColResizable>B</th>
+          <th cpsTColResizable>C</th>
+          <th cpsTColResizable>D</th>
+          <th cpsTColResizable>E</th>
         </ng-template>
 
         <ng-template let-item #body>

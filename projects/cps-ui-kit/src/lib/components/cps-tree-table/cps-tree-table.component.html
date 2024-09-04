@@ -38,6 +38,8 @@
   [first]="first"
   [totalRecords]="totalRecords"
   [resetPageOnSort]="resetPageOnSort"
+  [resizableColumns]="resizableColumns"
+  [columnResizeMode]="columnResizeMode"
   currentPageReportTemplate="{first} - {last} of {totalRecords}"
   (onPage)="onPageChange($event)"
   (onSort)="onSort($event)"
@@ -48,6 +50,11 @@
   (onNodeCollapse)="onNodeCollapsed($event)"
   (onNodeSelect)="onNodeSelected($event)"
   (onNodeUnselect)="onNodeUnselected($event)">
+  @if (colgroupTemplate) {
+    <ng-template pTemplate="colgroup">
+      <ng-container *ngTemplateOutlet="colgroupTemplate"></ng-container>
+    </ng-template>
+  }
   <ng-template pTemplate="caption" *ngIf="hasToolbar">
     <ng-container *ngIf="toolbarTemplate">
       <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
@@ -176,7 +183,11 @@
   <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
     <tr>
       <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th> -->
-      <th *ngIf="selectable" cpsTTHdrSelectable></th>
+      <th
+        *ngIf="selectable"
+        cpsTTHdrSelectable
+        cpsTTColResizable
+        [cpsTTColResizableDisabled]="!resizableColumns"></th>
       <ng-container *ngIf="headerTemplate">
         <ng-container
           *ngTemplateOutlet="
@@ -198,13 +209,17 @@
                 (autoColumnFilterType
                   ? (data | cpsTTDetectFilterType: col[colFieldName])
                   : 'text')
-              ">
+              "
+              cpsTTColResizable
+              [cpsTTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           } @else {
             <th
               *ngFor="let col of columns"
-              [cpsTTColSortable]="col[colFieldName]">
+              [cpsTTColSortable]="col[colFieldName]"
+              cpsTTColResizable
+              [cpsTTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           }
@@ -219,11 +234,16 @@
                 (autoColumnFilterType
                   ? (data | cpsTTDetectFilterType: col[colFieldName])
                   : 'text')
-              ">
+              "
+              cpsTTColResizable
+              [cpsTTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           } @else {
-            <th *ngFor="let col of columns">
+            <th
+              *ngFor="let col of columns"
+              cpsTTColResizable
+              [cpsTTColResizableDisabled]="!resizableColumns">
               {{ col[colHeaderName] }}
             </th>
           }
@@ -231,7 +251,9 @@
       </ng-container>
       <th
         class="cps-treetable-row-menu-cell"
-        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"></th>
+        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"
+        cpsTTColResizable
+        [cpsTTColResizableDisabled]="!resizableColumns"></th>
     </tr>
   </ng-template>
 
