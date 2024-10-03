@@ -326,6 +326,14 @@
                         "description": "Debounce time for inputChanged event."
                     },
                     {
+                        "name": "validating",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the component is currently validating the selected value asynchronously."
+                    },
+                    {
                         "name": "_value",
                         "optional": false,
                         "readonly": false,

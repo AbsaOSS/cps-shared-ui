@@ -142,6 +142,21 @@
         prefixIcon="search"
         appearance="borderless">
       </cps-autocomplete>
+
+      <cps-autocomplete
+        label="Autocomplete with async validation"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Select a city"
+        [clearable]="true"
+        [(ngModel)]="selectedOption"
+        [ngModelOptions]="{ standalone: true }"
+        [validating]="validating"
+        (valueChanged)="onOptionSelected($event)"
+        [externalError]="externalError"
+        hint="This autocomplete simulates async validation upon selection.">
+      </cps-autocomplete>
     </div>
   </form>
 </app-component-docs-viewer>
