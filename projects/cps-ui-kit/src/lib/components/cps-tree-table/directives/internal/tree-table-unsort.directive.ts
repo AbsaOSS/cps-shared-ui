@@ -8,6 +8,15 @@ import { ObjectUtils } from 'primeng/utils';
 })
 export class TreeTableUnsortDirective {
   constructor(@Host() @Self() @Optional() public pTreeTable: TreeTable) {
+    this.sort(pTreeTable);
+    this.sortNodes(pTreeTable);
+    this.sortMultipleNodes(pTreeTable);
+    this.multisortField(pTreeTable);
+    this.filter(pTreeTable);
+    this.findFilteredNodes(pTreeTable);
+  }
+
+  sort(pTreeTable: TreeTable) {
     pTreeTable.sort = (event: any) => {
       if (pTreeTable.sortMode === 'single') {
         if (
@@ -59,7 +68,9 @@ export class TreeTableUnsortDirective {
         if (resetIndex) pTreeTable.multiSortMeta = [];
       }
     };
+  }
 
+  sortNodes(pTreeTable: TreeTable) {
     pTreeTable.sortNodes = (nodes) => {
       if (!nodes || nodes.length === 0) {
         return;
@@ -100,7 +111,9 @@ export class TreeTableUnsortDirective {
         if (node.children) pTreeTable.sortNodes(node.children);
       }
     };
+  }
 
+  sortMultipleNodes(pTreeTable: TreeTable) {
     pTreeTable.sortMultipleNodes = (nodes) => {
       if (!nodes || nodes.length === 0) {
         return;
@@ -129,7 +142,9 @@ export class TreeTableUnsortDirective {
         if (node.children) pTreeTable.sortMultipleNodes(node.children);
       }
     };
+  }
 
+  multisortField(pTreeTable: TreeTable) {
     pTreeTable.multisortField = (node1, node2, multiSortMeta, index) => {
       if (
         ObjectUtils.isEmpty(pTreeTable.multiSortMeta) ||
@@ -168,7 +183,9 @@ export class TreeTableUnsortDirective {
 
       return multiSortMeta[index].order * result;
     };
+  }
 
+  filter(pTreeTable: TreeTable) {
     pTreeTable._filter = () => {
       if (pTreeTable.lazy) {
         pTreeTable.onLazyLoad.emit(pTreeTable.createLazyLoadMetadata());
@@ -263,47 +280,44 @@ export class TreeTableUnsortDirective {
               !globalMatch &&
               globalFilterFieldsArray
             ) {
-              for (let j = 0; j < globalFilterFieldsArray.length; j++) {
-                const copyNodeForGlobal = { ...copyNode };
-                const filterField =
-                  globalFilterFieldsArray[j].field ||
-                  globalFilterFieldsArray[j];
-                const filterValue = pTreeTable.filters.global.value;
-                const filterConstraint =
-                  pTreeTable.filterService.filters[
-                    pTreeTable.filters.global
-                      .matchMode as keyof typeof pTreeTable.filterService.filters
-                  ];
-                paramsWithoutNode = {
-                  filterField,
-                  filterValue,
-                  filterConstraint,
-                  isStrictMode
-                };
+              const copyNodeForGlobal = { ...copyNode };
+              const filterField = undefined;
+              const filterValue = pTreeTable.filters.global.value;
+              const filterConstraint =
+                pTreeTable.filterService.filters[
+                  pTreeTable.filters.global
+                    .matchMode as keyof typeof pTreeTable.filterService.filters
+                ];
+              paramsWithoutNode = {
+                filterField,
+                filterValue,
+                filterConstraint,
+                isStrictMode,
+                globalFilterFieldsArray
+              };
 
-                if (
-                  (isStrictMode &&
-                    (pTreeTable.findFilteredNodes(
-                      copyNodeForGlobal,
-                      paramsWithoutNode
-                    ) ||
-                      pTreeTable.isFilterMatched(
-                        copyNodeForGlobal,
-                        paramsWithoutNode as any
-                      ))) ||
-                  (!isStrictMode &&
-                    (pTreeTable.isFilterMatched(
+              if (
+                (isStrictMode &&
+                  (pTreeTable.findFilteredNodes(
+                    copyNodeForGlobal,
+                    paramsWithoutNode
+                  ) ||
+                    pTreeTable.isFilterMatched(
                       copyNodeForGlobal,
                       paramsWithoutNode as any
-                    ) ||
-                      pTreeTable.findFilteredNodes(
-                        copyNodeForGlobal,
-                        paramsWithoutNode
-                      )))
-                ) {
-                  globalMatch = true;
-                  copyNode = copyNodeForGlobal;
-                }
+                    ))) ||
+                (!isStrictMode &&
+                  (pTreeTable.isFilterMatched(
+                    copyNodeForGlobal,
+                    paramsWithoutNode as any
+                  ) ||
+                    pTreeTable.findFilteredNodes(
+                      copyNodeForGlobal,
+                      paramsWithoutNode
+                    )))
+              ) {
+                globalMatch = true;
+                copyNode = copyNodeForGlobal;
               }
             }
 
@@ -355,7 +369,9 @@ export class TreeTableUnsortDirective {
         pTreeTable.resetScrollTop();
       }
     };
+  }
 
+  findFilteredNodes(pTreeTable: TreeTable) {
     pTreeTable.findFilteredNodes = (node, paramsWithoutNode): any => {
       if (node) {
         let matched = false;
