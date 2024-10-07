@@ -73,7 +73,7 @@ export class TreeTablePageComponent implements OnInit {
           children: [
             {
               data: {
-                name: 'angular.app',
+                name: 'angular.date',
                 size: 10,
                 modified: new Date(2020, 1, 11),
                 encrypted: true,
@@ -111,16 +111,16 @@ export class TreeTablePageComponent implements OnInit {
             },
             {
               data: {
-                name: 'cli.app',
+                name: 'cli.date_angular',
                 size: 10,
                 modified: new Date(2019, 2, 11),
                 encrypted: true,
-                importance: 'critical'
+                importance: 'date'
               }
             },
             {
               data: {
-                name: 'mobile.app',
+                name: 'date',
                 size: 50,
                 modified: new Date(2018, 9, 13),
                 encrypted: true,
