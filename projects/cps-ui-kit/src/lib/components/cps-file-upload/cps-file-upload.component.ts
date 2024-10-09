@@ -124,7 +124,7 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
 
   updateExtensionsString(): void {
     this.extensions = this.extensions.map((ext) =>
-      ext.startsWith('.') ? ext : '.' + ext
+      ext.startsWith('.') ? ext.toLowerCase() : '.' + ext.toLowerCase()
     );
     this.extensionsString = this.extensions.join(', ');
     this.extensionsStringAsterisks = this.extensions
@@ -186,9 +186,9 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     if (!file) return false;
 
     if (this.extensions.length < 1) return true;
-
+    const fileNameLowerCase = file.name.toLowerCase();
     for (const ext of this.extensions) {
-      if (file.name.endsWith(ext)) return true;
+      if (fileNameLowerCase.endsWith(ext)) return true;
     }
 
     return false;
