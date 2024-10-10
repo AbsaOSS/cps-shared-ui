@@ -670,22 +670,20 @@ export class CpsAutocompleteComponent
     );
   }
 
-  onBeforeOptionsHidden(reason: CpsMenuHideReason): boolean | void {
+  onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
     if (
       (this.loading || this.validating) &&
       reason !== CpsMenuHideReason.KEYDOWN_ESCAPE
     ) {
-      // Prevent hiding the options menu when loading or validating
-      return false;
+      return;
     }
     if ([CpsMenuHideReason.SCROLL, CpsMenuHideReason.RESIZE].includes(reason)) {
       this._toggleOptions(false);
-      return true;
+      return;
     }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
     this.onBlur();
-    return true;
   }
 
   onBoxClick() {

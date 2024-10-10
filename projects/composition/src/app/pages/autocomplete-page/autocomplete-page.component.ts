@@ -148,7 +148,7 @@ export class AutocompletePageComponent implements OnInit {
           this.validating = false;
         },
         error: () => {
-          // Handle errors and finalize loading state
+          // Handle errors and finalize validation state
           this.externalError = 'Validation failed';
         }
       });

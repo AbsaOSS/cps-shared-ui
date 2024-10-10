@@ -157,22 +157,26 @@ describe('CpsAutocompleteComponent', () => {
 
   it('should prevent options menu from closing when validating', () => {
     component.validating = true;
+    const onBlurStub = jest.spyOn(component, 'onBlur');
     fixture.detectChanges();
 
     // Simulate the options menu trying to close
     const result = component.onBeforeOptionsHidden(
       CpsMenuHideReason.CLICK_OUTSIDE
     );
-    expect(result).toBe(false);
+    expect(result).toBe(undefined);
+    expect(onBlurStub).toHaveBeenCalledTimes(0);
   });
 
   it('should allow options menu to close with ESCAPE key when validating', () => {
     component.validating = true;
+    const onBlurStub = jest.spyOn(component, 'onBlur');
     fixture.detectChanges();
     const result = component.onBeforeOptionsHidden(
       CpsMenuHideReason.KEYDOWN_ESCAPE
     );
-    expect(result).not.toBe(false);
+    expect(result).toBe(undefined);
+    expect(onBlurStub).toHaveBeenCalledTimes(1);
   });
 
   it('should display loading indicator when validating', () => {
