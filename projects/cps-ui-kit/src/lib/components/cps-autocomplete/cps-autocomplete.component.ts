@@ -316,6 +316,12 @@ export class CpsAutocompleteComponent
   @Input() inputChangeDebounceTime = 500;
 
   /**
+   * Determines whether the component is currently validating the selected value asynchronously.
+   * @group Props
+   */
+  @Input() validating = false;
+
+  /**
    * Value of the autocomplete.
    * @group Props
    */
@@ -664,7 +670,13 @@ export class CpsAutocompleteComponent
     );
   }
 
-  onBeforeOptionsHidden(reason: CpsMenuHideReason) {
+  onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
+    if (
+      (this.loading || this.validating) &&
+      reason !== CpsMenuHideReason.KEYDOWN_ESCAPE
+    ) {
+      return;
+    }
     if ([CpsMenuHideReason.SCROLL, CpsMenuHideReason.RESIZE].includes(reason)) {
       this._toggleOptions(false);
       return;
@@ -827,7 +839,10 @@ export class CpsAutocompleteComponent
   private _clickOption(option: any) {
     this.select(option, false, true, this.multiple);
     if (!this.multiple) {
-      this._toggleOptions(false);
+      // Only close options menu if not loading or validating
+      if (!this.loading && !this.validating) {
+        this._toggleOptions(false);
+      }
     }
   }
 

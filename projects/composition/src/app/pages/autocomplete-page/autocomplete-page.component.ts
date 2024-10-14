@@ -2,22 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
-  UntypedFormBuilder,
-  UntypedFormGroup,
+  FormBuilder,
+  FormGroup,
   Validators
 } from '@angular/forms';
 import { CpsAutocompleteComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import ComponentData from '../../api-data/cps-autocomplete.json';
-import {
-  Observable,
-  Subject,
-  catchError,
-  delay,
-  finalize,
-  of,
-  switchMap
-} from 'rxjs';
+import { Observable, Subject, of, delay } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -58,12 +51,13 @@ export class AutocompletePageComponent implements OnInit {
     { title: 'Tesla', val: 'TSLA', ticker: 'TSLA' }
   ];
 
-  form!: UntypedFormGroup;
+  form!: FormGroup;
   syncVal: any = [];
   componentData = ComponentData;
 
   isSingleLoading = false;
   isMultiLoading = false;
+  externalError = '';
 
   private _singleFilterOptionSubject$ = new Subject<string>();
   singleOptionsObservable$?: Observable<any>;
@@ -71,12 +65,16 @@ export class AutocompletePageComponent implements OnInit {
   private _multiFilterOptionSubject$ = new Subject<string>();
   multiOptionsObservable$?: Observable<any>;
 
+  // New properties for the validating example
+  validating = false;
+  selectedOption: any = null;
+
   get availableOptionInfo() {
     return this.options.map((option) => option.name).join(', ');
   }
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _formBuilder: UntypedFormBuilder) {}
+  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this._formBuilder.group({
@@ -116,13 +114,12 @@ export class AutocompletePageComponent implements OnInit {
         if (single) this.isSingleLoading = true;
         else this.isMultiLoading = true;
         return this._getOptionsFromServer(value).pipe(
-          catchError((error) => {
-            console.error('Failed to retrieve options list', error);
-            return of([]);
-          }),
-          finalize(() => {
-            if (single) this.isSingleLoading = false;
-            else this.isMultiLoading = false;
+          // Handle errors and finalize loading state
+          tap({
+            complete: () => {
+              if (single) this.isSingleLoading = false;
+              else this.isMultiLoading = false;
+            }
           })
         );
       })
@@ -134,5 +131,26 @@ export class AutocompletePageComponent implements OnInit {
       return option.name?.toLowerCase()?.includes(val);
     });
     return of(filteredRes).pipe(delay(1000));
+  }
+
+  // Method to handle selection changes for async validation
+  onOptionSelected(option: any) {
+    this.validating = true;
+    this.selectedOption = option;
+    this.externalError = '';
+    // Simulate async validation with a delay
+    of(option)
+      .pipe(
+        delay(3000) // Simulate a delay of 2 seconds
+      )
+      .subscribe({
+        next: () => {
+          this.validating = false;
+        },
+        error: () => {
+          // Handle errors and finalize validation state
+          this.externalError = 'Validation failed';
+        }
+      });
   }
 }
