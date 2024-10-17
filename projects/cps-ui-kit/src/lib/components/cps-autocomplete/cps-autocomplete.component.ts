@@ -651,9 +651,8 @@ export class CpsAutocompleteComponent
 
   onBlur() {
     if (!this.isOpened) {
-      this._closeAndClear();
+      this._confirmInput(this.inputText || '', false);
     }
-
     this._checkErrors();
     this.blurred.emit();
   }
@@ -971,7 +970,10 @@ export class CpsAutocompleteComponent
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
       if (this.multiple) return;
-      this.updateValue(this._getEmptyValue());
+      // Only reset the value if the inputText was changed by the user
+      if (this.inputText !== this._getValueLabel()) {
+        this.updateValue(this._getEmptyValue());
+      }
       this.cdRef.detectChanges();
       this._closeAndClear();
       return;
