@@ -1343,6 +1343,7 @@ export class CpsTreeTableComponent
   onSort(event: any) {
     this.sorted.emit(event);
     setTimeout(() => {
+      this.cdRef.detectChanges();
       this._calcAutoLayoutHeaderWidths(true);
     });
   }
