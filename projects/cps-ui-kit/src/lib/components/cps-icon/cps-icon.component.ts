@@ -73,6 +73,7 @@ export const iconNames = [
   'lock',
   'logout',
   'maximize',
+  'measurement',
   'menu-expand',
   'menu-shrink',
   'minimize',
