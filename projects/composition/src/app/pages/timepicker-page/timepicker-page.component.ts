@@ -14,7 +14,6 @@ import ComponentData from '../../api-data/cps-timepicker.json';
 
 @Component({
   selector: 'app-timepicker-page',
-  standalone: true,
   imports: [
     CommonModule,
     CpsTimepickerComponent,

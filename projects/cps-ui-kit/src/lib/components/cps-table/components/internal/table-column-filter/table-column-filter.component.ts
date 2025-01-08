@@ -32,7 +32,6 @@ import { Subscription } from 'rxjs';
  */
 @Component({
   selector: 'table-column-filter',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

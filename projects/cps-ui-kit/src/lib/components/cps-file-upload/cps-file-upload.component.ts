@@ -25,16 +25,15 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
  * @group Components
  */
 @Component({
-  selector: 'cps-file-upload',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CpsIconComponent,
-    CpsProgressLinearComponent,
-    CpsTooltipDirective
-  ],
-  templateUrl: './cps-file-upload.component.html',
-  styleUrls: ['./cps-file-upload.component.scss']
+    selector: 'cps-file-upload',
+    imports: [
+        CommonModule,
+        CpsIconComponent,
+        CpsProgressLinearComponent,
+        CpsTooltipDirective
+    ],
+    templateUrl: './cps-file-upload.component.html',
+    styleUrls: ['./cps-file-upload.component.scss']
 })
 export class CpsFileUploadComponent implements OnInit, OnChanges {
   /**

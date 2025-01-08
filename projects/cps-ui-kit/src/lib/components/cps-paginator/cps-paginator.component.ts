@@ -18,7 +18,6 @@ import { getCSSColor } from '../../utils/colors-utils';
  */
 @Component({
   selector: 'cps-paginator',
-  standalone: true,
   imports: [CommonModule, PaginatorModule, CpsSelectComponent],
   templateUrl: './cps-paginator.component.html',
   styleUrls: ['./cps-paginator.component.scss']

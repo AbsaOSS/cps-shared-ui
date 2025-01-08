@@ -78,7 +78,6 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     SharedModule,

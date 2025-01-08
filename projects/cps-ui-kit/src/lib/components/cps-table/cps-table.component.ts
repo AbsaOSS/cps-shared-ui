@@ -70,7 +70,6 @@ export type CpsTableSortMode = 'single' | 'multiple';
  */
 @Component({
   selector: 'cps-table',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,

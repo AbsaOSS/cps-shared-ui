@@ -79,7 +79,6 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
  */
 @Component({
   selector: 'cps-tree-table',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,

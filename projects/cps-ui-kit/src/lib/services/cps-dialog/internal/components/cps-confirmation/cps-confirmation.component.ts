@@ -5,7 +5,6 @@ import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 
 @Component({
-  standalone: true,
   imports: [CpsButtonComponent, CpsIconComponent],
   selector: 'cps-confirmation',
   templateUrl: './cps-confirmation.component.html',

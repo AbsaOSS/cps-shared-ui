@@ -12,7 +12,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import ComponentData from '../../api-data/cps-datepicker.json';
 
 @Component({
-  standalone: true,
   imports: [
     CpsDatepickerComponent,
     FormsModule,

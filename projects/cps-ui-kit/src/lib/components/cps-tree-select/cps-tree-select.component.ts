@@ -32,7 +32,6 @@ export type CpsTreeSelectAppearanceType =
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

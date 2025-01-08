@@ -5,7 +5,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   selector: 'app-scheduler-page',
-  standalone: true,
   imports: [CpsSchedulerComponent, ComponentDocsViewerComponent],
   templateUrl: './scheduler-page.component.html',
   styleUrl: './scheduler-page.component.scss',

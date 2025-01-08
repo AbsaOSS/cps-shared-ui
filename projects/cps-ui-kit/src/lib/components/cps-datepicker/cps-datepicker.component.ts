@@ -32,7 +32,6 @@ export type CpsDatepickerAppearanceType =
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CpsInputComponent,
     CalendarModule,

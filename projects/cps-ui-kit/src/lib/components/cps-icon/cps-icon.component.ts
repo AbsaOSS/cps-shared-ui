@@ -149,7 +149,6 @@ export type iconSizeType =
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule],
   selector: 'cps-icon',
   templateUrl: './cps-icon.component.html',

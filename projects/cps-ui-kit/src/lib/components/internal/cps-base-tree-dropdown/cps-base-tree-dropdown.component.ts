@@ -29,7 +29,8 @@ import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
  * @group Components
  */
 @Component({
-  template: ''
+  template: '',
+  standalone: false
 })
 export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy

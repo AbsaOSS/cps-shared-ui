@@ -12,7 +12,6 @@ import ComponentData from '../../api-data/cps-tree-autocomplete.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
-  standalone: true,
   imports: [
     CpsTreeAutocompleteComponent,
     FormsModule,

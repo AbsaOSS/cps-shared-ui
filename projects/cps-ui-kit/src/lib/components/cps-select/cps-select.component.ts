@@ -45,7 +45,6 @@ export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

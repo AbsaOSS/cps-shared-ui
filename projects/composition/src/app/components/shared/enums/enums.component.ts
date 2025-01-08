@@ -7,8 +7,7 @@ import { CpsTooltipDirective } from 'cps-ui-kit';
   selector: 'app-enums',
   templateUrl: './enums.component.html',
   styleUrl: './enums.component.scss',
-  imports: [EnumValuesPipe, CpsTooltipDirective],
-  standalone: true
+  imports: [EnumValuesPipe, CpsTooltipDirective]
 })
 export class EnumsComponent {
   @Input() enums?: EnumsAPI;

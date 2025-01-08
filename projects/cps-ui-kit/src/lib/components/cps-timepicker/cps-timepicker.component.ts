@@ -38,7 +38,6 @@ export interface CpsTime {
  */
 @Component({
   selector: 'cps-timepicker',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

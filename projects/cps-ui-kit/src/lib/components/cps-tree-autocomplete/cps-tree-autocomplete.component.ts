@@ -39,7 +39,6 @@ export type CpsTreeAutocompleteAppearanceType =
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

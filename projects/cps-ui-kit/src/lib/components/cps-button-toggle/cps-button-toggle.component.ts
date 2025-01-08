@@ -37,7 +37,6 @@ export type CpsButtonToggleOption = {
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     CheckOptionSelectedPipe,

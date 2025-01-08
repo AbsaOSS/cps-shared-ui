@@ -22,7 +22,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   selector: 'app-tree-table-page',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

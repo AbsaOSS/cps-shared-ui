@@ -10,7 +10,6 @@ import {
  */
 @Component({
   selector: 'table-row-menu',
-  standalone: true,
   imports: [CpsIconComponent, CpsMenuComponent],
   templateUrl: './table-row-menu.component.html',
   styleUrls: ['./table-row-menu.component.scss']

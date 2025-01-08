@@ -37,7 +37,6 @@ export type CpsSidebarMenuItem = {
  */
 @Component({
   selector: 'cps-sidebar-menu',
-  standalone: true,
   imports: [CommonModule, CpsMenuComponent, CpsIconComponent, RouterModule],
   templateUrl: './cps-sidebar-menu.component.html',
   styleUrls: ['./cps-sidebar-menu.component.scss'],

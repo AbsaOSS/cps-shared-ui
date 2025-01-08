@@ -8,7 +8,6 @@ import ServiceData from '../../api-data/cps-dialog.json';
 
 @Component({
   selector: 'app-dialog-page',
-  standalone: true,
   imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],

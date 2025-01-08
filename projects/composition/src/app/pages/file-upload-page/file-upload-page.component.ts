@@ -14,7 +14,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   selector: 'app-file-upload-page',
-  standalone: true,
   imports: [
     CommonModule,
     CpsIconComponent,

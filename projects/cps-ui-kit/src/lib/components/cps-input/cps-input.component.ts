@@ -36,7 +36,6 @@ export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     CpsIconComponent,

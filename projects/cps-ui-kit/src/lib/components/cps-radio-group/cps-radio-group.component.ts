@@ -40,7 +40,6 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     CpsInfoCircleComponent,

@@ -30,7 +30,6 @@ type Nullable<T = void> = T | null | undefined;
 
 @Component({
   selector: 'cps-notification-container',
-  standalone: true,
   imports: [
     CommonModule,
     SharedModule,

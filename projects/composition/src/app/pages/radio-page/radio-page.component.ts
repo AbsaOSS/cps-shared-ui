@@ -20,7 +20,6 @@ import ComponentData from '../../api-data/cps-radio-group.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
-  standalone: true,
   imports: [
     CpsRadioGroupComponent,
     ReactiveFormsModule,

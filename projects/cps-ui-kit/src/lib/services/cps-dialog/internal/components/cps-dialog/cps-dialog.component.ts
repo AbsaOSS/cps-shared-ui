@@ -50,7 +50,6 @@ type VoidListener = () => void | null | undefined;
 
 @Component({
   selector: 'cps-dialog',
-  standalone: true,
   imports: [
     CommonModule,
     SharedModule,

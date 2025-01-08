@@ -14,7 +14,6 @@ type colorGroupsType = {
 }[];
 
 @Component({
-  standalone: true,
   imports: [CpsInputComponent, CommonModule],
   selector: 'app-colors-page',
   templateUrl: './colors-page.component.html',

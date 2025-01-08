@@ -4,7 +4,8 @@ import { CpsTabChangeEvent } from 'cps-ui-kit';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-  template: ''
+  template: '',
+  standalone: false
 })
 export abstract class ViewerComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);

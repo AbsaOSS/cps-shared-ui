@@ -67,7 +67,6 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     CpsIconComponent,

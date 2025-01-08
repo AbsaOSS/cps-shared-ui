@@ -14,7 +14,6 @@ import { switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
   imports: [
     CpsAutocompleteComponent,
     FormsModule,

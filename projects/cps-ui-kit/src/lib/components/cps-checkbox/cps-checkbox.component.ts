@@ -21,7 +21,6 @@ import { getCSSColor } from '../../utils/colors-utils';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsInfoCircleComponent, CpsIconComponent],
   selector: 'cps-checkbox',
   templateUrl: './cps-checkbox.component.html',

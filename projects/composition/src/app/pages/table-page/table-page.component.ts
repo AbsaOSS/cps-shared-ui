@@ -22,7 +22,6 @@ import ComponentData from '../../api-data/cps-table.json';
 
 @Component({
   selector: 'app-table-page',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

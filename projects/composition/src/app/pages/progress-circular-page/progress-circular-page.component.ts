@@ -5,7 +5,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import ComponentData from '../../api-data/cps-progress-circular.json';
 
 @Component({
-  standalone: true,
   imports: [
     CpsProgressCircularComponent,
     ComponentDocsViewerComponent,

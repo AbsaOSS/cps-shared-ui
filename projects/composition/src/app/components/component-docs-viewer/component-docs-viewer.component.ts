@@ -27,8 +27,7 @@ import { EnumsComponent } from '../shared/enums/enums.component';
     RouterModule,
     DetectTypePipe,
     EnumsComponent
-  ],
-  standalone: true
+  ]
 })
 export class ComponentDocsViewerComponent extends ViewerComponent {
   @Input() componentData?: {

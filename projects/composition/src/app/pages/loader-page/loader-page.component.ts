@@ -6,7 +6,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import ComponentData from '../../api-data/cps-loader.json';
 
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     CpsLoaderComponent,

@@ -5,7 +5,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import ComponentData from '../../api-data/cps-button.json';
 
 @Component({
-  standalone: true,
   imports: [CpsButtonComponent, ComponentDocsViewerComponent],
   selector: 'app-button-page',
   templateUrl: './button-page.component.html',

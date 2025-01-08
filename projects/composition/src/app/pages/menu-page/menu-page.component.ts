@@ -6,7 +6,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import ComponetnData from '../../api-data/cps-menu.json';
 @Component({
   selector: 'app-menu-page',
-  standalone: true,
   imports: [
     CommonModule,
     CpsMenuComponent,

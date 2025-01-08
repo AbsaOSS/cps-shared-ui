@@ -54,7 +54,6 @@ export type CpsAutocompleteAppearanceType =
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
