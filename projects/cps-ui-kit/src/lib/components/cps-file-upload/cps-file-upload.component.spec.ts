@@ -29,23 +29,29 @@ describe('CpsFileUploadComponent', () => {
       fixture.nativeElement.querySelector('input[type="file"]');
     // Create a mock DataTransfer object
     const dataTransfer = {
-      files: [file],
+      files: {
+        item: (index: number): any => dataTransfer.files.files[index],
+        files: [file]
+      },
       items: {
         add: (item: File) => {
-          dataTransfer.files.push(item);
+          dataTransfer.files.files.push(item);
         }
       }
     };
-
-    // Simulate file upload
-    Object.defineProperty(fileUploadInput, 'files', {
-      value: dataTransfer.files,
+    const event = new Event('drop');
+    Object.defineProperty(event, 'dataTransfer', {
+      value: dataTransfer,
       writable: false
     });
-    fileUploadInput.dispatchEvent(new Event('change'));
+    // define dropzone element
+    const dropzone = fixture.nativeElement.querySelector('.cps-file-upload-dropzone');
+    dropzone.dispatchEvent(event);
+
+
     await fixture.whenStable();
 
-    expect(fileUploadInput.files && fileUploadInput.files[0]).toBe(file);
+    expect(component.uploadedFile).toBe(file);
   });
 
   it('should convert extensions to lowercase and format them correctly', () => {
