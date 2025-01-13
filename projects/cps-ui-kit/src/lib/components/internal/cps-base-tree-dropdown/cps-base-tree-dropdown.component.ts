@@ -498,7 +498,7 @@ export class CpsBaseTreeDropdownComponent
     if (!this.isOpened) return;
 
     if (!this.optionFocused) {
-      const firstElem = this.treeContainerElement?.querySelector('.p-treenode');
+      const firstElem = this.treeContainerElement?.querySelector('.p-tree-node');
 
       if (firstElem) (firstElem as HTMLElement).focus();
       this.optionFocused = true;
@@ -534,7 +534,7 @@ export class CpsBaseTreeDropdownComponent
 
   private _initContainerClickListener() {
     this.treeContainerElement =
-      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
+      this.treeList?.el?.nativeElement?.querySelector('.p-tree-root-children');
     if (this.treeContainerElement) {
       this.treeContainerElement.addEventListener(
         'click',
