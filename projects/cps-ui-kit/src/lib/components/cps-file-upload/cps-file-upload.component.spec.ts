@@ -25,8 +25,6 @@ describe('CpsFileUploadComponent', () => {
     fixture.autoDetectChanges();
     const file = new File([''], 'testFile.JPG', { type: 'image/jpeg' });
     component.extensions = ['.jpg'];
-    const fileUploadInput: HTMLInputElement =
-      fixture.nativeElement.querySelector('input[type="file"]');
     // Create a mock DataTransfer object
     const dataTransfer = {
       files: {
@@ -45,9 +43,10 @@ describe('CpsFileUploadComponent', () => {
       writable: false
     });
     // define dropzone element
-    const dropzone = fixture.nativeElement.querySelector('.cps-file-upload-dropzone');
+    const dropzone = fixture.nativeElement.querySelector(
+      '.cps-file-upload-dropzone'
+    );
     dropzone.dispatchEvent(event);
-
 
     await fixture.whenStable();
 

@@ -5,11 +5,11 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import ComponentData from '../../api-data/cps-paginator.json';
 
 @Component({
-    selector: 'app-paginator-page',
-    imports: [CpsPaginatorComponent, ComponentDocsViewerComponent],
-    templateUrl: './paginator-page.component.html',
-    styleUrls: ['./paginator-page.component.scss'],
-    host: { class: 'composition-page' }
+  selector: 'app-paginator-page',
+  imports: [CpsPaginatorComponent, ComponentDocsViewerComponent],
+  templateUrl: './paginator-page.component.html',
+  styleUrls: ['./paginator-page.component.scss'],
+  host: { class: 'composition-page' }
 })
 export class PaginatorPageComponent {
   componentData = ComponentData;

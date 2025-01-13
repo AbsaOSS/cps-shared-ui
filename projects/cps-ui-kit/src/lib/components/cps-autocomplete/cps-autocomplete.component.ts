@@ -29,7 +29,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
-import { isEqual } from 'lodash-es';;
+import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import {
   CpsMenuComponent,

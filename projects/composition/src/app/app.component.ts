@@ -4,10 +4,10 @@ import { filter, map } from 'rxjs/operators';
 import packageJson from 'projects/cps-ui-kit/package.json';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
 export class AppComponent {
   componentTitle = '';
