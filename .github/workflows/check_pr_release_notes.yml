@@ -1,0 +1,23 @@
+name: Check PR Release Notes in Description
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
+    branches: [ master ]
+
+jobs:
+  check-release-notes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-python@v5.1.1
+        with:
+          python-version: '3.11'
+
+      - name: Check presence of release notes in PR description
+        uses: AbsaOSS/release-notes-presence-check@v0.2.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          github-repository: ${{ github.repository }}
+          pr-number: ${{ github.event.number }}
