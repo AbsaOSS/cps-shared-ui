@@ -35,7 +35,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
   user-select: none; /* Standard syntax */
 
   ::ng-deep {
-    .p-datepicker {
+    .p-datepicker .p-datepicker-panel {
       font-family: 'Source Sans Pro', sans-serif;
       width: auto !important;
       padding: 0.5rem;
@@ -82,8 +82,8 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker .p-datepicker-header .p-datepicker-title {
       line-height: 2rem;
     }
-    .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-year,
-    .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+    .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-select-year,
+    .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-select-month {
       color: $text-color;
       transition:
         background-color 0.2s,
@@ -95,14 +95,14 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker
       .p-datepicker-header
       .p-datepicker-title
-      .p-datepicker-year:enabled:hover,
+      .p-datepicker-select-year:enabled:hover,
     .p-datepicker
       .p-datepicker-header
       .p-datepicker-title
-      .p-datepicker-month:enabled:hover {
+      .p-datepicker-select-month:enabled:hover {
       color: $color-calm;
     }
-    .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-month {
+    .p-datepicker .p-datepicker-header .p-datepicker-title .p-datepicker-select-month {
       margin-right: 0.5rem;
     }
     .p-datepicker table {
@@ -130,7 +130,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
         cursor: default;
       }
     }
-    .p-datepicker table td > span.p-highlight {
+    .p-datepicker table td > span.p-datepicker-day-selected {
       color: $color-calm;
       background: $color-selected-background;
       font-weight: bold;
@@ -145,7 +145,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       background: unset;
       color: unset;
     }
-    .p-datepicker table td.p-datepicker-today > span.p-highlight {
+    .p-datepicker table td.p-datepicker-today > span.p-datepicker-day-selected {
       color: $color-calm;
       background: $color-selected-background;
       font-weight: bold;
@@ -196,28 +196,28 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker.p-datepicker-timeonly .p-timepicker {
       border-top: 0 none;
     }
-    .p-datepicker .p-monthpicker {
+    .p-datepicker .p-datepicker-month-view {
       margin: 0.5rem 0;
     }
-    .p-datepicker .p-monthpicker .p-monthpicker-month {
+    .p-datepicker .p-datepicker-month-view .p-datepicker-month {
       padding: 0.5rem;
       transition: box-shadow 0.2s;
       border-radius: 6px;
     }
-    .p-datepicker .p-monthpicker .p-monthpicker-month.p-highlight {
+    .p-datepicker .p-datepicker-month-view .p-datepicker-month.p-datepicker-day-selected {
       color: $color-calm;
       background: $color-selected-background;
       font-weight: bold;
     }
-    .p-datepicker .p-yearpicker {
+    .p-datepicker .p-datepicker-year-view {
       margin: 0.5rem 0;
     }
-    .p-datepicker .p-yearpicker .p-yearpicker-year {
+    .p-datepicker .p-datepicker-year-view .p-datepicker-year {
       padding: 0.5rem;
       transition: box-shadow 0.2s;
       border-radius: 6px;
     }
-    .p-datepicker .p-yearpicker .p-yearpicker-year.p-highlight {
+    .p-datepicker .p-datepicker-year-view .p-datepicker-year.p-datepicker-day-selected {
       color: $color-calm;
       background: $color-selected-background;
       font-weight: bold;
@@ -239,37 +239,37 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker:not(.p-disabled)
       table
       td
-      span:not(.p-highlight):not(.p-disabled):hover {
+      span:not(.p-datepicker-day-selected):not(.p-disabled):hover {
       background: $color-highlight;
     }
     .p-datepicker:not(.p-disabled)
       table
       td
-      span:not(.p-highlight):not(.p-disabled):focus {
+      span:not(.p-datepicker-day-selected):not(.p-disabled):focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
     .p-datepicker:not(.p-disabled)
-      .p-monthpicker
-      .p-monthpicker-month:not(.p-disabled):not(.p-highlight):hover {
+      .p-datepicker-month-view
+      .p-datepicker-month:not(.p-disabled):not(.p-datepicker-day-selected):hover {
       background: $color-highlight;
     }
     .p-datepicker:not(.p-disabled)
-      .p-monthpicker
-      .p-monthpicker-month:not(.p-disabled):focus {
+      .p-datepicker-month-view
+      .p-datepicker-month:not(.p-disabled):focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
     .p-datepicker:not(.p-disabled)
       .p-yearpicker
-      .p-yearpicker-year:not(.p-disabled):not(.p-highlight):hover {
+      .p-datepicker-year:not(.p-disabled):not(.p-datepicker-day-selected):hover {
       background: $color-highlight;
     }
     .p-datepicker:not(.p-disabled)
       .p-yearpicker
-      .p-yearpicker-year:not(.p-disabled):focus {
+      .p-datepicker-year:not(.p-disabled):focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
@@ -297,13 +297,13 @@ $disabled-day-color: var(--cps-color-text-lightest);
       color: $other-month-color;
     }
 
-    .p-link:focus {
+    .p-ripple:focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
-    .p-link {
+    .p-ripple {
       text-align: left;
       background-color: transparent;
       margin: 0;

@@ -36,17 +36,19 @@
     hideTransitionOptions="0s linear"
     containerClass="cps-datepicker-calendar-menu">
     <div class="cps-datepicker-calendar">
-      <p-calendar
+      <p-datepicker
+        class="max-w-full"
         [(ngModel)]="value"
+        [inline]="true"
         [showIcon]="true"
         [showButtonBar]="showTodayButton"
-        [inline]="true"
         (onSelect)="onSelectCalendarDate($event)"
         (onClearClick)="onClearCalendarDate()"
+        [todayButtonStyleClass]="'btn-bar-today'"
+        [clearButtonStyleClass]="'btn-bar-clear'"
         [showOtherMonths]="false"
         [minDate]="minDate"
-        [maxDate]="maxDate">
-      </p-calendar>
+        [maxDate]="maxDate" />
     </div>
   </cps-menu>
 </div>
