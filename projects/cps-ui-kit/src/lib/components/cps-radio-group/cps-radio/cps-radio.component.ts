@@ -5,7 +5,6 @@ import {
   CpsRadioGroupComponent,
   CpsRadioOption
 } from '../cps-radio-group.component';
-import { CpsTooltipDirective } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.component';
 
 /**
@@ -16,8 +15,6 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   selector: 'cps-radio',
   imports: [
     CommonModule,
-    CpsTooltipDirective,
-    CpsRadioGroupComponent,
     CpsRadioButtonComponent
   ],
   templateUrl: './cps-radio.component.html',

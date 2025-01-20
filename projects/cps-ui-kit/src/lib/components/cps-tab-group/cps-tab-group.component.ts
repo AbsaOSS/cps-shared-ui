@@ -70,7 +70,6 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
   imports: [
     CommonModule,
     CpsIconComponent,
-    CpsTabComponent,
     CpsTooltipDirective
   ],
   selector: 'cps-tab-group',

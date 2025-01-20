@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
-import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 
 @Component({
-  imports: [CpsButtonComponent, CpsIconComponent],
+  imports: [CpsButtonComponent],
   selector: 'cps-confirmation',
   templateUrl: './cps-confirmation.component.html',
   styleUrls: ['./cps-confirmation.component.scss']

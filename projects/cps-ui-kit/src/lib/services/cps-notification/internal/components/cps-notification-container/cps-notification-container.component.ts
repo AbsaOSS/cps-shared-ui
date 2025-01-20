@@ -20,9 +20,6 @@ import {
   CpsNotificationPosition
 } from '../../../utils/cps-notification-config';
 import { CpsNotificationData } from '../../../utils/internal/cps-notification-data';
-import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
-import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
-import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CpsToastComponent } from '../cps-toast/cps-toast.component';
 import { animateChild, query, transition, trigger } from '@angular/animations';
 import { PrimeNG } from 'primeng/config';
@@ -34,9 +31,6 @@ type Nullable<T = void> = T | null | undefined;
   imports: [
     CommonModule,
     SharedModule,
-    CpsButtonComponent,
-    CpsInfoCircleComponent,
-    CpsIconComponent,
     CpsToastComponent
   ],
   templateUrl: './cps-notification-container.component.html',

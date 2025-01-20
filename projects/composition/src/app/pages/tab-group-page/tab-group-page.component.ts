@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-  CpsIconComponent,
   CpsTabGroupComponent,
   CpsTabComponent,
   CpsTabChangeEvent
@@ -13,7 +12,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 @Component({
   imports: [
     CommonModule,
-    CpsIconComponent,
     CpsTabGroupComponent,
     CpsTabComponent,
     ComponentDocsViewerComponent
