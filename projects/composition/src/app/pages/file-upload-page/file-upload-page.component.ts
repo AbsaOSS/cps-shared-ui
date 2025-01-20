@@ -4,7 +4,6 @@ import {
   CpsFileUploadComponent,
   CpsButtonToggleComponent,
   CpsButtonToggleOption,
-  CpsIconComponent,
   CpsDividerComponent
 } from 'cps-ui-kit';
 import { Observable, catchError, from, map, of } from 'rxjs';
@@ -16,7 +15,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   selector: 'app-file-upload-page',
   imports: [
     CommonModule,
-    CpsIconComponent,
     CpsButtonToggleComponent,
     CpsFileUploadComponent,
     ComponentDocsViewerComponent,
