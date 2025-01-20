@@ -1166,9 +1166,6 @@ export class CpsTreeTableComponent
     if (this.striped) {
       classesList.push('p-treetable-striped');
     }
-    if (this.bordered) {
-      classesList.push('p-treetable-gridlines');
-    }
 
     return classesList.join(' ');
   }

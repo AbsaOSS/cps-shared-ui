@@ -42,6 +42,7 @@ $tbar-normal-height: 72px;
 
       .p-column-resizer-helper {
         background: $color-calm;
+        width: 1px;
       }
     }
 
@@ -203,7 +204,7 @@ $tbar-normal-height: 72px;
     }
 
     .p-datatable
-      .p-sortable-column:not(.p-paginator-page-selected):hover
+      .p-datatable-sortable-column:not(.p-paginator-page-selected):hover
       .cps-sortable-column-icon.sort-unsorted {
       .sort-unsorted-arrow-up {
         border-bottom-color: $sorticon-hover-color;
@@ -263,9 +264,9 @@ $tbar-normal-height: 72px;
       background: #ffffff;
     }
 
-    .p-datatable.p-datatable-hoverable-rows
+    .p-datatable.p-datatable-hoverable
       .p-datatable-tbody
-      > tr:not(.p-paginator-page-selected):not(.cps-table-row-expanded-content):hover {
+      > tr:not(.p-highlight):not(.cps-table-row-expanded-content):hover {
       background: $row-hover-background;
     }
 
@@ -392,16 +393,16 @@ $tbar-normal-height: 72px;
       align-items: center;
     }
 
-    .p-checkbox .p-checkbox-box.p-paginator-page-selected {
+    .p-checkbox.p-checkbox-checked .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
     }
-    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-paginator-page-selected:hover {
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
     }
-    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
       border-color: $color-calm;
     }
 

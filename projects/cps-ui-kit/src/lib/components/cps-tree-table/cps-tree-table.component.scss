@@ -341,17 +341,29 @@ $tbar-normal-height: 72px;
       cursor: default;
     }
 
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
       background: $paginator-elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):active {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active {
       background: $paginator-elem-active-background;
     }
 
@@ -379,17 +391,23 @@ $tbar-normal-height: 72px;
       pointer-events: none;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page.p-paginator-page-selected {
       background: $color-calm;
       border-color: $color-calm;
       color: white;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):hover {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):hover {
       background: $paginator-elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):active {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):active {
       background: $paginator-elem-active-background;
     }
 
@@ -433,7 +451,7 @@ $tbar-normal-height: 72px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 10px !important;
       border: unset;
       background: unset;
       border-top: 1px solid $treetable-borders-color;
@@ -517,7 +535,7 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable
-      .p-sortable-column:not(.p-paginator-page-selected):hover
+      .p-sortable-column:not(.p-highlight):hover
       .cps-sortable-column-icon.sort-unsorted {
       .sort-unsorted-arrow-up {
         border-bottom-color: $sorticon-hover-color;
@@ -574,14 +592,14 @@ $tbar-normal-height: 72px;
       height: 2rem;
     }
 
-    .p-treetable .p-treetable-tbody > tr.p-paginator-page-selected {
+    .p-treetable .p-treetable-tbody > tr.p-highlight {
       background: #eff6ff;
       color: #1d4ed8;
     }
 
     .p-treetable.p-treetable-hoverable-rows
       .p-treetable-tbody
-      > tr:not(.p-paginator-page-selected):hover {
+      > tr:not(.p-highlight):hover {
       background: $row-hover-background;
     }
 
@@ -590,6 +608,7 @@ $tbar-normal-height: 72px;
     }
     .p-treetable .p-column-resizer-helper {
       background: $color-calm;
+      width: 1px;
     }
 
     .p-treetable .p-treetable-loading-overlay {
@@ -643,7 +662,8 @@ $tbar-normal-height: 72px;
     .p-treetable.p-treetable-gridlines .p-treetable-bottom {
       border-width: 0 1px 1px 1px;
     }
-    .p-treetable .p-treetable-thead > tr > th {
+    .p-treetable .p-treetable-thead > tr > th,
+    .p-treetable.p-treetable-gridlines .p-treetable-thead > tr > th {
       border-width: 1px 0 1px 1px;
     }
 
@@ -757,16 +777,17 @@ $tbar-normal-height: 72px;
       align-items: center;
     }
 
-    .p-checkbox .p-checkbox-box.p-paginator-page-selected {
+    .p-checkbox.p-checkbox-checked .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
     }
-    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-paginator-page-selected:hover {
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
+      .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
     }
-    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
       border-color: $color-calm;
     }
 
