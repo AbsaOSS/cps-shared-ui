@@ -1,5 +1,9 @@
 :host {
   .notification-btns-group {
+    gap: 30px;
+    display: flex;
+    flex-direction: column;
+
     &-title {
       font-size: 24px;
       color: var(--cps-color-depth);
@@ -8,9 +12,6 @@
       padding-bottom: 8px;
       font-weight: 600;
     }
-    gap: 30px;
-    display: flex;
-    flex-direction: column;
   }
   .notification-btns-last-group {
     padding-bottom: 12px;
