@@ -1,15 +1,15 @@
 {
   "name": "cps-ui-kit",
-  "version": "18.10.0",
+  "version": "19.0.0",
   "peerDependencies": {
-    "@angular/common": "^18.1.0",
-    "@angular/core": "^18.1.0",
-    "@angular/forms": "^18.1.0",
+    "@angular/common": "^19.1.0",
+    "@angular/core": "^19.1.0",
+    "@angular/forms": "^19.1.0",
     "rxjs": "^7.8.1",
-    "zone.js": "^0.14.8",
+    "zone.js": "^0.15.0",
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
-    "primeng": "^17.18.6",
+    "primeng": "^19.0.5",
     "xlsx": "^0.18.5"
   },
   "repository": {
