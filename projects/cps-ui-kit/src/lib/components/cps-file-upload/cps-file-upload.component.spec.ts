@@ -30,11 +30,6 @@ describe('CpsFileUploadComponent', () => {
       files: {
         item: (index: number): any => dataTransfer.files.files[index],
         files: [file]
-      },
-      items: {
-        add: (item: File) => {
-          dataTransfer.files.files.push(item);
-        }
       }
     };
     const event = new Event('drop');
