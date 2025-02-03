@@ -403,4 +403,26 @@ describe('CpsAutocompleteComponent', () => {
     );
     expect(container).toBeTruthy();
   });
+
+  it('should clear input text and reset options when clearInput function is called', () => {
+    component.options = [
+      { label: 'First Option', value: 'A' },
+      { label: 'Second Option', value: 'B' },
+      { label: 'Third Option', value: 'C' }
+    ];
+    const event = new Event('input');
+    Object.defineProperty(event, 'target', {
+      value: { value: 'First' }
+    });
+
+    component.autocompleteInput.nativeElement.dispatchEvent(event);
+
+    expect(component.inputText).toBe('First');
+    expect(component.filteredOptions.length).toBe(1);
+
+    component.clearInput();
+
+    expect(component.inputText).toBe('');
+    expect(component.filteredOptions.length).toBe(3);
+  });
 });

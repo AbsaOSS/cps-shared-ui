@@ -533,7 +533,7 @@ export class CpsAutocompleteComponent
     }
 
     if (needClearInput) {
-      this._clearInput();
+      this.clearInput();
     }
     if (needFocusInput) {
       setTimeout(() => {
@@ -635,7 +635,7 @@ export class CpsAutocompleteComponent
       const val = this.multiple ? [] : this._getEmptyValue();
       this.updateValue(val);
     }
-    this._clearInput();
+    this.clearInput();
     this._dehighlightOption();
     setTimeout(() => {
       this.focusInput();
@@ -776,6 +776,15 @@ export class CpsAutocompleteComponent
     );
   }
 
+  clearInput(): void {
+    this.filteredOptions = this.options;
+    this.inputText = '';
+    this.inputTextDebounced = '';
+    this._inputChangeSubject$.next('');
+    this.activeSingle = false;
+    this.recalcVirtualListHeight();
+  }
+
   private _getEmptyValue() {
     const option = this.options[this.emptyOptionIndex];
     return !option
@@ -884,17 +893,8 @@ export class CpsAutocompleteComponent
       : '';
   }
 
-  private _clearInput() {
-    this.filteredOptions = this.options;
-    this.inputText = '';
-    this.inputTextDebounced = '';
-    this._inputChangeSubject$.next('');
-    this.activeSingle = false;
-    this.recalcVirtualListHeight();
-  }
-
   private _closeAndClear() {
-    this._clearInput();
+    this.clearInput();
     this._toggleOptions(false);
     this._dehighlightOption();
   }
@@ -994,7 +994,7 @@ export class CpsAutocompleteComponent
       }
     }
 
-    this._clearInput();
+    this.clearInput();
   }
 
   private _removeLastValue() {
