@@ -54,8 +54,8 @@ $disabled-day-color: var(--cps-color-text-lightest);
       border-top-right-radius: 6px;
       border-top-left-radius: 6px;
     }
-    .p-datepicker .p-datepicker-header .p-datepicker-prev,
-    .p-datepicker .p-datepicker-header .p-datepicker-next {
+    .p-datepicker .p-datepicker-header .p-datepicker-prev-button,
+    .p-datepicker .p-datepicker-header .p-datepicker-next-button {
       width: 2rem;
       height: 2rem;
       color: $color-calm;
@@ -67,14 +67,14 @@ $disabled-day-color: var(--cps-color-text-lightest);
         color 0.2s,
         box-shadow 0.2s;
     }
-    .p-datepicker .p-datepicker-header .p-datepicker-prev:enabled:hover,
-    .p-datepicker .p-datepicker-header .p-datepicker-next:enabled:hover {
+    .p-datepicker .p-datepicker-header .p-datepicker-prev-button:enabled:hover,
+    .p-datepicker .p-datepicker-header .p-datepicker-next-button:enabled:hover {
       color: $color-calm;
       border-color: transparent;
       background: $color-highlight;
     }
-    .p-datepicker .p-datepicker-header .p-datepicker-prev:focus,
-    .p-datepicker .p-datepicker-header .p-datepicker-next:focus {
+    .p-datepicker .p-datepicker-header .p-datepicker-prev-button:focus,
+    .p-datepicker .p-datepicker-header .p-datepicker-next-button:focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
@@ -157,6 +157,8 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker .p-datepicker-buttonbar .p-button {
       width: auto;
       color: $color-prepared;
+      border-width: 2px;
+      border-style: solid;
     }
     .p-datepicker .p-timepicker {
       border-top: 1px solid #dee2e6;
@@ -317,41 +319,43 @@ $disabled-day-color: var(--cps-color-text-lightest);
       border-radius: 6px;
     }
 
-    .p-button {
-      font-family: 'Source Sans Pro', sans-serif;
-      background-color: transparent;
-      color: $color-calm;
-      border-color: transparent;
-      margin: 0;
-      display: inline-flex;
-      cursor: pointer;
-      -webkit-user-select: none;
-      user-select: none;
-      align-items: center;
-      vertical-align: bottom;
-      text-align: center;
-      overflow: hidden;
-      position: relative;
-      padding: 0.75rem 1.25rem;
-      font-size: 1rem;
-      transition:
-        background-color 0.2s,
-        color 0.2s,
-        border-color 0.2s,
-        box-shadow 0.2s;
-      border-radius: 6px;
-      &:focus {
-        box-shadow: unset;
-      }
-      &:hover {
-        background-color: $color-highlight;
-      }
-      &:active {
-        background-color: $color-selected-background;
-      }
+    .p-datepicker-buttonbar {
+      .p-button {
+        font-family: 'Source Sans Pro', sans-serif;
+        background-color: transparent;
+        color: $color-calm;
+        border-color: transparent;
+        margin: 0;
+        display: inline-flex;
+        cursor: pointer;
+        -webkit-user-select: none;
+        user-select: none;
+        align-items: center;
+        vertical-align: bottom;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+        padding: 0.75rem 1.25rem;
+        font-size: 1rem;
+        transition:
+          background-color 0.2s,
+          color 0.2s,
+          border-color 0.2s,
+          box-shadow 0.2s;
+        border-radius: 6px;
+        &:focus {
+          box-shadow: unset;
+        }
+        &:hover {
+          background-color: $color-highlight;
+        }
+        &:active {
+          background-color: $color-selected-background;
+        }
 
-      .p-button-label {
-        font-weight: 700;
+        .p-button-label {
+          font-weight: 700;
+        }
       }
     }
 
