@@ -13,10 +13,7 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
  */
 @Component({
   selector: 'cps-radio',
-  imports: [
-    CommonModule,
-    CpsRadioButtonComponent
-  ],
+  imports: [CommonModule, CpsRadioButtonComponent],
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss']
 })

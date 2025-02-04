@@ -28,11 +28,7 @@ type Nullable<T = void> = T | null | undefined;
 
 @Component({
   selector: 'cps-notification-container',
-  imports: [
-    CommonModule,
-    SharedModule,
-    CpsToastComponent
-  ],
+  imports: [CommonModule, SharedModule, CpsToastComponent],
   templateUrl: './cps-notification-container.component.html',
   styleUrls: ['./cps-notification-container.component.scss'],
   encapsulation: ViewEncapsulation.None,
