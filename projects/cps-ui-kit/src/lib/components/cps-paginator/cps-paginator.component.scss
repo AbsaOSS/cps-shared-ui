@@ -144,13 +144,13 @@ $elem-active-background: var(--cps-color-highlight-active);
       position: relative;
     }
 
-    .p-link:focus {
+    .p-paginator-page:focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
-    .p-link {
+    .p-paginator-page {
       text-align: left;
       background-color: transparent;
       margin: 0;
