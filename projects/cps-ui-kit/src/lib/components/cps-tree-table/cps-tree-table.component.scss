@@ -209,13 +209,13 @@ $tbar-normal-height: 72px;
       position: relative;
     }
 
-    .p-link:focus {
+    .p-paginator-page:focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
-    .p-link {
+    .p-paginator-page {
       text-align: left;
       background-color: transparent;
       margin: 0;
@@ -427,7 +427,11 @@ $tbar-normal-height: 72px;
       position: relative;
     }
 
-    span.p-paginator-icon {
+    span.p-paginator-icon,
+    span.p-paginator-first-icon,
+    span.p-paginator-prev-icon,
+    span.p-paginator-last-icon,
+    span.p-paginator-next-icon {
       display: contents;
     }
 
@@ -611,7 +615,7 @@ $tbar-normal-height: 72px;
       width: 1px;
     }
 
-    .p-treetable .p-treetable-loading-overlay {
+    .p-treetable .p-treetable-mask.p-overlay-mask {
       position: absolute;
       display: flex;
       align-items: center;
@@ -625,12 +629,12 @@ $tbar-normal-height: 72px;
       transition-duration: 0.2s;
       border: 1px solid $treetable-borders-color;
     }
-    .p-treetable.cps-tbar-small .p-treetable-loading-overlay {
+    .p-treetable.cps-tbar-small .p-treetable-mask.p-overlay-mask {
       top: $tbar-small-height;
       height: calc(100% - $tbar-small-height);
     }
 
-    .p-treetable.cps-tbar-normal .p-treetable-loading-overlay {
+    .p-treetable.cps-tbar-normal .p-treetable-mask.p-overlay-mask {
       top: $tbar-normal-height;
       height: calc(100% - $tbar-normal-height);
     }
