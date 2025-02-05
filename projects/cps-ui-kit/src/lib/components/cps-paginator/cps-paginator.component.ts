@@ -11,6 +11,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils';
+import { FormsModule } from '@angular/forms';
 
 /**
  * CpsPaginatorComponent is a generic component to display content in paged format.
@@ -18,8 +19,7 @@ import { getCSSColor } from '../../utils/colors-utils';
  */
 @Component({
   selector: 'cps-paginator',
-  standalone: true,
-  imports: [CommonModule, PaginatorModule, CpsSelectComponent],
+  imports: [CommonModule, PaginatorModule, CpsSelectComponent, FormsModule],
   templateUrl: './cps-paginator.component.html',
   styleUrls: ['./cps-paginator.component.scss']
 })

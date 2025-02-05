@@ -73,7 +73,6 @@ enum Months {
  */
 @Component({
   selector: 'cps-scheduler',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

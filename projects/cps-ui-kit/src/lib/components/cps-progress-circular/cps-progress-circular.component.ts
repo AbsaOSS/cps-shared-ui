@@ -8,7 +8,6 @@ import { getCSSColor } from '../../utils/colors-utils';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule],
   selector: 'cps-progress-circular',
   templateUrl: './cps-progress-circular.component.html',

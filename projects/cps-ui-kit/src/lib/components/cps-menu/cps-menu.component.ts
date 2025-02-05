@@ -27,12 +27,13 @@ import {
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
-import { OverlayService, PrimeNGConfig, SharedModule } from 'primeng/api';
+import { OverlayService, SharedModule } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
 import { Subscription } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
+import { PrimeNG } from 'primeng/config';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
@@ -78,7 +79,6 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     SharedModule,
@@ -238,7 +238,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     public renderer: Renderer2,
     public cd: ChangeDetectorRef,
     private zone: NgZone,
-    public config: PrimeNGConfig,
+    public primeNG: PrimeNG,
     public overlayService: OverlayService
   ) {
     this.window = this.document.defaultView as Window;
@@ -507,7 +507,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
       ZIndexUtils.set(
         'overlay',
         this.container,
-        this.baseZIndex + this.config.zIndex.overlay
+        this.baseZIndex + this.primeNG.zIndex.overlay
       );
     }
 

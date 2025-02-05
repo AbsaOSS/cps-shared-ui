@@ -13,7 +13,6 @@ import ComponentData from '../../api-data/cps-tooltip.json';
 
 @Component({
   selector: 'tooltip-page',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

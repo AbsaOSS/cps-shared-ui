@@ -209,13 +209,13 @@ $tbar-normal-height: 72px;
       position: relative;
     }
 
-    .p-link:focus {
+    .p-paginator-page:focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
-    .p-link {
+    .p-paginator-page {
       text-align: left;
       background-color: transparent;
       margin: 0;
@@ -280,7 +280,7 @@ $tbar-normal-height: 72px;
       border: 1px solid $treetable-borders-color;
     }
 
-    .p-paginator-left-content {
+    .p-paginator-content-start {
       margin-right: auto;
       .cps-table-paginator-itms-per-page {
         display: inline-flex;
@@ -341,17 +341,29 @@ $tbar-normal-height: 72px;
       cursor: default;
     }
 
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
       background: $paginator-elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):active,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):active,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):active,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):active {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active {
       background: $paginator-elem-active-background;
     }
 
@@ -379,17 +391,23 @@ $tbar-normal-height: 72px;
       pointer-events: none;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page.p-paginator-page-selected {
       background: $color-calm;
       border-color: $color-calm;
       color: white;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):hover {
       background: $paginator-elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):active {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):active {
       background: $paginator-elem-active-background;
     }
 
@@ -409,7 +427,11 @@ $tbar-normal-height: 72px;
       position: relative;
     }
 
-    span.p-paginator-icon {
+    span.p-paginator-icon,
+    span.p-paginator-first-icon,
+    span.p-paginator-prev-icon,
+    span.p-paginator-last-icon,
+    span.p-paginator-next-icon {
       display: contents;
     }
 
@@ -433,7 +455,7 @@ $tbar-normal-height: 72px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 10px !important;
       border: unset;
       background: unset;
       border-top: 1px solid $treetable-borders-color;
@@ -590,9 +612,10 @@ $tbar-normal-height: 72px;
     }
     .p-treetable .p-column-resizer-helper {
       background: $color-calm;
+      width: 1px;
     }
 
-    .p-treetable .p-treetable-loading-overlay {
+    .p-treetable .p-treetable-mask.p-overlay-mask {
       position: absolute;
       display: flex;
       align-items: center;
@@ -606,12 +629,12 @@ $tbar-normal-height: 72px;
       transition-duration: 0.2s;
       border: 1px solid $treetable-borders-color;
     }
-    .p-treetable.cps-tbar-small .p-treetable-loading-overlay {
+    .p-treetable.cps-tbar-small .p-treetable-mask.p-overlay-mask {
       top: $tbar-small-height;
       height: calc(100% - $tbar-small-height);
     }
 
-    .p-treetable.cps-tbar-normal .p-treetable-loading-overlay {
+    .p-treetable.cps-tbar-normal .p-treetable-mask.p-overlay-mask {
       top: $tbar-normal-height;
       height: calc(100% - $tbar-normal-height);
     }
@@ -643,7 +666,8 @@ $tbar-normal-height: 72px;
     .p-treetable.p-treetable-gridlines .p-treetable-bottom {
       border-width: 0 1px 1px 1px;
     }
-    .p-treetable .p-treetable-thead > tr > th {
+    .p-treetable .p-treetable-thead > tr > th,
+    .p-treetable.p-treetable-gridlines .p-treetable-thead > tr > th {
       border-width: 1px 0 1px 1px;
     }
 
@@ -757,16 +781,17 @@ $tbar-normal-height: 72px;
       align-items: center;
     }
 
-    .p-checkbox .p-checkbox-box.p-highlight {
+    .p-checkbox.p-checkbox-checked .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
     }
-    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
+      .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
     }
-    .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
       border-color: $color-calm;
     }
 

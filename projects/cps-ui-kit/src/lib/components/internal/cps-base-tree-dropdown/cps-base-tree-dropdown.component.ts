@@ -29,7 +29,8 @@ import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
  * @group Components
  */
 @Component({
-  template: ''
+  template: '',
+  standalone: false
 })
 export class CpsBaseTreeDropdownComponent
   implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy
@@ -497,7 +498,8 @@ export class CpsBaseTreeDropdownComponent
     if (!this.isOpened) return;
 
     if (!this.optionFocused) {
-      const firstElem = this.treeContainerElement?.querySelector('.p-treenode');
+      const firstElem =
+        this.treeContainerElement?.querySelector('.p-tree-node');
 
       if (firstElem) (firstElem as HTMLElement).focus();
       this.optionFocused = true;
@@ -532,8 +534,9 @@ export class CpsBaseTreeDropdownComponent
   }
 
   private _initContainerClickListener() {
-    this.treeContainerElement =
-      this.treeList?.el?.nativeElement?.querySelector('.p-tree-container');
+    this.treeContainerElement = this.treeList?.el?.nativeElement?.querySelector(
+      '.p-tree-root-children'
+    );
     if (this.treeContainerElement) {
       this.treeContainerElement.addEventListener(
         'click',

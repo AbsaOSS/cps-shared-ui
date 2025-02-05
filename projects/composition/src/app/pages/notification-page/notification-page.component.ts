@@ -12,7 +12,6 @@ import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer
 
 @Component({
   selector: 'app-notification-page',
-  standalone: true,
   imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './notification-page.component.html',
   styleUrls: ['./notification-page.component.scss'],

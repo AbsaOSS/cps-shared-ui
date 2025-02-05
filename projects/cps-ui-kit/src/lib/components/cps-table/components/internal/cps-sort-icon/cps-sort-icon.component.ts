@@ -14,7 +14,6 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cps-sort-icon',
-  standalone: true,
   imports: [CommonModule],
   templateUrl: './cps-sort-icon.component.html',
   styleUrls: ['./cps-sort-icon.component.scss'],

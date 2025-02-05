@@ -22,7 +22,6 @@ import ComponentData from '../../api-data/cps-table.json';
 
 @Component({
   selector: 'app-table-page',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -68,7 +67,7 @@ export class TablePageComponent implements OnInit {
     },
     {
       a: 'this is sanitized <script>console.log("pwned")</script>',
-      b: '<img src="/assets/ui_logo.svg" width="100" />',
+      b: '<img src="./assets/ui_logo.svg" width="100" />',
       c: '<code>null === undefined</code>'
     }
   ];

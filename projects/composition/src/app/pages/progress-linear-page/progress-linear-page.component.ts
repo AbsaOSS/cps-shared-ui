@@ -5,7 +5,6 @@ import ComponentData from '../../api-data/cps-progress-linear.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
-  standalone: true,
   imports: [CpsProgressLinearComponent, ComponentDocsViewerComponent],
   selector: 'app-progress-linear-page',
   templateUrl: './progress-linear-page.component.html',

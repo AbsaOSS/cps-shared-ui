@@ -27,12 +27,9 @@ import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
-import {
-  VirtualScroller,
-  VirtualScrollerModule
-} from 'primeng/virtualscroller';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { Scroller, ScrollerModule } from 'primeng/scroller';
 
 /**
  * CpsSelectAppearanceType is used to define the border of the select input.
@@ -45,7 +42,6 @@ export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -56,7 +52,7 @@ export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
     LabelByValuePipe,
     CombineLabelsPipe,
     CheckOptionSelectedPipe,
-    VirtualScrollerModule,
+    ScrollerModule,
     CpsMenuComponent
   ],
   providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
@@ -314,7 +310,7 @@ export class CpsSelectComponent
   selectContainer!: ElementRef;
 
   @ViewChild('virtualList')
-  virtualList!: VirtualScroller;
+  virtualList!: Scroller;
 
   @ViewChild('optionsMenu')
   optionsMenu!: CpsMenuComponent;

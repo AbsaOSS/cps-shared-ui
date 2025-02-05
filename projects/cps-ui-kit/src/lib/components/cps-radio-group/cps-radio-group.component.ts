@@ -13,10 +13,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import {
-  CpsTooltipDirective,
-  CpsTooltipPosition
-} from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 import { Subscription } from 'rxjs';
 
@@ -40,13 +37,7 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
  * @group Components
  */
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    CpsInfoCircleComponent,
-    CpsTooltipDirective,
-    CpsRadioButtonComponent
-  ],
+  imports: [CommonModule, CpsInfoCircleComponent, CpsRadioButtonComponent],
   selector: 'cps-radio-group',
   templateUrl: './cps-radio-group.component.html',
   styleUrls: ['./cps-radio-group.component.scss'],

@@ -15,7 +15,7 @@ $elem-active-background: var(--cps-color-highlight-active);
       padding: 0.5rem 1rem;
     }
 
-    .p-paginator-left-content {
+    .p-paginator-content-start {
       margin-right: auto;
       .cps-paginator-itms-per-page {
         display: inline-flex;
@@ -76,17 +76,17 @@ $elem-active-background: var(--cps-color-highlight-active);
       cursor: default;
     }
 
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
+    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
       background: $elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):active,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):active,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):active,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):active {
+    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):active {
       background: $elem-active-background;
     }
 
@@ -114,17 +114,17 @@ $elem-active-background: var(--cps-color-highlight-active);
       pointer-events: none;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+    .p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
       background: $color-calm;
       border-color: $color-calm;
       color: white;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):hover {
       background: $elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):active {
+    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):active {
       background: $elem-active-background;
     }
 
@@ -144,13 +144,13 @@ $elem-active-background: var(--cps-color-highlight-active);
       position: relative;
     }
 
-    .p-link:focus {
+    .p-paginator-page:focus {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
-    .p-link {
+    .p-paginator-page {
       text-align: left;
       background-color: transparent;
       margin: 0;

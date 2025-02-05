@@ -67,13 +67,7 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
  * @group Components
  */
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    CpsIconComponent,
-    CpsTabComponent,
-    CpsTooltipDirective
-  ],
+  imports: [CommonModule, CpsIconComponent, CpsTooltipDirective],
   selector: 'cps-tab-group',
   templateUrl: './cps-tab-group.component.html',
   styleUrls: ['./cps-tab-group.component.scss'],

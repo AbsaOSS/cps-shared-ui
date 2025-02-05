@@ -26,7 +26,6 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
  */
 @Component({
   selector: 'cps-file-upload',
-  standalone: true,
   imports: [
     CommonModule,
     CpsIconComponent,

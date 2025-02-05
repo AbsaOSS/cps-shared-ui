@@ -17,7 +17,6 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.dir
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsInfoCircleComponent],
   selector: 'cps-switch',
   templateUrl: './cps-switch.component.html',

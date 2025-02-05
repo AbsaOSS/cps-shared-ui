@@ -10,7 +10,6 @@ let nextUniqueId = 0;
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsTooltipDirective],
   selector: 'cps-radio-button',
   templateUrl: './cps-radio-button.component.html',

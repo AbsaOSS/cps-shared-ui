@@ -7,7 +7,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   selector: 'app-info-circle-page',
-  standalone: true,
   imports: [CommonModule, CpsInfoCircleComponent, ComponentDocsViewerComponent],
   templateUrl: './info-circle-page.component.html',
   styleUrls: ['./info-circle-page.component.scss'],

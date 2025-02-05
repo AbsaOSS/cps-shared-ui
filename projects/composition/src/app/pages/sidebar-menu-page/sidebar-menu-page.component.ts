@@ -7,7 +7,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   selector: 'app-sidebar-menu-page',
-  standalone: true,
   imports: [
     CommonModule,
     CpsSidebarMenuComponent,

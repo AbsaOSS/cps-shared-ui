@@ -6,7 +6,6 @@ import ComponentData from '../../api-data/cps-paginator.json';
 
 @Component({
   selector: 'app-paginator-page',
-  standalone: true,
   imports: [CpsPaginatorComponent, ComponentDocsViewerComponent],
   templateUrl: './paginator-page.component.html',
   styleUrls: ['./paginator-page.component.scss'],

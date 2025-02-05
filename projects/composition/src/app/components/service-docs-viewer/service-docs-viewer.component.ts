@@ -16,7 +16,6 @@ import { EnumsComponent } from '../shared/enums/enums.component';
   selector: 'app-service-docs-viewer',
   templateUrl: './service-docs-viewer.component.html',
   styleUrl: './service-docs-viewer.component.scss',
-  standalone: true,
   imports: [
     CommonModule,
     CpsTabComponent,

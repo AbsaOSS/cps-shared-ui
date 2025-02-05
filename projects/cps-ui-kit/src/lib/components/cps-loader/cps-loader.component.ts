@@ -7,7 +7,6 @@ import { getCSSColor } from '../../utils/colors-utils';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule],
   selector: 'cps-loader',
   templateUrl: './cps-loader.component.html',

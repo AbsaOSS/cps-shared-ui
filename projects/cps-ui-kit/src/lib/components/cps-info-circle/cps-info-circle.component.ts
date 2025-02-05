@@ -11,7 +11,6 @@ import {
  */
 @Component({
   selector: 'cps-info-circle',
-  standalone: true,
   imports: [CpsIconComponent, CpsTooltipDirective],
   templateUrl: './cps-info-circle.component.html',
   styleUrls: ['./cps-info-circle.component.scss']

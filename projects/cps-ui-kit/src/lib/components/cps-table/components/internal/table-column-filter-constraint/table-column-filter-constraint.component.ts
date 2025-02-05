@@ -27,7 +27,6 @@ import {
  */
 @Component({
   selector: 'table-column-filter-constraint',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,

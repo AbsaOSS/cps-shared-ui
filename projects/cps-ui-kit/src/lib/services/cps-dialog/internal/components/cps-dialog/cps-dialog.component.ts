@@ -26,7 +26,7 @@ import {
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
-import { PrimeNGConfig, SharedModule } from 'primeng/api';
+import { SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
@@ -35,6 +35,7 @@ import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
+import { PrimeNG } from 'primeng/config';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -50,7 +51,6 @@ type VoidListener = () => void | null | undefined;
 
 @Component({
   selector: 'cps-dialog',
-  standalone: true,
   imports: [
     CommonModule,
     SharedModule,
@@ -178,7 +178,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     public renderer: Renderer2,
     public config: CpsDialogConfig,
     public zone: NgZone,
-    public primeNGConfig: PrimeNGConfig
+    public primeNG: PrimeNG
   ) {}
 
   ngAfterViewInit() {
@@ -205,7 +205,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
       ZIndexUtils.set(
         'modal',
         this.container,
-        (this.config.baseZIndex || 0) + this.primeNGConfig.zIndex.modal
+        (this.config.baseZIndex || 0) + this.primeNG.zIndex.modal
       );
       (this.wrapper as HTMLElement).style.zIndex = String(
         parseInt((this.container as HTMLDivElement).style.zIndex, 10) - 1

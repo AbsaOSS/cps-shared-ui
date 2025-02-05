@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { CpsInputComponent } from 'cps-ui-kit';
 
 @Component({
-  standalone: true,
   imports: [RouterModule, CommonModule, FormsModule, CpsInputComponent],
   selector: 'app-navigation-sidebar',
   templateUrl: './navigation-sidebar.component.html',

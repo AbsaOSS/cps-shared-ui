@@ -79,7 +79,6 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
  */
 @Component({
   selector: 'cps-tree-table',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
@@ -1166,9 +1165,6 @@ export class CpsTreeTableComponent
     }
     if (this.striped) {
       classesList.push('p-treetable-striped');
-    }
-    if (this.bordered) {
-      classesList.push('p-treetable-gridlines');
     }
 
     return classesList.join(' ');

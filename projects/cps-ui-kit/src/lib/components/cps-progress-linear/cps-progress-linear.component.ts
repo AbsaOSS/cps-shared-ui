@@ -8,7 +8,6 @@ import { getCSSColor } from '../../utils/colors-utils';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule],
   selector: 'cps-progress-linear',
   templateUrl: './cps-progress-linear.component.html',

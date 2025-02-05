@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
-  CpsIconComponent,
   CpsTabGroupComponent,
   CpsTabComponent,
   CpsTabChangeEvent
@@ -11,10 +10,8 @@ import ComponentData from '../../api-data/cps-tab-group.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
-  standalone: true,
   imports: [
     CommonModule,
-    CpsIconComponent,
     CpsTabGroupComponent,
     CpsTabComponent,
     ComponentDocsViewerComponent

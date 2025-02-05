@@ -29,7 +29,6 @@ import {
 } from '@angular/animations';
 
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsButtonComponent, CpsIconComponent],
   selector: 'cps-toast',
   templateUrl: './cps-toast.component.html',

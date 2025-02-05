@@ -6,7 +6,6 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule],
   selector: 'cps-tab',
   templateUrl: './cps-tab.component.html',

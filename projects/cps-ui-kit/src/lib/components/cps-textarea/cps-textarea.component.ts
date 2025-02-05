@@ -22,7 +22,6 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.dir
  * @group Components
  */
 @Component({
-  standalone: true,
   selector: 'cps-textarea',
   imports: [CommonModule, CpsIconComponent, CpsInfoCircleComponent],
   templateUrl: './cps-textarea.component.html',

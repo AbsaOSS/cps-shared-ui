@@ -6,7 +6,6 @@ import ComponentData from '../../api-data/cps-divider.json';
 
 @Component({
   selector: 'app-divider-page',
-  standalone: true,
   imports: [CpsDividerComponent, ComponentDocsViewerComponent],
   templateUrl: './divider-page.component.html',
   styleUrl: './divider-page.component.scss',

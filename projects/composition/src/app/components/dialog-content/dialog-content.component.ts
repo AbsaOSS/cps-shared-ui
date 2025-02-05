@@ -7,7 +7,6 @@ import {
 } from 'cps-ui-kit';
 
 @Component({
-  standalone: true,
   imports: [CpsButtonComponent, CpsIconComponent],
   selector: 'app-dialog-content',
   templateUrl: './dialog-content.component.html',

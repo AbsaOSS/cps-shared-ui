@@ -32,7 +32,6 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-expansion-panel',
   templateUrl: './cps-expansion-panel.component.html',

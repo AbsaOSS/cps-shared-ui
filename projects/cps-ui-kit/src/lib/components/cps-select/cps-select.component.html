@@ -144,9 +144,9 @@
           </ng-container>
         </ng-container>
         <ng-container *ngIf="virtualScroll">
-          <p-virtualScroller
+          <p-virtualscroller
             #virtualList
-            [value]="options"
+            [items]="options"
             [delay]="0"
             [scrollHeight]="virtualListHeight + 'px'"
             [options]="{ numToleratedItems: numToleratedItems }"
@@ -160,7 +160,7 @@
                   }
                 "></ng-container>
             </ng-template>
-          </p-virtualScroller>
+          </p-virtualscroller>
         </ng-container>
       </div>
     </cps-menu>

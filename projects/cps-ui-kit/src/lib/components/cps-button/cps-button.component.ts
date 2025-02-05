@@ -18,7 +18,6 @@ import { convertSize, parseSize } from '../../utils/internal/size-utils';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsIconComponent, CpsProgressCircularComponent],
   selector: 'cps-button',
   templateUrl: './cps-button.component.html',

@@ -379,34 +379,34 @@ $hover-transition-duration: 0.2s;
       overflow: auto;
     }
 
-    .p-tree-container {
+    .p-tree-root-children {
       margin: 0;
       padding: 0;
       list-style-type: none;
       overflow: auto;
     }
 
-    .p-tree .p-tree-container .p-treenode {
+    .p-tree .p-tree-root-children .p-tree-node {
       padding: unset;
       outline: 0 none;
       min-width: fit-content;
     }
 
-    .p-tree .p-tree-container .p-treenode .p-treenode-content {
+    .p-tree .p-tree-root-children .p-tree-node .p-tree-node-content {
       border-radius: 0;
       transition: box-shadow 0.2s;
       padding: 0.25rem;
     }
 
-    .p-treenode-content {
+    .p-tree-node-content {
       display: flex;
       align-items: center;
-      .p-treenode-label {
+      .p-tree-node-label {
         width: 100%;
       }
     }
 
-    .p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
+    .p-tree .p-tree-root-children .p-tree-node .p-tree-node-content .p-tree-node-toggle-button {
       margin-right: 0.5rem;
       width: 2rem;
       height: 2rem;
@@ -421,26 +421,26 @@ $hover-transition-duration: 0.2s;
     }
 
     .p-tree
-      .p-tree-container
-      .p-treenode
-      .p-treenode-content:not(.p-highlight):hover {
+      .p-tree-root-children
+      .p-tree-node
+      .p-tree-node-content:not(.p-tree-node-selected):hover {
       background: $option-hover-background;
     }
 
-    .p-tree .p-tree-container .p-treenode:focus > .p-treenode-content {
+    .p-tree .p-tree-root-children .p-tree-node:focus > .p-tree-node-content {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
     .p-tree
-      .p-tree-container
-      .p-treenode:focus
-      > .p-treenode-content:not(.p-highlight) {
+      .p-tree-root-children
+      .p-tree-node:focus
+      > .p-tree-node-content:not(.p-tree-node-selected) {
       background-color: $option-hover-background;
     }
 
-    .p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
+    .p-tree .p-tree-root-children .p-tree-node .p-tree-node-content.p-tree-node-selected {
       background: $selected-option-background;
       color: $color-calm;
       font-weight: 600;
@@ -451,13 +451,13 @@ $hover-transition-duration: 0.2s;
     }
 
     .p-tree
-      .p-tree-container
-      .p-treenode:focus
-      > .p-treenode-content.p-highlight {
+      .p-tree-root-children
+      .p-tree-node:focus
+      > .p-tree-node-content.p-tree-node-selected {
       background: $option-highlight-selected-background;
     }
 
-    .p-tree-toggler {
+    .p-tree-node-toggle-button {
       outline: 0 none;
       outline-offset: 0;
       cursor: pointer;
@@ -475,26 +475,26 @@ $hover-transition-duration: 0.2s;
     }
 
     .p-tree
-      .p-tree-container
-      .p-treenode:focus
-      > .p-treenode-content
-      .p-tree-toggler {
+      .p-tree-root-children
+      .p-tree-node:focus
+      > .p-tree-node-content
+      .p-tree-node-toggle-button {
       outline: 0 none;
       outline-offset: 0;
       box-shadow: unset;
     }
 
-    .cps-tree-node-fully-expandable > .p-treenode-content:hover {
-      .p-tree-toggler {
+    .cps-tree-node-fully-expandable > .p-tree-node-content:hover {
+      .p-tree-node-toggle-button {
         color: $color-calm !important;
       }
     }
 
-    .p-tree .p-treenode-children {
+    .p-tree .p-tree-node-children {
       padding: 0 0 0 1rem;
     }
 
-    .p-treenode-children {
+    .p-tree-node-children {
       margin: 0;
       padding: 0;
       list-style-type: none;

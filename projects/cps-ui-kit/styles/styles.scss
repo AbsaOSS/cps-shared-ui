@@ -8,3 +8,12 @@
 *::after {
   box-sizing: border-box;
 }
+
+// See https://github.com/primefaces/primeng/issues/17437
+.p-scrollbar-measure {
+  width: 100px;
+  height: 100px;
+  overflow: scroll;
+  position: absolute;
+  top: -9999px;
+}

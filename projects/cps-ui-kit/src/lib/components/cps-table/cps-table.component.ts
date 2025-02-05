@@ -70,7 +70,6 @@ export type CpsTableSortMode = 'single' | 'multiple';
  */
 @Component({
   selector: 'cps-table',
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
@@ -759,14 +758,6 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   get styleClass() {
     const classesList = [];
-    switch (this.size) {
-      case 'small':
-        classesList.push('p-datatable-sm');
-        break;
-      case 'large':
-        classesList.push('p-datatable-lg');
-        break;
-    }
     if (this.hasToolbar) {
       switch (this.toolbarSize) {
         case 'small':
@@ -776,13 +767,6 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
           classesList.push('cps-tbar-normal');
           break;
       }
-    }
-
-    if (this.striped) {
-      classesList.push('p-datatable-striped');
-    }
-    if (this.bordered) {
-      classesList.push('p-datatable-gridlines');
     }
 
     return classesList.join(' ');

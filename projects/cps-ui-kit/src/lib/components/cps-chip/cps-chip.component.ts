@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-chip',
   templateUrl: './cps-chip.component.html',

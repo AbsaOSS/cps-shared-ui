@@ -11,12 +11,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
-import { CalendarModule } from 'primeng/calendar';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 /**
  * CpsDatepickerAppearanceType is used to define the border of the datepicker input.
@@ -32,10 +32,9 @@ export type CpsDatepickerAppearanceType =
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [
     CpsInputComponent,
-    CalendarModule,
+    DatePickerModule,
     CommonModule,
     FormsModule,
     CpsMenuComponent

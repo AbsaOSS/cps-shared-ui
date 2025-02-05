@@ -17,7 +17,6 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
  * @group Components
  */
 @Component({
-  standalone: true,
   imports: [CommonModule],
   selector: 'cps-tag',
   templateUrl: './cps-tag.component.html',
