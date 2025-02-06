@@ -159,4 +159,12 @@
       </cps-autocomplete>
     </div>
   </form>
+
+  <h5 class="mt-4">Reproducing Child CVA + cps-autocomplete Bug</h5>
+  <div style="border:1px dashed gray; padding:8px; margin:8px 0;">
+    <div [formGroup]="form">
+      <child-cva-example [options]="options" formControlName="childControl"></child-cva-example>
+    </div>
+    <p>Current parent form value: {{ form.get('childControl')?.value | json }}</p>
+  </div>
 </app-component-docs-viewer>

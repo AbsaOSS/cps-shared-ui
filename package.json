@@ -8,6 +8,7 @@
     "build:documentation": "ng build --configuration=production --project=composition --base-href '/cps-shared-ui/'",
     "watch": "ng build cps-ui-kit --watch --configuration development",
     "test": "ng test",
+    "test:coverage": "ng test --coverage",
     "lint": "eslint \"**/*.ts\"",
     "generate-json-api": "node ./api-generator/api-generator.js",
     "cypress:open": "cypress open",

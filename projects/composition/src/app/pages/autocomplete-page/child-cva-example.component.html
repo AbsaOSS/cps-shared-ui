@@ -1,0 +1,22 @@
+<div class="child-cva-container"
+     (mousedown)="onParentMousedown($event)"
+     style="border:1px solid red; padding:8px; display:inline-block; position:relative;">
+
+  <cps-autocomplete
+    label="Child CVA Example (click triggers (mousedown) on the red box)"
+    [options]="options"
+    optionLabel="name"
+    optionInfo="info"
+    placeholder="Pick a column or type it"
+    [closableChips]="false"
+    [returnObject]="true"
+    [selectAll]="false"
+    [clearable]="false"
+    [multiple]="false"
+    [value]="currentOptionValue"
+    (valueChanged)="onAutocompleteValueChanged($event)"
+    hint="Clicking item won't work if the parent intercepts mousedown first!"
+    appearance="outlined">
+  </cps-autocomplete>
+
+</div>

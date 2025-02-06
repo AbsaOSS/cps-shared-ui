@@ -4,7 +4,8 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
+  FormControl
 } from '@angular/forms';
 import { CpsAutocompleteComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -13,13 +14,16 @@ import { Observable, Subject, of, delay } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
+import { ChildCvaExampleComponent } from './child-cva-example.component';
+
 @Component({
   imports: [
     CpsAutocompleteComponent,
     FormsModule,
     ReactiveFormsModule,
     ComponentDocsViewerComponent,
-    CommonModule
+    CommonModule,
+    ChildCvaExampleComponent
   ],
   selector: 'app-autocomplete-page',
   templateUrl: './autocomplete-page.component.html',
@@ -79,6 +83,8 @@ export class AutocompletePageComponent implements OnInit {
     this.form = this._formBuilder.group({
       requiredAutocomplete: [this.options[1], [Validators.required]]
     });
+
+    this.form.addControl('childControl', new FormControl(this.options[3].name));
 
     this.singleOptionsObservable$ = this._defineOptionsObservable(
       this._singleFilterOptionSubject$,
