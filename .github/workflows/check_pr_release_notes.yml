@@ -21,3 +21,4 @@ jobs:
         with:
           github-repository: ${{ github.repository }}
           pr-number: ${{ github.event.number }}
+          skip-labels: "skip-release-notes"
