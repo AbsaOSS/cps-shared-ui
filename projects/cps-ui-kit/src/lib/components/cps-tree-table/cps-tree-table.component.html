@@ -118,6 +118,20 @@
           </cps-button>
         </div>
         <div
+          *ngIf="showExportBtn"
+          class="cps-treetable-tbar-export-btn ml-2"
+          [ngClass]="{ 'btn-disabled': exportBtnDisabled }">
+          <cps-button
+            label="Export"
+            [disabled]="exportBtnDisabled"
+            color="prepared"
+            type="solid"
+            icon="export"
+            [size]="toolbarSize"
+            (clicked)="onExportData()">
+          </cps-button>
+        </div>
+        <div
           *ngIf="showColumnsToggleBtn && columns.length > 0"
           class="cps-treetable-tbar-coltoggle-btn"
           [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">

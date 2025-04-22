@@ -520,6 +520,30 @@ export class CpsTreeTableComponent
   @Input() autoColumnFilterType = true;
 
   /**
+   * Determines whether to show export button in the toolbar.
+   * @group Props
+   */
+  @Input() showExportBtn = false;
+
+  /**
+   * Determines whether export button is disabled.
+   * @group Props
+   */
+  @Input() exportBtnDisabled = false;
+
+  /**
+   * Filename to use when exporting data (without extension).
+   * @group Props
+   */
+  @Input() exportFilename = 'export';
+
+  /**
+   * Original source data to use for export instead of processed tree table data.
+   * @group Props
+   */
+  @Input() exportOriginalData: any[] = [];
+
+  /**
    * If set to true, row data are rendered using innerHTML.
    * @group Props
    */
@@ -1376,5 +1400,62 @@ export class CpsTreeTableComponent
   onSelectionChanged(selection: any) {
     if (selection && !Array.isArray(selection)) selection = [selection];
     this.rowsSelected.emit(selection);
+  }
+
+  onExportData() {
+    if (this.exportBtnDisabled) return;
+    this.exportJSON();
+  }
+
+  exportJSON() {
+    try {
+      const exportData = this.getExportData();
+      const jsonString = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonString], {
+        type: 'application/json;charset=utf-8'
+      });
+
+      const downloadLink = this.document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = `${this.exportFilename}.json`;
+      downloadLink.click();
+    } catch (error) {
+      console.error('Error exporting JSON:', error);
+    }
+  }
+
+  getExportData(): any[] {
+    // If original data is provided, use it directly for export
+    if (this.exportOriginalData && this.exportOriginalData.length > 0) {
+      return this.exportOriginalData;
+    }
+
+    // Create a deep copy of the tree data without circular references
+    return this.removeCircularReferences(this.primengTreeTable?.value || []);
+  }
+
+  private removeCircularReferences(nodes: any[]): any[] {
+    return nodes.map((node) => {
+      const cleanNode: any = {};
+
+      // Copy all properties except 'parent' to avoid circular references
+      Object.keys(node).forEach((key) => {
+        if (key !== 'parent') {
+          if (
+            key === 'children' &&
+            Array.isArray(node.children) &&
+            node.children.length > 0
+          ) {
+            // Recursively clean children
+            cleanNode.children = this.removeCircularReferences(node.children);
+          } else {
+            // Copy other properties as is
+            cleanNode[key] = node[key];
+          }
+        }
+      });
+
+      return cleanNode;
+    });
   }
 }
