@@ -54,7 +54,6 @@ import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-tabl
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
 }
-export type CpsTreeTableExportFormat = 'csv' | 'xlsx' | 'json';
 
 /**
  * CpsTreeTableSize is used to define the size of the tree table.

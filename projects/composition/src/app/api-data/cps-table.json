@@ -107,7 +107,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set."
+                        "description": "Determines whether the 'Remove' button should be displayed in the row menu.\r\nNote: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set."
                     },
                     {
                         "name": "showRowEditButton",
@@ -115,14 +115,14 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set."
+                        "description": "Determines whether the 'Edit' button should be displayed in the row menu.\r\nNote: This setting only takes effect if 'showRowMenu' is true and 'rowMenuItems' is not set."
                     },
                     {
                         "name": "rowMenuItems",
                         "optional": true,
                         "readonly": false,
                         "type": "CpsMenuItem[]",
-                        "description": "Custom items to be displayed in the row menu.\nNote: This setting only takes effect if 'showRowMenu' is true."
+                        "description": "Custom items to be displayed in the row menu.\r\nNote: This setting only takes effect if 'showRowMenu' is true."
                     },
                     {
                         "name": "reorderableRows",
@@ -178,7 +178,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "If true, automatically detects filter type based on values, otherwise sets 'text' filter type for all columns.\nNote: This setting only takes effect if 'filterableByColumns' is true."
+                        "description": "If true, automatically detects filter type based on values, otherwise sets 'text' filter type for all columns.\r\nNote: This setting only takes effect if 'filterableByColumns' is true."
                     },
                     {
                         "name": "sortMode",
@@ -570,7 +570,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "false",
-                        "description": "Determines whether columns are resizable.\nIn case of using a custom template for columns, it is also needed to add cpsTColResizable directive to th elements."
+                        "description": "Determines whether columns are resizable.\r\nIn case of using a custom template for columns, it is also needed to add cpsTColResizable directive to th elements."
                     },
                     {
                         "name": "columnResizeMode",
@@ -578,7 +578,7 @@
                         "readonly": false,
                         "type": "\"expand\" | \"fit\"",
                         "default": "fit",
-                        "description": "Determines how the columns are resized. It can be 'fit' (total width of the table stays the same) or 'expand' (total width of the table changes when resizing columns).\nNote: This setting only takes effect if 'resizableColumns' is true."
+                        "description": "Determines how the columns are resized. It can be 'fit' (total width of the table stays the same) or 'expand' (total width of the table changes when resizing columns).\r\nNote: This setting only takes effect if 'resizableColumns' is true."
                     }
                 ]
             },
