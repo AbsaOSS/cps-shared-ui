@@ -1,4 +1,4 @@
-const path = require('path');
+import path = require('path');
 
 describe('cps-table page', () => {
   describe('export to xlsx', () => {
