@@ -10,7 +10,7 @@
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
     "primeng": "^19.0.5",
-    "xlsx": "^0.18.5"
+    "@e965/xlsx": "^0.20.3"
   },
   "repository": {
     "type": "git",
