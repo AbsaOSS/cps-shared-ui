@@ -981,7 +981,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   exportXLSX() {
-    import('xlsx').then((xlsx) => {
+    import('@e965/xlsx').then((xlsx) => {
       const sheetData = [
         this.selectedColumns.map(
           (c: { [key: string]: any }) => c[this.colHeaderName]
