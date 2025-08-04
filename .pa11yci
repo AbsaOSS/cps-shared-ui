@@ -1,0 +1,145 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 30000,
+    "wait": 1000,
+    "runners": ["axe"],
+    "hideElements": ".cps-loader",
+    "reporter": "cli",
+    "level": "error"
+  },
+  "urls": [
+    {
+      "url": "http://localhost:4200/autocomplete",
+      "label": "Autocomplete Component"
+    },
+    {
+      "url": "http://localhost:4200/button",
+      "label": "Button Component"
+    },
+    {
+      "url": "http://localhost:4200/button-toggle",
+      "label": "Button Toggle Component"
+    },
+    {
+      "url": "http://localhost:4200/checkbox",
+      "label": "Checkbox Component"
+    },
+    {
+      "url": "http://localhost:4200/chip",
+      "label": "Chip Component"
+    },
+    {
+      "url": "http://localhost:4200/datepicker",
+      "label": "Datepicker Component"
+    },
+    {
+      "url": "http://localhost:4200/dialog",
+      "label": "Dialog Component"
+    },
+    {
+      "url": "http://localhost:4200/divider",
+      "label": "Divider Component"
+    },
+    {
+      "url": "http://localhost:4200/expansion-panel",
+      "label": "Expansion Panel Component"
+    },
+    {
+      "url": "http://localhost:4200/file-upload",
+      "label": "File Upload Component"
+    },
+    {
+      "url": "http://localhost:4200/icon",
+      "label": "Icon Component"
+    },
+    {
+      "url": "http://localhost:4200/info-circle",
+      "label": "Info Circle Component"
+    },
+    {
+      "url": "http://localhost:4200/input",
+      "label": "Input Component"
+    },
+    {
+      "url": "http://localhost:4200/loader",
+      "label": "Loader Component"
+    },
+    {
+      "url": "http://localhost:4200/menu",
+      "label": "Menu Component"
+    },
+    {
+      "url": "http://localhost:4200/notification",
+      "label": "Notifications Component"
+    },
+    {
+      "url": "http://localhost:4200/paginator",
+      "label": "Paginator Component"
+    },
+    {
+      "url": "http://localhost:4200/progress-circular",
+      "label": "Progress Circular Component"
+    },
+    {
+      "url": "http://localhost:4200/progress-linear",
+      "label": "Progress Linear Component"
+    },
+    {
+      "url": "http://localhost:4200/radio-group",
+      "label": "Radio Component"
+    },
+    {
+      "url": "http://localhost:4200/scheduler",
+      "label": "Scheduler Component"
+    },
+    {
+      "url": "http://localhost:4200/select",
+      "label": "Select Component"
+    },
+    {
+      "url": "http://localhost:4200/sidebar-menu",
+      "label": "Sidebar Menu Component"
+    },
+    {
+      "url": "http://localhost:4200/switch",
+      "label": "Switch Component"
+    },
+    {
+      "url": "http://localhost:4200/table",
+      "label": "Table Component"
+    },
+    {
+      "url": "http://localhost:4200/tab-group",
+      "label": "Tabs Component"
+    },
+    {
+      "url": "http://localhost:4200/tag",
+      "label": "Tag Component"
+    },
+    {
+      "url": "http://localhost:4200/textarea",
+      "label": "Textarea Component"
+    },
+    {
+      "url": "http://localhost:4200/timepicker",
+      "label": "Timepicker Component"
+    },
+    {
+      "url": "http://localhost:4200/tooltip",
+      "label": "Tooltip Directive"
+    },
+    {
+      "url": "http://localhost:4200/tree-autocomplete",
+      "label": "Tree Autocomplete Component"
+    },
+    {
+      "url": "http://localhost:4200/tree-select",
+      "label": "Tree Select Component"
+    },
+    {
+      "url": "http://localhost:4200/tree-table",
+      "label": "Tree Table Component"
+    }
+  ]
+}

@@ -88,3 +88,36 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 #### Run Cypress e2e tests
 
 `npm run cypress:run` (headless run) or you can open Cypress tests using `npm run cypress:open`
+
+#### Run accessibility tests
+
+The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all components for WCAG 2.0 AA compliance.
+
+To run accessibility tests:
+
+1. Start the development server:
+   ```bash
+   npm run start
+   ```
+
+2. In a separate terminal, run the accessibility tests:
+   ```bash
+   npm run test:a11y
+   ```
+
+Alternatively, use the combined script that starts the server and runs tests:
+```bash
+npm run test:a11y:local
+```
+
+For a colorful summary with statistics:
+```bash
+npm run test:a11y:summary
+```
+
+This will display:
+- Total components tested and pass/fail counts
+- Total accessibility errors found
+- Top 10 components with the most issues
+
+The tests will check all 33 components for accessibility issues and report any violations found.
