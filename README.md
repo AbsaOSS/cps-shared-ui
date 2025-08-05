@@ -116,8 +116,10 @@ npm run test:a11y:summary
 ```
 
 This will display:
-- Total components tested and pass/fail counts
+- Total URLs tested with pass/fail ratio
 - Total accessibility errors found
+- Accessibility standard (WCAG 2.0 AA)
+- Test engine (axe-core via pa11y-ci)
 - Top 10 components with the most issues
 
 The tests will check all 33 components for accessibility issues and report any violations found.

@@ -41,6 +41,7 @@ testem.log
 cypress/downloads/*
 cypress/videos/*
 cypress/screenshots/*
+.pa11y-temp.json
 
 # System files
 .DS_Store
