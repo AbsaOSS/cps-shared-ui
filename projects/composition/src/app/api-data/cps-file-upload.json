@@ -41,7 +41,7 @@
                         "name": "fileProcessingCallback",
                         "optional": true,
                         "readonly": false,
-                        "type": "Function",
+                        "type": "(file: File) => Observable<boolean>",
                         "default": "undefined",
                         "description": "Callback for uploaded file processing."
                     },

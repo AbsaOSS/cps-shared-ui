@@ -189,9 +189,7 @@
     <ng-container
       *ngTemplateOutlet="
         nestedHeaderTemplate;
-        context: {
-          $implicit: columns
-        }
+        context: { $implicit: columns }
       "></ng-container>
   </ng-template>
 
@@ -207,9 +205,7 @@
         <ng-container
           *ngTemplateOutlet="
             headerTemplate;
-            context: {
-              $implicit: columns
-            }
+            context: { $implicit: columns }
           "></ng-container>
       </ng-container>
       <ng-container *ngIf="!headerTemplate && columns.length > 0">
@@ -376,15 +372,15 @@
   </ng-template>
 
   <ng-template pTemplate="paginatorfirstpagelinkicon">
-    <AngleDoubleLeftIcon />
+    <i class="pi pi-angle-double-left" style="font-size: 1rem"></i>
   </ng-template>
   <ng-template pTemplate="paginatorpreviouspagelinkicon">
-    <AngleLeftIcon />
+    <i class="pi pi-angle-left" style="font-size: 1rem"></i>
   </ng-template>
   <ng-template pTemplate="paginatornextpagelinkicon">
-    <AngleRightIcon />
+    <i class="pi pi-angle-right" style="font-size: 1rem"></i>
   </ng-template>
   <ng-template pTemplate="paginatorlastpagelinkicon">
-    <AngleDoubleRightIcon />
+    <i class="pi pi-angle-double-right" style="font-size: 1rem"></i>
   </ng-template>
 </p-treeTable>

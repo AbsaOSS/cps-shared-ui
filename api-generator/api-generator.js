@@ -2,7 +2,10 @@ const TypeDoc = require('typedoc');
 const path = require('path');
 const fs = require('fs');
 const rootDir = path.resolve(__dirname, '../');
-const outputPath = path.resolve(rootDir, 'projects/composition/src/app/api-data/');
+const outputPath = path.resolve(
+  rootDir,
+  'projects/composition/src/app/api-data/'
+);
 
 const staticMessages = {
   methods: "Defines methods that can be accessed by the component's reference.",
@@ -24,7 +27,7 @@ async function main() {
     entryPoints: [
       `projects/cps-ui-kit/src/lib/components`,
       `projects/cps-ui-kit/src/lib/services`,
-      `projects/cps-ui-kit/src/lib/directives`,
+      `projects/cps-ui-kit/src/lib/directives`
     ],
     entryPointStrategy: 'expand',
     hideGenerator: true,
@@ -46,8 +49,8 @@ async function main() {
   // await app.generateJson(project, `./api-generator/typedoc.json`);
 
   if (project) {
-    let doc = {};
-    let typesMap = {};
+    const doc = {};
+    const typesMap = {};
 
     const parseText = (content) => {
       if (content.kind === 'text') {
@@ -63,8 +66,12 @@ async function main() {
     };
 
     const getDefaultValue = (signature) => {
-      const defaultValueTag = signature?.comment?.getTag('@default') ?? signature?.comment?.getTag('@defaultValue');
-      return defaultValueTag ? parseText(defaultValueTag.content[0]) : undefined;
+      const defaultValueTag =
+        signature?.comment?.getTag('@default') ??
+        signature?.comment?.getTag('@defaultValue');
+      return defaultValueTag
+        ? parseText(defaultValueTag.content[0])
+        : undefined;
     };
 
     const modules = project.groups.find((g) => g.title === 'Modules');
@@ -112,7 +119,7 @@ async function main() {
                 const componentName = component.name;
                 const comment = component.comment;
 
-                doc[name]['components'][componentName] = {
+                doc[name].components[componentName] = {
                   description:
                     comment &&
                     comment.summary.map((s) => s.text || '').join(' ')
@@ -124,7 +131,7 @@ async function main() {
 
                 if (isProcessable(component_props_group)) {
                   const props = {
-                    description: staticMessages['props'],
+                    description: staticMessages.props,
                     values: []
                   };
 
@@ -141,19 +148,28 @@ async function main() {
                             : null,
                       default:
                         (prop.type &&
-                          prop.type.name === 'boolean' &&
-                          !prop.defaultValue
+                        prop.type.name === 'boolean' &&
+                        !prop.defaultValue
                           ? 'false'
                           : prop.defaultValue
                             ? prop.defaultValue.replace(/^'|'$/g, '')
-                            : undefined) ?? getDefaultValue(prop.setSignature) ?? getDefaultValue(prop.getSignature),
-                      description: ((prop.getSignature?.comment?.summary || prop.setSignature?.comment?.summary) || prop.comment?.summary)?.map((s) => s.text || '').join(' '),
-                      deprecated: getDeprecatedText(prop.getSignature)
-                        || getDeprecatedText(prop.setSignature)
-                        || getDeprecatedText(prop.comment)
+                            : undefined) ??
+                        getDefaultValue(prop.setSignature) ??
+                        getDefaultValue(prop.getSignature),
+                      description: (
+                        prop.getSignature?.comment?.summary ||
+                        prop.setSignature?.comment?.summary ||
+                        prop.comment?.summary
+                      )
+                        ?.map((s) => s.text || '')
+                        .join(' '),
+                      deprecated:
+                        getDeprecatedText(prop.getSignature) ||
+                        getDeprecatedText(prop.setSignature) ||
+                        getDeprecatedText(prop.comment)
                     });
                   });
-                  doc[name]['components'][componentName]['props'] = props;
+                  doc[name].components[componentName].props = props;
                 }
 
                 const component_emits_group = component.groups.find(
@@ -161,7 +177,7 @@ async function main() {
                 );
                 if (isProcessable(component_emits_group)) {
                   const emits = {
-                    description: staticMessages['emits'],
+                    description: staticMessages.emits,
                     values: []
                   };
 
@@ -172,7 +188,7 @@ async function main() {
                         {
                           name:
                             extractParameter(emitter) &&
-                              extractParameter(emitter).includes('Event')
+                            extractParameter(emitter).includes('Event')
                               ? 'event'
                               : 'value',
                           type: extractParameter(emitter)
@@ -187,7 +203,7 @@ async function main() {
                     });
                   });
 
-                  doc[name]['components'][componentName]['emits'] = emits;
+                  doc[name].components[componentName].emits = emits;
                 }
 
                 const component_methods_group = component.groups.find(
@@ -195,7 +211,7 @@ async function main() {
                 );
                 if (isProcessable(component_methods_group)) {
                   const methods = {
-                    description: staticMessages['methods'],
+                    description: staticMessages.methods,
                     values: []
                   };
 
@@ -222,7 +238,7 @@ async function main() {
                     });
                   });
 
-                  doc[name]['components'][componentName]['methods'] = methods;
+                  doc[name].components[componentName].methods = methods;
                 }
 
                 const component_events_group = component.groups.find(
@@ -230,7 +246,7 @@ async function main() {
                 );
                 if (isProcessable(component_events_group)) {
                   const events = {
-                    description: staticMessages['events'],
+                    description: staticMessages.events,
                     values: []
                   };
 
@@ -259,14 +275,14 @@ async function main() {
                     });
                   });
 
-                  doc[name]['components'][componentName]['events'] = events;
+                  doc[name].components[componentName].events = events;
                 }
               });
             }
 
             if (isProcessable(module_events_group)) {
               const events = {
-                description: staticMessages['events'],
+                description: staticMessages.events,
                 values: []
               };
 
@@ -293,12 +309,12 @@ async function main() {
                 });
               });
 
-              doc[name]['events'] = events;
+              doc[name].events = events;
             }
 
             if (isProcessable(module_templates_group)) {
               const templates = {
-                description: staticMessages['templates'],
+                description: staticMessages.templates,
                 values: []
               };
 
@@ -307,7 +323,7 @@ async function main() {
                 template.children.forEach((child) => {
                   const signature = child.getAllSignatures()[0];
                   templates.values.push({
-                    parent: parent,
+                    parent,
                     name: signature ? signature.name : child.name,
                     parameters: signature.parameters.map((param) => {
                       let type = param.type.toString();
@@ -343,7 +359,7 @@ async function main() {
 
                       return {
                         name: param.name,
-                        type: type,
+                        type,
                         description:
                           param.comment &&
                           param.comment.summary
@@ -361,7 +377,7 @@ async function main() {
                 });
               });
 
-              doc[name]['templates'] = templates;
+              doc[name].templates = templates;
             }
 
             if (isProcessable(module_service_group)) {
@@ -374,10 +390,9 @@ async function main() {
                 doc[name] = {
                   ...doc[name],
                   name: service.name,
-                  description: service.comment &&
-                    service.comment.summary
-                      .map((s) => s.text || '')
-                      .join(' ')
+                  description:
+                    service.comment &&
+                    service.comment.summary.map((s) => s.text || '').join(' ')
                 };
                 const service_methods_group = service.groups.find(
                   (g) => g.title === 'Method'
@@ -413,14 +428,14 @@ async function main() {
                     });
                   });
 
-                  doc[name]['methods'] = methods;
+                  doc[name].methods = methods;
                 }
               });
             }
 
             if (isProcessable(module_interface_group)) {
               const interfaces = {
-                description: staticMessages['interfaces'],
+                description: staticMessages.interfaces,
                 values: []
               };
 
@@ -447,29 +462,26 @@ async function main() {
                       deprecated: getDeprecatedText(child)
                     }))
                 });
-                typesMap[int.name] = int.comment.blockTags?.find(
-                  tag => tag.tag === "@customPath"
-                )?.content?.map((s) => s.text || '').join(' ')
-                  ?? name.replace("cps-", "");
+                typesMap[int.name] =
+                  int.comment.blockTags
+                    ?.find((tag) => tag.tag === '@customPath')
+                    ?.content?.map((s) => s.text || '')
+                    .join(' ') ?? name.replace('cps-', '');
               });
 
               if (doc[name]?.interfaces) {
-                doc[name]['interfaces'] = {
-                  ...doc[name]['interfaces'],
-                  values: [
-                    ...doc[name]['interfaces'].values,
-                    ...interfaces.values
-                  ]
+                doc[name].interfaces = {
+                  ...doc[name].interfaces,
+                  values: [...doc[name].interfaces.values, ...interfaces.values]
                 };
               } else {
-                doc[name]['interfaces'] = interfaces;
+                doc[name].interfaces = interfaces;
               }
             }
 
-
             if (isProcessable(module_types_group)) {
               const types = {
-                description: staticMessages['types'],
+                description: staticMessages.types,
                 values: []
               };
 
@@ -481,28 +493,26 @@ async function main() {
                     t.comment.summary &&
                     t.comment.summary.map((s) => s.text || '').join(' ')
                 });
-                typesMap[t.name] = t.comment.blockTags?.find(
-                  tag => tag.tag === "@customPath"
-                )?.content?.map((s) => s.text || '').join(' ')
-                  ?? name.replace("cps-", "");
+                typesMap[t.name] =
+                  t.comment.blockTags
+                    ?.find((tag) => tag.tag === '@customPath')
+                    ?.content?.map((s) => s.text || '')
+                    .join(' ') ?? name.replace('cps-', '');
               });
 
               if (doc[name]?.types) {
-                doc[name]['types'] = {
-                  ...doc[name]['types'],
-                  values: [
-                    ...doc[name]['types'].values,
-                    ...types.values
-                  ]
+                doc[name].types = {
+                  ...doc[name].types,
+                  values: [...doc[name].types.values, ...types.values]
                 };
               } else {
-                doc[name]['types'] = types;
+                doc[name].types = types;
               }
             }
 
             if (isProcessable(module_enums_group)) {
               const enums = {
-                description: staticMessages['enums'],
+                description: staticMessages.enums,
                 values: []
               };
 
@@ -512,24 +522,25 @@ async function main() {
                   description:
                     e.comment.summary &&
                     e.comment.summary.map((s) => s.text || '').join(' '),
-                  values: e.children.map(value => ({ name: value.escapedName, value: value.type.value }))
+                  values: e.children.map((value) => ({
+                    name: value.escapedName,
+                    value: value.type.value
+                  }))
                 });
-                typesMap[e.name] = e.comment.blockTags?.find(
-                  tag => tag.tag === "@customPath"
-                )?.content?.map((s) => s.text || '').join(' ')
-                  ?? name.replace("cps-", "");
+                typesMap[e.name] =
+                  e.comment.blockTags
+                    ?.find((tag) => tag.tag === '@customPath')
+                    ?.content?.map((s) => s.text || '')
+                    .join(' ') ?? name.replace('cps-', '');
               });
 
               if (doc[name]?.enums) {
-                doc[name]['enums'] = {
-                  ...doc[name]['enums'],
-                  values: [
-                    ...doc[name]['enums'].values,
-                    ...enums.values
-                  ]
+                doc[name].enums = {
+                  ...doc[name].enums,
+                  values: [...doc[name].enums.values, ...enums.values]
                 };
               } else {
-                doc[name]['enums'] = enums;
+                doc[name].enums = enums;
               }
             }
           }
@@ -537,7 +548,7 @@ async function main() {
       });
     }
 
-    let mergedDocs = {};
+    const mergedDocs = {};
 
     for (const key in doc) {
       if (key.includes('.interface')) {
@@ -560,7 +571,6 @@ async function main() {
       }
     }
 
-
     for (const key in mergedDocs) {
       const typedocJSON = JSON.stringify(mergedDocs[key], null, 4);
       !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
@@ -570,7 +580,10 @@ async function main() {
     if (Object.entries(typesMap).length) {
       const typesMapJSON = JSON.stringify(typesMap, null, 4);
       !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
-      fs.writeFileSync(path.resolve(outputPath, `types_map.json`), typesMapJSON);
+      fs.writeFileSync(
+        path.resolve(outputPath, `types_map.json`),
+        typesMapJSON
+      );
     }
 
     // const typedocJSON = JSON.stringify(mergedDocs, null, 4);
@@ -580,7 +593,7 @@ async function main() {
 }
 
 function extractParameter(emitter) {
-  let { comment, type } = emitter;
+  const { comment, type } = emitter;
 
   if (type && type.typeArguments) {
     if (type.toString()) {
@@ -618,33 +631,56 @@ const allowed = (name) => {
 };
 
 const getTypesValue = (typeobj) => {
-  let { type } = typeobj;
+  const { type, children, indexSignature } = typeobj ?? {};
 
-  if (typeobj.indexSignature) {
-    const signature = typeobj.getAllSignatures()[0];
-    const value = signature.parameters.map((param) => {
-      return {
-        [`[${param.name}:${param.type.toString()}]`]: signature.type.toString()
-      };
-    })[0];
-
-    return JSON.stringify(value);
+  // 1) Handle index signatures (e.g., { [key: string]: number })
+  // If the type has an index signature, extract the key and value types.
+  // Example: { [key: string]: number } -> { "[key:string]": "number" }
+  if (indexSignature) {
+    const signature = typeobj.getAllSignatures?.()?.[0];
+    if (signature) {
+      const param = signature.parameters?.[0];
+      const idx = param
+        ? `[${param.name}:${param.type?.toString?.()}]`
+        : '[key:unknown]';
+      return JSON.stringify({ [idx]: signature.type?.toString?.() }, null, 0);
+    }
   }
 
-  if (type) {
-    if (type.type === 'union') {
-      return type.toString();
-    }
-    if (type.type === 'reflection' && type.declaration) {
-      let values = type.declaration.children.map((child) => ({
-        [child.name]: child.type.toString()
-      }));
-
-      return JSON.stringify(Object.assign({}, ...values), null, 4);
-    }
-    // TODO: Handle "typeof iconNames[number] properly
-    return type.toString();
+  // 2) Handle object-literal type aliases (NEWER TypeDoc behavior)
+  // Some object-literal type aliases have their properties directly in the `children` array.
+  // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
+  if (Array.isArray(children) && children.length) {
+    const entries = children.map((ch) => ({
+      [ch.name]: ch.type?.toString?.() ?? 'unknown'
+    }));
+    return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
+
+  // 3) Handle object-literal type aliases under reflection (OLDER TypeDoc behavior)
+  // Older versions of TypeDoc store object-literal properties under `type.declaration.children`.
+  // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
+  if (type?.type === 'reflection' && type.declaration?.children?.length) {
+    const entries = type.declaration.children.map((ch) => ({
+      [ch.name]: ch.type?.toString?.() ?? 'unknown'
+    }));
+    return JSON.stringify(Object.assign({}, ...entries), null, 4);
+  }
+
+  // 4) Handle function type aliases
+  // If the type is a function alias, serialize its signature.
+  // Example: (name: string, age: number) => boolean
+  if (type?.type === 'reflection' && type.declaration?.signatures?.length) {
+    const sig = type.declaration.signatures[0];
+    const params = (sig.parameters ?? [])
+      .map((p) => `${p.name}: ${p.type?.toString?.() ?? 'unknown'}`)
+      .join(', ');
+    const ret = sig.type?.toString?.() ?? 'void';
+    return `(${params}) => ${ret}`;
+  }
+
+  // TODO: Handle "typeof iconNames[number] properly
+  return type?.toString?.();
 };
 
 main().catch(console.error);

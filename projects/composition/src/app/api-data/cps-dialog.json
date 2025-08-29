@@ -15,11 +15,11 @@
                     },
                     {
                         "name": "config",
-                        "type": "CpsDialogConfig<any>",
+                        "type": "CpsDialogConfig",
                         "description": "CpsDialogConfig object."
                     }
                 ],
-                "returnType": "CpsDialogRef<any>",
+                "returnType": "CpsDialogRef",
                 "description": "Opens a dialog with a dynamically loaded component."
             },
             {
@@ -27,11 +27,11 @@
                 "parameters": [
                     {
                         "name": "config",
-                        "type": "CpsDialogConfig<any>",
+                        "type": "CpsDialogConfig",
                         "description": "CpsDialogConfig object."
                     }
                 ],
-                "returnType": "CpsDialogRef<any>",
+                "returnType": "CpsDialogRef",
                 "description": "Opens a confirmation dialog."
             },
             {

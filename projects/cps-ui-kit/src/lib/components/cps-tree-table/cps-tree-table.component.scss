@@ -185,8 +185,8 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler {
-      width: 1rem;
-      height: 1rem;
+      width: auto;
+      height: auto;
       color: $body-text-color;
       border: 0 none;
       background: transparent;

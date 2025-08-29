@@ -1,7 +1,8 @@
-@import './_bootstrap-grid';
-@import './_colors.scss';
-@import './_fonts.scss';
-@import './_cps-tooltip-style.scss';
+@use './_bootstrap-grid';
+@use './_colors.scss';
+@use './_fonts.scss';
+@use './_cps-tooltip-style.scss';
+@use 'primeicons/primeicons.css';
 
 *,
 *::before,

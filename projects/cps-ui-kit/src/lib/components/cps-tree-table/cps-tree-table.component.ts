@@ -1,3 +1,4 @@
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewChecked,
   AfterViewInit,
@@ -19,37 +20,33 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { cloneDeep, isEqual } from 'lodash-es';
+import { DomHandler } from 'primeng/dom';
 import {
   TreeTable,
-  TreeTableService,
   TreeTableModule,
-  TreeTableSortEvent
+  TreeTableService,
+  TreeTableSortEvent,
+  TreeTableStyle
 } from 'primeng/treetable';
-import { DomHandler } from 'primeng/dom';
-import { AngleDoubleLeftIcon } from 'primeng/icons/angledoubleleft';
-import { AngleLeftIcon } from 'primeng/icons/angleleft';
-import { AngleRightIcon } from 'primeng/icons/angleright';
-import { AngleDoubleRightIcon } from 'primeng/icons/angledoubleright';
-import { cloneDeep, isEqual } from 'lodash-es';
-import { CpsInputComponent } from '../cps-input/cps-input.component';
-import { CpsButtonComponent } from '../cps-button/cps-button.component';
-import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
-import { CpsSelectComponent } from '../cps-select/cps-select.component';
-import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
-import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
-import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
-import { TableRowMenuComponent } from '../cps-table/components/internal/table-row-menu/table-row-menu.component';
+import { Subscription, fromEvent } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
+import { CpsButtonComponent } from '../cps-button/cps-button.component';
+import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
+import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
+import { CpsSelectComponent } from '../cps-select/cps-select.component';
+import { TableRowMenuComponent } from '../cps-table/components/internal/table-row-menu/table-row-menu.component';
+import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter.directive';
+import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable.directive';
+import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
 import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
 import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
 import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler.directive';
-import { Subscription, fromEvent } from 'rxjs';
-import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter.directive';
+import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
 import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type.pipe';
-import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable.directive';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -90,10 +87,6 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
     CpsIconComponent,
     CpsSelectComponent,
     CpsLoaderComponent,
-    AngleDoubleLeftIcon,
-    AngleLeftIcon,
-    AngleRightIcon,
-    AngleDoubleRightIcon,
     CpsTreeTableColumnSortableDirective,
     CpsTreeTableColumnFilterDirective,
     CpsTreeTableHeaderSelectableDirective,
@@ -107,6 +100,7 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
   templateUrl: './cps-tree-table.component.html',
   styleUrls: ['./cps-tree-table.component.scss'],
   providers: [
+    TreeTableStyle,
     TreeTableService,
     {
       provide: TreeTable,
