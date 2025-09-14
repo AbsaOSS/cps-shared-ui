@@ -29,6 +29,12 @@
   <symbol id="add-domain" viewBox="0 0 28 28">
     <path fill="currentColor" fill-rule="evenodd" d="M14 28c7.72 0 14-6.28 14-14S21.72 0 14 0 0 6.28 0 14s6.28 14 14 14Zm0-26.25c6.755 0 12.25 5.497 12.25 12.25S20.755 26.25 14 26.25 1.75 20.753 1.75 14 7.245 1.75 14 1.75Zm.875 18.436h-1.75v-5.31H7.812v-1.75h5.313V7.813h1.75v5.311h5.313v1.75h-5.313v5.311Z" clip-rule="evenodd"/>
   </symbol>
+   <symbol id="angle-left" viewBox="0 0 16 16">
+    <path d="M10 4L6 8L10 12L8.5 13.5L3 8L8.5 2.5L10 4Z" fill="currentColor"/>
+  </symbol>
+    <symbol id="angle-right" viewBox="0 0 16 16">
+    <path d="M6 4L10 8L6 12L7.5 13.5L13 8L7.5 2.5L6 4Z" fill="currentColor"/>
+  </symbol>
   <symbol id="attribute" viewBox="0 0 52 46"
     xmlns="http://www.w3.org/2000/svg">
     <path d="M21.185 39.761h30.459v4H21.185zM21.188 21.058h30.455v4H21.188zM21.275 2.444h30.459v4H21.275z"/>

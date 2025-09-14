@@ -10,6 +10,8 @@ export const iconNames = [
   'access-unlock',
   'add',
   'add-domain',
+  'angle-left',
+  'angle-right',
   'attribute',
   'avatar',
   'avatar-top-menu',
