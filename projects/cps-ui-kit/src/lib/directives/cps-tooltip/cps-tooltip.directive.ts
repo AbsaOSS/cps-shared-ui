@@ -2,12 +2,14 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  Inject,
+  inject,
   Input,
-  OnDestroy
+  OnDestroy,
+  SecurityContext
 } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 import { DOCUMENT } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
 
 /**
  * CpsTooltipPosition is used to define the position of the tooltip.
@@ -96,11 +98,12 @@ export class CpsTooltipDirective implements OnDestroy {
 
   private window: Window;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) private document: Document
-  ) {
-    this.window = this.document.defaultView as Window;
+  private _elementRef = inject(ElementRef<HTMLElement>);
+  private _document = inject(DOCUMENT);
+  private _domSanitizer = inject(DomSanitizer);
+
+  constructor() {
+    this.window = this._document.defaultView as Window;
   }
 
   ngOnDestroy(): void {
@@ -112,7 +115,7 @@ export class CpsTooltipDirective implements OnDestroy {
 
     if (this.tooltipDisabled) return;
 
-    this._popup = this.document.createElement('div');
+    this._popup = this._document.createElement('div');
     this._constructElement(this._popup);
 
     if (this.tooltipPersistent)
@@ -149,15 +152,17 @@ export class CpsTooltipDirective implements OnDestroy {
   };
 
   private _constructElement(popup: HTMLDivElement) {
-    const popupContent = this.document.createElement('div');
-    popupContent.innerHTML = this.tooltip || 'Add your text to this tooltip';
+    const popupContent = this._document.createElement('div');
+    popupContent.innerHTML =
+      this._domSanitizer.sanitize(SecurityContext.HTML, this.tooltip) ||
+      'Add your text to this tooltip';
     popupContent.classList.add(this.tooltipContentClass);
     popup.appendChild(popupContent);
 
     popup.classList.add('cps-tooltip');
     popup.style.maxWidth = convertSize(this.tooltipMaxWidth);
 
-    this.document.body.appendChild(popup);
+    this._document.body.appendChild(popup);
     requestAnimationFrame(function () {
       popup.style.opacity = '1';
     });
