@@ -9,7 +9,7 @@
                         "name": "columns",
                         "optional": false,
                         "readonly": false,
-                        "type": "Object[]",
+                        "type": "{ [key: string]: any }[]",
                         "default": "[]",
                         "description": "An array of objects to represent dynamic columns."
                     },
@@ -512,7 +512,7 @@
                         "name": "initialColumns",
                         "optional": false,
                         "readonly": false,
-                        "type": "Object[]",
+                        "type": "{ [key: string]: any }[]",
                         "default": "[]",
                         "description": "Array of initial columns to show in the treetable. If not provided, all columns are initially visible."
                     },
@@ -686,7 +686,7 @@
                         "parameters": [
                             {
                                 "name": "value",
-                                "type": "Object[]"
+                                "type": "{ [key: string]: any }[]"
                             }
                         ],
                         "description": "Callback to invoke on selected columns."

@@ -1,7 +1,7 @@
-@import '../variables.scss';
+@use '../variables.scss' as vars;
 
 .top-toolbar {
-  height: $top-tbar-height;
+  height: vars.$top-tbar-height;
   background-color: white;
   display: flex;
   padding-left: 20px;
@@ -14,22 +14,22 @@
   span {
     margin-left: 16px;
     font-size: 18px;
-    color: $color-calm;
+    color: vars.$color-calm;
   }
 }
 .composition-container {
   display: flex;
-  height: calc(100vh - $top-tbar-height);
+  height: calc(100vh - vars.$top-tbar-height);
 
   .composition-body {
     display: flex;
     flex-direction: column;
     width: 100%;
     overflow-x: auto;
-    background-color: $composition-background;
+    background-color: vars.$composition-background;
     .composition-body-toolbar {
-      height: $inner-tbar-height;
-      background: $color-calm;
+      height: vars.$inner-tbar-height;
+      background: vars.$color-calm;
       display: flex;
       align-items: center;
       justify-content: space-between;

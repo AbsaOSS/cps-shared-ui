@@ -1,5 +1,5 @@
-@import './variables.scss';
-@import '../../cps-ui-kit/styles/styles.scss';
+@use './variables.scss' as vars;
+@use '../../cps-ui-kit/styles/styles.scss';
 
 *,
 *::before,
@@ -18,7 +18,7 @@ body {
 .composition-page {
   padding: 0 24px 24px 24px;
   width: 100%;
-  height: calc(100% - $inner-tbar-height);
+  height: calc(100% - vars.$inner-tbar-height);
   overflow: auto;
   display: flex;
   flex-direction: column;

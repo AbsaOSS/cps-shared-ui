@@ -1,4 +1,4 @@
-@import '../../../variables.scss';
+@use '../../../variables.scss' as vars;
 
 :host {
   $item-hover-background: var(--cps-color-highlight-hover);
@@ -10,14 +10,14 @@
   .sidebar {
     transition: width 0.2s;
     background-color: white;
-    width: $sidebar-width;
-    height: calc(100vh - $top-tbar-height - 20px);
+    width: vars.$sidebar-width;
+    height: calc(100vh - vars.$top-tbar-height - 20px);
     overflow: auto;
     .list {
       &-title {
         margin: 0;
         padding: 12px 0 12px 12px;
-        color: $color-text;
+        color: vars.$color-text;
       }
       &-item {
         border-bottom: 1px solid $item-border-color;
@@ -26,7 +26,7 @@
         align-items: center;
         padding-left: 30px;
         text-decoration: none;
-        color: $color-text;
+        color: vars.$color-text;
         &:hover {
           background: $item-hover-background;
         }
@@ -37,7 +37,7 @@
       ._active {
         color: white;
         font-weight: bold;
-        background: $color-calm;
+        background: vars.$color-calm;
       }
     }
 

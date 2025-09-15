@@ -1,7 +1,7 @@
-@import '../../../../variables.scss';
+@use '../../../../variables.scss' as vars;
 
 :host {
-    padding: 24px;
+  padding: 24px;
 }
 
 .search-input {
@@ -16,7 +16,7 @@
       padding-bottom: 8px;
       margin-bottom: 12px;
       font-size: 28px;
-      color: $color-calm;
+      color: vars.$color-calm;
     }
     &-body {
       display: flex;

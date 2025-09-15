@@ -1,4 +1,4 @@
-@import '../../../../variables.scss';
+@use '../../../../variables.scss' as vars;
 
 .search-input {
   margin-bottom: 24px;
@@ -17,6 +17,6 @@
   cursor: pointer;
   span {
     margin-left: 16px;
-    color: $color-calm;
+    color: vars.$color-calm;
   }
 }

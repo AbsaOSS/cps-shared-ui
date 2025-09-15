@@ -131,7 +131,7 @@
         "values": [
             {
                 "name": "CpsMenuItem",
-                "value": "{\n    \"title\": \"string\",\n    \"action\": \"Function\",\n    \"icon\": \"string\",\n    \"desc\": \"string\",\n    \"url\": \"string\",\n    \"target\": \"string\",\n    \"disabled\": \"boolean\",\n    \"loading\": \"boolean\"\n}",
+                "value": "{\n    \"title\": \"string\",\n    \"action\": \"(event?: any) => void\",\n    \"icon\": \"string\",\n    \"desc\": \"string\",\n    \"url\": \"string\",\n    \"target\": \"string\",\n    \"disabled\": \"boolean\",\n    \"loading\": \"boolean\"\n}",
                 "description": "CpsMenuItem is used to define the items of the CpsMenuComponent."
             },
             {

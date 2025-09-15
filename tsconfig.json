@@ -4,9 +4,7 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "baseUrl": "./",
-    "paths": {
-      "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"]
-    },
+    "paths": { "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"] },
     "esModuleInterop": true,
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -18,7 +16,8 @@
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
