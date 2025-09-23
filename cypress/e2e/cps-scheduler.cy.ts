@@ -63,8 +63,6 @@ describe('CPS Scheduler Component', () => {
       cy.get('[data-cy="weekly-MON"]').click();
       cy.get('[data-cy="weekly-WED"]').click();
 
-      cy.wait(1000);
-
       // Verify timezone selector appears
       cy.get('[data-cy="timezone-selector"]').should('be.visible');
 
@@ -85,8 +83,6 @@ describe('CPS Scheduler Component', () => {
       cy.get('[data-cy="weekly-FRI"]').within(() => {
         cy.get('input[type="checkbox"]').check({ force: true });
       });
-
-      cy.wait(1000);
 
       // Verify timezone selector appears
       cy.get('[data-cy="timezone-selector"]').should('be.visible');
@@ -143,8 +139,10 @@ describe('CPS Scheduler Component', () => {
 
       // Set custom time to 14:45 (2:45 PM)
       cy.get('[data-cy="monthly-weekday-timepicker"]').within(() => {
-        cy.get('input').eq(1).clear().type('45');
-        cy.get('input').first().clear().type('14');
+        cy.get('input').eq(1).clear();
+        cy.get('input').eq(1).type('45');
+        cy.get('input').first().clear();
+        cy.get('input').first().type('14');
       });
 
       // Switch to Advanced to see generated cron
@@ -164,12 +162,11 @@ describe('CPS Scheduler Component', () => {
     it('should accept valid cron expressions', () => {
       const testCron = '0 30 14 ? * MON-FRI';
 
+      cy.get('[data-cy="advanced-cron-input"]').find('input, textarea').clear();
+
       cy.get('[data-cy="advanced-cron-input"]')
         .find('input, textarea')
-        .clear()
         .type(testCron);
-
-      cy.wait(1000);
 
       // Verify input contains the cron
       cy.get('[data-cy="advanced-cron-input"]')
@@ -178,21 +175,17 @@ describe('CPS Scheduler Component', () => {
     });
 
     it('should handle invalid cron expressions', () => {
+      cy.get('[data-cy="advanced-cron-input"]').find('input, textarea').clear();
+
       cy.get('[data-cy="advanced-cron-input"]')
         .find('input, textarea')
-        .clear()
         .type('invalid cron');
-
-      cy.wait(1000);
 
       // Component should not crash
       cy.get('[data-cy="advanced-cron-input"]').should('be.visible');
 
       // Check validation state
-      cy.get('body').then(($body) => {
-        const hasError = $body.find('.ng-invalid, .error').length > 0;
-        expect(hasError).to.be.true;
-      });
+      cy.get('.ng-invalid, .error').should('exist');
     });
   });
 
@@ -201,8 +194,6 @@ describe('CPS Scheduler Component', () => {
       // Set up Weekly schedule
       cy.get('[data-cy="schedule-type-toggle"]').contains('Weekly').click();
       cy.get('[data-cy="weekly-MON"]').click();
-
-      cy.wait(1000);
 
       // Switch to Advanced to verify cron was generated
       cy.get('[data-cy="schedule-type-toggle"]').contains('Advanced').click();
@@ -220,8 +211,6 @@ describe('CPS Scheduler Component', () => {
       cy.get('[data-cy="schedule-type-toggle"]').contains('Weekly').click();
       cy.get('[data-cy="weekly-MON"]').click();
 
-      cy.wait(1000);
-
       // Reset to Not set
       cy.get('[data-cy="schedule-type-toggle"]').contains('Not set').click();
 
@@ -238,12 +227,11 @@ describe('CPS Scheduler Component', () => {
     it('should allow timezone filtering and show autocomplete options', () => {
       cy.get('[data-cy="schedule-type-toggle"]').contains('Advanced').click();
       // Type in the autocomplete to filter timezone options
+      cy.get('[data-cy="timezone-select"]').find('input').clear();
+
       cy.get('[data-cy="timezone-select"]')
         .find('input')
-        .clear()
         .type('UTC', { force: true });
-
-      cy.wait(500);
 
       // Verify that autocomplete dropdown appears with options
       cy.get('.cps-autocomplete-options, .cps-autocomplete-option').should(
@@ -260,12 +248,11 @@ describe('CPS Scheduler Component', () => {
       cy.get('[data-cy="schedule-type-toggle"]').contains('Advanced').click();
 
       // Type a specific timezone
+      cy.get('[data-cy="timezone-select"]').find('input').clear();
+
       cy.get('[data-cy="timezone-select"]')
         .find('input')
-        .clear()
         .type('Europe/London', { force: true });
-
-      cy.wait(500);
 
       // Verify the text remains in the input
       cy.get('[data-cy="timezone-select"]')
@@ -283,7 +270,6 @@ describe('CPS Scheduler Component', () => {
 
       types.forEach((type) => {
         cy.get('[data-cy="schedule-type-toggle"]').contains(type).click();
-        cy.wait(200);
       });
 
       // Should end in valid state

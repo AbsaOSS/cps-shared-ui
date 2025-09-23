@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   OnInit,
@@ -184,6 +185,10 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
     { label: 'Advanced', value: 'Advanced' }
   ];
 
+  private readonly _fb = inject(FormBuilder);
+  private readonly _cdr = inject(ChangeDetectorRef);
+  private readonly _cronValidationService = inject(CronValidationService);
+
   activeScheduleType = 'Not set';
   selectOptions = this._getSelectOptions();
   timeZoneOptions = timeZones.map((tz) => ({ label: tz, value: tz }));
@@ -194,12 +199,6 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
   private _isDirty = false;
   private _minutesDefault = '0/1 * 1/1 * ? *';
-
-  constructor(
-    private _fb: FormBuilder,
-    private _cdr: ChangeDetectorRef,
-    private _cronValidationService: CronValidationService
-  ) {}
 
   ngOnInit(): void {
     this.state = this._getDefaultState();
