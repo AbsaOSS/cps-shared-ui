@@ -1,18 +1,18 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
+  discardPeriodicTasks,
   fakeAsync,
-  tick,
-  discardPeriodicTasks
+  tick
 } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CpsAutocompleteComponent } from './cps-autocomplete.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
-import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { By } from '@angular/platform-browser';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
+import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
+import { CpsAutocompleteComponent } from './cps-autocomplete.component';
 
 describe('CpsAutocompleteComponent', () => {
   let component: CpsAutocompleteComponent;
