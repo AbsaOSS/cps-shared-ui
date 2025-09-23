@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
 /**
- * Service for validating AWS EventBridge Scheduler cron expressions.
+ * Service for validating 6-field cron expressions with extended features.
  *
- * This service handles all cron validation logic, supporting the full EventBridge Scheduler
- * cron expression format which extends standard Unix cron with additional features for
- * cloud-scale scheduling.
+ * This service handles cron validation logic for extended cron expression formats
+ * that support additional features beyond standard Unix cron for more flexible
+ * scheduling capabilities.
  *
- * EventBridge Scheduler Format: minutes hours day-of-month month day-of-week year
+ * Format: minutes hours day-of-month month day-of-week year
  *
  * Key Features:
  * - Wildcards: asterisk (any value), question mark (any value for day fields)
@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
 })
 export class CronValidationService {
   /**
-   * Validates a complete EventBridge Scheduler cron expression.
+   * Validates a complete 6-field cron expression.
    *
    * @param cron - The 6-field cron expression to validate
    * @param allowEmpty - Whether to allow empty cron expressions
@@ -38,32 +38,31 @@ export class CronValidationService {
       return false;
     }
 
-    // Validate each field according to EventBridge Scheduler rules
     return this.validateCronFields(parts);
   }
 
   /**
-   * Validates all six fields of an EventBridge Scheduler cron expression.
+   * Validates all six fields of an extended cron expression.
    *
-   * EventBridge Scheduler uses a 6-field cron format: minutes hours day-of-month month day-of-week year
-   * This method orchestrates validation of each field according to AWS EventBridge Scheduler rules,
-   * which extend standard Unix cron with additional features for cloud-scale scheduling.
+   * Extended cron format uses 6 fields: minutes hours day-of-month month day-of-week year
+   * This method validates each field according to extended cron syntax rules,
+   * which build upon standard Unix cron with additional features.
    *
-   * Field Ranges and Special Features:
-   * - Minutes (0-59): Standard numeric, ranges, steps, lists
-   * - Hours (0-23): Standard numeric, ranges, steps, lists
+   * Field Ranges and Features:
+   * - Minutes (0-59): Numeric, ranges, steps, lists
+   * - Hours (0-23): Numeric, ranges, steps, lists
    * - Day-of-month (1-31): Numeric + special chars (L, W, LW)
    * - Month (1-12): Numeric or named (JAN-DEC), ranges, steps, lists
-   * - Day-of-week (1-7): Numeric or named (SUN-SAT), special chars (L, hash)
+   * - Day-of-week (1-7): Numeric or named (SUN-SAT), special chars (L, #)
    * - Year (1970-2199): Extended range for long-term scheduling
    *
-   * Key EventBridge Rules:
-   * - Day-of-month and day-of-week are mutually exclusive (one must be asterisk or question mark)
-   * - Question mark (?) is only valid for day-of-month and day-of-week fields
-   * - Special characters (L, W, hash) provide advanced scheduling capabilities
+   * Key Rules:
+   * - Day-of-month and day-of-week are mutually exclusive (one must be * or ?)
+   * - ? is only valid for day-of-month and day-of-week fields
+   * - Special characters provide advanced scheduling capabilities
    *
    * @param parts - Array of 6 cron field strings [minutes, hours, dayOfMonth, month, dayOfWeek, year]
-   * @returns boolean - True if all fields are valid and follow EventBridge Scheduler rules
+   * @returns boolean - True if all fields are valid and follow extended cron rules
    */
   private validateCronFields(parts: string[]): boolean {
     const [minutes, hours, dayOfMonth, month, dayOfWeek, year] = parts;
@@ -93,11 +92,11 @@ export class CronValidationService {
   }
 
   /**
-   * Enhanced validation for complex EventBridge Scheduler cron field patterns.
-   * Supports all EventBridge features including ranges, steps, lists, and special characters.
+   * Enhanced validation for complex cron field patterns.
+   * Supports extended cron features including ranges, steps, lists, and special characters.
    *
-   * This method follows the AWS EventBridge Scheduler cron expression format which is based on
-   * the Unix cron format but includes additional features for more flexible scheduling.
+   * This method handles extended cron expression syntax which builds upon
+   * standard Unix cron format with additional features for flexible scheduling.
    *
    * Supported patterns:
    * - Wildcards: asterisk (any value), question mark (any value for day fields)
@@ -118,7 +117,7 @@ export class CronValidationService {
     max: number,
     type: string
   ): boolean {
-    // Handle wildcard characters - following EventBridge Scheduler mutual exclusivity rules
+    // Handle wildcard characters
     // '*' means "any value" and is valid for all fields
     // '?' means "no specific value" and is only valid for day-of-month and day-of-week fields
     if (field === '*' || field === '?') {
@@ -126,7 +125,7 @@ export class CronValidationService {
     }
 
     // Handle comma-separated lists: "1,3,5" or "MON,WED,FRI" or "MON-WED,FRI"
-    // Allows EventBridge to trigger on multiple specific values within a field
+    // Allows scheduling on multiple specific values within a field
     if (field.includes(',')) {
       return field.split(',').every((val) => {
         const trimmedVal = val.trim();
@@ -136,7 +135,7 @@ export class CronValidationService {
     }
 
     // Handle complex range with step patterns: "1-5/2" (every 2nd value from 1 to 5)
-    // This allows EventBridge to schedule at intervals within a specific range
+    // This allows scheduling at intervals within a specific range
     if (field.includes('-') && field.includes('/')) {
       const [range, step] = field.split('/');
       const [start, end] = range.split('-');
@@ -144,37 +143,37 @@ export class CronValidationService {
     }
 
     // Handle simple range patterns: "1-5" (values from 1 to 5), "MON-FRI" (Monday to Friday)
-    // EventBridge supports both numeric and named ranges for time-based scheduling
+    // Extended cron supports both numeric and named ranges for time-based scheduling
     if (field.includes('-')) {
       const [start, end] = field.split('-');
       return this.validateSimpleRange(start, end, min, max, type);
     }
 
     // Handle step patterns from start: "5/10" (every 10th value starting from 5)
-    // EventBridge uses this for interval-based scheduling from a specific starting point
+    // Extended cron uses this for interval-based scheduling from a specific starting point
     if (field.includes('/')) {
       const [start, step] = field.split('/');
       return this.validateStepField(start, step, min, max, type);
     }
 
-    // Handle single values and EventBridge special characters (L, W, hash)
+    // Handle single values and special characters (L, W, #)
     // These provide advanced scheduling capabilities like "last day of month" or "3rd Tuesday"
     return this.validateSingleValue(field, min, max, type);
   }
 
   /**
-   * Validates single values and EventBridge Scheduler special characters.
+   * Validates single values and extended cron special characters.
    *
    * This method handles the validation of individual field values including:
    * - Numeric values within specified ranges
-   * - Special EventBridge characters for advanced scheduling
+   * - Special characters for advanced scheduling
    * - Named values like month names (JAN, FEB) and day names (SUN, MON)
    *
-   * EventBridge Special Characters:
+   * Extended Cron Special Characters:
    * - L: Last day of month (day-of-month) or last occurrence of weekday (day-of-week)
    * - W: Nearest weekday to the specified day (day-of-month only)
    * - LW: Last weekday of the month (day-of-month only)
-   * - hash: Nth occurrence of weekday (e.g., "3#2" = 3rd Tuesday of month)
+   * - #: Nth occurrence of weekday (e.g., "3#2" = 3rd Tuesday of month)
    *
    * @param value - The single value to validate (e.g., "15", "L", "15W", "MON", "3#2")
    * @param min - Minimum valid numeric value for this field type
@@ -189,7 +188,7 @@ export class CronValidationService {
     type: string
   ): boolean {
     // Handle special characters for day of month field
-    // EventBridge supports advanced day-of-month scheduling patterns
+    // Extended cron supports advanced day-of-month scheduling patterns
     if (type === 'dayOfMonth') {
       // 'L' = last day of month, 'LW' = last weekday of month
       if (value === 'L' || value === 'LW') return true;
@@ -201,7 +200,7 @@ export class CronValidationService {
     }
 
     // Handle special characters for day of week field
-    // EventBridge supports advanced day-of-week scheduling patterns
+    // Extended cron supports advanced day-of-week scheduling patterns
     if (type === 'dayOfWeek') {
       // 'MONL' = last Monday of month (last occurrence)
       if (value.endsWith('L')) {
@@ -220,7 +219,7 @@ export class CronValidationService {
     }
 
     // Handle month names (JAN, FEB, MAR, etc.) for month field
-    // EventBridge allows both numeric (1-12) and named month values
+    // Extended cron allows both numeric (1-12) and named month values
     if (type === 'month' && this.isValidMonthName(value)) return true;
 
     // Validate numeric values within the specified range
@@ -230,12 +229,12 @@ export class CronValidationService {
   }
 
   /**
-   * Validates range patterns with step intervals for EventBridge Scheduler.
+   * Validates range patterns with step intervals.
    *
    * This method handles complex range-step patterns like "1-5/2" which means
    * "every 2nd value from 1 to 5" (resulting in: 1, 3, 5).
    *
-   * EventBridge uses this pattern for flexible interval scheduling within specific ranges.
+   * Extended cron uses this pattern for flexible interval scheduling within specific ranges.
    * For example: "9-17/2" for hours would trigger at 9:00, 11:00, 13:00, 15:00, 17:00.
    *
    * @param start - Range start value (numeric or named like "MON")
@@ -254,18 +253,18 @@ export class CronValidationService {
     max: number,
     type: string
   ): boolean {
-    // Validate step value - must be positive integer for EventBridge compliance
+    // Validate step value - must be positive integer
     const stepNum = Number(step);
     if (isNaN(stepNum) || stepNum <= 0) return false;
 
     // Special handling for day-of-week ranges (supports named days like MON-FRI)
-    // EventBridge allows both numeric (1-7) and named (SUN-SAT) day ranges
+    // Extended cron allows both numeric (1-7) and named (SUN-SAT) day ranges
     if (type === 'dayOfWeek') {
       return this.isValidDayOfWeek(start) && this.isValidDayOfWeek(end);
     }
 
     // Special handling for month ranges (supports named months like JAN-DEC)
-    // EventBridge allows both numeric (1-12) and named (JAN-DEC) month ranges
+    // Extended cron allows both numeric (1-12) and named (JAN-DEC) month ranges
     if (type === 'month') {
       const startValid =
         this.isValidMonthName(start) ||
@@ -290,10 +289,10 @@ export class CronValidationService {
   }
 
   /**
-   * Validates simple range patterns without step intervals for EventBridge Scheduler.
+   * Validates simple range patterns without step intervals.
    *
    * This method handles basic range patterns like "1-5" (values 1 through 5) or
-   * "MON-FRI" (Monday through Friday). EventBridge supports both numeric and
+   * "MON-FRI" (Monday through Friday). Extended cron supports both numeric and
    * named ranges for flexible scheduling.
    *
    * Examples:
@@ -316,13 +315,13 @@ export class CronValidationService {
     type: string
   ): boolean {
     // Handle day-of-week ranges with named values (MON-FRI, SUN-SAT, etc.)
-    // EventBridge supports both numeric (1-7) and named day ranges
+    // Extended cron supports both numeric (1-7) and named day ranges
     if (type === 'dayOfWeek') {
       return this.isValidDayOfWeek(start) && this.isValidDayOfWeek(end);
     }
 
     // Handle month ranges with named values (JAN-DEC, etc.)
-    // EventBridge allows both numeric (1-12) and named month ranges
+    // Extended cron allows both numeric (1-12) and named month ranges
     if (type === 'month') {
       const startValid =
         this.isValidMonthName(start) ||
@@ -347,10 +346,10 @@ export class CronValidationService {
   }
 
   /**
-   * Validates step patterns from a starting point for EventBridge Scheduler.
+   * Validates step patterns from a starting point.
    *
    * This method handles step patterns like "5/10" (every 10th value starting from 5)
-   * or asterisk/15 (every 15th value starting from minimum). EventBridge uses this for
+   * or asterisk/15 (every 15th value starting from minimum). Extended cron uses this for
    * interval-based scheduling from specific starting points.
    *
    * Examples:
@@ -372,7 +371,7 @@ export class CronValidationService {
     max: number,
     type: string
   ): boolean {
-    // Validate step value - must be positive integer for EventBridge compliance
+    // Validate step value - must be positive integer
     const stepNum = Number(step);
     if (isNaN(stepNum) || stepNum <= 0) return false;
 
@@ -381,19 +380,19 @@ export class CronValidationService {
     if (start === '*') return true;
 
     // Handle named day values for day-of-week step patterns
-    // EventBridge supports patterns like "MON/2" (every 2nd occurrence starting Monday)
+    // Extended cron supports patterns like "MON/2" (every 2nd occurrence starting Monday)
     if (type === 'dayOfWeek') {
       return this.isValidDayOfWeek(start);
     }
 
     // Validate numeric start values - must be within field's valid range
-    // EventBridge requires the starting point to be a valid value for the field type
+    // Extended cron requires the starting point to be a valid value for the field type
     const startNum = Number(start);
     return !isNaN(startNum) && startNum >= min && startNum <= max;
   }
 
   /**
-   * Validates day-of-month field with special EventBridge characters.
+   * Validates day-of-month field with special characters.
    */
   private validateDayOfMonth(dayOfMonth: string): boolean {
     return this.validateComplexField(dayOfMonth, 1, 31, 'dayOfMonth');
@@ -415,7 +414,7 @@ export class CronValidationService {
 
   /**
    * Validates mutual exclusivity rule for day-of-month and day-of-week fields.
-   * EventBridge requires that one of these fields must be a wildcard.
+   * Extended cron requires that one of these fields must be a wildcard.
    */
   private validateDayMutualExclusivity(
     dayOfMonth: string,
