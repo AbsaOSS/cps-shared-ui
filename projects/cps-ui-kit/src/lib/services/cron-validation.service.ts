@@ -16,6 +16,7 @@ import { Injectable } from '@angular/core';
  * - Lists: 1,3,5, MON,WED,FRI
  * - Special chars: L (last), W (weekday), hash (nth occurrence)
  * @see {@link https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html#cron-based | AWS EventBridge Scheduler - Cron-based schedules}
+ * @group Services
  */
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,7 @@ export class CronValidationService {
    * @param cron - The 6-field cron expression to validate
    * @param allowEmpty - Whether to allow empty cron expressions
    * @returns boolean - True if the cron expression is valid
+   * @group Method
    */
   isValidCron(cron: string, allowEmpty = false): boolean {
     if (typeof cron !== 'string') return false;
