@@ -200,6 +200,7 @@ describe('CronValidationService', () => {
         expect(service.isValidCron('0 9 ? * MON#0 *')).toBe(false); // Week 0 invalid
         expect(service.isValidCron('0 9 ? * MON#6 *')).toBe(false); // Week 6 invalid
         expect(service.isValidCron('0 9 15#1 * ? *')).toBe(false); // Hash in day-of-month
+        expect(service.isValidCron('0 9 ? * SUN#5,MON#4 *')).toBe(false); // two expressions with a hash for day-of-week field should not be allowed
       });
     });
   });

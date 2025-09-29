@@ -15,6 +15,7 @@ import { Injectable } from '@angular/core';
  * - Steps: asterisk/15, 5/10, 1-5/2
  * - Lists: 1,3,5, MON,WED,FRI
  * - Special chars: L (last), W (weekday), hash (nth occurrence)
+ * @see {@link https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html#cron-based | AWS EventBridge Scheduler - Cron-based schedules}
  */
 @Injectable({
   providedIn: 'root'
@@ -409,6 +410,19 @@ export class CronValidationService {
    * Validates day-of-week field with support for named days and special characters.
    */
   private validateDayOfWeek(dayOfWeek: string): boolean {
+    // Check for multiple hash expressions in day-of-week field
+    if (dayOfWeek.includes(',') && dayOfWeek.includes('#')) {
+      const parts = dayOfWeek.split(',');
+      const hashCount = parts.filter((part) =>
+        part.trim().includes('#')
+      ).length;
+
+      // AWS EventBridge: Only one hash expression allowed per day-of-week field
+      if (hashCount > 1) {
+        return false;
+      }
+    }
+
     return this.validateComplexField(dayOfWeek, 1, 7, 'dayOfWeek');
   }
 
