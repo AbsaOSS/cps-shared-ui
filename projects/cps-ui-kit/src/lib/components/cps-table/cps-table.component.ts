@@ -1,3 +1,4 @@
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -14,24 +15,23 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Table, TableService, TableModule } from 'primeng/table';
+import { isEqual } from 'lodash-es';
 import { SortEvent } from 'primeng/api';
-import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { Table, TableModule, TableService } from 'primeng/table';
+import { convertSize } from '../../utils/internal/size-utils';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
-import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
-import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
+import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
+import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
+import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { TableRowMenuComponent } from './components/internal/table-row-menu/table-row-menu.component';
+import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
+import { CpsTableColumnResizableDirective } from './directives/cps-table-column-resizable.directive';
 import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
-import { convertSize } from '../../utils/internal/size-utils';
-import { isEqual } from 'lodash-es';
-import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
 import { CpsTableDetectFilterTypePipe } from './pipes/cps-table-detect-filter-type.pipe';
-import { CpsTableColumnResizableDirective } from './directives/cps-table-column-resizable.directive';
 
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -818,8 +818,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     this.customSortFunction.emit(event);
   }
 
-  onFilterGlobal(value: string) {
-    this.primengTable.filterGlobal(value, 'contains');
+  onFilterGlobal(value: string | number) {
+    this.primengTable.filterGlobal(String(value), 'contains');
   }
 
   removeSelected() {

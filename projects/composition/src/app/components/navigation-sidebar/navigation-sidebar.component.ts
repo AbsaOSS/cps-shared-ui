@@ -168,8 +168,8 @@ export class NavigationSidebarComponent implements OnInit {
     this.filteredComponents = [...this._components];
   }
 
-  onSearchChanged(value: string) {
-    this._filterComponentsList(value);
+  onSearchChanged(value: string | number) {
+    this._filterComponentsList(String(value));
   }
 
   private _filterComponentsList(searchStr: string) {

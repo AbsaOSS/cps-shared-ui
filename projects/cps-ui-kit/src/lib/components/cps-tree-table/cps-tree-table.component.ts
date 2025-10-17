@@ -1231,8 +1231,8 @@ export class CpsTreeTableComponent
     this.customSortFunction.emit(event);
   }
 
-  onFilterGlobal(value: string) {
-    this.primengTreeTable.filterGlobal(value, 'contains');
+  onFilterGlobal(value: string | number) {
+    this.primengTreeTable.filterGlobal(String(value), 'contains');
   }
 
   onClickAdditionalBtnOnSelect() {
