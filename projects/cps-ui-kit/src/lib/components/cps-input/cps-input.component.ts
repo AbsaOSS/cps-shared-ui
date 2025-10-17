@@ -14,16 +14,16 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { convertSize } from '../../utils/internal/size-utils';
 import {
   CpsIconComponent,
   IconType,
   iconSizeType
 } from '../cps-icon/cps-icon.component';
-import { Subscription } from 'rxjs';
-import { convertSize } from '../../utils/internal/size-utils';
-import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 
 /**
  * CpsInputAppearanceType is used to define the border of the input field.
@@ -192,22 +192,22 @@ export class CpsInputComponent
    * @default ''
    * @group Props
    */
-  @Input() set value(value: string) {
-    if (!value) value = '';
+  @Input() set value(value: string | number) {
+    if (value === null || value === undefined) value = '';
     this._value = value;
     this.onChange(value);
   }
 
-  get value(): string {
+  get value(): string | number {
     return this._value;
   }
 
   /**
    * Callback to invoke on value change.
-   * @param {string} string - value changed.
+   * @param {string | number} value - value changed.
    * @group Emits
    */
-  @Output() valueChanged = new EventEmitter<string>();
+  @Output() valueChanged = new EventEmitter<string | number>();
 
   /**
    * Callback to invoke when the component receives focus.
@@ -251,7 +251,7 @@ export class CpsInputComponent
   cvtWidth = '';
 
   private _statusChangesSubscription?: Subscription;
-  private _value = '';
+  private _value: string | number = '';
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -336,8 +336,9 @@ export class CpsInputComponent
     this.error = message || 'Unknown error';
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onChange = (value: string | number) => {};
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
@@ -346,7 +347,7 @@ export class CpsInputComponent
     this.enterClicked.emit();
   }
 
-  registerOnChange(fn: any) {
+  registerOnChange(fn: (value: string | number) => void) {
     this.onChange = fn;
   }
 
@@ -354,16 +355,16 @@ export class CpsInputComponent
     this.onTouched = fn;
   }
 
-  writeValue(value: string) {
-    this.value = value;
+  writeValue(value: string | number | null | undefined) {
+    this.value = value ?? '';
   }
 
   updateValueEvent(event: any) {
-    const value = event?.target?.value || '';
+    const value = event?.target?.value ?? '';
     this._updateValue(value);
   }
 
-  private _updateValue(value: string) {
+  private _updateValue(value: string | number) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
