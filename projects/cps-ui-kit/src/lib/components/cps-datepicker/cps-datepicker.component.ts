@@ -11,12 +11,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
-import { DatePickerModule } from 'primeng/datepicker';
-import { Subscription } from 'rxjs';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { convertSize } from '../../utils/internal/size-utils';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
+import { Subscription } from 'rxjs';
+import { convertSize } from '../../utils/internal/size-utils';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { DatePickerModule } from 'primeng/datepicker';
 
 /**
  * CpsDatepickerAppearanceType is used to define the border of the datepicker input.
@@ -226,13 +226,13 @@ export class CpsDatepickerComponent
     this.onTouched = fn;
   }
 
-  onInputValueChanged(val: string | number) {
-    this.stringDate = String(val);
+  onInputValueChanged(val: string) {
+    this.stringDate = val;
     if (!val) {
       this._updateValue(null);
       return;
     }
-    const dt = this._stringToDate(String(val));
+    const dt = this._stringToDate(val);
     if (dt) this._updateValue(dt);
   }
 

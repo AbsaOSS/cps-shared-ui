@@ -151,8 +151,8 @@ export class ColorsPageComponent implements OnInit {
     this.filteredColorsList = [...this.colorsList];
   }
 
-  onSearchChanged(value: string | number) {
-    this._filterColors(String(value));
+  onSearchChanged(value: string) {
+    this._filterColors(value);
   }
 
   private _filterColors(searchStr: string) {

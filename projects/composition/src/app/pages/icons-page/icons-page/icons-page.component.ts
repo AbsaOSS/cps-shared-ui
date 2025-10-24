@@ -36,8 +36,8 @@ export class IconsPageComponent implements OnInit {
     this.filteredIconsList = iconNames;
   }
 
-  onSearchChanged(value: string | number) {
-    this._filterIcons(String(value));
+  onSearchChanged(value: string) {
+    this._filterIcons(value);
   }
 
   private _filterIcons(name: string) {
