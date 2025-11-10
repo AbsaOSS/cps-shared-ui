@@ -10,23 +10,27 @@
       [checked]="value"
       (change)="updateValueEvent($event)" />
     <span class="cps-checkbox-indicator"></span>
-    <cps-icon
-      class="cps-checkbox-icon"
-      *ngIf="icon"
-      [icon]="icon"
-      size="small"
-      [color]="disabled ? 'text-light' : iconColor">
-    </cps-icon>
-    <span *ngIf="label" class="cps-checkbox-label">{{ label }}</span>
+    @if (icon) {
+      <cps-icon
+        class="cps-checkbox-icon"
+        [icon]="icon"
+        size="small"
+        [color]="disabled ? 'text-light' : iconColor">
+      </cps-icon>
+    }
+    @if (label) {
+      <span class="cps-checkbox-label">{{ label }}</span>
+    }
   </label>
-  <cps-info-circle
-    *ngIf="infoTooltip"
-    class="cps-checkbox-info-circle"
-    size="xsmall"
-    [tooltipPosition]="infoTooltipPosition"
-    [tooltipContentClass]="infoTooltipClass"
-    [tooltipMaxWidth]="infoTooltipMaxWidth"
-    [tooltipPersistent]="infoTooltipPersistent"
-    [tooltipText]="infoTooltip">
-  </cps-info-circle>
+  @if (infoTooltip) {
+    <cps-info-circle
+      class="cps-checkbox-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  }
 </div>

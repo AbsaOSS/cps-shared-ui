@@ -4,19 +4,22 @@
   tabindex="1"
   [ngClass]="{ disabled: disabled, error: error, active: isActive() }"
   #componentContainer>
-  <div class="cps-treeautocomplete-label" *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-treeautocomplete-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div class="cps-treeautocomplete-label">
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-treeautocomplete-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-treeautocomplete-container"
@@ -28,97 +31,125 @@
     }">
     <div class="cps-treeautocomplete-box" #boxEl (mousedown)="onBoxClick()">
       <div class="cps-treeautocomplete-box-area">
-        <cps-icon
-          *ngIf="prefixIcon"
-          [icon]="prefixIcon"
-          [style.color]="disabled ? '#9a9595' : null"
-          [size]="prefixIconSize"
-          class="prefix-icon">
-        </cps-icon>
-        <div
-          class="cps-treeautocomplete-box-items"
-          *ngIf="
-            (treeSelection && !multiple) ||
-              (treeSelection?.length > 0 && multiple);
-            else treeAutocompleteInputTemplate
-          ">
-          <span *ngIf="!multiple" class="single-item">
-            <div class="single-item-selection">
-              <span [style.opacity]="activeSingle ? 0 : 1">{{
-                treeSelection.label
-              }}</span>
-            </div>
-            <ng-container
-              *ngTemplateOutlet="
-                treeAutocompleteInputTemplate;
-                context: {
-                  inputClass: 'single-item-input',
-                  inputStyle: activeSingle ? 'opacity: 1' : null
+        @if (prefixIcon) {
+          <cps-icon
+            [icon]="prefixIcon"
+            [style.color]="disabled ? '#9a9595' : null"
+            [size]="prefixIconSize"
+            class="prefix-icon">
+          </cps-icon>
+        }
+        @if (
+          (treeSelection && !multiple) ||
+          (treeSelection?.length > 0 && multiple)
+        ) {
+          <div class="cps-treeautocomplete-box-items">
+            @if (!multiple) {
+              <span class="single-item">
+                <div class="single-item-selection">
+                  <span [style.opacity]="activeSingle ? 0 : 1">{{
+                    treeSelection.label
+                  }}</span>
+                </div>
+                <ng-container
+                  *ngTemplateOutlet="
+                    treeAutocompleteInputTemplate;
+                    context: {
+                      inputClass: 'single-item-input',
+                      inputStyle: activeSingle ? 'opacity: 1' : null
+                    }
+                  ">
+                </ng-container>
+              </span>
+            }
+            @if (multiple && !chips) {
+              <div class="text-group">
+                @for (val of treeSelection; track val; let last = $last) {
+                  <div
+                    class="text-group-item"
+                    [ngClass]="{
+                      'about-to-remove': last && backspaceClickedOnce
+                    }">
+                    {{ val.label }}{{ !last ? ',' : '' }}
+                  </div>
                 }
-              ">
-            </ng-container>
-          </span>
-
-          <div *ngIf="multiple && !chips" class="text-group">
-            <div
-              *ngFor="let val of treeSelection; let last = last"
-              class="text-group-item"
-              [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }">
-              {{ val.label }}{{ !last ? ',' : '' }}
-            </div>
-            <ng-container
-              *ngTemplateOutlet="
-                treeAutocompleteInputTemplate;
-                context: {
-                  inputClass: 'multi-item-input'
+                <ng-container
+                  *ngTemplateOutlet="
+                    treeAutocompleteInputTemplate;
+                    context: {
+                      inputClass: 'multi-item-input'
+                    }
+                  "></ng-container>
+              </div>
+            }
+            @if (multiple && chips) {
+              <div class="chips-group">
+                @for (val of treeSelection; track val; let last = $last) {
+                  <cps-chip
+                    [disabled]="disabled"
+                    [closable]="closableChips"
+                    (closed)="remove(val)"
+                    [ngClass]="{
+                      'about-to-remove': last && backspaceClickedOnce
+                    }"
+                    [label]="val.label">
+                  </cps-chip>
                 }
-              "></ng-container>
+                <ng-container
+                  *ngTemplateOutlet="
+                    treeAutocompleteInputTemplate;
+                    context: {
+                      inputClass: 'multi-chip-input'
+                    }
+                  "></ng-container>
+              </div>
+            }
           </div>
-
-          <div *ngIf="multiple && chips" class="chips-group">
-            <cps-chip
-              *ngFor="let val of treeSelection; let last = last"
-              [disabled]="disabled"
-              [closable]="closableChips"
-              (closed)="remove(val)"
-              [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }"
-              [label]="val.label">
-            </cps-chip>
-            <ng-container
-              *ngTemplateOutlet="
-                treeAutocompleteInputTemplate;
-                context: {
-                  inputClass: 'multi-chip-input'
-                }
-              "></ng-container>
-          </div>
-        </div>
-        <span class="cps-treeautocomplete-box-icons">
-          <span
-            *ngIf="clearable && !disabled"
-            [style.visibility]="
-              persistentClear ||
-              (!persistentClear &&
-                ((multiple && treeSelection?.length) ||
-                  (!multiple && treeSelection)))
-                ? 'visible'
-                : 'hidden'
+        } @else {
+          <input
+            #treeAutocompleteInput
+            class="cps-treeautocomplete-box-input"
+            spellcheck="false"
+            [placeholder]="
+              (!treeSelection && !multiple) ||
+              (treeSelection?.length < 1 && multiple)
+                ? placeholder
+                : ''
             "
-            class="cps-treeautocomplete-box-clear-icon">
-            <cps-icon
-              icon="delete"
-              size="small"
-              (click)="clear($event)"></cps-icon>
-          </span>
-          <span
-            *ngIf="showChevron"
-            class="cps-treeautocomplete-box-chevron"
-            (mousedown)="onChevronClick($event)">
-            <cps-icon
-              icon="chevron-down"
-              size="small"
-              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
-          </span>
+            (input)="filterOptions($event)"
+            (keydown)="onInputKeyDown($event)"
+            [(ngModel)]="inputText"
+            (focus)="onFocus()"
+            (blur)="onBlur()" />
+        }
+        <span class="cps-treeautocomplete-box-icons">
+          @if (clearable && !disabled) {
+            <span
+              [style.visibility]="
+                persistentClear ||
+                (!persistentClear &&
+                  ((multiple && treeSelection?.length) ||
+                    (!multiple && treeSelection)))
+                  ? 'visible'
+                  : 'hidden'
+              "
+              class="cps-treeautocomplete-box-clear-icon">
+              <cps-icon
+                icon="delete"
+                size="small"
+                (click)="clear($event)"></cps-icon>
+            </span>
+          }
+          @if (showChevron) {
+            <span
+              class="cps-treeautocomplete-box-chevron"
+              (mousedown)="onChevronClick($event)">
+              <cps-icon
+                icon="chevron-down"
+                size="small"
+                [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
+            </span>
+          }
         </span>
       </div>
     </div>
@@ -158,10 +189,9 @@
           <ng-template let-node pTemplate="default">
             <span class="cps-treeautocomplete-option">
               <span class="cps-treeautocomplete-option-left">
-                <span
-                  *ngIf="multiple"
-                  class="cps-treeautocomplete-option-check">
-                </span>
+                @if (multiple) {
+                  <span class="cps-treeautocomplete-option-check"> </span>
+                }
                 <span
                   class="cps-treeautocomplete-option-label"
                   [class.virtual-row]="virtualScroll"
@@ -178,21 +208,26 @@
         </p-tree>
       </div>
     </cps-menu>
-    <cps-progress-linear
-      *ngIf="loading"
-      height="3"
-      radius="4"
-      opacity="0.3"
-      class="cps-treeautocomplete-progress-bar"
-      bgColor="transparent">
-    </cps-progress-linear>
+    @if (loading) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="cps-treeautocomplete-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-treeautocomplete-hint">
-    {{ hint }}
-  </div>
-  <div *ngIf="error && !hideDetails" class="cps-treeautocomplete-error">
-    {{ error }}
-  </div>
+  @if (!error && !hideDetails) {
+    <div class="cps-treeautocomplete-hint">
+      {{ hint }}
+    </div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-treeautocomplete-error">
+      {{ error }}
+    </div>
+  }
 </div>
 
 <ng-template

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,7 +13,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cps-sort-icon',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './cps-sort-icon.component.html',
   styleUrls: ['./cps-sort-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

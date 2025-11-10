@@ -5,12 +5,13 @@
     position: fullScreen ? 'fixed' : 'relative'
   }">
   <div class="cps-loader-overlay-content">
-    <label
-      *ngIf="showLabel"
-      class="cps-loader-overlay-content-text"
-      [style.color]="labelColor"
-      >Loading...
-    </label>
+    @if (showLabel) {
+      <label
+        class="cps-loader-overlay-content-text"
+        [style.color]="labelColor"
+        >Loading...
+      </label>
+    }
     <div class="cps-loader-overlay-content-circles">
       <div class="cps-loader-overlay-content-circles-circle cps-sp1">
         <div class="cps-loader-overlay-content-circles-circle cps-sp2">

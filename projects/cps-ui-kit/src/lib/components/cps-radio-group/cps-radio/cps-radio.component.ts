@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import {
   CPS_RADIO_GROUP,
@@ -13,7 +12,7 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
  */
 @Component({
   selector: 'cps-radio',
-  imports: [CommonModule, CpsRadioButtonComponent],
+  imports: [CpsRadioButtonComponent],
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss']
 })

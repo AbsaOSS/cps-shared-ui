@@ -12,29 +12,32 @@
       borderRadius: borderRadius
     }">
     <div class="cps-button__spinner">
-      <cps-progress-circular
-        *ngIf="loading"
-        color="currentColor"
-        [diameter]="cvtIconSize"
-        strokeWidth="2">
-      </cps-progress-circular>
+      @if (loading) {
+        <cps-progress-circular
+          color="currentColor"
+          [diameter]="cvtIconSize"
+          strokeWidth="2">
+        </cps-progress-circular>
+      }
     </div>
     <div
       class="cps-button__content"
       [style.visibility]="loading ? 'hidden' : null">
-      <cps-icon
-        *ngIf="icon"
-        class="cps-button__icon"
-        [icon]="icon"
-        [color]="disabled ? 'text-light' : textColor"
-        [size]="cvtIconSize">
-      </cps-icon>
-      <span
-        class="cps-button__text"
-        *ngIf="label"
-        [ngStyle]="{ 'font-size': cvtFontSize || null }"
-        >{{ label }}</span
-      >
-    </div>
-  </button>
-</div>
+      @if (icon) {
+        <cps-icon
+          class="cps-button__icon"
+          [icon]="icon"
+          [color]="disabled ? 'text-light' : textColor"
+          [size]="cvtIconSize">
+        </cps-icon>
+      }
+      @if (label) {
+        <span
+          class="cps-button__text"
+          [ngStyle]="{ 'font-size': cvtFontSize || null }"
+          >{{ label }}</span
+          >
+        }
+      </div>
+    </button>
+  </div>

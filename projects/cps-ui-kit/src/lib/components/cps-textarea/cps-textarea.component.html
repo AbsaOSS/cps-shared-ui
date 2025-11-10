@@ -1,20 +1,23 @@
 <div class="cps-textarea-container" [ngStyle]="{ width: cvtWidth }">
-  <div
-    class="cps-textarea-label"
-    [ngClass]="{ 'cps-textarea-label-disabled': disabled }"
-    *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-textarea-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div
+      class="cps-textarea-label"
+      [ngClass]="{ 'cps-textarea-label-disabled': disabled }"
+      >
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-textarea-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
 
   <div
     class="cps-textarea-wrap"
@@ -37,21 +40,26 @@
       }"
       (blur)="onBlur()"
       (focus)="onFocus()"
-      (input)="updateValueEvent($event)"></textarea>
+    (input)="updateValueEvent($event)"></textarea>
 
-    <span
-      *ngIf="clearable && !disabled"
+    @if (clearable && !disabled) {
+      <span
       [style.visibility]="
         persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
       "
-      class="clear-btn">
-      <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
-    </span>
+        class="clear-btn">
+        <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+      </span>
+    }
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-textarea-hint">
-    {{ hint }}
-  </div>
-  <div *ngIf="error && !hideDetails" class="cps-textarea-error">
-    {{ error }}
-  </div>
+  @if (!error && !hideDetails) {
+    <div class="cps-textarea-hint">
+      {{ hint }}
+    </div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-textarea-error">
+      {{ error }}
+    </div>
+  }
 </div>

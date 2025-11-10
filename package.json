@@ -14,7 +14,8 @@
     "test:a11y:summary": "pa11y-ci --threshold 1000 --reporter=json > .pa11y-temp.json 2>/dev/null && jq -C '{\"Total URLs tested\": .total, \"Passed\": \"\\(.passes)/\\(.total)\", \"Total errors found\": .errors, \"Standard\": \"WCAG 2.0 AA\", \"Test engine\": \"axe-core via pa11y-ci\", \"Top 10 components with errors\": (.results | to_entries | map({component: (.key | split(\"/\") | .[-2]), errors: .value | length}) | sort_by(-.errors) | .[0:10])}' .pa11y-temp.json && rm -f .pa11y-temp.json",
     "test:a11y:local": "npm run start & sleep 10 && npm run test:a11y:summary && kill %1",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "format": "prettier --write \"**/*.{ts,html}\""
   },
   "private": true,
   "dependencies": {

@@ -8,19 +8,22 @@
     active: isActive()
   }"
   #autocompleteContainer>
-  <div class="cps-autocomplete-label" *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-autocomplete-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div class="cps-autocomplete-label">
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-autocomplete-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
@@ -35,105 +38,136 @@
       #autocompleteBox
       (mousedown)="onBoxClick()">
       <div class="cps-autocomplete-box-area">
-        <cps-icon
-          *ngIf="prefixIcon"
-          [icon]="prefixIcon"
-          [style.color]="disabled ? '#9a9595' : null"
-          [size]="prefixIconSize"
-          class="prefix-icon">
-        </cps-icon>
-        <div
-          class="cps-autocomplete-box-items"
-          *ngIf="
-            (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple);
-            else autocompleteInputTemplate
-          ">
-          <span *ngIf="!multiple" class="single-item">
-            <div class="single-item-selection">
-              <span [style.opacity]="activeSingle ? 0 : 1">{{
-                returnObject
-                  ? value[optionLabel]
-                  : (value | labelByValue: options : optionValue : optionLabel)
-              }}</span>
-            </div>
-            <ng-container
-              *ngTemplateOutlet="
-                autocompleteInputTemplate;
-                context: {
-                  inputClass: 'single-item-input',
-                  inputStyle: activeSingle ? 'opacity: 1' : null
+        @if (prefixIcon) {
+          <cps-icon
+            [icon]="prefixIcon"
+            [style.color]="disabled ? '#9a9595' : null"
+            [size]="prefixIconSize"
+            class="prefix-icon">
+          </cps-icon>
+        }
+        @if (
+          (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
+        ) {
+          <div class="cps-autocomplete-box-items">
+            @if (!multiple) {
+              <span class="single-item">
+                <div class="single-item-selection">
+                  <span [style.opacity]="activeSingle ? 0 : 1">{{
+                    returnObject
+                      ? value[optionLabel]
+                      : (value
+                        | labelByValue: options : optionValue : optionLabel)
+                  }}</span>
+                </div>
+                <ng-container
+                  *ngTemplateOutlet="
+                    autocompleteInputTemplate;
+                    context: {
+                      inputClass: 'single-item-input',
+                      inputStyle: activeSingle ? 'opacity: 1' : null
+                    }
+                  ">
+                </ng-container>
+              </span>
+            }
+            @if (multiple && !chips) {
+              <div class="text-group">
+                @for (val of value; track val; let last = $last) {
+                  <div
+                    class="text-group-item"
+                    [ngClass]="{
+                      'about-to-remove': last && backspaceClickedOnce
+                    }">
+                    {{
+                      returnObject
+                        ? val[optionLabel]
+                        : (val
+                          | labelByValue: options : optionValue : optionLabel)
+                    }}{{ !last ? ',' : '' }}
+                  </div>
                 }
-              ">
-            </ng-container>
-          </span>
-
-          <div *ngIf="multiple && !chips" class="text-group">
-            <div
-              *ngFor="let val of value; let last = last"
-              class="text-group-item"
-              [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }">
-              {{
-                returnObject
-                  ? val[optionLabel]
-                  : (val | labelByValue: options : optionValue : optionLabel)
-              }}{{ !last ? ',' : '' }}
-            </div>
-            <ng-container
-              *ngTemplateOutlet="
-                autocompleteInputTemplate;
-                context: {
-                  inputClass: 'multi-item-input'
+                <ng-container
+                  *ngTemplateOutlet="
+                    autocompleteInputTemplate;
+                    context: {
+                      inputClass: 'multi-item-input'
+                    }
+                  "></ng-container>
+              </div>
+            }
+            @if (multiple && chips) {
+              <div class="chips-group">
+                @for (val of value; track val; let last = $last) {
+                  <cps-chip
+                    [disabled]="disabled"
+                    [closable]="closableChips"
+                    (closed)="select(val, true)"
+                    [ngClass]="{
+                      'about-to-remove': last && backspaceClickedOnce
+                    }"
+                    [label]="
+                      returnObject
+                        ? val[optionLabel]
+                        : (val
+                          | labelByValue: options : optionValue : optionLabel)
+                    ">
+                  </cps-chip>
                 }
-              "></ng-container>
+                <ng-container
+                  *ngTemplateOutlet="
+                    autocompleteInputTemplate;
+                    context: {
+                      inputClass: 'multi-chip-input'
+                    }
+                  "></ng-container>
+              </div>
+            }
           </div>
-
-          <div *ngIf="multiple && chips" class="chips-group">
-            <cps-chip
-              *ngFor="let val of value; let last = last"
-              [disabled]="disabled"
-              [closable]="closableChips"
-              (closed)="select(val, true)"
-              [ngClass]="{ 'about-to-remove': last && backspaceClickedOnce }"
-              [label]="
-                returnObject
-                  ? val[optionLabel]
-                  : (val | labelByValue: options : optionValue : optionLabel)
-              ">
-            </cps-chip>
-            <ng-container
-              *ngTemplateOutlet="
-                autocompleteInputTemplate;
-                context: {
-                  inputClass: 'multi-chip-input'
-                }
-              "></ng-container>
-          </div>
-        </div>
-        <span class="cps-autocomplete-box-icons">
-          <span
-            *ngIf="clearable && !disabled"
-            [style.visibility]="
-              persistentClear ||
-              (!persistentClear &&
-                ((multiple && value?.length) || (!multiple && !isEmptyValue())))
-                ? 'visible'
-                : 'hidden'
+        } @else {
+          <input
+            #autocompleteInput
+            class="cps-autocomplete-box-input"
+            spellcheck="false"
+            [placeholder]="
+              (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
+                ? placeholder
+                : ''
             "
-            class="cps-autocomplete-box-clear-icon">
-            <cps-icon
-              icon="delete"
-              size="small"
-              (click)="clear($event)"></cps-icon>
-          </span>
-          <span
-            *ngIf="showChevron"
-            class="cps-autocomplete-box-chevron"
-            (mousedown)="onChevronClick($event)">
-            <cps-icon
-              icon="chevron-down"
-              size="small"
-              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
-          </span>
+            (input)="filterOptions($event)"
+            (keydown)="onInputKeyDown($event)"
+            [(ngModel)]="inputText"
+            (focus)="onFocus()"
+            (blur)="onBlur()" />
+        }
+        <span class="cps-autocomplete-box-icons">
+          @if (clearable && !disabled) {
+            <span
+              [style.visibility]="
+                persistentClear ||
+                (!persistentClear &&
+                  ((multiple && value?.length) ||
+                    (!multiple && !isEmptyValue())))
+                  ? 'visible'
+                  : 'hidden'
+              "
+              class="cps-autocomplete-box-clear-icon">
+              <cps-icon
+                icon="delete"
+                size="small"
+                (click)="clear($event)"></cps-icon>
+            </span>
+          }
+          @if (showChevron) {
+            <span
+              class="cps-autocomplete-box-chevron"
+              (mousedown)="onChevronClick($event)">
+              <cps-icon
+                icon="chevron-down"
+                size="small"
+                [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
+            </span>
+          }
         </span>
       </div>
     </div>
@@ -150,43 +184,43 @@
         [ngStyle]="{
           width: autocompleteBoxWidth + 'px'
         }">
-        <div
-          *ngIf="loading && showLoadingMessage"
-          class="cps-autocomplete-options-loading">
-          {{ loadingMessage }}
-        </div>
-        <div
-          *ngIf="
-            showEmptyMessage &&
-            filteredOptions.length < 1 &&
-            !loading &&
-            inputTextDebounced
-          "
-          class="cps-autocomplete-options-empty">
-          {{ emptyMessage }}
-        </div>
-        <ng-container *ngIf="!virtualScroll && !loading">
-          <div
-            class="cps-autocomplete-options-option select-all-option"
-            [class.allselected]="value?.length === options.length"
-            *ngIf="
-              multiple &&
-              selectAll &&
-              filteredOptions.length === options.length &&
-              options.length > 1
-            "
-            (click)="toggleAll()">
-            <span class="cps-autocomplete-options-option-left">
-              <span
-                *ngIf="multiple"
-                class="cps-autocomplete-options-option-check">
-              </span>
-              <span class="cps-autocomplete-options-option-label"
-                >Select all</span
-              >
-            </span>
+        @if (loading && showLoadingMessage) {
+          <div class="cps-autocomplete-options-loading">
+            {{ loadingMessage }}
           </div>
-          <ng-container *ngFor="let item of filteredOptions">
+        }
+        @if (
+          showEmptyMessage &&
+          filteredOptions.length < 1 &&
+          !loading &&
+          inputTextDebounced
+        ) {
+          <div class="cps-autocomplete-options-empty">
+            {{ emptyMessage }}
+          </div>
+        }
+        @if (!virtualScroll && !loading) {
+          @if (
+            multiple &&
+            selectAll &&
+            filteredOptions.length === options.length &&
+            options.length > 1
+          ) {
+            <div
+              class="cps-autocomplete-options-option select-all-option"
+              [class.allselected]="value?.length === options.length"
+              (click)="toggleAll()">
+              <span class="cps-autocomplete-options-option-left">
+                @if (multiple) {
+                  <span class="cps-autocomplete-options-option-check"> </span>
+                }
+                <span class="cps-autocomplete-options-option-label"
+                  >Select all</span
+                >
+              </span>
+            </div>
+          }
+          @for (item of filteredOptions; track item) {
             <ng-container
               *ngTemplateOutlet="
                 itemTemplate;
@@ -194,9 +228,9 @@
                   item: item
                 }
               "></ng-container>
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="virtualScroll && !loading">
+          }
+        }
+        @if (virtualScroll && !loading) {
           <p-virtualscroller
             #virtualList
             [items]="filteredOptions"
@@ -214,28 +248,29 @@
                 "></ng-container>
             </ng-template>
           </p-virtualscroller>
-        </ng-container>
+        }
       </div>
     </cps-menu>
-    <cps-progress-linear
-      *ngIf="loading || validating"
-      height="3"
-      radius="4"
-      opacity="0.3"
-      class="autocomplete-progress-bar"
-      bgColor="transparent">
-    </cps-progress-linear>
+    @if (loading || validating) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="autocomplete-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
   </div>
-  <div
-    *ngIf="!error && !externalError && !hideDetails"
-    class="cps-autocomplete-hint">
-    {{ hint }}
-  </div>
-  <div
-    *ngIf="(error || externalError) && !hideDetails"
-    class="cps-autocomplete-error">
-    {{ error || externalError }}
-  </div>
+  @if (!error && !externalError && !hideDetails) {
+    <div class="cps-autocomplete-hint">
+      {{ hint }}
+    </div>
+  }
+  @if ((error || externalError) && !hideDetails) {
+    <div class="cps-autocomplete-error">
+      {{ error || externalError }}
+    </div>
+  }
 </div>
 
 <ng-template
@@ -268,8 +303,9 @@
       item | checkOptionSelected: value : multiple : returnObject : optionValue
     ">
     <span class="cps-autocomplete-options-option-left">
-      <span *ngIf="multiple" class="cps-autocomplete-options-option-check">
-      </span>
+      @if (multiple) {
+        <span class="cps-autocomplete-options-option-check"> </span>
+      }
       <span
         data-cy-id="cps-autocomplete-options"
         class="cps-autocomplete-options-option-label"

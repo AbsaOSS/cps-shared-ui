@@ -1,66 +1,70 @@
-<ng-container [ngSwitch]="type">
-  <cps-input
-    *ngSwitchCase="'text'"
-    [placeholder]="placeholder"
-    [hideDetails]="true"
-    (keydown.enter)="onEnterKeyDown($event)"
-    [value]="filterConstraint?.value"
-    (valueChanged)="onValueChange($event)"
-    type="text"></cps-input>
 
-  <cps-input
-    *ngSwitchCase="'number'"
-    [hideDetails]="true"
-    [placeholder]="placeholder"
-    (keydown.enter)="onEnterKeyDown($event)"
-    [value]="filterConstraint?.value"
-    (valueChanged)="onValueChange($event)"
-    type="number"></cps-input>
-
-  <div
-    class="cps-table-col-filter-constraint-btn-toggles"
-    *ngSwitchCase="'boolean'">
-    <cps-button-toggle
-      [options]="booleanOptions"
-      [value]="filterConstraint?.value"
-      (valueChanged)="onValueChange($event)"
-      [mandatory]="false">
-    </cps-button-toggle>
-  </div>
-
-  <cps-datepicker
-    *ngSwitchCase="'date'"
-    [openOnInputFocus]="true"
-    [hideDetails]="true"
-    [placeholder]="placeholder"
-    [value]="filterConstraint?.value"
-    (keydown.enter)="onEnterKeyDown($event)"
-    (valueChanged)="onValueChange($event)">
-  </cps-datepicker>
-
-  <ng-container *ngSwitchCase="'category'">
-    <cps-autocomplete
-      #categoryAutocompleteComponent
-      *ngIf="!asButtonToggle"
-      class="cps-table-col-filter-category-autocomplete"
+@switch (type) {
+  @case ('text') {
+    <cps-input
       [placeholder]="placeholder"
-      [options]="categories"
       [hideDetails]="true"
-      [clearable]="true"
+      (keydown.enter)="onEnterKeyDown($event)"
       [value]="filterConstraint?.value"
       (valueChanged)="onValueChange($event)"
-      [returnObject]="false"
-      [multiple]="!singleSelection">
-    </cps-autocomplete>
-    <div class="cps-table-col-filter-constraint-btn-toggles">
+    type="text"></cps-input>
+  }
+  @case ('number') {
+    <cps-input
+      [hideDetails]="true"
+      [placeholder]="placeholder"
+      (keydown.enter)="onEnterKeyDown($event)"
+      [value]="filterConstraint?.value"
+      (valueChanged)="onValueChange($event)"
+    type="number"></cps-input>
+  }
+  @case ('boolean') {
+    <div
+      class="cps-table-col-filter-constraint-btn-toggles"
+      >
       <cps-button-toggle
-        *ngIf="asButtonToggle"
-        [options]="categories"
+        [options]="booleanOptions"
         [value]="filterConstraint?.value"
         (valueChanged)="onValueChange($event)"
-        [mandatory]="false"
-        [multiple]="!singleSelection">
+        [mandatory]="false">
       </cps-button-toggle>
     </div>
-  </ng-container>
-</ng-container>
+  }
+  @case ('date') {
+    <cps-datepicker
+      [openOnInputFocus]="true"
+      [hideDetails]="true"
+      [placeholder]="placeholder"
+      [value]="filterConstraint?.value"
+      (keydown.enter)="onEnterKeyDown($event)"
+      (valueChanged)="onValueChange($event)">
+    </cps-datepicker>
+  }
+  @case ('category') {
+    @if (!asButtonToggle) {
+      <cps-autocomplete
+        #categoryAutocompleteComponent
+        class="cps-table-col-filter-category-autocomplete"
+        [placeholder]="placeholder"
+        [options]="categories"
+        [hideDetails]="true"
+        [clearable]="true"
+        [value]="filterConstraint?.value"
+        (valueChanged)="onValueChange($event)"
+        [returnObject]="false"
+        [multiple]="!singleSelection">
+      </cps-autocomplete>
+    }
+    <div class="cps-table-col-filter-constraint-btn-toggles">
+      @if (asButtonToggle) {
+        <cps-button-toggle
+          [options]="categories"
+          [value]="filterConstraint?.value"
+          (valueChanged)="onValueChange($event)"
+          [mandatory]="false"
+          [multiple]="!singleSelection">
+        </cps-button-toggle>
+      }
+    </div>
+  }
+}

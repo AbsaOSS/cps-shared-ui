@@ -1,20 +1,23 @@
 <div class="cps-timepicker">
-  <div
-    class="cps-timepicker-label"
-    [ngClass]="{ 'cps-timepicker-label-disabled': disabled }"
-    *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-timepicker-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div
+      class="cps-timepicker-label"
+      [ngClass]="{ 'cps-timepicker-label-disabled': disabled }"
+      >
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-timepicker-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
   <div class="cps-timepicker-body">
     <cps-autocomplete
       #hoursField
@@ -34,7 +37,7 @@
       [value]="value?.hours"
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
-      placeholder="HH"></cps-autocomplete>
+    placeholder="HH"></cps-autocomplete>
     <span class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
@@ -52,39 +55,47 @@
       [value]="value?.minutes"
       (valueChanged)="updateMinutes($event)"
       [externalError]="minutesError"
-      placeholder="MM"></cps-autocomplete>
-    <span *ngIf="withSeconds" class="cps-timepicker-delimiter">:</span>
-    <cps-autocomplete
-      *ngIf="withSeconds"
-      #secondsField
-      (keypress)="numberOnly($event)"
-      width="60"
-      [emptyOptionIndex]="mandatoryValue ? 0 : -1"
-      [options]="secondsOptions"
-      [hideDetails]="true"
-      [disabled]="disabled"
-      [showChevron]="false"
-      [showEmptyMessage]="false"
-      (focused)="onFieldFocus()"
-      (blurred)="onFieldBlur()"
-      [returnObject]="false"
-      [value]="value?.seconds"
-      (valueChanged)="updateSeconds($event)"
-      [externalError]="secondsError"
+    placeholder="MM"></cps-autocomplete>
+    @if (withSeconds) {
+      <span class="cps-timepicker-delimiter">:</span>
+    }
+    @if (withSeconds) {
+      <cps-autocomplete
+        #secondsField
+        (keypress)="numberOnly($event)"
+        width="60"
+        [emptyOptionIndex]="mandatoryValue ? 0 : -1"
+        [options]="secondsOptions"
+        [hideDetails]="true"
+        [disabled]="disabled"
+        [showChevron]="false"
+        [showEmptyMessage]="false"
+        (focused)="onFieldFocus()"
+        (blurred)="onFieldBlur()"
+        [returnObject]="false"
+        [value]="value?.seconds"
+        (valueChanged)="updateSeconds($event)"
+        [externalError]="secondsError"
       placeholder="SS"></cps-autocomplete>
-    <cps-button-toggle
-      *ngIf="!use24HourTime"
-      class="cps-timepicker-am-pm-selector"
-      [options]="dayPeriodOptions"
-      [disabled]="disabled"
-      [value]="value?.dayPeriod || 'AM'"
-      (valueChanged)="updateDayPeriod($event)">
-    </cps-button-toggle>
+    }
+    @if (!use24HourTime) {
+      <cps-button-toggle
+        class="cps-timepicker-am-pm-selector"
+        [options]="dayPeriodOptions"
+        [disabled]="disabled"
+        [value]="value?.dayPeriod || 'AM'"
+        (valueChanged)="updateDayPeriod($event)">
+      </cps-button-toggle>
+    }
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-timepicker-hint">
-    {{ hint }}
-  </div>
-  <div *ngIf="error && !hideDetails" class="cps-timepicker-error">
-    {{ error }}
-  </div>
+  @if (!error && !hideDetails) {
+    <div class="cps-timepicker-hint">
+      {{ hint }}
+    </div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-timepicker-error">
+      {{ error }}
+    </div>
+  }
 </div>

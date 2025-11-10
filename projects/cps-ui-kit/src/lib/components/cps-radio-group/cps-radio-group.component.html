@@ -1,17 +1,20 @@
 <div class="cps-radio-group">
-  <div class="cps-radio-group-label" *ngIf="groupLabel">
-    <span>{{ groupLabel }}</span>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-radio-group-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (groupLabel) {
+    <div class="cps-radio-group-label">
+      <span>{{ groupLabel }}</span>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-radio-group-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
 
   <div
     #contentRef
@@ -24,28 +27,34 @@
     <ng-content></ng-content>
   </div>
 
-  <div
-    *ngIf="!contentRef.innerHTML.trim()"
-    class="cps-radio-group-content"
-    [ngClass]="
-      vertical
-        ? 'cps-radio-group-content-vertical'
-        : 'cps-radio-group-content-horizontal'
-    ">
-    <cps-radio-button
-      *ngFor="let option of options"
-      [option]="option"
-      [checked]="option.value === value"
-      [groupDisabled]="disabled"
-      (blurred)="onBlur()"
-      (focused)="onFocus()"
-      (updateValueEvent)="updateValueEvent($event)">
-    </cps-radio-button>
-  </div>
-  <div *ngIf="!error && !hideDetails" class="cps-radio-hint">
-    {{ hint }}
-  </div>
-  <div *ngIf="error && !hideDetails" class="cps-radio-error">
-    {{ error }}
-  </div>
+  @if (!contentRef.innerHTML.trim()) {
+    <div
+      class="cps-radio-group-content"
+      [ngClass]="
+        vertical
+          ? 'cps-radio-group-content-vertical'
+          : 'cps-radio-group-content-horizontal'
+      ">
+      @for (option of options; track option) {
+        <cps-radio-button
+          [option]="option"
+          [checked]="option.value === value"
+          [groupDisabled]="disabled"
+          (blurred)="onBlur()"
+          (focused)="onFocus()"
+          (updateValueEvent)="updateValueEvent($event)">
+        </cps-radio-button>
+      }
+    </div>
+  }
+  @if (!error && !hideDetails) {
+    <div class="cps-radio-hint">
+      {{ hint }}
+    </div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-radio-error">
+      {{ error }}
+    </div>
+  }
 </div>

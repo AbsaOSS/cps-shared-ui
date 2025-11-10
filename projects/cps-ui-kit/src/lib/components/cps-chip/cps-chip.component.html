@@ -1,15 +1,17 @@
 <div [ngClass]="classesList">
-  <cps-icon
-    *ngIf="icon"
-    class="cps-chip-icon"
-    [icon]="icon"
+  @if (icon) {
+    <cps-icon
+      class="cps-chip-icon"
+      [icon]="icon"
     [color]="iconColor"></cps-icon>
+  }
   <span class="cps-chip-label">{{ label }}</span>
-  <cps-icon
-    *ngIf="closable"
-    class="cps-chip-close-icon"
-    icon="close-x"
-    size="xsmall"
-    color="text-darkest"
+  @if (closable) {
+    <cps-icon
+      class="cps-chip-close-icon"
+      icon="close-x"
+      size="xsmall"
+      color="text-darkest"
     (click)="onCloseClick($event)"></cps-icon>
+  }
 </div>

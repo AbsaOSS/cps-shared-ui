@@ -19,24 +19,28 @@
           }
         : 'hidden'
     "
-    [ngClass]="{ disabled: disabled }"
-    [style.cursor]="disabled ? 'default' : 'pointer'"
-    (click)="toggleExpansion()">
-    <span class="cps-expansion-panel-prefix-icon" *ngIf="prefixIcon">
-      <cps-icon
-        [icon]="prefixIcon"
-        size="small"
-        [color]="disabled ? 'text-mild' : 'text-dark'">
-      </cps-icon>
-    </span>
-    <div class="cps-expansion-panel-title">{{ headerTitle }}</div>
-    <span class="cps-expansion-panel-chevron" *ngIf="showChevron && !disabled">
-      <cps-icon icon="chevron-down" size="small" color="text-dark"> </cps-icon>
-    </span>
+[ngClass]="{ disabled: disabled }"
+[style.cursor]="disabled ? 'default' : 'pointer'"
+(click)="toggleExpansion()">
+@if (prefixIcon) {
+  <span class="cps-expansion-panel-prefix-icon">
+    <cps-icon
+      [icon]="prefixIcon"
+      size="small"
+      [color]="disabled ? 'text-mild' : 'text-dark'">
+    </cps-icon>
+  </span>
+}
+<div class="cps-expansion-panel-title">{{ headerTitle }}</div>
+@if (showChevron && !disabled) {
+  <span class="cps-expansion-panel-chevron">
+    <cps-icon icon="chevron-down" size="small" color="text-dark"> </cps-icon>
+  </span>
+}
+</div>
+<div class="cps-expansion-panel-content" #panelContentElem>
+  <div class="cps-expansion-panel-content-inner">
+    <ng-content></ng-content>
   </div>
-  <div class="cps-expansion-panel-content" #panelContentElem>
-    <div class="cps-expansion-panel-content-inner">
-      <ng-content></ng-content>
-    </div>
-  </div>
+</div>
 </div>

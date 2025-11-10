@@ -7,19 +7,22 @@
   (keydown)="onKeyDown($event)"
   (focus)="onFocus()"
   (blur)="onBlur()">
-  <div class="cps-treeselect-label" *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-treeselect-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div class="cps-treeselect-label">
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-treeselect-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
   <div
     class="cps-treeselect-container"
     [class.focused]="isOpened"
@@ -30,73 +33,81 @@
     }">
     <div class="cps-treeselect-box" #boxEl (click)="onBoxClick()">
       <div class="cps-treeselect-box-left">
-        <cps-icon
-          *ngIf="prefixIcon"
-          [icon]="prefixIcon"
-          [style.color]="disabled ? '#9a9595' : null"
-          [size]="prefixIconSize"
-          class="prefix-icon">
-        </cps-icon>
-        <div
-          class="cps-treeselect-box-placeholder"
-          *ngIf="
-            (!treeSelection && !multiple) ||
-            (treeSelection?.length < 1 && multiple)
-          ">
-          {{ placeholder }}
-        </div>
-        <div
-          class="cps-treeselect-box-items"
-          *ngIf="
-            (treeSelection && !multiple) ||
-            (treeSelection?.length > 0 && multiple)
-          ">
-          <span *ngIf="!multiple" class="single-item">
-            {{ treeSelection.label }}</span
-          >
-          <div *ngIf="multiple && !chips" class="text-group">
-            <span class="text-group-item">
-              {{
-                treeSelection
-                  | combineLabels: innerOptions : '' : 'label' : true
-              }}
-            </span>
+        @if (prefixIcon) {
+          <cps-icon
+            [icon]="prefixIcon"
+            [style.color]="disabled ? '#9a9595' : null"
+            [size]="prefixIconSize"
+            class="prefix-icon">
+          </cps-icon>
+        }
+        @if (
+          (!treeSelection && !multiple) ||
+          (treeSelection?.length < 1 && multiple)
+        ) {
+          <div class="cps-treeselect-box-placeholder">
+            {{ placeholder }}
           </div>
-
-          <div *ngIf="multiple && chips" class="chips-group">
-            <cps-chip
-              *ngFor="let val of treeSelection"
-              [disabled]="disabled"
-              [closable]="closableChips"
-              (closed)="remove(val)"
-              [label]="val.label">
-            </cps-chip>
+        }
+        @if (
+          (treeSelection && !multiple) ||
+          (treeSelection?.length > 0 && multiple)
+        ) {
+          <div class="cps-treeselect-box-items">
+            @if (!multiple) {
+              <span class="single-item"> {{ treeSelection.label }}</span>
+            }
+            @if (multiple && !chips) {
+              <div class="text-group">
+                <span class="text-group-item">
+                  {{
+                    treeSelection
+                      | combineLabels: innerOptions : '' : 'label' : true
+                  }}
+                </span>
+              </div>
+            }
+            @if (multiple && chips) {
+              <div class="chips-group">
+                @for (val of treeSelection; track val) {
+                  <cps-chip
+                    [disabled]="disabled"
+                    [closable]="closableChips"
+                    (closed)="remove(val)"
+                    [label]="val.label">
+                  </cps-chip>
+                }
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
       <span class="cps-treeselect-box-icons">
-        <span
-          *ngIf="clearable && !disabled"
-          [style.visibility]="
-            persistentClear ||
-            (!persistentClear &&
-              ((multiple && treeSelection?.length) ||
-                (!multiple && treeSelection)))
-              ? 'visible'
-              : 'hidden'
-          "
-          class="cps-treeselect-box-clear-icon">
-          <cps-icon
-            icon="delete"
-            size="small"
-            (click)="clear($event)"></cps-icon>
-        </span>
-        <span *ngIf="showChevron" class="cps-treeselect-box-chevron">
-          <cps-icon
-            icon="chevron-down"
-            size="small"
-            [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
-        </span>
+        @if (clearable && !disabled) {
+          <span
+            [style.visibility]="
+              persistentClear ||
+              (!persistentClear &&
+                ((multiple && treeSelection?.length) ||
+                  (!multiple && treeSelection)))
+                ? 'visible'
+                : 'hidden'
+            "
+            class="cps-treeselect-box-clear-icon">
+            <cps-icon
+              icon="delete"
+              size="small"
+              (click)="clear($event)"></cps-icon>
+          </span>
+        }
+        @if (showChevron) {
+          <span class="cps-treeselect-box-chevron">
+            <cps-icon
+              icon="chevron-down"
+              size="small"
+              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
+          </span>
+        }
       </span>
     </div>
 
@@ -131,8 +142,9 @@
           <ng-template let-node pTemplate="default">
             <span class="cps-treeselect-option">
               <span class="cps-treeselect-option-left">
-                <span *ngIf="multiple" class="cps-treeselect-option-check">
-                </span>
+                @if (multiple) {
+                  <span class="cps-treeselect-option-check"> </span>
+                }
                 <span
                   class="cps-treeselect-option-label"
                   [class.virtual-row]="virtualScroll"
@@ -149,19 +161,24 @@
         </p-tree>
       </div>
     </cps-menu>
-    <cps-progress-linear
-      *ngIf="loading"
-      height="3"
-      radius="4"
-      opacity="0.3"
-      class="cps-treeselect-progress-bar"
-      bgColor="transparent">
-    </cps-progress-linear>
+    @if (loading) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="cps-treeselect-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-treeselect-hint">
-    {{ hint }}
-  </div>
-  <div *ngIf="error && !hideDetails" class="cps-treeselect-error">
-    {{ error }}
-  </div>
+  @if (!error && !hideDetails) {
+    <div class="cps-treeselect-hint">
+      {{ hint }}
+    </div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-treeselect-error">
+      {{ error }}
+    </div>
+  }
 </div>

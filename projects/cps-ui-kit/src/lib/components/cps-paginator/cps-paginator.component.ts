@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
  */
 @Component({
   selector: 'cps-paginator',
-  imports: [CommonModule, PaginatorModule, CpsSelectComponent, FormsModule],
+  imports: [PaginatorModule, CpsSelectComponent, FormsModule],
   templateUrl: './cps-paginator.component.html',
   styleUrls: ['./cps-paginator.component.scss']
 })
