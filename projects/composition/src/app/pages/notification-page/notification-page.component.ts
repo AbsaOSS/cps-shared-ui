@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   CpsButtonComponent,
   CpsNotificationAppearance,
@@ -12,7 +11,7 @@ import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer
 
 @Component({
   selector: 'app-notification-page',
-  imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
+  imports: [CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './notification-page.component.html',
   styleUrls: ['./notification-page.component.scss'],
   host: { class: 'composition-page' }

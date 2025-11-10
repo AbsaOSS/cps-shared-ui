@@ -1,9 +1,11 @@
 <div class="top-toolbar">
   <img src="assets/ui_logo.svg" />
   <span>Consumer Products UI Kit</span>
-  <span *ngIf="version"
-    ><b>v{{ version }}</b></span
-  >
+  @if (version) {
+    <span
+      ><b>v{{ version }}</b></span
+    >
+  }
 </div>
 <div class="composition-container">
   <app-navigation-sidebar
