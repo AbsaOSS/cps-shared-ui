@@ -12,17 +12,17 @@
       class="cps-switch-label"
       [ngClass]="{ 'cps-switch-label-disabled': disabled }"
       >{{ label }}</span
-      >
-    }
-    @if (infoTooltip) {
-      <cps-info-circle
-        class="cps-switch-info-circle"
-        size="xsmall"
-        [tooltipPosition]="infoTooltipPosition"
-        [tooltipContentClass]="infoTooltipClass"
-        [tooltipMaxWidth]="infoTooltipMaxWidth"
-        [tooltipPersistent]="infoTooltipPersistent"
-        [tooltipText]="infoTooltip">
-      </cps-info-circle>
-    }
-  </div>
+    >
+  }
+  @if (infoTooltip) {
+    <cps-info-circle
+      class="cps-switch-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  }
+</div>

@@ -3,7 +3,7 @@
     <cps-icon
       class="cps-chip-icon"
       [icon]="icon"
-    [color]="iconColor"></cps-icon>
+      [color]="iconColor"></cps-icon>
   }
   <span class="cps-chip-label">{{ label }}</span>
   @if (closable) {
@@ -12,6 +12,6 @@
       icon="close-x"
       size="xsmall"
       color="text-darkest"
-    (click)="onCloseClick($event)"></cps-icon>
+      (click)="onCloseClick($event)"></cps-icon>
   }
 </div>

@@ -32,39 +32,39 @@
           [tooltipPersistent]="tab.tooltipPersistent"
           [tooltipContentClass]="tab.tooltipContentClass">
           <ng-container
-          *ngTemplateOutlet="
-            tabHeaderTemplate;
-            context: {
-              tab: tab
-            }
-          "></ng-container>
-      </li>
+            *ngTemplateOutlet="
+              tabHeaderTemplate;
+              context: {
+                tab: tab
+              }
+            "></ng-container>
+        </li>
+      }
+      @if (!tab.tooltipText) {
+        <li
+          class="cps-tab"
+          (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
+          [ngClass]="{ active: tab.active, disabled: tab.disabled }">
+          <ng-container
+            *ngTemplateOutlet="
+              tabHeaderTemplate;
+              context: {
+                tab: tab
+              }
+            "></ng-container>
+        </li>
+      }
     }
-    @if (!tab.tooltipText) {
-      <li
-        class="cps-tab"
-        (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
-        [ngClass]="{ active: tab.active, disabled: tab.disabled }">
-        <ng-container
-          *ngTemplateOutlet="
-            tabHeaderTemplate;
-            context: {
-              tab: tab
-            }
-          "></ng-container>
-    </li>
+  </ul>
+  @if (!forwardBtnVisible) {
+    <div
+      class="nav-btn nav-btn-forward"
+      [ngStyle]="{ 'background-color': navButtonsBackground }"
+      #forwardBtn
+      (click)="navForward()">
+      <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
+    </div>
   }
-}
-</ul>
-@if (!forwardBtnVisible) {
-  <div
-    class="nav-btn nav-btn-forward"
-    [ngStyle]="{ 'background-color': navButtonsBackground }"
-    #forwardBtn
-    (click)="navForward()">
-    <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
-  </div>
-}
 </div>
 <div
   class="cps-tab-content-wrap"
@@ -76,16 +76,12 @@
     @if (tab.active) {
       <div class="cps-tab-content">
         @if (animationType === 'slide') {
-          <div
-            [@slideInOut]="animationState"
-            class="cps-tab-content-inner">
+          <div [@slideInOut]="animationState" class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
         @if (animationType === 'fade') {
-          <div
-            [@fadeInOut]="animationState"
-            class="cps-tab-content-inner">
+          <div [@fadeInOut]="animationState" class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
@@ -101,9 +97,7 @@
   <a class="cps-tab-link">{{ tab.label }}</a>
   @if (tab.badgeValue) {
     @if (tab.badgeTooltip) {
-      <div
-        class="cps-tab-badge"
-        [cpsTooltip]="tab.badgeTooltip">
+      <div class="cps-tab-badge" [cpsTooltip]="tab.badgeTooltip">
         <span>{{ tab.badgeValue }}</span>
       </div>
     }

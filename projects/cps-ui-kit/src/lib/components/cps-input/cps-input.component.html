@@ -2,8 +2,7 @@
   @if (label) {
     <div
       class="cps-input-label"
-      [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }"
-      >
+      [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -40,10 +39,10 @@
         [disabled]="disabled"
         [readonly]="readonly"
         (keydown.enter)="onInputEnterKeyDown()"
-      [ngStyle]="{
-        width: cvtWidth,
-        'padding-left': prefixWidth || 'none'
-      }"
+        [ngStyle]="{
+          width: cvtWidth,
+          'padding-left': prefixWidth || 'none'
+        }"
         (blur)="onBlur()"
         (focus)="onFocus()" />
     }
@@ -53,10 +52,10 @@
         [value]="valueToDisplay"
         [disabled]="true"
         [readonly]="true"
-      [ngStyle]="{
-        width: cvtWidth,
-        'padding-left': prefixWidth || 'none'
-      }" />
+        [ngStyle]="{
+          width: cvtWidth,
+          'padding-left': prefixWidth || 'none'
+        }" />
     }
 
     <div class="cps-input-prefix">
@@ -66,11 +65,11 @@
             [icon]="prefixIcon"
             [size]="prefixIconSize"
             [style.color]="disabled ? '#9a9595' : null"
-          [style.cursor]="
-            prefixIconClickable && !disabled && !readonly
-              ? 'pointer'
-              : 'default'
-          "
+            [style.cursor]="
+              prefixIconClickable && !disabled && !readonly
+                ? 'pointer'
+                : 'default'
+            "
             (click)="onClickPrefixIcon()">
           </cps-icon>
         </span>
@@ -87,9 +86,11 @@
       <div class="cps-input-action-btns">
         @if (clearable) {
           <span
-        [style.visibility]="
-          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
-        "
+            [style.visibility]="
+              persistentClear || (!persistentClear && value)
+                ? 'visible'
+                : 'hidden'
+            "
             class="clear-btn">
             <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
           </span>
@@ -98,7 +99,10 @@
           <span
             class="password-show-btn"
             [ngClass]="{ 'password-show-btn-active': currentType === 'text' }">
-            <cps-icon icon="eye" size="18px" (click)="togglePassword()"></cps-icon>
+            <cps-icon
+              icon="eye"
+              size="18px"
+              (click)="togglePassword()"></cps-icon>
           </span>
         }
       </div>

@@ -2,11 +2,11 @@
   <i
     [ngClass]="classesList"
     [style.color]="iconColor"
-  [ngStyle]="{
-    width: cvtSize || 'none',
-    height: cvtSize || 'none',
-    display: 'flex'
-  }">
+    [ngStyle]="{
+      width: cvtSize || 'none',
+      height: cvtSize || 'none',
+      display: 'flex'
+    }">
     <svg>
       <use attr.xlink:href="{{ url }}icons.svg#{{ icon }}"></use>
     </svg>

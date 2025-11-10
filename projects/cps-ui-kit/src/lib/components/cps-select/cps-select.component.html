@@ -41,120 +41,115 @@
             class="prefix-icon">
           </cps-icon>
         }
-        @if (
-          (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
-          ) {
-          <div
-            class="cps-select-box-placeholder"
-            >
+        @if ((!multiple && isEmptyValue()) || (value?.length < 1 && multiple)) {
+          <div class="cps-select-box-placeholder">
             {{ placeholder }}
           </div>
         }
         @if (
           (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
-          ) {
-          <div
-            class="cps-select-box-items"
-            >
+        ) {
+          <div class="cps-select-box-items">
             @if (!multiple) {
               <span class="single-item">
                 {{
-                returnObject
-                ? value[optionLabel]
-                : (value | labelByValue: options : optionValue : optionLabel)
+                  returnObject
+                    ? value[optionLabel]
+                    : (value
+                      | labelByValue: options : optionValue : optionLabel)
                 }}</span
-                >
-              }
-              @if (multiple && !chips) {
-                <div class="text-group">
-                  <span class="text-group-item">
-                    {{
+              >
+            }
+            @if (multiple && !chips) {
+              <div class="text-group">
+                <span class="text-group-item">
+                  {{
                     value
-                    | combineLabels
-                    : options
-                    : optionValue
-                    : optionLabel
-                    : returnObject
-                    }}
-                  </span>
-                </div>
-              }
-              @if (multiple && chips) {
-                <div class="chips-group">
-                  @for (val of value; track val) {
-                    <cps-chip
-                      [disabled]="disabled"
-                      [closable]="closableChips"
-                      (closed)="select(val, true)"
-              [label]="
-                returnObject
-                  ? val[optionLabel]
-                  : (val | labelByValue: options : optionValue : optionLabel)
-              ">
-                    </cps-chip>
-                  }
-                </div>
-              }
-            </div>
-          }
-        </div>
-        <span class="cps-select-box-icons">
-          @if (clearable && !disabled) {
-            <span
-          [style.visibility]="
-            persistentClear ||
-            (!persistentClear &&
-              ((multiple && value?.length) || (!multiple && !isEmptyValue())))
-              ? 'visible'
-              : 'hidden'
-          "
-              class="cps-select-box-clear-icon">
-              <cps-icon
-                icon="delete"
-                size="small"
-              (click)="clear($event)"></cps-icon>
-            </span>
-          }
-          @if (showChevron) {
-            <span class="cps-select-box-chevron">
-              <cps-icon
-                icon="chevron-down"
-                size="small"
-              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
-            </span>
-          }
-        </span>
-      </div>
-
-      <cps-menu
-        #optionsMenu
-        [withArrow]="false"
-        (beforeMenuHidden)="onBeforeOptionsHidden()"
-        hideTransitionOptions="0s linear"
-        [containerClass]="'cps-select-options-menu ' + optionsClass">
-        <div
-          #optionsList
-          class="cps-select-options"
-        [ngStyle]="{
-          width: selectBoxWidth + 'px'
-        }">
-          @if (!virtualScroll) {
-            @if (multiple && selectAll && options.length > 1) {
-              <div
-                class="cps-select-options-option select-all-option"
-                [class.allselected]="value?.length === options.length"
-                (click)="toggleAll()">
-                <span class="cps-select-options-option-left">
-                  @if (multiple) {
-                    <span class="cps-select-options-option-check">
-                    </span>
-                  }
-                  <span class="cps-select-options-option-label">Select all</span>
+                      | combineLabels
+                        : options
+                        : optionValue
+                        : optionLabel
+                        : returnObject
+                  }}
                 </span>
               </div>
             }
-            @for (item of options; track item) {
-              <ng-container
+            @if (multiple && chips) {
+              <div class="chips-group">
+                @for (val of value; track val) {
+                  <cps-chip
+                    [disabled]="disabled"
+                    [closable]="closableChips"
+                    (closed)="select(val, true)"
+                    [label]="
+                      returnObject
+                        ? val[optionLabel]
+                        : (val
+                          | labelByValue: options : optionValue : optionLabel)
+                    ">
+                  </cps-chip>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <span class="cps-select-box-icons">
+        @if (clearable && !disabled) {
+          <span
+            [style.visibility]="
+              persistentClear ||
+              (!persistentClear &&
+                ((multiple && value?.length) || (!multiple && !isEmptyValue())))
+                ? 'visible'
+                : 'hidden'
+            "
+            class="cps-select-box-clear-icon">
+            <cps-icon
+              icon="delete"
+              size="small"
+              (click)="clear($event)"></cps-icon>
+          </span>
+        }
+        @if (showChevron) {
+          <span class="cps-select-box-chevron">
+            <cps-icon
+              icon="chevron-down"
+              size="small"
+              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
+          </span>
+        }
+      </span>
+    </div>
+
+    <cps-menu
+      #optionsMenu
+      [withArrow]="false"
+      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      hideTransitionOptions="0s linear"
+      [containerClass]="'cps-select-options-menu ' + optionsClass">
+      <div
+        #optionsList
+        class="cps-select-options"
+        [ngStyle]="{
+          width: selectBoxWidth + 'px'
+        }">
+        @if (!virtualScroll) {
+          @if (multiple && selectAll && options.length > 1) {
+            <div
+              class="cps-select-options-option select-all-option"
+              [class.allselected]="value?.length === options.length"
+              (click)="toggleAll()">
+              <span class="cps-select-options-option-left">
+                @if (multiple) {
+                  <span class="cps-select-options-option-check"> </span>
+                }
+                <span class="cps-select-options-option-label">Select all</span>
+              </span>
+            </div>
+          }
+          @for (item of options; track item) {
+            <ng-container
               *ngTemplateOutlet="
                 itemTemplate;
                 context: {
@@ -179,28 +174,28 @@
                     item: item
                   }
                 "></ng-container>
-          </ng-template>
-        </p-virtualscroller>
-      }
-    </div>
-  </cps-menu>
+            </ng-template>
+          </p-virtualscroller>
+        }
+      </div>
+    </cps-menu>
 
-  @if (loading) {
-    <cps-progress-linear
-      height="3"
-      radius="4"
-      opacity="0.3"
-      class="select-progress-bar"
-      bgColor="transparent">
-    </cps-progress-linear>
+    @if (loading) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="select-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
+  </div>
+  @if (!error && !hideDetails) {
+    <div class="cps-select-hint">{{ hint }}</div>
   }
-</div>
-@if (!error && !hideDetails) {
-  <div class="cps-select-hint">{{ hint }}</div>
-}
-@if (error && !hideDetails) {
-  <div class="cps-select-error">{{ error }}</div>
-}
+  @if (error && !hideDetails) {
+    <div class="cps-select-error">{{ error }}</div>
+  }
 </div>
 
 <ng-template #itemTemplate let-item="item">
@@ -218,20 +213,20 @@
         class="cps-select-options-option-label"
         [class.virtual-row]="virtualScroll"
         >{{ item[optionLabel] }}</span
-        >
-      </span>
+      >
+    </span>
 
-      <span
-        class="cps-select-options-option-right"
-        [class.virtual-row]="virtualScroll">
-        {{ item[optionInfo] }}
-        @if (item[optionIcon]) {
-          <cps-icon
-            [icon]="item[optionIcon]"
-            [color]="item[optionIconColor] || 'text-light'"
-            class="cps-select-options-option-right-icon">
-          </cps-icon>
-        }
-      </span>
-    </div>
-  </ng-template>
+    <span
+      class="cps-select-options-option-right"
+      [class.virtual-row]="virtualScroll">
+      {{ item[optionInfo] }}
+      @if (item[optionIcon]) {
+        <cps-icon
+          [icon]="item[optionIcon]"
+          [color]="item[optionIconColor] || 'text-light'"
+          class="cps-select-options-option-right-icon">
+        </cps-icon>
+      }
+    </span>
+  </div>
+</ng-template>

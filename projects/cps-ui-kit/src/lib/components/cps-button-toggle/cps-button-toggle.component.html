@@ -25,8 +25,8 @@
             tooltip: option.tooltip
           }
         "></ng-container>
-  }
-</div>
+    }
+  </div>
 </div>
 
 <ng-template #optionContainerTemplate let-option="option" let-tooltip="tooltip">
@@ -37,25 +37,25 @@
       tooltipCloseDelay="0"
       [tooltipPosition]="optionTooltipPosition">
       <ng-container
-      *ngTemplateOutlet="
-        optionRadioTemplate;
-        context: {
-          option: option
-        }
-      "></ng-container>
-  </label>
-}
-@if (!tooltip) {
-  <label class="cps-btn-toggle-content-option">
-    <ng-container
-      *ngTemplateOutlet="
-        optionRadioTemplate;
-        context: {
-          option: option
-        }
-      "></ng-container>
-</label>
-}
+        *ngTemplateOutlet="
+          optionRadioTemplate;
+          context: {
+            option: option
+          }
+        "></ng-container>
+    </label>
+  }
+  @if (!tooltip) {
+    <label class="cps-btn-toggle-content-option">
+      <ng-container
+        *ngTemplateOutlet="
+          optionRadioTemplate;
+          context: {
+            option: option
+          }
+        "></ng-container>
+    </label>
+  }
 </ng-template>
 
 <ng-template #optionRadioTemplate let-option="option">
@@ -64,9 +64,7 @@
     [type]="!multiple && mandatory ? 'radio' : 'checkbox'"
     [disabled]="option.disabled || disabled"
     [value]="option.value"
-    [checked]="
-      option.value | checkOptionSelected : value : multiple : true : ''
-    "
+    [checked]="option.value | checkOptionSelected: value : multiple : true : ''"
     (change)="updateValueEvent($event, option.value)" />
   <span
     class="cps-btn-toggle-content-option-content"
@@ -74,9 +72,7 @@
       'min-width': largestButtonWidth ? largestButtonWidth + 'px' : 'none'
     }">
     @if (option.icon) {
-      <cps-icon
-        [ngClass]="{ 'me-2': !!option.label }"
-        [icon]="option.icon">
+      <cps-icon [ngClass]="{ 'me-2': !!option.label }" [icon]="option.icon">
       </cps-icon>
     }
     @if (option.label) {

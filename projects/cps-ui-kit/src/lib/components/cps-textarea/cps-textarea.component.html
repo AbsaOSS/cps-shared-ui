@@ -2,8 +2,7 @@
   @if (label) {
     <div
       class="cps-textarea-label"
-      [ngClass]="{ 'cps-textarea-label-disabled': disabled }"
-      >
+      [ngClass]="{ 'cps-textarea-label-disabled': disabled }">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -40,13 +39,13 @@
       }"
       (blur)="onBlur()"
       (focus)="onFocus()"
-    (input)="updateValueEvent($event)"></textarea>
+      (input)="updateValueEvent($event)"></textarea>
 
     @if (clearable && !disabled) {
       <span
-      [style.visibility]="
-        persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
-      "
+        [style.visibility]="
+          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
+        "
         class="clear-btn">
         <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
       </span>

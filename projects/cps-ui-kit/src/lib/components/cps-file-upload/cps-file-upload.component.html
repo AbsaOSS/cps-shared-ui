@@ -22,56 +22,56 @@
       Drag&Drop or choose a file to upload
     </div>
     @if (fileDesc || extensionsStringAsterisks) {
-      <span
-        class="cps-file-upload-dropzone-file-desc"
+      <span class="cps-file-upload-dropzone-file-desc"
         >{{ fileDesc }}
         {{
-        extensionsStringAsterisks ? '(' + extensionsStringAsterisks + ')' : ''
+          extensionsStringAsterisks ? '(' + extensionsStringAsterisks + ')' : ''
         }}</span
-        >
-      }
-      @if(fileInfo) {
-        <div class="cps-file-upload-dropzone-content">
-          <cps-icon color="calm" icon="info-circle" size="xsmall"></cps-icon>
-          {{fileInfo}}
-        </div>
-      }
-      @if (isProcessingFile && uploadedFile) {
-        <cps-progress-linear
-          height="3"
-          radius="4"
-          opacity="0.3"
-          class="cps-file-upload-progress-bar"
-          bgColor="transparent">
-        </cps-progress-linear>
-      }
-    </div>
-    @if (uploadedFile) {
-      <div class="cps-file-upload-uploaded-files">
-        <div class="cps-file-upload-uploaded-file">
-          <div class="cps-file-upload-uploaded-file-title">
-            <cps-icon
-              class="cps-file-upload-uploaded-file-status-icon"
-              [icon]="isProcessingFile ? 'pending' : 'toast-success'"
-              [color]="isProcessingFile ? 'warn' : 'success'">
-            </cps-icon>
-            <div class="cps-file-upload-uploaded-file-name"
-              cpsTooltip="{{ uploadedFile.name }}"
-              [tooltipPosition]="fileNameTooltipPosition"
-              [tooltipOffset]="fileNameTooltipOffset"
-              tooltipOpenOn="hover">
-              {{ uploadedFile.name }}
-            </div>
-          </div>
-          @if (!isProcessingFile) {
-            <cps-icon
-              class="cps-file-upload-uploaded-file-remove-icon"
-              icon="remove"
-              color="error"
-              (click)="removeUploadedFile()">
-            </cps-icon>
-          }
-        </div>
+      >
+    }
+    @if (fileInfo) {
+      <div class="cps-file-upload-dropzone-content">
+        <cps-icon color="calm" icon="info-circle" size="xsmall"></cps-icon>
+        {{ fileInfo }}
       </div>
     }
+    @if (isProcessingFile && uploadedFile) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="cps-file-upload-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
   </div>
+  @if (uploadedFile) {
+    <div class="cps-file-upload-uploaded-files">
+      <div class="cps-file-upload-uploaded-file">
+        <div class="cps-file-upload-uploaded-file-title">
+          <cps-icon
+            class="cps-file-upload-uploaded-file-status-icon"
+            [icon]="isProcessingFile ? 'pending' : 'toast-success'"
+            [color]="isProcessingFile ? 'warn' : 'success'">
+          </cps-icon>
+          <div
+            class="cps-file-upload-uploaded-file-name"
+            cpsTooltip="{{ uploadedFile.name }}"
+            [tooltipPosition]="fileNameTooltipPosition"
+            [tooltipOffset]="fileNameTooltipOffset"
+            tooltipOpenOn="hover">
+            {{ uploadedFile.name }}
+          </div>
+        </div>
+        @if (!isProcessingFile) {
+          <cps-icon
+            class="cps-file-upload-uploaded-file-remove-icon"
+            icon="remove"
+            color="error"
+            (click)="removeUploadedFile()">
+          </cps-icon>
+        }
+      </div>
+    </div>
+  }
+</div>

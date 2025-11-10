@@ -1,6 +1,8 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <h2 class="section-title">File upload component with the dependency on selected file extension</h2>
+  <h2 class="section-title">
+    File upload component with the dependency on selected file extension
+  </h2>
   <div>
     <p>
       <cps-button-toggle
@@ -9,7 +11,7 @@
         [value]="selectedFileUploadType.value"
         (valueChanged)="onFileExtensionChanged($event)">
       </cps-button-toggle>
-      <br/>
+      <br />
       <cps-file-upload
         [extensions]="[selectedFileUploadType.value]"
         [fileDesc]="selectedFileUploadType!.label || ''"
@@ -23,7 +25,7 @@
     </p>
   </div>
 
-  <cps-divider/>
+  <cps-divider />
 
   <h2 class="section-title">File upload component with extra info</h2>
   <div>
@@ -41,5 +43,4 @@
       </cps-file-upload>
     </p>
   </div>
-
 </app-component-docs-viewer>

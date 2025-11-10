@@ -9,36 +9,33 @@
     (beforeMenuHidden)="onBeforeMenuHidden()">
     <div class="cps-table-col-filter-menu-content">
       @if (showCloseButton || headerTitle) {
-        <div
-          class="cps-table-col-filter-menu-content-header"
-          >
+        <div class="cps-table-col-filter-menu-content-header">
           <span class="cps-table-col-filter-menu-content-header-title">
             {{ headerTitle }}
           </span>
           @if (showCloseButton) {
-            <cps-icon
-              icon="close-x"
-            (click)="onCloseClick()"></cps-icon>
+            <cps-icon icon="close-x" (click)="onCloseClick()"></cps-icon>
           }
         </div>
       }
       @if (isShowOperator) {
-        <div
-          class="cps-table-col-filter-menu-content-operator"
-          >
+        <div class="cps-table-col-filter-menu-content-operator">
           <cps-select
             [hideDetails]="true"
             [disabled]="!fieldConstraints || fieldConstraints.length < 2"
             [returnObject]="false"
             [options]="operatorOptions"
             [ngModel]="operator"
-          (valueChanged)="onOperatorChange($event)"></cps-select>
+            (valueChanged)="onOperatorChange($event)"></cps-select>
         </div>
       }
       <div class="cps-table-col-filter-menu-content-constraints">
-        @for (fieldConstraint of fieldConstraints; track fieldConstraint; let i = $index) {
-          <div
-            class="cps-table-col-filter-menu-content-constraint">
+        @for (
+          fieldConstraint of fieldConstraints;
+          track fieldConstraint;
+          let i = $index
+        ) {
+          <div class="cps-table-col-filter-menu-content-constraint">
             @if (showMatchModes && currentMatchModes) {
               <cps-select
                 class="cps-table-col-filter-match-mode-select"
@@ -46,9 +43,9 @@
                 [returnObject]="false"
                 [options]="currentMatchModes"
                 [ngModel]="fieldConstraint.matchMode"
-            (valueChanged)="
-              onMenuMatchModeChange($event, fieldConstraint)
-            "></cps-select>
+                (valueChanged)="
+                  onMenuMatchModeChange($event, fieldConstraint)
+                "></cps-select>
             }
             <table-column-filter-constraint
               #constraintComponent
@@ -62,9 +59,7 @@
               [placeholder]="placeholder">
             </table-column-filter-constraint>
             @if (showRemoveIcon) {
-              <div
-                class="cps-table-col-filter-remove-rule-btn"
-                >
+              <div class="cps-table-col-filter-remove-rule-btn">
                 <cps-button
                   type="borderless"
                   width="100%"
@@ -80,9 +75,7 @@
         }
       </div>
       @if (isShowAddConstraint) {
-        <div
-          class="cps-table-col-filter-add-rule-btn"
-          >
+        <div class="cps-table-col-filter-add-rule-btn">
           <cps-button
             label="Add condition"
             type="borderless"
@@ -101,14 +94,14 @@
             type="borderless"
             color="prepared"
             size="small"
-          label="Clear"></cps-button>
+            label="Clear"></cps-button>
         }
         @if (showApplyButton) {
           <cps-button
             (clicked)="applyFilter()"
             color="prepared"
             size="small"
-          label="Apply"></cps-button>
+            label="Apply"></cps-button>
         }
       </div>
     </div>

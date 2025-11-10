@@ -4,77 +4,77 @@
     [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
     [class]="containerClass"
     (mousedown)="onOverlayClick($event)"
-  [@animation]="{
-    value: overlayVisible ? 'open' : 'close',
-    params: {
-      showTransitionParams: showTransitionOptions,
-      hideTransitionParams: hideTransitionOptions
-    }
-  }"
-  (@animation.start)="onAnimationStart($event)"
-  (@animation.done)="onAnimationEnd($event)">
-  <div (mousedown)="onContentClick()">
-    @if (items.length < 1) {
-      <ng-content></ng-content>
-    }
-    @if (items.length > 0) {
-      <div
-        class="cps-menu-content"
-        [ngClass]="{ 'cps-menu-content-compressed': compressed }">
-        @if (header && !compressed) {
-          <div class="cps-menu-header">
-            {{ header }}
-          </div>
-        }
-        @for (item of items; track item; let i = $index) {
-          @if (!item.url) {
-            <a
-              (click)="onItemClick($event, item)"
-              [ngClass]="itemsClasses[i]">
-              <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-          </a>
-        }
-        @if (item.url && item.url.startsWith('/')) {
-          <a
-            (click)="onItemClick($event, item)"
-            [routerLink]="item.url"
-            [target]="item.target"
-            [ngClass]="itemsClasses[i]">
-            <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-        </a>
+    [@animation]="{
+      value: overlayVisible ? 'open' : 'close',
+      params: {
+        showTransitionParams: showTransitionOptions,
+        hideTransitionParams: hideTransitionOptions
       }
-      @if (item.url && !item.url.startsWith('/')) {
-        <a
-          (click)="onItemClick($event, item)"
-          [href]="item.url"
-          [attr.target]="item.target"
-          [ngClass]="itemsClasses[i]">
-          <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-      </a>
-    }
-  }
-</div>
-}
-</div>
-</div>
+    }"
+    (@animation.start)="onAnimationStart($event)"
+    (@animation.done)="onAnimationEnd($event)">
+    <div (mousedown)="onContentClick()">
+      @if (items.length < 1) {
+        <ng-content></ng-content>
+      }
+      @if (items.length > 0) {
+        <div
+          class="cps-menu-content"
+          [ngClass]="{ 'cps-menu-content-compressed': compressed }">
+          @if (header && !compressed) {
+            <div class="cps-menu-header">
+              {{ header }}
+            </div>
+          }
+          @for (item of items; track item; let i = $index) {
+            @if (!item.url) {
+              <a
+                (click)="onItemClick($event, item)"
+                [ngClass]="itemsClasses[i]">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item
+                    }
+                  "></ng-container>
+              </a>
+            }
+            @if (item.url && item.url.startsWith('/')) {
+              <a
+                (click)="onItemClick($event, item)"
+                [routerLink]="item.url"
+                [target]="item.target"
+                [ngClass]="itemsClasses[i]">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item
+                    }
+                  "></ng-container>
+              </a>
+            }
+            @if (item.url && !item.url.startsWith('/')) {
+              <a
+                (click)="onItemClick($event, item)"
+                [href]="item.url"
+                [attr.target]="item.target"
+                [ngClass]="itemsClasses[i]">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item
+                    }
+                  "></ng-container>
+              </a>
+            }
+          }
+        </div>
+      }
+    </div>
+  </div>
 }
 
 <ng-template #itemTemplate let-item="item">
@@ -85,27 +85,23 @@
           <cps-icon
             [icon]="item.icon"
             [color]="item.disabled ? 'text-light' : 'text-dark'"
-          [size]="compressed ? 'small' : 'normal'"></cps-icon>
+            [size]="compressed ? 'small' : 'normal'"></cps-icon>
         }
       </div>
     }
     <div class="cps-menu-item-content">
       <span class="cps-menu-item-content-title">{{ item.title }}</span>
       @if (item.desc && !compressed) {
-        <span
-          class="cps-menu-item-content-desc"
-          >{{ item.desc }}</span
-          >
-        }
-      </div>
-    } @else {
-      <span class="cps-menu-item-spinner">
-        <cps-progress-circular
-          [strokeWidth]="2"
-          [color]="compressed ? 'prepared' : 'calm'"
-          [diameter]="16">
-        </cps-progress-circular>
-      </span>
-    }
-  </ng-template>
-
+        <span class="cps-menu-item-content-desc">{{ item.desc }}</span>
+      }
+    </div>
+  } @else {
+    <span class="cps-menu-item-spinner">
+      <cps-progress-circular
+        [strokeWidth]="2"
+        [color]="compressed ? 'prepared' : 'calm'"
+        [diameter]="16">
+      </cps-progress-circular>
+    </span>
+  }
+</ng-template>

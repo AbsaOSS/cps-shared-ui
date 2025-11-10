@@ -2,8 +2,7 @@
   @if (label) {
     <div
       class="cps-timepicker-label"
-      [ngClass]="{ 'cps-timepicker-label-disabled': disabled }"
-      >
+      [ngClass]="{ 'cps-timepicker-label-disabled': disabled }">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -37,7 +36,7 @@
       [value]="value?.hours"
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
-    placeholder="HH"></cps-autocomplete>
+      placeholder="HH"></cps-autocomplete>
     <span class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
@@ -55,7 +54,7 @@
       [value]="value?.minutes"
       (valueChanged)="updateMinutes($event)"
       [externalError]="minutesError"
-    placeholder="MM"></cps-autocomplete>
+      placeholder="MM"></cps-autocomplete>
     @if (withSeconds) {
       <span class="cps-timepicker-delimiter">:</span>
     }
@@ -76,7 +75,7 @@
         [value]="value?.seconds"
         (valueChanged)="updateSeconds($event)"
         [externalError]="secondsError"
-      placeholder="SS"></cps-autocomplete>
+        placeholder="SS"></cps-autocomplete>
     }
     @if (!use24HourTime) {
       <cps-button-toggle
