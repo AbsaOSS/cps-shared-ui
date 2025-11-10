@@ -1,7 +1,7 @@
-@if (option.tooltip) {
+@if (option?.tooltip) {
   <div
     class="cps-radio-group-content-button"
-    [cpsTooltip]="option.tooltip"
+    [cpsTooltip]="option?.tooltip || ''"
     tooltipCloseDelay="0"
     tooltipPosition="bottom">
     <ng-container

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -77,7 +76,6 @@ enum Months {
 @Component({
   selector: 'cps-scheduler',
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     CpsButtonToggleComponent,

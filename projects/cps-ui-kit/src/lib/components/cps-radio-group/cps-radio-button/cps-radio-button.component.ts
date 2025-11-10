@@ -22,7 +22,7 @@ export class CpsRadioButtonComponent {
    * An option.
    * @group Props
    */
-  @Input() option!: CpsRadioOption;
+  @Input() option?: CpsRadioOption;
 
   /**
    * Determines whether the radio button is checked.
@@ -63,8 +63,8 @@ export class CpsRadioButtonComponent {
 
   updateValue(event: Event): void {
     event.preventDefault();
-    if (this.option.disabled) return;
-    this.updateValueEvent.emit(this.option.value);
+    if (this.option?.disabled) return;
+    this.updateValueEvent.emit(this.option?.value);
   }
 
   onBlur() {

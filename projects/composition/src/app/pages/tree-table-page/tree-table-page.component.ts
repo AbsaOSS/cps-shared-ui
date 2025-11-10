@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   CpsTreeTableComponent,
@@ -19,11 +18,12 @@ import {
 
 import ComponentData from '../../api-data/cps-tree-table.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-tree-table-page',
   imports: [
-    CommonModule,
+    DatePipe,
     FormsModule,
     CpsTreeTableComponent,
     CpsTreetableRowTogglerDirective,
