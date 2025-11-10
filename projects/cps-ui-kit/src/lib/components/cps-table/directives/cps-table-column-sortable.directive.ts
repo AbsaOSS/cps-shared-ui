@@ -33,9 +33,9 @@ export class CpsTableColumnSortableDirective
   constructor(
     private elementRef: ElementRef,
     private viewContainerRef: ViewContainerRef,
-    public override dt: Table
+    public override dataTable: Table
   ) {
-    super(dt);
+    super(dataTable);
     this.sortIconRef =
       this.viewContainerRef.createComponent(CpsSortIconComponent);
   }
