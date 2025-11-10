@@ -39,13 +39,13 @@
                       <a
                         *ngIf="
                           prop.type | detectType: TypesMap as type;
-                          else simpleType
+                          else simpleType1
                         "
                         [routerLink]="'/' + TypesMap[type] + '/api'"
                         fragment="{{ type }}"
                         >{{ prop.type }}</a
                       >
-                      <ng-template #simpleType>
+                      <ng-template #simpleType1>
                         <span>{{ prop.type }}</span>
                       </ng-template>
                     </td>
@@ -81,13 +81,13 @@
                           *ngIf="
                             event.parameters[0].type
                               | detectType: TypesMap as type;
-                            else simpleType
+                            else simpleType2
                           "
                           [routerLink]="'/' + TypesMap[type] + '/api'"
                           fragment="{{ type }}"
                           >{{ event.parameters[0].type }}</a
                         >
-                        <ng-template #simpleType>
+                        <ng-template #simpleType2>
                           <span>{{ event.parameters[0].type }}</span>
                         </ng-template>
                       </td>
@@ -163,13 +163,13 @@
                     <a
                       *ngIf="
                         prop.type | detectType: TypesMap as type;
-                        else simpleType
+                        else simpleType3
                       "
                       [routerLink]="'/' + TypesMap[type] + '/api'"
                       fragment="{{ type }}"
                       >{{ prop.type }}</a
                     >
-                    <ng-template #simpleType>
+                    <ng-template #simpleType3>
                       <span>{{ prop.type }}</span>
                     </ng-template>
                   </td>

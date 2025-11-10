@@ -43,13 +43,13 @@
                           <a
                             *ngIf="
                               param.type | detectType: TypesMap as type;
-                              else simpleType
+                              else simpleType1
                             "
                             [routerLink]="'/' + TypesMap[type] + '/api'"
                             fragment="{{ type }}">
                             {{ param.type }}
                           </a>
-                          <ng-template #simpleType>
+                          <ng-template #simpleType1>
                             <span>{{ param.type }}</span>
                           </ng-template>
                         </span>
@@ -62,13 +62,13 @@
                     <a
                       *ngIf="
                         method.returnType | detectType: TypesMap as type;
-                        else simpleType
+                        else simpleType2
                       "
                       [routerLink]="'/' + TypesMap[type] + '/api'"
                       fragment="{{ type }}"
                       >{{ method.returnType }}</a
                     >
-                    <ng-template #simpleType>
+                    <ng-template #simpleType2>
                       <span>{{ method.returnType }}</span>
                     </ng-template>
                   </td>
@@ -140,13 +140,13 @@
                     <a
                       *ngIf="
                         prop.type | detectType: TypesMap as type;
-                        else simpleType
+                        else simpleType3
                       "
                       [routerLink]="'/' + TypesMap[type] + '/api'"
                       fragment="{{ type }}"
                       >{{ prop.type }}</a
                     >
-                    <ng-template #simpleType>
+                    <ng-template #simpleType3>
                       <span>{{ prop.type }}</span>
                     </ng-template>
                   </td>
