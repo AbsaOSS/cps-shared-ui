@@ -1,17 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponetnData from '../../api-data/cps-menu.json';
 @Component({
   selector: 'app-menu-page',
-  imports: [
-    CommonModule,
-    CpsMenuComponent,
-    CpsButtonComponent,
-    ComponentDocsViewerComponent
-  ],
+  imports: [CpsMenuComponent, CpsButtonComponent, ComponentDocsViewerComponent],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],
   host: { class: 'composition-page' }

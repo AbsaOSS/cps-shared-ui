@@ -13,16 +13,18 @@
       icon="avatar"
       iconColor="success"></cps-chip>
     <div>
-      <cps-chip
-        *ngIf="!chipClosed"
-        label="Closable chip"
-        [closable]="true"
-        (closed)="onToggleChip()"></cps-chip>
-      <cps-button
-        *ngIf="chipClosed"
-        label="Reset chip"
-        (clicked)="onToggleChip()"
-        size="xsmall"></cps-button>
+      @if (!chipClosed) {
+        <cps-chip
+          label="Closable chip"
+          [closable]="true"
+          (closed)="onToggleChip()"></cps-chip>
+      }
+      @if (chipClosed) {
+        <cps-button
+          label="Reset chip"
+          (clicked)="onToggleChip()"
+          size="xsmall"></cps-button>
+      }
     </div>
   </div>
 </app-component-docs-viewer>

@@ -46,235 +46,270 @@
   (onSort)="onSort($event)"
   (onFilter)="onFilter($event)"
   (onRowReorder)="onRowReorder($event)">
-  <ng-template pTemplate="caption" *ngIf="hasToolbar">
-    <ng-container *ngIf="toolbarTemplate">
-      <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
-    </ng-container>
-    <ng-container *ngIf="!toolbarTemplate">
-      <div class="cps-table-tbar-left">
-        <div *ngIf="toolbarIcon" class="cps-table-tbar-icon">
-          <cps-icon [icon]="toolbarIcon" [color]="toolbarIconColor"></cps-icon>
-        </div>
-        <div class="cps-table-tbar-title">{{ toolbarTitle }}</div>
-        <div *ngIf="showGlobalFilter" class="cps-table-tbar-global-filter">
-          <cps-input
-            #globalFilterComp
-            prefixIcon="search"
-            [placeholder]="globalFilterPlaceholder"
-            (valueChanged)="onFilterGlobal($event)"
-            [clearable]="true"
-            [disabled]="loading"
-            [appearance]="toolbarSize === 'small' ? 'underlined' : 'outlined'"
-            [hideDetails]="true">
-          </cps-input>
-        </div>
-      </div>
-      <div class="cps-table-tbar-right">
-        <div
-          *ngIf="showRemoveBtnOnSelect && selectedRows.length > 0"
-          class="cps-table-tbar-btn-on-select">
-          <cps-button
-            label="Remove"
-            [disabled]="removeBtnOnSelectDisabled"
-            color="prepared"
-            type="borderless"
-            icon="remove"
-            [size]="toolbarSize"
-            (clicked)="removeSelected()">
-          </cps-button>
-        </div>
-        <div
-          *ngIf="showAdditionalBtnOnSelect && selectedRows.length > 0"
-          class="cps-table-tbar-btn-on-select">
-          <cps-button
-            [label]="additionalBtnOnSelectTitle"
-            [disabled]="additionalBtnOnSelectDisabled"
-            color="prepared"
-            type="borderless"
-            [icon]="additionalBtnOnSelectIcon"
-            [size]="toolbarSize"
-            (clicked)="onClickAdditionalBtnOnSelect()">
-          </cps-button>
-        </div>
-        <div *ngIf="showActionBtn" class="cps-table-tbar-action-btn">
-          <cps-button
-            [label]="actionBtnTitle"
-            [disabled]="actionBtnDisabled"
-            color="prepared"
-            type="outlined"
-            [icon]="actionBtnIcon"
-            [size]="toolbarSize"
-            (clicked)="onClickActionBtn()">
-          </cps-button>
-        </div>
-        <div
-          *ngIf="showColumnsToggleBtn && columns.length > 0"
-          class="cps-table-tbar-coltoggle-btn"
-          [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">
-          <cps-icon
-            icon="columns"
-            size="normal"
-            [color]="
-              columnsToggleBtnDisabled ? 'text-lightest' : 'prepared-lighten1'
-            "
-            (click)="onColumnsToggle($event)"></cps-icon>
-          <cps-menu #colToggleMenu [withArrow]="false">
-            <div class="cps-table-coltoggle-menu">
-              <div
-                class="cps-table-coltoggle-menu-item select-all-option"
-                [class.allselected]="selectedColumns.length === columns.length"
-                (click)="toggleAllColumns()">
-                <span class="cps-table-coltoggle-menu-item-left">
-                  <span class="cps-table-coltoggle-menu-item-check"> </span>
-                  <span class="cps-table-coltoggle-menu-item-label"
-                    >Show all columns</span
-                  >
-                </span>
-              </div>
-              <div
-                *ngFor="let col of columns"
-                class="cps-table-coltoggle-menu-item"
-                (click)="onSelectColumn(col)"
-                [class.selected]="isColumnSelected(col)">
-                <span class="cps-table-coltoggle-menu-item-left">
-                  <span class="cps-table-coltoggle-menu-item-check"></span>
-                  <span class="cps-table-coltoggle-menu-item-label">{{
-                    col[colHeaderName]
-                  }}</span>
-                </span>
-              </div>
+  @if (hasToolbar) {
+    <ng-template pTemplate="caption">
+      @if (toolbarTemplate) {
+        <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
+      }
+      @if (!toolbarTemplate) {
+        <div class="cps-table-tbar-left">
+          @if (toolbarIcon) {
+            <div class="cps-table-tbar-icon">
+              <cps-icon
+                [icon]="toolbarIcon"
+                [color]="toolbarIconColor"></cps-icon>
             </div>
-          </cps-menu>
+          }
+          <div class="cps-table-tbar-title">{{ toolbarTitle }}</div>
+          @if (showGlobalFilter) {
+            <div class="cps-table-tbar-global-filter">
+              <cps-input
+                #globalFilterComp
+                prefixIcon="search"
+                [placeholder]="globalFilterPlaceholder"
+                (valueChanged)="onFilterGlobal($event)"
+                [clearable]="true"
+                [disabled]="loading"
+                [appearance]="
+                  toolbarSize === 'small' ? 'underlined' : 'outlined'
+                "
+                [hideDetails]="true">
+              </cps-input>
+            </div>
+          }
         </div>
-        <div
-          *ngIf="showExportBtn"
-          class="cps-table-tbar-export-btn"
-          [ngClass]="{ 'btn-disabled': exportBtnDisabled }">
-          <cps-icon
-            icon="export"
-            size="20"
-            [color]="exportBtnDisabled ? 'text-light' : 'prepared-lighten1'"
-            (click)="onExportData($event)"></cps-icon>
-          <cps-menu
-            #exportMenu
-            [items]="exportMenuItems"
-            [compressed]="true"
-            [withArrow]="false">
-          </cps-menu>
+        <div class="cps-table-tbar-right">
+          @if (showRemoveBtnOnSelect && selectedRows.length > 0) {
+            <div class="cps-table-tbar-btn-on-select">
+              <cps-button
+                label="Remove"
+                [disabled]="removeBtnOnSelectDisabled"
+                color="prepared"
+                type="borderless"
+                icon="remove"
+                [size]="toolbarSize"
+                (clicked)="removeSelected()">
+              </cps-button>
+            </div>
+          }
+          @if (showAdditionalBtnOnSelect && selectedRows.length > 0) {
+            <div class="cps-table-tbar-btn-on-select">
+              <cps-button
+                [label]="additionalBtnOnSelectTitle"
+                [disabled]="additionalBtnOnSelectDisabled"
+                color="prepared"
+                type="borderless"
+                [icon]="additionalBtnOnSelectIcon"
+                [size]="toolbarSize"
+                (clicked)="onClickAdditionalBtnOnSelect()">
+              </cps-button>
+            </div>
+          }
+          @if (showActionBtn) {
+            <div class="cps-table-tbar-action-btn">
+              <cps-button
+                [label]="actionBtnTitle"
+                [disabled]="actionBtnDisabled"
+                color="prepared"
+                type="outlined"
+                [icon]="actionBtnIcon"
+                [size]="toolbarSize"
+                (clicked)="onClickActionBtn()">
+              </cps-button>
+            </div>
+          }
+          @if (showColumnsToggleBtn && columns.length > 0) {
+            <div
+              class="cps-table-tbar-coltoggle-btn"
+              [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">
+              <cps-icon
+                icon="columns"
+                size="normal"
+                [color]="
+                  columnsToggleBtnDisabled
+                    ? 'text-lightest'
+                    : 'prepared-lighten1'
+                "
+                (click)="onColumnsToggle($event)"></cps-icon>
+              <cps-menu #colToggleMenu [withArrow]="false">
+                <div class="cps-table-coltoggle-menu">
+                  <div
+                    class="cps-table-coltoggle-menu-item select-all-option"
+                    [class.allselected]="
+                      selectedColumns.length === columns.length
+                    "
+                    (click)="toggleAllColumns()">
+                    <span class="cps-table-coltoggle-menu-item-left">
+                      <span class="cps-table-coltoggle-menu-item-check"> </span>
+                      <span class="cps-table-coltoggle-menu-item-label"
+                        >Show all columns</span
+                      >
+                    </span>
+                  </div>
+                  @for (col of columns; track col) {
+                    <div
+                      class="cps-table-coltoggle-menu-item"
+                      (click)="onSelectColumn(col)"
+                      [class.selected]="isColumnSelected(col)">
+                      <span class="cps-table-coltoggle-menu-item-left">
+                        <span
+                          class="cps-table-coltoggle-menu-item-check"></span>
+                        <span class="cps-table-coltoggle-menu-item-label">{{
+                          col[colHeaderName]
+                        }}</span>
+                      </span>
+                    </div>
+                  }
+                </div>
+              </cps-menu>
+            </div>
+          }
+          @if (showExportBtn) {
+            <div
+              class="cps-table-tbar-export-btn"
+              [ngClass]="{ 'btn-disabled': exportBtnDisabled }">
+              <cps-icon
+                icon="export"
+                size="20"
+                [color]="exportBtnDisabled ? 'text-light' : 'prepared-lighten1'"
+                (click)="onExportData($event)"></cps-icon>
+              <cps-menu
+                #exportMenu
+                [items]="exportMenuItems"
+                [compressed]="true"
+                [withArrow]="false">
+              </cps-menu>
+            </div>
+          }
+          @if (showDataReloadBtn) {
+            <div
+              class="cps-table-tbar-reload-btn"
+              [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
+              <cps-icon
+                icon="refresh"
+                size="18"
+                [color]="
+                  dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'
+                "
+                (click)="onReloadData()">
+              </cps-icon>
+            </div>
+          }
         </div>
-        <div
-          *ngIf="showDataReloadBtn"
-          class="cps-table-tbar-reload-btn"
-          [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
-          <cps-icon
-            icon="refresh"
-            size="18"
-            [color]="dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'"
-            (click)="onReloadData()">
-          </cps-icon>
-        </div>
-      </div>
-    </ng-container>
-  </ng-template>
+      }
+    </ng-template>
+  }
 
-  <ng-template pTemplate="header" *ngIf="nestedHeaderTemplate" let-columns>
-    <ng-container
-      *ngTemplateOutlet="
-        nestedHeaderTemplate;
-        context: {
-          $implicit: columns
+  @if (nestedHeaderTemplate; as columns) {
+    <ng-template pTemplate="header" let-columns>
+      <ng-container
+        *ngTemplateOutlet="
+          nestedHeaderTemplate;
+          context: {
+            $implicit: columns
+          }
+        "></ng-container>
+    </ng-template>
+  }
+
+  @if (!nestedHeaderTemplate; as columns) {
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        @if (rowExpansionTemplate) {
+          <th
+            style="width: 3rem"
+            cpsTColResizable
+            [cpsTColResizableDisabled]="!resizableColumns"></th>
         }
-      "></ng-container>
-  </ng-template>
-
-  <ng-template pTemplate="header" *ngIf="!nestedHeaderTemplate" let-columns>
-    <tr>
-      <th
-        style="width: 3rem"
-        *ngIf="rowExpansionTemplate"
-        cpsTColResizable
-        [cpsTColResizableDisabled]="!resizableColumns"></th>
-      <th
-        style="width: 3rem"
-        *ngIf="reorderableRows"
-        cpsTColResizable
-        [cpsTColResizableDisabled]="!resizableColumns"></th>
-      <th
-        style="width: 4rem"
-        *ngIf="selectable"
-        cpsTColResizable
-        [cpsTColResizableDisabled]="!resizableColumns">
-        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-      </th>
-      <ng-container *ngIf="headerTemplate">
-        <ng-container
-          *ngTemplateOutlet="
-            headerTemplate;
-            context: {
-              $implicit: columns
+        @if (reorderableRows) {
+          <th
+            style="width: 3rem"
+            cpsTColResizable
+            [cpsTColResizableDisabled]="!resizableColumns"></th>
+        }
+        @if (selectable) {
+          <th
+            style="width: 4rem"
+            cpsTColResizable
+            [cpsTColResizableDisabled]="!resizableColumns">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+        }
+        @if (headerTemplate) {
+          <ng-container
+            *ngTemplateOutlet="
+              headerTemplate;
+              context: {
+                $implicit: columns
+              }
+            "></ng-container>
+        }
+        @if (!headerTemplate && columns.length > 0) {
+          @if (sortable) {
+            @if (filterableByColumns) {
+              @for (col of columns; track col) {
+                <th
+                  [cpsTColSortable]="col[colFieldName]"
+                  [cpsTColFilter]="col[colFieldName]"
+                  [filterType]="
+                    col[colFilterTypeName] ??
+                    (autoColumnFilterType
+                      ? (data | cpsTableDetectFilterType: col[colFieldName])
+                      : 'text')
+                  "
+                  cpsTColResizable
+                  [cpsTColResizableDisabled]="!resizableColumns">
+                  {{ col[colHeaderName] }}
+                </th>
+              }
+            } @else {
+              @for (col of columns; track col) {
+                <th
+                  [cpsTColSortable]="col[colFieldName]"
+                  cpsTColResizable
+                  [cpsTColResizableDisabled]="!resizableColumns">
+                  {{ col[colHeaderName] }}
+                </th>
+              }
             }
-          "></ng-container>
-      </ng-container>
-      <ng-container *ngIf="!headerTemplate && columns.length > 0">
-        <ng-container *ngIf="sortable">
-          @if (filterableByColumns) {
-            <th
-              *ngFor="let col of columns"
-              [cpsTColSortable]="col[colFieldName]"
-              [cpsTColFilter]="col[colFieldName]"
-              [filterType]="
-                col[colFilterTypeName] ??
-                (autoColumnFilterType
-                  ? (data | cpsTableDetectFilterType: col[colFieldName])
-                  : 'text')
-              "
-              cpsTColResizable
-              [cpsTColResizableDisabled]="!resizableColumns">
-              {{ col[colHeaderName] }}
-            </th>
-          } @else {
-            <th
-              *ngFor="let col of columns"
-              [cpsTColSortable]="col[colFieldName]"
-              cpsTColResizable
-              [cpsTColResizableDisabled]="!resizableColumns">
-              {{ col[colHeaderName] }}
-            </th>
           }
-        </ng-container>
-        <ng-container *ngIf="!sortable">
-          @if (filterableByColumns) {
-            <th
-              *ngFor="let col of columns"
-              [cpsTColFilter]="col[colFieldName]"
-              [filterType]="
-                col[colFilterTypeName] ??
-                (autoColumnFilterType
-                  ? (data | cpsTableDetectFilterType: col[colFieldName])
-                  : 'text')
-              "
-              cpsTColResizable
-              [cpsTColResizableDisabled]="!resizableColumns">
-              {{ col[colHeaderName] }}
-            </th>
-          } @else {
-            <th
-              *ngFor="let col of columns"
-              cpsTColResizable
-              [cpsTColResizableDisabled]="!resizableColumns">
-              {{ col[colHeaderName] }}
-            </th>
+          @if (!sortable) {
+            @if (filterableByColumns) {
+              @for (col of columns; track col) {
+                <th
+                  [cpsTColFilter]="col[colFieldName]"
+                  [filterType]="
+                    col[colFilterTypeName] ??
+                    (autoColumnFilterType
+                      ? (data | cpsTableDetectFilterType: col[colFieldName])
+                      : 'text')
+                  "
+                  cpsTColResizable
+                  [cpsTColResizableDisabled]="!resizableColumns">
+                  {{ col[colHeaderName] }}
+                </th>
+              }
+            } @else {
+              @for (col of columns; track col) {
+                <th
+                  cpsTColResizable
+                  [cpsTColResizableDisabled]="!resizableColumns">
+                  {{ col[colHeaderName] }}
+                </th>
+              }
+            }
           }
-        </ng-container>
-      </ng-container>
-      <th
-        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"
-        style="width: 2rem"
-        class="cps-table-row-menu-cell"
-        cpsTColResizable
-        [cpsTColResizableDisabled]="!resizableColumns"></th>
-    </tr>
-  </ng-template>
+        }
+        @if (showRowMenu && (showRowRemoveButton || showRowEditButton)) {
+          <th
+            style="width: 2rem"
+            class="cps-table-row-menu-cell"
+            cpsTColResizable
+            [cpsTColResizableDisabled]="!resizableColumns"></th>
+        }
+      </tr>
+    </ng-template>
+  }
 
   <ng-template
     pTemplate="body"
@@ -288,25 +323,33 @@
       [ngClass]="{
         'cps-table-row-selected': selectable && primengTable.isSelected(item)
       }">
-      <td *ngIf="rowExpansionTemplate" class="cps-table-row-chevron-cell">
-        <div
-          class="cps-table-row-chevron"
-          [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }">
-          <cps-icon
-            icon="chevron-down"
-            size="small"
-            color="text-dark"
-            [pRowToggler]="item">
-          </cps-icon>
-        </div>
-      </td>
-      <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
-        <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
-      </td>
-      <td *ngIf="selectable">
-        <p-tableCheckbox [value]="item"></p-tableCheckbox>
-      </td>
-      <ng-container *ngIf="bodyTemplate">
+      @if (rowExpansionTemplate) {
+        <td class="cps-table-row-chevron-cell">
+          <div
+            class="cps-table-row-chevron"
+            [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }">
+            <cps-icon
+              icon="chevron-down"
+              size="small"
+              color="text-dark"
+              [pRowToggler]="item">
+            </cps-icon>
+          </div>
+        </td>
+      }
+      @if (reorderableRows) {
+        <td class="cps-table-row-drag-handle-cell">
+          <span class="cps-table-row-drag-handle" pReorderableRowHandle
+            >☰</span
+          >
+        </td>
+      }
+      @if (selectable) {
+        <td>
+          <p-tableCheckbox [value]="item"></p-tableCheckbox>
+        </td>
+      }
+      @if (bodyTemplate) {
         <ng-container
           *ngTemplateOutlet="
             bodyTemplate;
@@ -318,50 +361,55 @@
             }
           ">
         </ng-container>
-      </ng-container>
-      <ng-container *ngIf="!bodyTemplate">
-        <ng-container *ngIf="columns.length > 0">
+      }
+      @if (!bodyTemplate) {
+        @if (columns.length > 0) {
           @if (renderDataAsHTML) {
-            <td
-              *ngFor="let col of columns"
-              [innerHTML]="rowData[col[colFieldName]]"></td>
-          } @else {
-            <td *ngFor="let col of columns">
-              {{
-                col[colDateFormatName]
-                  ? (rowData[col[colFieldName]] | date: col[colDateFormatName])
-                  : rowData[col[colFieldName]]
-              }}
-            </td>
-          }
-        </ng-container>
-      </ng-container>
-      <td
-        *ngIf="showRowMenu && (showRowRemoveButton || showRowEditButton)"
-        class="cps-table-row-menu-cell">
-        <table-row-menu
-          (editRowBtnClicked)="onEditRowClicked(item)"
-          (removeRowBtnClicked)="onRemoveRowClicked(item)"
-          [showRowRemoveButton]="showRowRemoveButton"
-          [showRowEditButton]="showRowEditButton"
-          [customItems]="rowMenuItems">
-        </table-row-menu>
-      </td>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="rowexpansion" *ngIf="rowExpansionTemplate" let-item>
-    <tr class="cps-table-row-expanded-content">
-      <td colspan="100">
-        <ng-container
-          *ngTemplateOutlet="
-            rowExpansionTemplate;
-            context: {
-              $implicit: item
+            @for (col of columns; track col) {
+              <td [innerHTML]="rowData[col[colFieldName]]"></td>
             }
-          "></ng-container>
-      </td>
+          } @else {
+            @for (col of columns; track col) {
+              <td>
+                {{
+                  col[colDateFormatName]
+                    ? (rowData[col[colFieldName]]
+                      | date: col[colDateFormatName])
+                    : rowData[col[colFieldName]]
+                }}
+              </td>
+            }
+          }
+        }
+      }
+      @if (showRowMenu && (showRowRemoveButton || showRowEditButton)) {
+        <td class="cps-table-row-menu-cell">
+          <table-row-menu
+            (editRowBtnClicked)="onEditRowClicked(item)"
+            (removeRowBtnClicked)="onRemoveRowClicked(item)"
+            [showRowRemoveButton]="showRowRemoveButton"
+            [showRowEditButton]="showRowEditButton"
+            [customItems]="rowMenuItems">
+          </table-row-menu>
+        </td>
+      }
     </tr>
   </ng-template>
+  @if (rowExpansionTemplate; as item) {
+    <ng-template pTemplate="rowexpansion" let-item>
+      <tr class="cps-table-row-expanded-content">
+        <td colspan="100">
+          <ng-container
+            *ngTemplateOutlet="
+              rowExpansionTemplate;
+              context: {
+                $implicit: item
+              }
+            "></ng-container>
+        </td>
+      </tr>
+    </ng-template>
+  }
   <ng-template pTemplate="emptymessage">
     <tr>
       <td

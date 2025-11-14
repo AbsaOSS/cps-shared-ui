@@ -4,7 +4,9 @@
     <cps-button
       label="Toggle fullscreen loader"
       (clicked)="onFullScreenClick()"></cps-button>
-    <cps-loader *ngIf="fullScreenOpened" [fullScreen]="true"></cps-loader>
+    @if (fullScreenOpened) {
+      <cps-loader [fullScreen]="true"></cps-loader>
+    }
 
     <div>
       <span class="loaders-group-label">Relative loader</span>

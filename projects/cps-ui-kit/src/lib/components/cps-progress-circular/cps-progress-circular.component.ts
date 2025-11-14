@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -8,7 +8,7 @@ import { getCSSColor } from '../../utils/colors-utils';
  * @group Components
  */
 @Component({
-  imports: [CommonModule],
+  imports: [],
   selector: 'cps-progress-circular',
   templateUrl: './cps-progress-circular.component.html',
   styleUrls: ['./cps-progress-circular.component.scss']

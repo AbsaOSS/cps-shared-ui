@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { CpsButtonComponent, CpsLoaderComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -7,7 +6,6 @@ import ComponentData from '../../api-data/cps-loader.json';
 
 @Component({
   imports: [
-    CommonModule,
     CpsLoaderComponent,
     CpsButtonComponent,
     ComponentDocsViewerComponent

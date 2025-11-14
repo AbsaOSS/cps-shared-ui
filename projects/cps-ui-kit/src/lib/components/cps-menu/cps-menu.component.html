@@ -1,102 +1,107 @@
-<div
-  *ngIf="render"
-  class="cps-menu-container"
-  [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
-  [class]="containerClass"
-  (mousedown)="onOverlayClick($event)"
-  [@animation]="{
-    value: overlayVisible ? 'open' : 'close',
-    params: {
-      showTransitionParams: showTransitionOptions,
-      hideTransitionParams: hideTransitionOptions
-    }
-  }"
-  (@animation.start)="onAnimationStart($event)"
-  (@animation.done)="onAnimationEnd($event)">
-  <div (mousedown)="onContentClick()">
-    <ng-container *ngIf="items.length < 1">
-      <ng-content></ng-content>
-    </ng-container>
-    <div
-      *ngIf="items.length > 0"
-      class="cps-menu-content"
-      [ngClass]="{ 'cps-menu-content-compressed': compressed }">
-      <div *ngIf="header && !compressed" class="cps-menu-header">
-        {{ header }}
-      </div>
-
-      <ng-container *ngFor="let item of items; let i = index">
-        <a
-          *ngIf="!item.url"
-          (click)="onItemClick($event, item)"
-          [ngClass]="itemsClasses[i]">
-          <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-        </a>
-        <a
-          *ngIf="item.url && item.url.startsWith('/')"
-          (click)="onItemClick($event, item)"
-          [routerLink]="item.url"
-          [target]="item.target"
-          [ngClass]="itemsClasses[i]">
-          <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-        </a>
-        <a
-          *ngIf="item.url && !item.url.startsWith('/')"
-          (click)="onItemClick($event, item)"
-          [href]="item.url"
-          [attr.target]="item.target"
-          [ngClass]="itemsClasses[i]">
-          <ng-container
-            *ngTemplateOutlet="
-              itemTemplate;
-              context: {
-                item: item
-              }
-            "></ng-container>
-        </a>
-      </ng-container>
+@if (render) {
+  <div
+    class="cps-menu-container"
+    [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
+    [class]="containerClass"
+    (mousedown)="onOverlayClick($event)"
+    [@animation]="{
+      value: overlayVisible ? 'open' : 'close',
+      params: {
+        showTransitionParams: showTransitionOptions,
+        hideTransitionParams: hideTransitionOptions
+      }
+    }"
+    (@animation.start)="onAnimationStart($event)"
+    (@animation.done)="onAnimationEnd($event)">
+    <div (mousedown)="onContentClick()">
+      @if (items.length < 1) {
+        <ng-content></ng-content>
+      }
+      @if (items.length > 0) {
+        <div
+          class="cps-menu-content"
+          [ngClass]="{ 'cps-menu-content-compressed': compressed }">
+          @if (header && !compressed) {
+            <div class="cps-menu-header">
+              {{ header }}
+            </div>
+          }
+          @for (item of items; track item; let i = $index) {
+            @if (!item.url) {
+              <a
+                (click)="onItemClick($event, item)"
+                [ngClass]="itemsClasses[i]">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item
+                    }
+                  "></ng-container>
+              </a>
+            }
+            @if (item.url && item.url.startsWith('/')) {
+              <a
+                (click)="onItemClick($event, item)"
+                [routerLink]="item.url"
+                [target]="item.target"
+                [ngClass]="itemsClasses[i]">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item
+                    }
+                  "></ng-container>
+              </a>
+            }
+            @if (item.url && !item.url.startsWith('/')) {
+              <a
+                (click)="onItemClick($event, item)"
+                [href]="item.url"
+                [attr.target]="item.target"
+                [ngClass]="itemsClasses[i]">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item
+                    }
+                  "></ng-container>
+              </a>
+            }
+          }
+        </div>
+      }
     </div>
   </div>
-</div>
+}
 
 <ng-template #itemTemplate let-item="item">
-  <ng-container *ngIf="!item.loading; else spinnerMenuItem">
-    <div class="cps-menu-item-icon" *ngIf="withIcons">
-      <cps-icon
-        *ngIf="item.icon"
-        [icon]="item.icon"
-        [color]="item.disabled ? 'text-light' : 'text-dark'"
-        [size]="compressed ? 'small' : 'normal'"></cps-icon>
-    </div>
+  @if (!item.loading) {
+    @if (withIcons) {
+      <div class="cps-menu-item-icon">
+        @if (item.icon) {
+          <cps-icon
+            [icon]="item.icon"
+            [color]="item.disabled ? 'text-light' : 'text-dark'"
+            [size]="compressed ? 'small' : 'normal'"></cps-icon>
+        }
+      </div>
+    }
     <div class="cps-menu-item-content">
       <span class="cps-menu-item-content-title">{{ item.title }}</span>
-      <span
-        *ngIf="item.desc && !compressed"
-        class="cps-menu-item-content-desc"
-        >{{ item.desc }}</span
-      >
+      @if (item.desc && !compressed) {
+        <span class="cps-menu-item-content-desc">{{ item.desc }}</span>
+      }
     </div>
-  </ng-container>
-</ng-template>
-
-<ng-template #spinnerMenuItem>
-  <span class="cps-menu-item-spinner">
-    <cps-progress-circular
-      [strokeWidth]="2"
-      [color]="compressed ? 'prepared' : 'calm'"
-      [diameter]="16">
-    </cps-progress-circular>
-  </span>
+  } @else {
+    <span class="cps-menu-item-spinner">
+      <cps-progress-circular
+        [strokeWidth]="2"
+        [color]="compressed ? 'prepared' : 'calm'"
+        [diameter]="16">
+      </cps-progress-circular>
+    </span>
+  }
 </ng-template>

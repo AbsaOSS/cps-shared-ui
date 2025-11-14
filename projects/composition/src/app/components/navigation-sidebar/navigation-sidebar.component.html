@@ -1,13 +1,14 @@
 <div class="sidebar" [ngClass]="{ 'sidebar-collapsed': !isExpanded }">
   <div class="list">
     <h3 class="list-title">Styles</h3>
-    <a
-      *ngFor="let style of styles"
-      class="list-item"
-      [routerLink]="[style.url]"
-      routerLinkActive="_active"
-      >{{ style.title }}</a
-    >
+    @for (style of styles; track style) {
+      <a
+        class="list-item"
+        [routerLink]="[style.url]"
+        routerLinkActive="_active"
+        >{{ style.title }}</a
+      >
+    }
   </div>
   <div class="list">
     <h3 class="list-title">Components</h3>
@@ -20,13 +21,14 @@
       [clearable]="true"
       [hideDetails]="true">
     </cps-input>
-    <a
-      *ngFor="let comp of filteredComponents"
-      class="list-item"
-      (click)="onComponentSelect()"
-      [routerLink]="[comp.url]"
-      routerLinkActive="_active"
-      >{{ comp.title }}</a
-    >
+    @for (comp of filteredComponents; track comp) {
+      <a
+        class="list-item"
+        (click)="onComponentSelect()"
+        [routerLink]="[comp.url]"
+        routerLinkActive="_active"
+        >{{ comp.title }}</a
+      >
+    }
   </div>
 </div>

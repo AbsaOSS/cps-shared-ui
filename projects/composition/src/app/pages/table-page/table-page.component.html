@@ -38,19 +38,20 @@
       </cps-table>
     </cps-tab>
     <cps-tab label="Table 2">
-      <cps-table
-        *ngIf="selectedTabIndex === 1"
-        [showGlobalFilter]="true"
-        [data]="dataVirtual"
-        [columns]="colsVirtual"
-        [sortable]="true"
-        [virtualScroll]="true"
-        [showColumnsToggleBtn]="true"
-        scrollHeight="500px"
-        toolbarTitle="Sortable table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled"
-        [filterableByColumns]="true"
-        [resizableColumns]="true">
-      </cps-table>
+      @if (selectedTabIndex === 1) {
+        <cps-table
+          [showGlobalFilter]="true"
+          [data]="dataVirtual"
+          [columns]="colsVirtual"
+          [sortable]="true"
+          [virtualScroll]="true"
+          [showColumnsToggleBtn]="true"
+          scrollHeight="500px"
+          toolbarTitle="Sortable table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled"
+          [filterableByColumns]="true"
+          [resizableColumns]="true">
+        </cps-table>
+      }
     </cps-tab>
     <cps-tab label="Table 3">
       <cps-table
@@ -109,25 +110,38 @@
         toolbarIconColor="success"
         toolbarTitle="Table with toolbar icon, external columns toggle, unstriped selectable and expandable rows">
         <ng-template #header>
-          <th
-            *ngFor="let scol of selCols"
-            [cpsTColSortable]="scol.field"
-            [cpsTColFilter]="scol.field"
-            [filterType]="scol.filterType">
-            {{ scol.header }}
-          </th>
+          @for (scol of selCols; track scol) {
+            <th
+              [cpsTColSortable]="scol.field"
+              [cpsTColFilter]="scol.field"
+              [filterType]="scol.filterType">
+              {{ scol.header }}
+            </th>
+          }
         </ng-template>
 
         <ng-template let-item #body>
-          <ng-container *ngFor="let scol of selCols" [ngSwitch]="scol.field">
-            <td *ngSwitchCase="'a'">{{ item.a | uppercase }}</td>
-            <td *ngSwitchCase="'b'">{{ item.b | date: 'MM/dd/yyyy' }}</td>
-            <td *ngSwitchCase="'c'">{{ item.c | percent }}</td>
-            <td *ngSwitchCase="'d'" [style.color]="item.d ? 'green' : 'red'">
-              {{ item.d ? '&#10004;' : '&#10008;' }}
-            </td>
-            <td *ngSwitchCase="'e'">{{ item.e }}</td>
-          </ng-container>
+          @for (scol of selCols; track scol) {
+            @switch (scol.field) {
+              @case ('a') {
+                <td>{{ item.a | uppercase }}</td>
+              }
+              @case ('b') {
+                <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
+              }
+              @case ('c') {
+                <td>{{ item.c | percent }}</td>
+              }
+              @case ('d') {
+                <td [style.color]="item.d ? 'green' : 'red'">
+                  {{ item.d ? '&#10004;' : '&#10008;' }}
+                </td>
+              }
+              @case ('e') {
+                <td>{{ item.e }}</td>
+              }
+            }
+          }
         </ng-template>
 
         <ng-template let-item #rowexpansion>

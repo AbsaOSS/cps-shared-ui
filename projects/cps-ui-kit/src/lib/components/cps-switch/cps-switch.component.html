@@ -7,20 +7,22 @@
       (change)="updateValueEvent($event)" />
     <span class="cps-switch-slider"></span>
   </label>
-  <span
-    *ngIf="label"
-    class="cps-switch-label"
-    [ngClass]="{ 'cps-switch-label-disabled': disabled }"
-    >{{ label }}</span
-  >
-  <cps-info-circle
-    *ngIf="infoTooltip"
-    class="cps-switch-info-circle"
-    size="xsmall"
-    [tooltipPosition]="infoTooltipPosition"
-    [tooltipContentClass]="infoTooltipClass"
-    [tooltipMaxWidth]="infoTooltipMaxWidth"
-    [tooltipPersistent]="infoTooltipPersistent"
-    [tooltipText]="infoTooltip">
-  </cps-info-circle>
+  @if (label) {
+    <span
+      class="cps-switch-label"
+      [ngClass]="{ 'cps-switch-label-disabled': disabled }"
+      >{{ label }}</span
+    >
+  }
+  @if (infoTooltip) {
+    <cps-info-circle
+      class="cps-switch-info-circle"
+      size="xsmall"
+      [tooltipPosition]="infoTooltipPosition"
+      [tooltipContentClass]="infoTooltipClass"
+      [tooltipMaxWidth]="infoTooltipMaxWidth"
+      [tooltipPersistent]="infoTooltipPersistent"
+      [tooltipText]="infoTooltip">
+    </cps-info-circle>
+  }
 </div>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   CpsFileUploadComponent,
   CpsButtonToggleComponent,
@@ -14,7 +13,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 @Component({
   selector: 'app-file-upload-page',
   imports: [
-    CommonModule,
     CpsButtonToggleComponent,
     CpsFileUploadComponent,
     ComponentDocsViewerComponent,

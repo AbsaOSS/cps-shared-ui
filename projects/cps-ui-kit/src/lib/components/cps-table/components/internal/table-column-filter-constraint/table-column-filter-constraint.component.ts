@@ -5,7 +5,7 @@ import {
   Optional,
   ViewChild
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { FilterMetadata, TreeNode } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -28,7 +28,6 @@ import {
 @Component({
   selector: 'table-column-filter-constraint',
   imports: [
-    CommonModule,
     FormsModule,
     CpsInputComponent,
     CpsDatepickerComponent,

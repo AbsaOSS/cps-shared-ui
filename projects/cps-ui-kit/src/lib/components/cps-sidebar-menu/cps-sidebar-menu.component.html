@@ -2,22 +2,23 @@
   class="cps-sidebar-menu"
   [style.height]="height"
   [ngClass]="{ 'cps-sidebar-menu-collapsed': !isExpanded }">
-  <ng-container *ngFor="let item of items">
-    <a
-      *ngIf="item.url"
-      class="cps-sidebar-menu-item"
-      [routerLink]="[item.url]"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: exactRoutes }"
-      [ngClass]="{ disabled: item.disabled }">
-      <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-      <span
-        class="cps-sidebar-menu-item-label"
-        [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
-        {{ item.title }}
-      </span>
-    </a>
-    <ng-container *ngIf="!item.url">
+  @for (item of items; track item) {
+    @if (item.url) {
+      <a
+        class="cps-sidebar-menu-item"
+        [routerLink]="[item.url]"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: exactRoutes }"
+        [ngClass]="{ disabled: item.disabled }">
+        <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
+        <span
+          class="cps-sidebar-menu-item-label"
+          [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+          {{ item.title }}
+        </span>
+      </a>
+    }
+    @if (!item.url) {
       <cps-menu
         #popupMenu
         [items]="item.items || []"
@@ -41,8 +42,8 @@
           {{ item.title }}
         </span>
       </div>
-    </ng-container>
-  </ng-container>
+    }
+  }
   <div class="expand-area" (click)="toggleSidebar()">
     <cps-icon icon="menu-shrink" size="fill"> </cps-icon>
   </div>

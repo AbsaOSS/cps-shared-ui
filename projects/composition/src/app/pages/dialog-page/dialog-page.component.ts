@@ -1,5 +1,4 @@
 import { Component, SkipSelf } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
 import { DialogContentComponent } from '../../components/dialog-content/dialog-content.component';
 import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
@@ -8,7 +7,7 @@ import ServiceData from '../../api-data/cps-dialog.json';
 
 @Component({
   selector: 'app-dialog-page',
-  imports: [CommonModule, CpsButtonComponent, ServiceDocsViewerComponent],
+  imports: [CpsButtonComponent, ServiceDocsViewerComponent],
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],
   host: { class: 'composition-page' },

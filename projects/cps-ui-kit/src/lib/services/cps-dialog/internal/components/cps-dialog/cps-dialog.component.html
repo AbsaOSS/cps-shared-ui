@@ -19,98 +19,107 @@
       position === 'bottomright' || position === 'bottom-right'
   }"
   [class]="config.maskStyleClass || ''">
-  <div
-    #container
-    [ngClass]="{
-      'cps-dialog': true,
-      'cps-dialog-resizable': resizable,
-      'cps-dialog-draggable': draggable && !maximized,
-      'cps-dialog-dragging': dragging,
-      'cps-dialog-maximized': maximized
-    }"
-    [ngStyle]="config.style"
-    [class]="config.styleClass || ''"
-    [@animation]="{
-      value: 'visible',
-      params: {
-        transform: transformOptions,
-        transition:
-          config.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)'
-      }
-    }"
-    (@animation.start)="onAnimationStart($event)"
-    (@animation.done)="onAnimationEnd($event)"
-    role="dialog"
-    *ngIf="visible"
-    [style.width]="config.width"
-    [style.height]="config.height"
-    [style.minWidth]="config.minWidth"
-    [style.minHeight]="config.minHeight"
-    [style.maxWidth]="maximized ? '' : config.maxWidth"
-    [style.maxHeight]="maximized ? '' : config.maxHeight">
+  @if (visible) {
     <div
-      *ngIf="resizable && !maximized"
-      class="cps-dialog-resizable-handle"
-      style="z-index: 90"
-      (mousedown)="initResize($event)"></div>
-    <div
-      #header
-      *ngIf="config.showHeader !== false"
-      class="cps-dialog-header"
+      #container
       [ngClass]="{
-        'cps-dialog-header-left-bordered':
-          config.showHeaderLeftBorder !== false,
-        'cps-dialog-header-bottom-bordered':
-          config.showHeaderBottomBorder !== false
+        'cps-dialog': true,
+        'cps-dialog-resizable': resizable,
+        'cps-dialog-draggable': draggable && !maximized,
+        'cps-dialog-dragging': dragging,
+        'cps-dialog-maximized': maximized
       }"
-      (mousedown)="initDrag($event)">
-      <div class="cps-dialog-header-left">
-        <div class="cps-dialog-header-icon">
-          <cps-icon
-            *ngIf="config.headerIcon"
-            [icon]="config.headerIcon"
-            [color]="config.headerIconColor || 'currentColor'">
-          </cps-icon>
+      [ngStyle]="config.style"
+      [class]="config.styleClass || ''"
+      [@animation]="{
+        value: 'visible',
+        params: {
+          transform: transformOptions,
+          transition:
+            config.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)'
+        }
+      }"
+      (@animation.start)="onAnimationStart($event)"
+      (@animation.done)="onAnimationEnd($event)"
+      role="dialog"
+      [style.width]="config.width"
+      [style.height]="config.height"
+      [style.minWidth]="config.minWidth"
+      [style.minHeight]="config.minHeight"
+      [style.maxWidth]="maximized ? '' : config.maxWidth"
+      [style.maxHeight]="maximized ? '' : config.maxHeight">
+      @if (resizable && !maximized) {
+        <div
+          class="cps-dialog-resizable-handle"
+          style="z-index: 90"
+          (mousedown)="initResize($event)"></div>
+      }
+      @if (config.showHeader !== false) {
+        <div
+          #header
+          class="cps-dialog-header"
+          [ngClass]="{
+            'cps-dialog-header-left-bordered':
+              config.showHeaderLeftBorder !== false,
+            'cps-dialog-header-bottom-bordered':
+              config.showHeaderBottomBorder !== false
+          }"
+          (mousedown)="initDrag($event)">
+          <div class="cps-dialog-header-left">
+            <div class="cps-dialog-header-icon">
+              @if (config.headerIcon) {
+                <cps-icon
+                  [icon]="config.headerIcon"
+                  [color]="config.headerIconColor || 'currentColor'">
+                </cps-icon>
+              }
+            </div>
+            <span class="cps-dialog-header-title">{{
+              config.headerTitle
+            }}</span>
+            <div class="cps-dialog-header-info-circle">
+              @if (config.headerInfoTooltip) {
+                <cps-info-circle
+                  size="small"
+                  [tooltipPosition]="config.headerInfoTooltipPosition || 'top'"
+                  [tooltipText]="config.headerInfoTooltip">
+                </cps-info-circle>
+              }
+            </div>
+          </div>
+          <div class="cps-dialog-header-action-buttons">
+            @if (maximizable) {
+              <cps-button
+                class="cps-dialog-header-action-button"
+                [icon]="maximized ? 'minimize' : 'maximize'"
+                size="small"
+                width="32"
+                color="graphite"
+                type="borderless"
+                (clicked)="toggleMaximized()">
+              </cps-button>
+            }
+            @if (config.showCloseBtn !== false) {
+              <cps-button
+                class="cps-dialog-header-action-button"
+                icon="close-x-2"
+                size="small"
+                width="32"
+                color="graphite"
+                type="borderless"
+                (clicked)="hide()">
+              </cps-button>
+            }
+          </div>
         </div>
-        <span class="cps-dialog-header-title">{{ config.headerTitle }}</span>
-        <div class="cps-dialog-header-info-circle">
-          <cps-info-circle
-            *ngIf="config.headerInfoTooltip"
-            size="small"
-            [tooltipPosition]="config.headerInfoTooltipPosition || 'top'"
-            [tooltipText]="config.headerInfoTooltip">
-          </cps-info-circle>
-        </div>
-      </div>
-      <div class="cps-dialog-header-action-buttons">
-        <cps-button
-          *ngIf="maximizable"
-          class="cps-dialog-header-action-button"
-          [icon]="maximized ? 'minimize' : 'maximize'"
-          size="small"
-          width="32"
-          color="graphite"
-          type="borderless"
-          (clicked)="toggleMaximized()">
-        </cps-button>
-        <cps-button
-          *ngIf="config.showCloseBtn !== false"
-          class="cps-dialog-header-action-button"
-          icon="close-x-2"
-          size="small"
-          width="32"
-          color="graphite"
-          type="borderless"
-          (clicked)="hide()">
-        </cps-button>
+      }
+      <div
+        #content
+        class="cps-dialog-content"
+        [ngStyle]="config.contentStyle"
+        [class]="config.contentStyleClass || ''">
+        <ng-template cpsDialogContent></ng-template>
       </div>
     </div>
-    <div
-      #content
-      class="cps-dialog-content"
-      [ngStyle]="config.contentStyle"
-      [class]="config.contentStyleClass || ''">
-      <ng-template cpsDialogContent></ng-template>
-    </div>
-  </div>
+  }
 </div>

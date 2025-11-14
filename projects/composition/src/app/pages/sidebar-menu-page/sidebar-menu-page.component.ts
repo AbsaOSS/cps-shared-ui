@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { CpsSidebarMenuComponent, CpsSidebarMenuItem } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-sidebar-menu.json';
@@ -7,11 +6,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   selector: 'app-sidebar-menu-page',
-  imports: [
-    CommonModule,
-    CpsSidebarMenuComponent,
-    ComponentDocsViewerComponent
-  ],
+  imports: [CpsSidebarMenuComponent, ComponentDocsViewerComponent],
   templateUrl: './sidebar-menu-page.component.html',
   styleUrls: ['./sidebar-menu-page.component.scss'],
   host: { class: 'composition-page' }

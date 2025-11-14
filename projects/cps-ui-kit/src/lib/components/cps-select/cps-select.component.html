@@ -7,19 +7,22 @@
   (keydown)="onKeyDown($event)"
   (focus)="onFocus()"
   (blur)="onBlur()">
-  <div class="cps-select-label" *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-select-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div class="cps-select-label">
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-select-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
   <div
     class="cps-select-container"
     [class.focused]="isOpened"
@@ -30,82 +33,92 @@
     }">
     <div class="cps-select-box" #selectBox (click)="onBoxClick()">
       <div class="cps-select-box-left">
-        <cps-icon
-          *ngIf="prefixIcon"
-          [icon]="prefixIcon"
-          [style.color]="disabled ? '#9a9595' : null"
-          [size]="prefixIconSize"
-          class="prefix-icon">
-        </cps-icon>
-        <div
-          class="cps-select-box-placeholder"
-          *ngIf="
-            (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
-          ">
-          {{ placeholder }}
-        </div>
-        <div
-          class="cps-select-box-items"
-          *ngIf="
-            (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
-          ">
-          <span *ngIf="!multiple" class="single-item">
-            {{
-              returnObject
-                ? value[optionLabel]
-                : (value | labelByValue: options : optionValue : optionLabel)
-            }}</span
-          >
-          <div *ngIf="multiple && !chips" class="text-group">
-            <span class="text-group-item">
-              {{
-                value
-                  | combineLabels
-                    : options
-                    : optionValue
-                    : optionLabel
-                    : returnObject
-              }}
-            </span>
+        @if (prefixIcon) {
+          <cps-icon
+            [icon]="prefixIcon"
+            [style.color]="disabled ? '#9a9595' : null"
+            [size]="prefixIconSize"
+            class="prefix-icon">
+          </cps-icon>
+        }
+        @if ((!multiple && isEmptyValue()) || (value?.length < 1 && multiple)) {
+          <div class="cps-select-box-placeholder">
+            {{ placeholder }}
           </div>
-
-          <div *ngIf="multiple && chips" class="chips-group">
-            <cps-chip
-              *ngFor="let val of value"
-              [disabled]="disabled"
-              [closable]="closableChips"
-              (closed)="select(val, true)"
-              [label]="
-                returnObject
-                  ? val[optionLabel]
-                  : (val | labelByValue: options : optionValue : optionLabel)
-              ">
-            </cps-chip>
+        }
+        @if (
+          (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
+        ) {
+          <div class="cps-select-box-items">
+            @if (!multiple) {
+              <span class="single-item">
+                {{
+                  returnObject
+                    ? value[optionLabel]
+                    : (value
+                      | labelByValue: options : optionValue : optionLabel)
+                }}</span
+              >
+            }
+            @if (multiple && !chips) {
+              <div class="text-group">
+                <span class="text-group-item">
+                  {{
+                    value
+                      | combineLabels
+                        : options
+                        : optionValue
+                        : optionLabel
+                        : returnObject
+                  }}
+                </span>
+              </div>
+            }
+            @if (multiple && chips) {
+              <div class="chips-group">
+                @for (val of value; track val) {
+                  <cps-chip
+                    [disabled]="disabled"
+                    [closable]="closableChips"
+                    (closed)="select(val, true)"
+                    [label]="
+                      returnObject
+                        ? val[optionLabel]
+                        : (val
+                          | labelByValue: options : optionValue : optionLabel)
+                    ">
+                  </cps-chip>
+                }
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
       <span class="cps-select-box-icons">
-        <span
-          *ngIf="clearable && !disabled"
-          [style.visibility]="
-            persistentClear ||
-            (!persistentClear &&
-              ((multiple && value?.length) || (!multiple && !isEmptyValue())))
-              ? 'visible'
-              : 'hidden'
-          "
-          class="cps-select-box-clear-icon">
-          <cps-icon
-            icon="delete"
-            size="small"
-            (click)="clear($event)"></cps-icon>
-        </span>
-        <span *ngIf="showChevron" class="cps-select-box-chevron">
-          <cps-icon
-            icon="chevron-down"
-            size="small"
-            [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
-        </span>
+        @if (clearable && !disabled) {
+          <span
+            [style.visibility]="
+              persistentClear ||
+              (!persistentClear &&
+                ((multiple && value?.length) || (!multiple && !isEmptyValue())))
+                ? 'visible'
+                : 'hidden'
+            "
+            class="cps-select-box-clear-icon">
+            <cps-icon
+              icon="delete"
+              size="small"
+              (click)="clear($event)"></cps-icon>
+          </span>
+        }
+        @if (showChevron) {
+          <span class="cps-select-box-chevron">
+            <cps-icon
+              icon="chevron-down"
+              size="small"
+              [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
+          </span>
+        }
       </span>
     </div>
 
@@ -121,19 +134,21 @@
         [ngStyle]="{
           width: selectBoxWidth + 'px'
         }">
-        <ng-container *ngIf="!virtualScroll">
-          <div
-            class="cps-select-options-option select-all-option"
-            [class.allselected]="value?.length === options.length"
-            *ngIf="multiple && selectAll && options.length > 1"
-            (click)="toggleAll()">
-            <span class="cps-select-options-option-left">
-              <span *ngIf="multiple" class="cps-select-options-option-check">
+        @if (!virtualScroll) {
+          @if (multiple && selectAll && options.length > 1) {
+            <div
+              class="cps-select-options-option select-all-option"
+              [class.allselected]="value?.length === options.length"
+              (click)="toggleAll()">
+              <span class="cps-select-options-option-left">
+                @if (multiple) {
+                  <span class="cps-select-options-option-check"> </span>
+                }
+                <span class="cps-select-options-option-label">Select all</span>
               </span>
-              <span class="cps-select-options-option-label">Select all</span>
-            </span>
-          </div>
-          <ng-container *ngFor="let item of options">
+            </div>
+          }
+          @for (item of options; track item) {
             <ng-container
               *ngTemplateOutlet="
                 itemTemplate;
@@ -141,9 +156,9 @@
                   item: item
                 }
               "></ng-container>
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="virtualScroll">
+          }
+        }
+        @if (virtualScroll) {
           <p-virtualscroller
             #virtualList
             [items]="options"
@@ -161,21 +176,26 @@
                 "></ng-container>
             </ng-template>
           </p-virtualscroller>
-        </ng-container>
+        }
       </div>
     </cps-menu>
 
-    <cps-progress-linear
-      *ngIf="loading"
-      height="3"
-      radius="4"
-      opacity="0.3"
-      class="select-progress-bar"
-      bgColor="transparent">
-    </cps-progress-linear>
+    @if (loading) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="select-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
   </div>
-  <div *ngIf="!error && !hideDetails" class="cps-select-hint">{{ hint }}</div>
-  <div *ngIf="error && !hideDetails" class="cps-select-error">{{ error }}</div>
+  @if (!error && !hideDetails) {
+    <div class="cps-select-hint">{{ hint }}</div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-select-error">{{ error }}</div>
+  }
 </div>
 
 <ng-template #itemTemplate let-item="item">
@@ -186,7 +206,9 @@
       item | checkOptionSelected: value : multiple : returnObject : optionValue
     ">
     <span class="cps-select-options-option-left">
-      <span *ngIf="multiple" class="cps-select-options-option-check"> </span>
+      @if (multiple) {
+        <span class="cps-select-options-option-check"> </span>
+      }
       <span
         class="cps-select-options-option-label"
         [class.virtual-row]="virtualScroll"
@@ -198,12 +220,13 @@
       class="cps-select-options-option-right"
       [class.virtual-row]="virtualScroll">
       {{ item[optionInfo] }}
-      <cps-icon
-        *ngIf="item[optionIcon]"
-        [icon]="item[optionIcon]"
-        [color]="item[optionIconColor] || 'text-light'"
-        class="cps-select-options-option-right-icon">
-      </cps-icon>
+      @if (item[optionIcon]) {
+        <cps-icon
+          [icon]="item[optionIcon]"
+          [color]="item[optionIconColor] || 'text-light'"
+          class="cps-select-options-option-right-icon">
+        </cps-icon>
+      }
     </span>
   </div>
 </ng-template>

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   CpsButtonComponent,
@@ -14,7 +13,6 @@ import ComponentData from '../../api-data/cps-tooltip.json';
 @Component({
   selector: 'tooltip-page',
   imports: [
-    CommonModule,
     FormsModule,
     CpsButtonComponent,
     CpsTooltipDirective,

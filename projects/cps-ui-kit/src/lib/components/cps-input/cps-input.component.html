@@ -1,20 +1,22 @@
 <div class="cps-input-container" [ngStyle]="{ width: cvtWidth }">
-  <div
-    class="cps-input-label"
-    [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }"
-    *ngIf="label">
-    <label>{{ label }}</label>
-    <cps-info-circle
-      *ngIf="infoTooltip"
-      class="cps-input-label-info-circle"
-      size="xsmall"
-      [tooltipPosition]="infoTooltipPosition"
-      [tooltipContentClass]="infoTooltipClass"
-      [tooltipMaxWidth]="infoTooltipMaxWidth"
-      [tooltipPersistent]="infoTooltipPersistent"
-      [tooltipText]="infoTooltip">
-    </cps-info-circle>
-  </div>
+  @if (label) {
+    <div
+      class="cps-input-label"
+      [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }">
+      <label>{{ label }}</label>
+      @if (infoTooltip) {
+        <cps-info-circle
+          class="cps-input-label-info-circle"
+          size="xsmall"
+          [tooltipPosition]="infoTooltipPosition"
+          [tooltipContentClass]="infoTooltipClass"
+          [tooltipMaxWidth]="infoTooltipMaxWidth"
+          [tooltipPersistent]="infoTooltipPersistent"
+          [tooltipText]="infoTooltip">
+        </cps-info-circle>
+      }
+    </div>
+  }
 
   <div
     class="cps-input-wrap"
@@ -26,84 +28,103 @@
       borderless: appearance === 'borderless',
       underlined: appearance === 'underlined'
     }">
-    <input
-      *ngIf="!valueToDisplay"
-      spellcheck="false"
-      [type]="currentType"
-      autocomplete="off"
-      [value]="value"
-      (input)="updateValueEvent($event)"
-      [placeholder]="placeholder"
-      [disabled]="disabled"
-      [readonly]="readonly"
-      (keydown.enter)="onInputEnterKeyDown()"
-      [ngStyle]="{
-        width: cvtWidth,
-        'padding-left': prefixWidth || 'none'
-      }"
-      (blur)="onBlur()"
-      (focus)="onFocus()" />
+    @if (!valueToDisplay) {
+      <input
+        spellcheck="false"
+        [type]="currentType"
+        autocomplete="off"
+        [value]="value"
+        (input)="updateValueEvent($event)"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        (keydown.enter)="onInputEnterKeyDown()"
+        [ngStyle]="{
+          width: cvtWidth,
+          'padding-left': prefixWidth || 'none'
+        }"
+        (blur)="onBlur()"
+        (focus)="onFocus()" />
+    }
 
-    <input
-      *ngIf="valueToDisplay"
-      [value]="valueToDisplay"
-      [disabled]="true"
-      [readonly]="true"
-      [ngStyle]="{
-        width: cvtWidth,
-        'padding-left': prefixWidth || 'none'
-      }" />
+    @if (valueToDisplay) {
+      <input
+        [value]="valueToDisplay"
+        [disabled]="true"
+        [readonly]="true"
+        [ngStyle]="{
+          width: cvtWidth,
+          'padding-left': prefixWidth || 'none'
+        }" />
+    }
 
     <div class="cps-input-prefix">
-      <span *ngIf="prefixIcon" class="cps-input-prefix-icon">
-        <cps-icon
-          [icon]="prefixIcon"
-          [size]="prefixIconSize"
-          [style.color]="disabled ? '#9a9595' : null"
-          [style.cursor]="
-            prefixIconClickable && !disabled && !readonly
-              ? 'pointer'
-              : 'default'
-          "
-          (click)="onClickPrefixIcon()">
-        </cps-icon>
-      </span>
+      @if (prefixIcon) {
+        <span class="cps-input-prefix-icon">
+          <cps-icon
+            [icon]="prefixIcon"
+            [size]="prefixIconSize"
+            [style.color]="disabled ? '#9a9595' : null"
+            [style.cursor]="
+              prefixIconClickable && !disabled && !readonly
+                ? 'pointer'
+                : 'default'
+            "
+            (click)="onClickPrefixIcon()">
+          </cps-icon>
+        </span>
+      }
 
-      <span *ngIf="prefixText" class="cps-input-prefix-text" #prefixTextSpan>
-        {{ prefixText }}
-      </span>
+      @if (prefixText) {
+        <span class="cps-input-prefix-text" #prefixTextSpan>
+          {{ prefixText }}
+        </span>
+      }
     </div>
 
-    <div class="cps-input-action-btns" *ngIf="!disabled && !readonly">
-      <span
-        *ngIf="clearable"
-        [style.visibility]="
-          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
-        "
-        class="clear-btn">
-        <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
-      </span>
-
-      <span
-        *ngIf="type === 'password'"
-        class="password-show-btn"
-        [ngClass]="{ 'password-show-btn-active': currentType === 'text' }">
-        <cps-icon icon="eye" size="18px" (click)="togglePassword()"></cps-icon>
-      </span>
+    @if (!disabled && !readonly) {
+      <div class="cps-input-action-btns">
+        @if (clearable) {
+          <span
+            [style.visibility]="
+              persistentClear || (!persistentClear && value)
+                ? 'visible'
+                : 'hidden'
+            "
+            class="clear-btn">
+            <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
+          </span>
+        }
+        @if (type === 'password') {
+          <span
+            class="password-show-btn"
+            [ngClass]="{ 'password-show-btn-active': currentType === 'text' }">
+            <cps-icon
+              icon="eye"
+              size="18px"
+              (click)="togglePassword()"></cps-icon>
+          </span>
+        }
+      </div>
+    }
+    @if (loading) {
+      <cps-progress-linear
+        height="3"
+        radius="4"
+        opacity="0.3"
+        class="cps-input-progress-bar"
+        bgColor="transparent">
+      </cps-progress-linear>
+    }
+  </div>
+  @if (!error && !hideDetails) {
+    <div class="cps-input-hint">
+      {{ hint }}
     </div>
-    <cps-progress-linear
-      *ngIf="loading"
-      height="3"
-      radius="4"
-      opacity="0.3"
-      class="cps-input-progress-bar"
-      bgColor="transparent">
-    </cps-progress-linear>
-  </div>
-  <div *ngIf="!error && !hideDetails" class="cps-input-hint">
-    {{ hint }}
-  </div>
-  <div *ngIf="error && !hideDetails" class="cps-input-error">
-    {{ error }}
-  </div>
+  }
+  @if (error && !hideDetails) {
+    <div class="cps-input-error">
+      {{ error }}
+    </div>
+  }
 </div>

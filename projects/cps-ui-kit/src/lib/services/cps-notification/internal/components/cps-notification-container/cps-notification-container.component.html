@@ -30,13 +30,14 @@
           ? 'flex-end'
           : 'flex-start'
       }">
-      <cps-toast
-        *ngFor="let notification of notifications; let i = index"
-        [data]="notification.data"
-        [config]="notification.config"
-        @notificationAnimation
-        (closed)="onCloseNotification(i)">
-      </cps-toast>
+      @for (notification of notifications; track notification; let i = $index) {
+        <cps-toast
+          [data]="notification.data"
+          [config]="notification.config"
+          @notificationAnimation
+          (closed)="onCloseNotification(i)">
+        </cps-toast>
+      }
     </div>
   </div>
 </div>

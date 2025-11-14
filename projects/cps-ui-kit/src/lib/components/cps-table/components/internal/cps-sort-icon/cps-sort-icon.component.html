@@ -1,10 +1,16 @@
-<div *ngIf="sortOrder === 0" class="cps-sortable-column-icon sort-unsorted">
-  <div class="sort-unsorted-arrow-up"></div>
-  <div class="sort-unsorted-arrow-down"></div>
-</div>
-<div *ngIf="sortOrder === 1" class="cps-sortable-column-icon sort-desc"></div>
-<div *ngIf="sortOrder === -1" class="cps-sortable-column-icon sort-asc"></div>
+@if (sortOrder === 0) {
+  <div class="cps-sortable-column-icon sort-unsorted">
+    <div class="sort-unsorted-arrow-up"></div>
+    <div class="sort-unsorted-arrow-down"></div>
+  </div>
+}
+@if (sortOrder === 1) {
+  <div class="cps-sortable-column-icon sort-desc"></div>
+}
+@if (sortOrder === -1) {
+  <div class="cps-sortable-column-icon sort-asc"></div>
+}
 
-<span *ngIf="isMultiSorted()" class="cps-sortable-column-badge">{{
-  getBadgeValue()
-}}</span>
+@if (isMultiSorted()) {
+  <span class="cps-sortable-column-badge">{{ getBadgeValue() }}</span>
+}

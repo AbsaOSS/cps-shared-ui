@@ -15,9 +15,11 @@
   </div>
   <div class="cps-toast-message">
     <p class="cps-toast-message-header">{{ data.message || '' }}</p>
-    <p class="cps-toast-message-details" *ngIf="data.details">
-      {{ data.details }}
-    </p>
+    @if (data.details) {
+      <p class="cps-toast-message-details">
+        {{ data.details }}
+      </p>
+    }
   </div>
   <div class="cps-toast-buttons">
     <cps-button

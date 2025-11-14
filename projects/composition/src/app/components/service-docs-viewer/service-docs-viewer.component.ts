@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ServiceAPI } from '../../models/service-api.model';
-import { CommonModule } from '@angular/common';
 import {
   CpsTabComponent,
   CpsTabGroupComponent,
@@ -17,7 +16,6 @@ import { EnumsComponent } from '../shared/enums/enums.component';
   templateUrl: './service-docs-viewer.component.html',
   styleUrl: './service-docs-viewer.component.scss',
   imports: [
-    CommonModule,
     CpsTabComponent,
     CpsTabGroupComponent,
     RouterLink,

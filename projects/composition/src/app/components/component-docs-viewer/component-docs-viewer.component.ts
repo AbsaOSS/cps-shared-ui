@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import {
   ComponentAPI,
@@ -20,7 +19,6 @@ import { EnumsComponent } from '../shared/enums/enums.component';
   templateUrl: './component-docs-viewer.component.html',
   styleUrl: './component-docs-viewer.component.scss',
   imports: [
-    CommonModule,
     CpsTabComponent,
     CpsTabGroupComponent,
     ObjectEntriesPipe,

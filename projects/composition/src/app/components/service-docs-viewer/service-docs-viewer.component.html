@@ -9,156 +9,161 @@
     </div>
   </cps-tab>
   <cps-tab label="API">
-    <ng-container *ngIf="serviceData">
+    @if (serviceData) {
       <div>
         <h1>{{ serviceData.name }}</h1>
         <p>{{ serviceData.description }}</p>
         <!-- Methods -->
-        <div
-          *ngIf="
-            serviceData.methods?.values && serviceData.methods.values.length > 0
-          ">
-          <h2>Methods</h2>
-          <p>{{ serviceData.methods.description }}</p>
-          <div>
-            <table class="data-table">
-              <thead>
-                <th>Name</th>
-                <th>Parameters</th>
-                <th>Return type</th>
-                <th>Description</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let method of serviceData.methods.values">
-                  <td class="highlighted-bg">
-                    <span>{{ method.name }}</span>
-                  </td>
-                  <td class="highlighted-text">
-                    <div class="parameters">
-                      @for (param of method.parameters; track param.name) {
-                        <span>
-                          <strong [cpsTooltip]="param.description || ''">
-                            {{ param.name }}:
-                          </strong>
-                          <a
-                            *ngIf="
-                              param.type | detectType: TypesMap as type;
-                              else simpleType
-                            "
-                            [routerLink]="'/' + TypesMap[type] + '/api'"
-                            fragment="{{ type }}">
-                            {{ param.type }}
-                          </a>
-                          <ng-template #simpleType>
-                            <span>{{ param.type }}</span>
-                          </ng-template>
-                        </span>
-                      } @empty {
-                        null
-                      }
-                    </div>
-                  </td>
-                  <td class="highlighted-text">
-                    <a
-                      *ngIf="
-                        method.returnType | detectType: TypesMap as type;
-                        else simpleType
-                      "
-                      [routerLink]="'/' + TypesMap[type] + '/api'"
-                      fragment="{{ type }}"
-                      >{{ method.returnType }}</a
-                    >
-                    <ng-template #simpleType>
-                      <span>{{ method.returnType }}</span>
-                    </ng-template>
-                  </td>
-                  <td class="method-description">{{ method.description }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <!-- Types -->
-        <div
-          *ngIf="
-            serviceData.types &&
-            serviceData.types.values &&
-            serviceData.types.values.length > 0
-          ">
-          <h2>Types</h2>
-          <p>{{ serviceData.types.description }}</p>
-          <div>
-            <table class="data-table">
-              <thead>
-                <th>Name</th>
-                <th>Values</th>
-                <th>Description</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let type of serviceData.types.values">
-                  <td class="highlighted-bg">
-                    <span>{{ type.name }}</span>
-                  </td>
-                  <td class="highlighted-text">
-                    {{ type.value }}
-                  </td>
-                  <td>{{ type.description }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <!-- Interfaces -->
-      <div
-        *ngIf="
-          serviceData.interfaces &&
-          serviceData.interfaces.values &&
-          serviceData.interfaces.values.length > 0
-        ">
-        <h2>Interfaces</h2>
-        <p>{{ serviceData.interfaces.description }}</p>
-        @for (
-          interface of serviceData.interfaces.values;
-          track interface.name
+        @if (
+          serviceData.methods.values && serviceData.methods.values.length > 0
         ) {
-          <div id="{{ interface.name }}">
-            <h3>{{ interface.name }}</h3>
-            <p>{{ interface.description }}</p>
-            <table class="data-table">
-              <thead>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Description</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let prop of interface.props">
-                  <td class="highlighted-bg">
-                    <span>{{ prop.name }}</span>
-                  </td>
-                  <td class="highlighted-text">
-                    <a
-                      *ngIf="
-                        prop.type | detectType: TypesMap as type;
-                        else simpleType
-                      "
-                      [routerLink]="'/' + TypesMap[type] + '/api'"
-                      fragment="{{ type }}"
-                      >{{ prop.type }}</a
-                    >
-                    <ng-template #simpleType>
-                      <span>{{ prop.type }}</span>
-                    </ng-template>
-                  </td>
-                  <td>{{ prop.description }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div>
+            <h2>Methods</h2>
+            <p>{{ serviceData.methods.description }}</p>
+            <div>
+              <table class="data-table">
+                <thead>
+                  <th>Name</th>
+                  <th>Parameters</th>
+                  <th>Return type</th>
+                  <th>Description</th>
+                </thead>
+                <tbody>
+                  @for (method of serviceData.methods.values; track method) {
+                    <tr>
+                      <td class="highlighted-bg">
+                        <span>{{ method.name }}</span>
+                      </td>
+                      <td class="highlighted-text">
+                        <div class="parameters">
+                          @for (param of method.parameters; track param.name) {
+                            <span>
+                              <strong [cpsTooltip]="param.description || ''">
+                                {{ param.name }}:
+                              </strong>
+                              @if (param.type | detectType: TypesMap; as type) {
+                                <a
+                                  [routerLink]="'/' + TypesMap[type] + '/api'"
+                                  fragment="{{ type }}">
+                                  {{ param.type }}
+                                </a>
+                              } @else {
+                                <span>{{ param.type }}</span>
+                              }
+                            </span>
+                          } @empty {
+                            null
+                          }
+                        </div>
+                      </td>
+                      <td class="highlighted-text">
+                        @if (
+                          method.returnType | detectType: TypesMap;
+                          as type
+                        ) {
+                          <a
+                            [routerLink]="'/' + TypesMap[type] + '/api'"
+                            fragment="{{ type }}"
+                            >{{ method.returnType }}</a
+                          >
+                        } @else {
+                          <span>{{ method.returnType }}</span>
+                        }
+                      </td>
+                      <td class="method-description">
+                        {{ method.description }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+        <!-- Types -->
+        @if (
+          serviceData.types &&
+          serviceData.types.values &&
+          serviceData.types.values.length > 0
+        ) {
+          <div>
+            <h2>Types</h2>
+            <p>{{ serviceData.types.description }}</p>
+            <div>
+              <table class="data-table">
+                <thead>
+                  <th>Name</th>
+                  <th>Values</th>
+                  <th>Description</th>
+                </thead>
+                <tbody>
+                  @for (type of serviceData.types.values; track type) {
+                    <tr>
+                      <td class="highlighted-bg">
+                        <span>{{ type.name }}</span>
+                      </td>
+                      <td class="highlighted-text">
+                        {{ type.value }}
+                      </td>
+                      <td>{{ type.description }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           </div>
         }
       </div>
+      <!-- Interfaces -->
+      @if (
+        serviceData.interfaces &&
+        serviceData.interfaces.values &&
+        serviceData.interfaces.values.length > 0
+      ) {
+        <div>
+          <h2>Interfaces</h2>
+          <p>{{ serviceData.interfaces.description }}</p>
+          @for (
+            interface of serviceData.interfaces.values;
+            track interface.name
+          ) {
+            <div id="{{ interface.name }}">
+              <h3>{{ interface.name }}</h3>
+              <p>{{ interface.description }}</p>
+              <table class="data-table">
+                <thead>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </thead>
+                <tbody>
+                  @for (prop of interface.props; track prop) {
+                    <tr>
+                      <td class="highlighted-bg">
+                        <span>{{ prop.name }}</span>
+                      </td>
+                      <td class="highlighted-text">
+                        @if (prop.type | detectType: TypesMap; as type) {
+                          <a
+                            [routerLink]="'/' + TypesMap[type] + '/api'"
+                            fragment="{{ type }}"
+                            >{{ prop.type }}</a
+                          >
+                        } @else {
+                          <span>{{ prop.type }}</span>
+                        }
+                      </td>
+                      <td>{{ prop.description }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
       <!-- Enums -->
       <app-enums [enums]="serviceData.enums"></app-enums>
-    </ng-container>
+    }
   </cps-tab>
 </cps-tab-group>

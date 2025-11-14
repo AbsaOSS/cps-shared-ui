@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   CpsTabGroupComponent,
@@ -11,7 +10,6 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 
 @Component({
   imports: [
-    CommonModule,
     CpsTabGroupComponent,
     CpsTabComponent,
     ComponentDocsViewerComponent

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   CpsTableComponent,
@@ -19,11 +18,14 @@ import {
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 import ComponentData from '../../api-data/cps-table.json';
+import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-table-page',
   imports: [
-    CommonModule,
+    DatePipe,
+    UpperCasePipe,
+    PercentPipe,
     FormsModule,
     CpsTableComponent,
     CpsTableColumnSortableDirective,
