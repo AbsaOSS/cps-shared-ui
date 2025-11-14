@@ -7,7 +7,7 @@
                 "values": [
                     {
                         "name": "option",
-                        "optional": false,
+                        "optional": true,
                         "readonly": false,
                         "type": "CpsRadioOption",
                         "description": "An option."
