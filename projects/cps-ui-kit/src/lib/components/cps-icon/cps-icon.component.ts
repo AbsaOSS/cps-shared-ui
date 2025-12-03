@@ -1,7 +1,21 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnChanges } from '@angular/core';
+import {
+  Component,
+  inject,
+  Inject,
+  InjectionToken,
+  Input,
+  OnChanges
+} from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils';
 import { getCSSColor } from '../../utils/colors-utils';
+
+/**
+ * Injection token that is used to provide the path to the icons.
+ */
+export const ICONS_PATH = new InjectionToken<string>(
+  'Icons path for CpsIconComponent'
+);
 
 export const iconNames = [
   'access',
@@ -176,7 +190,7 @@ export class CpsIconComponent implements OnChanges {
   @Input() color = 'currentColor';
 
   iconColor = 'currentColor';
-  url = 'assets/';
+  url = inject(ICONS_PATH, { optional: true }) ?? 'assets/';
   cvtSize = '';
 
   classesList: string[] = ['cps-icon'];
