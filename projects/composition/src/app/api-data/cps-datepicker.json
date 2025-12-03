@@ -151,7 +151,7 @@
                         "name": "value",
                         "optional": false,
                         "readonly": false,
-                        "type": "null | Date",
+                        "type": "Date | null",
                         "default": "null",
                         "description": "Value of the datepicker."
                     }
@@ -165,7 +165,7 @@
                         "parameters": [
                             {
                                 "name": "value",
-                                "type": "null | Date"
+                                "type": "Date | null"
                             }
                         ],
                         "description": "Callback to invoke on value change."
