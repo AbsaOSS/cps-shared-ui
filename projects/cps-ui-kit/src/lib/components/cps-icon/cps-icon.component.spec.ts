@@ -14,8 +14,7 @@ describe('CpsIconComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, CpsIconComponent],
-      providers: [{ provide: ICONS_PATH, useValue: 'test-assets' }]
+      imports: [CommonModule, CpsIconComponent]
     }).compileComponents();
   });
 
@@ -25,17 +24,17 @@ describe('CpsIconComponent', () => {
   });
 
   describe('Test assets path injection', () => {
-    it('should use injected ICONS_PATH value', () => {
-      createComponent();
-      expect(component.url).toBe('test-assets');
-    });
-
-    it('should default to "assets/" if no ICONS_PATH is provided', () => {
-      TestBed.overrideProvider(ICONS_PATH, {
-        useValue: null
-      });
+    it('should use default path when no ICONS_PATH is provided', () => {
       createComponent();
       expect(component.url).toBe('assets/');
+    });
+
+    it('should use injected ICONS_PATH value', () => {
+      TestBed.overrideProvider(ICONS_PATH, {
+        useValue: 'test-assets/'
+      });
+      createComponent();
+      expect(component.url).toBe('test-assets/');
     });
   });
 });
