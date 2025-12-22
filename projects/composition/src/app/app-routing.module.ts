@@ -92,9 +92,9 @@ const routes: Routes = [
     matcher: pathMatcher('tree-autocomplete'),
     title: 'Tree autocomplete',
     loadComponent: () =>
-      import(
-        './pages/tree-autocomplete-page/tree-autocomplete-page.component'
-      ).then((mod) => mod.TreeAutocompletePageComponent)
+      import('./pages/tree-autocomplete-page/tree-autocomplete-page.component').then(
+        (mod) => mod.TreeAutocompletePageComponent
+      )
   },
   {
     matcher: pathMatcher('button'),
@@ -180,9 +180,9 @@ const routes: Routes = [
     matcher: pathMatcher('expansion-panel'),
     title: 'Expansion panel',
     loadComponent: () =>
-      import(
-        './pages/expansion-panel-page/expansion-panel-page.component'
-      ).then((mod) => mod.ExpansionPanelPageComponent)
+      import('./pages/expansion-panel-page/expansion-panel-page.component').then(
+        (mod) => mod.ExpansionPanelPageComponent
+      )
   },
   {
     matcher: pathMatcher('file-upload'),
@@ -196,17 +196,17 @@ const routes: Routes = [
     matcher: pathMatcher('progress-circular'),
     title: 'Progress circular',
     loadComponent: () =>
-      import(
-        './pages/progress-circular-page/progress-circular-page.component'
-      ).then((mod) => mod.ProgressCircularPageComponent)
+      import('./pages/progress-circular-page/progress-circular-page.component').then(
+        (mod) => mod.ProgressCircularPageComponent
+      )
   },
   {
     matcher: pathMatcher('progress-linear'),
     title: 'Progress linear',
     loadComponent: () =>
-      import(
-        './pages/progress-linear-page/progress-linear-page.component'
-      ).then((mod) => mod.ProgressLinearPageComponent)
+      import('./pages/progress-linear-page/progress-linear-page.component').then(
+        (mod) => mod.ProgressLinearPageComponent
+      )
   },
   {
     matcher: pathMatcher('info-circle'),
