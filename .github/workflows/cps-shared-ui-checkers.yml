@@ -101,7 +101,7 @@ jobs:
       - name: Generate API data and check for changes
         id: generate-api
         run: |
-          npm run generate-api-data
+          npm run generate-json-api
           if [[ -n "$(git status --porcelain projects/composition/src/assets/api-data/)" ]]; then
             echo "API data has changed. Please commit the updated API data.";
             git --no-pager diff projects/composition/src/assets/api-data/
