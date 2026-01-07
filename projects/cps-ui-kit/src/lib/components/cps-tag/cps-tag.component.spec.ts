@@ -83,11 +83,12 @@ describe('CpsTagComponent', () => {
     expect(component.value).toBe(true);
   });
 
-  it('should register onChange callback', () => {
+  it('should register onChange callback properly', () => {
     const fn = jest.fn();
     component.registerOnChange(fn);
-    component.value = true;
-    expect(fn).toHaveBeenCalledWith(true);
+    component.selectable = true;
+    component.toggleSelected();
+    expect(fn).toHaveBeenCalled();
   });
 
   it('should register onTouched callback', () => {
@@ -120,9 +121,10 @@ describe('CpsTagComponent', () => {
     expect(component.value).toBe(false);
   });
 
-  it('should call onChange when value is set', () => {
-    const onChangeSpy = jest.spyOn(component, 'onChange');
+  it('should call onChange when value is set after registration', () => {
+    const fn = jest.fn();
+    component.registerOnChange(fn);
     component.value = true;
-    expect(onChangeSpy).toHaveBeenCalledWith(true);
+    expect(fn).toHaveBeenCalledWith(true);
   });
 });

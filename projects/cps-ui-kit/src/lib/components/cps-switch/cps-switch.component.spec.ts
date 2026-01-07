@@ -74,11 +74,12 @@ describe('CpsSwitchComponent', () => {
     expect(component.value).toBe(true);
   });
 
-  it('should register onChange callback', () => {
+  it('should register onChange callback properly', () => {
     const fn = jest.fn();
     component.registerOnChange(fn);
-    component.value = true;
-    expect(fn).toHaveBeenCalledWith(true);
+    const input = fixture.nativeElement.querySelector('input');
+    input.click();
+    expect(fn).toHaveBeenCalled();
   });
 
   it('should register onTouched callback', () => {
@@ -120,10 +121,11 @@ describe('CpsSwitchComponent', () => {
     expect(() => component.setDisabledState(true)).not.toThrow();
   });
 
-  it('should call onChange when value is set', () => {
-    const onChangeSpy = jest.spyOn(component, 'onChange');
+  it('should call onChange when value is set after registration', () => {
+    const fn = jest.fn();
+    component.registerOnChange(fn);
     component.value = true;
-    expect(onChangeSpy).toHaveBeenCalledWith(true);
+    expect(fn).toHaveBeenCalledWith(true);
   });
 
   it('should update value to false when clicking on switch', () => {

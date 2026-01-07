@@ -77,10 +77,11 @@ describe('CpsCheckboxComponent', () => {
     expect(icon).toBeTruthy();
   });
 
-  it('should call onChange when value is set', () => {
-    const onChangeSpy = jest.spyOn(component, 'onChange');
+  it('should call onChange when value is set after registration', () => {
+    const fn = jest.fn();
+    component.registerOnChange(fn);
     component.value = true;
-    expect(onChangeSpy).toHaveBeenCalledWith(true);
+    expect(fn).toHaveBeenCalledWith(true);
   });
 
   it('should write value through ControlValueAccessor', () => {
@@ -88,11 +89,12 @@ describe('CpsCheckboxComponent', () => {
     expect(component.value).toBe(true);
   });
 
-  it('should register onChange callback', () => {
+  it('should register onChange callback properly', () => {
     const fn = jest.fn();
     component.registerOnChange(fn);
-    component.value = true;
-    expect(fn).toHaveBeenCalledWith(true);
+    const input = fixture.nativeElement.querySelector('input');
+    input.click();
+    expect(fn).toHaveBeenCalled();
   });
 
   it('should register onTouched callback', () => {
