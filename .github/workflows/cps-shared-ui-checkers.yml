@@ -45,22 +45,14 @@ jobs:
       - name: Run unit tests with coverage
         run: npm run test:coverage
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-
       - name: Comment coverage on PR
-        uses: romeovs/lcov-reporter-action@v0.3.1
+        uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
-          lcov-file: ./coverage/lcov.info
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          delete-old-comments: true
+          coverage-file: ./coverage/lcov.info
+          base-coverage-file: ./coverage/lcov.info
+          skip-step: install
+          test-script: echo "Tests already run"
 
   lint:
     runs-on: ubuntu-latest
