@@ -13,7 +13,7 @@ module.exports = {
     '!projects/**/testing/**',
     '!projects/**/public-api.ts'
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       statements: 25,
       branches: 20,
