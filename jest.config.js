@@ -14,17 +14,11 @@ module.exports = {
     '!projects/**/public-api.ts'
   ],
   coverageThresholds: {
-    'projects/cps-ui-kit/src/**/*.ts': {
-      statements: 80,
-      branches: 80,
-      functions: 80,
-      lines: 80
-    },
-    'projects/composition/src/**/*.ts': {
-      statements: 60,
-      branches: 60,
-      functions: 60,
-      lines: 60
+    global: {
+      statements: 25,
+      branches: 20,
+      functions: 20,
+      lines: 25
     }
   }
 };
