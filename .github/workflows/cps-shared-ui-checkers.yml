@@ -51,8 +51,7 @@ jobs:
         with:
           coverage-file: ./coverage/lcov.info
           base-coverage-file: ./coverage/lcov.info
-          skip-step: install
-          test-script: echo "Tests already run"
+          skip-step: all
 
   lint:
     runs-on: ubuntu-latest
