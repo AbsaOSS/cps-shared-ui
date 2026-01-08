@@ -43,7 +43,8 @@ describe('CpsRadioGroupComponent', () => {
   });
 
   it('should render all radio options', () => {
-    const radioButtons = fixture.nativeElement.querySelectorAll('cps-radio-button');
+    const radioButtons =
+      fixture.nativeElement.querySelectorAll('cps-radio-button');
     expect(radioButtons.length).toBe(3);
   });
 

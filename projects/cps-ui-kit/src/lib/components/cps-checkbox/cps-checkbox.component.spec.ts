@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsCheckboxComponent } from './cps-checkbox.component';
-import { FormsModule, NgControl } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 describe('CpsCheckboxComponent', () => {
   let component: CpsCheckboxComponent;

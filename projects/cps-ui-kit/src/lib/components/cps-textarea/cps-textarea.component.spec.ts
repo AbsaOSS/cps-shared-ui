@@ -103,7 +103,9 @@ describe('CpsTextareaComponent', () => {
     component.clearable = true;
     component.value = 'Some text';
     fixture.detectChanges();
-    const clearIcon = fixture.nativeElement.querySelector('.clear-btn cps-icon');
+    const clearIcon = fixture.nativeElement.querySelector(
+      '.clear-btn cps-icon'
+    );
     clearIcon.click();
     expect(component.value).toBe('');
   });
@@ -172,7 +174,7 @@ describe('CpsTextareaComponent', () => {
     component.resizable = 'none';
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
-    const style = window.getComputedStyle(textarea);
+    // const style = window.getComputedStyle(textarea);
     // Check that resizable class is applied (actual style check depends on CSS)
     expect(textarea).toBeTruthy();
   });
@@ -183,7 +185,9 @@ describe('CpsTextareaComponent', () => {
     component.value = '';
     fixture.detectChanges();
     // Persistent clear should be visible even without value
-    const container = fixture.nativeElement.querySelector('.cps-textarea-container');
+    const container = fixture.nativeElement.querySelector(
+      '.cps-textarea-container'
+    );
     expect(container).toBeTruthy();
   });
 

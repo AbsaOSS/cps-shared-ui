@@ -34,7 +34,9 @@ describe('CpsExpansionPanelComponent', () => {
   it('should render header title', () => {
     component.headerTitle = 'Expandable Section';
     fixture.detectChanges();
-    const header = fixture.nativeElement.querySelector('.cps-expansion-panel-header');
+    const header = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-header'
+    );
     expect(header.textContent).toContain('Expandable Section');
   });
 
@@ -54,14 +56,18 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should show chevron icon by default', () => {
-    const chevron = fixture.nativeElement.querySelector('.cps-expansion-panel-chevron');
+    const chevron = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-chevron'
+    );
     expect(chevron).toBeTruthy();
   });
 
   it('should hide chevron when showChevron is false', () => {
     component.showChevron = false;
     fixture.detectChanges();
-    const chevron = fixture.nativeElement.querySelector('.cps-expansion-panel-chevron');
+    const chevron = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-chevron'
+    );
     expect(chevron).toBeFalsy();
   });
 
@@ -104,7 +110,9 @@ describe('CpsExpansionPanelComponent', () => {
   it('should expand content when isExpanded is true', () => {
     component.isExpanded = true;
     fixture.detectChanges();
-    const content = fixture.nativeElement.querySelector('.cps-expansion-panel-content');
+    const content = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-content'
+    );
     expect(content).toBeTruthy();
   });
 
@@ -114,7 +122,9 @@ describe('CpsExpansionPanelComponent', () => {
     component.isExpanded = true;
     fixture.detectChanges();
     // Chevron rotation is handled by CSS/animation
-    const chevron = fixture.nativeElement.querySelector('.cps-expansion-panel-chevron');
+    const chevron = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-chevron'
+    );
     expect(chevron).toBeTruthy();
   });
 });

@@ -105,9 +105,8 @@ describe('CpsSwitchComponent', () => {
   it('should have disabled class when disabled', () => {
     component.disabled = true;
     fixture.detectChanges();
-    const switchLabel = fixture.nativeElement.querySelector(
-      '.cps-switch-label'
-    );
+    const switchLabel =
+      fixture.nativeElement.querySelector('.cps-switch-label');
     if (switchLabel) {
       expect(switchLabel.classList.contains('cps-switch-label-disabled')).toBe(
         true

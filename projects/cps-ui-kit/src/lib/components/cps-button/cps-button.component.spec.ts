@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsButtonComponent } from './cps-button.component';
-import { DOCUMENT } from '@angular/common';
 
 describe('CpsButtonComponent', () => {
   let component: CpsButtonComponent;
