@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
+import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 import { TitleStrategy } from '@angular/router';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
 import { CpsIconComponent } from 'cps-ui-kit';
@@ -18,6 +19,7 @@ import { CpsIconComponent } from 'cps-ui-kit';
     BrowserAnimationsModule,
     AppRoutingModule,
     NavigationSidebarComponent,
+    ThemeToggleComponent,
     CpsIconComponent
   ],
   providers: [

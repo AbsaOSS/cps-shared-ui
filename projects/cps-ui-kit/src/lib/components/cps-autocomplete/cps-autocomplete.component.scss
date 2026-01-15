@@ -1,4 +1,4 @@
-$color-calm: var(--cps-color-calm);
+$color-primary: var(--cps-accent-primary);
 $color-error: var(--cps-color-error);
 $error-background: #fef3f2;
 $autocomplete-placeholder-color: var(--cps-color-text-lightest);
@@ -6,7 +6,7 @@ $autocomplete-label-color: var(--cps-color-text-dark);
 $autocomplete-label-disabled-color: var(--cps-color-text-mild);
 $autocomplete-items-disabled-color: var(--cps-color-text-light);
 $autocomplete-hint-color: var(--cps-color-text-mild);
-$option-hover-background: var(--cps-color-highlight-hover);
+$option-hover-background: var(--cps-highlight-hover); // Adjusted for dark mode
 $selected-option-background: var(--cps-color-highlight-selected);
 $option-highlight-background: var(--cps-color-highlight-active);
 $option-highlight-selected-background: var(--cps-color-highlight-selected-dark);
@@ -61,10 +61,10 @@ $hover-transition-duration: 0.2s;
 
     &.active {
       .cps-autocomplete-box {
-        border: 1px solid $color-calm;
+        border: 1px solid $color-primary;
         .cps-autocomplete-box-area {
           .prefix-icon {
-            color: $color-calm;
+            color: $color-primary;
           }
         }
         .cps-autocomplete-box-chevron {
@@ -206,10 +206,10 @@ $hover-transition-duration: 0.2s;
       }
 
       &:hover {
-        border: 1px solid $color-calm;
+        border: 1px solid $color-primary;
         .cps-autocomplete-box-area {
           .prefix-icon {
-            color: $color-calm;
+            color: $color-primary;
           }
         }
       }
@@ -220,7 +220,7 @@ $hover-transition-duration: 0.2s;
         .cps-autocomplete-box-clear-icon {
           cursor: pointer;
           display: flex;
-          color: $color-calm;
+          color: $color-primary;
           margin-left: 8px;
           cps-icon {
             opacity: 0;
@@ -238,7 +238,7 @@ $hover-transition-duration: 0.2s;
           &:hover {
             ::ng-deep cps-icon {
               .cps-icon {
-                color: $color-calm !important;
+                color: $color-primary !important;
               }
             }
           }
@@ -353,7 +353,7 @@ $hover-transition-duration: 0.2s;
       margin-right: 8px;
       opacity: 0;
       &::after {
-        color: $color-calm;
+        color: $color-primary;
         top: 4px;
         left: 1px;
         width: 8px;
@@ -372,7 +372,7 @@ $hover-transition-duration: 0.2s;
     &.allselected {
       font-weight: 600;
       .cps-autocomplete-options-option-label {
-        color: $color-calm;
+        color: $color-primary;
       }
       .cps-autocomplete-options-option-check {
         opacity: 1;

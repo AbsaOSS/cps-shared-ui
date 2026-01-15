@@ -33,7 +33,7 @@ export class CpsTableColumnSortableDirective
   constructor(
     private elementRef: ElementRef,
     private viewContainerRef: ViewContainerRef,
-    public override dataTable: Table
+    public dataTable: Table
   ) {
     super(dataTable);
     this.sortIconRef =

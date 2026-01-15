@@ -1,5 +1,10 @@
-:root {
-  //Main
+// Dark theme color palette
+// Using color theory: warm reds with cool teal/cyan complements
+// Cool blue-gray backgrounds provide temperature balance with warm red accents
+// Proper contrast ratios for WCAG AA compliance
+
+[data-theme='dark'] {
+  // Main brand colors - slightly desaturated and lighter for dark backgrounds
   --cps-color-energy: #ff780f;
   --cps-color-energy-highlighten: #faece5;
   --cps-color-energy-lighten5: #ffff9f;
@@ -273,58 +278,65 @@
   --cps-color-text-darkest: #2d2323;
 
   // Semantic design tokens (use these inside components)
-  --cps-accent-primary: var(--cps-color-calm);
-  --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: var(--cps-color-prepared);
-  --cps-accent-secondary-contrast: #ffffff;
-  --cps-color-error: #cc3333;
-  --cps-error-background: #fef3f2;
+  --cps-accent-primary: var(--cps-color-surprise);
+  --cps-accent-primary-contrast: var(--cps-color-text-darkest);
+  --cps-accent-secondary: var(--cps-color-warn);
+  --cps-accent-secondary-contrast: var(--cps-color-text-darkest);
+  --cps-color-error: var(--cps-color-warmth);
+  --cps-error-background: #ffb3b327;
 
   // Lines and borders
-  --cps-color-line: #e3e2e2;
-
-  --cps-surface-body: var(--cps-color-bg-light);
-  --cps-surface-highlight: #ffffff;
-  --cps-surface-muted: var(
-    --cps-color-bg-lightest
-  ); //switched with --cps-color-bg-light, investigate impact
-  --cps-surface-elevated: var(--cps-color-bg-mid);
-  --cps-surface-control: #ffffff;
-  --cps-surface-overlay: rgba(0, 0, 0, 0.45);
-  --cps-background-color: var(--cps-color-bg-lightest);
-  --cps-background-disabled: #f7f7f7;
+  --cps-color-line: #e3e2e22d;
+  --cps-surface-body: #1a1a1a;
+  --cps-surface-highlight: #262626;
+  --cps-surface-muted: var(--cps-color-bg-mid);
+  --cps-surface-elevated: var(--cps-color-bg-light);
+  --cps-surface-control: var(--cps-color-bg-lightest);
+  --cps-surface-overlay: rgba(0, 0, 0, 0.65);
+  --cps-background-color: #0f0f0f;
+  --cps-background-disabled: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); // oklch(55.096% 0.02679 264.351 / 0.452);
 
   // Tab component
-  --cps-tab-subtabs-background: #d7d7d759;
-  --cps-tabs-subtabs-active-background: #fff;
-  --cps-tabs-subtabs-background-hover: var(--cps-highlight-active);
-  --cps-tabs-subtabs-text-hover: var(--cps-accent-primary);
+  --cps-tab-subtabs-background: var(--cps-surface-highlight);
+  --cps-tabs-subtabs-active-background: color-mix(
+    in oklab,
+    var(--cps-accent-primary) 5%,
+    transparent
+  );
+  --cps-tabs-subtabs-background-hover: var(--cps-highlight-hover);
+  --cps-tabs-subtabs-text-hover: var(--cps-text-primary);
 
-  --cps-text-primary: var(--cps-color-text-darkest);
-  --cps-text-secondary: var(--cps-color-text-dark);
-  --cps-text-muted: #6b7280;
-  --cps-text-inverse: #ffffff;
-  --cps-text-on-accent: #ffffff;
-  --cps-text-disabled: var(--cps-color-text-light);
+  // Text
+  --cps-text-primary: #f3f4f6;
+  --cps-text-secondary: #caccda; // #dcdee9 second candidate
+  --cps-text-muted: #9ca3af;
+  --cps-text-inverse: #08080a;
+  --cps-text-on-accent: var(--cps-color-text-darkest);
+  --cps-text-disabled: #8a8c92;
 
-  --cps-border-color: var(--cps-color-line-mid);
-  --cps-border-strong: var(--cps-color-line-dark);
-  --cps-border-focus: var(--cps-color-calm);
+  --cps-border-color: #333333;
+  --cps-border-strong: var(--cps-color-line-darkest);
+  --cps-border-focus: var(--cps-color-surprise);
 
-  --cps-highlight-hover: var(--cps-color-highlight-hover);
-  --cps-highlight-active: var(--cps-color-highlight-active);
+  --cps-highlight-hover: rgba(255, 255, 255, 0.05);
+  --cps-highlight-active: var(--cps-color-text-darkest);
   --cps-highlight-selected: var(--cps-color-highlight-selected);
 
   --cps-state-info: var(--cps-color-info);
-  --cps-state-info-contrast: #ffffff;
+  --cps-state-info-contrast: var(--cps-color-text-darkest);
   --cps-state-info-surface: var(--cps-color-info-bg);
   --cps-state-success: var(--cps-color-success);
-  --cps-state-success-contrast: #ffffff;
+  --cps-state-success-contrast: var(--cps-color-text-darkest);
   --cps-state-success-surface: var(--cps-color-success-bg);
   --cps-state-warn: var(--cps-color-warn);
-  --cps-state-warn-contrast: #3b2500;
+  --cps-state-warn-contrast: var(--cps-color-text-darkest);
   --cps-state-warn-surface: var(--cps-color-warn-bg);
   --cps-state-error: var(--cps-color-error);
-  --cps-state-error-contrast: #ffffff;
+  --cps-state-error-contrast: var(--cps-color-text-darkest);
   --cps-state-error-surface: var(--cps-color-error-bg);
 }

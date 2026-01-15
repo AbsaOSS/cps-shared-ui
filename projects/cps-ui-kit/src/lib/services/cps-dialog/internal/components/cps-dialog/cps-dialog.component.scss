@@ -1,6 +1,6 @@
 $cps-overlay-background: rgba(0, 0, 0, 0.2);
-$header-drag-hover-background: var(--cps-color-highlight-hover);
-$header-drag-active-background: var(--cps-color-highlight-active);
+$header-drag-hover-background: var(--cps-highlight-hover);
+$header-drag-active-background: var(--cps-highlight-active);
 $animation-duration: 150ms;
 
 .cps-dialog-mask {
@@ -103,8 +103,8 @@ $animation-duration: 150ms;
   .cps-dialog-header {
     overflow: hidden;
     border-bottom: 0 none;
-    background: #ffffff;
-    color: var(--cps-color-text-dark);
+    background: var(--cps-surface-body);
+    color: var(--cps-text-secondary);
     padding: 1rem;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
@@ -113,10 +113,10 @@ $animation-duration: 150ms;
     justify-content: space-between;
     flex-shrink: 0;
     &.cps-dialog-header-left-bordered {
-      border-left: 4px solid var(--cps-color-surprise);
+      border-left: 4px solid var(--cps-accent-primary);
     }
     &.cps-dialog-header-bottom-bordered {
-      border-bottom: 1px solid var(--cps-color-line-mid);
+      border-bottom: 1px solid var(--cps-border-color);
     }
     .cps-dialog-header-left {
       display: flex;
@@ -143,8 +143,8 @@ $animation-duration: 150ms;
 }
 
 .cps-dialog .cps-dialog-content {
-  background: #ffffff;
-  color: var(--cps-color-text-dark);
+  background: var(--cps-surface-body);
+  color: var(--cps-text-secondary);
   padding: 1rem;
 }
 
@@ -259,8 +259,10 @@ $animation-duration: 150ms;
     display: block;
     width: 40px;
     height: 0;
-    box-shadow: 0 0px 0 1px var(--cps-color-calm),
-      0 7px 0 1px var(--cps-color-calm), 0 14px 0 1px var(--cps-color-calm);
+    box-shadow:
+      0 0px 0 1px var(--cps-accent-primary),
+      0 7px 0 1px var(--cps-accent-primary),
+      0 14px 0 1px var(--cps-accent-primary);
     transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
     top: 50%;
     left: 50%;

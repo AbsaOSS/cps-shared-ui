@@ -30,7 +30,7 @@ export class CpsProgressLinearComponent implements OnInit {
    * Color of the progress bar.
    * @group Props
    */
-  @Input() color = 'calm';
+  @Input() color = 'var(--cps-accent-primary)';
 
   /**
    * Background color of the progress bar.

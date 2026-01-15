@@ -15,8 +15,13 @@
   align-items: center;
   width: fit-content;
   cursor: pointer;
+
+  cps-icon {
+    color: vars.$color-calm;
+  }
+
   span {
     margin-left: 16px;
-    color: vars.$color-calm;
+    color: var(--cps-text-secondary);
   }
 }

@@ -1,0 +1,16 @@
+// Theme transition styles
+// Provides smooth color transitions when switching between light and dark themes
+// Applied temporarily via the 'cps-theme-transition' class
+
+html.cps-theme-transition,
+html.cps-theme-transition *,
+html.cps-theme-transition *:before,
+html.cps-theme-transition *:after {
+  transition:
+    background-color 500ms cubic-bezier(0.4, 0, 0.2, 1),
+    color 500ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 500ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1),
+    fill 500ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition-delay: 0 !important;
+}
