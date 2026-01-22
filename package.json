@@ -33,7 +33,7 @@
     "@primeuix/utils": "^0.6.2",
     "@types/lodash-es": "^4.17.12",
     "eslint-plugin-cypress": "^3.6.0",
-    "lodash-es": "^4.17.21",
+    "lodash-es": "^4.17.23",
     "primeicons": "^7.0.0",
     "primeng": "^20.0.1",
     "rxjs": "~7.8.2",
