@@ -49,8 +49,8 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
-          coverage-file: ./coverage/lcov.info
-          base-coverage-file: ./coverage/lcov.info
+          coverage-file: ./coverage/report.json
+          base-coverage-file: ./coverage/report.json
           skip-step: all
 
   lint:
