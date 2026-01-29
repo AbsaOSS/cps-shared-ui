@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CpsExpansionPanelComponent } from './cps-expansion-panel.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -46,14 +46,13 @@ describe('CpsExpansionPanelComponent', () => {
     expect(component.isExpanded).toBe(true);
   });
 
-  it('should emit afterExpand when toggled to expanded', () => {
+  it('should emit afterExpand when toggled to expanded', fakeAsync(() => {
     jest.spyOn(component.afterExpand, 'emit');
     component.toggleExpansion();
     // Wait for animation to complete
-    setTimeout(() => {
-      expect(component.afterExpand.emit).toHaveBeenCalled();
-    }, 300);
-  });
+    tick(300);
+    expect(component.afterExpand.emit).toHaveBeenCalled();
+  }));
 
   it('should show chevron icon by default', () => {
     const chevron = fixture.nativeElement.querySelector(
