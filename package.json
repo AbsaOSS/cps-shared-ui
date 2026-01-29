@@ -15,6 +15,10 @@
     "test:a11y:local": "npm run start & sleep 10 && npm run test:a11y:summary && kill %1",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
+    "playwright": "playwright test",
+    "playwright:ui": "playwright test --ui",
+    "playwright:headed": "playwright test --headed",
+    "playwright:report": "playwright show-report",
     "format": "prettier --write \"**/*.{ts,html}\""
   },
   "private": true,
@@ -45,6 +49,7 @@
     "@angular-devkit/build-angular": "^20.3.9",
     "@angular/cli": "~20.3.9",
     "@angular/compiler-cli": "^20.3.10",
+    "@playwright/test": "^1.58.0",
     "@types/express": "^4.17.25",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.10",
