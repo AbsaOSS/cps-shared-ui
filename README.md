@@ -85,6 +85,15 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 `npm run test`
 
 
+#### Run Playwright tests
+
+Playwright tests provide component-level integration and UI interaction testing.
+
+`npm run playwright` (headless run) or you can open Playwright UI mode using `npm run playwright:ui`
+
+For more details, see the [Playwright testing approach documentation](docs/testing/playwright-approach.md).
+
+
 #### Run Cypress e2e tests
 
 `npm run cypress:run` (headless run) or you can open Cypress tests using `npm run cypress:open`

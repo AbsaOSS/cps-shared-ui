@@ -7,7 +7,7 @@ test.describe('CPS Button Component', () => {
 
   test('should display button with label', async ({ page }) => {
     // Find a button by its label text
-    const button = page.locator('cps-button').filter({ hasText: 'Primary' }).first();
+    const button = page.locator('cps-button').filter({ hasText: 'Normal button' }).first();
     
     await expect(button).toBeVisible();
     await expect(button.locator('.cps-button__text')).toBeVisible();
@@ -15,7 +15,7 @@ test.describe('CPS Button Component', () => {
 
   test('should be clickable and emit click event', async ({ page }) => {
     // Find a clickable button
-    const button = page.locator('cps-button').filter({ hasText: 'Primary' }).first();
+    const button = page.locator('cps-button').filter({ hasText: 'Normal button' }).first();
     const buttonElement = button.locator('button');
     
     await expect(buttonElement).toBeEnabled();
@@ -52,10 +52,18 @@ test.describe('CPS Button Component', () => {
 
   test('should display different button sizes', async ({ page }) => {
     // Check for buttons with size classes
-    const normalButton = page.locator('cps-button .cps-button--normal').first();
+    const largeButton = page.locator('cps-button').filter({ hasText: 'Large button' }).first();
+    const smallButton = page.locator('cps-button').filter({ hasText: 'Small button' }).first();
     
-    if (await normalButton.count() > 0) {
-      await expect(normalButton).toBeVisible();
-    }
+    await expect(largeButton).toBeVisible();
+    await expect(smallButton).toBeVisible();
+  });
+
+  test('should display loading state', async ({ page }) => {
+    // Find a button in loading state
+    const loadingButton = page.locator('cps-button').filter({ has: page.locator('cps-progress-circular') }).first();
+    
+    await expect(loadingButton).toBeVisible();
+    await expect(loadingButton.locator('cps-progress-circular')).toBeVisible();
   });
 });
