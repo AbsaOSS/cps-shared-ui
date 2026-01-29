@@ -89,12 +89,12 @@ test.describe('CPS Button Component', () => {
   });
 
   test('should display button with label', async ({ page }) => {
-    const button = page.locator('cps-button').filter({ hasText: 'Primary' }).first();
+    const button = page.locator('cps-button').filter({ hasText: 'Normal button' }).first();
     await expect(button).toBeVisible();
   });
 
   test('should be clickable and emit click event', async ({ page }) => {
-    const button = page.locator('cps-button').filter({ hasText: 'Primary' }).first();
+    const button = page.locator('cps-button').filter({ hasText: 'Normal button' }).first();
     await button.locator('button').click();
     await expect(button.locator('button')).toBeEnabled();
   });

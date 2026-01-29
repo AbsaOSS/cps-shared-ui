@@ -40,7 +40,7 @@ test.describe('CPS Button Component', () => {
     await expect(buttonWithIcon.locator('cps-icon')).toBeVisible();
   });
 
-  test('should apply different button types (solid, outlined, borderless)', async ({ page }) => {
+  test('should apply solid button type', async ({ page }) => {
     // Check for solid buttons (default)
     const solidButton = page.locator('cps-button .cps-button--solid').first();
     await expect(solidButton).toBeVisible();
@@ -48,15 +48,23 @@ test.describe('CPS Button Component', () => {
     // Check that button has proper classes
     const buttonClasses = await solidButton.getAttribute('class');
     expect(buttonClasses).toContain('cps-button');
+    expect(buttonClasses).toContain('cps-button--solid');
   });
 
   test('should display different button sizes', async ({ page }) => {
-    // Check for buttons with size classes
-    const largeButton = page.locator('cps-button').filter({ hasText: 'Large button' }).first();
-    const smallButton = page.locator('cps-button').filter({ hasText: 'Small button' }).first();
-    
+    // Check for buttons with large size
+    const largeButton = page.locator('cps-button .cps-button--large').first();
     await expect(largeButton).toBeVisible();
+    
+    const largeClasses = await largeButton.getAttribute('class');
+    expect(largeClasses).toContain('cps-button--large');
+    
+    // Check for buttons with small size
+    const smallButton = page.locator('cps-button .cps-button--small').first();
     await expect(smallButton).toBeVisible();
+    
+    const smallClasses = await smallButton.getAttribute('class');
+    expect(smallClasses).toContain('cps-button--small');
   });
 
   test('should display loading state', async ({ page }) => {

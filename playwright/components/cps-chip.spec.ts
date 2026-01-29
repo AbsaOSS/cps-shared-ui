@@ -15,35 +15,20 @@ test.describe('CPS Chip Component', () => {
 
   test('should display closable chip with close button', async ({ page }) => {
     // Find closable chip with close icon
-    const closableChip = page.locator('cps-chip').filter({ has: page.locator('.cps-chip-close-icon') }).first();
+    const closableChips = page.locator('cps-chip').filter({ has: page.locator('.cps-chip-close-icon') });
     
-    if (await closableChip.count() > 0) {
-      await expect(closableChip).toBeVisible();
-      await expect(closableChip.locator('.cps-chip-close-icon')).toBeVisible();
-    }
-  });
-
-  test('should close chip when clicking close button', async ({ page }) => {
-    // Find a closable chip
-    const closableChip = page.locator('cps-chip').filter({ has: page.locator('.cps-chip-close-icon') }).first();
-    
-    if (await closableChip.count() > 0) {
-      const closeButton = closableChip.locator('.cps-chip-close-icon');
-      await closeButton.click();
-      
-      // After clicking close, the chip might be removed or hidden
-      // This depends on the implementation
-    }
+    // Verify at least one closable chip exists
+    await expect(closableChips.first()).toBeVisible();
+    await expect(closableChips.first().locator('.cps-chip-close-icon')).toBeVisible();
   });
 
   test('should display chip with icon', async ({ page }) => {
     // Find chips with icons
-    const chipWithIcon = page.locator('cps-chip').filter({ has: page.locator('cps-icon') }).first();
+    const chipsWithIcon = page.locator('cps-chip').filter({ has: page.locator('cps-icon') });
     
-    if (await chipWithIcon.count() > 0) {
-      await expect(chipWithIcon).toBeVisible();
-      await expect(chipWithIcon.locator('cps-icon')).toBeVisible();
-    }
+    // Verify at least one chip with icon exists
+    await expect(chipsWithIcon.first()).toBeVisible();
+    await expect(chipsWithIcon.first().locator('cps-icon')).toBeVisible();
   });
 
   test('should display multiple chips', async ({ page }) => {
