@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
 import { CpsExpansionPanelComponent } from './cps-expansion-panel.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
