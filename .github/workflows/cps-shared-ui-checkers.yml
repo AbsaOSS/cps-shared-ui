@@ -42,8 +42,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests
-        run: npm run test
+      - name: Run composition unit tests with coverage
+        run: npm run test:composition
+
+      - name: Run library unit tests with coverage
+        run: npm run test:coverage:cps-ui-kit
+
+      - name: Comment coverage on PR
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        if: github.event_name == 'pull_request'
+        with:
+          custom-title: Coverage report for library
+          coverage-file: ./coverage/report.json
+          base-coverage-file: ./coverage/report.json
+          skip-step: all
 
   lint:
     runs-on: ubuntu-latest
