@@ -282,7 +282,7 @@
   --cps-accent-primary-contrast: var(--cps-color-text-darkest);
   --cps-accent-secondary: var(--cps-color-warn);
   --cps-accent-secondary-contrast: var(--cps-color-text-darkest);
-  --cps-color-error: var(--cps-color-warmth);
+  --cps-color-error: #ff2b5b;
   --cps-error-background: #ffb3b327;
 
   // Lines and borders
@@ -290,7 +290,7 @@
   --cps-surface-body: #1a1a1a;
   --cps-surface-highlight: #262626;
   --cps-surface-muted: var(--cps-color-bg-mid);
-  --cps-surface-elevated: var(--cps-color-bg-light);
+  --cps-surface-elevated: #1f1f1f;
   --cps-surface-control: var(--cps-color-bg-lightest);
   --cps-surface-overlay: rgba(0, 0, 0, 0.65);
   --cps-background-color: #0f0f0f;
@@ -315,7 +315,7 @@
   --cps-text-primary: #f3f4f6;
   --cps-text-secondary: #caccda; // #dcdee9 second candidate
   --cps-text-muted: #9ca3af;
-  --cps-text-inverse: #08080a;
+  --cps-text-inverse: #f3f4f6;
   --cps-text-on-accent: var(--cps-color-text-darkest);
   --cps-text-disabled: #8a8c92;
 

@@ -162,7 +162,7 @@ export class CpsTabGroupComponent
    * Background color of tabs.
    * @group Props
    */
-  @Input() tabsBackground = 'red';
+  @Input() tabsBackground = 'inherit';
 
   /**
    * Callback to invoke before tab change.

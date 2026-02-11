@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CpsThemeService, CpsIconComponent } from 'cps-ui-kit';
+import { CpsIconComponent, CpsThemeService } from 'cps-ui-kit';
 
 @Component({
   selector: 'app-theme-toggle',
@@ -13,7 +13,6 @@ import { CpsThemeService, CpsIconComponent } from 'cps-ui-kit';
       "
       type="button">
       <cps-icon [icon]="isDark() ? 'sun' : 'moon'" [size]="20"> </cps-icon>
-      <span>{{ isDark() ? 'Light' : 'Dark' }} Mode</span>
     </button>
   `,
   styles: [

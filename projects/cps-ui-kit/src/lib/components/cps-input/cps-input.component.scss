@@ -1,6 +1,6 @@
 $color-calm: var(--cps-accent-primary);
 $input-hint-color: var(--cps-text-muted); //--cps-color-text-mild
-$input-label-disabled-color: var(--cps-color-text-mild);
+$input-label-disabled-color: var(--cps-text-muted);
 $input-pass-show-btn-color: var(--cps-color-text-mild);
 $input-placeholder-color: var(--cps-color-text-lightest);
 $input-border-color: var(--cps-border-color);
@@ -68,7 +68,7 @@ $hover-transition-duration: 0.2s;
         }
 
         &:disabled {
-          opacity: 1;
+          opacity: 0.7;
         }
         &:disabled:not([readonly]) {
           color: $input-text-disabled-color !important;
