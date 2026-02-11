@@ -1,8 +1,8 @@
-$color-calm: var(--cps-color-calm);
-$border-dashed-2px: 2px dashed $color-calm;
-$border-dashed-1px: 1px dashed $color-calm;
-$text-color-dark: var(--cps-color-text-dark);
-$text-color-darkest: var(--cps-color-text-darkest);
+$color-primary: var(--cps-accent-primary);
+$border-dashed-2px: 2px dashed $color-primary;
+$border-dashed-1px: 1px dashed $color-primary;
+$text-color-dark: var(--cps-text-primary);
+$text-color-darkest: var(--cps-text-secondary);
 
 :host {
   display: flex;
@@ -16,13 +16,13 @@ $text-color-darkest: var(--cps-color-text-darkest);
       position: relative;
       border-radius: 1rem;
       &:hover {
-        background-color: var(--cps-color-highlight-hover);
+        background-color: var(--cps-highlight-hover);
       }
       &:active {
-        background-color: var(--cps-color-highlight-selected);
+        background-color: var(--cps-highlight-active);
       }
       &.dragged-over {
-        background-color: var(--cps-color-highlight-selected);
+        background-color: var(--cps-highlight-active);
       }
       &.with-uploads {
         border-bottom-right-radius: 0;
@@ -43,7 +43,7 @@ $text-color-darkest: var(--cps-color-text-darkest);
       .cps-file-upload-dropzone-title {
         font-size: 16px;
         margin: 8px 0;
-        color: $color-calm;
+        color: $color-primary;
         font-weight: 600;
       }
 
@@ -69,7 +69,7 @@ $text-color-darkest: var(--cps-color-text-darkest);
       border-right: $border-dashed-2px;
       border-bottom-right-radius: 16px;
       border-bottom-left-radius: 16px;
-      background-color: var(--cps-color-highlight-hover);
+      background-color: var(--cps-highlight-hover);
 
       .cps-file-upload-uploaded-file {
         cursor: default;

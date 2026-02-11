@@ -8,6 +8,7 @@
   .cps-tabs {
     display: flex;
     position: relative;
+    background-color: var(--cps-surface-body) !important;
 
     .nav-btn {
       display: flex;
@@ -20,7 +21,7 @@
 
       &:hover {
         ::ng-deep cps-icon .cps-icon {
-          color: var(--cps-color-calm) !important;
+          color: var(--cps-accent-primary) !important;
         }
       }
     }
@@ -66,18 +67,18 @@
         font-weight: 500;
         font-size: 15px;
         line-height: 20px;
-        color: var(--cps-color-text-dark);
+        color: var(--cps-text-muted);
         opacity: 1;
         cursor: pointer;
         border-bottom: 3px solid transparent;
         transition: border-bottom 0.2s;
 
         &.active:not(.disabled) {
-          color: var(--cps-color-calm);
+          color: var(--cps-accent-primary);
         }
         &.disabled {
           cursor: default;
-          color: var(--cps-color-text-light);
+          color: var(--cps-text-disabled);
         }
 
         .cps-tab-link {
@@ -90,7 +91,7 @@
           padding: 0 3px;
           height: 20px;
           border-radius: 50%;
-          background-color: var(--cps-color-surprise);
+          background-color: var(--cps-accent-primary);
           color: white;
           font-size: 12px;
           display: flex;
@@ -123,18 +124,20 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     .cps-tabs-list .cps-tab {
       &.active:not(.disabled) {
-        border-bottom: 3px solid var(--cps-color-surprise);
+        border-bottom: 3px solid var(--cps-accent-primary);
       }
       &.active.disabled {
         border-bottom: 3px solid var(--cps-color-line-dark);
       }
 
       &:hover:not(:active, .active, .disabled) {
-        border-bottom: 3px solid var(--cps-color-line-light);
+        border-bottom: 3px solid var(--cps-color-line);
+        background-color: var(--cps-highlight-hover);
+        color: var(--cps-text-primary);
       }
 
       &:active:not(.disabled, .active) {
-        border-bottom: 3px solid var(--cps-color-line-mid);
+        border-bottom: 3px solid var(--cps-color-line);
       }
     }
   }
@@ -142,13 +145,14 @@
   .cps-tabs.cps-tabs-subtabs {
     .cps-tabs-list .cps-tab {
       height: 33px;
-      background-color: #d7d7d759;
+      background-color: var(--cps-tab-subtabs-background);
 
       &.active {
-        background-color: #fff;
+        background-color: var(--cps-tabs-subtabs-active-background);
       }
-      &:hover:not(.disabled) {
-        color: var(--cps-color-calm);
+      &:hover:not(.disabled, .active) {
+        color: var(--cps-tabs-subtabs-text-hover);
+        background-color: var(--cps-tabs-subtabs-background-hover);
       }
     }
   }
@@ -158,7 +162,7 @@
     position: relative;
     min-height: 100px;
     font-family: 'Source Sans Pro', sans-serif;
-    color: var(--cps-color-text-dark);
+    color: var(--cps-text-primary); //--cps-text-primary
     flex: 1;
     border-bottom: none;
     overflow: hidden;
@@ -182,6 +186,6 @@
   }
 
   .cps-tab-content-wrap.cps-tab-content-wrap-subtabs {
-    background-color: #fff;
+    background-color: var(--cps-surface-body);
   }
 }

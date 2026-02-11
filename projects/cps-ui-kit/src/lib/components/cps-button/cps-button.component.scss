@@ -42,7 +42,7 @@
 
       &:disabled {
         background-color: var(--cps-color-line-mid) !important;
-        color: var(--cps-color-text-light) !important;
+        color: var(--cps-text-disabled) !important;
       }
     }
 
@@ -52,13 +52,13 @@
 
       &:disabled {
         border-color: var(--cps-color-line-dark) !important;
-        color: var(--cps-color-text-light) !important;
+        color: var(--cps-text-disabled) !important;
       }
     }
 
     &--borderless {
       &:disabled {
-        color: var(--cps-color-text-light) !important;
+        color: var(--cps-text-disabled) !important;
       }
       &:hover:not(:active):not(:disabled) {
         box-shadow: 0 1px 4px 0 rgba(12, 12, 13, 0.1);

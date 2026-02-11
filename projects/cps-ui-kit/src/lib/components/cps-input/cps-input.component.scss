@@ -1,17 +1,17 @@
-$color-calm: var(--cps-color-calm);
-$input-hint-color: var(--cps-color-text-mild);
-$input-label-disabled-color: var(--cps-color-text-mild);
+$color-calm: var(--cps-accent-primary);
+$input-hint-color: var(--cps-text-muted); //--cps-color-text-mild
+$input-label-disabled-color: var(--cps-text-muted);
 $input-pass-show-btn-color: var(--cps-color-text-mild);
 $input-placeholder-color: var(--cps-color-text-lightest);
-$input-border-color: var(--cps-color-line-light);
-$input-label-color: var(--cps-color-text-dark);
-$input-text-color: var(--cps-color-text-dark);
-$input-text-disabled-color: var(--cps-color-text-light);
-$input-prefix-text-color: var(--cps-color-text-mild);
-$input-prefix-icon-color: var(--cps-color-text-dark);
+$input-border-color: var(--cps-border-color);
+$input-label-color: var(--cps-text-primary); // --cps-color-text-dark
+$input-text-color: var(--cps-text-primary); // --cps-color-text-dark
+$input-text-disabled-color: var(--cps-text-disabled);
+$input-prefix-text-color: var(--cps-text-muted);
+$input-prefix-icon-color: var(--cps-text-primary); // --cps-color-text-dark
 
 $color-error: var(--cps-color-error);
-$error-background: #fef3f2;
+$error-background: var(--cps-error-background);
 
 $hover-transition-duration: 0.2s;
 
@@ -49,7 +49,7 @@ $hover-transition-duration: 0.2s;
         font-family: 'Source Sans Pro', sans-serif;
         font-size: 1rem;
         color: $input-text-color;
-        background: #ffffff;
+        background: var(--cps-surface-highlight);
         padding: 0.375rem 0.75rem;
         line-height: 1.5;
         border: 1px solid $input-border-color;
@@ -68,16 +68,27 @@ $hover-transition-duration: 0.2s;
         }
 
         &:disabled {
-          opacity: 1;
+          opacity: 0.7;
         }
         &:disabled:not([readonly]) {
-          color: $input-text-disabled-color;
-          background-color: #f7f7f7;
+          color: $input-text-disabled-color !important;
+          -webkit-text-fill-color: $input-text-disabled-color !important;
+          background-color: var(--cps-background-disabled);
           pointer-events: none;
         }
 
         &[type='password'] {
           font-family: Verdana;
+        }
+
+        // Override browser autofill styles
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus,
+        &:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px var(--cps-surface-highlight) inset !important;
+          -webkit-text-fill-color: $input-text-color !important;
+          transition: background-color 5000s ease-in-out 0s;
         }
       }
 
@@ -116,7 +127,7 @@ $hover-transition-duration: 0.2s;
         .clear-btn {
           display: flex;
           cursor: pointer;
-          color: $color-calm;
+          color: var(--cps-color-error);
           cps-icon {
             opacity: 0;
             transition-duration: $hover-transition-duration;
@@ -239,6 +250,10 @@ $hover-transition-duration: 0.2s;
 
       &-disabled {
         color: $input-label-disabled-color;
+      }
+
+      &-error {
+        color: $color-error;
       }
     }
     ::placeholder {

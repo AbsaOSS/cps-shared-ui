@@ -1,14 +1,14 @@
-$group-label-color: var(--cps-color-text-dark);
+$group-label-color: var(--cps-text-secondary);
 $group-label-disabled-color: var(--cps-color-text-mild);
-$selected-background-color: var(--cps-color-calm);
+$selected-background-color: var(--cps-accent-primary);
 $selected-disabled-background-color: var(--cps-color-line-mid);
 $selected-disabled-option-label-color: var(--cps-color-text-mild);
-$disabled-background-color: #f7f7f7;
+$disabled-background-color: var(--cps-background-disabled);
 $disabled-option-label-color: var(--cps-color-text-light);
 $option-label-color: var(--cps-color-text-dark);
-$border-color: var(--cps-color-text-lightest);
-$option-hover-background: var(--cps-color-highlight-hover);
-$option-active-background: var(--cps-color-highlight-active);
+$border-color: var(--cps-border-color);
+$option-hover-background: var(--cps-highlight-hover);
+$option-active-background: var(--cps-highlight-active);
 
 :host {
   .cps-btn-toggle {
@@ -58,6 +58,7 @@ $option-active-background: var(--cps-color-highlight-active);
         pointer-events: none;
         background-color: $disabled-background-color;
         color: $disabled-option-label-color;
+        opacity: 0.7;
       }
 
       &-option-input:disabled:checked + .cps-btn-toggle-content-option-content {
@@ -72,7 +73,7 @@ $option-active-background: var(--cps-color-highlight-active);
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          background-color: #ffffff;
+          background-color: var(--cps-background-color);
           padding: 0.375em 0.75em;
           position: relative;
           border: 0.0625em solid $border-color;
@@ -81,7 +82,7 @@ $option-active-background: var(--cps-color-highlight-active);
           font-size: 16px;
           font-family: 'Source Sans Pro', sans-serif;
           letter-spacing: 0.05em;
-          color: $option-label-color;
+          color: var(--cps-text-muted);
           text-align: center;
           transition: background-color 0.2s ease;
           -webkit-user-select: none; /* Safari */
@@ -89,9 +90,11 @@ $option-active-background: var(--cps-color-highlight-active);
           user-select: none; /* Standard syntax */
           &:hover {
             background: $option-hover-background;
+            color: var(--cps-text-primary);
           }
           &:active {
             background: $option-active-background;
+            color: #ffffff;
           }
         }
       }

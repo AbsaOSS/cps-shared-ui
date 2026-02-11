@@ -2,21 +2,33 @@
 
 .top-toolbar {
   height: vars.$top-tbar-height;
-  background-color: white;
+  background-color: var(--cps-surface-body);
   display: flex;
   padding-left: 20px;
+  padding-right: 20px;
   align-items: center;
-  border-bottom: 1px solid lightgrey;
+  border-bottom: 1px solid var(--cps-border-color);
+  gap: 16px;
+
   img {
     width: 42px;
     height: 42px;
   }
+
   span {
-    margin-left: 16px;
     font-size: 18px;
     color: vars.$color-calm;
+
+    &:first-of-type {
+      flex: 1;
+    }
+  }
+
+  app-theme-toggle {
+    margin-left: auto;
   }
 }
+
 .composition-container {
   display: flex;
   height: calc(100vh - vars.$top-tbar-height);
