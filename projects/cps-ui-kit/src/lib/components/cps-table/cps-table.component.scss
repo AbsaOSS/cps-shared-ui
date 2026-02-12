@@ -1,26 +1,4 @@
-$color-calm: var(--cps-color-calm);
-$color-prepared: var(--cps-color-prepared);
-$color-surprise: var(--cps-color-surprise);
-$checkbox-border-color: var(--cps-color-text-mild);
-$stripe-color: var(--cps-color-bg-light);
-$table-borders-color: var(--cps-color-line-mid);
-$toolbar-text-color: var(--cps-color-text-darkest);
-$header-text-color: var(--cps-color-text-mild);
-$body-text-color: var(--cps-color-text-dark);
-$row-hover-background: var(--cps-color-highlight-hover);
-$row-selected-background: var(--cps-color-highlight-active);
-$sorticon-hover-color: var(--cps-color-text-mild);
-$paginator-text-color: var(--cps-color-text-dark);
-$paginator-border-color: var(--cps-color-text-dark);
-$paginator-elem-hover-background: var(--cps-color-highlight-hover);
-$paginator-elem-active-background: var(--cps-color-highlight-active);
-$colitem-hover-background: var(--cps-color-highlight-hover);
-$colitem-value-color: var(--cps-color-text-dark);
-$selected-colitem-background: var(--cps-color-highlight-selected);
-$colitem-highlight-background: var(--cps-color-highlight-active);
-$colitem-highlight-selected-background: var(
-  --cps-color-highlight-selected-dark
-);
+// Component-specific sizing constants
 $tbar-small-height: 43px;
 $tbar-normal-height: 72px;
 
@@ -41,7 +19,7 @@ $tbar-normal-height: 72px;
       position: relative;
 
       .p-column-resizer-helper {
-        background: $color-calm;
+        background: var(--cps-accent-primary);
         width: 1px;
       }
     }
@@ -57,15 +35,14 @@ $tbar-normal-height: 72px;
       align-items: center;
       padding: 0 10px !important;
       border: unset;
-      background: unset;
-      border-top: 1px solid $table-borders-color;
-      border-right: 1px solid $table-borders-color;
-      border-left: 4px solid $color-surprise !important;
+      background: var(--cps-surface-body);
+      border-top: 1px solid var(--cps-border-color);
+      border-right: 1px solid var(--cps-border-color);
+      border-left: 4px solid var(--cps-border-focus) !important;
       border-radius: 4px 4px 0 0;
       font-size: 16px;
       line-height: 150%;
-      background-color: white;
-      color: $toolbar-text-color;
+      color: var(--cps-text-primary);
       overflow: auto;
       .cps-table-tbar-left {
         display: flex;
@@ -105,7 +82,7 @@ $tbar-normal-height: 72px;
             }
             cps-icon:hover {
               .cps-icon {
-                color: $color-prepared !important;
+                color: var(--cps-accent-secondary) !important;
               }
             }
           }
@@ -161,7 +138,7 @@ $tbar-normal-height: 72px;
       > .p-scroller
       > .p-datatable-table
       > .p-datatable-tfoot {
-      background-color: white;
+      background-color: var(--cps-surface-body);
     }
 
     .p-datatable-scrollable-table > .p-datatable-thead {
@@ -181,11 +158,11 @@ $tbar-normal-height: 72px;
     .p-datatable .p-datatable-thead > tr > th {
       text-align: left;
       padding: 1rem 1rem;
-      border: 1px solid $table-borders-color;
+      border: 1px solid var(--cps-border-color);
       border-width: 0 0 1px 1px;
       font-weight: normal;
-      color: $header-text-color;
-      background: white;
+      color: var(--cps-text-muted);
+      background: var(--cps-surface-body);
       transition: box-shadow 0.2s;
     }
 
@@ -207,10 +184,10 @@ $tbar-normal-height: 72px;
       .p-datatable-sortable-column:not(.p-paginator-page-selected):hover
       .cps-sortable-column-icon.sort-unsorted {
       .sort-unsorted-arrow-up {
-        border-bottom-color: $sorticon-hover-color;
+        border-bottom-color: var(--cps-text-muted);
       }
       .sort-unsorted-arrow-down {
-        border-top-color: $sorticon-hover-color;
+        border-top-color: var(--cps-text-muted);
       }
     }
 
@@ -230,7 +207,7 @@ $tbar-normal-height: 72px;
       justify-content: center;
       font-size: 12px;
       vertical-align: top;
-      color: $color-calm;
+      color: var(--cps-accent-primary);
       margin-left: 0.25rem;
     }
 
@@ -257,31 +234,31 @@ $tbar-normal-height: 72px;
     }
 
     .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
-      background: $stripe-color;
+      background: var(--cps-surface-muted);
     }
 
     .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
-      background: #ffffff;
+      background: var(--cps-surface-body);
     }
 
     .p-datatable.p-datatable-hoverable
       .p-datatable-tbody
       > tr:not(.p-highlight):not(.cps-table-row-expanded-content):hover {
-      background: $row-hover-background;
+      background: var(--cps-highlight-hover);
     }
 
     .p-datatable .p-datatable-tbody .cps-table-row-expanded-content {
       td {
-        border-left: 4px solid $color-surprise !important;
+        border-left: 4px solid var(--cps-border-focus) !important;
       }
     }
 
     .p-datatable .p-datatable-tbody > tr {
-      background: #ffffff;
-      color: $body-text-color;
+      background: var(--cps-surface-body);
+      color: var(--cps-text-secondary);
       transition: box-shadow 0.2s;
       &.cps-table-row-selected {
-        background-color: $row-selected-background !important;
+        background-color: var(--cps-highlight-active) !important;
       }
     }
 
@@ -313,7 +290,7 @@ $tbar-normal-height: 72px;
 
     .p-datatable .p-datatable-tbody > tr > td {
       text-align: left;
-      border: 1px solid $table-borders-color;
+      border: 1px solid var(--cps-border-color);
       border-width: 0 0 1px 0;
       padding: 1rem 1rem;
     }
@@ -374,11 +351,11 @@ $tbar-normal-height: 72px;
     }
 
     .p-checkbox .p-checkbox-box {
-      background: #ffffff;
+      background: var(--cps-surface-body);
       width: 18px;
       height: 18px;
-      color: $body-text-color;
-      border: 2px solid $checkbox-border-color;
+      color: var(--cps-text-secondary);
+      border: 2px solid var(--cps-text-muted);
       border-radius: 2px;
       transition:
         background-color 0.2s,
@@ -394,16 +371,17 @@ $tbar-normal-height: 72px;
     }
 
     .p-checkbox.p-checkbox-checked .p-checkbox-box {
-      border-color: $color-calm;
-      background: $color-calm;
+      border-color: var(--cps-accent-primary);
+      background: var(--cps-accent-primary);
     }
-    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
-      border-color: $color-calm;
-      background: $color-calm;
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
+      .p-checkbox-box {
+      border-color: var(--cps-accent-primary);
+      background: var(--cps-accent-primary);
       color: #ffffff;
     }
     .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
-      border-color: $color-calm;
+      border-color: var(--cps-accent-primary);
     }
 
     .p-checkbox .p-checkbox-box .p-icon {
@@ -423,15 +401,15 @@ $tbar-normal-height: 72px;
       font-size: 20px;
       line-height: 1;
       &:hover {
-        color: $color-calm;
+        color: var(--cps-accent-primary);
       }
     }
 
     .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-top > td {
-      box-shadow: inset 0 2px 0 0 $color-calm;
+      box-shadow: inset 0 2px 0 0 var(--cps-accent-primary);
     }
     .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-bottom > td {
-      box-shadow: inset 0 -2px 0 0 $color-calm;
+      box-shadow: inset 0 -2px 0 0 var(--cps-accent-primary);
     }
 
     .p-datatable .p-paginator {
@@ -440,14 +418,14 @@ $tbar-normal-height: 72px;
     }
 
     .p-paginator {
-      background: white;
+      background: var(--cps-surface-body);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      color: $paginator-text-color;
+      color: var(--cps-text-secondary);
       padding: 1rem;
-      border: 1px solid $table-borders-color;
+      border: 1px solid var(--cps-border-color);
     }
 
     .p-paginator-content-start {
@@ -481,7 +459,7 @@ $tbar-normal-height: 72px;
     .p-paginator .p-paginator-current {
       background-color: transparent;
       border: 0 none;
-      color: $paginator-text-color;
+      color: var(--cps-text-secondary);
       min-width: 3rem;
       margin: 0.143rem;
       padding: 0 0.5rem;
@@ -511,18 +489,30 @@ $tbar-normal-height: 72px;
       cursor: default;
     }
 
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
-      background: $paginator-elem-hover-background;
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
+      background: var(--cps-highlight-hover);
       border-color: unset;
     }
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):active {
-      background: $paginator-elem-active-background;
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active {
+      background: var(--cps-highlight-active);
     }
 
     .p-paginator .p-paginator-first,
@@ -530,9 +520,9 @@ $tbar-normal-height: 72px;
     .p-paginator .p-paginator-next,
     .p-paginator .p-paginator-last {
       background-color: transparent;
-      border: 1px solid $paginator-border-color;
+      border: 1px solid var(--cps-text-secondary);
       border-radius: 4px;
-      color: $paginator-text-color;
+      color: var(--cps-text-secondary);
       min-width: 32px;
       height: 32px;
       margin: 0.143rem;
@@ -549,25 +539,31 @@ $tbar-normal-height: 72px;
       pointer-events: none;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
-      background: $color-calm;
-      border-color: $color-calm;
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page.p-paginator-page-selected {
+      background: var(--cps-accent-primary);
+      border-color: var(--cps-accent-primary);
       color: white;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):hover {
-      background: $paginator-elem-hover-background;
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):hover {
+      background: var(--cps-highlight-hover);
       border-color: unset;
     }
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):active {
-      background: $paginator-elem-active-background;
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):active {
+      background: var(--cps-highlight-active);
     }
 
     .p-paginator .p-paginator-pages .p-paginator-page {
       background-color: transparent;
-      border: 1px solid $paginator-border-color;
+      border: 1px solid var(--cps-text-secondary);
       border-radius: 4px;
-      color: $paginator-text-color;
+      color: var(--cps-text-secondary);
       min-width: 32px;
       height: 32px;
       margin: 0.143rem;
@@ -606,7 +602,7 @@ $tbar-normal-height: 72px;
     .cps-table-empty-message-td {
       text-align: center !important;
       font-weight: 600;
-      background: white;
+      background: var(--cps-surface-body);
     }
 
     .cps-table-row-drag-handle-cell {
@@ -628,7 +624,7 @@ $tbar-normal-height: 72px;
       }
       .cps-table-row-chevron:hover {
         cps-icon .cps-icon {
-          color: $color-calm !important;
+          color: var(--cps-accent-primary) !important;
         }
       }
       .cps-table-row-chevron-expanded {
@@ -650,9 +646,9 @@ $tbar-normal-height: 72px;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: white;
+      background-color: var(--cps-surface-body);
       transition-duration: 0.2s;
-      border: 1px solid $table-borders-color;
+      border: 1px solid var(--cps-border-color);
     }
     .p-datatable.cps-tbar-small .p-datatable-mask.p-overlay-mask {
       top: $tbar-small-height;
@@ -678,7 +674,7 @@ $tbar-normal-height: 72px;
 
     .cps-table-col-filter-menu-open {
       .cps-table-col-filter-menu-button {
-        color: $body-text-color;
+        color: var(--cps-text-secondary);
       }
     }
   }
@@ -688,7 +684,7 @@ $tbar-normal-height: 72px;
   display: block;
   max-height: 242px;
   overflow-x: hidden;
-  background: white;
+  background: var(--cps-surface-body);
 
   .cps-table-coltoggle-menu-item {
     padding: 12px;
@@ -697,11 +693,11 @@ $tbar-normal-height: 72px;
     cursor: pointer;
 
     &:hover {
-      background: $colitem-hover-background;
+      background: var(--cps-highlight-hover);
     }
 
     &-label {
-      color: $colitem-value-color;
+      color: var(--cps-text-secondary);
     }
 
     &-left {
@@ -727,7 +723,7 @@ $tbar-normal-height: 72px;
       margin-right: 8px;
       opacity: 0;
       &::after {
-        color: $color-calm;
+        color: var(--cps-accent-primary);
         top: 4px;
         left: 1px;
         width: 8px;
@@ -746,20 +742,20 @@ $tbar-normal-height: 72px;
     &.allselected {
       font-weight: 600;
       .cps-table-coltoggle-menu-item-label {
-        color: $color-calm;
+        color: var(--cps-accent-primary);
       }
       .cps-table-coltoggle-menu-item-check {
         opacity: 1;
       }
     }
     &.selected {
-      background: $selected-colitem-background;
+      background: var(--cps-highlight-selected);
     }
     &.highlighten {
-      background: $colitem-highlight-background;
+      background: var(--cps-highlight-active);
     }
     &.selected.highlighten {
-      background: $colitem-highlight-selected-background;
+      background: var(--cps-highlight-selected);
     }
   }
 

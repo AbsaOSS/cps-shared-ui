@@ -41,17 +41,12 @@ body {
     font-weight: bold;
     text-align: left;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cps-border-soft);
     background-color: var(--cps-surface-elevated);
-    color: var(--cps-text-primary);
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
+    border-bottom: 1px solid var(--cps-color-line);
   }
 
   tr {
-    transition: background-color 0.2s ease;
-
+    transition: background-color 0.5s ease-in;
     &:hover {
       background-color: var(--cps-highlight-hover);
     }
@@ -59,10 +54,8 @@ body {
 
   td {
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cps-border-soft);
-    color: var(--cps-text-secondary);
+    border-bottom: 1px solid var(--cps-color-line);
     white-space: pre-line;
-    transition: color 0.2s ease;
 
     span {
       display: flex;
@@ -73,36 +66,27 @@ body {
     &.highlighted-bg {
       span {
         color: var(--cps-text-inverse);
-        background-color: var(--cps-accent-primary);
+        background-color: var(--cps-accent-secondary-contrast);
         border-radius: 6px;
         padding: 0.2rem 0.5rem;
-        transition: background-color 0.2s ease;
       }
     }
 
     &.highlighted-text {
-      color: var(--cps-accent-primary);
-      font-weight: 500;
+      color: var(--cps-accent-secondary);
 
       a {
-        color: var(--cps-accent-primary);
-        text-decoration: none;
-        transition: opacity 0.2s ease;
+        color: var(--cps-accent-secondary);
 
         &:hover {
-          opacity: 0.8;
-          text-decoration: underline;
-        }
-
-        &:visited {
-          color: var(--cps-accent-primary);
+          text-decoration: none;
         }
       }
     }
 
     &.value-style {
       span {
-        padding: 0.25rem 0.5rem;
+        padding: 0.25rem;
         border-radius: 6px;
         font-family:
           ui-monospace,
@@ -112,13 +96,8 @@ body {
           Consolas,
           Liberation Mono,
           monospace;
-        font-size: 0.9em;
-        background-color: var(--cps-surface-muted);
-        color: var(--cps-text-muted);
-        border: 1px solid var(--cps-border-soft);
-        transition:
-          background-color 0.2s ease,
-          color 0.2s ease;
+        background-color: var(--cps-surface-elevated);
+        border: 1px solid var(--cps-color-line);
       }
     }
   }

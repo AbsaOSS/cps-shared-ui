@@ -275,8 +275,8 @@
   // Semantic design tokens (use these inside components)
   --cps-accent-primary: var(--cps-color-calm);
   --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: var(--cps-color-prepared);
-  --cps-accent-secondary-contrast: #ffffff;
+  --cps-accent-secondary: var(--cps-color-depth);
+  --cps-accent-secondary-contrast: var(--cps-color-human-lighten5);
   --cps-color-error: #cc3333;
   --cps-error-background: #fef3f2;
 
@@ -303,7 +303,7 @@
   --cps-text-primary: var(--cps-color-text-darkest);
   --cps-text-secondary: var(--cps-color-text-dark);
   --cps-text-muted: #6b7280;
-  --cps-text-inverse: #ffffff;
+  --cps-text-inverse: var(--cps-color-depth-darken4);
   --cps-text-on-accent: #ffffff;
   --cps-text-disabled: var(--cps-color-text-light);
 
