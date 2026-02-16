@@ -1,6 +1,11 @@
-:root {
-  //Main
-  --cps-color-energy: #ff780f;
+// Dark theme color palette
+// Using color theory: warm reds with cool teal/cyan complements
+// Cool blue-gray backgrounds provide temperature balance with warm red accents
+// Proper contrast ratios for WCAG AA compliance
+
+[data-theme='dark'] {
+  // Main brand colors - slightly desaturated and lighter for dark backgrounds
+  --cps-color-energy: #f47721;
   --cps-color-energy-highlighten: #faece5;
   --cps-color-energy-lighten5: #ffff9f;
   --cps-color-energy-lighten4: #ffe883;
@@ -84,7 +89,7 @@
   --cps-color-grounded-darken3: #440000;
   --cps-color-grounded-darken4: #390000;
 
-  --cps-color-care: #f05a7d;
+  --cps-color-care: #f05a78;
   --cps-color-care-highlighten: #f8e9ed;
   --cps-color-care-lighten5: #ffe9ff;
   --cps-color-care-lighten4: #ffcce9;
@@ -230,7 +235,6 @@
   --cps-color-warn-darken3: #a15300;
   --cps-color-warn-darken4: #843b00;
 
-  --cps-color-error: #cc3333;
   --cps-color-error-highlighten: #f9e4e5;
   --cps-color-error-lighten5: #f5d9d9;
   --cps-color-error-lighten4: #f2cece;
@@ -243,98 +247,101 @@
   --cps-color-error-darken4: #300c0c;
 
   // States backgrounds
-  --cps-color-info-bg: #f7fcfe;
-  --cps-color-success-bg: #f8fbf7;
-  --cps-color-warn-bg: #fffcf7;
-  --cps-color-error-bg: #fef8f8;
+  --cps-color-info-bg: rgba(73, 185, 255, 0.16);
+  --cps-color-success-bg: rgba(93, 211, 58, 0.16);
+  --cps-color-warn-bg: rgba(255, 186, 48, 0.16);
+  --cps-color-error-bg: rgba(255, 90, 103, 0.16);
 
   // Highlights
-  --cps-color-highlight-hover: #f8f4f5;
-  --cps-color-highlight-active: #f1eaec;
-  --cps-color-highlight-selected: #efe4e7;
-  --cps-color-highlight-selected-dark: #e6d4d9;
+  --cps-color-highlight-hover: rgba(251, 251, 251, 0.06);
+  --cps-color-highlight-active: rgba(251, 251, 251, 0.1);
+  --cps-color-highlight-selected: rgba(244, 119, 33, 0.16);
+  --cps-color-highlight-selected-dark: rgba(244, 119, 33, 0.24);
 
   //Backgrounds
-  --cps-color-bg-lightest: #fbfbfb;
-  --cps-color-bg-light: #f9f8f8;
-  --cps-color-bg-mid: #f4f3f3;
-  --cps-color-bg-dark: #eeeded;
+  --cps-color-bg-lightest: #2a2a31;
+  --cps-color-bg-light: #1f1f24;
+  --cps-color-bg-mid: #1b1b1e;
+  --cps-color-bg-dark: #151419;
 
   //Lines
-  --cps-color-line-light: #e3e2e2;
-  --cps-color-line-mid: #d7d5d5;
-  --cps-color-line-dark: #cac7c7;
-  --cps-color-line-darkest: #bebaba;
+  --cps-color-line-light: #3f3f46;
+  --cps-color-line-mid: #50505a;
+  --cps-color-line-dark: #666670;
+  --cps-color-line-darkest: #7a7a86;
 
   //Text
-  --cps-color-text-lightest: #b5b2b2;
-  --cps-color-text-light: #9a9595;
-  --cps-color-text-mild: #787272;
-  --cps-color-text-dark: #524a4a;
-  --cps-color-text-darkest: #2d2323;
+  --cps-color-text-lightest: #fbfbfb;
+  --cps-color-text-light: #d0d0d2;
+  --cps-color-text-mild: #a8a8ad;
+  --cps-color-text-dark: #878787;
+  --cps-color-text-darkest: #151419;
 
   // Semantic design tokens (use these inside components)
-  --cps-accent-primary: var(--cps-color-passion);
-  --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: var(--cps-color-energy);
-  --cps-accent-secondary-contrast: #2d2323;
+  --cps-accent-primary: var(--cps-color-energy);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: #fbfbfb;
+  --cps-accent-secondary-contrast: #151419;
   --cps-color-error: #b91c1c;
-  --cps-error-background: #fef3f2;
+  --cps-error-background: rgba(255, 90, 103, 0.16);
 
   // Lines and borders
-  --cps-color-line: #e3e2e2;
-
-  --cps-surface-body: var(--cps-color-bg-light);
-  --cps-surface-highlight: #ffffff;
-  --cps-surface-muted: var(
-    --cps-color-bg-lightest
-  ); //switched with --cps-color-bg-light, investigate impact
-  --cps-surface-elevated: var(--cps-color-bg-mid);
-  --cps-surface-control: #ffffff;
-  --cps-surface-overlay: rgba(0, 0, 0, 0.45);
-  --cps-background-color: var(--cps-color-bg-lightest);
-  --cps-background-disabled: #f7f7f7;
+  --cps-color-line: rgba(251, 251, 251, 0.12);
+  --cps-surface-body: #151419;
+  --cps-surface-highlight: #1b1b1e;
+  --cps-surface-muted: #202028;
+  --cps-surface-elevated: #262626;
+  --cps-surface-control: #262626;
+  --cps-surface-overlay: rgba(21, 20, 25, 0.85);
+  --cps-background-color: #151419;
+  --cps-background-disabled: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); // oklch(55.096% 0.02679 264.351 / 0.452);
 
   // Tab component
-  --cps-tab-subtabs-background: #d7d7d759;
-  --cps-tabs-subtabs-active-background: #fff;
-  --cps-tabs-subtabs-background-hover: var(--cps-highlight-active);
-  --cps-tabs-subtabs-text-hover: var(--cps-accent-primary);
+  --cps-tab-subtabs-background: var(--cps-surface-highlight);
+  --cps-tabs-subtabs-active-background: var(--cps-color-highlight-selected);
+  --cps-tabs-subtabs-background-hover: var(--cps-highlight-hover);
+  --cps-tabs-subtabs-text-hover: var(--cps-text-primary);
 
-  --cps-text-primary: var(--cps-color-text-darkest);
-  --cps-text-secondary: var(--cps-color-text-dark);
-  --cps-text-muted: var(--cps-color-text-mild);
+  // Text
+  --cps-text-primary: #fbfbfb;
+  --cps-text-secondary: #d0d0d2;
+  --cps-text-muted: #878787;
   --cps-text-inverse: var(--cps-color-depth-darken4);
-  --cps-text-on-accent: #ffffff;
-  --cps-text-disabled: var(--cps-color-text-light);
+  --cps-text-on-accent: #151419;
+  --cps-text-disabled: #6f6f74;
 
-  --cps-border-color: var(--cps-color-line-mid);
-  --cps-border-strong: var(--cps-color-line-dark);
-  --cps-border-focus: var(--cps-color-passion);
+  --cps-border-color: #3a3a3a;
+  --cps-border-strong: #505050;
+  --cps-border-focus: var(--cps-accent-primary);
 
-  --cps-highlight-hover: var(--cps-color-highlight-hover);
-  --cps-highlight-active: var(--cps-color-highlight-active);
-  --cps-highlight-selected: var(--cps-color-highlight-selected);
+  --cps-highlight-hover: rgba(251, 251, 251, 0.1);
+  --cps-highlight-active: rgba(251, 251, 251, 0.16);
+  --cps-highlight-selected: var(--cps-color-highlight-selected-dark);
 
-  --cps-state-info: var(--cps-color-info);
-  --cps-state-info-contrast: #2d2323;
-  --cps-state-info-surface: var(--cps-color-info-bg);
-  --cps-state-success: var(--cps-color-success);
-  --cps-state-success-contrast: #2d2323;
-  --cps-state-success-surface: var(--cps-color-success-bg);
-  --cps-state-warn: var(--cps-color-warn);
-  --cps-state-warn-contrast: #3b2500;
-  --cps-state-warn-surface: var(--cps-color-warn-bg);
+  --cps-state-info: #49b9ff;
+  --cps-state-info-contrast: #151419;
+  --cps-state-info-surface: rgba(73, 185, 255, 0.16);
+  --cps-state-success: #5dd33a;
+  --cps-state-success-contrast: #151419;
+  --cps-state-success-surface: rgba(93, 211, 58, 0.16);
+  --cps-state-warn: #ffba30;
+  --cps-state-warn-contrast: #151419;
+  --cps-state-warn-surface: rgba(255, 186, 48, 0.16);
   --cps-state-error: var(--cps-color-error);
   --cps-state-error-contrast: #ffffff;
-  --cps-state-error-surface: rgba(185, 28, 28, 0.14);
+  --cps-state-error-surface: rgba(185, 28, 28, 0.28);
 
   // Modern semantic surfaces
   --cps-card-background: var(--cps-surface-highlight);
   --cps-card-foreground: var(--cps-text-primary);
-  --cps-popover-background: var(--cps-surface-control);
+  --cps-popover-background: var(--cps-surface-elevated);
   --cps-popover-foreground: var(--cps-text-primary);
-  --cps-input-background: var(--cps-surface-control);
+  --cps-input-background: var(--cps-surface-highlight);
   --cps-input-foreground: var(--cps-text-primary);
   --cps-input-placeholder: var(--cps-text-muted);
 
@@ -357,10 +364,10 @@
   --cps-border-radius-round: var(--cps-radius-full);
 
   // Elevation shadows
-  --cps-shadow-xs: 0 1px 2px rgba(45, 35, 35, 0.08);
-  --cps-shadow-sm: 0 2px 6px rgba(45, 35, 35, 0.12);
-  --cps-shadow-md: 0 8px 20px rgba(45, 35, 35, 0.14);
-  --cps-shadow-lg: 0 16px 40px rgba(45, 35, 35, 0.2);
+  --cps-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --cps-shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.34);
+  --cps-shadow-md: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --cps-shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.5);
 
   // Motion tokens
   --cps-motion-fast: 120ms;
@@ -369,68 +376,74 @@
   --cps-motion-easing: cubic-bezier(0.2, 0, 0, 1);
 }
 
-:root[data-color-theme='neutral'] {
-  --cps-accent-primary: #27272a;
-  --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: #3f3f46;
-  --cps-accent-secondary-contrast: #ffffff;
-  --cps-border-focus: #27272a;
-  --cps-highlight-selected: rgba(39, 39, 42, 0.14);
+[data-theme='dark'][data-color-theme='neutral'] {
+  --cps-accent-primary: #e4e4e7;
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: #f4f4f5;
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: #e4e4e7;
+  --cps-highlight-selected: rgba(228, 228, 231, 0.22);
 }
 
-:root[data-color-theme='calm'] {
-  --cps-accent-primary: var(--cps-color-calm);
-  --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: var(--cps-color-care);
-  --cps-accent-secondary-contrast: #2d2323;
-  --cps-border-focus: var(--cps-color-calm);
-  --cps-highlight-selected: rgba(135, 10, 60, 0.16);
+[data-theme='dark'][data-color-theme='calm'] {
+  --cps-accent-primary: var(--cps-color-calm-lighten4);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: var(--cps-color-care-lighten3);
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: var(--cps-color-calm-lighten4);
+  --cps-highlight-selected: rgba(253, 128, 158, 0.28);
 }
 
-:root[data-color-theme='energy'] {
+[data-theme='dark'][data-color-theme='energy'] {
   --cps-accent-primary: var(--cps-color-energy);
-  --cps-accent-primary-contrast: #2d2323;
-  --cps-text-on-accent: #2d2323;
-  --cps-accent-secondary: var(--cps-color-prepared);
-  --cps-accent-secondary-contrast: #2d2323;
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: var(--cps-color-prepared-lighten4);
+  --cps-accent-secondary-contrast: #151419;
   --cps-border-focus: var(--cps-color-energy);
-  --cps-highlight-selected: var(--cps-color-highlight-selected);
+  --cps-highlight-selected: var(--cps-color-highlight-selected-dark);
 }
 
-:root[data-color-theme='passion'] {
-  --cps-accent-primary: var(--cps-color-passion);
-  --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: var(--cps-color-warmth);
-  --cps-accent-secondary-contrast: #ffffff;
-  --cps-border-focus: var(--cps-color-passion);
-  --cps-highlight-selected: rgba(220, 0, 50, 0.16);
+[data-theme='dark'][data-color-theme='passion'] {
+  --cps-accent-primary: var(--cps-color-passion-lighten3);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: var(--cps-color-care-lighten4);
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: var(--cps-color-passion-lighten3);
+  --cps-highlight-selected: rgba(255, 120, 121, 0.3);
 }
 
-:root[data-radius-theme='none'] {
-  --cps-radius-xs: 0px;
-  --cps-radius-sm: 0px;
-  --cps-radius-md: 0px;
-  --cps-radius-lg: 0px;
-  --cps-radius-xl: 0px;
+[data-theme='dark'][data-base-theme='graphite'] {
+  --cps-surface-body: #121216;
+  --cps-surface-highlight: #191a20;
+  --cps-surface-muted: #1d1f26;
+  --cps-surface-elevated: #23252f;
+  --cps-surface-control: #23252f;
+  --cps-background-color: #121216;
+  --cps-border-color: #3f424d;
+  --cps-border-strong: #555968;
+  --cps-ring-offset-color: #121216;
 }
 
-:root[data-radius-theme='compact'] {
-  --cps-radius-sm: 3px;
-  --cps-radius-md: 6px;
-  --cps-radius-lg: 10px;
-  --cps-radius-xl: 14px;
+[data-theme='dark'][data-base-theme='midnight'] {
+  --cps-surface-body: #0f1624;
+  --cps-surface-highlight: #172033;
+  --cps-surface-muted: #1b263c;
+  --cps-surface-elevated: #21304a;
+  --cps-surface-control: #21304a;
+  --cps-background-color: #0f1624;
+  --cps-border-color: #32445f;
+  --cps-border-strong: #4a6388;
+  --cps-ring-offset-color: #0f1624;
 }
 
-:root[data-radius-theme='rounded'] {
-  --cps-radius-sm: 6px;
-  --cps-radius-md: 10px;
-  --cps-radius-lg: 14px;
-  --cps-radius-xl: 20px;
-}
-
-:root[data-radius-theme='pill'] {
-  --cps-radius-sm: 9999px;
-  --cps-radius-md: 9999px;
-  --cps-radius-lg: 9999px;
-  --cps-radius-xl: 9999px;
+[data-theme='dark'][data-base-theme='aubergine'] {
+  --cps-surface-body: #1a1320;
+  --cps-surface-highlight: #231a2c;
+  --cps-surface-muted: #2b2136;
+  --cps-surface-elevated: #332943;
+  --cps-surface-control: #332943;
+  --cps-background-color: #1a1320;
+  --cps-border-color: #534363;
+  --cps-border-strong: #6d5683;
+  --cps-ring-offset-color: #1a1320;
 }
