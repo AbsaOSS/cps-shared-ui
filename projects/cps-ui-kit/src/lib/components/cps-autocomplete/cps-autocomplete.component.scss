@@ -30,7 +30,7 @@ $hover-transition-duration: 0.2s;
     position: relative;
     width: 100%;
     outline: none;
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: inherit;
     font-weight: normal;
     display: grid;
 
@@ -82,8 +82,14 @@ $hover-transition-duration: 0.2s;
       display: inline-flex;
       margin-bottom: 0.2rem;
       color: $autocomplete-label-color;
+      background-color: var(--cps-surface-body);
       font-size: 0.875rem;
       font-weight: 600;
+
+      label {
+        color: $autocomplete-label-color;
+      }
+
       .cps-autocomplete-label-info-circle {
         margin-left: 0.5rem;
         pointer-events: all;
@@ -109,7 +115,7 @@ $hover-transition-duration: 0.2s;
       min-height: 2.375rem;
       width: 100%;
       cursor: text;
-      background: white;
+      background: var(--cps-input-background);
       font-size: 1rem;
       outline: none;
       padding: 0 0.75rem 0 0.75rem;
@@ -138,7 +144,7 @@ $hover-transition-duration: 0.2s;
         color: $autocomplete-option-value-color;
         border-style: none;
         outline: none;
-        font-family: 'Source Sans Pro', sans-serif;
+        font-family: inherit;
         &::placeholder {
           color: $autocomplete-placeholder-color;
           font-style: italic;
@@ -273,6 +279,8 @@ $hover-transition-duration: 0.2s;
 
     .cps-autocomplete-hint {
       color: $autocomplete-hint-color;
+      background-color: var(--cps-surface-body);
+      display: inline-block;
       font-size: 0.75rem;
       min-height: 1.125rem;
       line-height: 1.125rem;
@@ -322,8 +330,12 @@ $hover-transition-duration: 0.2s;
 }
 
 .cps-autocomplete-options {
-  font-family: 'Source Sans Pro', sans-serif;
-  background: white;
+  font-family: inherit;
+  background: var(--cps-popover-background);
+  color: var(--cps-popover-foreground);
+  border: 1px solid var(--cps-border-color);
+  border-radius: var(--cps-border-radius-medium);
+  box-shadow: var(--cps-shadow-md);
   overflow-x: hidden;
   max-height: 15.125rem;
   overflow-y: auto;
