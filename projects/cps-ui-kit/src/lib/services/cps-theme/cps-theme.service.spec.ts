@@ -1,0 +1,83 @@
+import { TestBed } from '@angular/core/testing';
+import { CpsThemeService } from './cps-theme.service';
+
+describe('CpsThemeService', () => {
+  let service: CpsThemeService;
+
+  beforeEach(() => {
+    localStorage.clear();
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(CpsThemeService);
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should initialize with system preference', () => {
+    expect(['light', 'dark']).toContain(service.theme());
+  });
+
+  it('should toggle theme', () => {
+    const initialTheme = service.theme();
+    service.toggleTheme();
+    const newTheme = service.theme();
+    expect(newTheme).not.toBe(initialTheme);
+  });
+
+  it('should save theme preference to localStorage', () => {
+    service.setTheme('dark', false);
+    expect(localStorage.getItem('cps-theme-preference')).toBe('dark');
+  });
+
+  it('should compute isDark correctly', () => {
+    service.setTheme('dark', false);
+    expect(service.isDark()).toBe(true);
+    service.setTheme('light', false);
+    expect(service.isDark()).toBe(false);
+  });
+
+  it('should initialize with neutral color theme by default', () => {
+    expect(service.colorTheme()).toBe('neutral');
+  });
+
+  it('should save color theme preference to localStorage', () => {
+    service.setColorTheme('energy', false);
+    expect(localStorage.getItem('cps-color-theme-preference')).toBe('energy');
+  });
+
+  it('should apply color theme to document attribute', () => {
+    service.setColorTheme('calm', false);
+    expect(document.documentElement.getAttribute('data-color-theme')).toBe(
+      'calm'
+    );
+  });
+
+  it('should save base theme preference to localStorage', () => {
+    service.setBaseTheme('midnight', false);
+    expect(localStorage.getItem('cps-base-theme-preference')).toBe('midnight');
+  });
+
+  it('should apply base theme to document attribute', () => {
+    service.setBaseTheme('graphite', false);
+    expect(document.documentElement.getAttribute('data-base-theme')).toBe(
+      'graphite'
+    );
+  });
+
+  it('should save radius theme preference to localStorage', () => {
+    service.setRadiusTheme('rounded', false);
+    expect(localStorage.getItem('cps-radius-theme-preference')).toBe('rounded');
+  });
+
+  it('should initialize with none radius theme by default', () => {
+    expect(service.radiusTheme()).toBe('none');
+  });
+
+  it('should apply radius theme to document attribute', () => {
+    service.setRadiusTheme('pill', false);
+    expect(document.documentElement.getAttribute('data-radius-theme')).toBe(
+      'pill'
+    );
+  });
+});
