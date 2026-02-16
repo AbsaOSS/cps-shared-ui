@@ -1,21 +1,21 @@
-$color-calm: var(--cps-color-calm);
-$color-error: var(--cps-color-error);
-$error-background: #fef3f2;
-$autocomplete-placeholder-color: var(--cps-color-text-lightest);
-$autocomplete-label-color: var(--cps-color-text-dark);
-$autocomplete-label-disabled-color: var(--cps-color-text-mild);
-$autocomplete-items-disabled-color: var(--cps-color-text-light);
-$autocomplete-hint-color: var(--cps-color-text-mild);
-$option-hover-background: var(--cps-color-highlight-hover);
-$selected-option-background: var(--cps-color-highlight-selected);
-$option-highlight-background: var(--cps-color-highlight-active);
-$option-highlight-selected-background: var(--cps-color-highlight-selected-dark);
-$autocomplete-option-info-color: var(--cps-color-text-light);
-$autocomplete-option-value-color: var(--cps-color-text-dark);
-$autocomplete-about-remove-color: var(--cps-color-text-light);
-$autocomplete-about-remove-background: var(--cps-color-bg-mid);
-$autocomplete-prefix-icon-color: var(--cps-color-text-dark);
-$autocomplete-border-color: var(--cps-color-line-light);
+$color-calm: var(--cps-accent-primary);
+$color-error: var(--cps-state-error);
+$error-background: var(--cps-error-background);
+$autocomplete-placeholder-color: var(--cps-input-placeholder);
+$autocomplete-label-color: var(--cps-text-primary);
+$autocomplete-label-disabled-color: var(--cps-text-secondary);
+$autocomplete-items-disabled-color: var(--cps-text-disabled);
+$autocomplete-hint-color: var(--cps-text-primary);
+$option-hover-background: var(--cps-highlight-hover);
+$selected-option-background: var(--cps-highlight-selected);
+$option-highlight-background: var(--cps-highlight-active);
+$option-highlight-selected-background: var(--cps-highlight-selected);
+$autocomplete-option-info-color: var(--cps-text-secondary);
+$autocomplete-option-value-color: var(--cps-text-primary);
+$autocomplete-about-remove-color: var(--cps-text-muted);
+$autocomplete-about-remove-background: var(--cps-surface-muted);
+$autocomplete-prefix-icon-color: var(--cps-text-secondary);
+$autocomplete-border-color: var(--cps-border-color);
 
 $hover-transition-duration: 0.2s;
 
@@ -26,7 +26,7 @@ $hover-transition-duration: 0.2s;
     position: relative;
     width: 100%;
     outline: none;
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: inherit;
     font-weight: normal;
     display: grid;
 
@@ -40,7 +40,7 @@ $hover-transition-duration: 0.2s;
 
       &.focused {
         .cps-autocomplete-box {
-          background: white !important;
+          background: var(--cps-input-background) !important;
         }
       }
 
@@ -62,6 +62,7 @@ $hover-transition-duration: 0.2s;
     &.active {
       .cps-autocomplete-box {
         border: 1px solid $color-calm;
+        box-shadow: 0 0 0 3px var(--cps-highlight-selected);
         .cps-autocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
@@ -79,8 +80,14 @@ $hover-transition-duration: 0.2s;
       display: inline-flex;
       margin-bottom: 0.2rem;
       color: $autocomplete-label-color;
+      background-color: var(--cps-surface-body);
       font-size: 0.875rem;
       font-weight: 600;
+
+      label {
+        color: $autocomplete-label-color;
+      }
+
       .cps-autocomplete-label-info-circle {
         margin-left: 8px;
         pointer-events: all;
@@ -106,13 +113,16 @@ $hover-transition-duration: 0.2s;
       min-height: 38px;
       width: 100%;
       cursor: text;
-      background: white;
+      background: var(--cps-input-background);
       font-size: 1rem;
       outline: none;
       padding: 0 12px 0 12px;
-      border-radius: 4px;
+      border-radius: var(--cps-border-radius-medium);
       border: 1px solid $autocomplete-border-color;
-      transition-duration: $hover-transition-duration;
+      transition:
+        border-color $hover-transition-duration var(--cps-motion-easing),
+        box-shadow $hover-transition-duration var(--cps-motion-easing),
+        background-color $hover-transition-duration var(--cps-motion-easing);
 
       &-area {
         display: flex;
@@ -135,7 +145,7 @@ $hover-transition-duration: 0.2s;
         color: $autocomplete-option-value-color;
         border-style: none;
         outline: none;
-        font-family: 'Source Sans Pro', sans-serif;
+        font-family: inherit;
         &::placeholder {
           color: $autocomplete-placeholder-color;
           font-style: italic;
@@ -206,7 +216,7 @@ $hover-transition-duration: 0.2s;
       }
 
       &:hover {
-        border: 1px solid $color-calm;
+        border: 1px solid var(--cps-border-strong);
         .cps-autocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
@@ -248,6 +258,8 @@ $hover-transition-duration: 0.2s;
 
     .cps-autocomplete-hint {
       color: $autocomplete-hint-color;
+      background-color: var(--cps-surface-body);
+      display: inline-block;
       font-size: 0.75rem;
       min-height: 1.125rem;
       line-height: 1.125rem;
@@ -267,7 +279,7 @@ $hover-transition-duration: 0.2s;
     &.disabled {
       pointer-events: none;
       .cps-autocomplete-box {
-        background: #f7f7f7;
+        background: var(--cps-background-disabled);
         &-items {
           color: $autocomplete-items-disabled-color;
           .text-group,
@@ -297,8 +309,12 @@ $hover-transition-duration: 0.2s;
 }
 
 .cps-autocomplete-options {
-  font-family: 'Source Sans Pro', sans-serif;
-  background: white;
+  font-family: inherit;
+  background: var(--cps-popover-background);
+  color: var(--cps-popover-foreground);
+  border: 1px solid var(--cps-border-color);
+  border-radius: var(--cps-border-radius-medium);
+  box-shadow: var(--cps-shadow-md);
   overflow-x: hidden;
   max-height: 242px;
   overflow-y: auto;
@@ -390,7 +406,7 @@ $hover-transition-duration: 0.2s;
   }
 
   .select-all-option {
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid var(--cps-border-color);
     font-weight: 600;
   }
 

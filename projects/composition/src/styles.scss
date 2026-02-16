@@ -41,11 +41,15 @@ body {
     font-weight: bold;
     text-align: left;
     padding: 0.75rem 1rem;
+    background-color: var(--cps-surface-elevated);
     border-bottom: 1px solid var(--cps-color-line);
   }
 
   tr {
     transition: background-color 0.5s ease-in;
+    &:hover {
+      background-color: var(--cps-highlight-hover);
+    }
   }
 
   td {
@@ -76,8 +80,6 @@ body {
 
         &:hover {
           text-decoration: none;
-          background-color: var(--cps-surface-elevated);
-          border: 1px solid var(--cps-color-line);
         }
       }
     }
@@ -94,8 +96,8 @@ body {
           Consolas,
           Liberation Mono,
           monospace;
-        background-color: var(--cps-color-bg-mid);
-        border: 1px solid var(--cps-color-line-light);
+        background-color: var(--cps-surface-elevated);
+        border: 1px solid var(--cps-color-line);
       }
     }
   }

@@ -7,8 +7,9 @@
   .cps-chip {
     align-items: center;
     display: inline-flex;
-    background-color: var(--cps-color-bg-dark);
-    border-radius: 14px;
+    background-color: var(--cps-surface-elevated);
+    border: 1px solid var(--cps-border-color);
+    border-radius: var(--cps-radius-full);
     line-height: 16px;
     padding: 4px 12px;
     cursor: default;
@@ -17,28 +18,28 @@
       cursor: pointer;
       &:hover {
         ::ng-deep .cps-icon {
-          color: var(--cps-color-calm) !important;
+          color: var(--cps-accent-primary) !important;
         }
       }
     }
     &-label {
       font-size: 14px;
-      color: var(--cps-color-text-darkest);
-      font-family: 'Source Sans Pro', sans-serif;
+      color: var(--cps-text-primary);
+      font-family: inherit;
       font-style: normal;
       font-weight: 400;
     }
 
     &.cps-chip-disabled {
       pointer-events: none;
-      background-color: var(--cps-color-bg-mid);
+      background-color: var(--cps-background-disabled);
       .cps-chip-label {
-        color: var(--cps-color-text-light);
+        color: var(--cps-text-muted);
       }
       .cps-chip-icon,
       .cps-chip-close-icon {
         ::ng-deep .cps-icon {
-          color: var(--cps-color-text-light) !important;
+          color: var(--cps-text-muted) !important;
         }
       }
     }
