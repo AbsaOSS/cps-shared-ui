@@ -2,7 +2,10 @@
   @if (label) {
     <div
       class="cps-input-label"
-      [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }">
+      [ngClass]="{
+        'cps-input-label-disabled': disabled && !readonly,
+        'cps-input-label-error': error
+      }">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -64,7 +67,7 @@
           <cps-icon
             [icon]="prefixIcon"
             [size]="prefixIconSize"
-            [style.color]="disabled ? '#9a9595' : null"
+            [style.color]="disabled ? 'var(--cps-text-muted)' : null"
             [style.cursor]="
               prefixIconClickable && !disabled && !readonly
                 ? 'pointer'
@@ -111,7 +114,7 @@
       <cps-progress-linear
         height="3"
         radius="4"
-        opacity="0.3"
+        opacity="0.5"
         class="cps-input-progress-bar"
         bgColor="transparent">
       </cps-progress-linear>

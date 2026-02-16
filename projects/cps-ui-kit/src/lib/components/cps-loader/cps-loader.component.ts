@@ -29,7 +29,7 @@ export class CpsLoaderComponent implements OnInit {
    * Color of the label.
    * @group Props
    */
-  @Input() labelColor = 'depth';
+  @Input() labelColor = 'text-primary';
 
   /**
    * Determines whether to show 'Loading...' label.
@@ -37,7 +37,7 @@ export class CpsLoaderComponent implements OnInit {
    */
   @Input() showLabel = true;
 
-  backgroundColor = 'rgba(0, 0, 0, 0.1)';
+  backgroundColor = 'var(--cps-surface-overlay)';
 
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
