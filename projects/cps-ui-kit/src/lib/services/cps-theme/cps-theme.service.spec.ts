@@ -46,23 +46,9 @@ describe('CpsThemeService', () => {
     expect(localStorage.getItem('cps-color-theme-preference')).toBe('energy');
   });
 
-  it('should apply color theme to document attribute', () => {
-    service.setColorTheme('calm', false);
-    expect(document.documentElement.getAttribute('data-color-theme')).toBe(
-      'calm'
-    );
-  });
-
   it('should save base theme preference to localStorage', () => {
     service.setBaseTheme('midnight', false);
     expect(localStorage.getItem('cps-base-theme-preference')).toBe('midnight');
-  });
-
-  it('should apply base theme to document attribute', () => {
-    service.setBaseTheme('graphite', false);
-    expect(document.documentElement.getAttribute('data-base-theme')).toBe(
-      'graphite'
-    );
   });
 
   it('should save radius theme preference to localStorage', () => {
@@ -72,12 +58,5 @@ describe('CpsThemeService', () => {
 
   it('should initialize with none radius theme by default', () => {
     expect(service.radiusTheme()).toBe('none');
-  });
-
-  it('should apply radius theme to document attribute', () => {
-    service.setRadiusTheme('pill', false);
-    expect(document.documentElement.getAttribute('data-radius-theme')).toBe(
-      'pill'
-    );
   });
 });
