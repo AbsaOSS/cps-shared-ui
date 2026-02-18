@@ -77,10 +77,6 @@ $hover-transition-duration: 0.2s;
           background-color: var(--cps-background-disabled);
           pointer-events: none;
         }
-
-        &[type='password'] {
-          font-family: Verdana;
-        }
       }
 
       input:focus:not(:read-only) + .cps-input-prefix > .cps-input-prefix-icon,
