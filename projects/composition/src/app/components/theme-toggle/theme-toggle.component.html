@@ -9,12 +9,8 @@
     <span class="theme-toggle-caret">▾</span>
   </button>
   @if (menuOpen) {
-    <button
-      class="menu-backdrop"
-      type="button"
-      aria-label="Close appearance settings"
-      (click)="closeMenu()"></button>
-    <div class="theme-menu" role="menu" aria-label="Appearance settings">
+    <div class="menu-backdrop" aria-hidden="true" (click)="closeMenu()"></div>
+    <div class="theme-menu" aria-label="Appearance settings">
       <div class="theme-menu-header">
         <div class="theme-menu-title">Appearance</div>
         <div class="theme-menu-subtitle">Theme, radius and dark base</div>
