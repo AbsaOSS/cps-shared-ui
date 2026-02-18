@@ -42,3 +42,15 @@ body {
   background: var(--cps-background-color);
   color: var(--cps-text-primary);
 }
+
+// Theme transition hook used by CpsThemeService
+.cps-theme-transition,
+.cps-theme-transition *,
+.cps-theme-transition *::before,
+.cps-theme-transition *::after {
+  transition:
+    background-color var(--cps-motion-base) var(--cps-motion-easing),
+    border-color var(--cps-motion-base) var(--cps-motion-easing),
+    color var(--cps-motion-base) var(--cps-motion-easing),
+    box-shadow var(--cps-motion-base) var(--cps-motion-easing) !important;
+}

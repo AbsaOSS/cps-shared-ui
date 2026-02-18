@@ -85,11 +85,6 @@ $hover-transition-duration: 0.2s;
       background-color: var(--cps-surface-body);
       font-size: 0.875rem;
       font-weight: 600;
-
-      label {
-        color: $autocomplete-label-color;
-      }
-
       .cps-autocomplete-label-info-circle {
         margin-left: 0.5rem;
         pointer-events: all;
