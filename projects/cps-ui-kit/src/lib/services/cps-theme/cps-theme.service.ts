@@ -225,7 +225,7 @@ export class CpsThemeService {
       return stored;
     }
 
-    return 'neutral';
+    return 'calm';
   }
 
   private getInitialBaseTheme(): CpsBaseTheme {
@@ -259,7 +259,7 @@ export class CpsThemeService {
       return stored;
     }
 
-    return 'none';
+    return 'compact';
   }
 
   private getSystemTheme(): CpsTheme {

@@ -11,9 +11,6 @@ export * from './lib/components/cps-datepicker/cps-datepicker.component';
 export * from './lib/components/cps-divider/cps-divider.component';
 export * from './lib/components/cps-expansion-panel/cps-expansion-panel.component';
 export * from './lib/components/cps-file-upload/cps-file-upload.component';
-/*
- * Public API Surface of cps-ui-kit
- */
 export * from './lib/components/cps-icon/cps-icon.component';
 export * from './lib/components/cps-info-circle/cps-info-circle.component';
 export * from './lib/components/cps-input/cps-input.component';

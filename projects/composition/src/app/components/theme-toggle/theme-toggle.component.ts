@@ -1,4 +1,9 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject
+} from '@angular/core';
 import {
   CpsBaseTheme,
   CpsColorTheme,
@@ -11,7 +16,8 @@ import {
   selector: 'app-theme-toggle',
   imports: [CpsIconComponent],
   templateUrl: './theme-toggle.component.html',
-  styleUrl: './theme-toggle.component.scss'
+  styleUrl: './theme-toggle.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeToggleComponent {
   private themeService = inject(CpsThemeService);
@@ -32,6 +38,13 @@ export class ThemeToggleComponent {
 
   closeMenu(): void {
     this.menuOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.menuOpen) {
+      this.closeMenu();
+    }
   }
 
   setColorTheme(value: CpsColorTheme): void {

@@ -5,7 +5,7 @@ $autocomplete-placeholder-color: var(--cps-input-placeholder);
 $autocomplete-label-color: var(--cps-text-primary);
 $autocomplete-label-disabled-color: var(--cps-text-secondary);
 $autocomplete-items-disabled-color: var(--cps-text-disabled);
-$autocomplete-hint-color: var(--cps-text-primary);
+$autocomplete-hint-color: var(--cps-text-muted);
 $option-hover-background: var(--cps-highlight-hover);
 $selected-option-background: var(--cps-highlight-selected);
 $option-highlight-background: var(--cps-highlight-active);
@@ -83,11 +83,6 @@ $hover-transition-duration: 0.2s;
       background-color: var(--cps-surface-body);
       font-size: 0.875rem;
       font-weight: 600;
-
-      label {
-        color: $autocomplete-label-color;
-      }
-
       .cps-autocomplete-label-info-circle {
         margin-left: 8px;
         pointer-events: all;
