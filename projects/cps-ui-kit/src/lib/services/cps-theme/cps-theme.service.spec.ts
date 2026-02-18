@@ -37,8 +37,8 @@ describe('CpsThemeService', () => {
     expect(service.isDark()).toBe(false);
   });
 
-  it('should initialize with neutral color theme by default', () => {
-    expect(service.colorTheme()).toBe('neutral');
+  it('should initialize with calm color theme by default', () => {
+    expect(service.colorTheme()).toBe('calm');
   });
 
   it('should save color theme preference to localStorage', () => {
@@ -56,7 +56,7 @@ describe('CpsThemeService', () => {
     expect(localStorage.getItem('cps-radius-theme-preference')).toBe('rounded');
   });
 
-  it('should initialize with none radius theme by default', () => {
-    expect(service.radiusTheme()).toBe('none');
+  it('should initialize with compact radius theme by default', () => {
+    expect(service.radiusTheme()).toBe('compact');
   });
 });
