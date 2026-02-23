@@ -124,9 +124,8 @@
   <button
     class="theme-toggle-btn"
     (click)="toggleTheme()"
-    [attr.aria-label]="
-      isDark() ? 'Switch to light mode' : 'Switch to dark mode'
-    "
+    [attr.aria-pressed]="isDark()"
+    aria-label="Dark mode"
     type="button">
     <cps-icon [icon]="isDark() ? 'sun' : 'moon'" [size]="20"> </cps-icon>
   </button>
