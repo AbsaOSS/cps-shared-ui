@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 
 /**
  * Available theme options
@@ -45,6 +45,7 @@ export class CpsThemeService {
   private readonly RADIUS_THEME_STORAGE_KEY = 'cps-radius-theme-preference';
   private readonly TRANSITION_CLASS = 'cps-theme-transition';
   private readonly TRANSITION_DURATION = 500;
+  private transitionTimeout: ReturnType<typeof setTimeout> | null = null;
 
   private _theme = signal<CpsTheme>(this.getInitialTheme());
   private _colorTheme = signal<CpsColorTheme>(this.getInitialColorTheme());
@@ -77,15 +78,8 @@ export class CpsThemeService {
   readonly isDark = computed(() => this._theme() === 'dark');
 
   constructor() {
-    // Apply theme changes to DOM whenever theme signal changes
-    effect(() => {
-      this.applyTheme(
-        this._theme(),
-        this._colorTheme(),
-        this._baseTheme(),
-        this._radiusTheme()
-      );
-    });
+    // Apply initial theme to DOM synchronously
+    this.applyCurrentTheme();
 
     // Listen for system theme changes
     this.watchSystemTheme();
@@ -113,9 +107,10 @@ export class CpsThemeService {
 
     this._theme.set(theme);
     this.saveThemePreference(theme);
+    this.applyCurrentTheme();
 
     if (animated) {
-      setTimeout(() => this.disableTransition(), this.TRANSITION_DURATION);
+      this.scheduleDisableTransition();
     }
   }
 
@@ -133,9 +128,10 @@ export class CpsThemeService {
 
     this._colorTheme.set(colorTheme);
     this.saveColorThemePreference(colorTheme);
+    this.applyCurrentTheme();
 
     if (animated) {
-      setTimeout(() => this.disableTransition(), this.TRANSITION_DURATION);
+      this.scheduleDisableTransition();
     }
   }
 
@@ -151,9 +147,10 @@ export class CpsThemeService {
 
     this._baseTheme.set(baseTheme);
     this.saveBaseThemePreference(baseTheme);
+    this.applyCurrentTheme();
 
     if (animated) {
-      setTimeout(() => this.disableTransition(), this.TRANSITION_DURATION);
+      this.scheduleDisableTransition();
     }
   }
 
@@ -169,33 +166,42 @@ export class CpsThemeService {
 
     this._radiusTheme.set(radiusTheme);
     this.saveRadiusThemePreference(radiusTheme);
+    this.applyCurrentTheme();
 
     if (animated) {
-      setTimeout(() => this.disableTransition(), this.TRANSITION_DURATION);
+      this.scheduleDisableTransition();
     }
   }
 
-  private applyTheme(
-    theme: CpsTheme,
-    colorTheme: CpsColorTheme,
-    baseTheme: CpsBaseTheme,
-    radiusTheme: CpsRadiusTheme
-  ): void {
-    this.document.documentElement.setAttribute('data-theme', theme);
-    this.document.documentElement.setAttribute('data-color-theme', colorTheme);
-    this.document.documentElement.setAttribute('data-base-theme', baseTheme);
+  private applyCurrentTheme(): void {
+    this.document.documentElement.setAttribute('data-theme', this._theme());
+    this.document.documentElement.setAttribute(
+      'data-color-theme',
+      this._colorTheme()
+    );
+    this.document.documentElement.setAttribute(
+      'data-base-theme',
+      this._baseTheme()
+    );
     this.document.documentElement.setAttribute(
       'data-radius-theme',
-      radiusTheme
+      this._radiusTheme()
     );
   }
 
   private enableTransition(): void {
+    if (this.transitionTimeout) {
+      clearTimeout(this.transitionTimeout);
+      this.transitionTimeout = null;
+    }
     this.document.documentElement.classList.add(this.TRANSITION_CLASS);
   }
 
-  private disableTransition(): void {
-    this.document.documentElement.classList.remove(this.TRANSITION_CLASS);
+  private scheduleDisableTransition(): void {
+    this.transitionTimeout = setTimeout(() => {
+      this.document.documentElement.classList.remove(this.TRANSITION_CLASS);
+      this.transitionTimeout = null;
+    }, this.TRANSITION_DURATION);
   }
 
   private getInitialTheme(): CpsTheme {
