@@ -33,15 +33,17 @@ describe('CpsConfirmationComponent', () => {
 
   it('should render plain text subtitle', () => {
     createComponent('Are you sure?');
-    const subtitleEl: HTMLElement =
-      fixture.nativeElement.querySelector('.cps-confirmation-subtitle');
+    const subtitleEl: HTMLElement = fixture.nativeElement.querySelector(
+      '.cps-confirmation-subtitle'
+    );
     expect(subtitleEl.textContent).toContain('Are you sure?');
   });
 
   it('should render HTML in subtitle', () => {
     createComponent('Delete <b>my-resource</b>?');
-    const subtitleEl: HTMLElement =
-      fixture.nativeElement.querySelector('.cps-confirmation-subtitle');
+    const subtitleEl: HTMLElement = fixture.nativeElement.querySelector(
+      '.cps-confirmation-subtitle'
+    );
     expect(subtitleEl.innerHTML).toContain('<b>my-resource</b>');
   });
 
