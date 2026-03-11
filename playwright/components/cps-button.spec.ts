@@ -7,20 +7,26 @@ test.describe('CPS Button Component', () => {
 
   test('should display button with label', async ({ page }) => {
     // Find a button by its label text
-    const button = page.locator('cps-button').filter({ hasText: 'Normal button' }).first();
-    
+    const button = page
+      .locator('cps-button')
+      .filter({ hasText: 'Normal button' })
+      .first();
+
     await expect(button).toBeVisible();
     await expect(button.locator('.cps-button__text')).toBeVisible();
   });
 
   test('should be clickable and emit click event', async ({ page }) => {
     // Find a clickable button
-    const button = page.locator('cps-button').filter({ hasText: 'Normal button' }).first();
+    const button = page
+      .locator('cps-button')
+      .filter({ hasText: 'Normal button' })
+      .first();
     const buttonElement = button.locator('button');
-    
+
     await expect(buttonElement).toBeEnabled();
     await buttonElement.click();
-    
+
     // Verify the button is still enabled after click
     await expect(buttonElement).toBeEnabled();
   });
@@ -28,14 +34,17 @@ test.describe('CPS Button Component', () => {
   test('should display disabled button', async ({ page }) => {
     // Find disabled buttons on the page
     const disabledButton = page.locator('cps-button button[disabled]').first();
-    
+
     await expect(disabledButton).toBeDisabled();
   });
 
   test('should display button with icon', async ({ page }) => {
     // Find a button with an icon
-    const buttonWithIcon = page.locator('cps-button').filter({ has: page.locator('cps-icon') }).first();
-    
+    const buttonWithIcon = page
+      .locator('cps-button')
+      .filter({ has: page.locator('cps-icon') })
+      .first();
+
     await expect(buttonWithIcon).toBeVisible();
     await expect(buttonWithIcon.locator('cps-icon')).toBeVisible();
   });
@@ -44,7 +53,7 @@ test.describe('CPS Button Component', () => {
     // Check for solid buttons (default)
     const solidButton = page.locator('cps-button .cps-button--solid').first();
     await expect(solidButton).toBeVisible();
-    
+
     // Check that button has proper classes
     const buttonClasses = await solidButton.getAttribute('class');
     expect(buttonClasses).toContain('cps-button');
@@ -55,22 +64,25 @@ test.describe('CPS Button Component', () => {
     // Check for buttons with large size
     const largeButton = page.locator('cps-button .cps-button--large').first();
     await expect(largeButton).toBeVisible();
-    
+
     const largeClasses = await largeButton.getAttribute('class');
     expect(largeClasses).toContain('cps-button--large');
-    
+
     // Check for buttons with small size
     const smallButton = page.locator('cps-button .cps-button--small').first();
     await expect(smallButton).toBeVisible();
-    
+
     const smallClasses = await smallButton.getAttribute('class');
     expect(smallClasses).toContain('cps-button--small');
   });
 
   test('should display loading state', async ({ page }) => {
     // Find a button in loading state
-    const loadingButton = page.locator('cps-button').filter({ has: page.locator('cps-progress-circular') }).first();
-    
+    const loadingButton = page
+      .locator('cps-button')
+      .filter({ has: page.locator('cps-progress-circular') })
+      .first();
+
     await expect(loadingButton).toBeVisible();
     await expect(loadingButton.locator('cps-progress-circular')).toBeVisible();
   });
