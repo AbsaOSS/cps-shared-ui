@@ -24,7 +24,7 @@ export class DialogPageComponent {
   openConfirmationDialog() {
     const dialogRef = this._dialogService.openConfirmationDialog({
       data: {
-        subtitle: 'Are you really sure you want to break the law?'
+        subtitle: 'Are you really sure you want to <u>break the law?</u>'
       }
     });
 
