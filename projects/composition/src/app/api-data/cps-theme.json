@@ -1,0 +1,30 @@
+{
+    "components": {},
+    "name": "CpsThemeService",
+    "description": "CpsThemeService manages application theming including dark mode support.\r\n\r\nThis service provides:\r\n- Light and dark theme switching with smooth transitions\r\n- Automatic persistence of theme preference in localStorage\r\n- System preference detection (prefers-color-scheme)\r\n- Reactive state management using Angular signals",
+    "types": {
+        "description": "Defines the custom types used by the module.",
+        "values": [
+            {
+                "name": "CpsTheme",
+                "value": "\"light\" | \"dark\"",
+                "description": "Available theme options"
+            },
+            {
+                "name": "CpsColorTheme",
+                "value": "\"neutral\" | \"calm\" | \"energy\" | \"passion\"",
+                "description": "Available color theme options"
+            },
+            {
+                "name": "CpsBaseTheme",
+                "value": "\"default\" | \"graphite\" | \"midnight\" | \"aubergine\"",
+                "description": "Available dark-mode base theme options"
+            },
+            {
+                "name": "CpsRadiusTheme",
+                "value": "\"none\" | \"compact\" | \"rounded\" | \"pill\"",
+                "description": "Available radius theme options"
+            }
+        ]
+    }
+}

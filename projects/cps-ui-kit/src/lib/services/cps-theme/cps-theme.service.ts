@@ -6,8 +6,23 @@ import { computed, inject, Injectable, signal } from '@angular/core';
  * @group Types
  */
 export type CpsTheme = 'light' | 'dark';
+
+/**
+ * Available color theme options
+ * @group Types
+ */
 export type CpsColorTheme = 'neutral' | 'calm' | 'energy' | 'passion';
+
+/**
+ * Available dark-mode base theme options
+ * @group Types
+ */
 export type CpsBaseTheme = 'default' | 'graphite' | 'midnight' | 'aubergine';
+
+/**
+ * Available radius theme options
+ * @group Types
+ */
 export type CpsRadiusTheme = 'none' | 'compact' | 'rounded' | 'pill';
 
 /**
