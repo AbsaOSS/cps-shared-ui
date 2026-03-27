@@ -34,7 +34,7 @@
     "@angular/router": "^21.2.6",
     "@e965/xlsx": "^0.20.3",
     "@primeuix/styled": "^0.7.4",
-    "@primeuix/utils": "^0.6.2",
+    "@primeuix/utils": "^0.7.1",
     "@types/lodash-es": "^4.17.12",
     "eslint-plugin-cypress": "^3.6.0",
     "lodash-es": "^4.17.21",
