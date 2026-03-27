@@ -5,14 +5,14 @@
     "@angular/common": "^20.2.1",
     "@angular/core": "^20.2.1",
     "@angular/forms": "^20.2.1",
-    "rxjs": "^7.8.1",
-    "zone.js": "^0.15.0",
+    "@e965/xlsx": "^0.20.3",
+    "@primeuix/styled": "^0.7.2",
+    "@primeuix/utils": "^0.6.1",
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
     "primeng": "^20.0.1",
-    "@primeuix/utils": "^0.6.1",
-    "@primeuix/styled": "^0.7.2",
-    "@e965/xlsx": "^0.20.3"
+    "rxjs": "^7.8.1",
+    "zone.js": "^0.15.0"
   },
   "repository": {
     "type": "git",
@@ -22,9 +22,6 @@
   "license": "Apache License 2.0",
   "dependencies": {
     "tslib": "^2.8.1"
-  },
-  "devDependencies": {
-    "@angular-builders/jest": "^20.0.0"
   },
   "sideEffects": false
 }
