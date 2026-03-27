@@ -23,5 +23,8 @@
   "dependencies": {
     "tslib": "^2.8.1"
   },
+  "devDependencies": {
+    "@angular-builders/jest": "^20.0.0"
+  },
   "sideEffects": false
 }
