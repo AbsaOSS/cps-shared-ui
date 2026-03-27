@@ -3,6 +3,7 @@ module.exports = {
   moduleNameMapper: {
     '^lodash-es$': 'lodash'
   },
+  testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   coverageReporters: ['text', 'html', 'lcov', 'json-summary'],
   collectCoverageFrom: [
