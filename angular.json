@@ -30,7 +30,10 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular-builders/jest:run"
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "zoneless": false
+          }
         }
       }
     },
@@ -116,7 +119,10 @@
           }
         },
         "test": {
-          "builder": "@angular-builders/jest:run"
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "zoneless": false
+          }
         }
       }
     }

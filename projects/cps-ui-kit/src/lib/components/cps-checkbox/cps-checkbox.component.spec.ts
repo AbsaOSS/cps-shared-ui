@@ -33,7 +33,7 @@ describe('CpsCheckboxComponent', () => {
   });
 
   it('should render checkbox with label', () => {
-    component.label = 'Accept Terms';
+    fixture.componentRef.setInput('label', 'Accept Terms');
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector('.cps-checkbox-label');
     expect(label.textContent).toContain('Accept Terms');
@@ -54,7 +54,7 @@ describe('CpsCheckboxComponent', () => {
   });
 
   it('should not toggle when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     component.value = false;
     fixture.detectChanges();
     const event = new Event('click');
@@ -63,15 +63,15 @@ describe('CpsCheckboxComponent', () => {
   });
 
   it('should display info tooltip when infoTooltip is provided', () => {
-    component.infoTooltip = 'This is important info';
-    component.label = 'Test';
+    fixture.componentRef.setInput('infoTooltip', 'This is important info');
+    fixture.componentRef.setInput('label', 'Test');
     fixture.detectChanges();
     const infoCircle = fixture.nativeElement.querySelector('cps-info-circle');
     expect(infoCircle).toBeTruthy();
   });
 
   it('should display custom icon when icon is provided', () => {
-    component.icon = 'check';
+    fixture.componentRef.setInput('icon', 'check');
     fixture.detectChanges();
     const icon = fixture.nativeElement.querySelector('cps-icon');
     expect(icon).toBeTruthy();
@@ -111,7 +111,7 @@ describe('CpsCheckboxComponent', () => {
   });
 
   it('should have disabled class when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     const checkbox = fixture.nativeElement.querySelector('.cps-checkbox');
     expect(checkbox.classList.contains('cps-checkbox-disabled')).toBe(true);
@@ -125,8 +125,8 @@ describe('CpsCheckboxComponent', () => {
   });
 
   it('should set icon color on init', () => {
-    component.iconColor = 'primary';
-    component.ngOnInit();
+    fixture.componentRef.setInput('iconColor', 'primary');
+    fixture.detectChanges();
     expect(component.iconColor).toBeTruthy();
   });
 

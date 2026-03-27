@@ -13,9 +13,9 @@ describe('CpsPaginatorComponent', () => {
 
     fixture = TestBed.createComponent(CpsPaginatorComponent);
     component = fixture.componentInstance;
-    component.totalRecords = 100;
-    component.rows = 10;
-    component.rowsPerPageOptions = [10, 20, 50];
+    fixture.componentRef.setInput('totalRecords', 100);
+    fixture.componentRef.setInput('rows', 10);
+    fixture.componentRef.setInput('rowsPerPageOptions', [10, 20, 50]);
     fixture.detectChanges();
   });
 
@@ -57,9 +57,9 @@ describe('CpsPaginatorComponent', () => {
   });
 
   it('should show paginator even with one page when alwaysShow is true', () => {
-    component.totalRecords = 5;
-    component.rows = 10;
-    component.alwaysShow = true;
+    fixture.componentRef.setInput('totalRecords', 5);
+    fixture.componentRef.setInput('rows', 10);
+    fixture.componentRef.setInput('alwaysShow', true);
     fixture.detectChanges();
     const paginator = fixture.nativeElement.querySelector('p-paginator');
     expect(paginator).toBeTruthy();

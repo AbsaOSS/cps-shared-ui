@@ -32,7 +32,7 @@ describe('CpsSwitchComponent', () => {
   });
 
   it('should render label', () => {
-    component.label = 'Enable Feature';
+    fixture.componentRef.setInput('label', 'Enable Feature');
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector('.cps-switch-label');
     expect(label.textContent).toContain('Enable Feature');
@@ -53,7 +53,7 @@ describe('CpsSwitchComponent', () => {
   });
 
   it('should not toggle when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     component.value = false;
     fixture.detectChanges();
     const event = new Event('click');
@@ -62,8 +62,8 @@ describe('CpsSwitchComponent', () => {
   });
 
   it('should display info tooltip when infoTooltip is provided', () => {
-    component.infoTooltip = 'This is a switch';
-    component.label = 'Test';
+    fixture.componentRef.setInput('infoTooltip', 'This is a switch');
+    fixture.componentRef.setInput('label', 'Test');
     fixture.detectChanges();
     const infoCircle = fixture.nativeElement.querySelector('cps-info-circle');
     expect(infoCircle).toBeTruthy();
@@ -103,7 +103,7 @@ describe('CpsSwitchComponent', () => {
   });
 
   it('should have disabled class when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     const switchLabel =
       fixture.nativeElement.querySelector('.cps-switch-label');
