@@ -7,8 +7,8 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
+import { getCSSColor } from '../../utils/colors-utils';
 
 /**
  * Injection token that is used to provide the path to the icons.
@@ -94,7 +94,6 @@ export const iconNames = [
   'menu-shrink',
   'minimize',
   'minus',
-  'moon',
   'move-grabber',
   'open',
   'ownership',
@@ -121,7 +120,6 @@ export const iconNames = [
   'stepper-completed',
   'success',
   'suggestion',
-  'sun',
   'survivorship',
   'table-row-error',
   'table-row-success',

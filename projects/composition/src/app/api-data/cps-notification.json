@@ -127,7 +127,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "number",
-                        "description": "The duration (in milliseconds) that the notification will be displayed before automatically closing.\r\nValue 0 means that the notification is persistent and will not be automatically closed."
+                        "description": "The duration (in milliseconds) that the notification will be displayed before automatically closing.\nValue 0 means that the notification is persistent and will not be automatically closed."
                     },
                     {
                         "name": "allowDuplicates",

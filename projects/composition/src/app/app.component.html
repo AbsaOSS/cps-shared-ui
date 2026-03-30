@@ -1,12 +1,11 @@
 <div class="top-toolbar">
-  <img src="assets/ui_logo.svg" alt="CPS UI Kit logo" />
+  <img src="assets/ui_logo.svg" />
   <span>Consumer Products UI Kit</span>
   @if (version) {
     <span
       ><b>v{{ version }}</b></span
     >
   }
-  <app-theme-toggle />
 </div>
 <div class="composition-container">
   <app-navigation-sidebar
@@ -17,6 +16,7 @@
     <div class="composition-body-toolbar">
       <cps-icon
         icon="burger-arrow"
+        color="white"
         class="sidebar-toggle-icon"
         (click)="toggleSidebar()"></cps-icon>
       <span class="composition-body-toolbar-title">{{ componentTitle }}</span>
