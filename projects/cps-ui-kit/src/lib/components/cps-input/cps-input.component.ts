@@ -14,16 +14,16 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { convertSize } from '../../utils/internal/size-utils';
 import {
   CpsIconComponent,
   IconType,
   iconSizeType
 } from '../cps-icon/cps-icon.component';
-import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { Subscription } from 'rxjs';
+import { convertSize } from '../../utils/internal/size-utils';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
  * CpsInputAppearanceType is used to define the border of the input field.
