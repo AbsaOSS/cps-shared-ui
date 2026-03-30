@@ -79,7 +79,14 @@ Playwright starts `npm run start` (Angular dev server) automatically and waits f
 
 ## VS Code Extension
 
-Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension. It lets you run and debug individual tests directly from the editor, pick locators visually, and view traces — much faster than the command line for day-to-day work.
+Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) extension — it makes working with Playwright much more convenient than the command line:
+
+- **Run/debug individual tests** directly from the gutter icons next to each `test()` block
+- **Pick locators** visually by clicking elements in the browser, so you don't have to guess selectors
+- **View traces** inline when a test fails, with DOM snapshots, network requests, and action logs
+- **Watch mode** that re-runs tests automatically as you edit them
+- **Browser preview** to see exactly what the test sees in real time
+- **Auto-detects** the project by finding `playwright.config.ts` in the workspace root — no extra setup needed
 
 ## CI
 
