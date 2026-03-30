@@ -14,16 +14,13 @@ test.describe('cps-autocomplete page', () => {
       ).toHaveText('Rome');
 
       await page.locator('[data-cy="required-autocomplete"]').click();
-      await page.getByText('Prague').click();
+      await page.getByText('Prague').first().click();
       await expect(
         page.locator('[data-cy="required-autocomplete"] .single-item-selection')
       ).toHaveText('Prague');
     });
 
     test('should clear items', async ({ page }) => {
-      // First select an item so there's something to clear
-      await page.locator('[data-cy="required-autocomplete"]').click();
-      await page.getByText('Prague').click();
       await expect(
         page.locator('[data-cy="required-autocomplete"] .single-item-selection')
       ).toHaveText('Prague');
@@ -33,11 +30,12 @@ test.describe('cps-autocomplete page', () => {
           '[data-cy="required-autocomplete"] .cps-autocomplete-box-clear-icon'
         )
         .click();
+
       await page.locator('body').click({ position: { x: 0, y: 0 } });
       await expect(page.getByText('Field is required')).toBeVisible();
       await expect(
         page.locator('[data-cy="required-autocomplete"] .single-item-selection')
-      ).not.toBeVisible();
+      ).toHaveCount(0);
     });
   });
 });
