@@ -84,6 +84,13 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 
 `npm run test`
 
+#### Run Playwright e2e tests
+
+`npm run test:playwright` (headless run)
+
+`npm run test:playwright:headed` to run tests in headed mode (browser visible)
+
+`npm run test:playwright:interactive` to open Playwright UI mode
 
 #### Run Cypress e2e tests
 
@@ -96,6 +103,7 @@ The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all compo
 To run accessibility tests:
 
 1. Start the development server:
+
    ```bash
    npm run start
    ```
@@ -106,16 +114,19 @@ To run accessibility tests:
    ```
 
 Alternatively, use the combined script that starts the server and runs tests:
+
 ```bash
 npm run test:a11y:local
 ```
 
 For a colorful summary with statistics:
+
 ```bash
 npm run test:a11y:summary
 ```
 
 This will display:
+
 - Total URLs tested with pass/fail ratio
 - Total accessibility errors found
 - Accessibility standard (WCAG 2.0 AA)
