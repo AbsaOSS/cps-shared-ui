@@ -32,5 +32,9 @@
     "CpsTooltipOpenOn": "tooltip",
     "CpsNotificationConfig": "notification",
     "CpsNotificationAppearance": "notification",
-    "CpsNotificationPosition": "notification"
+    "CpsNotificationPosition": "notification",
+    "CpsTheme": "theme",
+    "CpsColorTheme": "theme",
+    "CpsBaseTheme": "theme",
+    "CpsRadiusTheme": "theme"
 }
