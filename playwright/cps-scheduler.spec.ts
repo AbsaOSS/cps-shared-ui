@@ -78,7 +78,6 @@ test.describe('CPS Scheduler Component', () => {
     test('should generate correct cron for Monday and Wednesday', async ({
       page
     }) => {
-      await page.locator('[data-cy="weekly-MON"]').click();
       await page.locator('[data-cy="weekly-WED"]').click();
 
       await expect(page.locator('[data-cy="timezone-selector"]')).toBeVisible();
@@ -93,15 +92,11 @@ test.describe('CPS Scheduler Component', () => {
     });
 
     test('should generate correct cron for Friday only', async ({ page }) => {
-      await page
-        .locator('[data-cy="weekly-MON"]')
-        .locator('input[type="checkbox"]')
-        .uncheck({ force: true });
-
-      await page
-        .locator('[data-cy="weekly-FRI"]')
-        .locator('input[type="checkbox"]')
-        .check({ force: true });
+      await page.locator('[data-cy="weekly-MON"]').locator('label').click();
+      await expect(
+        page.locator('[data-cy="weekly-MON"]').locator('input[type="checkbox"]')
+      ).not.toBeChecked();
+      await page.locator('[data-cy="weekly-FRI"]').locator('label').click();
 
       await expect(page.locator('[data-cy="timezone-selector"]')).toBeVisible();
 
@@ -225,7 +220,9 @@ test.describe('CPS Scheduler Component', () => {
         page.locator('[data-cy="advanced-cron-input"]')
       ).toBeVisible();
 
-      await expect(page.locator('.ng-invalid, .error')).toBeAttached();
+      await expect(
+        page.locator('[data-cy="advanced-cron-input"].ng-invalid')
+      ).toBeAttached();
     });
   });
 
