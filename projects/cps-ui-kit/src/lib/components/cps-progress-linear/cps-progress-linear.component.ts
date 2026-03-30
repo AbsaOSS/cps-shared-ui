@@ -1,7 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
+import { getCSSColor } from '../../utils/colors-utils';
 
 /**
  * CpsProgressLinearComponent is a process status indicator of a rectangular form.
@@ -30,7 +30,7 @@ export class CpsProgressLinearComponent implements OnInit {
    * Color of the progress bar.
    * @group Props
    */
-  @Input() color = 'var(--cps-accent-primary)';
+  @Input() color = 'calm';
 
   /**
    * Background color of the progress bar.

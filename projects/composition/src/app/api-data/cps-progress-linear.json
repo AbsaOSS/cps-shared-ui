@@ -26,7 +26,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "var(--cps-accent-primary)",
+                        "default": "calm",
                         "description": "Color of the progress bar."
                     },
                     {
