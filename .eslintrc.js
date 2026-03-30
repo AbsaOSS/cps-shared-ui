@@ -15,5 +15,14 @@ module.exports = {
   },
   env: {
     jest: true
-  }
+  },
+  overrides: [
+    {
+      files: ['playwright/**/*.ts'],
+      env: {
+        jest: false,
+        node: true
+      }
+    }
+  ]
 };

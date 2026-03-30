@@ -92,10 +92,6 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 
 `npm run test:playwright:interactive` to open Playwright UI mode
 
-#### Run Cypress e2e tests
-
-`npm run cypress:run` (headless run) or you can open Cypress tests using `npm run cypress:open`
-
 #### Run accessibility tests
 
 The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all components for WCAG 2.0 AA compliance.
