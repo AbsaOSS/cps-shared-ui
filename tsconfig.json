@@ -3,6 +3,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "resolveJsonModule": true,
+    "baseUrl": "./",
     "paths": { "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"] },
     "esModuleInterop": true,
     "outDir": "./dist/out-tsc",
