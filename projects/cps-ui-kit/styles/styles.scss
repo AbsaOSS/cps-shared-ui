@@ -1,6 +1,5 @@
 @use './_bootstrap-grid';
 @use './_colors.scss';
-@use './_colors-dark.scss';
 @use './_fonts.scss';
 @use './_cps-tooltip-style.scss';
 @use 'primeicons/primeicons.css';
@@ -18,39 +17,4 @@
   overflow: scroll;
   position: absolute;
   top: -9999px;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--cps-background-color);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--cps-border-color);
-  border-radius: var(--cps-radius-sm);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--cps-accent-primary);
-}
-
-html,
-body {
-  font-family: 'Source Sans Pro', sans-serif;
-  background: var(--cps-background-color);
-  color: var(--cps-text-primary);
-}
-
-// Theme transition hook used by CpsThemeService
-.cps-theme-transition,
-.cps-theme-transition *,
-.cps-theme-transition *::before,
-.cps-theme-transition *::after {
-  transition:
-    background-color var(--cps-motion-base) var(--cps-motion-easing),
-    border-color var(--cps-motion-base) var(--cps-motion-easing),
-    color var(--cps-motion-base) var(--cps-motion-easing),
-    box-shadow var(--cps-motion-base) var(--cps-motion-easing) !important;
 }

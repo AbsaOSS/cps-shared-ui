@@ -1,7 +1,7 @@
 <div
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
-  [attr.tabindex]="disabled ? -1 : 0"
+  tabindex="1"
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
@@ -41,7 +41,7 @@
         @if (prefixIcon) {
           <cps-icon
             [icon]="prefixIcon"
-            [style.color]="disabled ? 'var(--cps-text-muted)' : null"
+            [style.color]="disabled ? '#9a9595' : null"
             [size]="prefixIconSize"
             class="prefix-icon">
           </cps-icon>
@@ -129,7 +129,6 @@
             #autocompleteInput
             class="cps-autocomplete-box-input"
             spellcheck="false"
-            [attr.aria-label]="label || placeholder || 'Autocomplete input'"
             [placeholder]="
               (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
                 ? placeholder
@@ -284,7 +283,6 @@
     spellcheck="false"
     [class]="inputClass"
     [style]="inputStyle"
-    [attr.aria-label]="label || placeholder || 'Autocomplete input'"
     [placeholder]="
       (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
         ? placeholder
