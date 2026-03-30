@@ -38,7 +38,7 @@ Playwright auto-starts the dev server (`npm run start`) if it isn't already runn
 
 ### Issues with Firefox
 
-Playwright's default Firefox is a custom Nightly build that is blocked by Absa's MDM policy: ~Library/Caches/ms-playwright/firefox-1509/firefox/Nightly.app
+Playwright's default Firefox is a custom Nightly build that is blocked by corporate MDM policy: ~Library/Caches/ms-playwright/firefox-1509/firefox/Nightly.app
 By default, Playwright downloads its own patched Firefox Nightly binary to control the browser via an internal protocol called Juggler. The MDM (Mobile Device Management) software blocks unsigned or Nightly-signed apps. When this happens you'll see:
 
 ```
