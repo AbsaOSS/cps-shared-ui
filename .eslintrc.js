@@ -19,7 +19,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['playwright/**/*.ts'],
+      files: ['playwright/**/*.ts', 'playwright.config.ts'],
       env: {
         jest: false,
         node: true
