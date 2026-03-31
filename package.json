@@ -23,8 +23,6 @@
     "test:playwright:report": "playwright show-report",
     "test:playwright:chromium": "playwright test --project=chromium",
     "test:playwright:chromium:headed": "playwright test --project=chromium --headed",
-    "test:playwright:firefox": "playwright test --project=firefox",
-    "test:playwright:firefox:headed": "playwright test --project=firefox --headed",
     "test:playwright:webkit": "playwright test --project=webkit",
     "test:playwright:webkit:headed": "playwright test --project=webkit --headed",
     "format": "prettier --write \"**/*.{ts,html}\""

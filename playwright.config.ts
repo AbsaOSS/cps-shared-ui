@@ -48,32 +48,6 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] }
     },
     {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        /*
-         * On macOS, corporate MDM may block Playwright's patched Firefox Nightly.
-         * Set these env vars locally to use your system Firefox via WebDriver BiDi:
-         *   PLAYWRIGHT_FIREFOX_CHANNEL=moz-firefox
-         *   PLAYWRIGHT_FIREFOX_EXECUTABLE_PATH=/path/to/firefox  (optional, if not at standard location)
-         * CI leaves these unset and uses the default Nightly build.
-         */
-        ...(!process.env.CI && process.env.PLAYWRIGHT_FIREFOX_CHANNEL
-          ? {
-              channel: process.env.PLAYWRIGHT_FIREFOX_CHANNEL,
-              ...(process.env.PLAYWRIGHT_FIREFOX_EXECUTABLE_PATH
-                ? {
-                    launchOptions: {
-                      executablePath:
-                        process.env.PLAYWRIGHT_FIREFOX_EXECUTABLE_PATH
-                    }
-                  }
-                : {})
-            }
-          : {})
-      }
-    },
-    {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] }
     }
