@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   CpsBaseTheme,
   CpsColorTheme,
@@ -17,7 +12,10 @@ import {
   imports: [CpsIconComponent],
   templateUrl: './theme-toggle.component.html',
   styleUrl: './theme-toggle.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(document:keydown.escape)': 'onEscapeKey()'
+  }
 })
 export class ThemeToggleComponent {
   private themeService = inject(CpsThemeService);
@@ -40,7 +38,6 @@ export class ThemeToggleComponent {
     this.menuOpen = false;
   }
 
-  @HostListener('document:keydown.escape')
   onEscapeKey(): void {
     if (this.menuOpen) {
       this.closeMenu();
