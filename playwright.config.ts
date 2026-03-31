@@ -15,7 +15,10 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. Default: undefined (uses 50% of CPU cores) */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [['html'], ['json', { outputFile: 'playwright-report/summary.json' }]],
+  reporter: [
+    ['html'],
+    ['json', { outputFile: 'playwright-report/summary.json' }]
+  ],
   /* Maximum time one test can run for. Default: 30_000 */
   timeout: 30_000,
   /* Maximum time an expect() assertion can wait for the condition to be met. Default: 5_000 */
