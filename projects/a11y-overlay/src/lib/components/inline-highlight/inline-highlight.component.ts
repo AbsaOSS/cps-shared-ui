@@ -32,11 +32,10 @@ import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-p
     :host {
       position: absolute;
       pointer-events: none;
-      border: 2px solid;
+      border: 2px solid transparent;
       border-radius: 2px;
       box-sizing: border-box;
       z-index: 2147483641;
-      transition: border-color 0.15s;
     }
 
     :host.a11y-highlight--selected {
