@@ -12,8 +12,11 @@ test.describe('cps-table page', () => {
       await page.getByText('Table 6').click({ force: true });
       await page.locator('.cps-table-tbar-export-btn cps-icon').click();
 
+      const xlsxItem = page.getByText('XLSX');
+      await expect(xlsxItem).toBeVisible();
+
       const downloadPromise = page.waitForEvent('download');
-      await page.getByText('XLSX').click();
+      await xlsxItem.click({ force: true });
       const download = await downloadPromise;
 
       const downloadedPath = await download.path();

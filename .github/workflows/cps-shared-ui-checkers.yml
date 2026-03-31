@@ -97,6 +97,7 @@ jobs:
         run: npm run test:playwright
 
       - name: Upload Playwright report
+        id: upload-report
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -105,12 +106,35 @@ jobs:
           retention-days: 30
 
       - name: Upload test results
+        id: upload-results
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-test-results
           path: test-results/
           retention-days: 10
+
+      - name: Build artifact links
+        id: artifact-links
+        if: always()
+        run: |
+          REPORT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-report.outputs.artifact-id }}"
+          MSG="For details, download the [Playwright report](${REPORT_URL})"
+          RESULTS_ID="${{ steps.upload-results.outputs.artifact-id }}"
+          if [ -n "$RESULTS_ID" ]; then
+            RESULTS_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${RESULTS_ID}"
+            MSG="${MSG} | [Test results — screenshots, videos, traces](${RESULTS_URL})"
+          fi
+          echo "msg=${MSG}" >> "$GITHUB_OUTPUT"
+
+      - name: Playwright report summary
+        uses: daun/playwright-report-summary@v3
+        if: always()
+        with:
+          report-file: test-results/report.json
+          comment-title: 'Playwright test results'
+          job-summary: true
+          custom-info: ${{ steps.artifact-links.outputs.msg }}
 
   generate-api-data:
     runs-on: ubuntu-latest

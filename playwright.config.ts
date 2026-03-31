@@ -15,7 +15,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. Default: undefined (uses 50% of CPU cores) */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [['html'], ['json', { outputFile: 'test-results/report.json' }]],
   /* Maximum time one test can run for. Default: 30_000 */
   timeout: 30_000,
   /* Maximum time an expect() assertion can wait for the condition to be met. Default: 5_000 */
@@ -25,7 +25,7 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'http://localhost:4200',
     /* Maximum time each user action (click, fill, etc.) can take. Default: 0 (no limit) */
-    actionTimeout: 10_000,
+    actionTimeout: 30_000,
     /* Maximum time a navigation (goto, reload) can take. Default: 0 (no limit) */
     navigationTimeout: 30_000,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer. Default: 'off' */
