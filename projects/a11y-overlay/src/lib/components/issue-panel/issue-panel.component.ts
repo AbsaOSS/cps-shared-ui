@@ -28,7 +28,7 @@ const CATEGORY_ICONS: Record<A11yCategory, string> = {
   headings: 'H',
   landmarks: '◈',
   'link-text': '🔗',
-  'interactive': '👆',
+  'interactive': '☞',
 };
 
 interface IssueGroup {
