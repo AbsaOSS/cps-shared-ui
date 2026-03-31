@@ -29,14 +29,14 @@ describe('CpsChipComponent', () => {
   });
 
   it('should render label', () => {
-    component.label = 'Test Chip';
+    fixture.componentRef.setInput('label', 'Test Chip');
     fixture.detectChanges();
     const chip = fixture.nativeElement.querySelector('.cps-chip');
     expect(chip.textContent).toContain('Test Chip');
   });
 
   it('should display close icon when closable', () => {
-    component.closable = true;
+    fixture.componentRef.setInput('closable', true);
     fixture.detectChanges();
     const closeIcon = fixture.nativeElement.querySelector(
       '.cps-chip-close-icon'
@@ -46,8 +46,8 @@ describe('CpsChipComponent', () => {
 
   it('should emit closed event when close icon is clicked', () => {
     jest.spyOn(component.closed, 'emit');
-    component.closable = true;
-    component.label = 'Test';
+    fixture.componentRef.setInput('closable', true);
+    fixture.componentRef.setInput('label', 'Test');
     fixture.detectChanges();
     const closeIcon = fixture.nativeElement.querySelector(
       '.cps-chip-close-icon'
@@ -64,68 +64,67 @@ describe('CpsChipComponent', () => {
   });
 
   it('should display custom icon when icon is provided', () => {
-    component.icon = 'home';
-    component.label = 'Home';
+    fixture.componentRef.setInput('icon', 'home');
+    fixture.componentRef.setInput('label', 'Home');
     fixture.detectChanges();
     const icon = fixture.nativeElement.querySelector('cps-icon');
     expect(icon).toBeTruthy();
   });
 
   it('should add disabled class when disabled', () => {
-    component.disabled = true;
-    component.ngOnChanges();
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     expect(component.classesList).toContain('cps-chip-disabled');
   });
 
   it('should add icon-before class when icon is before', () => {
-    component.icon = 'home';
-    component.label = 'Home';
-    component.iconPosition = 'before';
-    component.ngOnChanges();
+    fixture.componentRef.setInput('icon', 'home');
+    fixture.componentRef.setInput('label', 'Home');
+    fixture.componentRef.setInput('iconPosition', 'before');
     fixture.detectChanges();
     expect(component.classesList).toContain('cps-chip--icon-before');
   });
 
   it('should add icon-after class when icon is after', () => {
-    component.icon = 'home';
-    component.label = 'Home';
-    component.iconPosition = 'after';
-    component.ngOnChanges();
+    fixture.componentRef.setInput('icon', 'home');
+    fixture.componentRef.setInput('label', 'Home');
+    fixture.componentRef.setInput('iconPosition', 'after');
     fixture.detectChanges();
     expect(component.classesList).toContain('cps-chip--icon-after');
   });
 
   it('should always have base class', () => {
-    component.ngOnChanges();
+    fixture.componentRef.setInput('label', '');
+    fixture.detectChanges();
     expect(component.classesList).toContain('cps-chip');
   });
 
   it('should not add icon position class if no icon', () => {
-    component.label = 'Test';
-    component.icon = '';
-    component.ngOnChanges();
+    fixture.componentRef.setInput('label', 'Test');
+    fixture.componentRef.setInput('icon', '');
+    fixture.detectChanges();
     expect(component.classesList).not.toContain('cps-chip--icon-before');
     expect(component.classesList).not.toContain('cps-chip--icon-after');
   });
 
   it('should not add icon position class if no label', () => {
-    component.icon = 'home';
-    component.label = '';
-    component.ngOnChanges();
+    fixture.componentRef.setInput('icon', 'home');
+    fixture.componentRef.setInput('label', '');
+    fixture.detectChanges();
     expect(component.classesList).not.toContain('cps-chip--icon-before');
     expect(component.classesList).not.toContain('cps-chip--icon-after');
   });
 
   it('should set custom icon color', () => {
-    component.iconColor = 'primary';
+    fixture.componentRef.setInput('iconColor', 'primary');
     fixture.detectChanges();
     expect(component.iconColor).toBe('primary');
   });
 
   it('should call setClasses on ngOnChanges', () => {
     const spy = jest.spyOn(component, 'setClasses');
-    component.ngOnChanges();
+    fixture.componentRef.setInput('label', '');
+    fixture.detectChanges();
     expect(spy).toHaveBeenCalled();
   });
 });

@@ -34,11 +34,11 @@ describe('CpsAutocompleteComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CpsAutocompleteComponent);
     component = fixture.componentInstance;
-    component.options = [
+    fixture.componentRef.setInput('options', [
       { label: 'Option 1', value: 'opt1', info: 'Info 1' },
       { label: 'Option 2', value: 'opt2', info: 'Info 2' },
       { label: 'Option 3', value: 'opt3', info: 'Info 3' }
-    ];
+    ]);
     fixture.detectChanges();
   });
 
@@ -47,7 +47,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display the label when provided', () => {
-    component.label = 'Test Label';
+    fixture.componentRef.setInput('label', 'Test Label');
     fixture.detectChanges();
     const labelElement = fixture.debugElement.query(
       By.css('.cps-autocomplete-label label')
@@ -56,7 +56,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display the placeholder when no value is selected', () => {
-    component.placeholder = 'Test Placeholder';
+    fixture.componentRef.setInput('placeholder', 'Test Placeholder');
     component.value = null;
     fixture.detectChanges();
     const inputElement = fixture.debugElement.query(
@@ -130,6 +130,7 @@ describe('CpsAutocompleteComponent', () => {
 
   it('should display selected option label', () => {
     component.value = component.options[0];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const selectedLabel = fixture.debugElement.query(
       By.css('.single-item-selection span')
@@ -138,8 +139,9 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display multiple selected options as chips', () => {
-    component.multiple = true;
+    fixture.componentRef.setInput('multiple', true);
     component.value = [component.options[0], component.options[2]];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     const chipElements = fixture.debugElement.queryAll(By.css('cps-chip'));
     expect(chipElements.length).toBe(2);
@@ -156,7 +158,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should prevent options menu from closing when validating', () => {
-    component.validating = true;
+    fixture.componentRef.setInput('validating', true);
     const onBlurStub = jest.spyOn(component, 'onBlur');
     fixture.detectChanges();
 
@@ -169,7 +171,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should allow options menu to close with ESCAPE key when validating', () => {
-    component.validating = true;
+    fixture.componentRef.setInput('validating', true);
     const onBlurStub = jest.spyOn(component, 'onBlur');
     fixture.detectChanges();
     const result = component.onBeforeOptionsHidden(
@@ -180,7 +182,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display loading indicator when validating', () => {
-    component.validating = true;
+    fixture.componentRef.setInput('validating', true);
     fixture.detectChanges();
     const progressBar = fixture.debugElement.query(
       By.css('.autocomplete-progress-bar')
@@ -189,7 +191,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should correctly set disabled state', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
 
     const container = fixture.debugElement.query(
@@ -217,7 +219,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display error message when externalError is set', () => {
-    component.externalError = 'External error occurred';
+    fixture.componentRef.setInput('externalError', 'External error occurred');
     fixture.detectChanges();
     const errorElement = fixture.debugElement.query(
       By.css('.cps-autocomplete-error')
@@ -229,7 +231,7 @@ describe('CpsAutocompleteComponent', () => {
 
   it('should clear the value when clear button is clicked', () => {
     component.value = component.options[0];
-    component.clearable = true;
+    fixture.componentRef.setInput('clearable', true);
     fixture.detectChanges();
     const clearButton = fixture.debugElement.query(
       By.css('.cps-autocomplete-box-clear-icon cps-icon')
@@ -246,7 +248,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display hint when provided', () => {
-    component.hint = 'Test hint message';
+    fixture.componentRef.setInput('hint', 'Test hint message');
     fixture.detectChanges();
     const hintElement = fixture.debugElement.query(
       By.css('.cps-autocomplete-hint')
@@ -263,11 +265,11 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should filter options based on input', fakeAsync(() => {
-    component.options = [
+    fixture.componentRef.setInput('options', [
       { label: 'Apple', value: 'apple' },
       { label: 'Banana', value: 'banana' },
       { label: 'Cherry', value: 'cherry' }
-    ];
+    ]);
     fixture.detectChanges();
     const inputElement = fixture.debugElement.query(
       By.css('.cps-autocomplete-box-input')
@@ -284,8 +286,8 @@ describe('CpsAutocompleteComponent', () => {
   }));
 
   it('should display loading message when loading', fakeAsync(() => {
-    component.loading = true;
-    component.loadingMessage = 'Loading options...';
+    fixture.componentRef.setInput('loading', true);
+    fixture.componentRef.setInput('loadingMessage', 'Loading options...');
     fixture.detectChanges();
 
     // Simulate opening the options menu
@@ -308,10 +310,10 @@ describe('CpsAutocompleteComponent', () => {
   }));
 
   it('should display empty message when no options are available', fakeAsync(() => {
-    component.options = [];
+    fixture.componentRef.setInput('options', []);
     component.inputTextDebounced = 'test';
-    component.showEmptyMessage = true;
-    component.loading = false;
+    fixture.componentRef.setInput('showEmptyMessage', true);
+    fixture.componentRef.setInput('loading', false);
     fixture.detectChanges();
 
     // Open the options menu
@@ -339,8 +341,8 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should display info tooltip when infoTooltip is provided', () => {
-    component.infoTooltip = 'Tooltip info';
-    component.label = 'Test Label'; // Label is required for the tooltip to appear
+    fixture.componentRef.setInput('infoTooltip', 'Tooltip info');
+    fixture.componentRef.setInput('label', 'Test Label'); // Label is required for the tooltip to appear
     fixture.detectChanges();
     const infoIcon = fixture.debugElement.query(
       By.css('.cps-autocomplete-label-info-circle')
@@ -355,7 +357,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should toggle options menu when chevron is clicked', fakeAsync(() => {
-    component.showChevron = true;
+    fixture.componentRef.setInput('showChevron', true);
     fixture.detectChanges();
 
     const chevron = fixture.debugElement.query(
@@ -371,7 +373,7 @@ describe('CpsAutocompleteComponent', () => {
   }));
 
   it('should not open options menu when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
 
     const autocompleteBox = fixture.debugElement.query(
@@ -384,9 +386,10 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should select all options when toggleAll is called', () => {
-    component.multiple = true;
-    component.selectAll = true;
+    fixture.componentRef.setInput('multiple', true);
+    fixture.componentRef.setInput('selectAll', true);
     component.value = [];
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     component.toggleAll();
@@ -396,7 +399,7 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should apply custom appearance', () => {
-    component.appearance = 'underlined';
+    fixture.componentRef.setInput('appearance', 'underlined');
     fixture.detectChanges();
     const container = fixture.debugElement.query(
       By.css('.cps-autocomplete-container.underlined')
@@ -405,11 +408,11 @@ describe('CpsAutocompleteComponent', () => {
   });
 
   it('should clear input text and reset options when clearInput function is called', () => {
-    component.options = [
+    fixture.componentRef.setInput('options', [
       { label: 'First Option', value: 'A' },
       { label: 'Second Option', value: 'B' },
       { label: 'Third Option', value: 'C' }
-    ];
+    ]);
     const event = new Event('input');
     Object.defineProperty(event, 'target', {
       value: { value: 'First' }

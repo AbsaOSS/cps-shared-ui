@@ -32,11 +32,11 @@ describe('CpsSchedulerComponent', () => {
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     // Set default inputs
-    component.cron = '';
-    component.showNotSet = true;
-    component.showAdvanced = true;
-    component.showMinutes = true;
-    component.use24HourTime = true;
+    fixture.componentRef.setInput('cron', '');
+    fixture.componentRef.setInput('showNotSet', true);
+    fixture.componentRef.setInput('showAdvanced', true);
+    fixture.componentRef.setInput('showMinutes', true);
+    fixture.componentRef.setInput('use24HourTime', true);
 
     fixture.detectChanges();
   });

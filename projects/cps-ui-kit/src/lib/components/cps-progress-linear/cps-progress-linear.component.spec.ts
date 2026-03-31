@@ -35,8 +35,8 @@ describe('CpsProgressLinearComponent', () => {
   });
 
   it('should keep width as string if already string', () => {
-    component.width = '50%';
-    component.ngOnInit();
+    fixture.componentRef.setInput('width', '50%');
+    fixture.detectChanges();
     expect(component.width).toBe('50%');
   });
 
@@ -47,8 +47,8 @@ describe('CpsProgressLinearComponent', () => {
   });
 
   it('should keep height as string if already string', () => {
-    component.height = '1rem';
-    component.ngOnInit();
+    fixture.componentRef.setInput('height', '1rem');
+    fixture.detectChanges();
     expect(component.height).toBe('1rem');
   });
 
@@ -59,25 +59,25 @@ describe('CpsProgressLinearComponent', () => {
   });
 
   it('should keep radius as string if already string', () => {
-    component.radius = '0.25rem';
-    component.ngOnInit();
+    fixture.componentRef.setInput('radius', '0.25rem');
+    fixture.detectChanges();
     expect(component.radius).toBe('0.25rem');
   });
 
   it('should set custom color', () => {
-    component.color = 'primary';
-    component.ngOnInit();
+    fixture.componentRef.setInput('color', 'primary');
+    fixture.detectChanges();
     expect(component.color).toBeTruthy();
   });
 
   it('should set custom background color', () => {
-    component.bgColor = 'line-light';
-    component.ngOnInit();
+    fixture.componentRef.setInput('bgColor', 'line-light');
+    fixture.detectChanges();
     expect(component.bgColor).toBeTruthy();
   });
 
   it('should set custom opacity', () => {
-    component.opacity = 0.5;
+    fixture.componentRef.setInput('opacity', 0.5);
     fixture.detectChanges();
     expect(component.opacity).toBe(0.5);
   });

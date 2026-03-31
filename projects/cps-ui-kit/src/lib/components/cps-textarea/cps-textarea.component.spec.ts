@@ -37,7 +37,7 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should render label when provided', () => {
-    component.label = 'Comments';
+    fixture.componentRef.setInput('label', 'Comments');
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector('.cps-textarea-label');
     expect(label).toBeTruthy();
@@ -45,21 +45,21 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should render textarea with placeholder', () => {
-    component.placeholder = 'Enter your text';
+    fixture.componentRef.setInput('placeholder', 'Enter your text');
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
     expect(textarea.placeholder).toBe('Enter your text');
   });
 
   it('should set rows attribute', () => {
-    component.rows = 10;
+    fixture.componentRef.setInput('rows', 10);
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
     expect(textarea.rows).toBe(10);
   });
 
   it('should set cols attribute', () => {
-    component.cols = 50;
+    fixture.componentRef.setInput('cols', 50);
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
     expect(textarea.cols).toBe(50);
@@ -92,7 +92,7 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should display clear icon when clearable and has value', () => {
-    component.clearable = true;
+    fixture.componentRef.setInput('clearable', true);
     component.value = 'Some text';
     fixture.detectChanges();
     const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
@@ -100,7 +100,7 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should clear value when clear icon is clicked', () => {
-    component.clearable = true;
+    fixture.componentRef.setInput('clearable', true);
     component.value = 'Some text';
     fixture.detectChanges();
     const clearIcon = fixture.nativeElement.querySelector(
@@ -111,7 +111,7 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should display hint when provided', () => {
-    component.hint = 'Max 200 characters';
+    fixture.componentRef.setInput('hint', 'Max 200 characters');
     fixture.detectChanges();
     const hint = fixture.nativeElement.querySelector('.cps-textarea-hint');
     expect(hint).toBeTruthy();
@@ -119,7 +119,7 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should display error message when error is set', () => {
-    component.error = 'This field is required';
+    fixture.componentRef.setInput('error', 'This field is required');
     fixture.detectChanges();
     const error = fixture.nativeElement.querySelector('.cps-textarea-error');
     expect(error).toBeTruthy();
@@ -127,29 +127,29 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should disable textarea when disabled is true', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
     expect(textarea.disabled).toBe(true);
   });
 
   it('should set custom width', () => {
-    component.width = 500;
+    fixture.componentRef.setInput('width', 500);
     fixture.detectChanges();
     // Width can be set as number or string
     expect(component.width).toBeDefined();
   });
 
   it('should keep width as string if already string', () => {
-    component.width = '80%';
+    fixture.componentRef.setInput('width', '80%');
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.width).toBe('80%');
   });
 
   it('should display info tooltip when provided', () => {
-    component.infoTooltip = 'Help text';
-    component.label = 'Comments';
+    fixture.componentRef.setInput('infoTooltip', 'Help text');
+    fixture.componentRef.setInput('label', 'Comments');
     fixture.detectChanges();
     const infoCircle = fixture.nativeElement.querySelector('cps-info-circle');
     expect(infoCircle).toBeTruthy();
@@ -163,15 +163,15 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should not display hint when hideDetails is true', () => {
-    component.hint = 'Some hint';
-    component.hideDetails = true;
+    fixture.componentRef.setInput('hint', 'Some hint');
+    fixture.componentRef.setInput('hideDetails', true);
     fixture.detectChanges();
     const hint = fixture.nativeElement.querySelector('.cps-textarea-hint');
     expect(hint).toBeFalsy();
   });
 
   it('should apply resizable class', () => {
-    component.resizable = 'none';
+    fixture.componentRef.setInput('resizable', 'none');
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
     // const style = window.getComputedStyle(textarea);
@@ -180,8 +180,8 @@ describe('CpsTextareaComponent', () => {
   });
 
   it('should show persistent clear icon when persistentClear is true', () => {
-    component.clearable = true;
-    component.persistentClear = true;
+    fixture.componentRef.setInput('clearable', true);
+    fixture.componentRef.setInput('persistentClear', true);
     component.value = '';
     fixture.detectChanges();
     // Persistent clear should be visible even without value
