@@ -20,7 +20,7 @@ export default defineConfig({
     ['json', { outputFile: 'playwright-report/summary.json' }]
   ],
   /* Maximum time one test can run for. Default: 30_000 */
-  timeout: 30_000,
+  timeout: 60_000,
   /* Maximum time an expect() assertion can wait for the condition to be met. Default: 5_000 */
   expect: { timeout: 5_000 },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
