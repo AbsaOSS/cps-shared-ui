@@ -97,7 +97,7 @@ All config lives in [`playwright.config.ts`](../playwright.config.ts) at the pro
 | Scope                                    | Value |
 | ---------------------------------------- | ----- |
 | Test (`timeout`)                         | 30 s  |
-| Action (`actionTimeout`)                 | 10 s  |
+| Action (`actionTimeout`)                 | 30 s  |
 | Assertion (`expect.timeout`)             | 5 s   |
 | Navigation (`navigationTimeout`)         | 30 s  |
 | Dev server startup (`webServer.timeout`) | 120 s |
@@ -111,6 +111,18 @@ All config lives in [`playwright.config.ts`](../playwright.config.ts) at the pro
 | Trace      | On first retry      |
 
 These are written to `test-results/` and the HTML report goes to `playwright-report/`. Both directories are git-ignored.
+
+### CI reporting
+
+The GitHub Actions workflow uploads artifacts and posts a PR comment summarising results:
+
+| Artifact / action          | Condition | Retention |
+| -------------------------- | --------- | --------- |
+| HTML report                | Always    | 30 days   |
+| Test results (screenshots, videos, traces) | On failure | 10 days |
+| PR comment (via `daun/playwright-report-summary`) | Always | — |
+
+The PR comment includes direct download links to the uploaded artifacts.
 
 ### Browser projects
 

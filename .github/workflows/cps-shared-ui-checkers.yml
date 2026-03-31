@@ -131,7 +131,7 @@ jobs:
         uses: daun/playwright-report-summary@v3
         if: always()
         with:
-          report-file: test-results/report.json
+          report-file: playwright-report/summary.json
           comment-title: 'Playwright test results'
           job-summary: true
           custom-info: ${{ steps.artifact-links.outputs.msg }}
