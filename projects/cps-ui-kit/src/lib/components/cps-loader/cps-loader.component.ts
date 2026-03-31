@@ -29,7 +29,7 @@ export class CpsLoaderComponent implements OnInit {
    * Color of the label.
    * @group Props
    */
-  @Input() labelColor = 'text-primary';
+  @Input() labelColor = 'var(--cps-text-primary)';
 
   /**
    * Determines whether to show 'Loading...' label.
