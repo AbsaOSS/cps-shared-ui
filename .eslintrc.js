@@ -14,6 +14,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn'
   },
   env: {
+    browser: true,
     jest: true
   },
   overrides: [
