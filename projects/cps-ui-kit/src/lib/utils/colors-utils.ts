@@ -20,12 +20,12 @@ const isDark = (color: string): boolean => {
   let g = 0;
   let b = 0;
   if (color.match(/^rgb/)) {
-    const colorMatched = color.match(
-      /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
-    ) as any;
-    r = colorMatched[1];
-    g = colorMatched[2];
-    b = colorMatched[3];
+    // Match both legacy rgba(r, g, b, a) and modern rgb(r g b / a) syntax
+    const colorMatched = color.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    if (!colorMatched) return false;
+    r = +colorMatched[1];
+    g = +colorMatched[2];
+    b = +colorMatched[3];
   } else {
     const colorNum = +(
       '0x' + color.slice(1).replace(color.length < 5 && (/./g as any), '$&$&')
