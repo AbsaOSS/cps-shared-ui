@@ -125,6 +125,35 @@
           }
         }
       }
+    },
+    "a11y-overlay": {
+      "projectType": "library",
+      "root": "projects/a11y-overlay",
+      "sourceRoot": "projects/a11y-overlay/src",
+      "prefix": "a11y",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/a11y-overlay/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/a11y-overlay/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/a11y-overlay/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "zoneless": false
+          }
+        }
+      }
     }
   },
   "cli": {

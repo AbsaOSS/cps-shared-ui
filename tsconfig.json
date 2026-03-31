@@ -4,7 +4,14 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "baseUrl": "./",
-    "paths": { "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"] },
+    "paths": {
+      "a11y-overlay": [
+        "./projects/a11y-overlay/src/public-api.ts"
+      ],
+      "cps-ui-kit": [
+        "./projects/cps-ui-kit/src/public-api.ts"
+      ]
+    },
     "esModuleInterop": true,
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -28,5 +35,16 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "exclude": ["cypress/**/*.ts", "cypress.config.ts"]
+  "exclude": [
+    "cypress/**/*.ts",
+    "cypress.config.ts"
+  ],
+  "references": [
+    {
+      "path": "./projects/a11y-overlay/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/a11y-overlay/tsconfig.spec.json"
+    }
+  ]
 }

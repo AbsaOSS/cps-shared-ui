@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import {
   BrowserModule
   // provideClientHydration
@@ -10,6 +10,7 @@ import { NavigationSidebarComponent } from './components/navigation-sidebar/navi
 import { TitleStrategy } from '@angular/router';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
 import { CpsIconComponent } from 'cps-ui-kit';
+import { provideA11yOverlay, A11yOverlayComponent } from 'a11y-overlay';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,11 +19,13 @@ import { CpsIconComponent } from 'cps-ui-kit';
     BrowserAnimationsModule,
     AppRoutingModule,
     NavigationSidebarComponent,
-    CpsIconComponent
+    CpsIconComponent,
+    A11yOverlayComponent
   ],
   providers: [
-    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy }
+    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
     // provideClientHydration()
+    provideA11yOverlay({ enabled: isDevMode(), scanOn: 'navigation' })
   ],
   bootstrap: [AppComponent]
 })
