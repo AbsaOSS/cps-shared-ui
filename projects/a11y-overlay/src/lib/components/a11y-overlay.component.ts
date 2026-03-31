@@ -272,7 +272,8 @@ export class A11yOverlayComponent implements OnInit {
 
   readonly showHighlights = computed(() => {
     const cats = this.service.activeCategories();
-    return cats.has('axe') || cats.has('link-text') || cats.has('focus-order');
+    return cats.has('axe') || cats.has('link-text') || cats.has('focus-order')
+      || cats.has('landmarks') || cats.has('headings') || cats.has('interactive');
   });
 
   /** All inline highlights. Focus-order issues render as "ghost" (invisible unless selected). */

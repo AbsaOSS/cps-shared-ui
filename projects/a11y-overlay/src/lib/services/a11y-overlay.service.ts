@@ -125,7 +125,8 @@ export class A11yOverlayService {
     const allIssues: A11yIssue[] = [];
     const seen = new Set<string>();
 
-    for (const result of results) {
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
       if (result.status === 'fulfilled') {
         for (const issue of result.value) {
           if (!seen.has(issue.id)) {
@@ -136,11 +137,25 @@ export class A11yOverlayService {
       }
     }
 
-    // Ensure signal updates run inside Angular's zone.
-    // After await, the async continuation may leave Angular's zone,
-    // so signal updates wouldn't trigger change detection.
+    // Merge: keep existing issues for still-connected elements that the new scan didn't find.
+    // Axe-core can produce different results for the same elements depending on page context
+    // (e.g., visibility heuristics, scroll position). Preserve existing issues for elements
+    // that are still in the DOM to avoid losing sidebar/persistent highlights on page changes.
     this.zone.run(() => {
-      this.issues.set(allIssues);
+      const newIdSet = new Set(allIssues.map((i) => i.id));
+      const existing = this.issues();
+      const preserved: A11yIssue[] = [];
+      for (const old of existing) {
+        if (!newIdSet.has(old.id) && old.element.isConnected) {
+          // Check if the new scan has any issue for this same element (by reference)
+          const newHasElement = allIssues.some((n) => n.element === old.element && n.category === old.category);
+          if (!newHasElement) {
+            preserved.push(old);
+          }
+        }
+      }
+      const merged = [...allIssues, ...preserved];
+      this.issues.set(merged);
       this.domChangeTick.update((v) => v + 1);
     });
   }
@@ -194,8 +209,17 @@ export class A11yOverlayService {
           takeUntilDestroyed(this.destroyRef)
         )
         .subscribe(() => {
-          // Wait for Angular to render the new route
-          setTimeout(() => this.scan(), 300);
+          // Purge issues referencing elements no longer in the DOM,
+          // but keep issues for persistent elements (like sidebar)
+          const current = this.issues();
+          const connected = current.filter((i) => i.element.isConnected);
+          if (connected.length !== current.length) {
+            this.issues.set(connected);
+          }
+          this.selectedIssue.set(null);
+          this.hoveredHighlight.set(null);
+          // Wait for Angular to render the new route, then re-scan
+          setTimeout(() => this.scan(), 600);
         });
     }
 

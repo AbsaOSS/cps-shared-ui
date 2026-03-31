@@ -72,7 +72,7 @@ import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-p
     }
 
     .a11y-indicator {
-      position: absolute;
+      position: fixed;
       width: 24px;
       height: 24px;
       cursor: pointer;
@@ -80,6 +80,7 @@ import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-p
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 2147483646;
     }
 
     .a11y-indicator__dot {
@@ -144,7 +145,7 @@ export class InlineHighlightComponent implements OnInit {
     return classes.join(' ');
   });
 
-  /** Nudge the indicator inward only if it would be clipped by the viewport. */
+  /** Viewport-fixed coordinates for the indicator dot. */
   readonly indicatorOffset = computed(() => {
     const r = this.rect();
     const hitSize = 24; // hit area size
@@ -159,8 +160,7 @@ export class InlineHighlightComponent implements OnInit {
     const vpX = Math.max(pad, Math.min(desiredVpX, window.innerWidth - hitSize - pad));
     const vpY = Math.max(pad, Math.min(desiredVpY, window.innerHeight - hitSize - pad));
 
-    // Convert to host-relative
-    return { left: vpX - r.left, top: vpY - r.top };
+    return { left: vpX, top: vpY };
   });
 
   ngOnInit(): void {
