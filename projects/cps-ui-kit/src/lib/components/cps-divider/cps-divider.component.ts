@@ -23,8 +23,8 @@ export type CpsDividerType = 'solid' | 'dashed' | 'dotted';
   selector: 'cps-divider',
   host: {
     class: 'cps-divider',
-    '[style.border-top]': '_borderTop()',
-    '[style.border-right]': '_borderRight()'
+    '[style.border-top]': 'borderTop()',
+    '[style.border-right]': 'borderRight()'
   },
   standalone: true,
   template: '',
@@ -59,11 +59,11 @@ export class CpsDividerComponent {
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
-  private _borderTop = computed(() => {
+  public borderTop = computed(() => {
     return this._constructBorder(!this.vertical());
   });
 
-  private _borderRight = computed(() => {
+  public borderRight = computed(() => {
     return this._constructBorder(this.vertical());
   });
 

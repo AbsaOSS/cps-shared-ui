@@ -92,7 +92,7 @@ describe('CpsInputComponent', () => {
 
   describe('Input Properties', () => {
     it('should apply label', () => {
-      component.label = 'Test Label';
+      fixture.componentRef.setInput('label', 'Test Label');
       fixture.detectChanges();
 
       const label = fixture.nativeElement.querySelector('label');
@@ -100,7 +100,7 @@ describe('CpsInputComponent', () => {
     });
 
     it('should apply placeholder', () => {
-      component.placeholder = 'Enter text';
+      fixture.componentRef.setInput('placeholder', 'Enter text');
       fixture.detectChanges();
 
       const input = fixture.nativeElement.querySelector('input');
@@ -108,7 +108,7 @@ describe('CpsInputComponent', () => {
     });
 
     it('should disable input when disabled is true', () => {
-      component.disabled = true;
+      fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
 
       const input = fixture.nativeElement.querySelector('input');
@@ -116,7 +116,7 @@ describe('CpsInputComponent', () => {
     });
 
     it('should make input readonly when readonly is true', () => {
-      component.readonly = true;
+      fixture.componentRef.setInput('readonly', true);
       fixture.detectChanges();
 
       const input = fixture.nativeElement.querySelector('input');
@@ -124,7 +124,7 @@ describe('CpsInputComponent', () => {
     });
 
     it('should apply hint text', () => {
-      component.hint = 'Helper text';
+      fixture.componentRef.setInput('hint', 'Helper text');
       fixture.detectChanges();
 
       const hint = fixture.nativeElement.querySelector('.cps-input-hint');
@@ -143,7 +143,7 @@ describe('CpsInputComponent', () => {
 
   describe('Clear Functionality', () => {
     it('should clear value when clear button is clicked', () => {
-      component.clearable = true;
+      fixture.componentRef.setInput('clearable', true);
       component.writeValue('test');
       fixture.detectChanges();
 
@@ -154,7 +154,7 @@ describe('CpsInputComponent', () => {
 
     it('should emit cleared event', () => {
       const emitSpy = jest.spyOn(component.cleared, 'emit');
-      component.clearable = true;
+      fixture.componentRef.setInput('clearable', true);
       component.writeValue('test');
 
       component.onClear();
@@ -231,7 +231,7 @@ describe('CpsInputComponent', () => {
 
     it('should emit prefixIconClicked when prefix icon is clicked', () => {
       const emitSpy = jest.spyOn(component.prefixIconClicked, 'emit');
-      component.prefixIconClickable = true;
+      fixture.componentRef.setInput('prefixIconClickable', true);
 
       component.onClickPrefixIcon();
 
@@ -240,7 +240,7 @@ describe('CpsInputComponent', () => {
 
     it('should not emit prefixIconClicked when not clickable', () => {
       const emitSpy = jest.spyOn(component.prefixIconClicked, 'emit');
-      component.prefixIconClickable = false;
+      fixture.componentRef.setInput('prefixIconClickable', false);
 
       component.onClickPrefixIcon();
 
@@ -249,8 +249,8 @@ describe('CpsInputComponent', () => {
 
     it('should not emit prefixIconClicked when disabled', () => {
       const emitSpy = jest.spyOn(component.prefixIconClicked, 'emit');
-      component.prefixIconClickable = true;
-      component.disabled = true;
+      fixture.componentRef.setInput('prefixIconClickable', true);
+      fixture.componentRef.setInput('disabled', true);
 
       component.onClickPrefixIcon();
 
@@ -259,8 +259,8 @@ describe('CpsInputComponent', () => {
 
     it('should not emit prefixIconClicked when readonly', () => {
       const emitSpy = jest.spyOn(component.prefixIconClicked, 'emit');
-      component.prefixIconClickable = true;
-      component.readonly = true;
+      fixture.componentRef.setInput('prefixIconClickable', true);
+      fixture.componentRef.setInput('readonly', true);
 
       component.onClickPrefixIcon();
 
@@ -436,8 +436,8 @@ describe('CpsInputComponent', () => {
     });
 
     it('should calculate prefix width after view init', () => {
-      component.prefixText = 'USD';
-      component.prefixIcon = 'search';
+      fixture.componentRef.setInput('prefixText', 'USD');
+      fixture.componentRef.setInput('prefixIcon', 'search');
 
       // Mock prefixTextSpan
       component.prefixTextSpan = {
@@ -496,7 +496,7 @@ describe('CpsInputComponent', () => {
 
   describe('Type Consistency', () => {
     it('should maintain number type for numeric input', () => {
-      component.type = 'number';
+      fixture.componentRef.setInput('type', 'number');
       component.writeValue('42');
       fixture.detectChanges();
 
@@ -505,7 +505,7 @@ describe('CpsInputComponent', () => {
     });
 
     it('should maintain string type for text input', () => {
-      component.type = 'text';
+      fixture.componentRef.setInput('type', 'text');
       component.writeValue('text');
       fixture.detectChanges();
 

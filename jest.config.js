@@ -3,6 +3,12 @@ module.exports = {
   moduleNameMapper: {
     '^lodash-es$': 'lodash'
   },
+  transform: {
+    '^.+\\.(ts|js|mjs|html|svg)$': ['jest-preset-angular', {
+      diagnostics: false
+    }]
+  },
+  testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   coverageReporters: ['text', 'html', 'lcov', 'json-summary'],
   collectCoverageFrom: [

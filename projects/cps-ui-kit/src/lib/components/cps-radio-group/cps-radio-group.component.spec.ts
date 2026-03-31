@@ -13,11 +13,11 @@ describe('CpsRadioGroupComponent', () => {
 
     fixture = TestBed.createComponent(CpsRadioGroupComponent);
     component = fixture.componentInstance;
-    component.options = [
+    fixture.componentRef.setInput('options', [
       { label: 'Option 1', value: 'opt1' },
       { label: 'Option 2', value: 'opt2' },
       { label: 'Option 3', value: 'opt3' }
-    ];
+    ]);
     fixture.detectChanges();
   });
 
@@ -35,7 +35,7 @@ describe('CpsRadioGroupComponent', () => {
   });
 
   it('should render group label when provided', () => {
-    component.groupLabel = 'Select an option';
+    fixture.componentRef.setInput('groupLabel', 'Select an option');
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector('.cps-radio-group-label');
     expect(label).toBeTruthy();
@@ -86,27 +86,27 @@ describe('CpsRadioGroupComponent', () => {
   });
 
   it('should apply vertical layout when vertical is true', () => {
-    component.vertical = true;
+    fixture.componentRef.setInput('vertical', true);
     fixture.detectChanges();
     expect(component.vertical).toBe(true);
   });
 
   it('should disable all options when disabled is true', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     expect(component.disabled).toBe(true);
   });
 
   it('should display hint when provided', () => {
-    component.hint = 'Select one option';
-    component.hideDetails = false;
+    fixture.componentRef.setInput('hint', 'Select one option');
+    fixture.componentRef.setInput('hideDetails', false);
     fixture.detectChanges();
     expect(component.hint).toBe('Select one option');
   });
 
   it('should display info tooltip when provided', () => {
-    component.infoTooltip = 'More information';
-    component.groupLabel = 'Test';
+    fixture.componentRef.setInput('infoTooltip', 'More information');
+    fixture.componentRef.setInput('groupLabel', 'Test');
     fixture.detectChanges();
     const infoCircle = fixture.nativeElement.querySelector('cps-info-circle');
     expect(infoCircle).toBeTruthy();
@@ -118,18 +118,18 @@ describe('CpsRadioGroupComponent', () => {
   });
 
   it('should not display hint when hideDetails is true', () => {
-    component.hint = 'Some hint';
-    component.hideDetails = true;
+    fixture.componentRef.setInput('hint', 'Some hint');
+    fixture.componentRef.setInput('hideDetails', true);
     fixture.detectChanges();
     const hint = fixture.nativeElement.querySelector('.cps-radio-group-hint');
     expect(hint).toBeFalsy();
   });
 
   it('should handle disabled option', () => {
-    component.options = [
+    fixture.componentRef.setInput('options', [
       { label: 'Option 1', value: 'opt1', disabled: true },
       { label: 'Option 2', value: 'opt2' }
-    ];
+    ]);
     fixture.detectChanges();
     const disabledOption = component.options[0];
     expect(disabledOption.disabled).toBe(true);

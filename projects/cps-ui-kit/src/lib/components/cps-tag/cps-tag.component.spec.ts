@@ -29,22 +29,20 @@ describe('CpsTagComponent', () => {
   });
 
   it('should render label', () => {
-    component.label = 'Test Tag';
+    fixture.componentRef.setInput('label', 'Test Tag');
     fixture.detectChanges();
     const tag = fixture.nativeElement.querySelector('p');
     expect(tag.textContent).toContain('Test Tag');
   });
 
   it('should add selectable class when selectable', () => {
-    component.selectable = true;
-    component.ngOnChanges();
+    fixture.componentRef.setInput('selectable', true);
     fixture.detectChanges();
     expect(component.classesList).toContain('cps-tag--selectable');
   });
 
   it('should add disabled class when disabled', () => {
-    component.disabled = true;
-    component.ngOnChanges();
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     expect(component.classesList).toContain('cps-tag--disabled');
   });
@@ -98,19 +96,21 @@ describe('CpsTagComponent', () => {
   });
 
   it('should always have base class', () => {
-    component.ngOnChanges();
+    fixture.componentRef.setInput('color', 'calm');
+    fixture.detectChanges();
     expect(component.classesList).toContain('cps-tag');
   });
 
   it('should call setClasses on ngOnChanges', () => {
     const spy = jest.spyOn(component, 'setClasses');
-    component.ngOnChanges();
+    fixture.componentRef.setInput('color', 'calm');
+    fixture.detectChanges();
     expect(spy).toHaveBeenCalled();
   });
 
   it('should set custom color', () => {
-    component.color = 'primary';
-    component.ngOnChanges();
+    fixture.componentRef.setInput('color', 'primary');
+    fixture.detectChanges();
     expect(component.color).toBeTruthy();
   });
 

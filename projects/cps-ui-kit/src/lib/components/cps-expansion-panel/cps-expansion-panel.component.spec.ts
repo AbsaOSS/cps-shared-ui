@@ -37,7 +37,7 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should render header title', () => {
-    component.headerTitle = 'Expandable Section';
+    fixture.componentRef.setInput('headerTitle', 'Expandable Section');
     fixture.detectChanges();
     const header = fixture.nativeElement.querySelector(
       '.cps-expansion-panel-header'
@@ -67,7 +67,7 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should hide chevron when showChevron is false', () => {
-    component.showChevron = false;
+    fixture.componentRef.setInput('showChevron', false);
     fixture.detectChanges();
     const chevron = fixture.nativeElement.querySelector(
       '.cps-expansion-panel-chevron'
@@ -83,7 +83,7 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should apply bordered styling when bordered is true', () => {
-    component.bordered = true;
+    fixture.componentRef.setInput('bordered', true);
     fixture.detectChanges();
     const panel = fixture.nativeElement.querySelector('.cps-expansion-panel');
     expect(panel).toBeTruthy();
@@ -91,7 +91,7 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should apply disabled styling when disabled', () => {
-    component.disabled = true;
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
     const panel = fixture.nativeElement.querySelector('.cps-expansion-panel');
     expect(panel).toBeTruthy();
@@ -99,7 +99,7 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should set custom border radius', () => {
-    component.borderRadius = 8;
+    fixture.componentRef.setInput('borderRadius', 8);
     component.ngOnInit();
     fixture.detectChanges();
     expect(component.borderRadius).toBe('8px');
@@ -112,7 +112,7 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should expand content when isExpanded is true', () => {
-    component.isExpanded = true;
+    fixture.componentRef.setInput('isExpanded', true);
     fixture.detectChanges();
     const content = fixture.nativeElement.querySelector(
       '.cps-expansion-panel-content'
@@ -121,9 +121,9 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should rotate chevron when expanded', () => {
-    component.isExpanded = false;
+    fixture.componentRef.setInput('isExpanded', false);
     fixture.detectChanges();
-    component.isExpanded = true;
+    fixture.componentRef.setInput('isExpanded', true);
     fixture.detectChanges();
     // Chevron rotation is handled by CSS/animation
     const chevron = fixture.nativeElement.querySelector(

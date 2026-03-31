@@ -35,7 +35,7 @@ describe('CpsLoaderComponent', () => {
   });
 
   it('should hide loading label when showLabel is false', () => {
-    component.showLabel = false;
+    fixture.componentRef.setInput('showLabel', false);
     fixture.detectChanges();
     const label = fixture.nativeElement.querySelector(
       '.cps-loader-overlay-content-text'
@@ -44,7 +44,7 @@ describe('CpsLoaderComponent', () => {
   });
 
   it('should apply fullScreen styling when fullScreen is true', () => {
-    component.fullScreen = true;
+    fixture.componentRef.setInput('fullScreen', true);
     fixture.detectChanges();
     const overlay = fixture.nativeElement.querySelector('.cps-loader-overlay');
     expect(overlay).toBeTruthy();
@@ -57,8 +57,8 @@ describe('CpsLoaderComponent', () => {
   });
 
   it('should convert label color on init', () => {
-    component.labelColor = 'primary';
-    component.ngOnInit();
+    fixture.componentRef.setInput('labelColor', 'primary');
+    fixture.detectChanges();
     expect(component.labelColor).toBeTruthy();
   });
 
