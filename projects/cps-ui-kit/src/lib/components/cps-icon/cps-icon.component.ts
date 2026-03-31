@@ -81,6 +81,7 @@ export const iconNames = [
   'issues',
   'jpeg',
   'json',
+  'kafka',
   'kris',
   'last-seen-product',
   'left',
