@@ -74,7 +74,7 @@ The GitHub Actions workflow uploads artifacts and posts a PR comment summarising
 
 | Artifact / action          | Condition | Retention |
 | -------------------------- | --------- | --------- |
-| HTML report                | Always    | 30 days   |
+| HTML report                | Always    | 10 days   |
 | Test results (screenshots, videos, traces) | On failure | 10 days |
 | PR comment (via `daun/playwright-report-summary`) | Always | — |
 
