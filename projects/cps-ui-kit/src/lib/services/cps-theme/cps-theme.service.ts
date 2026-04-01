@@ -228,8 +228,8 @@ export class CpsThemeService {
       return stored;
     }
 
-    // Fall back to system preference
-    return this.getSystemTheme();
+    // Fall back to light mode
+    return 'light';
   }
 
   private getInitialColorTheme(): CpsColorTheme {

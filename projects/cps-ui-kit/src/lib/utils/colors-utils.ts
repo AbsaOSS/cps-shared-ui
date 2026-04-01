@@ -50,16 +50,20 @@ export const getCpsColors = (_document: Document): [string, string][] =>
     .reduce(
       (finalArr, sheet) =>
         finalArr.concat(
-          [...sheet.cssRules].filter(isStyleRule).reduce((propValArr, rule) => {
-            const props = [...rule.style]
-              .map((propName) => [
-                propName.trim(),
-                rule.style.getPropertyValue(propName).trim()
-              ])
-              .filter(([propName]) => propName.indexOf('--cps-color') === 0);
+          [...sheet.cssRules]
+            .filter(
+              (rule: any) => isStyleRule(rule) && rule.selectorText === ':root'
+            )
+            .reduce((propValArr, rule) => {
+              const props = [...rule.style]
+                .map((propName) => [
+                  propName.trim(),
+                  rule.style.getPropertyValue(propName).trim()
+                ])
+                .filter(([propName]) => propName.indexOf('--cps-color') === 0);
 
-            return [...propValArr, ...props];
-          }, [])
+              return [...propValArr, ...props];
+            }, [])
         ),
       []
     );
