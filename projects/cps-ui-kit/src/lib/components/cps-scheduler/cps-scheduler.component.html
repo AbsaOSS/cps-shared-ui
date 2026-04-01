@@ -1,6 +1,6 @@
 <div class="cps-scheduler-selector">
   <cps-button-toggle
-    data-cy="schedule-type-toggle"
+    data-testid="schedule-type-toggle"
     [options]="scheduleTypes"
     [disabled]="disabled"
     [label]="label"
@@ -15,11 +15,11 @@
   [class.cps-scheduler-container-disabled]="disabled">
   @switch (activeScheduleType) {
     @case ('Not set') {
-      <div class="cps-scheduler-tab-pane" data-cy="not-set-config"></div>
+      <div class="cps-scheduler-tab-pane" data-testid="not-set-config"></div>
     }
 
     @case ('Minutes') {
-      <div class="cps-scheduler-tab-pane" data-cy="minutes-config">
+      <div class="cps-scheduler-tab-pane" data-testid="minutes-config">
         <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
@@ -27,7 +27,7 @@
             [disabled]="disabled"
             [returnObject]="false"
             [hideDetails]="true"
-            data-cy="minutes-input"
+            data-testid="minutes-input"
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.minutes.minutes"
             [options]="selectOptions.minutes"
@@ -39,7 +39,7 @@
     }
 
     @case ('Hourly') {
-      <div class="cps-scheduler-tab-pane" data-cy="hourly-config">
+      <div class="cps-scheduler-tab-pane" data-testid="hourly-config">
         <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
@@ -47,7 +47,7 @@
             [disabled]="disabled"
             [returnObject]="false"
             [hideDetails]="true"
-            data-cy="hourly-hours-input"
+            data-testid="hourly-hours-input"
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.hourly.hours"
             [options]="selectOptions.hours"
@@ -59,7 +59,7 @@
             [disabled]="disabled"
             [returnObject]="false"
             [hideDetails]="true"
-            data-cy="hourly-minutes-input"
+            data-testid="hourly-minutes-input"
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.hourly.minutes"
             [options]="selectOptions.fullMinutes"
@@ -70,7 +70,7 @@
     }
 
     @case ('Daily') {
-      <div class="cps-scheduler-tab-pane" data-cy="daily-config">
+      <div class="cps-scheduler-tab-pane" data-testid="daily-config">
         <cps-radio-group
           [hideDetails]="true"
           [(ngModel)]="state.daily.subTab"
@@ -78,7 +78,7 @@
           [vertical]="true">
           <cps-radio
             [option]="{ value: 'everyDays', disabled: disabled }"
-            data-cy="daily-subtab-everyDays">
+            data-testid="daily-subtab-everyDays">
             <div
               class="cps-scheduler-tab-pane-row"
               [class.cps-scheduler-tab-pane-row-disabled]="
@@ -87,7 +87,7 @@
               Every
               <cps-select
                 width="70px"
-                data-cy="daily-every-days-input"
+                data-testid="daily-every-days-input"
                 [disabled]="disabled || state.daily.subTab !== 'everyDays'"
                 [returnObject]="false"
                 [hideDetails]="true"
@@ -98,7 +98,7 @@
               </cps-select>
               day(s) at
               <cps-timepicker
-                data-cy="daily-timepicker"
+                data-testid="daily-timepicker"
                 [disabled]="disabled || state.daily.subTab !== 'everyDays'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -109,11 +109,11 @@
             </div>
           </cps-radio>
           <cps-radio
-            data-cy="daily-subtab-everyWeekDay"
+            data-testid="daily-subtab-everyWeekDay"
             [option]="{ value: 'everyWeekDay', disabled: disabled }">
             <div
               class="cps-scheduler-tab-pane-row"
-              data-cy="daily-weekday-config"
+              data-testid="daily-weekday-config"
               [class.cps-scheduler-tab-pane-row-disabled]="
                 state.daily.subTab !== 'everyWeekDay'
               ">
@@ -135,54 +135,54 @@
     }
 
     @case ('Weekly') {
-      <div class="cps-scheduler-tab-pane" data-cy="weekly-config">
+      <div class="cps-scheduler-tab-pane" data-testid="weekly-config">
         <div class="cps-scheduler-days-checkbox-group">
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-MON"
+            data-testid="weekly-MON"
             label="Monday"
             [(ngModel)]="state.weekly.MON">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-TUE"
+            data-testid="weekly-TUE"
             label="Tuesday"
             [(ngModel)]="state.weekly.TUE">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-WED"
+            data-testid="weekly-WED"
             label="Wednesday"
             [(ngModel)]="state.weekly.WED">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-THU"
+            data-testid="weekly-THU"
             label="Thursday"
             [(ngModel)]="state.weekly.THU">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-FRI"
+            data-testid="weekly-FRI"
             label="Friday"
             [(ngModel)]="state.weekly.FRI">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-SAT"
+            data-testid="weekly-SAT"
             label="Saturday"
             [(ngModel)]="state.weekly.SAT">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
-            data-cy="weekly-SUN"
+            data-testid="weekly-SUN"
             label="Sunday"
             [(ngModel)]="state.weekly.SUN">
           </cps-checkbox>
@@ -191,7 +191,7 @@
           at
           <cps-timepicker
             [disabled]="disabled"
-            data-cy="weekly-timepicker"
+            data-testid="weekly-timepicker"
             [use24HourTime]="use24HourTime"
             [mandatoryValue]="true"
             [value]="formatTimeValue(state.weekly)"
@@ -203,7 +203,7 @@
     }
 
     @case ('Monthly') {
-      <div class="cps-scheduler-tab-pane" data-cy="monthly-config">
+      <div class="cps-scheduler-tab-pane" data-testid="monthly-config">
         <cps-radio-group
           [hideDetails]="true"
           [(ngModel)]="state.monthly.subTab"
@@ -211,7 +211,7 @@
           [vertical]="true">
           <cps-radio
             [option]="{ value: 'specificDay', disabled: disabled }"
-            data-cy="monthly-subtab-specificDay">
+            data-testid="monthly-subtab-specificDay">
             <div
               class="cps-scheduler-tab-pane-row"
               [class.cps-scheduler-tab-pane-row-disabled]="
@@ -220,7 +220,7 @@
               On the
               <cps-select
                 width="120px"
-                data-cy="monthly-day-select"
+                data-testid="monthly-day-select"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [returnObject]="false"
                 [hideDetails]="true"
@@ -232,7 +232,7 @@
               of every
               <cps-select
                 width="70px"
-                data-cy="monthly-months-input"
+                data-testid="monthly-months-input"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [returnObject]="false"
                 [hideDetails]="true"
@@ -253,7 +253,7 @@
                 ">
               </cps-timepicker>
               <cps-checkbox
-                data-cy="monthly-weekday-toggle"
+                data-testid="monthly-weekday-toggle"
                 (valueChanged)="regenerateCron()"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 label="During the nearest weekday"
@@ -265,7 +265,7 @@
 
           <cps-radio
             [option]="{ value: 'specificWeekDay', disabled: disabled }"
-            data-cy="monthly-subtab-specificWeekDay">
+            data-testid="monthly-subtab-specificWeekDay">
             <div
               class="cps-scheduler-tab-pane-row"
               [class.cps-scheduler-tab-pane-row-disabled]="
@@ -274,7 +274,7 @@
               On the
               <cps-select
                 width="106px"
-                data-cy="monthly-week-select"
+                data-testid="monthly-week-select"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
                 "
@@ -287,7 +287,7 @@
               </cps-select>
               <cps-select
                 width="130px"
-                data-cy="monthly-weekday-select"
+                data-testid="monthly-weekday-select"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
                 "
@@ -307,7 +307,7 @@
                 [returnObject]="false"
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
-                data-cy="monthly-weekday-months-input"
+                data-testid="monthly-weekday-months-input"
                 [(ngModel)]="state.monthly.specificWeekDay.months"
                 [options]="selectOptions.monthsNumeric"
                 class="cps-scheduler-select-control">
@@ -320,7 +320,7 @@
                 "
                 [returnObject]="false"
                 [hideDetails]="true"
-                data-cy="monthly-weekday-start-month-select"
+                data-testid="monthly-weekday-start-month-select"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.monthly.specificWeekDay.startMonth"
                 [options]="selectOptions.months"
@@ -333,7 +333,7 @@
                 "
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
-                data-cy="monthly-weekday-timepicker"
+                data-testid="monthly-weekday-timepicker"
                 [value]="formatTimeValue(state.monthly.specificWeekDay)"
                 [hideDetails]="true"
                 (valueChanged)="
@@ -347,7 +347,7 @@
     }
 
     @case ('Yearly') {
-      <div class="cps-scheduler-tab-pane" data-cy="yearly-config">
+      <div class="cps-scheduler-tab-pane" data-testid="yearly-config">
         <cps-radio-group
           [hideDetails]="true"
           [(ngModel)]="state.yearly.subTab"
@@ -355,7 +355,7 @@
           [vertical]="true">
           <cps-radio
             [option]="{ value: 'specificMonthDay', disabled: disabled }"
-            data-cy="yearly-subtab-specificMonthDay">
+            data-testid="yearly-subtab-specificMonthDay">
             <div
               class="cps-scheduler-tab-pane-row"
               [class.cps-scheduler-tab-pane-row-disabled]="
@@ -372,13 +372,13 @@
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.yearly.specificMonthDay.month"
                 [options]="selectOptions.months"
-                data-cy="yearly-month-select"
+                data-testid="yearly-month-select"
                 class="cps-scheduler-select-control">
               </cps-select>
               on the
               <cps-select
                 width="120px"
-                data-cy="yearly-day-select"
+                data-testid="yearly-day-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
                 "
@@ -403,7 +403,7 @@
                 ">
               </cps-timepicker>
               <cps-checkbox
-                data-cy="yearly-weekday-toggle"
+                data-testid="yearly-weekday-toggle"
                 (valueChanged)="regenerateCron()"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
@@ -417,7 +417,7 @@
 
           <cps-radio
             [option]="{ value: 'specificMonthWeek', disabled: disabled }"
-            data-cy="yearly-subtab-specificMonthWeek">
+            data-testid="yearly-subtab-specificMonthWeek">
             <div
               class="cps-scheduler-tab-pane-row"
               [class.cps-scheduler-tab-pane-row-disabled]="
@@ -426,7 +426,7 @@
               On the
               <cps-select
                 width="106px"
-                data-cy="yearly-week-select"
+                data-testid="yearly-week-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "
@@ -439,7 +439,7 @@
               </cps-select>
               <cps-select
                 width="120px"
-                data-cy="yearly-weekday-select"
+                data-testid="yearly-weekday-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "
@@ -483,11 +483,11 @@
     }
 
     @case ('Advanced') {
-      <div data-cy="advanced-config">
+      <div data-testid="advanced-config">
         <form [formGroup]="form">
           <cps-input
             label=""
-            data-cy="advanced-cron-input"
+            data-testid="advanced-cron-input"
             [disabled]="disabled"
             width="500px"
             placeholder="Please enter"
@@ -500,10 +500,10 @@
   }
 
   @if (cron && showTimeZone) {
-    <div class="cps-scheduler-time-zone" data-cy="timezone-selector">
+    <div class="cps-scheduler-time-zone" data-testid="timezone-selector">
       <cps-autocomplete
         label="Time zone"
-        data-cy="timezone-select"
+        data-testid="timezone-select"
         [(ngModel)]="timeZone"
         (valueChanged)="onTimeZoneChanged($event)"
         [returnObject]="false"

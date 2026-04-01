@@ -28,5 +28,5 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "exclude": ["cypress/**/*.ts", "cypress.config.ts"]
+  "exclude": ["playwright/**/*.ts", "playwright.config.ts"]
 }
