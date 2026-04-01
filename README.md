@@ -96,7 +96,7 @@ See [playwright/README.md](playwright/README.md) for full details.
 
 #### Versioning and publishing
 
-The CI/CD pipeline automatically bumps the **minor version** and publishes the package to NPM on every push to `master` that touches files under `projects/cps-ui-kit/**`.
+The CI/CD pipeline automatically bumps the **minor version** and publishes the package to NPM on every push to `master` that either touches files under `projects/cps-ui-kit/**` or modifies `.github/workflows/cps-ui-kit-publish.yml`.
 
 To publish a **major** or **patch** version instead:
 
