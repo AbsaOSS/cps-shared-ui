@@ -25,32 +25,8 @@ export interface LandmarkData {
     '[style.height.px]': 'clampedHeight()',
     '[style.display]': 'visible() ? "block" : "none"',
   },
-  template: `
-    <span class="a11y-landmark__label">{{ data().label }}</span>
-  `,
-  styles: `
-    :host {
-      position: absolute;
-      border: 2px dashed #7b1fa2;
-      background: rgba(123, 31, 162, 0.04);
-      border-radius: 4px;
-      z-index: 2147483640;
-      pointer-events: none;
-    }
-
-    .a11y-landmark__label {
-      position: absolute;
-      top: -1px;
-      left: -1px;
-      padding: 1px 6px;
-      background: #7b1fa2;
-      color: #fff;
-      font: bold 10px/16px -apple-system, BlinkMacSystemFont, sans-serif;
-      border-radius: 0 0 4px 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  `,
+  templateUrl: './landmark-overlay.component.html',
+  styleUrl: './landmark-overlay.component.scss',
 })
 export class LandmarkOverlayComponent implements OnInit {
   readonly data = input.required<LandmarkData>();

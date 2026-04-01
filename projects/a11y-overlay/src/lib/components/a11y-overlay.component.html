@@ -1,0 +1,65 @@
+@if (service.isActive()) {
+  <div class="a11y-overlay-container">
+    @if (showHighlights()) {
+      @for (highlight of elementHighlights(); track highlight.primary.id) {
+        <a11y-inline-highlight [highlight]="highlight" />
+      }
+    }
+
+    @if (showFocusOrder()) {
+      @for (badge of focusBadges(); track badge.index) {
+        <a11y-focus-badge [data]="badge" />
+      }
+    }
+
+    @if (showHeadings()) {
+      @for (badge of headingBadges(); track $index) {
+        <a11y-heading-badge [data]="badge" />
+      }
+    }
+
+    @if (showLandmarks()) {
+      @for (lm of landmarks(); track lm.label) {
+        <a11y-landmark-overlay [data]="lm" />
+      }
+    }
+
+    <a11y-issue-panel />
+  </div>
+
+  @if (service.hoveredHighlight(); as hovered) {
+    <div
+      class="a11y-floating-tooltip"
+      #tooltipEl
+      [style.top.px]="adjustedTooltipPosition().top"
+      [style.left.px]="adjustedTooltipPosition().left"
+      (mouseenter)="keepTooltip()"
+      (mouseleave)="dismissTooltip()"
+      role="tooltip">
+      @for (issue of hovered.highlight.issues; track issue.id) {
+        <div class="a11y-floating-tooltip__issue" [class.a11y-floating-tooltip__issue--divider]="!$first">
+          <span class="a11y-floating-tooltip__impact" [class]="'a11y-floating-tooltip__impact--' + issue.impact">
+            {{ issue.impact }}
+          </span>
+          <span class="a11y-floating-tooltip__message">{{ issue.message }}</span>
+          @if (issue.helpUrl) {
+            <a
+              class="a11y-floating-tooltip__link"
+              [href]="issue.helpUrl"
+              target="_blank"
+              rel="noopener noreferrer">
+              Learn more
+            </a>
+          }
+          @if (issue.wcagTags?.length) {
+            <div class="a11y-floating-tooltip__tags">
+              @for (tag of issue.wcagTags; track tag) {
+                <span class="a11y-floating-tooltip__tag">{{ tag }}</span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+}

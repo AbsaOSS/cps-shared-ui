@@ -1,0 +1,78 @@
+:host {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  box-sizing: border-box;
+  z-index: 2147483641;
+}
+
+:host.a11y-highlight--selected {
+  z-index: 2147483643;
+  border-width: 3px;
+  border-color: #42a5f5 !important;
+  background: rgba(66, 165, 245, 0.12) !important;
+  box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.6), 0 0 16px rgba(66, 165, 245, 0.4);
+  animation: a11y-selected-pulse 0.6s ease-out 2;
+}
+
+@keyframes a11y-selected-pulse {
+  0% { box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.6), 0 0 16px rgba(66, 165, 245, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(66, 165, 245, 0.8), 0 0 30px rgba(66, 165, 245, 0.6); }
+  100% { box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.6), 0 0 16px rgba(66, 165, 245, 0.4); }
+}
+
+:host.a11y-impact--critical {
+  border-color: #d32f2f;
+  background: rgba(211, 47, 47, 0.08);
+}
+:host.a11y-impact--serious {
+  border-color: #f57c00;
+  background: rgba(245, 124, 0, 0.08);
+}
+:host.a11y-impact--moderate {
+  border-color: #fbc02d;
+  background: rgba(251, 192, 45, 0.08);
+}
+:host.a11y-impact--minor {
+  border-color: #1976d2;
+  background: rgba(25, 118, 210, 0.08);
+}
+
+.a11y-indicator {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483646;
+}
+
+.a11y-indicator__dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d32f2f;
+  color: #fff;
+  font: bold 11px/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+:host.a11y-impact--serious .a11y-indicator__dot { background: #f57c00; }
+:host.a11y-impact--moderate .a11y-indicator__dot { background: #fbc02d; color: #1e1e1e; }
+:host.a11y-impact--minor .a11y-indicator__dot { background: #1976d2; }
+
+:host.a11y-highlight--ghost {
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+:host.a11y-highlight--ghost .a11y-indicator {
+  display: none;
+}

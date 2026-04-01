@@ -23,33 +23,8 @@ export interface HeadingBadgeData {
     '[style.left.px]': 'clampedLeft()',
     '[style.display]': 'visible() ? "flex" : "none"',
   },
-  template: `H{{ data().level }}`,
-  styles: `
-    :host {
-      position: absolute;
-      min-width: 26px;
-      height: 20px;
-      padding: 0 4px;
-      border-radius: 3px;
-      font: bold 11px/20px -apple-system, BlinkMacSystemFont, sans-serif;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2147483641;
-      pointer-events: none;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-
-    :host.a11y-heading--ok {
-      background: #388e3c;
-      color: #fff;
-    }
-    :host.a11y-heading--error {
-      background: #d32f2f;
-      color: #fff;
-    }
-  `,
+  templateUrl: './heading-badge.component.html',
+  styleUrl: './heading-badge.component.scss',
 })
 export class HeadingBadgeComponent {
   readonly data = input.required<HeadingBadgeData>();

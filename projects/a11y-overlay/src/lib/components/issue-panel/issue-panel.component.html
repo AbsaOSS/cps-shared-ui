@@ -1,0 +1,150 @@
+<div
+  class="a11y-panel"
+  [class.a11y-panel--open]="isOpen()"
+  role="complementary"
+  aria-label="Accessibility issues panel">
+
+  <button
+    class="a11y-panel__toggle"
+    (click)="togglePanel()"
+    [attr.aria-expanded]="isOpen()"
+    aria-controls="a11y-panel-content"
+    type="button">
+    @if (isOpen()) {
+      <span aria-hidden="true">&#x2715;</span>
+      <span class="a11y-sr-only">Close accessibility panel</span>
+    } @else {
+      <svg class="a11y-panel__toggle-icon" aria-hidden="true" viewBox="64 64 384 384">
+        <path fill="currentColor" d="M256 108c19.882 0 36 16.118 36 36s-16.118 36-36 36-36-16.118-36-36 16.118-36 36-36zm117.741 98.023c-28.712 6.779-55.511 12.748-82.14 15.807.851 101.023 12.306 123.052 25.037 155.621 3.617 9.26-.957 19.698-10.217 23.315-9.261 3.617-19.699-.957-23.316-10.217-8.705-22.308-17.086-40.636-22.261-78.549h-9.686c-5.167 37.851-13.534 56.208-22.262 78.549-3.615 9.255-14.05 13.836-23.315 10.217-9.26-3.617-13.834-14.056-10.217-23.315 12.713-32.541 24.185-54.541 25.037-155.621-26.629-3.058-53.428-9.027-82.141-15.807-8.6-2.031-13.926-10.648-11.895-19.249s10.647-13.926 19.249-11.895c96.686 22.829 124.283 22.783 220.775 0 8.599-2.03 17.218 3.294 19.249 11.895 2.029 8.601-3.297 17.219-11.897 19.249z"/>
+      </svg>
+      <span class="a11y-panel__badge" [class]="badgeClass()">{{ service.totalIssueCount() }}</span>
+      <span class="a11y-sr-only">Open accessibility panel ({{ service.totalIssueCount() }} issues)</span>
+    }
+  </button>
+
+  @if (isOpen()) {
+    <div class="a11y-panel__content" id="a11y-panel-content">
+      <div class="a11y-panel__header">
+        <h2 class="a11y-panel__title">A11y Issues</h2>
+        <div class="a11y-panel__counts">
+          @for (impact of impactOrder; track impact) {
+            <button
+              type="button"
+              class="a11y-panel__count"
+              [class]="'a11y-panel__count--' + impact"
+              [class.a11y-panel__count--inactive]="!activeImpacts().has(impact)"
+              (click)="toggleImpact(impact)"
+              [attr.aria-pressed]="activeImpacts().has(impact)"
+              [attr.aria-label]="(activeImpacts().has(impact) ? 'Hide' : 'Show') + ' ' + impact + ' issues'">
+              {{ service.issueCounts()[impact] }} {{ impact }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="a11y-panel__search">
+        <input
+          type="search"
+          class="a11y-panel__search-input"
+          placeholder="Filter issues..."
+          [value]="searchText()"
+          (input)="onSearchInput($event)"
+          aria-label="Filter accessibility issues" />
+      </div>
+
+      <div class="a11y-panel__list" role="tree">
+        @for (group of issueGroups(); track group.category) {
+          <div class="a11y-panel__group" [class.a11y-panel__group--inactive]="!service.activeCategories().has(group.category)" role="treeitem">
+            <button
+              type="button"
+              class="a11y-panel__group-header"
+              [class.a11y-panel__group-header--active]="service.activeCategories().has(group.category)"
+              [attr.aria-expanded]="expandedGroups().has(group.category)"
+              (click)="toggleGroup(group.category)">
+              <span class="a11y-panel__group-arrow" [class.a11y-panel__group-arrow--open]="expandedGroups().has(group.category)">▶</span>
+              <span class="a11y-panel__group-icon">{{ group.icon }}</span>
+              <span class="a11y-panel__group-label">{{ group.label }}</span>
+              <span class="a11y-panel__group-count">{{ group.issues.length }}</span>
+              @if (group.criticalCount > 0) {
+                <span class="a11y-panel__group-badge a11y-panel__group-badge--critical">{{ group.criticalCount }}</span>
+              }
+              @if (group.seriousCount > 0) {
+                <span class="a11y-panel__group-badge a11y-panel__group-badge--serious">{{ group.seriousCount }}</span>
+              }
+              @if (group.moderateCount > 0) {
+                <span class="a11y-panel__group-badge a11y-panel__group-badge--moderate">{{ group.moderateCount }}</span>
+              }
+              @if (group.minorCount > 0) {
+                <span class="a11y-panel__group-badge a11y-panel__group-badge--minor">{{ group.minorCount }}</span>
+              }
+              <button
+                type="button"
+                class="a11y-panel__group-toggle"
+                [class.a11y-panel__group-toggle--active]="service.activeCategories().has(group.category)"
+                (click)="onToggleCategory($event, group.category)"
+                [attr.aria-label]="(service.activeCategories().has(group.category) ? 'Hide' : 'Show') + ' ' + group.label + ' overlays'"
+                title="Toggle overlays">
+                {{ service.activeCategories().has(group.category) ? '👁' : '👁‍🗨' }}
+              </button>
+            </button>
+
+            @if (expandedGroups().has(group.category)) {
+              <div class="a11y-panel__group-items" role="group">
+                @for (issue of group.issues; track issue.id) {
+                  <button
+                    type="button"
+                    class="a11y-panel__item"
+                    [class.a11y-panel__item--selected]="service.selectedIssue()?.id === issue.id"
+                    (click)="onSelectIssue(issue)"
+                    role="treeitem">
+                    <span class="a11y-panel__item-impact" [class]="'a11y-panel__item-impact--' + issue.impact">
+                      {{ issue.impact[0].toUpperCase() }}
+                    </span>
+                    <span class="a11y-panel__item-body">
+                      <span class="a11y-panel__item-message">{{ issue.message }}</span>
+                      <span class="a11y-panel__item-element">
+                        @if (offScreenIds().has(issue.id)) {
+                          <span class="a11y-panel__item-offscreen" title="This element is positioned off-screen and cannot be highlighted">⚠ off-screen</span>
+                        } @else if (resolvedOffScreenIds().has(issue.id)) {
+                          <span class="a11y-panel__item-resolved" title="This element was off-screen at scan time but is now visible">✓ now visible</span>
+                        }
+                        {{ describeElement(issue) }}
+                      </span>
+                    </span>
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        } @empty {
+          <div class="a11y-panel__empty">
+            @if (service.totalIssueCount() === 0) {
+              No accessibility issues found.
+            } @else {
+              No issues match the current filters.
+            }
+          </div>
+        }
+      </div>
+
+      <div class="a11y-panel__footer">
+        <label class="a11y-panel__landmark-toggle">
+          <input
+            type="checkbox"
+            [checked]="service.showLandmarkOverlay()"
+            (change)="service.showLandmarkOverlay.set($any($event.target).checked)"
+            aria-label="Show page landmark regions" />
+          Show landmarks
+        </label>
+        <div class="a11y-panel__footer-actions">
+          <button type="button" class="a11y-panel__action" (click)="service.scan()">
+            Re-scan
+          </button>
+          <button type="button" class="a11y-panel__action" (click)="exportJson()">
+            Export JSON
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

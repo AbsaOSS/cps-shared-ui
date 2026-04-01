@@ -26,30 +26,8 @@ export interface FocusBadgeData {
     '[attr.title]': 'tooltipText()',
     '[class.a11y-focus-badge--error]': 'isError()',
   },
-  template: `{{ data().index + 1 }}`,
-  styles: `
-    :host {
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #6200ea;
-      color: #fff;
-      font: bold 11px/22px -apple-system, BlinkMacSystemFont, sans-serif;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2147483641;
-      pointer-events: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-    }
-    :host(.a11y-focus-badge--error) {
-      background: #d32f2f;
-      outline: 2px solid #ff8a80;
-      outline-offset: 1px;
-    }
-  `,
+  templateUrl: './focus-badge.component.html',
+  styleUrl: './focus-badge.component.scss',
 })
 export class FocusBadgeComponent {
   readonly data = input.required<FocusBadgeData>();
