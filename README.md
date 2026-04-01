@@ -94,6 +94,23 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 
 See [playwright/README.md](playwright/README.md) for full details.
 
+#### Versioning and publishing
+
+The CI/CD pipeline automatically bumps the **minor version** and publishes the package to NPM on every push to `master` that touches files under `projects/cps-ui-kit/**`.
+
+To publish a **major** or **patch** version instead:
+
+1. Manually update the version in [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) to the desired version.
+2. Include `#SkipVersionBump` in the commit message so the pipeline skips the automatic minor bump and publishes exactly the version you set.
+
+Example commit message:
+
+```
+chore: release patch fix #SkipVersionBump
+```
+
+> **Note:** Without `#SkipVersionBump`, any manual version change in `package.json` will be overwritten by the automatic minor bump before publishing.
+
 #### Run accessibility tests
 
 The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all components for WCAG 2.0 AA compliance.
