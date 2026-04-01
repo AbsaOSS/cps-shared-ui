@@ -103,10 +103,12 @@ To publish a **major** or **patch** version instead:
 1. Manually update the version in [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) to the desired version.
 2. Include `#SkipVersionBump` in the commit message so the pipeline skips the automatic minor bump and publishes exactly the version you set.
 
-Example commit message:
+Example commit message (the token is matched against the full message, so placing it in the footer is preferred):
 
 ```
-chore: release patch fix #SkipVersionBump
+chore: release patch fix
+
+#SkipVersionBump
 ```
 
 > **Note:** Without `#SkipVersionBump`, any manual version change in `package.json` will be overwritten by the automatic minor bump before publishing.
