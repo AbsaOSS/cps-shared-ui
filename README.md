@@ -103,7 +103,7 @@ To publish a **major** or **patch** version instead:
 1. Manually update the version in [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) to the desired version.
 2. Include `#SkipVersionBump` in the commit message so the pipeline skips the automatic minor bump and publishes exactly the version you set.
 
-Example commit message (the token is matched against the full message, so placing it in the footer is preferred):
+Example commit message for the **final/head commit in the push** (the workflow checks only `github.event.head_commit.message`, so `#SkipVersionBump` must appear in the last commit message; the token is matched against the full message, so placing it in the footer is preferred):
 
 ```
 chore: release patch fix
