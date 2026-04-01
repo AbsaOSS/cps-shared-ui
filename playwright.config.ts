@@ -20,7 +20,7 @@ export default defineConfig({
     ['json', { outputFile: 'playwright-report/summary.json' }]
   ],
   /* Maximum time one test can run for. Default: 30_000 */
-  timeout: 60_000,
+  timeout: 30_000,
   /* Maximum time an expect() assertion can wait for the condition to be met. Default: 5_000 */
   expect: { timeout: 5_000 },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -28,9 +28,9 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'http://localhost:4200',
     /* Maximum time each user action (click, fill, etc.) can take. Default: 0 (no limit) */
-    actionTimeout: 30_000,
+    actionTimeout: 5_000,
     /* Maximum time a navigation (goto, reload) can take. Default: 0 (no limit) */
-    navigationTimeout: 30_000,
+    navigationTimeout: 5_000,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer. Default: 'off' */
     trace: 'on-first-retry',
     /* Capture screenshot only when a test fails. Default: 'off' */
