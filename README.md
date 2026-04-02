@@ -84,10 +84,34 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 
 `npm run test`
 
+#### Run Playwright e2e tests
 
-#### Run Cypress e2e tests
+`npm run test:playwright` (headless run)
 
-`npm run cypress:run` (headless run) or you can open Cypress tests using `npm run cypress:open`
+`npm run test:playwright:headed` to run tests in headed mode (browser visible)
+
+`npm run test:playwright:interactive` to open Playwright UI mode
+
+See [playwright/README.md](playwright/README.md) for full details.
+
+#### Versioning and publishing
+
+The CI/CD pipeline automatically bumps the **minor version** and publishes the package to NPM on every push to `master` that either touches files under `projects/cps-ui-kit/**` or modifies `.github/workflows/cps-ui-kit-publish.yml`.
+
+To publish a **major** or **patch** version instead:
+
+1. Manually update the version in [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) to the desired version.
+2. Include `#SkipVersionBump` in the commit message so the pipeline skips the automatic minor bump and publishes exactly the version you set.
+
+Example commit message for the **final/head commit in the push** (the workflow checks only `github.event.head_commit.message`, so `#SkipVersionBump` must appear in the last commit message; the token is matched against the full message, so placing it in the footer is preferred):
+
+```
+chore: release patch fix
+
+#SkipVersionBump
+```
+
+> **Note:** Without `#SkipVersionBump`, any manual version change in `package.json` will be overwritten by the automatic minor bump before publishing.
 
 #### Run accessibility tests
 
@@ -96,6 +120,7 @@ The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all compo
 To run accessibility tests:
 
 1. Start the development server:
+
    ```bash
    npm run start
    ```
@@ -106,16 +131,19 @@ To run accessibility tests:
    ```
 
 Alternatively, use the combined script that starts the server and runs tests:
+
 ```bash
 npm run test:a11y:local
 ```
 
 For a colorful summary with statistics:
+
 ```bash
 npm run test:a11y:summary
 ```
 
 This will display:
+
 - Total URLs tested with pass/fail ratio
 - Total accessibility errors found
 - Accessibility standard (WCAG 2.0 AA)

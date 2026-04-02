@@ -5,19 +5,25 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'standard',
-    'plugin:cypress/recommended',
     'prettier'
   ],
-  plugins: ['@typescript-eslint', 'cypress', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
     'prettier/prettier': ['error'],
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn'
   },
-  globals: {
-    Cypress: 'readonly'
-  },
   env: {
+    browser: true,
     jest: true
-  }
+  },
+  overrides: [
+    {
+      files: ['playwright/**/*.ts', 'playwright.config.ts'],
+      env: {
+        jest: false,
+        node: true
+      }
+    }
+  ]
 };
