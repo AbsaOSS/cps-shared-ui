@@ -288,9 +288,7 @@
 
   --cps-surface-body: var(--cps-color-bg-light);
   --cps-surface-highlight: #ffffff;
-  --cps-surface-muted: var(
-    --cps-color-bg-lightest
-  ); //switched with --cps-color-bg-light, investigate impact
+  --cps-surface-muted: var(--cps-color-bg-lightest);
   --cps-surface-elevated: var(--cps-color-bg-mid);
   --cps-surface-control: #ffffff;
   --cps-surface-overlay: rgba(0, 0, 0, 0.45);

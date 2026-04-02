@@ -42,6 +42,11 @@ const isDark = (color: string): boolean => {
   return hsp <= 127.5;
 };
 
+/**
+ * Collects all --cps-color-* CSS custom properties from :root rules only.
+ * Theme overrides (e.g. [data-theme='dark']) are excluded to avoid duplicates,
+ * since the Colors page serves as a base palette reference.
+ */
 export const getCpsColors = (_document: Document): [string, string][] =>
   [...(_document.styleSheets as any)]
     .filter((sheet: any) =>

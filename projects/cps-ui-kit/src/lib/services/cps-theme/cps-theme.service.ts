@@ -31,7 +31,6 @@ export type CpsRadiusTheme = 'none' | 'compact' | 'rounded' | 'pill';
  * This service provides:
  * - Light and dark theme switching with smooth transitions
  * - Automatic persistence of theme preference in localStorage
- * - System preference detection (prefers-color-scheme)
  * - Reactive state management using Angular signals
  *
  * @example
@@ -283,15 +282,20 @@ export class CpsThemeService {
     return 'compact';
   }
 
+  // TODO: Use as fallback in getInitialTheme() once dark mode is fully supported across all components.
   private getSystemTheme(): CpsTheme {
-    const prefersDark = window.matchMedia(
-      '(prefers-color-scheme: dark)'
-    ).matches;
-    return prefersDark ? 'dark' : 'light';
+    const win = this.document.defaultView;
+    if (!win?.matchMedia) return 'light';
+    return win.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
   }
 
+  // TODO: Enable system preference fallback once dark mode is fully supported across all components.
   private watchSystemTheme(): void {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const win = this.document.defaultView;
+    if (!win?.matchMedia) return;
+    const mediaQuery = win.matchMedia('(prefers-color-scheme: dark)');
     mediaQuery.addEventListener('change', (e) => {
       // Only auto-switch if user hasn't set a preference
       if (!localStorage.getItem(this.THEME_STORAGE_KEY)) {

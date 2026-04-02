@@ -14,8 +14,8 @@ describe('CpsThemeService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should initialize with system preference', () => {
-    expect(['light', 'dark']).toContain(service.theme());
+  it('should initialize with light theme by default', () => {
+    expect(service.theme()).toBe('light');
   });
 
   it('should toggle theme', () => {
