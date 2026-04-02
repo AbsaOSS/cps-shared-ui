@@ -6,11 +6,15 @@ import {
   computed,
   DestroyRef,
   inject,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { A11yIssue, ElementHighlight } from '../../models/a11y-issue.model';
 import { A11yOverlayService } from '../../services/a11y-overlay.service';
-import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-position';
+import {
+  ElementRect,
+  getElementRect,
+  isElementVisible
+} from '../../utils/dom-position';
 
 @Component({
   selector: 'a11y-inline-highlight',
@@ -21,10 +25,10 @@ import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-p
     '[style.width.px]': 'rect().width',
     '[style.height.px]': 'rect().height',
     '[style.display]': 'visible() ? "block" : "none"',
-    '[class]': 'hostClasses()',
+    '[class]': 'hostClasses()'
   },
   templateUrl: './inline-highlight.component.html',
-  styleUrl: './inline-highlight.component.scss',
+  styleUrl: './inline-highlight.component.scss'
 })
 export class InlineHighlightComponent implements OnInit {
   readonly highlight = input.required<ElementHighlight>();
@@ -57,7 +61,8 @@ export class InlineHighlightComponent implements OnInit {
   readonly hostClasses = computed(() => {
     const classes = [this.impactClass()];
     if (this.selected()) classes.push('a11y-highlight--selected');
-    if (this.isGhost() && !this.selected()) classes.push('a11y-highlight--ghost');
+    if (this.isGhost() && !this.selected())
+      classes.push('a11y-highlight--ghost');
     return classes.join(' ');
   });
 
@@ -73,8 +78,14 @@ export class InlineHighlightComponent implements OnInit {
     const desiredVpY = r.top - halfHit;
 
     // Clamp to viewport
-    const vpX = Math.max(pad, Math.min(desiredVpX, window.innerWidth - hitSize - pad));
-    const vpY = Math.max(pad, Math.min(desiredVpY, window.innerHeight - hitSize - pad));
+    const vpX = Math.max(
+      pad,
+      Math.min(desiredVpX, window.innerWidth - hitSize - pad)
+    );
+    const vpY = Math.max(
+      pad,
+      Math.min(desiredVpY, window.innerHeight - hitSize - pad)
+    );
 
     return { left: vpX, top: vpY };
   });
@@ -89,7 +100,11 @@ export class InlineHighlightComponent implements OnInit {
     const indicator = event.currentTarget as HTMLElement;
     const anchorRect = indicator.getBoundingClientRect();
     const elementRect = this.highlight().element.getBoundingClientRect();
-    this.service.hoveredHighlight.set({ highlight: this.highlight(), anchorRect, elementRect });
+    this.service.hoveredHighlight.set({
+      highlight: this.highlight(),
+      anchorRect,
+      elementRect
+    });
   }
 
   onMouseLeave(): void {
@@ -123,13 +138,18 @@ export class InlineHighlightComponent implements OnInit {
       cancelAnimationFrame(this.animFrameId);
       this.animFrameId = requestAnimationFrame(() => this.updatePosition());
     };
-    document.addEventListener('scroll', scrollHandler, { capture: true, passive: true });
+    document.addEventListener('scroll', scrollHandler, {
+      capture: true,
+      passive: true
+    });
     window.addEventListener('resize', scrollHandler, { passive: true });
 
     this.destroyRef.onDestroy(() => {
       this.resizeObserver?.disconnect();
       cancelAnimationFrame(this.animFrameId);
-      document.removeEventListener('scroll', scrollHandler, { capture: true } as EventListenerOptions);
+      document.removeEventListener('scroll', scrollHandler, {
+        capture: true
+      } as EventListenerOptions);
       window.removeEventListener('resize', scrollHandler);
     });
   }

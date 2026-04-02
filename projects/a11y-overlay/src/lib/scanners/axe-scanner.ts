@@ -1,6 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import type { RunOptions, AxeResults, Result, NodeResult } from 'axe-core';
-import { A11yIssue, A11yImpact, A11yCategory } from '../models/a11y-issue.model';
+import {
+  A11yIssue,
+  A11yImpact,
+  A11yCategory
+} from '../models/a11y-issue.model';
 import { A11Y_OVERLAY_CONFIG } from '../models/a11y-config.model';
 import { Scanner } from './scanner.interface';
 
@@ -10,7 +14,7 @@ import { Scanner } from './scanner.interface';
  */
 const AXE_RULE_CATEGORY_MAP: Record<string, A11yCategory> = {
   // Landmark rules → 'landmarks'
-  'region': 'landmarks',
+  region: 'landmarks',
   'landmark-one-main': 'landmarks',
   'landmark-no-duplicate-banner': 'landmarks',
   'landmark-no-duplicate-contentinfo': 'landmarks',
@@ -28,7 +32,7 @@ const AXE_RULE_CATEGORY_MAP: Record<string, A11yCategory> = {
   'link-name': 'link-text',
   'button-name': 'link-text',
   'link-in-text-block': 'link-text',
-  'input-button-name': 'link-text',
+  'input-button-name': 'link-text'
 };
 
 @Injectable()
@@ -39,14 +43,14 @@ export class AxeScanner implements Scanner {
     const axe = await import('axe-core');
     const options: RunOptions = {
       resultTypes: ['violations', 'incomplete'],
-      ...this.config?.axeOptions,
+      ...this.config?.axeOptions
     };
 
     // Exclude the overlay's own DOM from scanning.
     // `exclude` is part of the context (1st arg), not options (2nd arg).
     const context = {
       include: [root] as any,
-      exclude: ['a11y-overlay'] as any,
+      exclude: ['a11y-overlay'] as any
     };
 
     let results: AxeResults;
@@ -131,7 +135,7 @@ export class AxeScanner implements Scanner {
       helpUrl: violation.helpUrl,
       wcagTags: violation.tags.filter(
         (t) => t.startsWith('wcag') || t.startsWith('best-practice')
-      ),
+      )
     };
   }
 
@@ -195,7 +199,7 @@ export class AxeScanner implements Scanner {
     const details = [
       `Contrast ratio: ${ratio}:1 (required: ${threshold}:1)`,
       fgColor ? `Foreground: ${fgColor}` : null,
-      bgColor ? `Background: ${bgColor}` : null,
+      bgColor ? `Background: ${bgColor}` : null
     ]
       .filter(Boolean)
       .join(' · ');
@@ -210,7 +214,7 @@ export class AxeScanner implements Scanner {
       helpUrl: rule.helpUrl,
       wcagTags: rule.tags.filter(
         (t) => t.startsWith('wcag') || t.startsWith('best-practice')
-      ),
+      )
     };
   }
 
@@ -237,7 +241,7 @@ export class AxeScanner implements Scanner {
       return {
         ratio: Math.round(ratio * 100) / 100,
         fg: `rgb(${fgRgb.join(', ')})`,
-        bg: `rgb(${bgRgb.join(', ')})`,
+        bg: `rgb(${bgRgb.join(', ')})`
       };
     } catch {
       return null;
@@ -271,7 +275,7 @@ export class AxeScanner implements Scanner {
       result = [
         Math.round(result[0] * (1 - alpha) + layer[0] * alpha),
         Math.round(result[1] * (1 - alpha) + layer[1] * alpha),
-        Math.round(result[2] * (1 - alpha) + layer[2] * alpha),
+        Math.round(result[2] * (1 - alpha) + layer[2] * alpha)
       ];
     }
     return result;
@@ -286,7 +290,7 @@ export class AxeScanner implements Scanner {
       parseInt(rgba[1], 10),
       parseInt(rgba[2], 10),
       parseInt(rgba[3], 10),
-      rgba[4] != null ? parseFloat(rgba[4]) : 1,
+      rgba[4] != null ? parseFloat(rgba[4]) : 1
     ];
   }
 

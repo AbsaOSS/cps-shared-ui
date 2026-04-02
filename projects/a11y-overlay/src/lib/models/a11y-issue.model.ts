@@ -23,7 +23,7 @@ const IMPACT_SEVERITY: Record<A11yImpact, number> = {
   critical: 4,
   serious: 3,
   moderate: 2,
-  minor: 1,
+  minor: 1
 };
 
 export function worstImpact(impacts: A11yImpact[]): A11yImpact {

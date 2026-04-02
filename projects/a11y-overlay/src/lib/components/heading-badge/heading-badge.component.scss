@@ -4,14 +4,17 @@
   height: 20px;
   padding: 0 4px;
   border-radius: 3px;
-  font: bold 11px/20px -apple-system, BlinkMacSystemFont, sans-serif;
+  font:
+    bold 11px/20px -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2147483641;
   pointer-events: none;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 :host.a11y-heading--ok {

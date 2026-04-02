@@ -5,9 +5,13 @@ import {
   signal,
   OnInit,
   DestroyRef,
-  inject,
+  inject
 } from '@angular/core';
-import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-position';
+import {
+  ElementRect,
+  getElementRect,
+  isElementVisible
+} from '../../utils/dom-position';
 
 export interface LandmarkData {
   element: HTMLElement;
@@ -23,10 +27,10 @@ export interface LandmarkData {
     '[style.left.px]': 'clampedLeft()',
     '[style.width.px]': 'clampedWidth()',
     '[style.height.px]': 'clampedHeight()',
-    '[style.display]': 'visible() ? "block" : "none"',
+    '[style.display]': 'visible() ? "block" : "none"'
   },
   templateUrl: './landmark-overlay.component.html',
-  styleUrl: './landmark-overlay.component.scss',
+  styleUrl: './landmark-overlay.component.scss'
 })
 export class LandmarkOverlayComponent implements OnInit {
   readonly data = input.required<LandmarkData>();
@@ -86,13 +90,18 @@ export class LandmarkOverlayComponent implements OnInit {
       cancelAnimationFrame(this.animFrameId);
       this.animFrameId = requestAnimationFrame(() => this.updatePosition());
     };
-    document.addEventListener('scroll', handler, { capture: true, passive: true });
+    document.addEventListener('scroll', handler, {
+      capture: true,
+      passive: true
+    });
     window.addEventListener('resize', handler, { passive: true });
 
     this.destroyRef.onDestroy(() => {
       this.resizeObserver?.disconnect();
       cancelAnimationFrame(this.animFrameId);
-      document.removeEventListener('scroll', handler, { capture: true } as EventListenerOptions);
+      document.removeEventListener('scroll', handler, {
+        capture: true
+      } as EventListenerOptions);
       window.removeEventListener('resize', handler);
     });
   }

@@ -7,16 +7,29 @@ import {
   effect,
   OnInit,
   ElementRef,
-  viewChild,
+  viewChild
 } from '@angular/core';
 import { A11yOverlayService } from '../services/a11y-overlay.service';
 import { InlineHighlightComponent } from './inline-highlight/inline-highlight.component';
-import { FocusBadgeComponent, FocusBadgeData } from './focus-badge/focus-badge.component';
-import { HeadingBadgeComponent, HeadingBadgeData } from './heading-badge/heading-badge.component';
+import {
+  FocusBadgeComponent,
+  FocusBadgeData
+} from './focus-badge/focus-badge.component';
+import {
+  HeadingBadgeComponent,
+  HeadingBadgeData
+} from './heading-badge/heading-badge.component';
 
-import { LandmarkOverlayComponent, LandmarkData } from './landmark-overlay/landmark-overlay.component';
+import {
+  LandmarkOverlayComponent,
+  LandmarkData
+} from './landmark-overlay/landmark-overlay.component';
 import { IssuePanelComponent } from './issue-panel/issue-panel.component';
-import { ElementHighlight, worstImpact, A11yIssue } from '../models/a11y-issue.model';
+import {
+  ElementHighlight,
+  worstImpact,
+  A11yIssue
+} from '../models/a11y-issue.model';
 import { getElementKey } from '../utils/dom-position';
 
 const FOCUSABLE_SELECTOR = [
@@ -26,10 +39,8 @@ const FOCUSABLE_SELECTOR = [
   'select:not([disabled])',
   'textarea:not([disabled])',
   '[tabindex]',
-  '[contenteditable="true"]',
+  '[contenteditable="true"]'
 ].join(',');
-
-
 
 @Component({
   selector: 'a11y-overlay',
@@ -39,16 +50,19 @@ const FOCUSABLE_SELECTOR = [
     FocusBadgeComponent,
     HeadingBadgeComponent,
     LandmarkOverlayComponent,
-    IssuePanelComponent,
+    IssuePanelComponent
   ],
   templateUrl: './a11y-overlay.component.html',
-  styleUrl: './a11y-overlay.component.scss',
+  styleUrl: './a11y-overlay.component.scss'
 })
 export class A11yOverlayComponent implements OnInit {
   protected readonly service = inject(A11yOverlayService);
 
   private readonly tooltipRef = viewChild<ElementRef<HTMLElement>>('tooltipEl');
-  private readonly tooltipMeasured = signal<{ width: number; height: number } | null>(null);
+  private readonly tooltipMeasured = signal<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   readonly initialTooltipPosition = computed(() => {
     const hovered = this.service.hoveredHighlight();
@@ -76,15 +90,17 @@ export class A11yOverlayComponent implements OnInit {
 
     // Check if tooltip would cover the anchor dot
     const coversAnchor = (t: number, l: number) =>
-      l < anchorRect.right + 2 && l + tw > anchorRect.left - 2 &&
-      t < anchorRect.bottom + 2 && t + th > anchorRect.top - 2;
+      l < anchorRect.right + 2 &&
+      l + tw > anchorRect.left - 2 &&
+      t < anchorRect.bottom + 2 &&
+      t + th > anchorRect.top - 2;
 
     // Try positions near the anchor dot: above, below, right, left
     const candidates: { top: number; left: number }[] = [
       { top: anchorRect.top - th - gap, left: aCx - tw / 2 },
       { top: anchorRect.bottom + gap, left: aCx - tw / 2 },
       { top: aCy - th / 2, left: anchorRect.right + gap },
-      { top: aCy - th / 2, left: anchorRect.left - tw - gap },
+      { top: aCy - th / 2, left: anchorRect.left - tw - gap }
     ];
 
     // First pass: find a candidate that fits in viewport and doesn't cover the dot
@@ -99,7 +115,7 @@ export class A11yOverlayComponent implements OnInit {
     // Fallback: above anchor, clamped to viewport (acceptable to overlap)
     return {
       top: Math.max(m, Math.min(anchorRect.top - th - gap, vh - th - m)),
-      left: Math.max(m, Math.min(aCx - tw / 2, vw - tw - m)),
+      left: Math.max(m, Math.min(aCx - tw / 2, vw - tw - m))
     };
   });
 
@@ -115,7 +131,10 @@ export class A11yOverlayComponent implements OnInit {
     requestAnimationFrame(() => {
       const el = this.tooltipRef()?.nativeElement;
       if (el) {
-        this.tooltipMeasured.set({ width: el.offsetWidth, height: el.offsetHeight });
+        this.tooltipMeasured.set({
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        });
       }
     });
   });
@@ -132,8 +151,14 @@ export class A11yOverlayComponent implements OnInit {
 
   readonly showHighlights = computed(() => {
     const cats = this.service.activeCategories();
-    return cats.has('axe') || cats.has('link-text') || cats.has('focus-order')
-      || cats.has('landmarks') || cats.has('headings') || cats.has('interactive');
+    return (
+      cats.has('axe') ||
+      cats.has('link-text') ||
+      cats.has('focus-order') ||
+      cats.has('landmarks') ||
+      cats.has('headings') ||
+      cats.has('interactive')
+    );
   });
 
   /** All inline highlights. Focus-order issues render as "ghost" (invisible unless selected). */
@@ -167,9 +192,7 @@ export class A11yOverlayComponent implements OnInit {
     this.service.activeCategories().has('headings')
   );
 
-  readonly showLandmarks = computed(() =>
-    this.service.showLandmarkOverlay()
-  );
+  readonly showLandmarks = computed(() => this.service.showLandmarkOverlay());
 
   readonly landmarks = computed<LandmarkData[]>(() => {
     this.service.issues();
@@ -177,7 +200,6 @@ export class A11yOverlayComponent implements OnInit {
     if (!this.showLandmarks()) return [];
     return this.computeLandmarks();
   });
-
 
   readonly focusBadges = computed<FocusBadgeData[]>(() => {
     // Re-evaluate when issues change (scan happened) or DOM changes
@@ -215,7 +237,7 @@ export class A11yOverlayComponent implements OnInit {
       element: el,
       index: i,
       tabIndex: el.tabIndex,
-      hasStaticError: el.tabIndex > 0, // only static errors; off-screen is computed dynamically by the badge
+      hasStaticError: el.tabIndex > 0 // only static errors; off-screen is computed dynamically by the badge
     }));
   }
 
@@ -233,7 +255,7 @@ export class A11yOverlayComponent implements OnInit {
     return headings.map((el) => ({
       element: el,
       level: parseInt(el.tagName[1], 10),
-      hasError: errorIds.has(el),
+      hasError: errorIds.has(el)
     }));
   }
 
@@ -246,7 +268,7 @@ export class A11yOverlayComponent implements OnInit {
       contentinfo: 'footer',
       search: 'search',
       form: 'form',
-      region: 'section',
+      region: 'section'
     };
 
     const results: LandmarkData[] = [];
@@ -260,20 +282,18 @@ export class A11yOverlayComponent implements OnInit {
       FOOTER: 'contentinfo',
       SEARCH: 'search',
       SECTION: 'region',
-      FORM: 'form',
+      FORM: 'form'
     };
 
     for (const [tag, role] of Object.entries(tagMap)) {
       document.querySelectorAll<HTMLElement>(tag).forEach((el) => {
         if (el.closest('a11y-overlay')) return;
         const name =
-          el.getAttribute('aria-label') ||
-          this.getLabelledByText(el) ||
-          '';
+          el.getAttribute('aria-label') || this.getLabelledByText(el) || '';
         results.push({
           element: el,
           role,
-          label: name ? `${role}: ${name}` : role,
+          label: name ? `${role}: ${name}` : role
         });
       });
     }
@@ -287,13 +307,11 @@ export class A11yOverlayComponent implements OnInit {
           // Skip if already added via tag
           if (results.some((r) => r.element === el)) return;
           const name =
-            el.getAttribute('aria-label') ||
-            this.getLabelledByText(el) ||
-            '';
+            el.getAttribute('aria-label') || this.getLabelledByText(el) || '';
           results.push({
             element: el,
             role,
-            label: name ? `${role}: ${name}` : role,
+            label: name ? `${role}: ${name}` : role
           });
         });
     }
@@ -307,5 +325,4 @@ export class A11yOverlayComponent implements OnInit {
     const labelEl = document.getElementById(id);
     return labelEl?.textContent?.trim() ?? '';
   }
-
 }

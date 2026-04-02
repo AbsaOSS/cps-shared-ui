@@ -5,9 +5,13 @@ import {
   signal,
   effect,
   DestroyRef,
-  inject,
+  inject
 } from '@angular/core';
-import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-position';
+import {
+  ElementRect,
+  getElementRect,
+  isElementVisible
+} from '../../utils/dom-position';
 
 export interface HeadingBadgeData {
   element: HTMLElement;
@@ -21,10 +25,10 @@ export interface HeadingBadgeData {
   host: {
     '[style.top.px]': 'clampedTop()',
     '[style.left.px]': 'clampedLeft()',
-    '[style.display]': 'visible() ? "flex" : "none"',
+    '[style.display]': 'visible() ? "flex" : "none"'
   },
   templateUrl: './heading-badge.component.html',
-  styleUrl: './heading-badge.component.scss',
+  styleUrl: './heading-badge.component.scss'
 })
 export class HeadingBadgeComponent {
   readonly data = input.required<HeadingBadgeData>();
@@ -39,12 +43,18 @@ export class HeadingBadgeComponent {
 
   clampedTop(): number {
     const raw = this.rect().top;
-    return Math.max(0, Math.min(raw, window.innerHeight - HeadingBadgeComponent.BADGE_HEIGHT));
+    return Math.max(
+      0,
+      Math.min(raw, window.innerHeight - HeadingBadgeComponent.BADGE_HEIGHT)
+    );
   }
 
   clampedLeft(): number {
     const raw = this.rect().left - 36;
-    return Math.max(0, Math.min(raw, window.innerWidth - HeadingBadgeComponent.BADGE_WIDTH));
+    return Math.max(
+      0,
+      Math.min(raw, window.innerWidth - HeadingBadgeComponent.BADGE_WIDTH)
+    );
   }
 
   private resizeObserver: ResizeObserver | null = null;
@@ -91,7 +101,10 @@ export class HeadingBadgeComponent {
     };
     this.scrollHandler = handler;
     this.resizeHandler = handler;
-    document.addEventListener('scroll', handler, { capture: true, passive: true });
+    document.addEventListener('scroll', handler, {
+      capture: true,
+      passive: true
+    });
     window.addEventListener('resize', handler, { passive: true });
   }
 
@@ -100,7 +113,9 @@ export class HeadingBadgeComponent {
     this.resizeObserver = null;
     cancelAnimationFrame(this.animFrameId);
     if (this.scrollHandler) {
-      document.removeEventListener('scroll', this.scrollHandler, { capture: true } as EventListenerOptions);
+      document.removeEventListener('scroll', this.scrollHandler, {
+        capture: true
+      } as EventListenerOptions);
       this.scrollHandler = null;
     }
     if (this.resizeHandler) {

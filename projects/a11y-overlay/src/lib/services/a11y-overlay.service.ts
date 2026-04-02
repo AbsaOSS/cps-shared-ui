@@ -5,16 +5,21 @@ import {
   inject,
   DestroyRef,
   NgZone,
-  isDevMode,
+  isDevMode
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { A11yIssue, A11yCategory, A11yImpact, ElementHighlight } from '../models/a11y-issue.model';
+import {
+  A11yIssue,
+  A11yCategory,
+  A11yImpact,
+  ElementHighlight
+} from '../models/a11y-issue.model';
 import {
   A11Y_OVERLAY_CONFIG,
   A11yOverlayConfig,
-  DEFAULT_A11Y_CONFIG,
+  DEFAULT_A11Y_CONFIG
 } from '../models/a11y-config.model';
 import { AxeScanner } from '../scanners/axe-scanner';
 import { FocusOrderScanner } from '../scanners/focus-order-scanner';
@@ -37,7 +42,7 @@ export class A11yOverlayService {
     headings: inject(HeadingScanner),
     landmarks: inject(LandmarkScanner),
     'link-text': inject(LinkTextScanner),
-    'interactive': inject(InteractiveScanner),
+    interactive: inject(InteractiveScanner)
   };
 
   private mutationObserver: MutationObserver | null = null;
@@ -57,7 +62,11 @@ export class A11yOverlayService {
     new Set(this.resolveCategories())
   );
   readonly selectedIssue = signal<A11yIssue | null>(null);
-  readonly hoveredHighlight = signal<{ highlight: ElementHighlight; anchorRect: DOMRect; elementRect: DOMRect } | null>(null);
+  readonly hoveredHighlight = signal<{
+    highlight: ElementHighlight;
+    anchorRect: DOMRect;
+    elementRect: DOMRect;
+  } | null>(null);
   private tooltipDismissTimer: ReturnType<typeof setTimeout> | null = null;
 
   /** Schedule tooltip dismissal. Call cancelTooltipDismiss() from the tooltip mouseenter to keep it alive. */
@@ -88,7 +97,7 @@ export class A11yOverlayService {
       critical: 0,
       serious: 0,
       moderate: 0,
-      minor: 0,
+      minor: 0
     };
     for (const issue of this.filteredIssues()) {
       counts[issue.impact]++;
@@ -118,9 +127,7 @@ export class A11yOverlayService {
     const categories = this.resolveCategories();
     const scanners = categories.map((cat) => this.scannerMap[cat]);
 
-    const results = await Promise.allSettled(
-      scanners.map((s) => s.scan(root))
-    );
+    const results = await Promise.allSettled(scanners.map((s) => s.scan(root)));
 
     const allIssues: A11yIssue[] = [];
     const seen = new Set<string>();
@@ -148,7 +155,9 @@ export class A11yOverlayService {
       for (const old of existing) {
         if (!newIdSet.has(old.id) && old.element.isConnected) {
           // Check if the new scan has any issue for this same element (by reference)
-          const newHasElement = allIssues.some((n) => n.element === old.element && n.category === old.category);
+          const newHasElement = allIssues.some(
+            (n) => n.element === old.element && n.category === old.category
+          );
           if (!newHasElement) {
             preserved.push(old);
           }
@@ -236,7 +245,11 @@ export class A11yOverlayService {
     this.zone.runOutsideAngular(() => {
       this.mutationObserver = new MutationObserver((mutations) => {
         const hasRelevantMutation = mutations.some(
-          (m) => !(m.target instanceof HTMLElement && m.target.closest('a11y-overlay'))
+          (m) =>
+            !(
+              m.target instanceof HTMLElement &&
+              m.target.closest('a11y-overlay')
+            )
         );
         if (!hasRelevantMutation) return;
 
@@ -250,7 +263,7 @@ export class A11yOverlayService {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['class', 'style', 'hidden', 'aria-hidden'],
+        attributeFilter: ['class', 'style', 'hidden', 'aria-hidden']
       });
     });
 
@@ -273,7 +286,11 @@ export class A11yOverlayService {
       this.domObserver = new MutationObserver((mutations) => {
         // Ignore mutations caused by the overlay itself to prevent infinite loops
         const hasRelevantMutation = mutations.some(
-          (m) => !(m.target instanceof HTMLElement && m.target.closest('a11y-overlay'))
+          (m) =>
+            !(
+              m.target instanceof HTMLElement &&
+              m.target.closest('a11y-overlay')
+            )
         );
         if (!hasRelevantMutation) return;
 
@@ -286,7 +303,7 @@ export class A11yOverlayService {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ['class', 'style', 'hidden', 'aria-hidden'],
+        attributeFilter: ['class', 'style', 'hidden', 'aria-hidden']
       });
     });
     this.destroyRef.onDestroy(() => {
@@ -304,7 +321,10 @@ export class A11yOverlayService {
     };
     this.scrollListener = handler;
     this.zone.runOutsideAngular(() => {
-      document.addEventListener('scroll', handler, { capture: true, passive: true });
+      document.addEventListener('scroll', handler, {
+        capture: true,
+        passive: true
+      });
     });
     this.destroyRef.onDestroy(() => {
       document.removeEventListener('scroll', handler, { capture: true });

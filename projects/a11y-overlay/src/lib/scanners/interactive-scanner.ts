@@ -8,26 +8,49 @@ import { Scanner } from './scanner.interface';
  */
 
 const INTERACTIVE_TAGS = new Set([
-  'a', 'button', 'input', 'select', 'textarea', 'summary', 'details',
+  'a',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'summary',
+  'details'
 ]);
 
 const INTERACTIVE_ROLES = new Set([
-  'button', 'link', 'menuitem', 'menuitemcheckbox', 'menuitemradio',
-  'option', 'radio', 'switch', 'tab', 'checkbox', 'combobox',
-  'listbox', 'searchbox', 'slider', 'spinbutton', 'textbox',
-  'gridcell', 'treeitem',
+  'button',
+  'link',
+  'menuitem',
+  'menuitemcheckbox',
+  'menuitemradio',
+  'option',
+  'radio',
+  'switch',
+  'tab',
+  'checkbox',
+  'combobox',
+  'listbox',
+  'searchbox',
+  'slider',
+  'spinbutton',
+  'textbox',
+  'gridcell',
+  'treeitem'
 ]);
 
 @Injectable()
 export class InteractiveScanner implements Scanner {
   async scan(root: HTMLElement): Promise<A11yIssue[]> {
     const issues: A11yIssue[] = [];
-    const allElements = Array.from(root.querySelectorAll<HTMLElement>('*'))
-      .filter(el => !el.closest('a11y-overlay'));
+    const allElements = Array.from(
+      root.querySelectorAll<HTMLElement>('*')
+    ).filter((el) => !el.closest('a11y-overlay'));
 
     let idx = 0;
     for (const el of allElements) {
-      const isNativeInteractive = INTERACTIVE_TAGS.has(el.tagName.toLowerCase());
+      const isNativeInteractive = INTERACTIVE_TAGS.has(
+        el.tagName.toLowerCase()
+      );
       const role = el.getAttribute('role');
       const hasInteractiveRole = role ? INTERACTIVE_ROLES.has(role) : false;
 
@@ -56,7 +79,7 @@ export class InteractiveScanner implements Scanner {
           selector,
           impact: 'serious',
           message: `Element <${el.tagName.toLowerCase()}> appears interactive (has click handler or cursor:pointer) but has no ARIA role. Add role="button" or use a native <button> element.`,
-          wcagTags: ['wcag412', 'wcag211'],
+          wcagTags: ['wcag412', 'wcag211']
         });
       }
 
@@ -69,7 +92,7 @@ export class InteractiveScanner implements Scanner {
           selector,
           impact: 'serious',
           message: `Element <${el.tagName.toLowerCase()}> appears interactive but has no accessible name. Add aria-label, aria-labelledby, or visible text content.`,
-          wcagTags: ['wcag412'],
+          wcagTags: ['wcag412']
         });
       }
 
@@ -82,7 +105,7 @@ export class InteractiveScanner implements Scanner {
           selector,
           impact: 'critical',
           message: `Element <${el.tagName.toLowerCase()}> appears interactive but cannot be reached by keyboard. Add tabindex="0" and keydown handlers, or use a native <button> element.`,
-          wcagTags: ['wcag211'],
+          wcagTags: ['wcag211']
         });
       }
     }

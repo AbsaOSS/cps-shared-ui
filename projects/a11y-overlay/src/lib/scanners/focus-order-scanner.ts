@@ -9,7 +9,7 @@ const FOCUSABLE_SELECTOR = [
   'select:not([disabled])',
   'textarea:not([disabled])',
   '[tabindex]',
-  '[contenteditable="true"]',
+  '[contenteditable="true"]'
 ].join(',');
 
 @Injectable()
@@ -37,7 +37,7 @@ export class FocusOrderScanner implements Scanner {
           element: el,
           selector: this.getSelector(el),
           impact: 'serious',
-          message: `Element has tabindex="${el.tabIndex}". Avoid positive tabindex values; they disrupt natural tab order.`,
+          message: `Element has tabindex="${el.tabIndex}". Avoid positive tabindex values; they disrupt natural tab order.`
         });
       }
     });
@@ -107,7 +107,7 @@ export class FocusOrderScanner implements Scanner {
               `Focus passes through ${count} off-screen element${count > 1 ? 's' : ''} (this is ${position} of ${count}) ` +
               `between visible content. Users will lose sight of the focus indicator while tabbing through ` +
               `these elements (WCAG 2.4.7 Focus Visible). ` +
-              `Consider adding tabindex="-1" to remove from tab order, or moving these elements on-screen.`,
+              `Consider adding tabindex="-1" to remove from tab order, or moving these elements on-screen.`
           });
         } else {
           issues.push({
@@ -119,7 +119,7 @@ export class FocusOrderScanner implements Scanner {
             message:
               'Focusable element is positioned off-screen. When tabbing reaches this element, ' +
               'the focus indicator will not be visible to the user (WCAG 2.4.7 Focus Visible). ' +
-              'Consider adding tabindex="-1" to remove from tab order, or moving it on-screen.',
+              'Consider adding tabindex="-1" to remove from tab order, or moving it on-screen.'
           });
         }
       }

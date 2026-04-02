@@ -3,8 +3,18 @@
  */
 
 // Models
-export { A11yIssue, A11yImpact, A11yCategory, ElementHighlight, worstImpact } from './lib/models/a11y-issue.model';
-export { A11yOverlayConfig, A11yScanTrigger, A11Y_OVERLAY_CONFIG } from './lib/models/a11y-config.model';
+export {
+  A11yIssue,
+  A11yImpact,
+  A11yCategory,
+  ElementHighlight,
+  worstImpact
+} from './lib/models/a11y-issue.model';
+export {
+  A11yOverlayConfig,
+  A11yScanTrigger,
+  A11Y_OVERLAY_CONFIG
+} from './lib/models/a11y-config.model';
 
 // Provider
 export { provideA11yOverlay } from './lib/providers/provide-a11y-overlay';

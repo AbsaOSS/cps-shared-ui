@@ -11,7 +11,7 @@ const GENERIC_LINK_PATTERNS = [
   /^link$/i,
   /^this$/i,
   /^info$/i,
-  /^details$/i,
+  /^details$/i
 ];
 
 @Injectable()
@@ -37,7 +37,7 @@ export class LinkTextScanner implements Scanner {
           element: el,
           selector: this.getSelector(el),
           impact: 'critical',
-          message: `${type === 'link' ? 'Link' : 'Button'} has no accessible name. Add text content, aria-label, or aria-labelledby.`,
+          message: `${type === 'link' ? 'Link' : 'Button'} has no accessible name. Add text content, aria-label, or aria-labelledby.`
         });
         return;
       }
@@ -49,7 +49,7 @@ export class LinkTextScanner implements Scanner {
           element: el,
           selector: this.getSelector(el),
           impact: 'moderate',
-          message: `${type === 'link' ? 'Link' : 'Button'} has generic text "${text}". Use descriptive text that explains the purpose.`,
+          message: `${type === 'link' ? 'Link' : 'Button'} has generic text "${text}". Use descriptive text that explains the purpose.`
         });
       }
     };

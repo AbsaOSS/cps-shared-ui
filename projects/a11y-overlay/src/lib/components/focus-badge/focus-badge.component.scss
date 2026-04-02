@@ -5,14 +5,17 @@
   border-radius: 50%;
   background: #6200ea;
   color: #fff;
-  font: bold 11px/22px -apple-system, BlinkMacSystemFont, sans-serif;
+  font:
+    bold 11px/22px -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2147483641;
   pointer-events: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 :host(.a11y-focus-badge--error) {
   background: #d32f2f;

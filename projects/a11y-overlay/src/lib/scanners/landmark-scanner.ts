@@ -8,9 +8,10 @@ const LANDMARK_SELECTORS: Record<string, string> = {
   main: 'main, [role="main"]',
   contentinfo: 'footer, [role="contentinfo"]',
   complementary: 'aside, [role="complementary"]',
-  region: 'section[aria-label], section[aria-labelledby], [role="region"][aria-label], [role="region"][aria-labelledby]',
+  region:
+    'section[aria-label], section[aria-labelledby], [role="region"][aria-label], [role="region"][aria-labelledby]',
   search: '[role="search"]',
-  form: 'form[aria-label], form[aria-labelledby], [role="form"]',
+  form: 'form[aria-label], form[aria-labelledby], [role="form"]'
 };
 
 @Injectable()
@@ -22,7 +23,9 @@ export class LandmarkScanner implements Scanner {
     const allMains = root.querySelectorAll<HTMLElement>(
       LANDMARK_SELECTORS['main']
     );
-    const mains = Array.from(allMains).filter((el) => !el.closest('a11y-overlay'));
+    const mains = Array.from(allMains).filter(
+      (el) => !el.closest('a11y-overlay')
+    );
     if (mains.length === 0) {
       issues.push({
         id: 'landmark-missing-main',
@@ -31,7 +34,7 @@ export class LandmarkScanner implements Scanner {
         selector: 'body',
         impact: 'serious',
         message:
-          'No <main> or [role="main"] landmark found. Pages should have a main landmark.',
+          'No <main> or [role="main"] landmark found. Pages should have a main landmark.'
       });
     }
 
@@ -41,7 +44,9 @@ export class LandmarkScanner implements Scanner {
       const allElements = root.querySelectorAll<HTMLElement>(
         LANDMARK_SELECTORS[role]
       );
-      const elements = Array.from(allElements).filter((el) => !el.closest('a11y-overlay'));
+      const elements = Array.from(allElements).filter(
+        (el) => !el.closest('a11y-overlay')
+      );
       if (elements.length > 1) {
         elements.forEach((el, i) => {
           issues.push({
@@ -50,7 +55,7 @@ export class LandmarkScanner implements Scanner {
             element: el,
             selector: this.getSelector(el),
             impact: 'moderate',
-            message: `Multiple "${role}" landmarks found (${elements.length}). There should be only one per page, or provide unique aria-labels.`,
+            message: `Multiple "${role}" landmarks found (${elements.length}). There should be only one per page, or provide unique aria-labels.`
           });
         });
       }
@@ -60,7 +65,9 @@ export class LandmarkScanner implements Scanner {
     const allNavs = root.querySelectorAll<HTMLElement>(
       LANDMARK_SELECTORS['navigation']
     );
-    const navs = Array.from(allNavs).filter((el) => !el.closest('a11y-overlay'));
+    const navs = Array.from(allNavs).filter(
+      (el) => !el.closest('a11y-overlay')
+    );
     if (navs.length > 1) {
       navs.forEach((nav, i) => {
         if (
@@ -74,7 +81,7 @@ export class LandmarkScanner implements Scanner {
             selector: this.getSelector(nav),
             impact: 'moderate',
             message:
-              'Multiple navigation landmarks found. Each should have a unique aria-label to distinguish them.',
+              'Multiple navigation landmarks found. Each should have a unique aria-label to distinguish them.'
           });
         }
       });

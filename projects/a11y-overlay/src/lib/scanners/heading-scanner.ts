@@ -11,9 +11,7 @@ export class HeadingScanner implements Scanner {
     ).filter((el) => !el.closest('a11y-overlay'));
 
     // Check for multiple h1s
-    const h1s = headings.filter(
-      (h) => h.tagName.toLowerCase() === 'h1'
-    );
+    const h1s = headings.filter((h) => h.tagName.toLowerCase() === 'h1');
     if (h1s.length > 1) {
       h1s.forEach((el, i) => {
         issues.push({
@@ -22,7 +20,7 @@ export class HeadingScanner implements Scanner {
           element: el,
           selector: this.getSelector(el),
           impact: 'moderate',
-          message: `Multiple <h1> elements found (${h1s.length}). Pages should generally have a single <h1>.`,
+          message: `Multiple <h1> elements found (${h1s.length}). Pages should generally have a single <h1>.`
         });
       });
     }
@@ -36,8 +34,7 @@ export class HeadingScanner implements Scanner {
         element: first,
         selector: this.getSelector(first),
         impact: 'moderate',
-        message:
-          'No <h1> element found. Pages should have a top-level heading.',
+        message: 'No <h1> element found. Pages should have a top-level heading.'
       });
     }
 
@@ -52,7 +49,7 @@ export class HeadingScanner implements Scanner {
           element: el,
           selector: this.getSelector(el),
           impact: 'moderate',
-          message: `Heading level skipped: <h${lastLevel}> to <h${level}>. Headings should not skip levels.`,
+          message: `Heading level skipped: <h${lastLevel}> to <h${level}>. Headings should not skip levels.`
         });
       }
       lastLevel = level;
@@ -68,7 +65,7 @@ export class HeadingScanner implements Scanner {
           element: el,
           selector: this.getSelector(el),
           impact: 'serious',
-          message: `Empty <${el.tagName.toLowerCase()}> element. Headings must have accessible text content.`,
+          message: `Empty <${el.tagName.toLowerCase()}> element. Headings must have accessible text content.`
         });
       }
     });

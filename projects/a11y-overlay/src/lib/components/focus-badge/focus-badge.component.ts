@@ -5,9 +5,13 @@ import {
   signal,
   effect,
   DestroyRef,
-  inject,
+  inject
 } from '@angular/core';
-import { ElementRect, getElementRect, isElementVisible } from '../../utils/dom-position';
+import {
+  ElementRect,
+  getElementRect,
+  isElementVisible
+} from '../../utils/dom-position';
 
 export interface FocusBadgeData {
   element: HTMLElement;
@@ -24,10 +28,10 @@ export interface FocusBadgeData {
     '[style.left.px]': 'badgeLeft()',
     '[style.display]': 'visible() ? "flex" : "none"',
     '[attr.title]': 'tooltipText()',
-    '[class.a11y-focus-badge--error]': 'isError()',
+    '[class.a11y-focus-badge--error]': 'isError()'
   },
   templateUrl: './focus-badge.component.html',
-  styleUrl: './focus-badge.component.scss',
+  styleUrl: './focus-badge.component.scss'
 })
 export class FocusBadgeComponent {
   readonly data = input.required<FocusBadgeData>();
@@ -43,13 +47,19 @@ export class FocusBadgeComponent {
   badgeTop(): number {
     const r = this.rect();
     const raw = r.top + r.height - FocusBadgeComponent.BADGE_SIZE / 2;
-    return Math.max(0, Math.min(raw, window.innerHeight - FocusBadgeComponent.BADGE_SIZE));
+    return Math.max(
+      0,
+      Math.min(raw, window.innerHeight - FocusBadgeComponent.BADGE_SIZE)
+    );
   }
 
   badgeLeft(): number {
     const r = this.rect();
     const raw = r.left - FocusBadgeComponent.BADGE_SIZE / 2;
-    return Math.max(0, Math.min(raw, window.innerWidth - FocusBadgeComponent.BADGE_SIZE));
+    return Math.max(
+      0,
+      Math.min(raw, window.innerWidth - FocusBadgeComponent.BADGE_SIZE)
+    );
   }
 
   private resizeObserver: ResizeObserver | null = null;
@@ -112,7 +122,10 @@ export class FocusBadgeComponent {
     };
     this.scrollHandler = handler;
     this.resizeHandler = handler;
-    document.addEventListener('scroll', handler, { capture: true, passive: true });
+    document.addEventListener('scroll', handler, {
+      capture: true,
+      passive: true
+    });
     window.addEventListener('resize', handler, { passive: true });
   }
 
@@ -121,7 +134,9 @@ export class FocusBadgeComponent {
     this.resizeObserver = null;
     cancelAnimationFrame(this.animFrameId);
     if (this.scrollHandler) {
-      document.removeEventListener('scroll', this.scrollHandler, { capture: true } as EventListenerOptions);
+      document.removeEventListener('scroll', this.scrollHandler, {
+        capture: true
+      } as EventListenerOptions);
       this.scrollHandler = null;
     }
     if (this.resizeHandler) {

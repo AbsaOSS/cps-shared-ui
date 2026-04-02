@@ -11,7 +11,7 @@ export function getElementRect(el: HTMLElement): ElementRect {
     top: rect.top,
     left: rect.left,
     width: rect.width,
-    height: rect.height,
+    height: rect.height
   };
 }
 

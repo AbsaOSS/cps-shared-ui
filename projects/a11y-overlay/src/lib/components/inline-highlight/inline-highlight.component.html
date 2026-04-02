@@ -1,3 +1,9 @@
-<div class="a11y-indicator" [style.top.px]="indicatorOffset().top" [style.left.px]="indicatorOffset().left" (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave()" (click)="onClick()">
+<div
+  class="a11y-indicator"
+  [style.top.px]="indicatorOffset().top"
+  [style.left.px]="indicatorOffset().left"
+  (mouseenter)="onMouseEnter($event)"
+  (mouseleave)="onMouseLeave()"
+  (click)="onClick()">
   <span class="a11y-indicator__dot" aria-hidden="true">!</span>
 </div>

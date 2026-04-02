@@ -37,11 +37,17 @@
       (mouseleave)="dismissTooltip()"
       role="tooltip">
       @for (issue of hovered.highlight.issues; track issue.id) {
-        <div class="a11y-floating-tooltip__issue" [class.a11y-floating-tooltip__issue--divider]="!$first">
-          <span class="a11y-floating-tooltip__impact" [class]="'a11y-floating-tooltip__impact--' + issue.impact">
+        <div
+          class="a11y-floating-tooltip__issue"
+          [class.a11y-floating-tooltip__issue--divider]="!$first">
+          <span
+            class="a11y-floating-tooltip__impact"
+            [class]="'a11y-floating-tooltip__impact--' + issue.impact">
             {{ issue.impact }}
           </span>
-          <span class="a11y-floating-tooltip__message">{{ issue.message }}</span>
+          <span class="a11y-floating-tooltip__message">{{
+            issue.message
+          }}</span>
           @if (issue.helpUrl) {
             <a
               class="a11y-floating-tooltip__link"

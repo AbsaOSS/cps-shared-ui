@@ -5,10 +5,14 @@ import {
   signal,
   computed,
   effect,
-  ElementRef,
+  ElementRef
 } from '@angular/core';
 import { A11yOverlayService } from '../../services/a11y-overlay.service';
-import { A11yIssue, A11yCategory, A11yImpact } from '../../models/a11y-issue.model';
+import {
+  A11yIssue,
+  A11yCategory,
+  A11yImpact
+} from '../../models/a11y-issue.model';
 import { isElementOffScreen } from '../../utils/dom-position';
 
 const IMPACT_ORDER: A11yImpact[] = ['critical', 'serious', 'moderate', 'minor'];
@@ -19,7 +23,7 @@ const CATEGORY_LABELS: Record<A11yCategory, string> = {
   headings: 'Headings',
   landmarks: 'Page Structure',
   'link-text': 'Link & Button Text',
-  'interactive': 'Interactive Elements',
+  interactive: 'Interactive Elements'
 };
 
 const CATEGORY_ICONS: Record<A11yCategory, string> = {
@@ -28,7 +32,7 @@ const CATEGORY_ICONS: Record<A11yCategory, string> = {
   headings: 'H',
   landmarks: '◈',
   'link-text': '🔗',
-  'interactive': '☞',
+  interactive: '☞'
 };
 
 interface IssueGroup {
@@ -53,7 +57,8 @@ function describeElement(issue: A11yIssue): string {
   const ariaLabel = el.getAttribute('aria-label');
   const role = el.getAttribute('role');
   const textContent = el.textContent?.trim() ?? '';
-  const textSnippet = textContent.length > 30 ? textContent.substring(0, 30) + '…' : textContent;
+  const textSnippet =
+    textContent.length > 30 ? textContent.substring(0, 30) + '…' : textContent;
 
   const parts: string[] = [`<${tag}${id}>`];
 
@@ -62,7 +67,9 @@ function describeElement(issue: A11yIssue): string {
   }
 
   if (ariaLabel) {
-    parts.push(`"${ariaLabel.length > 30 ? ariaLabel.substring(0, 30) + '…' : ariaLabel}"`);
+    parts.push(
+      `"${ariaLabel.length > 30 ? ariaLabel.substring(0, 30) + '…' : ariaLabel}"`
+    );
   } else if (textSnippet && textSnippet.length > 0) {
     parts.push(`"${textSnippet}"`);
   }
@@ -74,7 +81,7 @@ function describeElement(issue: A11yIssue): string {
   selector: 'a11y-issue-panel',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './issue-panel.component.html',
-  styleUrl: './issue-panel.component.scss',
+  styleUrl: './issue-panel.component.scss'
 })
 export class IssuePanelComponent {
   protected readonly service = inject(A11yOverlayService);
@@ -100,7 +107,8 @@ export class IssuePanelComponent {
     for (const issue of this.service.issues()) {
       if (
         issue.category === 'focus-order' &&
-        (issue.id.startsWith('focus-offscreen-') || issue.id.startsWith('focus-broken-flow-')) &&
+        (issue.id.startsWith('focus-offscreen-') ||
+          issue.id.startsWith('focus-broken-flow-')) &&
         issue.element &&
         !isElementOffScreen(issue.element)
       ) {
@@ -116,7 +124,13 @@ export class IssuePanelComponent {
     new Set<A11yImpact>(IMPACT_ORDER)
   );
   readonly expandedGroups = signal<Set<A11yCategory>>(
-    new Set<A11yCategory>(['axe', 'focus-order', 'headings', 'landmarks', 'link-text'])
+    new Set<A11yCategory>([
+      'axe',
+      'focus-order',
+      'headings',
+      'landmarks',
+      'link-text'
+    ])
   );
 
   readonly impactOrder = IMPACT_ORDER;
@@ -168,7 +182,14 @@ export class IssuePanelComponent {
       );
     }
 
-    const categoryOrder: A11yCategory[] = ['axe', 'focus-order', 'headings', 'landmarks', 'link-text', 'interactive'];
+    const categoryOrder: A11yCategory[] = [
+      'axe',
+      'focus-order',
+      'headings',
+      'landmarks',
+      'link-text',
+      'interactive'
+    ];
     const grouped = new Map<A11yCategory, A11yIssue[]>();
     for (const issue of issues) {
       const list = grouped.get(issue.category) ?? [];
@@ -185,10 +206,12 @@ export class IssuePanelComponent {
           label: CATEGORY_LABELS[cat],
           icon: CATEGORY_ICONS[cat],
           issues: catIssues,
-          criticalCount: catIssues.filter((i) => i.impact === 'critical').length,
+          criticalCount: catIssues.filter((i) => i.impact === 'critical')
+            .length,
           seriousCount: catIssues.filter((i) => i.impact === 'serious').length,
-          moderateCount: catIssues.filter((i) => i.impact === 'moderate').length,
-          minorCount: catIssues.filter((i) => i.impact === 'minor').length,
+          moderateCount: catIssues.filter((i) => i.impact === 'moderate')
+            .length,
+          minorCount: catIssues.filter((i) => i.impact === 'minor').length
         };
       });
   });
@@ -260,10 +283,10 @@ export class IssuePanelComponent {
       impact: i.impact,
       message: i.message,
       helpUrl: i.helpUrl,
-      wcagTags: i.wcagTags,
+      wcagTags: i.wcagTags
     }));
     const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: 'application/json',
+      type: 'application/json'
     });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

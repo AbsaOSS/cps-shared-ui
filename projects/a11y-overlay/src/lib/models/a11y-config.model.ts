@@ -25,6 +25,13 @@ export const DEFAULT_A11Y_CONFIG: Required<
   Pick<A11yOverlayConfig, 'scanOn' | 'categories' | 'debounceMs'>
 > = {
   scanOn: 'navigation',
-  categories: ['axe', 'focus-order', 'headings', 'landmarks', 'link-text', 'interactive'],
-  debounceMs: 1000,
+  categories: [
+    'axe',
+    'focus-order',
+    'headings',
+    'landmarks',
+    'link-text',
+    'interactive'
+  ],
+  debounceMs: 1000
 };
