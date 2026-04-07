@@ -26,7 +26,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "var(--cps-text-primary)",
+                        "default": "var(--cps-accent-primary)",
                         "description": "Color of the label."
                     },
                     {
