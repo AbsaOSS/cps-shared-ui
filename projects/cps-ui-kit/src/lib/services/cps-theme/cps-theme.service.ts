@@ -189,6 +189,7 @@ export class CpsThemeService {
 
   private applyCurrentTheme(): void {
     this.document.documentElement.setAttribute('data-theme', this._theme());
+    this.document.documentElement.style.colorScheme = this._theme();
     this.document.documentElement.setAttribute(
       'data-color-theme',
       this._colorTheme()

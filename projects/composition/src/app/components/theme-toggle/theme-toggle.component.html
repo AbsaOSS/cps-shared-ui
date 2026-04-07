@@ -1,15 +1,13 @@
 <div class="theme-controls">
-  @if (showCustomize) {
-    <button
-      class="theme-toggle-btn"
-      (click)="toggleMenu()"
-      [attr.aria-expanded]="menuOpen"
-      aria-label="Open appearance settings"
-      type="button">
-      Customize
-      <span class="theme-toggle-caret">▾</span>
-    </button>
-  }
+  <button
+    class="theme-toggle-btn"
+    (click)="toggleMenu()"
+    [attr.aria-expanded]="menuOpen"
+    aria-label="Open appearance settings"
+    type="button">
+    Customize
+    <span class="theme-toggle-caret">▾</span>
+  </button>
   @if (menuOpen) {
     <div class="menu-backdrop" aria-hidden="true" (click)="closeMenu()"></div>
     <div class="theme-menu" aria-label="Appearance settings">

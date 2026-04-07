@@ -14,21 +14,20 @@
   }
 
   span {
-    font-size: 13px;
-    color: var(--cps-text-secondary);
+    font-size: 18px;
+    color: var(--cps-accent-primary);
     line-height: 1;
 
     &:first-of-type {
       flex: 1;
-      color: var(--cps-text-primary);
-      font-weight: 600;
+      font-weight: lighter;
       letter-spacing: 0.01em;
     }
 
     b {
       color: var(--cps-accent-primary);
       font-weight: 700;
-      font-size: 15px;
+      font-size: 18px;
     }
   }
 

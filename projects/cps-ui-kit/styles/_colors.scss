@@ -277,9 +277,9 @@
   --cps-color-text-darkest: #2d2323;
 
   // Semantic design tokens (use these inside components)
-  --cps-accent-primary: var(--cps-color-passion);
+  --cps-accent-primary: var(--cps-color-calm);
   --cps-accent-primary-contrast: #ffffff;
-  --cps-accent-secondary: var(--cps-color-energy);
+  --cps-accent-secondary: var(--cps-color-warmth);
   --cps-accent-secondary-contrast: #2d2323;
   --cps-error-background: #fef3f2;
 
@@ -310,7 +310,7 @@
 
   --cps-border-color: var(--cps-color-line-mid);
   --cps-border-strong: var(--cps-color-line-dark);
-  --cps-border-focus: var(--cps-color-passion);
+  --cps-border-focus: var(--cps-color-calm);
 
   --cps-highlight-hover: var(--cps-color-highlight-hover);
   --cps-highlight-active: var(--cps-color-highlight-active);
@@ -384,7 +384,7 @@
   --cps-accent-secondary: var(--cps-color-warmth);
   --cps-accent-secondary-contrast: #2d2323;
   --cps-border-focus: var(--cps-color-calm);
-  --cps-highlight-selected: rgba(135, 10, 60, 0.16);
+  --cps-highlight-selected: var(--cps-color-highlight-selected);
 }
 
 :root[data-color-theme='energy'] {

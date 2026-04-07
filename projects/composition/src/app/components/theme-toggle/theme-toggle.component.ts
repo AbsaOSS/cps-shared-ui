@@ -20,9 +20,6 @@ import {
 export class ThemeToggleComponent {
   private themeService = inject(CpsThemeService);
 
-  showCustomize =
-    new URLSearchParams(window.location.search).get('experimental') === 'true';
-
   isDark = this.themeService.isDark;
   colorTheme = this.themeService.colorTheme;
   radiusTheme = this.themeService.radiusTheme;

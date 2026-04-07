@@ -37,6 +37,14 @@ describe('CpsThemeService', () => {
     expect(service.isDark()).toBe(false);
   });
 
+  it('should apply color-scheme based on current theme', () => {
+    service.setTheme('dark', false);
+    expect(document.documentElement.style.colorScheme).toBe('dark');
+
+    service.setTheme('light', false);
+    expect(document.documentElement.style.colorScheme).toBe('light');
+  });
+
   it('should initialize with calm color theme by default', () => {
     expect(service.colorTheme()).toBe('calm');
   });

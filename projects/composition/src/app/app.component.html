@@ -6,7 +6,9 @@
       ><b>v{{ version }}</b></span
     >
   }
-  <app-theme-toggle />
+  @if (showThemeToggle) {
+    <app-theme-toggle />
+  }
 </div>
 <div class="composition-container">
   <app-navigation-sidebar
