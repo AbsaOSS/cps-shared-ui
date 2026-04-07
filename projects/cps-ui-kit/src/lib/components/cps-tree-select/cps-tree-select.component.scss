@@ -1,5 +1,5 @@
 $color-calm: var(--cps-color-calm);
-$color-error: var(--cps-color-error);
+$color-error: var(--cps-state-error);
 $error-background: #fef3f2;
 $treeselect-placeholder-color: var(--cps-color-text-mild);
 $treeselect-background-disabled: var(--cps-color-bg-disabled);
@@ -160,7 +160,7 @@ $hover-transition-duration: 0.2s;
 
         .cps-treeselect-box-clear-icon {
           display: flex;
-          color: $color-calm;
+          color: $color-error;
           margin-left: 8px;
           cps-icon {
             opacity: 0;

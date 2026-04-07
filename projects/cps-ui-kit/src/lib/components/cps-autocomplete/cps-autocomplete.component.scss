@@ -275,7 +275,6 @@ $hover-transition-duration: 0.2s;
     .cps-autocomplete-hint {
       color: $autocomplete-hint-color;
       background-color: var(--cps-surface-body);
-      display: inline-block;
       font-size: 0.75rem;
       min-height: 1.125rem;
       line-height: 1.125rem;
@@ -327,10 +326,6 @@ $hover-transition-duration: 0.2s;
 .cps-autocomplete-options {
   font-family: inherit;
   background: var(--cps-popover-background);
-  color: var(--cps-popover-foreground);
-  border: 1px solid var(--cps-border-color);
-  border-radius: var(--cps-border-radius-medium);
-  box-shadow: var(--cps-shadow-md);
   overflow-x: hidden;
   max-height: 15.125rem;
   overflow-y: auto;

@@ -2,8 +2,7 @@
   @if (label) {
     <div
       class="cps-input-label"
-      [class.cps-input-label-disabled]="disabled && !readonly"
-      [class.cps-input-label-error]="error">
+      [class.cps-input-label-disabled]="disabled && !readonly">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle

@@ -30,7 +30,7 @@ $hover-transition-duration: 0.2s;
       overflow: hidden;
       &:hover {
         input:enabled:not(:read-only) {
-          border-color: var(--cps-border-strong);
+          border: 1px solid $color-calm;
         }
       }
       &-error {
@@ -56,14 +56,13 @@ $hover-transition-duration: 0.2s;
         border: 1px solid $input-border-color;
         transition-duration: $hover-transition-duration;
         appearance: none;
-        border-radius: var(--cps-border-radius-medium);
+        border-radius: var(--cps-border-radius-small);
         width: 100%;
         &:focus {
           outline: 0;
         }
         &:focus:not(:read-only) {
           border-color: $color-calm;
-          box-shadow: 0 0 0 3px var(--cps-highlight-selected);
         }
         &:read-only {
           cursor: default;
@@ -186,26 +185,6 @@ $hover-transition-duration: 0.2s;
       &.underlined {
         input {
           border-bottom: 1px solid $input-border-color !important;
-          background: transparent;
-          box-shadow: none !important;
-        }
-      }
-
-      &.borderless {
-        input {
-          background: var(--cps-surface-muted);
-          box-shadow: none !important;
-        }
-
-        &:hover {
-          input:enabled:not(:read-only) {
-            background: var(--cps-highlight-hover);
-          }
-        }
-
-        input:focus:not(:read-only) {
-          background: var(--cps-highlight-selected);
-          border-color: transparent !important;
         }
       }
     }
@@ -259,10 +238,6 @@ $hover-transition-duration: 0.2s;
 
       &-disabled {
         color: $input-label-disabled-color;
-      }
-
-      &-error {
-        color: $color-error;
       }
     }
     ::placeholder {
