@@ -1,4 +1,4 @@
-<div [ngClass]="classesList">
+<div [ngClass]="classesList" [attr.aria-label]="label">
   @if (icon) {
     <cps-icon
       class="cps-chip-icon"
@@ -8,6 +8,9 @@
   <span class="cps-chip-label">{{ label }}</span>
   @if (closable) {
     <cps-icon
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="closeButtonAriaLabel"
       class="cps-chip-close-icon"
       icon="close-x"
       size="xsmall"

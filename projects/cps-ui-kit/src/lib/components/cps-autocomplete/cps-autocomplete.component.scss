@@ -191,6 +191,9 @@ $hover-transition-duration: 0.2s;
             padding-top: 3px;
             padding-right: 4px;
           }
+          .cps-autocomplete-input-option-wrapper {
+            flex-grow: 1;
+          }
         }
         .text-group {
           color: $autocomplete-option-value-color;
@@ -201,6 +204,9 @@ $hover-transition-duration: 0.2s;
             padding-bottom: 3px;
             padding-top: 3px;
             padding-right: 4px;
+          }
+          .cps-autocomplete-input-option-wrapper {
+            flex-grow: 1;
           }
         }
       }

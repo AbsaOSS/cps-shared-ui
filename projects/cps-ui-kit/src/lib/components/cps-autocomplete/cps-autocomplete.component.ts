@@ -19,6 +19,7 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
+import { getComputedLabel } from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
   IconType,
@@ -783,6 +784,20 @@ export class CpsAutocompleteComponent
     this._inputChangeSubject$.next('');
     this.activeSingle = false;
     this.recalcVirtualListHeight();
+  }
+
+  get computedLabel(): string {
+    return getComputedLabel({
+      label: this.label,
+      hint: this.hint,
+      error: this.error,
+      externalError: this.externalError,
+      hideDetails: this.hideDetails
+    });
+  }
+
+  get computedChevronLabel(): string {
+    return this.isOpened ? 'Collapse options' : 'Expand options';
   }
 
   private _getEmptyValue() {

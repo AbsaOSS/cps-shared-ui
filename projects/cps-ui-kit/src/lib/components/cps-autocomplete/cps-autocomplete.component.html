@@ -1,7 +1,6 @@
 <div
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
-  tabindex="1"
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
@@ -97,9 +96,18 @@
               </div>
             }
             @if (multiple && chips) {
-              <div class="chips-group">
+              <div
+                class="chips-group"
+                role="listbox"
+                tabindex="-1"
+                aria-orientation="horizontal">
                 @for (val of value; track val; let last = $last) {
                   <cps-chip
+                    role="option"
+                    aria-selected="true"
+                    [attr.aria-setsize]="value.length"
+                    [attr.aria-posinset]="value.indexOf(val) + 1"
+                    closeButtonAriaLabel="Remove"
                     [disabled]="disabled"
                     [closable]="closableChips"
                     (closed)="select(val, true)"
@@ -114,21 +122,32 @@
                     ">
                   </cps-chip>
                 }
-                <ng-container
-                  *ngTemplateOutlet="
-                    autocompleteInputTemplate;
-                    context: {
-                      inputClass: 'multi-chip-input'
-                    }
-                  "></ng-container>
+                <div
+                  role="option"
+                  class="cps-autocomplete-input-option-wrapper">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      autocompleteInputTemplate;
+                      context: {
+                        inputClass: 'multi-chip-input'
+                      }
+                    "></ng-container>
+                </div>
               </div>
             }
           </div>
         } @else {
           <input
             #autocompleteInput
+            type="text"
             class="cps-autocomplete-box-input"
             spellcheck="false"
+            [attr.aria-invalid]="error || externalError ? true : null"
+            [disabled]="disabled"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="isOpened"
             [placeholder]="
               (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
                 ? placeholder
@@ -138,7 +157,8 @@
             (keydown)="onInputKeyDown($event)"
             [(ngModel)]="inputText"
             (focus)="onFocus()"
-            (blur)="onBlur()" />
+            (blur)="onBlur()"
+            [attr.aria-label]="computedLabel" />
         }
         <span class="cps-autocomplete-box-icons">
           @if (clearable && !disabled) {
@@ -151,17 +171,25 @@
                   ? 'visible'
                   : 'hidden'
               "
+              role="button"
+              (click)="clear($event)"
+              (keydown.enter)="clear($event)"
+              (keydown.space)="clear($event)"
+              aria-label="Clear selection"
+              [attr.tabindex]="disabled ? -1 : 0"
               class="cps-autocomplete-box-clear-icon">
-              <cps-icon
-                icon="delete"
-                size="small"
-                (click)="clear($event)"></cps-icon>
+              <cps-icon icon="delete" size="small"></cps-icon>
             </span>
           }
           @if (showChevron) {
             <span
               class="cps-autocomplete-box-chevron"
-              (mousedown)="onChevronClick($event)">
+              role="button"
+              (mousedown)="onChevronClick($event)"
+              (keydown.enter)="onChevronClick($event)"
+              (keydown.space)="onChevronClick($event)"
+              [attr.aria-label]="computedChevronLabel"
+              [attr.tabindex]="disabled ? -1 : 0">
               <cps-icon
                 icon="chevron-down"
                 size="small"
@@ -279,8 +307,15 @@
   let-inputStyle="inputStyle">
   <input
     #autocompleteInput
+    type="text"
     class="cps-autocomplete-box-input"
     spellcheck="false"
+    [attr.aria-invalid]="error || externalError ? true : null"
+    [disabled]="disabled"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="isOpened"
     [class]="inputClass"
     [style]="inputStyle"
     [placeholder]="
@@ -292,7 +327,8 @@
     (keydown)="onInputKeyDown($event)"
     [(ngModel)]="inputText"
     (focus)="onFocus()"
-    (blur)="onBlur()" />
+    (blur)="onBlur()"
+    [attr.aria-label]="computedLabel" />
 </ng-template>
 
 <ng-template #itemTemplate let-item="item">
