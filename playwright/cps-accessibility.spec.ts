@@ -1,6 +1,6 @@
 import { test, expect } from './fixtures/axe-test';
 import type { Page } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
+import type AxeBuilder from '@axe-core/playwright';
 
 interface ComponentEntry {
   route: string;
