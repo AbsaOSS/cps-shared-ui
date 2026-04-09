@@ -45,11 +45,18 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: /cps-accessibility/,
       use: { ...devices['Desktop Chrome'] }
     },
     {
       name: 'webkit',
+      testIgnore: /cps-accessibility/,
       use: { ...devices['Desktop Safari'] }
+    },
+    {
+      name: 'accessibility',
+      testMatch: /cps-accessibility/,
+      use: { ...devices['Desktop Chrome'] }
     }
   ],
 
