@@ -70,23 +70,30 @@ if (fromFileIdx !== -1) {
 
 const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
 
-function flattenSuites(suites, parentTitle) {
+function flattenSuites(suites) {
   const out = [];
   for (const suite of suites) {
-    const title = parentTitle ? `${parentTitle} - ${suite.title}` : suite.title;
     for (const spec of suite.specs || []) {
-      const results = spec.tests?.[0]?.results ?? [];
-      const result = results[results.length - 1];
+      const result = spec.tests?.[0]?.results?.[0];
       out.push({
-        suite: title,
+        suite: suite.title,
         test: spec.title,
         status: result?.status ?? 'unknown',
         error: result?.error?.message ?? '',
         axeResults: parseAxeAttachment(result)
       });
     }
-    if (suite.suites?.length) {
-      out.push(...flattenSuites(suite.suites, title));
+    for (const sub of suite.suites || []) {
+      for (const spec of sub.specs || []) {
+        const result = spec.tests?.[0]?.results?.[0];
+        out.push({
+          suite: suite.title,
+          test: `${sub.title} - ${spec.title}`,
+          status: result?.status ?? 'unknown',
+          error: result?.error?.message ?? '',
+          axeResults: parseAxeAttachment(result)
+        });
+      }
     }
   }
   return out;
@@ -106,7 +113,7 @@ function parseAxeAttachment(result) {
   }
 }
 
-const tests = flattenSuites(data.suites ?? []);
+const tests = flattenSuites(data.suites?.[0]?.suites ?? []);
 
 // ---------------------------------------------------------------------------
 // Extract violations and applicability per component
