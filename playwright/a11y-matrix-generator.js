@@ -75,10 +75,10 @@ function flattenSuites(suites, parentTitle) {
   for (const suite of suites) {
     const title = parentTitle ? `${parentTitle} - ${suite.title}` : suite.title;
     for (const spec of suite.specs || []) {
-      const tests = spec.tests?.[0]?.results ?? [];
-      const result = tests[tests.length - 1];
+      const results = spec.tests?.[0]?.results ?? [];
+      const result = results[results.length - 1];
       out.push({
-        suite: suite.title,
+        suite: title,
         test: spec.title,
         status: result?.status ?? 'unknown',
         error: result?.error?.message ?? '',
