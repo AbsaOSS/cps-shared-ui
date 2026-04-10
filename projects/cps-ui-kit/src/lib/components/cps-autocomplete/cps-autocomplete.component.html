@@ -231,6 +231,8 @@
             role="option"
             tabindex="-1"
             aria-disabled="false"
+            [attr.aria-setsize]="optionsAriaSetSize"
+            [attr.aria-posinset]="1"
             [attr.aria-selected]="value?.length === options.length"
             [class.allselected]="value?.length === options.length"
             [class.highlighten]="optionHighlightedIndex === 0"
@@ -340,6 +342,8 @@
     [id]="getOptionId(item, itemIndex)"
     role="option"
     tabindex="-1"
+    [attr.aria-setsize]="optionsAriaSetSize"
+    [attr.aria-posinset]="getOptionAriaPosInSet(itemIndex)"
     (click)="onOptionClick(item)"
     [class.highlighten]="
       itemIndex === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)

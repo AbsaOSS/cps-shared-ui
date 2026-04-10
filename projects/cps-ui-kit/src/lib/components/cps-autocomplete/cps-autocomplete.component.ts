@@ -844,6 +844,14 @@ export class CpsAutocompleteComponent
     return this.isOpened ? 'Collapse options' : 'Expand options';
   }
 
+  get optionsAriaSetSize(): number {
+    return this.filteredOptions.length + (this.isSelectAllVisible ? 1 : 0);
+  }
+
+  getOptionAriaPosInSet(itemIndex: number): number {
+    return itemIndex + 1 + (this.isSelectAllVisible ? 1 : 0);
+  }
+
   get activeDescendantId(): string | null {
     if (!this.isOpened || this.optionHighlightedIndex < 0) {
       return null;
@@ -1017,10 +1025,12 @@ export class CpsAutocompleteComponent
   private _navigateOptionsByArrows(up: boolean) {
     if (!this.isOpened) return;
 
-    const len = this.filteredOptions.length + (this.isSelectAllVisible ? 1 : 0);
-    if (len < 1) return;
+    if (this.optionsAriaSetSize < 1) return;
 
-    this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
+    this.optionHighlightedIndex = this._nextHighlightIndex(
+      up,
+      this.optionsAriaSetSize
+    );
 
     const activeId = this._getHighlightedOptionId();
     if (!activeId) return;
