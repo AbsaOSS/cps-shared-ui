@@ -65,7 +65,7 @@
                     autocompleteInputTemplate;
                     context: {
                       inputClass: 'single-item-input',
-                      inputStyle: activeSingle ? 'opacity: 1' : null
+                      inputStyle: activeSingle ? { opacity: '1' } : null
                     }
                   ">
                 </ng-container>
@@ -138,28 +138,8 @@
             }
           </div>
         } @else {
-          <input
-            #autocompleteInput
-            type="text"
-            class="cps-autocomplete-box-input"
-            spellcheck="false"
-            [attr.aria-invalid]="error || externalError ? true : null"
-            [disabled]="disabled"
-            role="combobox"
-            aria-autocomplete="list"
-            aria-haspopup="listbox"
-            [attr.aria-expanded]="isOpened"
-            [placeholder]="
-              (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
-                ? placeholder
-                : ''
-            "
-            (input)="filterOptions($event)"
-            (keydown)="onInputKeyDown($event)"
-            [(ngModel)]="inputText"
-            (focus)="onFocus()"
-            (blur)="onBlur()"
-            [attr.aria-label]="computedLabel" />
+          <ng-container
+            *ngTemplateOutlet="autocompleteInputTemplate"></ng-container>
         }
         <span class="cps-autocomplete-box-icons">
           @if (clearable && !disabled) {
@@ -315,8 +295,8 @@
     aria-autocomplete="list"
     aria-haspopup="listbox"
     [attr.aria-expanded]="isOpened"
-    [class]="inputClass"
-    [style]="inputStyle"
+    [ngClass]="inputClass"
+    [ngStyle]="inputStyle"
     [placeholder]="
       (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
         ? placeholder
