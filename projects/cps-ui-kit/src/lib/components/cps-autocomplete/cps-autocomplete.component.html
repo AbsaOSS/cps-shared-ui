@@ -187,12 +187,24 @@
       containerClass="cps-autocomplete-options-menu">
       <div
         #optionsList
+        role="listbox"
+        [id]="optionsListId"
+        tabindex="-1"
+        aria-readonly="false"
+        aria-disabled="false"
+        aria-orientation="vertical"
+        [attr.aria-multiselectable]="!!multiple"
         class="cps-autocomplete-options"
         [ngStyle]="{
           width: autocompleteBoxWidth + 'px'
         }">
         @if (loading && showLoadingMessage) {
-          <div class="cps-autocomplete-options-loading">
+          <div
+            class="cps-autocomplete-options-loading"
+            role="option"
+            tabindex="-1"
+            aria-disabled="true"
+            aria-selected="false">
             {{ loadingMessage }}
           </div>
         }
@@ -202,7 +214,12 @@
           !loading &&
           inputTextDebounced
         ) {
-          <div class="cps-autocomplete-options-empty">
+          <div
+            class="cps-autocomplete-options-empty"
+            role="option"
+            tabindex="-1"
+            aria-disabled="true"
+            aria-selected="false">
             {{ emptyMessage }}
           </div>
         }
@@ -215,6 +232,10 @@
           ) {
             <div
               class="cps-autocomplete-options-option select-all-option"
+              role="option"
+              tabindex="-1"
+              aria-disabled="false"
+              [attr.aria-selected]="value?.length === options.length"
               [class.allselected]="value?.length === options.length"
               (click)="toggleAll()">
               <span class="cps-autocomplete-options-option-left">
@@ -294,6 +315,8 @@
     role="combobox"
     aria-autocomplete="list"
     aria-haspopup="listbox"
+    [attr.aria-controls]="optionsListId"
+    [attr.aria-activedescendant]="TODO"
     [attr.aria-expanded]="isOpened"
     [ngClass]="inputClass"
     [ngStyle]="inputStyle"
@@ -313,7 +336,12 @@
 <ng-template #itemTemplate let-item="item">
   <div
     class="cps-autocomplete-options-option"
+    role="option"
+    tabindex="-1"
     (click)="onOptionClick(item)"
+    [attr.aria-selected]="
+      item | checkOptionSelected: value : multiple : returnObject : optionValue
+    "
     [class.selected]="
       item | checkOptionSelected: value : multiple : returnObject : optionValue
     ">

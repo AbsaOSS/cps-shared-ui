@@ -19,7 +19,10 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
-import { getComputedLabel } from '../../utils/internal/accessibility-utils';
+import {
+  generateUniqueId,
+  getComputedLabel
+} from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
   IconType,
@@ -408,6 +411,8 @@ export class CpsAutocompleteComponent
   resizeObserver: ResizeObserver;
 
   isTimePickerField = false;
+
+  optionsListId = generateUniqueId('cps-autocomplete-options-list');
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
