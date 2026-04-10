@@ -655,6 +655,8 @@ export class CpsAutocompleteComponent
   onBlur() {
     if (!this.isOpened) {
       this._confirmInput(this.inputText || '', false);
+    } else {
+      this._toggleOptions(false);
     }
     this._checkErrors();
     this.blurred.emit();
