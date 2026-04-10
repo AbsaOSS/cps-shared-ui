@@ -655,6 +655,11 @@ export class CpsAutocompleteComponent
   }
 
   onFocus() {
+    if (!this.multiple) {
+      this.activeSingle = true;
+      if (!this.inputText) this.inputText = this._getValueLabel();
+    }
+
     this._control?.control?.markAsTouched();
     this.focused.emit();
   }
