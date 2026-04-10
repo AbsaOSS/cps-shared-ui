@@ -4,7 +4,8 @@
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
-    active: isActive()
+    active: isActive(),
+    opened: isOpened
   }"
   #autocompleteContainer>
   @if (label) {
@@ -26,7 +27,7 @@
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
-    [class.focused]="isActive()"
+    [class.active]="isActive()"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',
@@ -163,25 +164,23 @@
         <span class="cps-autocomplete-box-icons">
           @if (clearable && !disabled) {
             <span
-              [style.visibility]="
-                persistentClear ||
-                (!persistentClear &&
-                  ((multiple && value?.length) ||
-                    (!multiple && !isEmptyValue())))
-                  ? 'visible'
-                  : 'hidden'
-              "
               role="button"
               (click)="clear($event)"
               (keydown.enter)="clear($event)"
               (keydown.space)="clear($event)"
               aria-label="Clear selection"
               [attr.tabindex]="disabled ? -1 : 0"
-              class="cps-autocomplete-box-clear-icon">
+              class="cps-autocomplete-box-clear-icon"
+              [ngClass]="{
+                'cps-autocomplete-box-clear-icon-hidden':
+                  !persistentClear &&
+                  (!multiple || !value?.length) &&
+                  (multiple || isEmptyValue())
+              }">
               <cps-icon icon="delete" size="small"></cps-icon>
             </span>
           }
-          @if (showChevron) {
+          @if (showChevron && options.length) {
             <span
               class="cps-autocomplete-box-chevron"
               role="button"

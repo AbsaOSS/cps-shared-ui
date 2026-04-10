@@ -38,12 +38,6 @@ $hover-transition-duration: 0.2s;
         padding: 0 1px;
       }
 
-      &.focused {
-        .cps-autocomplete-box {
-          background: white !important;
-        }
-      }
-
       &.borderless,
       &.underlined {
         .cps-autocomplete-box {
@@ -67,6 +61,11 @@ $hover-transition-duration: 0.2s;
             color: $color-calm;
           }
         }
+      }
+    }
+
+    &.opened {
+      .cps-autocomplete-box {
         .cps-autocomplete-box-chevron {
           top: 22px;
           transform: rotate(180deg);
@@ -88,7 +87,7 @@ $hover-transition-duration: 0.2s;
     }
 
     .persistent-clear,
-    .cps-autocomplete-container.focused,
+    .cps-autocomplete-container.active,
     .cps-autocomplete-container:hover {
       .cps-autocomplete-box {
         .cps-autocomplete-box-icons {
@@ -228,6 +227,19 @@ $hover-transition-duration: 0.2s;
           display: flex;
           color: $color-calm;
           margin-left: 8px;
+
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px $color-calm;
+            border-radius: 6px;
+            cps-icon {
+              opacity: 1;
+            }
+          }
+
+          &-hidden {
+            visibility: hidden;
+          }
           cps-icon {
             opacity: 0;
             transition-duration: $hover-transition-duration;
@@ -239,6 +251,11 @@ $hover-transition-duration: 0.2s;
         .cps-autocomplete-box-chevron {
           display: flex;
           margin-left: 8px;
+          &:focus {
+            outline: none;
+            box-shadow: 0 0 0 1px $color-calm;
+            border-radius: 6px;
+          }
           transition-duration: $hover-transition-duration;
           cursor: pointer;
           &:hover {

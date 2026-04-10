@@ -661,7 +661,6 @@ export class CpsAutocompleteComponent
 
   isActive() {
     return (
-      this.isOpened ||
       this.document.activeElement === this.autocompleteInput?.nativeElement
     );
   }
