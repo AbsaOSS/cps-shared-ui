@@ -92,6 +92,8 @@ export class CpsChipComponent implements OnChanges {
   }
 
   onCloseClick(event: any) {
+    if (this.disabled) return;
+
     event.stopPropagation();
     this.closed.emit(this.label);
   }

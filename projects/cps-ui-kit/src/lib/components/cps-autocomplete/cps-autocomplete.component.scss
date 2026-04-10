@@ -230,11 +230,13 @@ $hover-transition-duration: 0.2s;
 
           &:focus {
             outline: none;
-            box-shadow: 0 0 0 1px $color-calm;
-            border-radius: 6px;
             cps-icon {
               opacity: 1;
             }
+          }
+          &:focus-visible {
+            box-shadow: 0 0 0 1px $color-calm;
+            border-radius: 6px;
           }
 
           &-hidden {
@@ -253,6 +255,8 @@ $hover-transition-duration: 0.2s;
           margin-left: 8px;
           &:focus {
             outline: none;
+          }
+          &:focus-visible {
             box-shadow: 0 0 0 1px $color-calm;
             border-radius: 6px;
           }

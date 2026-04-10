@@ -1,3 +1,9 @@
+$color-calm: var(--cps-color-calm);
+$color-bg-dark: var(--cps-color-bg-dark);
+$color-bg-mid: var(--cps-color-bg-mid);
+$color-text-darkest: var(--cps-color-text-darkest);
+$color-text-light: var(--cps-color-text-light);
+
 :host {
   width: fit-content;
   display: inline-block;
@@ -7,7 +13,7 @@
   .cps-chip {
     align-items: center;
     display: inline-flex;
-    background-color: var(--cps-color-bg-dark);
+    background-color: $color-bg-dark;
     border-radius: 14px;
     line-height: 16px;
     padding: 4px 12px;
@@ -15,15 +21,22 @@
     &-close-icon {
       margin-left: 6px;
       cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+      &:focus-visible {
+        box-shadow: 0 0 0 1px $color-calm;
+        border-radius: 6px;
+      }
       &:hover {
         ::ng-deep .cps-icon {
-          color: var(--cps-color-calm) !important;
+          color: $color-calm !important;
         }
       }
     }
     &-label {
       font-size: 14px;
-      color: var(--cps-color-text-darkest);
+      color: $color-text-darkest;
       font-family: 'Source Sans Pro', sans-serif;
       font-style: normal;
       font-weight: 400;
@@ -31,14 +44,23 @@
 
     &.cps-chip-disabled {
       pointer-events: none;
-      background-color: var(--cps-color-bg-mid);
+      background-color: $color-bg-mid;
+
+      .cps-chip-close-icon {
+        &:focus,
+        &:focus-visible {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+
       .cps-chip-label {
-        color: var(--cps-color-text-light);
+        color: $color-text-light;
       }
       .cps-chip-icon,
       .cps-chip-close-icon {
         ::ng-deep .cps-icon {
-          color: var(--cps-color-text-light) !important;
+          color: $color-text-light !important;
         }
       }
     }
