@@ -721,8 +721,9 @@ export class CpsAutocompleteComponent
         } else idx--;
       }
       const option = this.filteredOptions[idx];
-      if (this.filteredOptions.length !== this.options.length)
+      if (this.filteredOptions.length !== this.options.length) {
         this._dehighlightOption();
+      }
       this._clickOption(option);
     }
     // vertical arrows
@@ -744,6 +745,12 @@ export class CpsAutocompleteComponent
     }
     // enter
     else if (code === 13) {
+      if (!this.isOpened) {
+        event.stopPropagation();
+        event.preventDefault();
+        this._toggleOptions(true);
+        return;
+      }
       if (this.optionHighlightedIndex < 0) {
         this._confirmInput(event?.target?.value || '', true);
         event.stopPropagation();
