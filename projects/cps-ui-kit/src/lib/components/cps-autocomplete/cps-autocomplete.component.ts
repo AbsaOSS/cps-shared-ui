@@ -342,6 +342,13 @@ export class CpsAutocompleteComponent
    */
   @Input() set options(opts: any[] | undefined) {
     this._options = opts || [];
+    this._optionIds = new WeakMap<object, string>();
+
+    this._options.forEach((opt, index) => {
+      if (opt && typeof opt === 'object') {
+        this._optionIds.set(opt, this._buildOptionId(index));
+      }
+    });
   }
 
   get options(): any[] {
@@ -413,11 +420,14 @@ export class CpsAutocompleteComponent
   isTimePickerField = false;
 
   optionsListId = generateUniqueId('cps-autocomplete-options-list');
+  selectAllOptionId = generateUniqueId('cps-autocomplete-option-select-all');
+  private _optionIdPrefix = generateUniqueId('cps-autocomplete-option');
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
 
   private _options: any[] = [];
+  private _optionIds = new WeakMap<object, string>();
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -834,6 +844,26 @@ export class CpsAutocompleteComponent
     return this.isOpened ? 'Collapse options' : 'Expand options';
   }
 
+  get activeDescendantId(): string | null {
+    if (!this.isOpened || this.optionHighlightedIndex < 0) {
+      return null;
+    }
+
+    return this._getHighlightedOptionId();
+  }
+
+  getOptionId(option: any, index: number): string {
+    if (option && typeof option === 'object') {
+      return this._optionIds.get(option) || this._buildOptionId(index);
+    }
+
+    return this._buildOptionId(index);
+  }
+
+  private _buildOptionId(index: number): string {
+    return `${this._optionIdPrefix}-${index}`;
+  }
+
   private _getEmptyValue() {
     const option = this.options[this.emptyOptionIndex];
     return !option
@@ -948,14 +978,27 @@ export class CpsAutocompleteComponent
     this._dehighlightOption();
   }
 
-  private _getHTMLOptions() {
-    return (this.optionsList.nativeElement.querySelectorAll(
-      '.cps-autocomplete-options-option'
-    ) || []) as any;
-  }
-
   private _dehighlightOption() {
     this.optionHighlightedIndex = -1;
+  }
+
+  private _getHighlightedOptionId(): string | null {
+    if (this.optionHighlightedIndex < 0) {
+      return null;
+    }
+
+    if (this.isSelectAllVisible && this.optionHighlightedIndex === 0) {
+      return this.selectAllOptionId;
+    }
+
+    const optionIndex =
+      this.optionHighlightedIndex - (this.isSelectAllVisible ? 1 : 0);
+    const activeOption = this.filteredOptions[optionIndex];
+    if (!activeOption) {
+      return null;
+    }
+
+    return this.getOptionId(activeOption, optionIndex);
   }
 
   private _highlightOption(el: HTMLElement) {
@@ -974,12 +1017,21 @@ export class CpsAutocompleteComponent
   private _navigateOptionsByArrows(up: boolean) {
     if (!this.isOpened) return;
 
-    const optionItems = this._getHTMLOptions();
-    const len = optionItems.length;
+    const len = this.filteredOptions.length + (this.isSelectAllVisible ? 1 : 0);
     if (len < 1) return;
 
     this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
-    this._highlightOption(optionItems[this.optionHighlightedIndex]);
+
+    const activeId = this._getHighlightedOptionId();
+    if (!activeId) return;
+
+    const activeOption = this.optionsList?.nativeElement?.querySelector(
+      `#${activeId}`
+    ) as HTMLElement | null;
+
+    if (activeOption) {
+      this._highlightOption(activeOption);
+    }
   }
 
   private _navigateVirtualOptionsByArrows(up: boolean) {

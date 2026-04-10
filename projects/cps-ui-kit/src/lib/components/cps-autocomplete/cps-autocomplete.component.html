@@ -227,6 +227,7 @@
         @if (isSelectAllVisible) {
           <div
             class="cps-autocomplete-options-option select-all-option"
+            [id]="selectAllOptionId"
             role="option"
             tabindex="-1"
             aria-disabled="false"
@@ -316,6 +317,7 @@
     aria-autocomplete="list"
     aria-haspopup="listbox"
     [attr.aria-controls]="optionsListId"
+    [attr.aria-activedescendant]="activeDescendantId"
     [attr.aria-expanded]="isOpened"
     [ngClass]="inputClass"
     [ngStyle]="inputStyle"
@@ -335,6 +337,7 @@
 <ng-template #itemTemplate let-item="item" let-itemIndex="itemIndex">
   <div
     class="cps-autocomplete-options-option"
+    [id]="getOptionId(item, itemIndex)"
     role="option"
     tabindex="-1"
     (click)="onOptionClick(item)"
@@ -362,6 +365,7 @@
     <span
       class="cps-autocomplete-options-option-right"
       [class.virtual-row]="virtualScroll"
+      aria-hidden="true"
       >{{ item[optionInfo] }}</span
     >
   </div>
