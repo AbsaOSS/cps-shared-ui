@@ -405,7 +405,7 @@ export class CpsAutocompleteComponent
   optionHighlightedIndex = -1;
 
   virtualListHeight = 240;
-  virtualScrollItemSize = 42;
+  virtualScrollItemSize = 44;
 
   autocompleteBoxWidth = 0;
   resizeObserver: ResizeObserver;
@@ -726,8 +726,11 @@ export class CpsAutocompleteComponent
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
-      // Arrows navigation doesn't work with virtual scroll
-      if (!this.virtualScroll) this._navigateOptionsByArrows(code === 38);
+      if (this.virtualScroll) {
+        this._navigateVirtualOptionsByArrows(code === 38);
+      } else {
+        this._navigateOptionsByArrows(code === 38);
+      }
     }
   }
 
@@ -803,6 +806,17 @@ export class CpsAutocompleteComponent
       externalError: this.externalError,
       hideDetails: this.hideDetails
     });
+  }
+
+  get isSelectAllVisible(): boolean {
+    return (
+      !this.virtualScroll &&
+      !this.loading &&
+      this.multiple &&
+      this.selectAll &&
+      this.filteredOptions.length === this.options.length &&
+      this.options.length > 1
+    );
   }
 
   get computedChevronLabel(): string {
@@ -929,18 +943,11 @@ export class CpsAutocompleteComponent
     ) || []) as any;
   }
 
-  private _dehighlightOption(el?: HTMLElement) {
-    if (el) el.classList.remove('highlighten');
-    else {
-      if (this.optionHighlightedIndex < 0) return;
-      const optionItems = this._getHTMLOptions();
-      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
-      this.optionHighlightedIndex = -1;
-    }
+  private _dehighlightOption() {
+    this.optionHighlightedIndex = -1;
   }
 
   private _highlightOption(el: HTMLElement) {
-    el.classList.add('highlighten');
     const parent = el.parentElement;
     if (!parent) return;
     const parentRect = parent.getBoundingClientRect();
@@ -960,28 +967,67 @@ export class CpsAutocompleteComponent
     const len = optionItems.length;
     if (len < 1) return;
 
-    if (len === 1) {
-      this.optionHighlightedIndex = 0;
-      this._highlightOption(optionItems[0]);
+    this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
+    this._highlightOption(optionItems[this.optionHighlightedIndex]);
+  }
+
+  private _navigateVirtualOptionsByArrows(up: boolean) {
+    if (!this.isOpened) return;
+
+    const len = this.filteredOptions.length;
+    if (len < 1) return;
+
+    this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
+    this._syncVirtualHighlightedOptionIntoView();
+  }
+
+  private _nextHighlightIndex(up: boolean, len: number): number {
+    if (up) {
+      return this.optionHighlightedIndex < 1
+        ? len - 1
+        : this.optionHighlightedIndex - 1;
+    }
+
+    return [-1, len - 1].includes(this.optionHighlightedIndex)
+      ? 0
+      : this.optionHighlightedIndex + 1;
+  }
+
+  private _syncVirtualHighlightedOptionIntoView() {
+    if (this.optionHighlightedIndex < 0) return;
+
+    this._scrollVirtualListToIndex(this.optionHighlightedIndex);
+  }
+
+  private _scrollVirtualListToIndex(index: number) {
+    const scrollerEl = this.optionsList?.nativeElement?.querySelector(
+      '.p-virtualscroller'
+    ) as HTMLElement | null;
+    if (!scrollerEl) {
+      this.virtualList?.scrollToIndex(index);
       return;
     }
 
-    if (up) {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex =
-        this.optionHighlightedIndex < 1
-          ? len - 1
-          : this.optionHighlightedIndex - 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    } else {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex = [-1, len - 1].includes(
-        this.optionHighlightedIndex
-      )
-        ? 0
-        : this.optionHighlightedIndex + 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    const itemTop = index * this.virtualScrollItemSize;
+    const itemBottom = itemTop + this.virtualScrollItemSize;
+
+    const viewportTop = scrollerEl.scrollTop;
+    const viewportBottom = viewportTop + scrollerEl.clientHeight;
+
+    let nextTop = viewportTop;
+    if (itemTop < viewportTop) {
+      nextTop = itemTop;
+    } else if (itemBottom > viewportBottom) {
+      nextTop = itemBottom - scrollerEl.clientHeight;
     }
+
+    if (nextTop === viewportTop) return;
+
+    const maxTop = Math.max(
+      0,
+      scrollerEl.scrollHeight - scrollerEl.clientHeight
+    );
+    scrollerEl.scrollTop = Math.min(Math.max(0, nextTop), maxTop);
   }
 
   private _confirmInput(searchVal: string, needFocusInput: boolean) {
@@ -1026,11 +1072,7 @@ export class CpsAutocompleteComponent
 
     if (this.value?.length) {
       if (this.backspaceClickedOnce) {
-        this.updateValue(
-          this.value.filter(
-            (v: any, index: number) => index !== this.value.length - 1
-          )
-        );
+        this.updateValue(this.value.slice(0, -1));
 
         this.backspaceClickedOnce = false;
       } else this.backspaceClickedOnce = true;

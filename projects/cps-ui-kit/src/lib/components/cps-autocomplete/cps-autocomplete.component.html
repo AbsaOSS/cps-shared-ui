@@ -223,59 +223,58 @@
             {{ emptyMessage }}
           </div>
         }
-        @if (!virtualScroll && !loading) {
-          @if (
-            multiple &&
-            selectAll &&
-            filteredOptions.length === options.length &&
-            options.length > 1
-          ) {
-            <div
-              class="cps-autocomplete-options-option select-all-option"
-              role="option"
-              tabindex="-1"
-              aria-disabled="false"
-              [attr.aria-selected]="value?.length === options.length"
-              [class.allselected]="value?.length === options.length"
-              (click)="toggleAll()">
-              <span class="cps-autocomplete-options-option-left">
-                @if (multiple) {
-                  <span class="cps-autocomplete-options-option-check"> </span>
-                }
-                <span class="cps-autocomplete-options-option-label"
-                  >Select all</span
-                >
-              </span>
-            </div>
-          }
-          @for (item of filteredOptions; track item) {
-            <ng-container
-              *ngTemplateOutlet="
-                itemTemplate;
-                context: {
-                  item: item
-                }
-              "></ng-container>
-          }
+        @if (isSelectAllVisible) {
+          <div
+            class="cps-autocomplete-options-option select-all-option"
+            role="option"
+            tabindex="-1"
+            aria-disabled="false"
+            [attr.aria-selected]="value?.length === options.length"
+            [class.allselected]="value?.length === options.length"
+            [class.highlighten]="optionHighlightedIndex === 0"
+            (click)="toggleAll()">
+            <span class="cps-autocomplete-options-option-left">
+              @if (multiple) {
+                <span class="cps-autocomplete-options-option-check"> </span>
+              }
+              <span class="cps-autocomplete-options-option-label"
+                >Select all</span
+              >
+            </span>
+          </div>
         }
-        @if (virtualScroll && !loading) {
-          <p-virtualscroller
-            #virtualList
-            [items]="filteredOptions"
-            [delay]="0"
-            [scrollHeight]="virtualListHeight + 'px'"
-            [options]="{ numToleratedItems: numToleratedItems }"
-            [itemSize]="virtualScrollItemSize">
-            <ng-template pTemplate="item" let-item>
+        @if (!loading) {
+          @if (virtualScroll) {
+            <p-virtualscroller
+              #virtualList
+              [items]="filteredOptions"
+              [delay]="0"
+              [scrollHeight]="virtualListHeight + 'px'"
+              [options]="{ numToleratedItems: numToleratedItems }"
+              [itemSize]="virtualScrollItemSize">
+              <ng-template pTemplate="item" let-item let-options="options">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item,
+                      itemIndex: options.index
+                    }
+                  "></ng-container>
+              </ng-template>
+            </p-virtualscroller>
+          } @else {
+            @for (item of filteredOptions; track item; let itemIndex = $index) {
               <ng-container
                 *ngTemplateOutlet="
                   itemTemplate;
                   context: {
-                    item: item
+                    item: item,
+                    itemIndex: itemIndex
                   }
                 "></ng-container>
-            </ng-template>
-          </p-virtualscroller>
+            }
+          }
         }
       </div>
     </cps-menu>
@@ -316,7 +315,6 @@
     aria-autocomplete="list"
     aria-haspopup="listbox"
     [attr.aria-controls]="optionsListId"
-    [attr.aria-activedescendant]="TODO"
     [attr.aria-expanded]="isOpened"
     [ngClass]="inputClass"
     [ngStyle]="inputStyle"
@@ -333,12 +331,15 @@
     [attr.aria-label]="computedLabel" />
 </ng-template>
 
-<ng-template #itemTemplate let-item="item">
+<ng-template #itemTemplate let-item="item" let-itemIndex="itemIndex">
   <div
     class="cps-autocomplete-options-option"
     role="option"
     tabindex="-1"
     (click)="onOptionClick(item)"
+    [class.highlighten]="
+      itemIndex === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)
+    "
     [attr.aria-selected]="
       item | checkOptionSelected: value : multiple : returnObject : optionValue
     "
