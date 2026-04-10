@@ -630,6 +630,7 @@ export class CpsAutocompleteComponent
 
   clear(event?: any): void {
     event?.stopPropagation();
+    event?.preventDefault();
 
     if (
       (!this.multiple && !this.isEmptyValue()) ||
@@ -754,6 +755,7 @@ export class CpsAutocompleteComponent
 
   onChevronClick(event: any) {
     event.stopPropagation();
+    event.preventDefault();
 
     if (this.isOpened) {
       this._closeAndClear();
