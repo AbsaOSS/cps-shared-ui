@@ -9,7 +9,7 @@
   @if (closable) {
     <cps-icon
       role="button"
-      tabindex="0"
+      [tabindex]="disabled ? -1 : 0"
       [attr.aria-label]="closeButtonAriaLabel"
       [attr.aria-disabled]="disabled"
       class="cps-chip-close-icon"

@@ -149,7 +149,7 @@
               (keydown.enter)="clear($event)"
               (keydown.space)="clear($event)"
               aria-label="Clear selection"
-              [attr.tabindex]="disabled ? -1 : 0"
+              [tabindex]="disabled ? -1 : 0"
               class="cps-autocomplete-box-clear-icon"
               [ngClass]="{
                 'cps-autocomplete-box-clear-icon-hidden':
@@ -168,7 +168,7 @@
               (keydown.enter)="onChevronClick($event)"
               (keydown.space)="onChevronClick($event)"
               [attr.aria-label]="computedChevronLabel"
-              [attr.tabindex]="disabled ? -1 : 0">
+              [tabindex]="disabled ? -1 : 0">
               <cps-icon
                 icon="chevron-down"
                 size="small"

@@ -46,14 +46,6 @@ $color-text-light: var(--cps-color-text-light);
       pointer-events: none;
       background-color: $color-bg-mid;
 
-      .cps-chip-close-icon {
-        &:focus,
-        &:focus-visible {
-          outline: none;
-          box-shadow: none;
-        }
-      }
-
       .cps-chip-label {
         color: $color-text-light;
       }
