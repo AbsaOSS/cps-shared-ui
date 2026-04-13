@@ -663,11 +663,12 @@ export class CpsAutocompleteComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
-    if (!this.isOpened) {
-      this._confirmInput(this.inputText || '', false);
-    } else {
+    this._confirmInput(this.inputText || '', false);
+
+    if (this.isOpened) {
       this._toggleOptions(false);
     }
+
     this._checkErrors();
     this.blurred.emit();
   }
