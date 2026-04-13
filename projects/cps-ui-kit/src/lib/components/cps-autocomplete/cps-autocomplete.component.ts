@@ -822,7 +822,6 @@ export class CpsAutocompleteComponent
   get computedLabel(): string {
     return getComputedLabel({
       label: this.label,
-      hint: this.hint,
       error: this.error,
       externalError: this.externalError,
       hideDetails: this.hideDetails

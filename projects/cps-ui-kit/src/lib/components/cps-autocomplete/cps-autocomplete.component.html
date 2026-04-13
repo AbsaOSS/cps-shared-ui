@@ -72,10 +72,19 @@
               </span>
             }
             @if (multiple && !chips) {
-              <div class="text-group">
+              <div
+                class="text-group"
+                role="listbox"
+                tabindex="-1"
+                aria-label="Selected options"
+                aria-orientation="horizontal">
                 @for (val of value; track val; let last = $last) {
                   <div
                     class="text-group-item"
+                    role="option"
+                    aria-selected="true"
+                    [attr.aria-setsize]="value.length"
+                    [attr.aria-posinset]="value.indexOf(val) + 1"
                     [ngClass]="{
                       'about-to-remove': last && backspaceClickedOnce
                     }">
@@ -87,13 +96,17 @@
                     }}{{ !last ? ',' : '' }}
                   </div>
                 }
-                <ng-container
-                  *ngTemplateOutlet="
-                    autocompleteInputTemplate;
-                    context: {
-                      inputClass: 'multi-item-input'
-                    }
-                  "></ng-container>
+                <div
+                  role="option"
+                  class="cps-autocomplete-input-option-wrapper">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      autocompleteInputTemplate;
+                      context: {
+                        inputClass: 'multi-item-input'
+                      }
+                    "></ng-container>
+                </div>
               </div>
             }
             @if (multiple && chips) {

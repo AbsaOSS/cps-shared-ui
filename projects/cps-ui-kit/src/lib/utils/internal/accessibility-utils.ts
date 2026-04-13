@@ -7,7 +7,6 @@ export const generateUniqueId = (prefix: string = 'cps'): string => {
 
 export const getComputedLabel = (context: {
   label?: string;
-  hint?: string;
   error?: string;
   externalError?: string;
   hideDetails?: boolean;
@@ -17,16 +16,6 @@ export const getComputedLabel = (context: {
   // Always add label
   if (context.label) {
     parts.push(context.label.trim().replace(/\.*$/, '.')); // ensure single period
-  }
-
-  // Add hint if no error and not hidden
-  if (
-    context.hint &&
-    !context.error &&
-    !context.externalError &&
-    !context.hideDetails
-  ) {
-    parts.push(context.hint.trim().replace(/\.*$/, '.'));
   }
 
   // Add error if exists and not hidden
