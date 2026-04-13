@@ -236,6 +236,7 @@
             [attr.aria-selected]="value?.length === options.length"
             [class.allselected]="value?.length === options.length"
             [class.highlighten]="optionHighlightedIndex === 0"
+            (mousedown)="$event.preventDefault()"
             (click)="toggleAll()">
             <span class="cps-autocomplete-options-option-left">
               @if (multiple) {
@@ -344,6 +345,7 @@
     tabindex="-1"
     [attr.aria-setsize]="optionsAriaSetSize"
     [attr.aria-posinset]="getOptionAriaPosInSet(itemIndex)"
+    (mousedown)="$event.preventDefault()"
     (click)="onOptionClick(item)"
     [class.highlighten]="
       itemIndex === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)
