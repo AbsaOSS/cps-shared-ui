@@ -14,19 +14,19 @@ $color-text-mild: var(--cps-color-text-mild);
     align-items: center;
     display: inline-flex;
     background-color: $color-bg-dark;
-    border-radius: 14px;
-    line-height: 16px;
-    padding: 4px 12px;
+    border-radius: 0.875rem;
+    line-height: 1rem;
+    padding: 0.25rem 0.75rem;
     cursor: default;
     &-close-icon {
-      margin-left: 6px;
+      margin-left: 0.375rem;
       cursor: pointer;
       &:focus {
         outline: none;
       }
       &:focus-visible {
-        box-shadow: 0 0 0 1px $color-calm;
-        border-radius: 6px;
+        box-shadow: 0 0 0 0.0625rem $color-calm;
+        border-radius: 0.375rem;
       }
       &:hover {
         ::ng-deep .cps-icon {
@@ -35,7 +35,7 @@ $color-text-mild: var(--cps-color-text-mild);
       }
     }
     &-label {
-      font-size: 14px;
+      font-size: 0.875rem;
       color: $color-text-darkest;
       font-family: 'Source Sans Pro', sans-serif;
       font-style: normal;
@@ -59,13 +59,13 @@ $color-text-mild: var(--cps-color-text-mild);
 
     &.cps-chip--icon-before {
       .cps-chip-icon {
-        margin-right: 6px;
+        margin-right: 0.375rem;
       }
     }
 
     &.cps-chip--icon-after {
       .cps-chip-icon {
-        margin-left: 6px;
+        margin-left: 0.375rem;
         order: 1;
       }
     }
