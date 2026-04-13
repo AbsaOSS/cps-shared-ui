@@ -72,82 +72,73 @@
               </span>
             }
             @if (multiple && !chips) {
-              <div
-                class="text-group"
-                role="listbox"
-                tabindex="-1"
-                aria-label="Selected options"
-                aria-orientation="horizontal">
-                @for (val of value; track val; let last = $last) {
-                  <div
-                    class="text-group-item"
-                    role="option"
-                    aria-selected="true"
-                    [attr.aria-setsize]="value.length"
-                    [attr.aria-posinset]="value.indexOf(val) + 1"
-                    [ngClass]="{
-                      'about-to-remove': last && backspaceClickedOnce
-                    }">
-                    {{
-                      returnObject
-                        ? val[optionLabel]
-                        : (val
-                          | labelByValue: options : optionValue : optionLabel)
-                    }}{{ !last ? ',' : '' }}
-                  </div>
-                }
+              <div class="cps-autocomplete-multi-selection-wrapper">
                 <div
-                  role="option"
-                  class="cps-autocomplete-input-option-wrapper">
-                  <ng-container
-                    *ngTemplateOutlet="
-                      autocompleteInputTemplate;
-                      context: {
-                        inputClass: 'multi-item-input'
-                      }
-                    "></ng-container>
+                  class="text-group"
+                  role="list"
+                  tabindex="-1"
+                  aria-label="Selected options">
+                  @for (val of value; track val; let last = $last) {
+                    <div
+                      class="text-group-item"
+                      role="listitem"
+                      [ngClass]="{
+                        'about-to-remove': last && backspaceClickedOnce
+                      }">
+                      {{
+                        returnObject
+                          ? val[optionLabel]
+                          : (val
+                            | labelByValue
+                              : options
+                              : optionValue
+                              : optionLabel)
+                      }}{{ !last ? ',' : '' }}
+                    </div>
+                  }
                 </div>
+                <ng-container
+                  *ngTemplateOutlet="
+                    autocompleteInputTemplate;
+                    context: {
+                      inputClass: 'multi-item-input'
+                    }
+                  "></ng-container>
               </div>
             }
             @if (multiple && chips) {
-              <div
-                class="chips-group"
-                role="listbox"
-                tabindex="-1"
-                aria-label="Selected options"
-                aria-orientation="horizontal">
-                @for (val of value; track val; let last = $last) {
-                  <cps-chip
-                    role="option"
-                    aria-selected="true"
-                    [attr.aria-setsize]="value.length"
-                    [attr.aria-posinset]="value.indexOf(val) + 1"
-                    closeButtonAriaLabel="Remove"
-                    [disabled]="disabled"
-                    [closable]="closableChips"
-                    (closed)="select(val, true)"
-                    [ngClass]="{
-                      'about-to-remove': last && backspaceClickedOnce
-                    }"
-                    [label]="
-                      returnObject
-                        ? val[optionLabel]
-                        : (val
-                          | labelByValue: options : optionValue : optionLabel)
-                    ">
-                  </cps-chip>
-                }
+              <div class="cps-autocomplete-multi-selection-wrapper">
                 <div
-                  role="option"
-                  class="cps-autocomplete-input-option-wrapper">
-                  <ng-container
-                    *ngTemplateOutlet="
-                      autocompleteInputTemplate;
-                      context: {
-                        inputClass: 'multi-chip-input'
-                      }
-                    "></ng-container>
+                  class="chips-group"
+                  role="list"
+                  tabindex="-1"
+                  aria-label="Selected options">
+                  @for (val of value; track val; let last = $last) {
+                    <cps-chip
+                      role="listitem"
+                      closeButtonAriaLabel="Remove"
+                      [disabled]="disabled"
+                      [closable]="closableChips"
+                      (closed)="select(val, true)"
+                      [ngClass]="{
+                        'about-to-remove': last && backspaceClickedOnce
+                      }"
+                      [label]="
+                        returnObject
+                          ? val[optionLabel]
+                          : (val
+                            | labelByValue: options : optionValue : optionLabel)
+                      ">
+                    </cps-chip>
+                  }
                 </div>
+                <ng-container
+                  *ngTemplateOutlet="
+                    autocompleteInputTemplate;
+                    context: {
+                      inputClass: 'multi-chip-input'
+                    }
+                  "></ng-container>
               </div>
             }
           </div>

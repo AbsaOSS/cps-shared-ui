@@ -182,31 +182,26 @@ $hover-transition-duration: 0.2s;
         .multi-item-input {
           min-height: 28px;
         }
-        .chips-group {
+        .cps-autocomplete-multi-selection-wrapper {
           display: inline-flex;
           flex-wrap: wrap;
           align-items: center;
-          cps-chip {
-            padding-bottom: 3px;
-            padding-top: 3px;
-            padding-right: 4px;
+          .chips-group {
+            display: contents;
+            cps-chip {
+              padding-bottom: 3px;
+              padding-top: 3px;
+              padding-right: 4px;
+            }
           }
-          .cps-autocomplete-input-option-wrapper {
-            flex-grow: 1;
-          }
-        }
-        .text-group {
-          color: $autocomplete-option-value-color;
-          align-items: center;
-          display: inline-flex;
-          flex-wrap: wrap;
-          .text-group-item {
-            padding-bottom: 3px;
-            padding-top: 3px;
-            padding-right: 4px;
-          }
-          .cps-autocomplete-input-option-wrapper {
-            flex-grow: 1;
+          .text-group {
+            display: contents;
+            color: $autocomplete-option-value-color;
+            .text-group-item {
+              padding-bottom: 3px;
+              padding-top: 3px;
+              padding-right: 4px;
+            }
           }
         }
       }
