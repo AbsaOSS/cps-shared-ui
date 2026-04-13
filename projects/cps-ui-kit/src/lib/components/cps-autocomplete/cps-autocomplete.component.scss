@@ -10,7 +10,8 @@ $option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: var(--cps-color-highlight-selected);
 $option-highlight-background: var(--cps-color-highlight-active);
 $option-highlight-selected-background: var(--cps-color-highlight-selected-dark);
-$autocomplete-option-info-color: var(--cps-color-text-light);
+$autocomplete-option-info-color: var(--cps-color-text-mild);
+$autocomplete-selected-option-info-color: var(--cps-color-text-medium);
 $autocomplete-option-value-color: var(--cps-color-text-dark);
 $autocomplete-about-remove-color: var(--cps-color-text-light);
 $autocomplete-about-remove-background: var(--cps-color-bg-mid);
@@ -407,6 +408,9 @@ $hover-transition-duration: 0.2s;
     }
     &.selected {
       background: $selected-option-background;
+      .cps-autocomplete-options-option-right {
+        color: $autocomplete-selected-option-info-color;
+      }
     }
     &.highlighten {
       background: $option-highlight-background;
