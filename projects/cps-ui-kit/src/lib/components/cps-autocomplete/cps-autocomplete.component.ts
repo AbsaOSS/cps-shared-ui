@@ -840,16 +840,8 @@ export class CpsAutocompleteComponent
     );
   }
 
-  get computedChevronLabel(): string {
-    return this.isOpened ? 'Collapse options' : 'Expand options';
-  }
-
   get optionsAriaSetSize(): number {
     return this.filteredOptions.length + (this.isSelectAllVisible ? 1 : 0);
-  }
-
-  getOptionAriaPosInSet(itemIndex: number): number {
-    return itemIndex + 1 + (this.isSelectAllVisible ? 1 : 0);
   }
 
   get activeDescendantId(): string | null {
@@ -858,6 +850,10 @@ export class CpsAutocompleteComponent
     }
 
     return this._getHighlightedOptionId();
+  }
+
+  getOptionAriaPosInSet(itemIndex: number): number {
+    return itemIndex + 1 + (this.isSelectAllVisible ? 1 : 0);
   }
 
   getOptionId(option: any, index: number): string {

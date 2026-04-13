@@ -172,7 +172,9 @@
               (mousedown)="onChevronClick($event)"
               (keydown.enter)="onChevronClick($event)"
               (keydown.space)="onChevronClick($event)"
-              [attr.aria-label]="computedChevronLabel"
+              [attr.aria-label]="
+                isOpened ? 'Collapse options' : 'Expand options'
+              "
               [tabindex]="disabled ? -1 : 0">
               <cps-icon
                 icon="chevron-down"
