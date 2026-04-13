@@ -2,7 +2,7 @@ $color-calm: var(--cps-color-calm);
 $color-bg-dark: var(--cps-color-bg-dark);
 $color-bg-mid: var(--cps-color-bg-mid);
 $color-text-darkest: var(--cps-color-text-darkest);
-$color-text-light: var(--cps-color-text-light);
+$color-text-mild: var(--cps-color-text-mild);
 
 :host {
   width: fit-content;
@@ -47,12 +47,12 @@ $color-text-light: var(--cps-color-text-light);
       background-color: $color-bg-mid;
 
       .cps-chip-label {
-        color: $color-text-light;
+        color: $color-text-mild;
       }
       .cps-chip-icon,
       .cps-chip-close-icon {
         ::ng-deep .cps-icon {
-          color: $color-text-light !important;
+          color: $color-text-mild !important;
         }
       }
     }
