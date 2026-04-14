@@ -1,13 +1,13 @@
 .buttons-group {
-  margin-bottom: 32px;
-  margin-left: 8px;
-  margin-right: 8px;
+  margin-bottom: 2rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
   &-title {
-    font-size: 24px;
+    font-size: 1.5rem;
     color: var(--cps-color-depth);
-    border-bottom: 1px solid lightgrey;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
+    border-bottom: 0.0625rem solid lightgrey;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
     font-weight: 600;
   }
   &-row {
@@ -15,15 +15,15 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem;
     align-items: center;
   }
 }
 
 .dark-background {
   background-color: var(--cps-color-calm);
-  padding-top: 18px;
-  padding-bottom: 18px;
-  padding-left: 18px;
-  padding-right: 18px;
+  padding-top: 1.125rem;
+  padding-bottom: 1.125rem;
+  padding-left: 1.125rem;
+  padding-right: 1.125rem;
 }

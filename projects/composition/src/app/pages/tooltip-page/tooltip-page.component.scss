@@ -1,13 +1,15 @@
 :host {
   .tooltip-elems-group {
-    margin-bottom: 32px;
+    margin-bottom: 2rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 
     &-title {
-      font-size: 24px;
+      font-size: 1.5rem;
       color: var(--cps-color-depth);
-      border-bottom: 1px solid lightgrey;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
+      border-bottom: 0.0625rem solid lightgrey;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
       font-weight: 600;
     }
     &-row {
@@ -15,12 +17,12 @@
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      margin-bottom: 18px;
+      margin-bottom: 1.125rem;
       align-items: center;
     }
 
     &-elem-left {
-      margin-right: 40px;
+      margin-right: 2.5rem;
       display: inline-flex;
     }
   }
@@ -29,7 +31,7 @@
 ::ng-deep .cps-tooltip .my-tooltip-content {
   display: flex;
   flex-direction: column;
-  row-gap: 6px;
+  row-gap: 0.375rem;
   .ttip-hdr {
     color: var(--cps-color-warmth);
     font-weight: bold;
