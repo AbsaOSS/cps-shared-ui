@@ -55,6 +55,12 @@ export class CpsButtonComponent implements OnChanges {
   @Input() label = '';
 
   /**
+   * Aria label for the button, used for accessibility.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
+
+  /**
    * Name of the icon on the button.
    * @group Props
    */
@@ -114,6 +120,7 @@ export class CpsButtonComponent implements OnChanges {
   cvtIconSize = '';
 
   classesList: string[] = [];
+  enterActive = false;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
@@ -198,5 +205,20 @@ export class CpsButtonComponent implements OnChanges {
 
   onClick(event: Event) {
     this.clicked.emit(event);
+  }
+
+  onEnterKeydown(event: Event) {
+    event.preventDefault();
+    if (!this.disabled && !this.loading) {
+      this.enterActive = true;
+    }
+  }
+
+  onEnterKeyup(event: Event) {
+    this.enterActive = false;
+    this.onClick(event);
+    if (!this.disabled && !this.loading) {
+      this.clicked.emit(event);
+    }
   }
 }

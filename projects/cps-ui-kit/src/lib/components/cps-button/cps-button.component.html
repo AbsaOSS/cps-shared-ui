@@ -4,14 +4,20 @@
     [ngClass]="classesList"
     [disabled]="disabled || loading"
     (click)="onClick($event)"
+    [attr.aria-busy]="loading"
+    [attr.aria-disabled]="disabled || loading"
+    [attr.aria-label]="ariaLabel || label || 'Button'"
     [class.loading]="loading"
+    [class.cps-button--key-active]="enterActive"
+    (keydown.enter)="onEnterKeydown($event)"
+    (keyup.enter)="onEnterKeyup($event)"
     [ngStyle]="{
       backgroundColor: type === 'solid' ? buttonColor : 'transparent',
       color: textColor,
       height: cvtHeight || 'none',
       borderRadius: borderRadius
     }">
-    <div class="cps-button__spinner">
+    <div class="cps-button__spinner" aria-hidden="true">
       @if (loading) {
         <cps-progress-circular
           color="currentColor"
@@ -22,21 +28,23 @@
     </div>
     <div
       class="cps-button__content"
-      [style.visibility]="loading ? 'hidden' : null">
+      [style.visibility]="loading ? 'hidden' : null"
+      [attr.aria-hidden]="loading">
       @if (icon) {
         <cps-icon
           class="cps-button__icon"
           [icon]="icon"
           [color]="disabled ? 'text-light' : textColor"
+          aria-hidden="true"
           [size]="cvtIconSize">
         </cps-icon>
       }
       @if (label) {
         <span
           class="cps-button__text"
-          [ngStyle]="{ 'font-size': cvtFontSize || null }"
-          >{{ label }}</span
-        >
+          [ngStyle]="{ 'font-size': cvtFontSize || null }">
+          {{ label }}
+        </span>
       }
     </div>
   </button>
