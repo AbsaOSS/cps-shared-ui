@@ -9,8 +9,8 @@
     [attr.aria-label]="ariaLabel || label || 'Button'"
     [class.loading]="loading"
     [class.cps-button--key-active]="enterActive"
-    (keydown.enter)="onEnterKeydown($event)"
-    (keyup.enter)="onEnterKeyup($event)"
+    (keydown.enter)="onEnterKeydown()"
+    (keyup.enter)="onEnterKeyup()"
     [ngStyle]="{
       backgroundColor: type === 'solid' ? buttonColor : 'transparent',
       color: textColor,

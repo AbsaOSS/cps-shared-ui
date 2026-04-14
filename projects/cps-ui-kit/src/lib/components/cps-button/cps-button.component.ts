@@ -207,18 +207,12 @@ export class CpsButtonComponent implements OnChanges {
     this.clicked.emit(event);
   }
 
-  onEnterKeydown(event: Event) {
-    event.preventDefault();
-    if (!this.disabled && !this.loading) {
-      this.enterActive = true;
-    }
+  onEnterKeydown() {
+    if (this.disabled || this.loading) return;
+    this.enterActive = true;
   }
 
-  onEnterKeyup(event: Event) {
+  onEnterKeyup() {
     this.enterActive = false;
-    this.onClick(event);
-    if (!this.disabled && !this.loading) {
-      this.clicked.emit(event);
-    }
   }
 }
