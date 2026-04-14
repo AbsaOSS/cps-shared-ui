@@ -4,8 +4,8 @@
     [ngClass]="classesList"
     [disabled]="disabled || loading"
     (click)="onClick($event)"
-    [attr.aria-busy]="loading"
-    [attr.aria-disabled]="disabled || loading"
+    [attr.aria-busy]="loading ? true : null"
+    [attr.aria-disabled]="disabled || loading ? true : null"
     [attr.aria-label]="ariaLabel || label || 'Button'"
     [class.loading]="loading"
     [class.cps-button--key-active]="enterActive"
@@ -29,7 +29,7 @@
     <div
       class="cps-button__content"
       [style.visibility]="loading ? 'hidden' : null"
-      [attr.aria-hidden]="loading">
+      [attr.aria-hidden]="loading ? true : null">
       @if (icon) {
         <cps-icon
           class="cps-button__icon"
