@@ -2,15 +2,16 @@
   <button
     type="button"
     [ngClass]="classesList"
-    [disabled]="disabled || loading"
+    [disabled]="disabled"
     (click)="onClick($event)"
     [attr.aria-busy]="loading ? true : null"
-    [attr.aria-disabled]="disabled || loading ? true : null"
-    [attr.aria-label]="ariaLabel || label || 'Button'"
+    [attr.aria-disabled]="disabled ? true : null"
+    [attr.aria-label]="ariaLabel || label || null"
     [class.loading]="loading"
     [class.cps-button--key-active]="enterActive"
     (keydown.enter)="onEnterKeydown()"
     (keyup.enter)="onEnterKeyup()"
+    (blur)="onBlur()"
     [ngStyle]="{
       backgroundColor: type === 'solid' ? buttonColor : 'transparent',
       color: textColor,

@@ -5,6 +5,7 @@
     width: 100%;
     letter-spacing: normal;
     font-family: 'Source Sans Pro', sans-serif;
+    user-select: none;
 
     display: inline-flex;
     align-items: center;
@@ -17,7 +18,7 @@
     padding: 0 1rem;
     font-weight: 500;
 
-    &:focus-visible {
+    &:focus-visible:not(.loading) {
       background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);
       box-shadow: 0 0.125rem 0.25rem 0 rgba(12, 12, 13, 0.2);
       position: relative;
@@ -44,8 +45,8 @@
       box-shadow: 0 0.125rem 0.25rem 0 rgba(12, 12, 13, 0.2);
     }
 
-    &:active:not(:disabled),
-    &--key-active:not(:disabled) {
+    &:active:not(:disabled):not(.loading),
+    &--key-active:not(:disabled):not(.loading) {
       background-image: linear-gradient(hsla(0, 0%, 0%, 0.1) 0 0);
     }
 
@@ -56,8 +57,10 @@
       align-self: center;
     }
 
-    &:disabled {
+    &:disabled,
+    &.loading {
       cursor: default;
+      pointer-events: none;
     }
 
     &--solid {

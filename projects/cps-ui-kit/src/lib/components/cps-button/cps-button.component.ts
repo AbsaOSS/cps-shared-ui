@@ -132,6 +132,14 @@ export class CpsButtonComponent implements OnChanges {
       this.type === 'solid'
         ? getCSSColor(this.contentColor, this.document)
         : this.buttonColor;
+    if (this.disabled || this.loading) {
+      this.enterActive = false;
+    }
+    if (!this.label && !this.ariaLabel) {
+      console.error(
+        'CpsButtonComponent: icon-only or unlabeled buttons must have an ariaLabel for accessibility.'
+      );
+    }
     this.setClasses();
   }
 
@@ -204,6 +212,7 @@ export class CpsButtonComponent implements OnChanges {
   }
 
   onClick(event: Event) {
+    if (this.disabled || this.loading) return;
     this.clicked.emit(event);
   }
 
@@ -213,6 +222,10 @@ export class CpsButtonComponent implements OnChanges {
   }
 
   onEnterKeyup() {
+    this.enterActive = false;
+  }
+
+  onBlur() {
     this.enterActive = false;
   }
 }
