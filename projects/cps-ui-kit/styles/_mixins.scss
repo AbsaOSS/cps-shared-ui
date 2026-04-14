@@ -1,0 +1,34 @@
+/**
+ * Focus ring mixin for interactive elements.
+ *
+ * Renders a dual-color focus indicator (inner + outer ring)
+ * to ensure visibility on light and dark backgrounds and meet accessibility requirements.
+ */
+@mixin focus-ring(
+  $radius: 0.375rem,
+  $inner-offset: 0.125rem,
+  $outer-offset: 0.25rem,
+  $inner-width: 0.0625rem,
+  $outer-width: 0.0625rem
+) {
+  &:focus-visible {
+    position: relative;
+  }
+
+  &:focus-visible::before,
+  &:focus-visible::after {
+    content: '';
+    position: absolute;
+    border-radius: $radius;
+  }
+
+  &:focus-visible::before {
+    inset: -#{$inner-offset}; /* inner offset */
+    border: $inner-width solid var(--cps-color-calm);
+  }
+
+  &:focus-visible::after {
+    inset: -#{$outer-offset}; /* outer offset */
+    border: $outer-width solid var(--cps-color-calm-highlighten);
+  }
+}

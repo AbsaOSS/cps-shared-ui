@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $color-error: var(--cps-color-error);
 $error-background: #fef3f2;
@@ -230,10 +232,7 @@ $hover-transition-duration: 0.2s;
               opacity: 1;
             }
           }
-          &:focus-visible {
-            box-shadow: 0 0 0 0.0625rem $color-calm;
-            border-radius: 0.375rem;
-          }
+          @include focus-ring();
 
           &-hidden {
             visibility: hidden;
@@ -252,10 +251,7 @@ $hover-transition-duration: 0.2s;
           &:focus {
             outline: none;
           }
-          &:focus-visible {
-            box-shadow: 0 0 0 0.0625rem $color-calm;
-            border-radius: 0.375rem;
-          }
+          @include focus-ring();
           transition-duration: $hover-transition-duration;
           cursor: pointer;
           &:hover {

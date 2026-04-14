@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $color-bg-dark: var(--cps-color-bg-dark);
 $color-bg-mid: var(--cps-color-bg-mid);
@@ -24,10 +26,7 @@ $color-text-mild: var(--cps-color-text-mild);
       &:focus {
         outline: none;
       }
-      &:focus-visible {
-        box-shadow: 0 0 0 0.0625rem $color-calm;
-        border-radius: 0.375rem;
-      }
+      @include focus-ring();
       &:hover {
         ::ng-deep .cps-icon {
           color: $color-calm !important;
