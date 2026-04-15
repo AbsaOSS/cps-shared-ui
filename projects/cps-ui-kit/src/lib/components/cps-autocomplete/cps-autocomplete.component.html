@@ -151,6 +151,7 @@
             <span
               role="button"
               (click)="clear($event)"
+              (mousedown)="$event.preventDefault()"
               (keydown.enter)="clear($event)"
               (keydown.space)="clear($event)"
               aria-label="Clear selection"
