@@ -1,11 +1,11 @@
 <div
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
-  tabindex="1"
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
-    active: isActive()
+    active: isActive,
+    opened: isOpened
   }"
   #autocompleteContainer>
   @if (label) {
@@ -27,7 +27,7 @@
   <div
     (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
-    [class.focused]="isActive()"
+    [class.active]="isActive"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',
@@ -65,28 +65,38 @@
                     autocompleteInputTemplate;
                     context: {
                       inputClass: 'single-item-input',
-                      inputStyle: activeSingle ? 'opacity: 1' : null
+                      inputStyle: activeSingle ? { opacity: '1' } : null
                     }
                   ">
                 </ng-container>
               </span>
             }
             @if (multiple && !chips) {
-              <div class="text-group">
-                @for (val of value; track val; let last = $last) {
-                  <div
-                    class="text-group-item"
-                    [ngClass]="{
-                      'about-to-remove': last && backspaceClickedOnce
-                    }">
-                    {{
-                      returnObject
-                        ? val[optionLabel]
-                        : (val
-                          | labelByValue: options : optionValue : optionLabel)
-                    }}{{ !last ? ',' : '' }}
-                  </div>
-                }
+              <div class="cps-autocomplete-multi-selection-wrapper">
+                <div
+                  class="text-group"
+                  role="list"
+                  tabindex="-1"
+                  aria-label="Selected options">
+                  @for (val of value; track val; let last = $last) {
+                    <div
+                      class="text-group-item"
+                      role="listitem"
+                      [ngClass]="{
+                        'about-to-remove': last && backspaceClickedOnce
+                      }">
+                      {{
+                        returnObject
+                          ? val[optionLabel]
+                          : (val
+                            | labelByValue
+                              : options
+                              : optionValue
+                              : optionLabel)
+                      }}{{ !last ? ',' : '' }}
+                    </div>
+                  }
+                </div>
                 <ng-container
                   *ngTemplateOutlet="
                     autocompleteInputTemplate;
@@ -97,23 +107,31 @@
               </div>
             }
             @if (multiple && chips) {
-              <div class="chips-group">
-                @for (val of value; track val; let last = $last) {
-                  <cps-chip
-                    [disabled]="disabled"
-                    [closable]="closableChips"
-                    (closed)="select(val, true)"
-                    [ngClass]="{
-                      'about-to-remove': last && backspaceClickedOnce
-                    }"
-                    [label]="
-                      returnObject
-                        ? val[optionLabel]
-                        : (val
-                          | labelByValue: options : optionValue : optionLabel)
-                    ">
-                  </cps-chip>
-                }
+              <div class="cps-autocomplete-multi-selection-wrapper">
+                <div
+                  class="chips-group"
+                  role="list"
+                  tabindex="-1"
+                  aria-label="Selected options">
+                  @for (val of value; track val; let last = $last) {
+                    <cps-chip
+                      role="listitem"
+                      closeButtonAriaLabel="Remove"
+                      [disabled]="disabled"
+                      [closable]="closableChips"
+                      (closed)="select(val, true)"
+                      [ngClass]="{
+                        'about-to-remove': last && backspaceClickedOnce
+                      }"
+                      [label]="
+                        returnObject
+                          ? val[optionLabel]
+                          : (val
+                            | labelByValue: options : optionValue : optionLabel)
+                      ">
+                    </cps-chip>
+                  }
+                </div>
                 <ng-container
                   *ngTemplateOutlet="
                     autocompleteInputTemplate;
@@ -125,43 +143,40 @@
             }
           </div>
         } @else {
-          <input
-            #autocompleteInput
-            class="cps-autocomplete-box-input"
-            spellcheck="false"
-            [placeholder]="
-              (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
-                ? placeholder
-                : ''
-            "
-            (input)="filterOptions($event)"
-            (keydown)="onInputKeyDown($event)"
-            [(ngModel)]="inputText"
-            (focus)="onFocus()"
-            (blur)="onBlur()" />
+          <ng-container
+            *ngTemplateOutlet="autocompleteInputTemplate"></ng-container>
         }
         <span class="cps-autocomplete-box-icons">
           @if (clearable && !disabled) {
             <span
-              [style.visibility]="
-                persistentClear ||
-                (!persistentClear &&
-                  ((multiple && value?.length) ||
-                    (!multiple && !isEmptyValue())))
-                  ? 'visible'
-                  : 'hidden'
-              "
-              class="cps-autocomplete-box-clear-icon">
-              <cps-icon
-                icon="delete"
-                size="small"
-                (click)="clear($event)"></cps-icon>
+              role="button"
+              (click)="clear($event)"
+              (mousedown)="$event.preventDefault()"
+              (keydown.enter)="clear($event)"
+              (keydown.space)="clear($event)"
+              aria-label="Clear selection"
+              [tabindex]="disabled ? -1 : 0"
+              class="cps-autocomplete-box-clear-icon"
+              [ngClass]="{
+                'cps-autocomplete-box-clear-icon-hidden':
+                  !persistentClear &&
+                  (!multiple || !value?.length) &&
+                  (multiple || isEmptyValue())
+              }">
+              <cps-icon icon="delete" size="small"></cps-icon>
             </span>
           }
-          @if (showChevron) {
+          @if (showChevron && options.length) {
             <span
               class="cps-autocomplete-box-chevron"
-              (mousedown)="onChevronClick($event)">
+              role="button"
+              (mousedown)="onChevronClick($event)"
+              (keydown.enter)="onChevronClick($event)"
+              (keydown.space)="onChevronClick($event)"
+              [attr.aria-label]="
+                isOpened ? 'Collapse options' : 'Expand options'
+              "
+              [tabindex]="disabled ? -1 : 0">
               <cps-icon
                 icon="chevron-down"
                 size="small"
@@ -180,12 +195,24 @@
       containerClass="cps-autocomplete-options-menu">
       <div
         #optionsList
+        role="listbox"
+        [id]="optionsListId"
+        tabindex="-1"
+        aria-readonly="false"
+        aria-disabled="false"
+        aria-orientation="vertical"
+        [attr.aria-multiselectable]="!!multiple"
         class="cps-autocomplete-options"
         [ngStyle]="{
           width: autocompleteBoxWidth + 'px'
         }">
         @if (loading && showLoadingMessage) {
-          <div class="cps-autocomplete-options-loading">
+          <div
+            class="cps-autocomplete-options-loading"
+            role="option"
+            tabindex="-1"
+            aria-disabled="true"
+            aria-selected="false">
             {{ loadingMessage }}
           </div>
         }
@@ -195,59 +222,71 @@
           !loading &&
           inputTextDebounced
         ) {
-          <div class="cps-autocomplete-options-empty">
+          <div
+            class="cps-autocomplete-options-empty"
+            role="option"
+            tabindex="-1"
+            aria-disabled="true"
+            aria-selected="false">
             {{ emptyMessage }}
           </div>
         }
-        @if (!virtualScroll && !loading) {
-          @if (
-            multiple &&
-            selectAll &&
-            filteredOptions.length === options.length &&
-            options.length > 1
-          ) {
-            <div
-              class="cps-autocomplete-options-option select-all-option"
-              [class.allselected]="value?.length === options.length"
-              (click)="toggleAll()">
-              <span class="cps-autocomplete-options-option-left">
-                @if (multiple) {
-                  <span class="cps-autocomplete-options-option-check"> </span>
-                }
-                <span class="cps-autocomplete-options-option-label"
-                  >Select all</span
-                >
-              </span>
-            </div>
-          }
-          @for (item of filteredOptions; track item) {
-            <ng-container
-              *ngTemplateOutlet="
-                itemTemplate;
-                context: {
-                  item: item
-                }
-              "></ng-container>
-          }
+        @if (isSelectAllVisible) {
+          <div
+            class="cps-autocomplete-options-option select-all-option"
+            [id]="selectAllOptionId"
+            role="option"
+            tabindex="-1"
+            aria-disabled="false"
+            [attr.aria-setsize]="optionsAriaSetSize"
+            [attr.aria-posinset]="1"
+            [attr.aria-selected]="value?.length === options.length"
+            [class.allselected]="value?.length === options.length"
+            [class.highlighten]="optionHighlightedIndex === 0"
+            (mousedown)="$event.preventDefault()"
+            (click)="toggleAll()">
+            <span class="cps-autocomplete-options-option-left">
+              @if (multiple) {
+                <span class="cps-autocomplete-options-option-check"> </span>
+              }
+              <span class="cps-autocomplete-options-option-label"
+                >Select all</span
+              >
+            </span>
+          </div>
         }
-        @if (virtualScroll && !loading) {
-          <p-virtualscroller
-            #virtualList
-            [items]="filteredOptions"
-            [delay]="0"
-            [scrollHeight]="virtualListHeight + 'px'"
-            [options]="{ numToleratedItems: numToleratedItems }"
-            [itemSize]="virtualScrollItemSize">
-            <ng-template pTemplate="item" let-item>
+        @if (!loading) {
+          @if (virtualScroll) {
+            <p-virtualscroller
+              #virtualList
+              [items]="filteredOptions"
+              [delay]="0"
+              [scrollHeight]="virtualListHeight + 'px'"
+              [options]="{ numToleratedItems: numToleratedItems }"
+              [itemSize]="virtualScrollItemSize">
+              <ng-template pTemplate="item" let-item let-options="options">
+                <ng-container
+                  *ngTemplateOutlet="
+                    itemTemplate;
+                    context: {
+                      item: item,
+                      itemIndex: options.index
+                    }
+                  "></ng-container>
+              </ng-template>
+            </p-virtualscroller>
+          } @else {
+            @for (item of filteredOptions; track item; let itemIndex = $index) {
               <ng-container
                 *ngTemplateOutlet="
                   itemTemplate;
                   context: {
-                    item: item
+                    item: item,
+                    itemIndex: itemIndex
                   }
                 "></ng-container>
-            </ng-template>
-          </p-virtualscroller>
+            }
+          }
         }
       </div>
     </cps-menu>
@@ -279,10 +318,19 @@
   let-inputStyle="inputStyle">
   <input
     #autocompleteInput
+    type="text"
     class="cps-autocomplete-box-input"
     spellcheck="false"
-    [class]="inputClass"
-    [style]="inputStyle"
+    [attr.aria-invalid]="error || externalError ? true : null"
+    [disabled]="disabled"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-haspopup="listbox"
+    [attr.aria-controls]="optionsListId"
+    [attr.aria-activedescendant]="activeDescendantId"
+    [attr.aria-expanded]="isOpened"
+    [ngClass]="inputClass"
+    [ngStyle]="inputStyle"
     [placeholder]="
       (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
         ? placeholder
@@ -292,13 +340,26 @@
     (keydown)="onInputKeyDown($event)"
     [(ngModel)]="inputText"
     (focus)="onFocus()"
-    (blur)="onBlur()" />
+    (blur)="onBlur()"
+    [attr.aria-label]="computedLabel" />
 </ng-template>
 
-<ng-template #itemTemplate let-item="item">
+<ng-template #itemTemplate let-item="item" let-itemIndex="itemIndex">
   <div
     class="cps-autocomplete-options-option"
+    [id]="getOptionId(item, itemIndex)"
+    role="option"
+    tabindex="-1"
+    [attr.aria-setsize]="optionsAriaSetSize"
+    [attr.aria-posinset]="getOptionAriaPosInSet(itemIndex)"
+    (mousedown)="$event.preventDefault()"
     (click)="onOptionClick(item)"
+    [class.highlighten]="
+      itemIndex === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)
+    "
+    [attr.aria-selected]="
+      item | checkOptionSelected: value : multiple : returnObject : optionValue
+    "
     [class.selected]="
       item | checkOptionSelected: value : multiple : returnObject : optionValue
     ">

@@ -31,7 +31,7 @@ export class ColorsPageComponent implements OnInit {
     { name: 'Highlights', colors: [[], [], [], []] },
     { name: 'Backgrounds', colors: [[], [], [], []] },
     { name: 'Lines', colors: [[], [], [], []] },
-    { name: 'Text', colors: [[], [], [], [], []] }
+    { name: 'Text', colors: [[], [], [], [], [], []] }
   ];
 
   filteredColorsList: colorGroupsType = [
@@ -44,7 +44,7 @@ export class ColorsPageComponent implements OnInit {
     { name: 'Highlights', colors: [[], [], [], []] },
     { name: 'Backgrounds', colors: [[], [], [], []] },
     { name: 'Lines', colors: [[], [], [], []] },
-    { name: 'Text', colors: [[], [], [], [], []] }
+    { name: 'Text', colors: [[], [], [], [], [], []] }
   ];
 
   colorNameColor: { [key: string]: string } = {};
@@ -141,10 +141,12 @@ export class ColorsPageComponent implements OnInit {
         this.colorsList[6].colors[1].push({ name, value });
       } else if (name === 'text-mild') {
         this.colorsList[6].colors[2].push({ name, value });
-      } else if (name === 'text-dark') {
+      } else if (name === 'text-medium') {
         this.colorsList[6].colors[3].push({ name, value });
-      } else if (name === 'text-darkest') {
+      } else if (name === 'text-dark') {
         this.colorsList[6].colors[4].push({ name, value });
+      } else if (name === 'text-darkest') {
+        this.colorsList[6].colors[5].push({ name, value });
       }
     });
 

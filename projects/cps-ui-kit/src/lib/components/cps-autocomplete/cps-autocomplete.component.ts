@@ -20,6 +20,10 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
+  generateUniqueId,
+  getComputedLabel
+} from '../../utils/internal/accessibility-utils';
+import {
   CpsIconComponent,
   IconType,
   iconSizeType
@@ -338,6 +342,13 @@ export class CpsAutocompleteComponent
    */
   @Input() set options(opts: any[] | undefined) {
     this._options = opts || [];
+    this._optionIds = new WeakMap<object, string>();
+
+    this._options.forEach((opt, index) => {
+      if (opt && typeof opt === 'object') {
+        this._optionIds.set(opt, this._buildOptionId(index));
+      }
+    });
   }
 
   get options(): any[] {
@@ -393,6 +404,7 @@ export class CpsAutocompleteComponent
   error = '';
   cvtWidth = '';
   isOpened = false;
+  isActive = false;
   inputText = '';
   inputTextDebounced = '';
   filteredOptions: any[] = [];
@@ -401,17 +413,22 @@ export class CpsAutocompleteComponent
   optionHighlightedIndex = -1;
 
   virtualListHeight = 240;
-  virtualScrollItemSize = 42;
+  virtualScrollItemSize = 44;
 
   autocompleteBoxWidth = 0;
   resizeObserver: ResizeObserver;
 
   isTimePickerField = false;
 
+  optionsListId = generateUniqueId('cps-autocomplete-options-list');
+  selectAllOptionId = generateUniqueId('cps-autocomplete-option-select-all');
+  private _optionIdPrefix = generateUniqueId('cps-autocomplete-option');
+
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
 
   private _options: any[] = [];
+  private _optionIds = new WeakMap<object, string>();
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -624,6 +641,7 @@ export class CpsAutocompleteComponent
 
   clear(event?: any): void {
     event?.stopPropagation();
+    event?.preventDefault();
 
     if (
       (!this.multiple && !this.isEmptyValue()) ||
@@ -646,23 +664,30 @@ export class CpsAutocompleteComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
-    if (!this.isOpened) {
-      this._confirmInput(this.inputText || '', false);
+    this.isActive = false;
+
+    this._confirmInput(this.inputText || '', false);
+
+    if (this.isOpened) {
+      this._toggleOptions(false);
     }
+
     this._checkErrors();
     this.blurred.emit();
   }
 
   onFocus() {
+    if (!this.disabled) {
+      this.isActive = true;
+    }
+
+    if (!this.multiple) {
+      this.activeSingle = true;
+      if (!this.inputText) this.inputText = this._getValueLabel();
+    }
+
     this._control?.control?.markAsTouched();
     this.focused.emit();
-  }
-
-  isActive() {
-    return (
-      this.isOpened ||
-      this.document.activeElement === this.autocompleteInput?.nativeElement
-    );
   }
 
   onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
@@ -710,14 +735,18 @@ export class CpsAutocompleteComponent
         } else idx--;
       }
       const option = this.filteredOptions[idx];
-      if (this.filteredOptions.length !== this.options.length)
+      if (this.filteredOptions.length !== this.options.length) {
         this._dehighlightOption();
+      }
       this._clickOption(option);
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
-      // Arrows navigation doesn't work with virtual scroll
-      if (!this.virtualScroll) this._navigateOptionsByArrows(code === 38);
+      if (this.virtualScroll) {
+        this._navigateVirtualOptionsByArrows(code === 38);
+      } else {
+        this._navigateOptionsByArrows(code === 38);
+      }
     }
   }
 
@@ -730,6 +759,12 @@ export class CpsAutocompleteComponent
     }
     // enter
     else if (code === 13) {
+      if (!this.isOpened) {
+        event.stopPropagation();
+        event.preventDefault();
+        this._toggleOptions(true);
+        return;
+      }
       if (this.optionHighlightedIndex < 0) {
         this._confirmInput(event?.target?.value || '', true);
         event.stopPropagation();
@@ -741,6 +776,7 @@ export class CpsAutocompleteComponent
 
   onChevronClick(event: any) {
     event.stopPropagation();
+    event.preventDefault();
 
     if (this.isOpened) {
       this._closeAndClear();
@@ -783,6 +819,54 @@ export class CpsAutocompleteComponent
     this._inputChangeSubject$.next('');
     this.activeSingle = false;
     this.recalcVirtualListHeight();
+  }
+
+  get computedLabel(): string {
+    return getComputedLabel({
+      label: this.label,
+      error: this.error,
+      externalError: this.externalError,
+      hideDetails: this.hideDetails
+    });
+  }
+
+  get isSelectAllVisible(): boolean {
+    return (
+      !this.virtualScroll &&
+      !this.loading &&
+      this.multiple &&
+      this.selectAll &&
+      this.filteredOptions.length === this.options.length &&
+      this.options.length > 1
+    );
+  }
+
+  get optionsAriaSetSize(): number {
+    return this.filteredOptions.length + (this.isSelectAllVisible ? 1 : 0);
+  }
+
+  get activeDescendantId(): string | null {
+    if (!this.isOpened || this.optionHighlightedIndex < 0) {
+      return null;
+    }
+
+    return this._getHighlightedOptionId();
+  }
+
+  getOptionAriaPosInSet(itemIndex: number): number {
+    return itemIndex + 1 + (this.isSelectAllVisible ? 1 : 0);
+  }
+
+  getOptionId(option: any, index: number): string {
+    if (option && typeof option === 'object') {
+      return this._optionIds.get(option) || this._buildOptionId(index);
+    }
+
+    return this._buildOptionId(index);
+  }
+
+  private _buildOptionId(index: number): string {
+    return `${this._optionIdPrefix}-${index}`;
   }
 
   private _getEmptyValue() {
@@ -899,24 +983,30 @@ export class CpsAutocompleteComponent
     this._dehighlightOption();
   }
 
-  private _getHTMLOptions() {
-    return (this.optionsList.nativeElement.querySelectorAll(
-      '.cps-autocomplete-options-option'
-    ) || []) as any;
+  private _dehighlightOption() {
+    this.optionHighlightedIndex = -1;
   }
 
-  private _dehighlightOption(el?: HTMLElement) {
-    if (el) el.classList.remove('highlighten');
-    else {
-      if (this.optionHighlightedIndex < 0) return;
-      const optionItems = this._getHTMLOptions();
-      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
-      this.optionHighlightedIndex = -1;
+  private _getHighlightedOptionId(): string | null {
+    if (this.optionHighlightedIndex < 0) {
+      return null;
     }
+
+    if (this.isSelectAllVisible && this.optionHighlightedIndex === 0) {
+      return this.selectAllOptionId;
+    }
+
+    const optionIndex =
+      this.optionHighlightedIndex - (this.isSelectAllVisible ? 1 : 0);
+    const activeOption = this.filteredOptions[optionIndex];
+    if (!activeOption) {
+      return null;
+    }
+
+    return this.getOptionId(activeOption, optionIndex);
   }
 
   private _highlightOption(el: HTMLElement) {
-    el.classList.add('highlighten');
     const parent = el.parentElement;
     if (!parent) return;
     const parentRect = parent.getBoundingClientRect();
@@ -932,32 +1022,82 @@ export class CpsAutocompleteComponent
   private _navigateOptionsByArrows(up: boolean) {
     if (!this.isOpened) return;
 
-    const optionItems = this._getHTMLOptions();
-    const len = optionItems.length;
+    if (this.optionsAriaSetSize < 1) return;
+
+    this.optionHighlightedIndex = this._nextHighlightIndex(
+      up,
+      this.optionsAriaSetSize
+    );
+
+    const activeId = this._getHighlightedOptionId();
+    if (!activeId) return;
+
+    const activeOption = this.optionsList?.nativeElement?.querySelector(
+      `#${activeId}`
+    ) as HTMLElement | null;
+
+    if (activeOption) {
+      this._highlightOption(activeOption);
+    }
+  }
+
+  private _navigateVirtualOptionsByArrows(up: boolean) {
+    if (!this.isOpened) return;
+
+    const len = this.filteredOptions.length;
     if (len < 1) return;
 
-    if (len === 1) {
-      this.optionHighlightedIndex = 0;
-      this._highlightOption(optionItems[0]);
+    this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
+    this._syncVirtualHighlightedOptionIntoView();
+  }
+
+  private _nextHighlightIndex(up: boolean, len: number): number {
+    if (up) {
+      return this.optionHighlightedIndex < 1
+        ? len - 1
+        : this.optionHighlightedIndex - 1;
+    }
+
+    return [-1, len - 1].includes(this.optionHighlightedIndex)
+      ? 0
+      : this.optionHighlightedIndex + 1;
+  }
+
+  private _syncVirtualHighlightedOptionIntoView() {
+    if (this.optionHighlightedIndex < 0) return;
+
+    this._scrollVirtualListToIndex(this.optionHighlightedIndex);
+  }
+
+  private _scrollVirtualListToIndex(index: number) {
+    const scrollerEl = this.optionsList?.nativeElement?.querySelector(
+      '.p-virtualscroller'
+    ) as HTMLElement | null;
+    if (!scrollerEl) {
+      this.virtualList?.scrollToIndex(index);
       return;
     }
 
-    if (up) {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex =
-        this.optionHighlightedIndex < 1
-          ? len - 1
-          : this.optionHighlightedIndex - 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    } else {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex = [-1, len - 1].includes(
-        this.optionHighlightedIndex
-      )
-        ? 0
-        : this.optionHighlightedIndex + 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    const itemTop = index * this.virtualScrollItemSize;
+    const itemBottom = itemTop + this.virtualScrollItemSize;
+
+    const viewportTop = scrollerEl.scrollTop;
+    const viewportBottom = viewportTop + scrollerEl.clientHeight;
+
+    let nextTop = viewportTop;
+    if (itemTop < viewportTop) {
+      nextTop = itemTop;
+    } else if (itemBottom > viewportBottom) {
+      nextTop = itemBottom - scrollerEl.clientHeight;
     }
+
+    if (nextTop === viewportTop) return;
+
+    const maxTop = Math.max(
+      0,
+      scrollerEl.scrollHeight - scrollerEl.clientHeight
+    );
+    scrollerEl.scrollTop = Math.min(Math.max(0, nextTop), maxTop);
   }
 
   private _confirmInput(searchVal: string, needFocusInput: boolean) {
@@ -1002,11 +1142,7 @@ export class CpsAutocompleteComponent
 
     if (this.value?.length) {
       if (this.backspaceClickedOnce) {
-        this.updateValue(
-          this.value.filter(
-            (v: any, index: number) => index !== this.value.length - 1
-          )
-        );
+        this.updateValue(this.value.slice(0, -1));
 
         this.backspaceClickedOnce = false;
       } else this.backspaceClickedOnce = true;

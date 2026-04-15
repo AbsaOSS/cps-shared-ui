@@ -1,3 +1,11 @@
+@use '../../../../styles/mixins' as *;
+
+$color-calm: var(--cps-color-calm);
+$color-bg-dark: var(--cps-color-bg-dark);
+$color-bg-mid: var(--cps-color-bg-mid);
+$color-text-darkest: var(--cps-color-text-darkest);
+$color-text-mild: var(--cps-color-text-mild);
+
 :host {
   width: fit-content;
   display: inline-block;
@@ -7,23 +15,27 @@
   .cps-chip {
     align-items: center;
     display: inline-flex;
-    background-color: var(--cps-color-bg-dark);
-    border-radius: 14px;
-    line-height: 16px;
-    padding: 4px 12px;
+    background-color: $color-bg-dark;
+    border-radius: 0.875rem;
+    line-height: 1rem;
+    padding: 0.25rem 0.75rem;
     cursor: default;
     &-close-icon {
-      margin-left: 6px;
+      margin-left: 0.375rem;
       cursor: pointer;
+      &:focus {
+        outline: none;
+      }
+      @include focus-ring();
       &:hover {
         ::ng-deep .cps-icon {
-          color: var(--cps-color-calm) !important;
+          color: $color-calm !important;
         }
       }
     }
     &-label {
-      font-size: 14px;
-      color: var(--cps-color-text-darkest);
+      font-size: 0.875rem;
+      color: $color-text-darkest;
       font-family: 'Source Sans Pro', sans-serif;
       font-style: normal;
       font-weight: 400;
@@ -31,27 +43,28 @@
 
     &.cps-chip-disabled {
       pointer-events: none;
-      background-color: var(--cps-color-bg-mid);
+      background-color: $color-bg-mid;
+
       .cps-chip-label {
-        color: var(--cps-color-text-light);
+        color: $color-text-mild;
       }
       .cps-chip-icon,
       .cps-chip-close-icon {
         ::ng-deep .cps-icon {
-          color: var(--cps-color-text-light) !important;
+          color: $color-text-mild !important;
         }
       }
     }
 
     &.cps-chip--icon-before {
       .cps-chip-icon {
-        margin-right: 6px;
+        margin-right: 0.375rem;
       }
     }
 
     &.cps-chip--icon-after {
       .cps-chip-icon {
-        margin-left: 6px;
+        margin-left: 0.375rem;
         order: 1;
       }
     }

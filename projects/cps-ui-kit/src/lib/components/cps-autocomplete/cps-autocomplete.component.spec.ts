@@ -215,7 +215,7 @@ describe('CpsAutocompleteComponent', () => {
     inputElement.nativeElement.dispatchEvent(new Event('focus'));
     fixture.detectChanges();
 
-    expect(component.isActive()).toBeFalsy();
+    expect(component.isActive).toBeFalsy();
   });
 
   it('should display error message when externalError is set', () => {

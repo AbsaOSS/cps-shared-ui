@@ -52,6 +52,14 @@
                         "type": "boolean",
                         "default": "false",
                         "description": "Determines whether chip is disabled."
+                    },
+                    {
+                        "name": "closeButtonAriaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Close",
+                        "description": "Aria label for the close button."
                     }
                 ]
             },

@@ -56,6 +56,12 @@ export class CpsChipComponent implements OnChanges {
   @Input() disabled = false;
 
   /**
+   * Aria label for the close button.
+   * @group Props
+   */
+  @Input() closeButtonAriaLabel = 'Close';
+
+  /**
    * Callback to invoke on chip close.
    * @param {string} string - Chip closed.
    * @group Emits
@@ -86,7 +92,10 @@ export class CpsChipComponent implements OnChanges {
   }
 
   onCloseClick(event: any) {
+    if (this.disabled) return;
+
     event.stopPropagation();
+    event.preventDefault();
     this.closed.emit(this.label);
   }
 }

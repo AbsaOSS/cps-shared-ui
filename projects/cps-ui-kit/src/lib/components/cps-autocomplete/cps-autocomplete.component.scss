@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $color-error: var(--cps-color-error);
 $error-background: #fef3f2;
@@ -10,7 +12,8 @@ $option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: var(--cps-color-highlight-selected);
 $option-highlight-background: var(--cps-color-highlight-active);
 $option-highlight-selected-background: var(--cps-color-highlight-selected-dark);
-$autocomplete-option-info-color: var(--cps-color-text-light);
+$autocomplete-option-info-color: var(--cps-color-text-mild);
+$autocomplete-selected-option-info-color: var(--cps-color-text-medium);
 $autocomplete-option-value-color: var(--cps-color-text-dark);
 $autocomplete-about-remove-color: var(--cps-color-text-light);
 $autocomplete-about-remove-background: var(--cps-color-bg-mid);
@@ -34,14 +37,8 @@ $hover-transition-duration: 0.2s;
       position: relative;
       .autocomplete-progress-bar {
         position: absolute;
-        bottom: 1px;
-        padding: 0 1px;
-      }
-
-      &.focused {
-        .cps-autocomplete-box {
-          background: white !important;
-        }
+        bottom: 0.0625rem;
+        padding: 0 0.0625rem;
       }
 
       &.borderless,
@@ -54,21 +51,26 @@ $hover-transition-duration: 0.2s;
       }
       &.underlined {
         .cps-autocomplete-box {
-          border-bottom: 1px solid $autocomplete-border-color !important;
+          border-bottom: 0.0625rem solid $autocomplete-border-color !important;
         }
       }
     }
 
     &.active {
       .cps-autocomplete-box {
-        border: 1px solid $color-calm;
+        border: 0.0625rem solid $color-calm;
         .cps-autocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
           }
         }
+      }
+    }
+
+    &.opened {
+      .cps-autocomplete-box {
         .cps-autocomplete-box-chevron {
-          top: 22px;
+          top: 1.375rem;
           transform: rotate(180deg);
         }
       }
@@ -82,17 +84,17 @@ $hover-transition-duration: 0.2s;
       font-size: 0.875rem;
       font-weight: 600;
       .cps-autocomplete-label-info-circle {
-        margin-left: 8px;
+        margin-left: 0.5rem;
         pointer-events: all;
       }
     }
 
     .persistent-clear,
-    .cps-autocomplete-container.focused,
+    .cps-autocomplete-container.active,
     .cps-autocomplete-container:hover {
       .cps-autocomplete-box {
         .cps-autocomplete-box-icons {
-          .cps-autocomplete-box-clear-icon {
+          .cps-autocomplete-box-clear-icon:not(:focus):not(:hover) {
             cps-icon {
               opacity: 0.5;
             }
@@ -103,20 +105,20 @@ $hover-transition-duration: 0.2s;
 
     .cps-autocomplete-box {
       overflow: hidden;
-      min-height: 38px;
+      min-height: 2.375rem;
       width: 100%;
       cursor: text;
       background: white;
       font-size: 1rem;
       outline: none;
-      padding: 0 12px 0 12px;
-      border-radius: 4px;
-      border: 1px solid $autocomplete-border-color;
+      padding: 0 0.75rem 0 0.75rem;
+      border-radius: 0.25rem;
+      border: 0.0625rem solid $autocomplete-border-color;
       transition-duration: $hover-transition-duration;
 
       &-area {
         display: flex;
-        min-height: 36px;
+        min-height: 2.25rem;
         align-items: center;
         .prefix-icon {
           margin-right: 0.5rem;
@@ -125,11 +127,11 @@ $hover-transition-duration: 0.2s;
       }
 
       &-input {
-        min-height: 36px;
+        min-height: 2.25rem;
         padding: 0;
         background-color: transparent;
         width: 0;
-        min-width: 30px;
+        min-width: 1.875rem;
         flex-grow: 1;
         font-size: 1rem;
         color: $autocomplete-option-value-color;
@@ -147,9 +149,9 @@ $hover-transition-duration: 0.2s;
         display: inline-flex;
         flex-direction: column;
         width: 100%;
-        padding-top: 3px;
-        padding-bottom: 3px;
-        min-height: 36px;
+        padding-top: 0.1875rem;
+        padding-bottom: 0.1875rem;
+        min-height: 2.25rem;
         justify-content: center;
         position: relative;
 
@@ -177,36 +179,37 @@ $hover-transition-duration: 0.2s;
           }
         }
         .multi-chip-input {
-          min-height: 30px;
+          min-height: 1.875rem;
         }
         .multi-item-input {
-          min-height: 28px;
+          min-height: 1.75rem;
         }
-        .chips-group {
+        .cps-autocomplete-multi-selection-wrapper {
           display: inline-flex;
           flex-wrap: wrap;
           align-items: center;
-          cps-chip {
-            padding-bottom: 3px;
-            padding-top: 3px;
-            padding-right: 4px;
+          .chips-group {
+            display: contents;
+            cps-chip {
+              padding-bottom: 0.1875rem;
+              padding-top: 0.1875rem;
+              padding-right: 0.25rem;
+            }
           }
-        }
-        .text-group {
-          color: $autocomplete-option-value-color;
-          align-items: center;
-          display: inline-flex;
-          flex-wrap: wrap;
-          .text-group-item {
-            padding-bottom: 3px;
-            padding-top: 3px;
-            padding-right: 4px;
+          .text-group {
+            display: contents;
+            color: $autocomplete-option-value-color;
+            .text-group-item {
+              padding-bottom: 0.1875rem;
+              padding-top: 0.1875rem;
+              padding-right: 0.25rem;
+            }
           }
         }
       }
 
       &:hover {
-        border: 1px solid $color-calm;
+        border: 0.0625rem solid $color-calm;
         .cps-autocomplete-box-area {
           .prefix-icon {
             color: $color-calm;
@@ -221,21 +224,38 @@ $hover-transition-duration: 0.2s;
           cursor: pointer;
           display: flex;
           color: $color-calm;
-          margin-left: 8px;
+          margin-left: 0.5rem;
+
+          &:focus {
+            outline: none;
+          }
+          &:hover,
+          &:focus {
+            cps-icon {
+              opacity: 1;
+            }
+          }
+          @include focus-ring();
+
+          &-hidden {
+            visibility: hidden;
+          }
           cps-icon {
             opacity: 0;
             transition-duration: $hover-transition-duration;
-            &:hover {
-              opacity: 1 !important;
-            }
           }
         }
         .cps-autocomplete-box-chevron {
           display: flex;
-          margin-left: 8px;
+          margin-left: 0.5rem;
+          &:focus {
+            outline: none;
+          }
+          @include focus-ring();
           transition-duration: $hover-transition-duration;
           cursor: pointer;
-          &:hover {
+          &:hover,
+          &:focus {
             ::ng-deep cps-icon {
               .cps-icon {
                 color: $color-calm !important;
@@ -300,19 +320,19 @@ $hover-transition-duration: 0.2s;
   font-family: 'Source Sans Pro', sans-serif;
   background: white;
   overflow-x: hidden;
-  max-height: 242px;
+  max-height: 15.125rem;
   overflow-y: auto;
 
   .cps-autocomplete-options-empty,
   .cps-autocomplete-options-loading {
-    padding: 11px;
-    font-size: 16px;
+    padding: 0.6875rem;
+    font-size: 1rem;
     cursor: default;
     color: $autocomplete-option-value-color;
   }
 
   .cps-autocomplete-options-option {
-    padding: 12px;
+    padding: 0.75rem;
     justify-content: space-between;
     display: flex;
     cursor: pointer;
@@ -328,7 +348,7 @@ $hover-transition-duration: 0.2s;
     &-left {
       display: flex;
       align-items: center;
-      margin-right: 8px;
+      margin-right: 0.5rem;
     }
 
     &-right {
@@ -339,8 +359,8 @@ $hover-transition-duration: 0.2s;
     &-check {
       background-color: transparent;
       border: 0;
-      width: 16px;
-      height: 16px;
+      width: 1rem;
+      height: 1rem;
       cursor: pointer;
       display: inline-block;
       vertical-align: middle;
@@ -350,21 +370,21 @@ $hover-transition-duration: 0.2s;
       transition:
         border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
         background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-      margin-right: 8px;
+      margin-right: 0.5rem;
       opacity: 0;
       &::after {
         color: $color-calm;
-        top: 4px;
-        left: 1px;
-        width: 8px;
-        height: 3px;
-        border-left: 2px solid currentColor;
+        top: 0.25rem;
+        left: 0.0625rem;
+        width: 0.5rem;
+        height: 0.1875rem;
+        border-left: 0.125rem solid currentColor;
         transform: rotate(-45deg);
         opacity: 1;
         box-sizing: content-box;
         position: absolute;
         content: '';
-        border-bottom: 2px solid currentColor;
+        border-bottom: 0.125rem solid currentColor;
         transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
       }
     }
@@ -380,6 +400,9 @@ $hover-transition-duration: 0.2s;
     }
     &.selected {
       background: $selected-option-background;
+      .cps-autocomplete-options-option-right {
+        color: $autocomplete-selected-option-info-color;
+      }
     }
     &.highlighten {
       background: $option-highlight-background;
@@ -390,7 +413,7 @@ $hover-transition-duration: 0.2s;
   }
 
   .select-all-option {
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 0.0625rem solid lightgrey;
     font-weight: 600;
   }
 
