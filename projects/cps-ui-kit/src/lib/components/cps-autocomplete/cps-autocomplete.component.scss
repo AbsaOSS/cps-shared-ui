@@ -94,7 +94,7 @@ $hover-transition-duration: 0.2s;
     .cps-autocomplete-container:hover {
       .cps-autocomplete-box {
         .cps-autocomplete-box-icons {
-          .cps-autocomplete-box-clear-icon {
+          .cps-autocomplete-box-clear-icon:not(:focus):not(:hover) {
             cps-icon {
               opacity: 0.5;
             }
@@ -228,6 +228,9 @@ $hover-transition-duration: 0.2s;
 
           &:focus {
             outline: none;
+          }
+          &:hover,
+          &:focus {
             cps-icon {
               opacity: 1;
             }
@@ -240,9 +243,6 @@ $hover-transition-duration: 0.2s;
           cps-icon {
             opacity: 0;
             transition-duration: $hover-transition-duration;
-            &:hover {
-              opacity: 1 !important;
-            }
           }
         }
         .cps-autocomplete-box-chevron {
@@ -254,7 +254,8 @@ $hover-transition-duration: 0.2s;
           @include focus-ring();
           transition-duration: $hover-transition-duration;
           cursor: pointer;
-          &:hover {
+          &:hover,
+          &:focus {
             ::ng-deep cps-icon {
               .cps-icon {
                 color: $color-calm !important;
