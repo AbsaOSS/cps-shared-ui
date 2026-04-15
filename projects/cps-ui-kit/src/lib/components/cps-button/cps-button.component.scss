@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 :host {
   width: fit-content;
   display: inline-block;
@@ -21,24 +23,9 @@
     &:focus-visible:not(.loading) {
       background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);
       box-shadow: 0 0.125rem 0.25rem 0 rgba(12, 12, 13, 0.2);
-      position: relative;
     }
 
-    &:focus-visible::before {
-      content: '';
-      position: absolute;
-      inset: -0.25rem; /* inner offset */
-      border: 0.0625rem solid var(--cps-color-calm);
-      border-radius: 0.375rem;
-    }
-
-    &:focus-visible::after {
-      content: '';
-      position: absolute;
-      inset: -0.3125rem; /* outer offset */
-      border: 0.0625rem solid var(--cps-color-calm-highlighten);
-      border-radius: 0.375rem;
-    }
+    @include focus-ring(0.25rem, 0.3125rem);
 
     &:hover:not(:active):not(:disabled) {
       background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);

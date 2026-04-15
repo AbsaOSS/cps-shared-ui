@@ -326,7 +326,7 @@ export class CpsSelectComponent
   optionHighlightedIndex = -1;
 
   virtualListHeight = 240;
-  virtualScrollItemSize = 42;
+  virtualScrollItemSize = 44;
 
   selectBoxWidth = 0;
   resizeObserver: ResizeObserver;
