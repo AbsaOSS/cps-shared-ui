@@ -34,6 +34,7 @@ describe('CpsAutocompleteComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CpsAutocompleteComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Test autocomplete');
     fixture.componentRef.setInput('options', [
       { label: 'Option 1', value: 'opt1', info: 'Info 1' },
       { label: 'Option 2', value: 'opt2', info: 'Info 2' },
@@ -427,5 +428,46 @@ describe('CpsAutocompleteComponent', () => {
 
     expect(component.inputText).toBe('');
     expect(component.filteredOptions.length).toBe(3);
+  });
+
+  describe('aria-label', () => {
+    it('should set aria-label from ariaLabel input', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Search options');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector(
+        '.cps-autocomplete-box-input'
+      );
+      expect(input.getAttribute('aria-label')).toBe('Search options.');
+    });
+
+    it('should set aria-label from label when ariaLabel is not provided', () => {
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('label', 'My Field');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector(
+        '.cps-autocomplete-box-input'
+      );
+      expect(input.getAttribute('aria-label')).toBe('My Field.');
+    });
+
+    it('should prefer ariaLabel over label', () => {
+      fixture.componentRef.setInput('label', 'My Field');
+      fixture.componentRef.setInput('ariaLabel', 'Override label');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector(
+        '.cps-autocomplete-box-input'
+      );
+      expect(input.getAttribute('aria-label')).toBe('Override label.');
+    });
+
+    it('should error when neither label nor ariaLabel is provided', () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      fixture.componentRef.setInput('label', '');
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.detectChanges();
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining('ariaLabel')
+      );
+    });
   });
 });

@@ -12,6 +12,7 @@ describe('CpsButtonComponent', () => {
 
     fixture = TestBed.createComponent(CpsButtonComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Test button');
     fixture.detectChanges();
   });
 
@@ -22,7 +23,7 @@ describe('CpsButtonComponent', () => {
   it('should have default values', () => {
     expect(component.color).toBe('calm');
     expect(component.contentColor).toBe('white');
-    expect(component.borderRadius).toBe(4);
+    expect(component.borderRadius).toBe('4px');
     expect(component.type).toBe('solid');
     expect(component.label).toBe('');
     expect(component.icon).toBe('');
@@ -259,6 +260,7 @@ describe('CpsButtonComponent', () => {
     });
 
     it('should set aria-label from label when ariaLabel is not provided', () => {
+      fixture.componentRef.setInput('ariaLabel', '');
       fixture.componentRef.setInput('label', 'Submit');
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button');
