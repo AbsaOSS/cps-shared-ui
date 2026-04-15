@@ -20,7 +20,7 @@ const components: ComponentEntry[] = [
       await page.locator('cps-autocomplete').first().click();
     }
   },
-  // { route: '/button', name: 'Button', selector: 'cps-button' },
+  { route: '/button', name: 'Button', selector: 'cps-button' },
   // {
   //   route: '/button-toggle',
   //   name: 'Button toggle',

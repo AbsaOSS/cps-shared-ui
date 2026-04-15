@@ -17,7 +17,10 @@
         color="luxury"
         size="large"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="large"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="large"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button label="Normal button" color="luxury"></cps-button>
@@ -32,7 +35,7 @@
         label="Normal button"
         color="luxury"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true"></cps-button>
+      <cps-button [loading]="true" ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button label="Small button" size="small" color="luxury"></cps-button>
@@ -49,7 +52,10 @@
         color="luxury"
         size="small"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="small"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="small"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -69,7 +75,10 @@
         color="luxury"
         size="xsmall"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="xsmall"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="xsmall"
+        ariaLabel="Loading button"></cps-button>
     </div>
   </div>
 
@@ -100,7 +109,11 @@
         size="large"
         type="outlined"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="large" type="outlined"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="large"
+        type="outlined"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -120,7 +133,10 @@
         color="luxury"
         type="outlined"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" type="outlined"></cps-button>
+      <cps-button
+        [loading]="true"
+        type="outlined"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -147,7 +163,11 @@
         size="small"
         type="outlined"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="small" type="outlined"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="small"
+        type="outlined"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -174,7 +194,11 @@
         size="xsmall"
         type="outlined"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="xsmall" type="outlined"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="xsmall"
+        type="outlined"
+        ariaLabel="Loading button"></cps-button>
     </div>
   </div>
 
@@ -205,7 +229,11 @@
         size="large"
         type="borderless"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="large" type="borderless"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="large"
+        type="borderless"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -228,7 +256,10 @@
         color="luxury"
         type="borderless"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" type="borderless"></cps-button>
+      <cps-button
+        [loading]="true"
+        type="borderless"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -255,7 +286,11 @@
         size="small"
         type="borderless"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="small" type="borderless"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="small"
+        type="borderless"
+        ariaLabel="Loading button"></cps-button>
     </div>
     <div class="buttons-group-row">
       <cps-button
@@ -282,7 +317,11 @@
         size="xsmall"
         type="borderless"
         [disabled]="true"></cps-button>
-      <cps-button [loading]="true" size="xsmall" type="borderless"></cps-button>
+      <cps-button
+        [loading]="true"
+        size="xsmall"
+        type="borderless"
+        ariaLabel="Loading button"></cps-button>
     </div>
   </div>
 
@@ -299,10 +338,16 @@
         color="white"
         type="outlined"
         icon="like"
+        ariaLabel="Like"
         size="large"></cps-button>
-      <cps-button color="graphite" icon="eye" size="large"></cps-button>
+      <cps-button
+        color="graphite"
+        icon="eye"
+        size="large"
+        ariaLabel="View"></cps-button>
       <cps-button
         label="Custom size"
+        borderRadius="2rem"
         width="300"
         height="60"
         color="white"
@@ -311,6 +356,7 @@
     </div>
     <cps-button
       label="Block large button"
+      borderRadius="0"
       width="100%"
       size="large"
       color="depth"></cps-button>

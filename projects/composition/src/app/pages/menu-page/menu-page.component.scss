@@ -1,5 +1,8 @@
 .menu-group {
-  gap: 32px;
+  gap: 2rem;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
   display: flex;
   flex-direction: column;
 }
@@ -10,6 +13,6 @@
   padding: 1rem;
   span {
     color: red;
-    margin-bottom: 12px;
+    margin-bottom: 0.75rem;
   }
 }

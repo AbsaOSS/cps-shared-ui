@@ -1,20 +1,23 @@
 :host {
   .notification-btns-group {
-    gap: 30px;
+    gap: 1.875rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
 
     &-title {
-      font-size: 24px;
+      font-size: 1.5rem;
       color: var(--cps-color-depth);
-      border-bottom: 1px solid lightgrey;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
+      border-bottom: 0.0625rem solid lightgrey;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
       font-weight: 600;
     }
   }
   .notification-btns-last-group {
-    padding-bottom: 12px;
-    border-bottom: 1px solid lightgrey;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.0625rem solid lightgrey;
   }
 }

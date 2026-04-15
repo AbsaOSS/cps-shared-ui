@@ -46,6 +46,14 @@
                         "description": "Label or text on the button."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the button, used for accessibility, it takes precedence over label."
+                    },
+                    {
                         "name": "icon",
                         "optional": false,
                         "readonly": false,

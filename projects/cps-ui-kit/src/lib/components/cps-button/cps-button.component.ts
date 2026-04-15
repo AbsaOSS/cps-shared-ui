@@ -55,6 +55,12 @@ export class CpsButtonComponent implements OnChanges {
   @Input() label = '';
 
   /**
+   * Aria label for the button, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
+
+  /**
    * Name of the icon on the button.
    * @group Props
    */
@@ -114,6 +120,7 @@ export class CpsButtonComponent implements OnChanges {
   cvtIconSize = '';
 
   classesList: string[] = [];
+  enterActive = false;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
@@ -125,6 +132,14 @@ export class CpsButtonComponent implements OnChanges {
       this.type === 'solid'
         ? getCSSColor(this.contentColor, this.document)
         : this.buttonColor;
+    if (this.disabled || this.loading) {
+      this.enterActive = false;
+    }
+    if (!this.label && !this.ariaLabel) {
+      console.error(
+        'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
+      );
+    }
     this.setClasses();
   }
 
@@ -197,6 +212,20 @@ export class CpsButtonComponent implements OnChanges {
   }
 
   onClick(event: Event) {
+    if (this.disabled || this.loading) return;
     this.clicked.emit(event);
+  }
+
+  onEnterKeydown() {
+    if (this.disabled || this.loading) return;
+    this.enterActive = true;
+  }
+
+  onEnterKeyup() {
+    this.enterActive = false;
+  }
+
+  onBlur() {
+    this.enterActive = false;
   }
 }

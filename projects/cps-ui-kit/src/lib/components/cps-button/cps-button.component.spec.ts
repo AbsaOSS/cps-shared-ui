@@ -12,6 +12,7 @@ describe('CpsButtonComponent', () => {
 
     fixture = TestBed.createComponent(CpsButtonComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Test button');
     fixture.detectChanges();
   });
 
@@ -22,7 +23,7 @@ describe('CpsButtonComponent', () => {
   it('should have default values', () => {
     expect(component.color).toBe('calm');
     expect(component.contentColor).toBe('white');
-    expect(component.borderRadius).toBe(4);
+    expect(component.borderRadius).toBe('4px');
     expect(component.type).toBe('solid');
     expect(component.label).toBe('');
     expect(component.icon).toBe('');
@@ -226,5 +227,70 @@ describe('CpsButtonComponent', () => {
     fixture.detectChanges();
     expect(component.classesList).not.toContain('cps-button--icon-before');
     expect(component.classesList).not.toContain('cps-button--icon-after');
+  });
+
+  it('should clear enterActive when disabled becomes true', () => {
+    component.enterActive = true;
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    expect(component.enterActive).toBe(false);
+  });
+
+  it('should clear enterActive when loading becomes true', () => {
+    component.enterActive = true;
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+    expect(component.enterActive).toBe(false);
+  });
+
+  it('should clear enterActive on blur', () => {
+    component.enterActive = true;
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button');
+    button.dispatchEvent(new Event('blur'));
+    expect(component.enterActive).toBe(false);
+  });
+
+  describe('aria-label', () => {
+    it('should set aria-label from ariaLabel input', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Save');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('aria-label')).toBe('Save');
+    });
+
+    it('should set aria-label from label when ariaLabel is not provided', () => {
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('label', 'Submit');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('aria-label')).toBe('Submit');
+    });
+
+    it('should prefer ariaLabel over label', () => {
+      fixture.componentRef.setInput('label', 'Submit');
+      fixture.componentRef.setInput('ariaLabel', 'Submit form');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('aria-label')).toBe('Submit form');
+    });
+
+    it('should not set aria-label when neither label nor ariaLabel is provided', () => {
+      fixture.componentRef.setInput('label', '');
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('aria-label')).toBeNull();
+    });
+
+    it('should error when neither label nor ariaLabel is provided', () => {
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      fixture.componentRef.setInput('label', '');
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.detectChanges();
+      expect(console.error).toHaveBeenCalledWith(
+        expect.stringContaining('ariaLabel')
+      );
+    });
   });
 });
