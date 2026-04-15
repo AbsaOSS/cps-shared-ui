@@ -135,7 +135,7 @@ export class CpsButtonComponent implements OnChanges {
     if (this.disabled || this.loading) {
       this.enterActive = false;
     }
-    if (!this.label && !this.ariaLabel) {
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
       console.error(
         'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
       );

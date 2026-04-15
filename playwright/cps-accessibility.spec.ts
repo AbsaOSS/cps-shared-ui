@@ -21,11 +21,11 @@ const components: ComponentEntry[] = [
     }
   },
   { route: '/button', name: 'Button', selector: 'cps-button' },
-  // {
-  //   route: '/button-toggle',
-  //   name: 'Button toggle',
-  //   selector: 'cps-button-toggle'
-  // },
+  {
+    route: '/button-toggle',
+    name: 'Button toggle',
+    selector: 'cps-button-toggle'
+  },
   // { route: '/checkbox', name: 'Checkbox', selector: 'cps-checkbox' },
   { route: '/chip', name: 'Chip', selector: 'cps-chip' }
   // {

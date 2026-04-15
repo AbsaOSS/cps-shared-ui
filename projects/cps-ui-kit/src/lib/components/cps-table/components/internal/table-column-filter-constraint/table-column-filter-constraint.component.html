@@ -20,6 +20,7 @@
   @case ('boolean') {
     <div class="cps-table-col-filter-constraint-btn-toggles">
       <cps-button-toggle
+        ariaLabel="Boolean filter"
         [options]="booleanOptions"
         [value]="filterConstraint?.value"
         (valueChanged)="onValueChange($event)"
@@ -41,6 +42,7 @@
     @if (!asButtonToggle) {
       <cps-autocomplete
         #categoryAutocompleteComponent
+        ariaLabel="Category filter"
         class="cps-table-col-filter-category-autocomplete"
         [placeholder]="placeholder"
         [options]="categories"
@@ -55,6 +57,7 @@
     <div class="cps-table-col-filter-constraint-btn-toggles">
       @if (asButtonToggle) {
         <cps-button-toggle
+          ariaLabel="Category filter"
           [options]="categories"
           [value]="filterConstraint?.value"
           (valueChanged)="onValueChange($event)"

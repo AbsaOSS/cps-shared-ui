@@ -223,7 +223,7 @@ export class CpsAutocompleteComponent
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '18px';
+  @Input() prefixIconSize: iconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.
@@ -495,7 +495,7 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
-    if (!this.label && !this.ariaLabel) {
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
       console.error(
         'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
       );

@@ -27,6 +27,7 @@ import {
 export type CpsButtonToggleOption = {
   value: any;
   label?: string;
+  ariaLabel?: string;
   icon?: string;
   disabled?: boolean;
   tooltip?: string;
@@ -51,10 +52,16 @@ export type CpsButtonToggleOption = {
 })
 export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   /**
-   * Label of the toggle buttons.
+   * Label of the button toggle component.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the button toggle component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * An array of options.
@@ -146,6 +153,8 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
   largestButtonWidth = 0;
 
+  private _rootFontSizePx = 16;
+
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
@@ -160,13 +169,38 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     if (this.multiple && !this._value) {
       this._value = [];
     }
-    this._setEqualWidths();
+    if (document?.fonts?.ready) {
+      document.fonts.ready.then(() => this._setEqualWidths());
+    } else {
+      this._setEqualWidths();
+    }
+    this._rootFontSizePx = parseFloat(
+      getComputedStyle(this.document.documentElement).fontSize || '16'
+    );
+  }
+
+  ngOnChanges() {
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
+      );
+    }
+    const hasInaccessibleOption = this.options.some(
+      (opt) => !opt.label?.trim() && !opt.ariaLabel?.trim()
+    );
+    if (hasInaccessibleOption) {
+      console.error(
+        'CpsButtonToggleComponent: each unlabeled option must have an ariaLabel for accessibility.'
+      );
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onChange = (event: any) => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setDisabledState(disabled: boolean) {}
 
   registerOnChange(fn: any) {
     this.onChange = fn;
@@ -180,37 +214,37 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this.value = value;
   }
 
-  updateValueEvent(event: any, val: any) {
+  updateValueOnClick(val: any) {
     if (this.disabled) return;
-    const check = event?.target?.checked || false;
 
-    if (this.mandatory && this.multiple && !check && this.value.length < 2) {
-      event.target.checked = true;
+    if (this.multiple) {
+      const current: any[] = Array.isArray(this.value) ? this.value : [];
+      const isSelected = current.some((v) => isEqual(v, val));
+      let next: any[];
+
+      if (isSelected) {
+        if (this.mandatory && current.length === 1) {
+          return;
+        }
+        next = current.filter((v) => !isEqual(v, val));
+      } else {
+        next = [...current, val];
+      }
+      const ordered = this.options
+        .map((o) => o.value)
+        .filter((v) => next.some((n) => isEqual(n, v)));
+
+      this._updateValue(ordered);
       return;
     }
 
-    if (this.multiple) {
-      let res = [];
-      if (!check) {
-        res = this.value.filter((v: any) => !isEqual(v, val));
-      } else {
-        this.options.forEach((o) => {
-          if (
-            this.value.some((v: any) => isEqual(v, o.value)) ||
-            isEqual(val, o.value)
-          ) {
-            res.push(o.value);
-          }
-        });
-      }
-      this._updateValue(res);
-    } else {
-      if (this.mandatory) {
-        this._updateValue(val); // radio
-      } else {
-        this._updateValue(check ? val : undefined);
-      }
+    if (this.mandatory) {
+      this._updateValue(val);
+      return;
     }
+
+    const isSame = isEqual(this.value, val);
+    this._updateValue(isSame ? undefined : val);
   }
 
   private _updateValue(value: any) {
@@ -226,7 +260,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this.renderer.setStyle(hiddenSpan, 'visibility', 'hidden');
     this.renderer.setStyle(hiddenSpan, 'position', 'absolute');
     this.renderer.setStyle(hiddenSpan, 'left', '-9999px');
-    this.renderer.setStyle(hiddenSpan, 'font-size', '16px');
+    this.renderer.setStyle(hiddenSpan, 'font-size', '1rem');
     this.renderer.setStyle(hiddenSpan, 'letter-spacing', '0.05em');
     this.renderer.setStyle(
       hiddenSpan,
@@ -238,24 +272,27 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
     this.largestButtonWidth = 0;
     this.options.forEach((opt) => {
-      const text = this.renderer.createText(opt.label || '');
-      this.renderer.appendChild(hiddenSpan, text);
+      const label = opt.label || '';
+      this.renderer.setProperty(hiddenSpan, 'textContent', label);
 
-      let width = hiddenSpan.offsetWidth || 0;
-      width += 26;
+      const textWidth = hiddenSpan.offsetWidth || 0;
+      let totalWidth = textWidth + 26;
       if (opt.icon) {
-        width += 16;
-        if (opt.label) width += 8;
+        totalWidth += 16;
+        if (label) totalWidth += 8;
       }
-      if (width > this.largestButtonWidth) {
-        this.largestButtonWidth = width;
-      }
-      this.renderer.removeChild(hiddenSpan, text);
+
+      const totalWidthRem = this._pxToRem(totalWidth);
+      this.largestButtonWidth = Math.max(
+        this.largestButtonWidth,
+        totalWidthRem
+      );
     });
 
     this.renderer.removeChild(this.document.body, hiddenSpan);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
+  private _pxToRem(px: number): number {
+    return px / this._rootFontSizePx;
+  }
 }
