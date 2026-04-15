@@ -82,6 +82,12 @@ export class CpsAutocompleteComponent
   @Input() label = '';
 
   /**
+   * Aria label for the autocomplete component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
+
+  /**
    * Placeholder text.
    * @group Props
    */
@@ -489,6 +495,11 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
+    if (!this.label && !this.ariaLabel) {
+      console.error(
+        'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
+      );
+    }
   }
 
   ngAfterViewInit(): void {
@@ -821,9 +832,9 @@ export class CpsAutocompleteComponent
     this.recalcVirtualListHeight();
   }
 
-  get computedLabel(): string {
+  get computedLabel(): string | null {
     return getComputedLabel({
-      label: this.label,
+      label: this.ariaLabel || this.label,
       error: this.error,
       externalError: this.externalError,
       hideDetails: this.hideDetails

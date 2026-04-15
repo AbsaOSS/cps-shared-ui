@@ -55,7 +55,7 @@ export class CpsButtonComponent implements OnChanges {
   @Input() label = '';
 
   /**
-   * Aria label for the button, used for accessibility.
+   * Aria label for the button, used for accessibility, it takes precedence over label.
    * @group Props
    */
   @Input() ariaLabel = '';
@@ -137,7 +137,7 @@ export class CpsButtonComponent implements OnChanges {
     }
     if (!this.label && !this.ariaLabel) {
       console.error(
-        'CpsButtonComponent: icon-only or unlabeled buttons must have an ariaLabel for accessibility.'
+        'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
       );
     }
     this.setClasses();

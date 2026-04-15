@@ -25,7 +25,7 @@
       box-shadow: 0 0.125rem 0.25rem 0 rgba(12, 12, 13, 0.2);
     }
 
-    @include focus-ring(0.25rem, 0.3125rem);
+    @include focus-ring(inherit, 0.25rem, 0.3125rem);
 
     &:hover:not(:active):not(:disabled) {
       background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);

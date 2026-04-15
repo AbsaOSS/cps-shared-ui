@@ -10,7 +10,7 @@ export const getComputedLabel = (context: {
   error?: string;
   externalError?: string;
   hideDetails?: boolean;
-}): string => {
+}): string | null => {
   const parts: string[] = [];
 
   // Always add label
@@ -25,5 +25,5 @@ export const getComputedLabel = (context: {
     parts.push(`Error: ${cleanedError}.`);
   }
 
-  return parts.join(' ');
+  return parts.length > 0 ? parts.join(' ') : null;
 };
