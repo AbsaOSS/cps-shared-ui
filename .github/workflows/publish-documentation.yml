@@ -6,12 +6,14 @@ on:
       - 'master'
     paths:
       - 'package.json'
+      - 'projects/cps-ui-kit/package.json'
       - 'angular.json'
       - 'tsconfig.generator.json'
       - 'api-generator/**'
       - 'projects/cps-ui-kit/src/**'
       - 'projects/composition/**'
       - '.github/**'
+  workflow_dispatch:
 
 jobs:
   # Build job
