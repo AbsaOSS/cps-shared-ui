@@ -404,6 +404,7 @@ export class CpsAutocompleteComponent
   error = '';
   cvtWidth = '';
   isOpened = false;
+  isActive = false;
   inputText = '';
   inputTextDebounced = '';
   filteredOptions: any[] = [];
@@ -663,6 +664,8 @@ export class CpsAutocompleteComponent
   setDisabledState(disabled: boolean) {}
 
   onBlur() {
+    this.isActive = false;
+
     this._confirmInput(this.inputText || '', false);
 
     if (this.isOpened) {
@@ -674,6 +677,10 @@ export class CpsAutocompleteComponent
   }
 
   onFocus() {
+    if (!this.disabled) {
+      this.isActive = true;
+    }
+
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
@@ -681,12 +688,6 @@ export class CpsAutocompleteComponent
 
     this._control?.control?.markAsTouched();
     this.focused.emit();
-  }
-
-  isActive() {
-    return (
-      this.document.activeElement === this.autocompleteInput?.nativeElement
-    );
   }
 
   onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
