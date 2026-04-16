@@ -34,7 +34,13 @@
         <cps-icon
           class="cps-button__icon"
           [icon]="icon"
-          [color]="disabled ? 'text-light' : textColor"
+          [color]="
+            disabled
+              ? type === 'solid'
+                ? 'text-mild'
+                : 'text-light'
+              : textColor
+          "
           aria-hidden="true"
           [size]="cvtIconSize">
         </cps-icon>

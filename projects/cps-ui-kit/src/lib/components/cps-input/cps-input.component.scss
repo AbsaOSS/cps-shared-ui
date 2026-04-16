@@ -2,8 +2,9 @@ $color-calm: var(--cps-color-calm);
 $input-hint-color: var(--cps-color-text-mild);
 $input-label-disabled-color: var(--cps-color-text-mild);
 $input-pass-show-btn-color: var(--cps-color-text-mild);
-$input-placeholder-color: var(--cps-color-text-lightest);
+$input-placeholder-color: var(--cps-color-text-mild);
 $input-border-color: var(--cps-color-line-light);
+$input-background-disabled: var(--cps-color-bg-disabled);
 $input-label-color: var(--cps-color-text-dark);
 $input-text-color: var(--cps-color-text-dark);
 $input-text-disabled-color: var(--cps-color-text-light);
@@ -72,7 +73,7 @@ $hover-transition-duration: 0.2s;
         }
         &:disabled:not([readonly]) {
           color: $input-text-disabled-color;
-          background-color: #f7f7f7;
+          background-color: $input-background-disabled;
           pointer-events: none;
         }
 

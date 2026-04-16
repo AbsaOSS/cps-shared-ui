@@ -3,9 +3,9 @@
 $group-label-color: var(--cps-color-text-dark);
 $group-label-disabled-color: var(--cps-color-text-mild);
 $selected-background-color: var(--cps-color-calm);
-$selected-disabled-background-color: var(--cps-color-line-mid);
+$selected-disabled-background-color: var(--cps-color-bg-disabled-selected);
 $selected-disabled-option-label-color: var(--cps-color-text-medium);
-$disabled-background-color: #f7f7f7;
+$disabled-background-color: var(--cps-color-bg-disabled);
 $disabled-option-label-color: var(--cps-color-text-mild);
 $option-label-color: var(--cps-color-text-dark);
 $border-color: var(--cps-color-text-lightest);

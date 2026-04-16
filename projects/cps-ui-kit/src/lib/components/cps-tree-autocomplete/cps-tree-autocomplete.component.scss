@@ -1,7 +1,8 @@
 $color-calm: var(--cps-color-calm);
 $color-error: var(--cps-color-error);
 $error-background: #fef3f2;
-$treeautocomplete-placeholder-color: var(--cps-color-text-lightest);
+$treeautocomplete-placeholder-color: var(--cps-color-text-mild);
+$treeautocomplete-background-disabled: var(--cps-color-bg-disabled);
 $treeautocomplete-label-color: var(--cps-color-text-dark);
 $treeautocomplete-label-disabled-color: var(--cps-color-text-mild);
 $treeautocomplete-items-disabled-color: var(--cps-color-text-light);
@@ -270,7 +271,7 @@ $hover-transition-duration: 0.2s;
     &.disabled {
       pointer-events: none;
       .cps-treeautocomplete-box {
-        background: #f7f7f7;
+        background: $treeautocomplete-background-disabled;
         &-items {
           color: $treeautocomplete-items-disabled-color;
           .text-group,
@@ -406,7 +407,11 @@ $hover-transition-duration: 0.2s;
       }
     }
 
-    .p-tree .p-tree-root-children .p-tree-node .p-tree-node-content .p-tree-node-toggle-button {
+    .p-tree
+      .p-tree-root-children
+      .p-tree-node
+      .p-tree-node-content
+      .p-tree-node-toggle-button {
       margin-right: 0.5rem;
       width: 2rem;
       height: 2rem;
@@ -440,7 +445,10 @@ $hover-transition-duration: 0.2s;
       background-color: $option-hover-background;
     }
 
-    .p-tree .p-tree-root-children .p-tree-node .p-tree-node-content.p-tree-node-selected {
+    .p-tree
+      .p-tree-root-children
+      .p-tree-node
+      .p-tree-node-content.p-tree-node-selected {
       background: $selected-option-background;
       color: $color-calm;
       font-weight: 600;

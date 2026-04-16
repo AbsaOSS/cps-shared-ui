@@ -54,8 +54,8 @@
       border: 0;
 
       &:disabled {
-        background-color: var(--cps-color-line-mid) !important;
-        color: var(--cps-color-text-light) !important;
+        background-color: var(--cps-color-bg-disabled-selected) !important;
+        color: var(--cps-color-text-mild) !important;
       }
     }
 
@@ -64,7 +64,7 @@
       box-sizing: border-box;
 
       &:disabled {
-        border-color: var(--cps-color-line-dark) !important;
+        border-color: var(--cps-color-text-light) !important;
         color: var(--cps-color-text-light) !important;
       }
     }

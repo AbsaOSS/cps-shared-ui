@@ -1,7 +1,8 @@
 $color-calm: var(--cps-color-calm);
 $color-error: var(--cps-color-error);
 $error-background: #fef3f2;
-$select-placeholder-color: var(--cps-color-text-lightest);
+$select-placeholder-color: var(--cps-color-text-mild);
+$select-background-disabled: var(--cps-color-bg-disabled);
 $select-label-color: var(--cps-color-text-dark);
 $select-label-disabled-color: var(--cps-color-text-mild);
 $select-items-disabled-color: var(--cps-color-text-light);
@@ -197,7 +198,7 @@ $hover-transition-duration: 0.2s;
     &.disabled {
       pointer-events: none;
       .cps-select-box {
-        background: #f7f7f7;
+        background: $select-background-disabled;
         &-items {
           color: $select-items-disabled-color;
           .text-group,
