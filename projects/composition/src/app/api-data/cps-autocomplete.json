@@ -202,7 +202,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "iconSizeType",
-                        "default": "18px",
+                        "default": "1.125rem",
                         "description": "Size of icon before input value."
                     },
                     {
