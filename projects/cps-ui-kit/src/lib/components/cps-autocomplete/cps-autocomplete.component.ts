@@ -41,6 +41,10 @@ import {
 } from '../cps-menu/cps-menu.component';
 import { Scroller, ScrollerModule } from 'primeng/scroller';
 
+const DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX = 44;
+const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.75;
+const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
+
 /**
  * CpsAutocompleteAppearanceType is used to define the border of the autocomplete input.
  * @group Types
@@ -418,17 +422,25 @@ export class CpsAutocompleteComponent
   activeSingle = false;
   optionHighlightedIndex = -1;
 
-  virtualListHeight = 240;
-  virtualScrollItemSize = 44;
+  virtualScrollItemSizePx = DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX;
+  virtualListHeightRem =
+    VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
 
-  autocompleteBoxWidth = 0;
+  autocompleteBoxWidthRem = 0;
   resizeObserver: ResizeObserver;
 
   isTimePickerField = false;
 
-  optionsListId = generateUniqueId('cps-autocomplete-options-list');
-  selectAllOptionId = generateUniqueId('cps-autocomplete-option-select-all');
-  private _optionIdPrefix = generateUniqueId('cps-autocomplete-option');
+  readonly optionsListId = generateUniqueId('cps-autocomplete-options-list');
+  readonly selectAllOptionId = generateUniqueId(
+    'cps-autocomplete-option-select-all'
+  );
+
+  private readonly _optionIdPrefix = generateUniqueId(
+    'cps-autocomplete-option'
+  );
+
+  private _rootFontSizePx = 16;
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
@@ -448,12 +460,21 @@ export class CpsAutocompleteComponent
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         if (entry?.target)
-          this.autocompleteBoxWidth = (entry.target as any).offsetWidth;
+          this.autocompleteBoxWidthRem = this._pxToRem(
+            (entry.target as any).offsetWidth
+          );
       });
     });
   }
 
   ngOnInit() {
+    this._rootFontSizePx = parseFloat(
+      getComputedStyle(this.document.documentElement).fontSize || '16'
+    );
+    this.virtualScrollItemSizePx =
+      this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
+    this.virtualListHeightRem =
+      VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
     this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
@@ -808,10 +829,9 @@ export class CpsAutocompleteComponent
   recalcVirtualListHeight() {
     if (!this.virtualScroll) return;
     const currentLen = this.filteredOptions?.length || 0;
-    this.virtualListHeight = Math.min(
-      this.virtualScrollItemSize * currentLen,
-      240
-    );
+    this.virtualListHeightRem =
+      VIRTUAL_SCROLL_ITEM_SIZE_REM *
+      Math.min(currentLen, VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS);
   }
 
   isEmptyValue(): boolean {
@@ -1089,8 +1109,8 @@ export class CpsAutocompleteComponent
       return;
     }
 
-    const itemTop = index * this.virtualScrollItemSize;
-    const itemBottom = itemTop + this.virtualScrollItemSize;
+    const itemTop = index * this.virtualScrollItemSizePx;
+    const itemBottom = itemTop + this.virtualScrollItemSizePx;
 
     const viewportTop = scrollerEl.scrollTop;
     const viewportBottom = viewportTop + scrollerEl.clientHeight;
@@ -1162,5 +1182,9 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       this.focusInput();
     }, 0);
+  }
+
+  private _pxToRem(px: number): number {
+    return px / this._rootFontSizePx;
   }
 }

@@ -169,14 +169,14 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     if (this.multiple && !this._value) {
       this._value = [];
     }
+    this._rootFontSizePx = parseFloat(
+      getComputedStyle(this.document.documentElement).fontSize || '16'
+    );
     if (document?.fonts?.ready) {
       document.fonts.ready.then(() => this._setEqualWidths());
     } else {
       this._setEqualWidths();
     }
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this.document.documentElement).fontSize || '16'
-    );
   }
 
   ngOnChanges() {

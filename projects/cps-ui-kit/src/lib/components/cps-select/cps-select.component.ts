@@ -325,7 +325,7 @@ export class CpsSelectComponent
   isOpened = false;
   optionHighlightedIndex = -1;
 
-  virtualListHeight = 240;
+  virtualListHeight = 242;
   virtualScrollItemSize = 44;
 
   selectBoxWidth = 0;
@@ -415,7 +415,7 @@ export class CpsSelectComponent
     const currentLen = this.options?.length || 0;
     this.virtualListHeight = Math.min(
       this.virtualScrollItemSize * currentLen,
-      240
+      242
     );
   }
 
