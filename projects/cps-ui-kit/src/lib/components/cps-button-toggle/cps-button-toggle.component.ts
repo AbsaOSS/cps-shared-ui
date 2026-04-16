@@ -172,8 +172,8 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
     this._rootFontSizePx = parseFloat(
       getComputedStyle(this.document.documentElement).fontSize || '16'
     );
-    if (document?.fonts?.ready) {
-      document.fonts.ready.then(() => this._setEqualWidths());
+    if (this.document?.fonts?.ready) {
+      this.document.fonts.ready.then(() => this._setEqualWidths());
     } else {
       this._setEqualWidths();
     }
