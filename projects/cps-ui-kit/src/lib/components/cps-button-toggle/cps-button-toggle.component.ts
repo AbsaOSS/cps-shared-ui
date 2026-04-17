@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
@@ -50,7 +51,9 @@ export type CpsButtonToggleOption = {
   templateUrl: './cps-button-toggle.component.html',
   styleUrls: ['./cps-button-toggle.component.scss']
 })
-export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
+export class CpsButtonToggleComponent
+  implements ControlValueAccessor, OnInit, OnChanges
+{
   /**
    * Label of the button toggle component.
    * @group Props
@@ -151,7 +154,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
    */
   @Output() valueChanged = new EventEmitter<any>();
 
-  largestButtonWidth = 0;
+  largestButtonWidthRem = 0;
 
   private _rootFontSizePx = 16;
 
@@ -211,7 +214,7 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
   }
 
   writeValue(value: any) {
-    this.value = value;
+    this._value = value;
   }
 
   updateValueOnClick(val: any) {
@@ -270,21 +273,22 @@ export class CpsButtonToggleComponent implements ControlValueAccessor, OnInit {
 
     this.renderer.appendChild(this.document.body, hiddenSpan);
 
-    this.largestButtonWidth = 0;
+    this.largestButtonWidthRem = 0;
     this.options.forEach((opt) => {
       const label = opt.label || '';
       this.renderer.setProperty(hiddenSpan, 'textContent', label);
 
-      const textWidth = hiddenSpan.offsetWidth || 0;
-      let totalWidth = textWidth + 26;
+      const textWidthRem = this._pxToRem(hiddenSpan.offsetWidth || 0);
+      let totalWidthRem = textWidthRem + 1.625; // padding: 2×0.75rem + borders: 2×0.0625rem = 1.625rem
       if (opt.icon) {
-        totalWidth += 16;
-        if (label) totalWidth += 8;
+        totalWidthRem += 1; // icon width: 1rem (cps-icon 'small' size)
+        if (label) {
+          totalWidthRem += 0.5; // icon margin-right: 0.5rem (me-2)
+        }
       }
 
-      const totalWidthRem = this._pxToRem(totalWidth);
-      this.largestButtonWidth = Math.max(
-        this.largestButtonWidth,
+      this.largestButtonWidthRem = Math.max(
+        this.largestButtonWidthRem,
         totalWidthRem
       );
     });

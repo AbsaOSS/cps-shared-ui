@@ -1,10 +1,6 @@
 <div class="cps-btn-toggle">
   @if (label) {
-    <div
-      class="cps-btn-toggle-label"
-      [ngClass]="{
-        disabled
-      }">
+    <div class="cps-btn-toggle-label" [class.disabled]="disabled">
       <span>{{ label }}</span>
       @if (infoTooltip) {
         <cps-info-circle
@@ -62,10 +58,10 @@
       option.value | checkOptionSelected: value : multiple : true : ''
     "
     [attr.aria-label]="option.ariaLabel || option.label || null"
-    [style.min-width.rem]="equalWidths ? largestButtonWidth : null">
+    [style.min-width.rem]="equalWidths ? largestButtonWidthRem : null">
     <span class="cps-btn-toggle-content-option-inner">
       @if (option.icon) {
-        <cps-icon [ngClass]="{ 'me-2': !!option.label }" [icon]="option.icon">
+        <cps-icon [class.me-2]="!!option.label" [icon]="option.icon">
         </cps-icon>
       }
       @if (option.label) {
