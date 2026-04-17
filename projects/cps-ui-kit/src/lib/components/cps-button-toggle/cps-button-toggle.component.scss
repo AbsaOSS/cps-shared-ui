@@ -68,17 +68,21 @@ $option-active-background: var(--cps-color-highlight-active);
       letter-spacing: 0.05em;
       color: $option-label-color;
       user-select: none;
-      transition: background-color 0.2s ease;
 
       &:hover {
         background: $option-hover-background;
+        transition: background-color 0.2s ease;
       }
 
       &:active {
         background: $option-active-background;
+        transition: background-color 0.2s ease;
       }
 
       &:focus-visible {
+        &:not(.is-selected):not(:active) {
+          background: $option-hover-background;
+        }
         z-index: 1;
       }
 
