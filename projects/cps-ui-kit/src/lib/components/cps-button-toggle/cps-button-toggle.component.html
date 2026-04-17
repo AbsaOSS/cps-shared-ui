@@ -1,6 +1,6 @@
 <div class="cps-btn-toggle">
   @if (label) {
-    <div class="cps-btn-toggle-label">
+    <div class="cps-btn-toggle-label" [class.disabled]="disabled">
       <span>{{ label }}</span>
       @if (infoTooltip) {
         <cps-info-circle
@@ -15,68 +15,58 @@
       }
     </div>
   }
-  <div class="cps-btn-toggle-content">
-    @for (option of options; track option) {
-      <ng-container
-        *ngTemplateOutlet="
-          optionContainerTemplate;
-          context: {
-            option: option,
-            tooltip: option.tooltip
-          }
-        "></ng-container>
+  <div
+    class="cps-btn-toggle-content"
+    role="group"
+    [attr.aria-label]="ariaLabel || label || null">
+    @for (option of options; track option.value) {
+      @if (option.tooltip) {
+        <span
+          class="cps-btn-toggle-option-wrapper"
+          [cpsTooltip]="option.tooltip"
+          tooltipCloseDelay="0"
+          [tooltipPosition]="optionTooltipPosition">
+          <ng-container
+            *ngTemplateOutlet="
+              buttonTemplate;
+              context: { option }
+            "></ng-container>
+        </span>
+      }
+      @if (!option.tooltip) {
+        <span class="cps-btn-toggle-option-wrapper">
+          <ng-container
+            *ngTemplateOutlet="
+              buttonTemplate;
+              context: { option }
+            "></ng-container>
+        </span>
+      }
     }
   </div>
 </div>
-
-<ng-template #optionContainerTemplate let-option="option" let-tooltip="tooltip">
-  @if (tooltip) {
-    <label
-      class="cps-btn-toggle-content-option"
-      [cpsTooltip]="option.tooltip"
-      tooltipCloseDelay="0"
-      [tooltipPosition]="optionTooltipPosition">
-      <ng-container
-        *ngTemplateOutlet="
-          optionRadioTemplate;
-          context: {
-            option: option
-          }
-        "></ng-container>
-    </label>
-  }
-  @if (!tooltip) {
-    <label class="cps-btn-toggle-content-option">
-      <ng-container
-        *ngTemplateOutlet="
-          optionRadioTemplate;
-          context: {
-            option: option
-          }
-        "></ng-container>
-    </label>
-  }
-</ng-template>
-
-<ng-template #optionRadioTemplate let-option="option">
-  <input
-    class="cps-btn-toggle-content-option-input"
-    [type]="!multiple && mandatory ? 'radio' : 'checkbox'"
+<ng-template #buttonTemplate let-option="option">
+  <button
+    type="button"
+    class="cps-btn-toggle-content-option"
+    [class.is-selected]="
+      option.value | checkOptionSelected: value : multiple : true : ''
+    "
     [disabled]="option.disabled || disabled"
-    [value]="option.value"
-    [checked]="option.value | checkOptionSelected: value : multiple : true : ''"
-    (change)="updateValueEvent($event, option.value)" />
-  <span
-    class="cps-btn-toggle-content-option-content"
-    [ngStyle]="{
-      'min-width': largestButtonWidth ? largestButtonWidth + 'px' : 'none'
-    }">
-    @if (option.icon) {
-      <cps-icon [ngClass]="{ 'me-2': !!option.label }" [icon]="option.icon">
-      </cps-icon>
-    }
-    @if (option.label) {
-      <span>{{ option.label }}</span>
-    }
-  </span>
+    (click)="updateValueOnClick(option.value)"
+    [attr.aria-pressed]="
+      option.value | checkOptionSelected: value : multiple : true : ''
+    "
+    [attr.aria-label]="option.ariaLabel || option.label || null"
+    [style.min-width.rem]="equalWidths ? largestButtonWidthRem : null">
+    <span class="cps-btn-toggle-content-option-inner">
+      @if (option.icon) {
+        <cps-icon [class.me-2]="!!option.label" [icon]="option.icon">
+        </cps-icon>
+      }
+      @if (option.label) {
+        <span>{{ option.label }}</span>
+      }
+    </span>
+  </button>
 </ng-template>

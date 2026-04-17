@@ -3,11 +3,12 @@
 $color-calm: var(--cps-color-calm);
 $color-error: var(--cps-color-error);
 $error-background: #fef3f2;
-$autocomplete-placeholder-color: var(--cps-color-text-lightest);
+$autocomplete-placeholder-color: var(--cps-color-text-mild);
 $autocomplete-label-color: var(--cps-color-text-dark);
 $autocomplete-label-disabled-color: var(--cps-color-text-mild);
 $autocomplete-items-disabled-color: var(--cps-color-text-light);
 $autocomplete-hint-color: var(--cps-color-text-mild);
+$autocomplete-background-disabled: var(--cps-color-bg-disabled);
 $option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: var(--cps-color-highlight-selected);
 $option-highlight-background: var(--cps-color-highlight-active);
@@ -287,7 +288,7 @@ $hover-transition-duration: 0.2s;
     &.disabled {
       pointer-events: none;
       .cps-autocomplete-box {
-        background: #f7f7f7;
+        background: $autocomplete-background-disabled;
         &-items {
           color: $autocomplete-items-disabled-color;
           .text-group,

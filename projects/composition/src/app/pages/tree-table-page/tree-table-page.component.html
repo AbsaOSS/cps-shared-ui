@@ -276,7 +276,10 @@
       <cps-tree-table [data]="data" [size]="selSize">
         <ng-template #toolbar>
           <span>Tree table with custom toolbar and different sizes</span>
-          <cps-button-toggle [options]="sizesOptions" [(ngModel)]="selSize">
+          <cps-button-toggle
+            ariaLabel="Table size"
+            [options]="sizesOptions"
+            [(ngModel)]="selSize">
           </cps-button-toggle>
         </ng-template>
         <ng-template #header>

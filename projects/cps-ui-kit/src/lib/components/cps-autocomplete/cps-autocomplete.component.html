@@ -203,9 +203,7 @@
         aria-orientation="vertical"
         [attr.aria-multiselectable]="!!multiple"
         class="cps-autocomplete-options"
-        [ngStyle]="{
-          width: autocompleteBoxWidth + 'px'
-        }">
+        [style.width.rem]="autocompleteBoxWidthRem">
         @if (loading && showLoadingMessage) {
           <div
             class="cps-autocomplete-options-loading"
@@ -261,9 +259,9 @@
               #virtualList
               [items]="filteredOptions"
               [delay]="0"
-              [scrollHeight]="virtualListHeight + 'px'"
+              [scrollHeight]="virtualListHeightRem + 'rem'"
               [options]="{ numToleratedItems: numToleratedItems }"
-              [itemSize]="virtualScrollItemSize">
+              [itemSize]="virtualScrollItemSizePx">
               <ng-template pTemplate="item" let-item let-options="options">
                 <ng-container
                   *ngTemplateOutlet="

@@ -1,8 +1,9 @@
 $color-calm: var(--cps-color-calm);
 $textarea-hint-color: var(--cps-color-text-mild);
 $textarea-label-disabled-color: var(--cps-color-text-mild);
+$textarea-background-disabled: var(--cps-color-bg-disabled);
 $textarea-pass-show-btn-color: var(--cps-color-text-mild);
-$textarea-placeholder-color: var(--cps-color-text-lightest);
+$textarea-placeholder-color: var(--cps-color-text-mild);
 $textarea-border-color: var(--cps-color-line-light);
 $textarea-label-color: var(--cps-color-text-dark);
 $textarea-text-color: var(--cps-color-text-dark);
@@ -61,7 +62,7 @@ $hover-transition-duration: 0.2s;
         }
         &:disabled {
           color: $textarea-text-disabled-color;
-          background-color: #f7f7f7;
+          background-color: $textarea-background-disabled;
           opacity: 1;
           pointer-events: none;
         }

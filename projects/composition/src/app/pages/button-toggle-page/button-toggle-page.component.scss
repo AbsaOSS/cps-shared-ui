@@ -1,11 +1,13 @@
 .btn-toggles-group {
-  gap: 35px;
+  gap: 2.1875rem;
   display: flex;
   flex-direction: column;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
 }
 
 .sync-val-example {
   .sync-val {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 }

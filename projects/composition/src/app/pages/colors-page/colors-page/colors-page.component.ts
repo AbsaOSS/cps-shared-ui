@@ -29,7 +29,7 @@ export class ColorsPageComponent implements OnInit {
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
     { name: 'Highlights', colors: [[], [], [], []] },
-    { name: 'Backgrounds', colors: [[], [], [], []] },
+    { name: 'Backgrounds', colors: [[], [], [], [], [], []] },
     { name: 'Lines', colors: [[], [], [], []] },
     { name: 'Text', colors: [[], [], [], [], [], []] }
   ];
@@ -42,7 +42,7 @@ export class ColorsPageComponent implements OnInit {
     { name: 'Darks', colors: [[], [], []] },
     { name: 'States', colors: [[], [], [], [], [], [], [], []] },
     { name: 'Highlights', colors: [[], [], [], []] },
-    { name: 'Backgrounds', colors: [[], [], [], []] },
+    { name: 'Backgrounds', colors: [[], [], [], [], [], []] },
     { name: 'Lines', colors: [[], [], [], []] },
     { name: 'Text', colors: [[], [], [], [], [], []] }
   ];
@@ -127,6 +127,10 @@ export class ColorsPageComponent implements OnInit {
         this.colorsList[4].colors[2].push({ name, value });
       } else if (name === 'bg-dark') {
         this.colorsList[4].colors[3].push({ name, value });
+      } else if (name === 'bg-disabled') {
+        this.colorsList[4].colors[4].push({ name, value });
+      } else if (name === 'bg-disabled-selected') {
+        this.colorsList[4].colors[5].push({ name, value });
       } else if (name === 'line-light') {
         this.colorsList[5].colors[0].push({ name, value });
       } else if (name === 'line-mid') {

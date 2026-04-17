@@ -1,10 +1,12 @@
+@use '../../../../styles/mixins' as *;
+
 $group-label-color: var(--cps-color-text-dark);
 $group-label-disabled-color: var(--cps-color-text-mild);
 $selected-background-color: var(--cps-color-calm);
-$selected-disabled-background-color: var(--cps-color-line-mid);
-$selected-disabled-option-label-color: var(--cps-color-text-mild);
-$disabled-background-color: #f7f7f7;
-$disabled-option-label-color: var(--cps-color-text-light);
+$selected-disabled-background-color: var(--cps-color-bg-disabled-selected);
+$selected-disabled-option-label-color: var(--cps-color-text-medium);
+$disabled-background-color: var(--cps-color-bg-disabled);
+$disabled-option-label-color: var(--cps-color-text-mild);
 $option-label-color: var(--cps-color-text-dark);
 $border-color: var(--cps-color-text-lightest);
 $option-hover-background: var(--cps-color-highlight-hover);
@@ -12,100 +14,111 @@ $option-active-background: var(--cps-color-highlight-active);
 
 :host {
   .cps-btn-toggle {
+    display: block;
+
     &-label {
       color: $group-label-color;
       margin-bottom: 0.5rem;
       align-items: center;
-      display: inline-flex;
+      display: flex;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 1rem;
       font-family: 'Source Sans Pro', sans-serif;
       cursor: default;
 
+      &.disabled {
+        color: $group-label-disabled-color;
+      }
+
       .cps-btn-toggle-label-info-circle {
-        margin-left: 8px;
-        ::ng-deep cps-icon {
-          i {
-            width: 14px;
-            height: 14px;
-          }
+        margin-left: 0.5rem;
+        ::ng-deep cps-icon i {
+          width: 0.875rem;
+          height: 0.875rem;
         }
       }
     }
+
     &-content {
       display: flex;
+      flex-wrap: nowrap;
+    }
 
-      &-option-input {
-        clip: rect(0 0 0 0);
-        clip-path: inset(100%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
-      }
+    &-option-wrapper {
+      display: flex;
 
-      &-option-input:checked + .cps-btn-toggle-content-option-content {
-        background-color: $selected-background-color;
-        z-index: 1;
-        color: #ffffff;
-        &:hover {
-          background-image: linear-gradient(hsla(0, 0%, 100%, 0.1) 0 0);
-        }
-      }
-
-      &-option-input:disabled + .cps-btn-toggle-content-option-content {
-        pointer-events: none;
-        background-color: $disabled-background-color;
-        color: $disabled-option-label-color;
-      }
-
-      &-option-input:disabled:checked + .cps-btn-toggle-content-option-content {
-        background-color: $selected-disabled-background-color;
-        color: $selected-disabled-option-label-color;
-      }
-
-      &-option {
-        &-content {
-          height: 38px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          background-color: #ffffff;
-          padding: 0.375em 0.75em;
-          position: relative;
-          border: 0.0625em solid $border-color;
-          border-right: 0;
-          font-weight: normal;
-          font-size: 16px;
-          font-family: 'Source Sans Pro', sans-serif;
-          letter-spacing: 0.05em;
-          color: $option-label-color;
-          text-align: center;
-          transition: background-color 0.2s ease;
-          -webkit-user-select: none; /* Safari */
-          -ms-user-select: none; /* IE 10 and IE 11 */
-          user-select: none; /* Standard syntax */
-          &:hover {
-            background: $option-hover-background;
-          }
-          &:active {
-            background: $option-active-background;
-          }
-        }
+      &:not(:last-child) .cps-btn-toggle-content-option {
+        border-right: 0;
       }
     }
-  }
 
-  .cps-btn-toggle-content-option:first-child
-    .cps-btn-toggle-content-option-content {
-    border-radius: 4px 0 0 4px;
-  }
+    &-content-option {
+      height: 2.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: white;
+      padding: 0.375rem 0.75rem;
+      position: relative;
+      border: 0.0625rem solid $border-color;
+      font-weight: normal;
+      font-size: 1rem;
+      font-family: 'Source Sans Pro', sans-serif;
+      letter-spacing: 0.05em;
+      color: $option-label-color;
+      user-select: none;
+      transition: background-color 0.2s ease;
 
-  .cps-btn-toggle-content-option:last-child
-    .cps-btn-toggle-content-option-content {
-    border-radius: 0 4px 4px 0;
-    border-right: 0.0625em solid $border-color;
+      &:hover {
+        background: $option-hover-background;
+      }
+
+      &:active {
+        background: $option-active-background;
+      }
+
+      &:focus-visible {
+        z-index: 1;
+      }
+
+      @include focus-ring(0.25rem, 0.3125rem);
+
+      &.is-selected {
+        background: $selected-background-color;
+        color: white;
+      }
+
+      &:disabled {
+        background: $disabled-background-color;
+        color: $disabled-option-label-color;
+        cursor: default;
+      }
+
+      &:disabled.is-selected {
+        background: $selected-disabled-background-color;
+        color: $selected-disabled-option-label-color;
+        opacity: 1;
+      }
+    }
+
+    &-option-wrapper:first-child .cps-btn-toggle-content-option {
+      border-radius: 0.25rem 0 0 0.25rem;
+    }
+
+    &-option-wrapper:last-child .cps-btn-toggle-content-option {
+      border-radius: 0 0.25rem 0.25rem 0;
+    }
+
+    &-content-option-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }

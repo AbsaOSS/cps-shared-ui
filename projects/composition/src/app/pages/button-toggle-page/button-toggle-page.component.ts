@@ -32,9 +32,24 @@ export class ButtonTogglePageComponent {
   ];
 
   iconOnlyOptions: CpsButtonToggleOption[] = [
-    { value: 'second', icon: 'toast-success', tooltip: 'Succeeded' },
-    { value: 'third', icon: 'toast-error', tooltip: 'Failed' },
-    { value: 'first', icon: 'pending', tooltip: 'Pending' }
+    {
+      value: 'second',
+      icon: 'toast-success',
+      tooltip: 'Succeeded',
+      ariaLabel: 'Succeeded'
+    },
+    {
+      value: 'third',
+      icon: 'toast-error',
+      tooltip: 'Failed',
+      ariaLabel: 'Failed'
+    },
+    {
+      value: 'first',
+      icon: 'pending',
+      tooltip: 'Pending',
+      ariaLabel: 'Pending'
+    }
   ];
 
   partiallyDisabledOptions: CpsButtonToggleOption[] = [

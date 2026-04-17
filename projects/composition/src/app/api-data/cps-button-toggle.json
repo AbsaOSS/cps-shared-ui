@@ -11,7 +11,15 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "Label of the toggle buttons."
+                        "description": "Label of the button toggle component."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the button toggle component, used for accessibility, it takes precedence over label."
                     },
                     {
                         "name": "options",
@@ -133,7 +141,7 @@
         "values": [
             {
                 "name": "CpsButtonToggleOption",
-                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"icon\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"ariaLabel\": \"string\",\n    \"icon\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
                 "description": "CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent."
             }
         ]

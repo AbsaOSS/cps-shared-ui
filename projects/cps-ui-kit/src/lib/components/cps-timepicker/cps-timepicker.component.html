@@ -20,6 +20,7 @@
   <div class="cps-timepicker-body">
     <cps-autocomplete
       #hoursField
+      ariaLabel="Hours"
       (keypress)="numberOnly($event)"
       width="60"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
@@ -40,6 +41,7 @@
     <span class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
+      ariaLabel="Minutes"
       (keypress)="numberOnly($event)"
       width="60"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
@@ -61,6 +63,7 @@
     @if (withSeconds) {
       <cps-autocomplete
         #secondsField
+        ariaLabel="Seconds"
         (keypress)="numberOnly($event)"
         width="60"
         [emptyOptionIndex]="mandatoryValue ? 0 : -1"
@@ -80,6 +83,7 @@
     @if (!use24HourTime) {
       <cps-button-toggle
         class="cps-timepicker-am-pm-selector"
+        ariaLabel="Day period"
         [options]="dayPeriodOptions"
         [disabled]="disabled"
         [value]="value?.dayPeriod || 'AM'"
