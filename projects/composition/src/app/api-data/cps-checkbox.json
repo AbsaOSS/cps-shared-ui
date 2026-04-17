@@ -14,6 +14,14 @@
                         "description": "Label of the checkbox."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the checkbox, used for accessibility, it takes precedence over label."
+                    },
+                    {
                         "name": "disabled",
                         "optional": false,
                         "readonly": false,

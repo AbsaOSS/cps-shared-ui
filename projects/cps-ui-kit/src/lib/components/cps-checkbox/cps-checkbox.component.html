@@ -1,25 +1,26 @@
 <div class="cps-checkbox-container">
-  <label
-    class="cps-checkbox"
-    [ngClass]="{
-      'cps-checkbox-disabled': disabled
-    }">
+  <label class="cps-checkbox" [class.cps-checkbox-disabled]="disabled">
     <input
       type="checkbox"
+      class="cps-checkbox-input"
       [disabled]="disabled"
       [checked]="value"
-      (change)="updateValueEvent($event)" />
-    <span class="cps-checkbox-indicator"></span>
+      (change)="updateValueEvent($event)"
+      [attr.aria-label]="ariaLabel || label || null" />
+    <span class="cps-checkbox-indicator" aria-hidden="true"></span>
     @if (icon) {
       <cps-icon
         class="cps-checkbox-icon"
         [icon]="icon"
         size="small"
-        [color]="disabled ? 'text-light' : iconColor">
+        [color]="disabled ? 'text-mild' : iconColor"
+        aria-hidden="true">
       </cps-icon>
     }
     @if (label) {
-      <span class="cps-checkbox-label">{{ label }}</span>
+      <span class="cps-checkbox-label">
+        {{ label }}
+      </span>
     }
   </label>
   @if (infoTooltip) {

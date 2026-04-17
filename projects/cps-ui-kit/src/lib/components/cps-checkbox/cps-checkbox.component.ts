@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnChanges,
   OnInit,
   Optional,
   Output,
@@ -26,12 +27,20 @@ import { getCSSColor } from '../../utils/colors-utils';
   templateUrl: './cps-checkbox.component.html',
   styleUrls: ['./cps-checkbox.component.scss']
 })
-export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
+export class CpsCheckboxComponent
+  implements OnInit, OnChanges, ControlValueAccessor
+{
   /**
    * Label of the checkbox.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the checkbox, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Determines whether checkbox is disabled.
@@ -116,6 +125,14 @@ export class CpsCheckboxComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit(): void {
     this.iconColor = getCSSColor(this.iconColor, this.document);
+  }
+
+  ngOnChanges(): void {
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
+      );
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

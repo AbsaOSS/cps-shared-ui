@@ -236,7 +236,9 @@ $hover-transition-duration: 0.2s;
               opacity: 1;
             }
           }
-          @include focus-ring();
+          &:focus-visible {
+            @include focus-ring();
+          }
 
           &-hidden {
             visibility: hidden;
@@ -252,7 +254,9 @@ $hover-transition-duration: 0.2s;
           &:focus {
             outline: none;
           }
-          @include focus-ring();
+          &:focus-visible {
+            @include focus-ring();
+          }
           transition-duration: $hover-transition-duration;
           cursor: pointer;
           &:hover,
