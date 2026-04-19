@@ -6,10 +6,10 @@
   $item-border-color: var(--cps-color-line);
 
   border-right: 1px solid $item-border-color;
-  background-color: var(--cps-surface-body);
+  background-color: var(--cps-surface-highlight);
   .sidebar {
     transition: width 0.2s;
-    background-color: var(--cps-surface-body);
+    background-color: var(--cps-surface-highlight);
     width: vars.$sidebar-width;
     height: calc(100vh - vars.$top-tbar-height - 20px);
     overflow: auto;

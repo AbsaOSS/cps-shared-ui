@@ -21,19 +21,9 @@
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--cps-background-color);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--cps-border-color);
-  border-radius: var(--cps-radius-sm);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--cps-accent-primary);
+* {
+  scrollbar-color: var(--cps-border-color) var(--cps-background-color);
+  scrollbar-width: thin;
 }
 
 html,
