@@ -1,7 +1,7 @@
 @use '../../../../styles/mixins' as *;
 
 $color-calm: var(--cps-color-calm);
-$color-error: var(--cps-color-error);
+$color-error: var(--cps-state-error);
 $error-background: #fef3f2;
 $autocomplete-placeholder-color: var(--cps-input-placeholder);
 $autocomplete-label-color: var(--cps-color-text-dark);
@@ -225,7 +225,7 @@ $hover-transition-duration: 0.2s;
         .cps-autocomplete-box-clear-icon {
           cursor: pointer;
           display: flex;
-          color: $color-calm;
+          color: $color-error;
           margin-left: 0.5rem;
 
           &:focus {

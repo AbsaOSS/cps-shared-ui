@@ -627,7 +627,11 @@ const isProcessable = (value) => {
 };
 
 const allowed = (name) => {
-  return !name.includes('ts-helpers') && !name.includes('icons');
+  return (
+    !name.includes('ts-helpers') &&
+    !name.includes('icons') &&
+    !name.includes('cps-theme')
+  );
 };
 
 const getTypesValue = (typeobj) => {
