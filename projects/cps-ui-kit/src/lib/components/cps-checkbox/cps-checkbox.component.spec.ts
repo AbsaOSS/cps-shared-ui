@@ -13,6 +13,7 @@ describe('CpsCheckboxComponent', () => {
 
     fixture = TestBed.createComponent(CpsCheckboxComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'checkbox');
     fixture.detectChanges();
   });
 
@@ -146,5 +147,65 @@ describe('CpsCheckboxComponent', () => {
   it('should have correct checkbox input type', () => {
     const input = fixture.nativeElement.querySelector('input');
     expect(input.type).toBe('checkbox');
+  });
+
+  describe('aria-label', () => {
+    it('should set aria-label from ariaLabel input', () => {
+      fixture.componentRef.setInput('ariaLabel', 'My checkbox');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-label')).toBe('My checkbox');
+    });
+
+    it('should fall back to label for aria-label when ariaLabel is not set', () => {
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('label', 'Accept Terms');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-label')).toBe('Accept Terms');
+    });
+
+    it('should prefer ariaLabel over label for aria-label', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Accessible label');
+      fixture.componentRef.setInput('label', 'Visible label');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-label')).toBe('Accessible label');
+    });
+
+    it('should log an error when neither label nor ariaLabel is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('label', '');
+      fixture.detectChanges();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
+      );
+      consoleSpy.mockRestore();
+    });
+
+    it('should not log an error when ariaLabel is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      fixture.componentRef.setInput('ariaLabel', 'Accessible');
+      fixture.componentRef.setInput('label', '');
+      fixture.detectChanges();
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
+
+    it('should not log an error when label is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('label', 'Visible label');
+      fixture.detectChanges();
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
   });
 });

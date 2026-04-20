@@ -83,10 +83,9 @@ $option-active-background: var(--cps-color-highlight-active);
         &:not(.is-selected):not(:active) {
           background: $option-hover-background;
         }
+        @include focus-ring(0.25rem, 0.3125rem);
         z-index: 1;
       }
-
-      @include focus-ring(0.25rem, 0.3125rem);
 
       &.is-selected {
         background: $selected-background-color;

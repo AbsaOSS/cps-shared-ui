@@ -1,12 +1,13 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
-$border-color: var(--cps-color-text-mild);
+$border-color: var(--cps-color-text-medium);
 $label-color: var(--cps-color-text-dark);
-$disabled-label-color: var(--cps-color-text-light);
-$disabled-background-checked: var(--cps-color-text-lightest);
-$disabled-border-color-checked: var(--cps-color-text-lightest);
-$disabled-border-color-unchecked: var(--cps-color-text-light);
-$border-radius: 2px;
-$tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+DQo8c3ZnIHdpZHRoPSIxMiIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgMTIgOSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4NCiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TC4wNTcgNS42NGwuODI5LTEuMjI3TDQuNDcgNy4yNjggMTAuOTIxLjA4NmwuOTIzIDEuMTAzLTYuODYzIDcuNjRjLS4xMzQtLjAwMy0uNDA2LjE0OC0uNDA2LjE0OHoiIGZpbGw9IiNGRkYiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPg0KPC9zdmc+);
+$disabled-label-color: var(--cps-color-text-mild);
+$disabled-background-checked: var(--cps-color-text-light);
+$disabled-border-color: var(--cps-color-text-light);
+$border-radius: 0.125rem;
+$tick-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgdmlld0JveD0iMCAwIDEyIDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTQuNTc1IDguOTc3cy0uNDA0LS4wMDctLjUzNi0uMTY1TCAuMDU3IDUuNjRsLjgyOS0xLjIyN0w0LjQ3IDcuMjY4IDEwLjkyMS4wODZsLjkyMyAxLjEwMy02Ljg2MyA3LjY0Yy0uMTM0LS4wMDMtLjQwNi4xNDgtLjQwNi4xNDh6IiBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+');
 
 :host {
   min-width: max-content;
@@ -26,67 +27,67 @@ $tick-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZ
       font-weight: 400;
       color: $label-color;
       cursor: pointer;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
+
     .cps-checkbox-disabled {
       cursor: default;
       color: $disabled-label-color;
     }
 
-    .cps-checkbox input[type='checkbox'] {
+    .cps-checkbox-input {
       position: absolute;
       opacity: 0;
-      width: 0;
-      height: 0;
+      width: 1.125rem;
+      height: 1.125rem;
+      margin: 0;
     }
 
     .cps-checkbox-indicator {
       position: relative;
       display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid $border-color;
+      width: 1.125rem;
+      height: 1.125rem;
+      border: 0.125rem solid $border-color;
       border-radius: $border-radius;
     }
 
     .cps-checkbox-label,
     .cps-checkbox-icon {
-      margin-left: 10px;
+      margin-left: 0.625rem;
     }
 
-    .cps-checkbox input[type='checkbox']:checked ~ .cps-checkbox-indicator {
+    .cps-checkbox-input:checked ~ .cps-checkbox-indicator {
       color: white;
       background: $color-calm $tick-image 50% 40% no-repeat;
+      background-size: 0.75rem auto;
       border-color: $color-calm;
     }
 
-    .cps-checkbox input[type='checkbox']:disabled ~ .cps-checkbox-indicator {
-      border-color: $disabled-border-color-unchecked;
+    .cps-checkbox-input:disabled ~ .cps-checkbox-indicator {
+      border-color: $disabled-border-color;
     }
 
-    .cps-checkbox
-      input[type='checkbox']:checked:disabled
-      ~ .cps-checkbox-indicator {
+    .cps-checkbox-input:checked:disabled ~ .cps-checkbox-indicator {
       background: $disabled-background-checked $tick-image 50% 40% no-repeat;
-      border-color: $disabled-border-color-checked;
+      background-size: 0.75rem auto;
     }
 
-    .cps-checkbox
-      input[type='checkbox']:not(:disabled):hover
-      ~ .cps-checkbox-indicator {
+    .cps-checkbox:not(.cps-checkbox-disabled):hover .cps-checkbox-indicator {
       border-color: $color-calm;
+    }
+
+    .cps-checkbox-input:focus-visible ~ .cps-checkbox-indicator {
+      border-color: $color-calm;
+      @include focus-ring(0.325rem, 0.45rem);
     }
 
     .cps-checkbox-info-circle {
-      margin-left: 8px;
-      ::ng-deep cps-icon {
-        i {
-          width: 14px;
-          height: 14px;
-        }
+      margin-left: 0.5rem;
+
+      ::ng-deep cps-icon i {
+        width: 0.875rem;
+        height: 0.875rem;
       }
     }
   }

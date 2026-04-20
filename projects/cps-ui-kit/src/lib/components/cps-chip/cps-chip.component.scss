@@ -26,7 +26,9 @@ $color-text-mild: var(--cps-color-text-mild);
       &:focus {
         outline: none;
       }
-      @include focus-ring();
+      &:focus-visible {
+        @include focus-ring();
+      }
       &:hover {
         ::ng-deep .cps-icon {
           color: $color-calm !important;

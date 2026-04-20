@@ -26,7 +26,7 @@ const components: ComponentEntry[] = [
     name: 'Button toggle',
     selector: 'cps-button-toggle'
   },
-  // { route: '/checkbox', name: 'Checkbox', selector: 'cps-checkbox' },
+  { route: '/checkbox', name: 'Checkbox', selector: 'cps-checkbox' },
   { route: '/chip', name: 'Chip', selector: 'cps-chip' }
   // {
   //   route: '/datepicker',
