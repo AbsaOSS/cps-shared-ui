@@ -230,7 +230,7 @@
   --cps-color-warn-darken3: #a15300;
   --cps-color-warn-darken4: #843b00;
 
-  --cps-color-error: #cc3333;
+  --cps-color-error: #b91c1c;
   --cps-color-error-highlighten: #f9e4e5;
   --cps-color-error-lighten5: #f5d9d9;
   --cps-color-error-lighten4: #f2cece;
@@ -275,4 +275,162 @@
   --cps-color-text-medium: #5a5555;
   --cps-color-text-dark: #4a4444;
   --cps-color-text-darkest: #2d2323;
+
+  // Semantic design tokens (use these inside components)
+  --cps-accent-primary: var(--cps-color-calm);
+  --cps-accent-primary-contrast: #ffffff;
+  --cps-accent-secondary: var(--cps-color-warmth);
+  --cps-accent-secondary-contrast: #2d2323;
+  --cps-error-background: #fef3f2;
+
+  // Lines and borders
+  --cps-color-line: #e3e2e2;
+
+  --cps-surface-body: var(--cps-color-bg-light);
+  --cps-surface-highlight: #ffffff;
+  --cps-surface-muted: var(--cps-color-bg-lightest);
+  --cps-surface-elevated: var(--cps-color-bg-mid);
+  --cps-surface-control: #ffffff;
+  --cps-surface-overlay: rgba(0, 0, 0, 0.45);
+  --cps-background-color: var(--cps-color-bg-lightest);
+  --cps-background-disabled: #f7f7f7;
+
+  // Tab component
+  --cps-tab-subtabs-background: #d7d7d759;
+  --cps-tabs-subtabs-active-background: #fff;
+  --cps-tabs-subtabs-background-hover: var(--cps-highlight-active);
+  --cps-tabs-subtabs-text-hover: var(--cps-accent-primary);
+
+  --cps-text-primary: var(--cps-color-text-darkest);
+  --cps-text-secondary: var(--cps-color-text-dark);
+  --cps-text-muted: var(--cps-color-text-mild);
+  --cps-text-inverse: var(--cps-color-depth-darken4);
+  --cps-text-on-accent: #ffffff;
+  --cps-text-disabled: var(--cps-color-text-light);
+
+  --cps-border-color: var(--cps-color-line-mid);
+  --cps-border-strong: var(--cps-color-line-dark);
+  --cps-border-focus: var(--cps-color-calm);
+
+  --cps-highlight-hover: var(--cps-color-highlight-hover);
+  --cps-highlight-active: var(--cps-color-highlight-active);
+  --cps-highlight-selected: var(--cps-color-highlight-selected);
+
+  --cps-state-info: var(--cps-color-info);
+  --cps-state-info-contrast: #2d2323;
+  --cps-state-info-surface: var(--cps-color-info-bg);
+  --cps-state-success: var(--cps-color-success);
+  --cps-state-success-contrast: #2d2323;
+  --cps-state-success-surface: var(--cps-color-success-bg);
+  --cps-state-warn: var(--cps-color-warn);
+  --cps-state-warn-contrast: #3b2500;
+  --cps-state-warn-surface: var(--cps-color-warn-bg);
+  --cps-state-error: var(--cps-color-error);
+  --cps-state-error-contrast: #ffffff;
+  --cps-state-error-surface: rgba(185, 28, 28, 0.14);
+
+  // Modern semantic surfaces
+  --cps-card-background: var(--cps-surface-highlight);
+  --cps-card-foreground: var(--cps-text-primary);
+  --cps-popover-background: var(--cps-surface-control);
+  --cps-popover-foreground: var(--cps-text-primary);
+  --cps-input-background: var(--cps-surface-control);
+  --cps-input-foreground: var(--cps-text-primary);
+  --cps-input-placeholder: var(--cps-text-muted);
+
+  // Focus ring and outlines
+  --cps-ring-color: var(--cps-border-focus);
+  --cps-ring-offset-color: var(--cps-surface-body);
+
+  // Radius scale
+  --cps-radius-xs: 2px;
+  --cps-radius-sm: 4px;
+  --cps-radius-md: 8px;
+  --cps-radius-lg: 12px;
+  --cps-radius-xl: 16px;
+  --cps-radius-full: 9999px;
+
+  // Backward compatible radius aliases
+  --cps-border-radius-small: var(--cps-radius-sm);
+  --cps-border-radius-medium: var(--cps-radius-md);
+  --cps-border-radius-large: var(--cps-radius-lg);
+  --cps-border-radius-round: var(--cps-radius-full);
+
+  // Elevation shadows
+  --cps-shadow-xs: 0 1px 2px rgba(45, 35, 35, 0.08);
+  --cps-shadow-sm: 0 2px 6px rgba(45, 35, 35, 0.12);
+  --cps-shadow-md: 0 8px 20px rgba(45, 35, 35, 0.14);
+  --cps-shadow-lg: 0 16px 40px rgba(45, 35, 35, 0.2);
+
+  // Motion tokens
+  --cps-motion-fast: 120ms;
+  --cps-motion-base: 180ms;
+  --cps-motion-slow: 260ms;
+  --cps-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root[data-color-theme='neutral'] {
+  --cps-accent-primary: #27272a;
+  --cps-accent-primary-contrast: #ffffff;
+  --cps-accent-secondary: #3f3f46;
+  --cps-accent-secondary-contrast: #ffffff;
+  --cps-border-focus: #27272a;
+  --cps-highlight-selected: rgba(39, 39, 42, 0.14);
+}
+
+:root[data-color-theme='calm'] {
+  --cps-accent-primary: var(--cps-color-calm);
+  --cps-accent-primary-contrast: #ffffff;
+  --cps-accent-secondary: var(--cps-color-warmth);
+  --cps-accent-secondary-contrast: #2d2323;
+  --cps-border-focus: var(--cps-color-calm);
+  --cps-highlight-selected: var(--cps-color-highlight-selected);
+}
+
+:root[data-color-theme='energy'] {
+  --cps-accent-primary: var(--cps-color-energy);
+  --cps-accent-primary-contrast: #2d2323;
+  --cps-text-on-accent: #2d2323;
+  --cps-accent-secondary: var(--cps-color-prepared);
+  --cps-accent-secondary-contrast: #2d2323;
+  --cps-border-focus: var(--cps-color-energy);
+  --cps-highlight-selected: var(--cps-color-highlight-selected);
+}
+
+:root[data-color-theme='passion'] {
+  --cps-accent-primary: var(--cps-color-passion);
+  --cps-accent-primary-contrast: #ffffff;
+  --cps-accent-secondary: var(--cps-color-warmth);
+  --cps-accent-secondary-contrast: #ffffff;
+  --cps-border-focus: var(--cps-color-passion);
+  --cps-highlight-selected: rgba(220, 0, 50, 0.16);
+}
+
+:root[data-radius-theme='none'] {
+  --cps-radius-xs: 0px;
+  --cps-radius-sm: 0px;
+  --cps-radius-md: 0px;
+  --cps-radius-lg: 0px;
+  --cps-radius-xl: 0px;
+}
+
+:root[data-radius-theme='compact'] {
+  --cps-radius-sm: 3px;
+  --cps-radius-md: 6px;
+  --cps-radius-lg: 10px;
+  --cps-radius-xl: 14px;
+}
+
+:root[data-radius-theme='rounded'] {
+  --cps-radius-sm: 6px;
+  --cps-radius-md: 10px;
+  --cps-radius-lg: 14px;
+  --cps-radius-xl: 20px;
+}
+
+:root[data-radius-theme='pill'] {
+  --cps-radius-sm: 9999px;
+  --cps-radius-md: 9999px;
+  --cps-radius-lg: 9999px;
+  --cps-radius-xl: 9999px;
 }

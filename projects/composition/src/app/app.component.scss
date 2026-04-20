@@ -2,19 +2,37 @@
 
 .top-toolbar {
   height: vars.$top-tbar-height;
-  background-color: white;
+  background-color: var(--cps-surface-body);
   display: flex;
-  padding-left: 20px;
+  padding: 0 14px;
   align-items: center;
-  border-bottom: 1px solid lightgrey;
+  border-bottom: 1px solid var(--cps-border-color);
+  gap: 8px;
   img {
     width: 42px;
     height: 42px;
   }
+
   span {
-    margin-left: 16px;
     font-size: 18px;
-    color: vars.$color-calm;
+    color: var(--cps-accent-primary);
+    line-height: 1;
+
+    &:first-of-type {
+      flex: 1;
+      font-weight: lighter;
+      letter-spacing: 0.01em;
+    }
+
+    b {
+      color: var(--cps-accent-primary);
+      font-weight: 700;
+      font-size: 18px;
+    }
+  }
+
+  app-theme-toggle {
+    margin-left: auto;
   }
 }
 .composition-container {
@@ -29,11 +47,12 @@
     background-color: vars.$composition-background;
     .composition-body-toolbar {
       height: vars.$inner-tbar-height;
-      background: vars.$color-calm;
+      background: var(--cps-surface-elevated);
+      border-bottom: 1px solid var(--cps-border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: white;
+      color: var(--cps-text-primary);
       font-size: 20px;
       .composition-body-toolbar-title {
         margin: 0 auto;

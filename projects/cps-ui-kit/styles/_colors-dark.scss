@@ -1,0 +1,184 @@
+// Dark theme color palette
+// Only overrides variables that differ from the light theme (:root).
+// All brand palette, darks, and state variant colors are inherited from :root.
+
+[data-theme='dark'] {
+  // Brand color overrides (base values only — variants inherited from :root)
+  --cps-color-energy: #f47721;
+  --cps-color-care: #f05a78;
+
+  // States backgrounds
+  --cps-color-info-bg: rgba(73, 185, 255, 0.16);
+  --cps-color-success-bg: rgba(93, 211, 58, 0.16);
+  --cps-color-warn-bg: rgba(255, 186, 48, 0.16);
+  --cps-color-error-bg: rgba(255, 90, 103, 0.16);
+
+  // Highlights
+  --cps-color-highlight-hover: rgba(251, 251, 251, 0.06);
+  --cps-color-highlight-active: rgba(251, 251, 251, 0.1);
+  --cps-color-highlight-selected: rgba(244, 119, 33, 0.16);
+  --cps-color-highlight-selected-dark: rgba(244, 119, 33, 0.24);
+
+  // Backgrounds
+  --cps-color-bg-lightest: #2a2a31;
+  --cps-color-bg-light: #1f1f24;
+  --cps-color-bg-mid: #1b1b1e;
+  --cps-color-bg-dark: #151419;
+
+  // Lines
+  --cps-color-line-light: #3f3f46;
+  --cps-color-line-mid: #50505a;
+  --cps-color-line-dark: #666670;
+  --cps-color-line-darkest: #7a7a86;
+
+  // Text
+  --cps-color-text-lightest: #fbfbfb;
+  --cps-color-text-light: #d0d0d2;
+  --cps-color-text-mild: #a8a8ad;
+  --cps-color-text-dark: #878787;
+  --cps-color-text-darkest: #151419;
+
+  // Semantic design tokens
+  --cps-accent-primary: var(--cps-color-energy);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: #fbfbfb;
+  --cps-accent-secondary-contrast: #151419;
+  --cps-error-background: rgba(255, 90, 103, 0.16);
+
+  // Lines and borders
+  --cps-color-line: rgba(251, 251, 251, 0.12);
+  --cps-surface-body: #151419;
+  --cps-surface-highlight: #1b1b1e;
+  --cps-surface-muted: #202028;
+  --cps-surface-elevated: #262626;
+  --cps-surface-control: #262626;
+  --cps-surface-overlay: rgba(21, 20, 25, 0.85);
+  --cps-background-color: #151419;
+  --cps-background-disabled: rgba(255, 255, 255, 0.05);
+
+  // Tab component
+  --cps-tab-subtabs-background: var(--cps-surface-highlight);
+  --cps-tabs-subtabs-active-background: var(--cps-color-highlight-selected);
+  --cps-tabs-subtabs-background-hover: var(--cps-highlight-hover);
+  --cps-tabs-subtabs-text-hover: var(--cps-text-primary);
+
+  // Text
+  --cps-text-primary: #fbfbfb;
+  --cps-text-secondary: #d0d0d2;
+  --cps-text-muted: #878787;
+  --cps-text-inverse: var(--cps-color-depth-darken4);
+  --cps-text-on-accent: #151419;
+  --cps-text-disabled: #6f6f74;
+
+  --cps-border-color: #3a3a3a;
+  --cps-border-strong: #505050;
+  --cps-border-focus: var(--cps-accent-primary);
+
+  --cps-highlight-hover: rgba(251, 251, 251, 0.1);
+  --cps-highlight-active: rgba(251, 251, 251, 0.16);
+  --cps-highlight-selected: var(--cps-color-highlight-selected-dark);
+
+  --cps-state-info: #49b9ff;
+  --cps-state-info-contrast: #151419;
+  --cps-state-info-surface: rgba(73, 185, 255, 0.16);
+  --cps-state-success: #5dd33a;
+  --cps-state-success-contrast: #151419;
+  --cps-state-success-surface: rgba(93, 211, 58, 0.16);
+  --cps-state-warn: #ffba30;
+  --cps-state-warn-contrast: #151419;
+  --cps-state-warn-surface: rgba(255, 186, 48, 0.16);
+  --cps-state-error: var(--cps-color-error);
+  --cps-state-error-contrast: #ffffff;
+  --cps-state-error-surface: rgba(185, 28, 28, 0.28);
+
+  // Modern semantic surfaces
+  --cps-card-background: var(--cps-surface-highlight);
+  --cps-card-foreground: var(--cps-text-primary);
+  --cps-popover-background: var(--cps-surface-elevated);
+  --cps-popover-foreground: var(--cps-text-primary);
+  --cps-input-background: var(--cps-surface-highlight);
+  --cps-input-foreground: var(--cps-text-primary);
+  --cps-input-placeholder: var(--cps-text-muted);
+
+  // Focus ring and outlines
+  --cps-ring-color: var(--cps-border-focus);
+  --cps-ring-offset-color: var(--cps-surface-body);
+
+  // Elevation shadows (darker than light theme)
+  --cps-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --cps-shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.34);
+  --cps-shadow-md: 0 12px 24px rgba(0, 0, 0, 0.4);
+  --cps-shadow-lg: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'][data-color-theme='neutral'] {
+  --cps-accent-primary: #e4e4e7;
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: #f4f4f5;
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: #e4e4e7;
+  --cps-highlight-selected: rgba(228, 228, 231, 0.22);
+}
+
+[data-theme='dark'][data-color-theme='calm'] {
+  --cps-accent-primary: var(--cps-color-calm-lighten4);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: var(--cps-color-care-lighten3);
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: var(--cps-color-calm-lighten4);
+  --cps-highlight-selected: rgba(253, 128, 158, 0.28);
+}
+
+[data-theme='dark'][data-color-theme='energy'] {
+  --cps-accent-primary: var(--cps-color-energy);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: var(--cps-color-prepared-lighten4);
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: var(--cps-color-energy);
+  --cps-highlight-selected: var(--cps-color-highlight-selected-dark);
+}
+
+[data-theme='dark'][data-color-theme='passion'] {
+  --cps-accent-primary: var(--cps-color-passion-lighten3);
+  --cps-accent-primary-contrast: #151419;
+  --cps-accent-secondary: var(--cps-color-care-lighten4);
+  --cps-accent-secondary-contrast: #151419;
+  --cps-border-focus: var(--cps-color-passion-lighten3);
+  --cps-highlight-selected: rgba(255, 120, 121, 0.3);
+}
+
+[data-theme='dark'][data-base-theme='graphite'] {
+  --cps-surface-body: #121216;
+  --cps-surface-highlight: #191a20;
+  --cps-surface-muted: #1d1f26;
+  --cps-surface-elevated: #23252f;
+  --cps-surface-control: #23252f;
+  --cps-background-color: #121216;
+  --cps-border-color: #3f424d;
+  --cps-border-strong: #555968;
+  --cps-ring-offset-color: #121216;
+}
+
+[data-theme='dark'][data-base-theme='midnight'] {
+  --cps-surface-body: #0f1624;
+  --cps-surface-highlight: #172033;
+  --cps-surface-muted: #1b263c;
+  --cps-surface-elevated: #21304a;
+  --cps-surface-control: #21304a;
+  --cps-background-color: #0f1624;
+  --cps-border-color: #32445f;
+  --cps-border-strong: #4a6388;
+  --cps-ring-offset-color: #0f1624;
+}
+
+[data-theme='dark'][data-base-theme='aubergine'] {
+  --cps-surface-body: #1a1320;
+  --cps-surface-highlight: #231a2c;
+  --cps-surface-muted: #2b2136;
+  --cps-surface-elevated: #332943;
+  --cps-surface-control: #332943;
+  --cps-background-color: #1a1320;
+  --cps-border-color: #534363;
+  --cps-border-strong: #6d5683;
+  --cps-ring-offset-color: #1a1320;
+}

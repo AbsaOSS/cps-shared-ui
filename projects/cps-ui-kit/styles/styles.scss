@@ -1,5 +1,6 @@
 @use './_bootstrap-grid';
 @use './_colors.scss';
+@use './_colors-dark.scss';
 @use './_fonts.scss';
 @use './_cps-tooltip-style.scss';
 @use 'primeicons/primeicons.css';
@@ -17,4 +18,28 @@
   overflow: scroll;
   position: absolute;
   top: -9999px;
+}
+
+/* Custom scrollbar */
+* {
+  scrollbar-width: thin;
+}
+
+html,
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  background: var(--cps-background-color);
+  color: var(--cps-text-primary);
+}
+
+// Theme transition hook used by CpsThemeService
+.cps-theme-transition,
+.cps-theme-transition *,
+.cps-theme-transition *::before,
+.cps-theme-transition *::after {
+  transition:
+    background-color var(--cps-motion-base) var(--cps-motion-easing),
+    border-color var(--cps-motion-base) var(--cps-motion-easing),
+    color var(--cps-motion-base) var(--cps-motion-easing),
+    box-shadow var(--cps-motion-base) var(--cps-motion-easing) !important;
 }

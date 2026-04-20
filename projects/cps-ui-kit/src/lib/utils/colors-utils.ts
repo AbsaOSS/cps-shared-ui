@@ -20,12 +20,12 @@ const isDark = (color: string): boolean => {
   let g = 0;
   let b = 0;
   if (color.match(/^rgb/)) {
-    const colorMatched = color.match(
-      /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
-    ) as any;
-    r = colorMatched[1];
-    g = colorMatched[2];
-    b = colorMatched[3];
+    // Match both legacy rgba(r, g, b, a) and modern rgb(r g b / a) syntax
+    const colorMatched = color.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    if (!colorMatched) return false;
+    r = +colorMatched[1];
+    g = +colorMatched[2];
+    b = +colorMatched[3];
   } else {
     const colorNum = +(
       '0x' + color.slice(1).replace(color.length < 5 && (/./g as any), '$&$&')
@@ -42,6 +42,11 @@ const isDark = (color: string): boolean => {
   return hsp <= 127.5;
 };
 
+/**
+ * Collects all --cps-color-* CSS custom properties from :root rules only.
+ * Theme overrides (e.g. [data-theme='dark']) are excluded to avoid duplicates,
+ * since the Colors page serves as a base palette reference.
+ */
 export const getCpsColors = (_document: Document): [string, string][] =>
   [...(_document.styleSheets as any)]
     .filter((sheet: any) =>
@@ -50,16 +55,20 @@ export const getCpsColors = (_document: Document): [string, string][] =>
     .reduce(
       (finalArr, sheet) =>
         finalArr.concat(
-          [...sheet.cssRules].filter(isStyleRule).reduce((propValArr, rule) => {
-            const props = [...rule.style]
-              .map((propName) => [
-                propName.trim(),
-                rule.style.getPropertyValue(propName).trim()
-              ])
-              .filter(([propName]) => propName.indexOf('--cps-color') === 0);
+          [...sheet.cssRules]
+            .filter(
+              (rule: any) => isStyleRule(rule) && rule.selectorText === ':root'
+            )
+            .reduce((propValArr, rule) => {
+              const props = [...rule.style]
+                .map((propName) => [
+                  propName.trim(),
+                  rule.style.getPropertyValue(propName).trim()
+                ])
+                .filter(([propName]) => propName.indexOf('--cps-color') === 0);
 
-            return [...propValArr, ...props];
-          }, [])
+              return [...propValArr, ...props];
+            }, [])
         ),
       []
     );

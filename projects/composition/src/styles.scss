@@ -41,16 +41,20 @@ body {
     font-weight: bold;
     text-align: left;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cps-color-line-light);
+    background-color: var(--cps-surface-elevated);
+    border-bottom: 1px solid var(--cps-color-line);
   }
 
   tr {
     transition: background-color 0.5s ease-in;
+    &:hover {
+      background-color: var(--cps-highlight-hover);
+    }
   }
 
   td {
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--cps-color-line-light);
+    border-bottom: 1px solid var(--cps-color-line);
     white-space: pre-line;
 
     span {
@@ -61,18 +65,18 @@ body {
 
     &.highlighted-bg {
       span {
-        color: var(--cps-color-depth-darken4);
-        background-color: var(--cps-color-human-lighten5);
+        color: var(--cps-text-on-accent);
+        background-color: var(--cps-accent-primary);
         border-radius: 6px;
         padding: 0.2rem 0.5rem;
       }
     }
 
     &.highlighted-text {
-      color: var(--cps-color-calm);
+      color: var(--cps-text-primary);
 
       a {
-        color: var(--cps-color-calm);
+        color: var(--cps-text-primary);
 
         &:hover {
           text-decoration: none;
@@ -92,8 +96,8 @@ body {
           Consolas,
           Liberation Mono,
           monospace;
-        background-color: var(--cps-color-bg-mid);
-        border: 1px solid var(--cps-color-line-light);
+        background-color: var(--cps-surface-elevated);
+        border: 1px solid var(--cps-color-line);
       }
     }
   }

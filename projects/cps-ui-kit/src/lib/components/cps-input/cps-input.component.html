@@ -2,7 +2,7 @@
   @if (label) {
     <div
       class="cps-input-label"
-      [ngClass]="{ 'cps-input-label-disabled': disabled && !readonly }">
+      [class.cps-input-label-disabled]="disabled && !readonly">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -20,14 +20,12 @@
 
   <div
     class="cps-input-wrap"
-    [ngClass]="{
-      password: type === 'password',
-      'cps-input-wrap-error': error,
-      clearable: clearable,
-      'persistent-clear': persistentClear,
-      borderless: appearance === 'borderless',
-      underlined: appearance === 'underlined'
-    }">
+    [class.password]="type === 'password'"
+    [class.cps-input-wrap-error]="error"
+    [class.clearable]="clearable"
+    [class.persistent-clear]="persistentClear"
+    [class.borderless]="appearance === 'borderless'"
+    [class.underlined]="appearance === 'underlined'">
     @if (!valueToDisplay) {
       <input
         spellcheck="false"
@@ -64,7 +62,7 @@
           <cps-icon
             [icon]="prefixIcon"
             [size]="prefixIconSize"
-            [style.color]="disabled ? '#9a9595' : null"
+            [style.color]="disabled ? 'var(--cps-text-muted)' : null"
             [style.cursor]="
               prefixIconClickable && !disabled && !readonly
                 ? 'pointer'
@@ -98,7 +96,7 @@
         @if (type === 'password') {
           <span
             class="password-show-btn"
-            [ngClass]="{ 'password-show-btn-active': currentType === 'text' }">
+            [class.password-show-btn-active]="currentType === 'text'">
             <cps-icon
               icon="eye"
               size="18px"
@@ -111,7 +109,7 @@
       <cps-progress-linear
         height="3"
         radius="4"
-        opacity="0.3"
+        opacity="0.5"
         class="cps-input-progress-bar"
         bgColor="transparent">
       </cps-progress-linear>

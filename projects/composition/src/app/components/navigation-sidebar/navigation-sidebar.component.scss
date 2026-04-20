@@ -1,15 +1,15 @@
 @use '../../../variables.scss' as vars;
 
 :host {
-  $item-hover-background: var(--cps-color-highlight-hover);
-  $item-active-background: var(--cps-color-highlight-active);
-  $item-border-color: var(--cps-color-line-light);
+  $item-hover-background: var(--cps-highlight-hover);
+  $item-active-background: var(--cps-highlight-active);
+  $item-border-color: var(--cps-color-line);
 
   border-right: 1px solid $item-border-color;
-  background-color: var(--cps-color-bg-light);
+  background-color: var(--cps-surface-highlight);
   .sidebar {
     transition: width 0.2s;
-    background-color: white;
+    background-color: var(--cps-surface-highlight);
     width: vars.$sidebar-width;
     height: calc(100vh - vars.$top-tbar-height - 20px);
     overflow: auto;
@@ -17,7 +17,7 @@
       &-title {
         margin: 0;
         padding: 12px 0 12px 12px;
-        color: vars.$color-text;
+        color: var(--cps-text-primary);
       }
       &-item {
         border-bottom: 1px solid $item-border-color;
@@ -26,7 +26,7 @@
         align-items: center;
         padding-left: 30px;
         text-decoration: none;
-        color: vars.$color-text;
+        color: var(--cps-text-primary);
         &:hover {
           background: $item-hover-background;
         }
@@ -35,7 +35,7 @@
         }
       }
       ._active {
-        color: white;
+        color: var(--cps-text-on-accent);
         font-weight: bold;
         background: vars.$color-calm;
       }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
 import packageJson from 'projects/cps-ui-kit/package.json';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,9 @@ export class AppComponent {
   componentTitle = '';
 
   sidebarExpanded = true;
+
+  showThemeToggle =
+    new URLSearchParams(window.location.search).get('experimental') === 'true';
 
   version = packageJson?.version;
 
