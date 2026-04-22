@@ -72,12 +72,17 @@
     @case ('Daily') {
       <div class="cps-scheduler-tab-pane" data-testid="daily-config">
         <cps-radio-group
+          ariaLabel="Daily schedule frequency"
           [hideDetails]="true"
           [(ngModel)]="state.daily.subTab"
           (valueChanged)="regenerateCron()"
           [vertical]="true">
           <cps-radio
-            [option]="{ value: 'everyDays', disabled: disabled }"
+            [option]="{
+              ariaLabel: 'Repeat every N days at a specific time',
+              value: 'everyDays',
+              disabled: disabled
+            }"
             data-testid="daily-subtab-everyDays">
             <div
               class="cps-scheduler-tab-pane-row"
@@ -110,7 +115,11 @@
           </cps-radio>
           <cps-radio
             data-testid="daily-subtab-everyWeekDay"
-            [option]="{ value: 'everyWeekDay', disabled: disabled }">
+            [option]="{
+              ariaLabel: 'Repeat every working day at a specific time',
+              value: 'everyWeekDay',
+              disabled: disabled
+            }">
             <div
               class="cps-scheduler-tab-pane-row"
               data-testid="daily-weekday-config"
@@ -205,12 +214,18 @@
     @case ('Monthly') {
       <div class="cps-scheduler-tab-pane" data-testid="monthly-config">
         <cps-radio-group
+          ariaLabel="Monthly schedule frequency"
           [hideDetails]="true"
           [(ngModel)]="state.monthly.subTab"
           (valueChanged)="regenerateCron()"
           [vertical]="true">
           <cps-radio
-            [option]="{ value: 'specificDay', disabled: disabled }"
+            [option]="{
+              ariaLabel:
+                'Repeat every N months on a selected day at a chosen time, nearest weekday optional',
+              value: 'specificDay',
+              disabled: disabled
+            }"
             data-testid="monthly-subtab-specificDay">
             <div
               class="cps-scheduler-tab-pane-row"
@@ -264,7 +279,12 @@
           </cps-radio>
 
           <cps-radio
-            [option]="{ value: 'specificWeekDay', disabled: disabled }"
+            [option]="{
+              ariaLabel:
+                'Repeat every N months on a weekday pattern from a chosen month at a chosen time',
+              value: 'specificWeekDay',
+              disabled: disabled
+            }"
             data-testid="monthly-subtab-specificWeekDay">
             <div
               class="cps-scheduler-tab-pane-row"
@@ -349,12 +369,18 @@
     @case ('Yearly') {
       <div class="cps-scheduler-tab-pane" data-testid="yearly-config">
         <cps-radio-group
+          ariaLabel="Yearly schedule frequency"
           [hideDetails]="true"
           [(ngModel)]="state.yearly.subTab"
           (valueChanged)="regenerateCron()"
           [vertical]="true">
           <cps-radio
-            [option]="{ value: 'specificMonthDay', disabled: disabled }"
+            [option]="{
+              ariaLabel:
+                'Repeat in a selected month on a selected day at a chosen time, nearest weekday optional',
+              value: 'specificMonthDay',
+              disabled: disabled
+            }"
             data-testid="yearly-subtab-specificMonthDay">
             <div
               class="cps-scheduler-tab-pane-row"
@@ -416,7 +442,12 @@
           </cps-radio>
 
           <cps-radio
-            [option]="{ value: 'specificMonthWeek', disabled: disabled }"
+            [option]="{
+              ariaLabel:
+                'Repeat in a selected month on a selected weekday at a chosen time',
+              value: 'specificMonthWeek',
+              disabled: disabled
+            }"
             data-testid="yearly-subtab-specificMonthWeek">
             <div
               class="cps-scheduler-tab-pane-row"

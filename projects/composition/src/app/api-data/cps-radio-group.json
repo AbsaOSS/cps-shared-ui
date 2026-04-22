@@ -6,8 +6,16 @@
                 "description": "Defines the input properties of the component.",
                 "values": [
                     {
+                        "name": "groupName",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Name attribute for the radio input, used to group buttons within the same radio group."
+                    },
+                    {
                         "name": "option",
-                        "optional": true,
+                        "optional": false,
                         "readonly": false,
                         "type": "CpsRadioOption",
                         "description": "An option."
@@ -86,6 +94,14 @@
                         "type": "string",
                         "default": "",
                         "description": "Label of the radio group."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the radio group, used for accessibility, it takes precedence over groupLabel."
                     },
                     {
                         "name": "vertical",
@@ -225,7 +241,7 @@
         "values": [
             {
                 "name": "CpsRadioOption",
-                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"ariaLabel\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
                 "description": "CpsRadioOption is used to define the options of the CpsRadioGroupComponent."
             }
         ]

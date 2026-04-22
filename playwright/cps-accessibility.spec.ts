@@ -27,7 +27,7 @@ const components: ComponentEntry[] = [
     selector: 'cps-button-toggle'
   },
   { route: '/checkbox', name: 'Checkbox', selector: 'cps-checkbox' },
-  { route: '/chip', name: 'Chip', selector: 'cps-chip' }
+  { route: '/chip', name: 'Chip', selector: 'cps-chip' },
   // {
   //   route: '/datepicker',
   //   name: 'Datepicker',
@@ -90,7 +90,7 @@ const components: ComponentEntry[] = [
   //   name: 'Progress linear',
   //   selector: 'cps-progress-linear'
   // },
-  // { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
+  { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' }
   // { route: '/scheduler', name: 'Scheduler', selector: 'cps-scheduler' },
   // {
   //   route: '/select',

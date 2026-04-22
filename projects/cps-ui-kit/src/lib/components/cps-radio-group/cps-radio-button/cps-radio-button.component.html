@@ -1,7 +1,7 @@
-@if (option?.tooltip) {
+@if (option.tooltip) {
   <div
     class="cps-radio-group-content-button"
-    [cpsTooltip]="option?.tooltip || ''"
+    [cpsTooltip]="option.tooltip || ''"
     tooltipCloseDelay="0"
     tooltipPosition="bottom">
     <ng-container
@@ -12,8 +12,7 @@
         }
       "></ng-container>
   </div>
-}
-@if (!option?.tooltip) {
+} @else {
   <div class="cps-radio-group-content-button">
     <ng-container
       *ngTemplateOutlet="
@@ -26,25 +25,30 @@
 }
 
 <ng-template #optionRadioTemplate let-option="option">
-  <input
-    [id]="inputId"
-    type="radio"
-    [disabled]="option.disabled || groupDisabled"
-    [value]="option.value"
-    [checked]="checked"
-    (change)="updateValue($event)"
-    (focus)="onFocus()"
-    (blur)="onBlur()" />
-  <div #contentRef class="content">
+  <span class="cps-radio-input-wrapper">
+    <input
+      type="radio"
+      [id]="inputId"
+      [name]="groupName"
+      [attr.aria-label]="option.ariaLabel || null"
+      [disabled]="option.disabled || groupDisabled"
+      [value]="option.value"
+      [checked]="checked"
+      (change)="updateValue($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()" />
+  </span>
+  <div
+    #contentRef
+    class="content"
+    [attr.inert]="!checked || option.disabled || groupDisabled ? '' : null">
     <ng-content></ng-content>
   </div>
-  @if (!contentRef.innerHTML.trim()) {
+  @if (!contentRef.innerHTML.trim() && option.label) {
     <label
-      [for]="inputId"
       class="cps-radio-group-content-button-label"
-      [ngStyle]="{
-        cursor: option.disabled || groupDisabled ? 'default' : 'pointer'
-      }"
+      [for]="inputId"
+      [style.cursor]="option.disabled || groupDisabled ? 'default' : 'pointer'"
       >{{ option.label }}
     </label>
   }

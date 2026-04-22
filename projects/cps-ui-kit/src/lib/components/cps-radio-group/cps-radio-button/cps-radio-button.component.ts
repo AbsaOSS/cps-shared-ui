@@ -1,9 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output
+} from '@angular/core';
 import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip/cps-tooltip.directive';
-
-let nextUniqueId = 0;
+import { generateUniqueId } from '../../../utils/internal/accessibility-utils';
 
 /**
  * CpsRadioButtonComponent is an internal radio button component.
@@ -15,14 +20,18 @@ let nextUniqueId = 0;
   templateUrl: './cps-radio-button.component.html',
   styleUrls: ['./cps-radio-button.component.scss']
 })
-export class CpsRadioButtonComponent {
-  private _uniqueId = `cps-radio-button-${++nextUniqueId}`;
+export class CpsRadioButtonComponent implements OnChanges {
+  /**
+   * Name attribute for the radio input, used to group buttons within the same radio group.
+   * @group Props
+   */
+  @Input() groupName = '';
 
   /**
    * An option.
    * @group Props
    */
-  @Input() option?: CpsRadioOption;
+  @Input() option!: CpsRadioOption;
 
   /**
    * Determines whether the radio button is checked.
@@ -57,14 +66,20 @@ export class CpsRadioButtonComponent {
    */
   @Output() focused = new EventEmitter();
 
-  get inputId(): string {
-    return `${this._uniqueId}-input`;
+  readonly inputId = generateUniqueId('cps-radio-button-input');
+
+  ngOnChanges(): void {
+    if (!this.option.label?.trim() && !this.option.ariaLabel?.trim()) {
+      console.error(
+        'CpsRadioButtonComponent: unlabeled radio button component must have an ariaLabel for accessibility.'
+      );
+    }
   }
 
   updateValue(event: Event): void {
     event.preventDefault();
-    if (this.option?.disabled) return;
-    this.updateValueEvent.emit(this.option?.value);
+    if (this.option.disabled) return;
+    this.updateValueEvent.emit(this.option.value);
   }
 
   onBlur() {

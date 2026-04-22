@@ -16,7 +16,12 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NgControl,
+  Validators
+} from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
@@ -852,11 +857,14 @@ export class CpsAutocompleteComponent
     this.recalcVirtualListHeight();
   }
 
+  get isRequired(): boolean {
+    return this._control?.control?.hasValidator(Validators.required) ?? false;
+  }
+
   get computedLabel(): string | null {
     return getComputedLabel({
       label: this.ariaLabel || this.label,
-      error: this.error,
-      externalError: this.externalError,
+      error: this.error || this.externalError,
       hideDetails: this.hideDetails
     });
   }

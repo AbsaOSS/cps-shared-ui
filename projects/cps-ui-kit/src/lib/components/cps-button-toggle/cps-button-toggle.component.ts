@@ -1,5 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Inject,
@@ -161,7 +162,8 @@ export class CpsButtonToggleComponent
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -176,7 +178,10 @@ export class CpsButtonToggleComponent
       getComputedStyle(this.document.documentElement).fontSize || '16'
     );
     if (this.document?.fonts?.ready) {
-      this.document.fonts.ready.then(() => this._setEqualWidths());
+      this.document.fonts.ready.then(() => {
+        this._setEqualWidths();
+        this.cdr.markForCheck();
+      });
     } else {
       this._setEqualWidths();
     }

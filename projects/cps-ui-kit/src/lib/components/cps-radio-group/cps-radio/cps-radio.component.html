@@ -1,5 +1,6 @@
 <cps-radio-button
   [option]="option"
+  [groupName]="radioGroup?.groupName || ''"
   [groupDisabled]="groupDisabled"
   [checked]="radioGroup?.value == option.value"
   (updateValueEvent)="updateValueEvent($event)">
