@@ -8,6 +8,7 @@ import {
 import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
 import { CpsTooltipDirective } from '../../../directives/cps-tooltip/cps-tooltip.directive';
+import { generateUniqueId } from '../../../utils/internal/accessibility-utils';
 
 /**
  * CpsRadioButtonComponent is an internal radio button component.
@@ -64,6 +65,8 @@ export class CpsRadioButtonComponent implements OnChanges {
    * @group Emits
    */
   @Output() focused = new EventEmitter();
+
+  readonly inputId = generateUniqueId('cps-radio-button-input');
 
   ngOnChanges(): void {
     if (!this.option.label?.trim() && !this.option.ariaLabel?.trim()) {

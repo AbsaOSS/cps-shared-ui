@@ -28,8 +28,9 @@
   <span class="cps-radio-input-wrapper">
     <input
       type="radio"
+      [id]="inputId"
       [name]="groupName"
-      [attr.aria-label]="option.ariaLabel || option.label || null"
+      [attr.aria-label]="option.ariaLabel || null"
       [disabled]="option.disabled || groupDisabled"
       [value]="option.value"
       [checked]="checked"
@@ -37,12 +38,16 @@
       (focus)="onFocus()"
       (blur)="onBlur()" />
   </span>
-  <div #contentRef class="content" [attr.inert]="!checked ? '' : null">
+  <div
+    #contentRef
+    class="content"
+    [attr.inert]="!checked || option.disabled || groupDisabled ? '' : null">
     <ng-content></ng-content>
   </div>
   @if (!contentRef.innerHTML.trim() && option.label) {
     <label
       class="cps-radio-group-content-button-label"
+      [for]="inputId"
       [style.cursor]="option.disabled || groupDisabled ? 'default' : 'pointer'"
       >{{ option.label }}
     </label>
