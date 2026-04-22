@@ -276,11 +276,15 @@ describe('CpsButtonComponent', () => {
     });
 
     it('should not set aria-label when neither label nor ariaLabel is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       fixture.componentRef.setInput('label', '');
       fixture.componentRef.setInput('ariaLabel', '');
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button');
       expect(button.getAttribute('aria-label')).toBeNull();
+      consoleSpy.mockRestore();
     });
 
     it('should error when neither label nor ariaLabel is provided', () => {

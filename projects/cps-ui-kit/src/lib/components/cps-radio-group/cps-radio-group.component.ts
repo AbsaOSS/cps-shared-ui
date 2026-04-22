@@ -5,17 +5,22 @@ import {
   EventEmitter,
   InjectionToken,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.component';
 import { Subscription } from 'rxjs';
+import {
+  generateUniqueId,
+  getComputedLabel
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsRadioOption is used to define the options of the CpsRadioGroupComponent.
@@ -24,6 +29,7 @@ import { Subscription } from 'rxjs';
 export type CpsRadioOption = {
   value: any;
   label?: string;
+  ariaLabel?: string;
   disabled?: boolean;
   tooltip?: string;
 };
@@ -49,7 +55,7 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   ]
 })
 export class CpsRadioGroupComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * An array of options.
@@ -62,6 +68,12 @@ export class CpsRadioGroupComponent
    * @group Props
    */
   @Input() groupLabel = '';
+
+  /**
+   * Aria label for the radio group, used for accessibility, it takes precedence over groupLabel.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Determines whether the radio group should be vertical.
@@ -151,6 +163,8 @@ export class CpsRadioGroupComponent
    */
   @Output() focused = new EventEmitter();
 
+  readonly groupName = generateUniqueId('cps-radio-group');
+
   private _statusChangesSubscription?: Subscription;
   private _value: any = undefined;
 
@@ -168,6 +182,14 @@ export class CpsRadioGroupComponent
         this._checkErrors();
       }
     );
+  }
+
+  ngOnChanges(): void {
+    if (!this.groupLabel?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsRadioGroupComponent: unlabeled radio group component must have an ariaLabel for accessibility.'
+      );
+    }
   }
 
   ngOnDestroy() {
@@ -213,6 +235,18 @@ export class CpsRadioGroupComponent
   onFocus() {
     this._control?.control?.markAsTouched();
     this.focused.emit();
+  }
+
+  get isRequired(): boolean {
+    return this._control?.control?.hasValidator(Validators.required) ?? false;
+  }
+
+  get computedLabel(): string | null {
+    return getComputedLabel({
+      label: this.ariaLabel || this.groupLabel,
+      error: this.error,
+      hideDetails: this.hideDetails
+    });
   }
 
   private _checkErrors() {

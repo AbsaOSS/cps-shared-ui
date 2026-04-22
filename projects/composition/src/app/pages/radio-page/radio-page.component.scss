@@ -1,12 +1,12 @@
 .radiogroups-group {
-  gap: 36px;
+  gap: 2.25rem;
   display: flex;
   flex-direction: column;
 }
 
 .sync-val-example {
   .sync-val {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 }
 
@@ -14,7 +14,7 @@
   .inline-radio-form {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.3125rem;
 
     span {
       color: var(--cps-color-text-dark);
@@ -22,6 +22,6 @@
   }
 
   .weekday-checkbox {
-    margin-left: 15px;
+    margin-left: 0.9375rem;
   }
 }

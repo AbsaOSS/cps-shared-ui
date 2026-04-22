@@ -304,7 +304,7 @@
     </div>
   }
   @if ((error || externalError) && !hideDetails) {
-    <div class="cps-autocomplete-error">
+    <div class="cps-autocomplete-error" role="alert" aria-live="assertive">
       {{ error || externalError }}
     </div>
   }
@@ -319,14 +319,15 @@
     type="text"
     class="cps-autocomplete-box-input"
     spellcheck="false"
-    [attr.aria-invalid]="error || externalError ? true : null"
     [disabled]="disabled"
     role="combobox"
     aria-autocomplete="list"
     aria-haspopup="listbox"
+    [attr.aria-invalid]="error || externalError ? 'true' : null"
     [attr.aria-controls]="optionsListId"
     [attr.aria-activedescendant]="activeDescendantId"
     [attr.aria-expanded]="isOpened"
+    [attr.aria-required]="isRequired || null"
     [ngClass]="inputClass"
     [ngStyle]="inputStyle"
     [placeholder]="

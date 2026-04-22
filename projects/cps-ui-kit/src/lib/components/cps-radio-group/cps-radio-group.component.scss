@@ -19,11 +19,11 @@ $color-error: var(--cps-state-error);
       cursor: default;
 
       .cps-radio-group-label-info-circle {
-        margin-left: 8px;
+        margin-left: 0.5rem;
         ::ng-deep cps-icon {
           i {
-            width: 14px;
-            height: 14px;
+            width: 0.875rem;
+            height: 0.875rem;
           }
         }
       }
@@ -49,7 +49,7 @@ $color-error: var(--cps-state-error);
     }
 
     .cps-radio-hint {
-      margin-top: 4px;
+      margin-top: 0.25rem;
       color: $radio-hint-color;
       font-size: 0.75rem;
       min-height: 1.125rem;
@@ -58,7 +58,7 @@ $color-error: var(--cps-state-error);
     }
 
     .cps-radio-error {
-      margin-top: 4px;
+      margin-top: 0.25rem;
       color: $color-error;
       font-weight: bold;
       font-size: 0.75rem;

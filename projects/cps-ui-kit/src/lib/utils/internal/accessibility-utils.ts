@@ -8,7 +8,6 @@ export const generateUniqueId = (prefix: string = 'cps'): string => {
 export const getComputedLabel = (context: {
   label?: string;
   error?: string;
-  externalError?: string;
   hideDetails?: boolean;
 }): string | null => {
   const parts: string[] = [];
@@ -19,7 +18,7 @@ export const getComputedLabel = (context: {
   }
 
   // Add error if exists and not hidden
-  const errorText = context.error || context.externalError;
+  const errorText = context.error;
   if (errorText && !context.hideDetails) {
     const cleanedError = errorText.trim().replace(/\.*$/, '');
     parts.push(`Error: ${cleanedError}.`);

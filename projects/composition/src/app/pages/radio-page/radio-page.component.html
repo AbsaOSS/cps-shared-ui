@@ -15,6 +15,12 @@
       value="second">
     </cps-radio-group>
     <cps-radio-group
+      groupLabel="Vertical radio group"
+      [options]="options"
+      value="second"
+      [vertical]="true">
+    </cps-radio-group>
+    <cps-radio-group
       groupLabel="Disabled vertical radio group"
       [options]="options"
       value="second"
@@ -38,7 +44,11 @@
       class="custom-content-example"
       [value]="2"
       [vertical]="true">
-      <cps-radio [option]="{ value: 1 }">
+      <cps-radio
+        [option]="{
+          ariaLabel: 'Custom option with inline selectors',
+          value: 1
+        }">
         <div class="inline-radio-form">
           <span>On the</span>
           <cps-select

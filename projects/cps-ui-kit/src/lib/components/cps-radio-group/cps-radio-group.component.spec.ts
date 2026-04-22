@@ -18,6 +18,7 @@ describe('CpsRadioGroupComponent', () => {
       { label: 'Option 2', value: 'opt2' },
       { label: 'Option 3', value: 'opt3' }
     ]);
+    fixture.componentRef.setInput('ariaLabel', 'Radio group');
     fixture.detectChanges();
   });
 
@@ -139,5 +140,60 @@ describe('CpsRadioGroupComponent', () => {
     // Just verify ngOnDestroy can be called without errors
     component.ngOnDestroy();
     expect(component).toBeTruthy();
+  });
+
+  describe('aria-label', () => {
+    it('should apply ariaLabel as the aria-label attribute on the radiogroup element', () => {
+      fixture.componentRef.setInput('ariaLabel', 'My radio group');
+      fixture.detectChanges();
+      const radiogroup = fixture.nativeElement.querySelector(
+        '[role="radiogroup"]'
+      );
+      expect(radiogroup.getAttribute('aria-label')).toBe('My radio group.');
+    });
+
+    it('should fall back to groupLabel for aria-label when ariaLabel is not set', () => {
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('groupLabel', 'Choose an option');
+      fixture.detectChanges();
+      const radiogroup = fixture.nativeElement.querySelector(
+        '[role="radiogroup"]'
+      );
+      expect(radiogroup.getAttribute('aria-label')).toBe('Choose an option.');
+    });
+
+    it('should prefer ariaLabel over groupLabel', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Explicit label');
+      fixture.componentRef.setInput('groupLabel', 'Visual label');
+      fixture.detectChanges();
+      const radiogroup = fixture.nativeElement.querySelector(
+        '[role="radiogroup"]'
+      );
+      expect(radiogroup.getAttribute('aria-label')).toBe('Explicit label.');
+    });
+
+    it('should log an error when neither ariaLabel nor groupLabel is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('groupLabel', '');
+      fixture.detectChanges();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('ariaLabel for accessibility')
+      );
+      consoleSpy.mockRestore();
+    });
+
+    it('should not log an error when ariaLabel is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      fixture.componentRef.setInput('ariaLabel', 'Accessible label');
+      fixture.componentRef.setInput('groupLabel', '');
+      fixture.detectChanges();
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
   });
 });
