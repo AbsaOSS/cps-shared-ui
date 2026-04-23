@@ -22,6 +22,14 @@
                         "description": "Expected file description. E.g. 'Word document'."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Upload file",
+                        "description": "Aria label for the component, used for accessibility."
+                    },
+                    {
                         "name": "width",
                         "optional": false,
                         "readonly": false,
@@ -36,6 +44,14 @@
                         "type": "string",
                         "default": "",
                         "description": "Expected file info block, explaining some extra stuff about file."
+                    },
+                    {
+                        "name": "disabled",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Whether the component is disabled."
                     },
                     {
                         "name": "fileProcessingCallback",
@@ -85,6 +101,26 @@
                             }
                         ],
                         "description": "Callback to invoke when file upload fails."
+                    },
+                    {
+                        "name": "fileProcessed",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "File"
+                            }
+                        ],
+                        "description": "Callback to invoke when file is processed."
+                    },
+                    {
+                        "name": "fileProcessingFailed",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke when file processing fails."
                     },
                     {
                         "name": "uploadedFileRemoved",

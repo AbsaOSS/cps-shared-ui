@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  booleanAttribute,
   Component,
   ElementRef,
   EventEmitter,
@@ -11,7 +12,7 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { catchError, Observable, of, take } from 'rxjs';
+import { catchError, Observable, of, Subject, take, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
@@ -49,6 +50,12 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
   @Input() fileDesc = 'Any file';
 
   /**
+   * Aria label for the component, used for accessibility.
+   * @group Props
+   */
+  @Input() ariaLabel = 'Upload file';
+
+  /**
    * Width of the component, a number denoting pixels or a string.
    * @group Props
    */
@@ -59,6 +66,12 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
    * @group Props
    */
   @Input() fileInfo: string = '';
+
+  /**
+   * Whether the component is disabled.
+   * @group Props
+   */
+  @Input({ transform: booleanAttribute }) disabled = false;
 
   /**
    * Callback for uploaded file processing.
@@ -94,6 +107,20 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
   @Output() fileUploadFailed = new EventEmitter<string>();
 
   /**
+   * Callback to invoke when file is processed.
+   * @param {File} File
+   * @group Emits
+   */
+  @Output() fileProcessed = new EventEmitter<File>();
+
+  /**
+   * Callback to invoke when file processing fails.
+   * @param {string} - file name
+   * @group Emits
+   */
+  @Output() fileProcessingFailed = new EventEmitter<string>();
+
+  /**
    * Callback to invoke when uploaded file is removed.
    * @param {string} - file name
    * @group Emits
@@ -109,6 +136,10 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
   cvtWidth = '';
 
   isProcessingFile = false;
+  errorMessage = '';
+
+  private dragCounter = 0;
+  private readonly cancelProcessing$ = new Subject<void>();
 
   ngOnInit(): void {
     this.updateExtensionsString();
@@ -119,6 +150,49 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     if (changes.extensions) {
       this.updateExtensionsString();
     }
+  }
+
+  resetState() {
+    this.cancelProcessing$.next();
+    this.removeUploadedFile();
+    this.errorMessage = '';
+    this.isProcessingFile = false;
+    this.dragCounter = 0;
+  }
+
+  openFilePicker(): void {
+    if (this.isProcessingFile) return;
+    this.fileInput?.nativeElement.click();
+  }
+
+  onDragEnter() {
+    this.dragCounter++;
+    this.isDragoverFile = true;
+  }
+
+  onDragLeave() {
+    this.dragCounter--;
+    if (this.dragCounter <= 0) {
+      this.isDragoverFile = false;
+      this.dragCounter = 0;
+    }
+  }
+
+  onDragEnd() {
+    this.dragCounter = 0;
+    this.isDragoverFile = false;
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragoverFile = true;
+  }
+
+  onDrop(event: Event) {
+    event.preventDefault();
+    this.dragCounter = 0;
+    this.isDragoverFile = false;
+    this.tryUploadFile(event);
   }
 
   updateExtensionsString(): void {
@@ -135,7 +209,10 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     event.preventDefault();
     event.stopPropagation();
 
+    if (this.isProcessingFile) return;
+
     this.isDragoverFile = false;
+    this.errorMessage = '';
     let file: File | undefined;
 
     if (event.type === 'drop') {
@@ -147,6 +224,7 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     }
 
     if (!this._isFileExtensionValid(file)) {
+      this.errorMessage = 'Unsupported file type';
       this.fileUploadFailed.emit(file?.name ?? '');
       return;
     }
@@ -159,25 +237,41 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
         this.fileProcessingCallback(this.uploadedFile)
           .pipe(
             take(1),
+            takeUntil(this.cancelProcessing$),
             catchError(() => {
               return of(false);
             })
           )
           .subscribe((res) => {
-            if (!res) this.removeUploadedFile();
             this.isProcessingFile = false;
+            if (res) {
+              this.fileProcessed.emit(this.uploadedFile);
+            } else {
+              this.errorMessage = 'File processing failed';
+              this.fileProcessingFailed.emit(this.uploadedFile?.name ?? '');
+              this.removeUploadedFile();
+            }
           });
       }
     }
   }
 
+  onRemoveUploadedFile(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.removeUploadedFile();
+  }
+
   removeUploadedFile() {
     const name = this.uploadedFile?.name ?? '';
     this.uploadedFile = undefined;
-    this.uploadedFileRemoved.emit(name);
+    if (name) {
+      this.uploadedFileRemoved.emit(name);
+    }
 
-    if (this.fileInput) {
-      this.fileInput.nativeElement.value = '';
+    const inputEl = this.fileInput?.nativeElement;
+    if (inputEl) {
+      inputEl.value = '';
     }
   }
 
@@ -186,10 +280,7 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
 
     if (this.extensions.length < 1) return true;
     const fileNameLowerCase = file.name.toLowerCase();
-    for (const ext of this.extensions) {
-      if (fileNameLowerCase.endsWith(ext)) return true;
-    }
 
-    return false;
+    return this.extensions.some((ext) => fileNameLowerCase.endsWith(ext));
   }
 }

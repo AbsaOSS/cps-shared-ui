@@ -1,0 +1,15 @@
+:host {
+  .section-title {
+    color: var(--cps-color-calm);
+  }
+  .section-title:first-child {
+    margin-top: 0;
+  }
+  .section-title,
+  .section-body {
+    margin-left: 0.5rem;
+  }
+  .section-body:last-child {
+    margin-bottom: 0.5rem;
+  }
+}

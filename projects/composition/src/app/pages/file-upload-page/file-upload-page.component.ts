@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   CpsFileUploadComponent,
   CpsButtonToggleComponent,
   CpsButtonToggleOption,
-  CpsDividerComponent
+  CpsDividerComponent,
+  CpsButtonComponent
 } from 'cps-ui-kit';
-import { Observable, catchError, from, map, of } from 'rxjs';
+import { Observable, catchError, delay, from, map, of } from 'rxjs';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -14,6 +15,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   selector: 'app-file-upload-page',
   imports: [
     CpsButtonToggleComponent,
+    CpsButtonComponent,
     CpsFileUploadComponent,
     ComponentDocsViewerComponent,
     CpsDividerComponent
@@ -23,6 +25,8 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class FileUploadPageComponent {
+  @ViewChild('fileUpload') fileUpload?: CpsFileUploadComponent;
+
   componentData = ComponentData;
 
   fileUploadOptions: CpsButtonToggleOption[] = [
@@ -33,11 +37,14 @@ export class FileUploadPageComponent {
 
   selectedFileUploadType: CpsButtonToggleOption = this.fileUploadOptions[0];
 
+  isDisabled = true;
+
   fileInfo: string =
     'The file should be a small sample file to infer the schema, which will be shown in the next step';
 
   processUploadedFile(file: File): Observable<boolean> {
     return from(file.text()).pipe(
+      delay(2000),
       map((fileContentsAsText) => {
         console.log(fileContentsAsText);
         return true;
@@ -57,16 +64,29 @@ export class FileUploadPageComponent {
     console.log('File upload failed', fileName);
   }
 
+  onFileProcessed(file: File) {
+    console.log('File processed', file?.name);
+  }
+
+  onFileProcessingFailed(fileName: string) {
+    console.log('File processing failed', fileName);
+  }
+
   onUploadedFileRemoved(fileName: string) {
     console.log('File removed: ', fileName);
   }
 
   onFileExtensionChanged(event: string) {
+    this.fileUpload?.resetState();
     const foundSelectedItem = this.fileUploadOptions.find(
       (item) => item.value === event
     );
     if (foundSelectedItem) {
       this.selectedFileUploadType = foundSelectedItem;
     }
+  }
+
+  toggleDisabled() {
+    this.isDisabled = !this.isDisabled;
   }
 }

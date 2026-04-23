@@ -1,5 +1,5 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnChanges, OnInit } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
 
@@ -13,7 +13,7 @@ import { convertSize } from '../../utils/internal/size-utils';
   templateUrl: './cps-progress-linear.component.html',
   styleUrls: ['./cps-progress-linear.component.scss']
 })
-export class CpsProgressLinearComponent implements OnInit {
+export class CpsProgressLinearComponent implements OnInit, OnChanges {
   /**
    * Width of the progress bar, of type number denoting pixels or string.
    * @group Props
@@ -58,6 +58,11 @@ export class CpsProgressLinearComponent implements OnInit {
     this.height = convertSize(this.height);
     this.radius = convertSize(this.radius);
 
+    this.color = getCSSColor(this.color, this.document);
+    this.bgColor = getCSSColor(this.bgColor, this.document);
+  }
+
+  ngOnChanges(): void {
     this.color = getCSSColor(this.color, this.document);
     this.bgColor = getCSSColor(this.bgColor, this.document);
   }
