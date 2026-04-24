@@ -57,9 +57,6 @@ export class CpsProgressLinearComponent implements OnInit, OnChanges {
     this.width = convertSize(this.width);
     this.height = convertSize(this.height);
     this.radius = convertSize(this.radius);
-
-    this.color = getCSSColor(this.color, this.document);
-    this.bgColor = getCSSColor(this.bgColor, this.document);
   }
 
   ngOnChanges(): void {
