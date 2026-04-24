@@ -26,3 +26,9 @@ export const getComputedLabel = (context: {
 
   return parts.length > 0 ? parts.join(' ') : null;
 };
+
+export const focusElement = (element?: HTMLElement): void => {
+  if (element) {
+    setTimeout(() => element.focus());
+  }
+};

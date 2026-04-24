@@ -44,7 +44,7 @@ export class FileUploadPageComponent {
 
   processUploadedFile(file: File): Observable<boolean> {
     return from(file.text()).pipe(
-      delay(2000),
+      delay(3000),
       map((fileContentsAsText) => {
         console.log(fileContentsAsText);
         return true;
@@ -70,6 +70,10 @@ export class FileUploadPageComponent {
 
   onFileProcessingFailed(fileName: string) {
     console.log('File processing failed', fileName);
+  }
+
+  onFileProcessingCancelled(fileName: string) {
+    console.log('File processing cancelled', fileName);
   }
 
   onUploadedFileRemoved(fileName: string) {

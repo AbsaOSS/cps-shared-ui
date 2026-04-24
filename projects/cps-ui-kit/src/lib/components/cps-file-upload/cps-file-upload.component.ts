@@ -2,9 +2,11 @@ import { CommonModule } from '@angular/common';
 import {
   booleanAttribute,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
   Input,
+  input,
   numberAttribute,
   OnChanges,
   OnDestroy,
@@ -15,6 +17,7 @@ import {
 } from '@angular/core';
 import { catchError, Observable, of, Subject, take, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
+import { focusElement } from '../../utils/internal/accessibility-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
@@ -57,12 +60,6 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   @Input() ariaLabel = 'Upload file';
 
   /**
-   * Width of the component, a number denoting pixels or a string.
-   * @group Props
-   */
-  @Input() width: number | string = '100%';
-
-  /**
    * Expected file info block, explaining some extra stuff about file.
    * @group Props
    */
@@ -94,6 +91,13 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   @Input({ transform: numberAttribute }) fileNameTooltipOffset: number = 12;
 
   /**
+   * Width of the component, a number denoting pixels or a string.
+   * @group Props
+   * @default 100%
+   */
+  width = input<number | string>('100%');
+
+  /**
    * Callback to invoke when file is uploaded.
    * @param {File} File
    * @group Emits
@@ -122,6 +126,13 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   @Output() fileProcessingFailed = new EventEmitter<string>();
 
   /**
+   * Callback to invoke when file processing is cancelled.
+   * @param {string} - file name
+   * @group Emits
+   */
+  @Output() fileProcessingCancelled = new EventEmitter<string>();
+
+  /**
    * Callback to invoke when uploaded file is removed.
    * @param {string} - file name
    * @group Emits
@@ -129,12 +140,13 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   @Output() uploadedFileRemoved = new EventEmitter<string>();
 
   @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('dropzoneButton') dropzoneButton?: ElementRef<HTMLButtonElement>;
 
   isDragoverFile = false;
   uploadedFile?: File;
   extensionsString = '';
   extensionsStringAsterisks = '';
-  cvtWidth = '';
+  cvtWidth = computed(() => convertSize(this.width()));
 
   isProcessingFile = false;
   errorMessage = '';
@@ -144,7 +156,6 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnInit(): void {
     this.updateExtensionsString();
-    this.cvtWidth = convertSize(this.width);
   }
 
   ngOnDestroy(): void {
@@ -159,10 +170,8 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   resetState() {
-    this.cancelProcessing$.next();
-    this.removeUploadedFile();
+    this.cancelFileProcessing();
     this.errorMessage = '';
-    this.isProcessingFile = false;
     this.dragCounter = 0;
     this.isDragoverFile = false;
   }
@@ -267,10 +276,28 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
     event.preventDefault();
     event.stopPropagation();
     this.removeUploadedFile();
+    focusElement(this.dropzoneButton?.nativeElement);
+  }
+
+  onCancelFileProcessing(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.cancelFileProcessing();
+    focusElement(this.dropzoneButton?.nativeElement);
+  }
+
+  cancelFileProcessing() {
+    this.cancelProcessing$.next();
+    this.isProcessingFile = false;
+    const name = this.uploadedFile?.name;
+    if (name) {
+      this.fileProcessingCancelled.emit(name);
+    }
+    this.removeUploadedFile();
   }
 
   removeUploadedFile() {
-    const name = this.uploadedFile?.name ?? '';
+    const name = this.uploadedFile?.name;
     this.uploadedFile = undefined;
     if (name) {
       this.uploadedFileRemoved.emit(name);

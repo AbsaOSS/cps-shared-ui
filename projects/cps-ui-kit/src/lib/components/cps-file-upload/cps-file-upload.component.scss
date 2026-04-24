@@ -120,7 +120,8 @@ $bg-disabled: var(--cps-color-bg-disabled);
             max-width: calc(100% - 3.75rem);
           }
         }
-        .cps-file-upload-uploaded-file-remove-icon {
+        .cps-file-upload-uploaded-file-remove-icon,
+        .cps-file-upload-uploaded-file-cancel-process-icon {
           cursor: pointer;
           flex-shrink: 0;
           margin-left: 0.5rem;

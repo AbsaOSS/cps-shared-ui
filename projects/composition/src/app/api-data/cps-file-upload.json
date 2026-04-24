@@ -30,14 +30,6 @@
                         "description": "Aria label for the component, used for accessibility."
                     },
                     {
-                        "name": "width",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "string | number",
-                        "default": "100%",
-                        "description": "Width of the component, a number denoting pixels or a string."
-                    },
-                    {
                         "name": "fileInfo",
                         "optional": false,
                         "readonly": false,
@@ -76,6 +68,14 @@
                         "type": "number",
                         "default": "12",
                         "description": "File name tooltip offset for styling."
+                    },
+                    {
+                        "name": "width",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | number",
+                        "default": "100%",
+                        "description": "Width of the component, a number denoting pixels or a string."
                     }
                 ]
             },
@@ -121,6 +121,16 @@
                             }
                         ],
                         "description": "Callback to invoke when file processing fails."
+                    },
+                    {
+                        "name": "fileProcessingCancelled",
+                        "parameters": [
+                            {
+                                "name": "value",
+                                "type": "string"
+                            }
+                        ],
+                        "description": "Callback to invoke when file processing is cancelled."
                     },
                     {
                         "name": "uploadedFileRemoved",

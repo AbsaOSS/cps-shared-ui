@@ -35,24 +35,28 @@ export class CpsDividerComponent {
   /**
    * Determines whether the divider is vertically aligned.
    * @group Props
+   * @default false
    */
   vertical = input(false);
 
   /**
    * Color of the divider.
    * @group Props
+   * @default line-mid
    */
   color = input('line-mid');
 
   /**
    * Type of the divider.
    * @group Props
+   * @default solid
    */
   type = input<CpsDividerType>('solid');
 
   /**
    * Thickness of the divider, a number denoting pixels or a string.
    * @group Props
+   * @default 1px
    */
   thickness = input<number | string>('1px');
 

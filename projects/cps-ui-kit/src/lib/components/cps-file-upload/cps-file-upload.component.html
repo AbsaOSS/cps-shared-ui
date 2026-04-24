@@ -1,7 +1,7 @@
 <div
   class="cps-file-upload"
   [class.disabled]="disabled"
-  [ngStyle]="{ width: cvtWidth }">
+  [style.width]="cvtWidth()">
   <div class="sr-only" aria-live="polite" aria-atomic="true">
     @if (errorMessage) {
       {{ errorMessage }}
@@ -14,6 +14,7 @@
     }
   </div>
   <button
+    #dropzoneButton
     type="button"
     class="cps-file-upload-dropzone"
     [ngClass]="{
@@ -98,18 +99,32 @@
             {{ uploadedFile.name }}
           </div>
         </div>
-        @if (!isProcessingFile && !disabled) {
-          <cps-icon
-            role="button"
-            tabindex="0"
-            [attr.aria-label]="'Remove uploaded file'"
-            class="cps-file-upload-uploaded-file-remove-icon"
-            icon="remove"
-            color="error"
-            (click)="onRemoveUploadedFile($event)"
-            (keydown.enter)="onRemoveUploadedFile($event)"
-            (keydown.space)="onRemoveUploadedFile($event)">
-          </cps-icon>
+        @if (!disabled) {
+          @if (isProcessingFile) {
+            <cps-icon
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Cancel file processing'"
+              class="cps-file-upload-uploaded-file-cancel-process-icon"
+              icon="close-x"
+              color="error"
+              (click)="onCancelFileProcessing($event)"
+              (keydown.enter)="onCancelFileProcessing($event)"
+              (keydown.space)="onCancelFileProcessing($event)">
+            </cps-icon>
+          } @else {
+            <cps-icon
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Remove uploaded file'"
+              class="cps-file-upload-uploaded-file-remove-icon"
+              icon="remove"
+              color="error"
+              (click)="onRemoveUploadedFile($event)"
+              (keydown.enter)="onRemoveUploadedFile($event)"
+              (keydown.space)="onRemoveUploadedFile($event)">
+            </cps-icon>
+          }
         }
       </div>
     </div>
