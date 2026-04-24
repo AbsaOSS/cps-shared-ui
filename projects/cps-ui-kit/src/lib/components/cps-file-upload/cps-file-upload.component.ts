@@ -7,6 +7,7 @@ import {
   Input,
   numberAttribute,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -36,7 +37,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
   templateUrl: './cps-file-upload.component.html',
   styleUrls: ['./cps-file-upload.component.scss']
 })
-export class CpsFileUploadComponent implements OnInit, OnChanges {
+export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Expected extensions of a file to be uploaded. E.g. 'doc or .doc'.
    * @group Props
@@ -146,6 +147,11 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     this.cvtWidth = convertSize(this.width);
   }
 
+  ngOnDestroy(): void {
+    this.cancelProcessing$.next();
+    this.cancelProcessing$.complete();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.extensions) {
       this.updateExtensionsString();
@@ -158,6 +164,7 @@ export class CpsFileUploadComponent implements OnInit, OnChanges {
     this.errorMessage = '';
     this.isProcessingFile = false;
     this.dragCounter = 0;
+    this.isDragoverFile = false;
   }
 
   openFilePicker(): void {

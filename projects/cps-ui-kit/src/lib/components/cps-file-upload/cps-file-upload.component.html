@@ -4,7 +4,7 @@
   [ngStyle]="{ width: cvtWidth }">
   <div class="sr-only" aria-live="polite" aria-atomic="true">
     @if (errorMessage) {
-      File upload failed
+      {{ errorMessage }}
     } @else if (uploadedFile) {
       @if (isProcessingFile) {
         File is being processed
