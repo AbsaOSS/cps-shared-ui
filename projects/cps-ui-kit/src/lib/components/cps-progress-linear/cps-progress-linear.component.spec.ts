@@ -20,66 +20,66 @@ describe('CpsProgressLinearComponent', () => {
   });
 
   it('should have default values', () => {
-    expect(component.width).toBe('100%');
-    expect(component.height).toBe('0.5rem');
-    expect(component.color).toBeTruthy();
-    expect(component.bgColor).toBeTruthy();
-    expect(component.opacity).toBe(1);
-    expect(component.radius).toBe('0px');
+    expect(component.width()).toBe('100%');
+    expect(component.height()).toBe('0.5rem');
+    expect(component.color()).toBeTruthy();
+    expect(component.bgColor()).toBeTruthy();
+    expect(component.opacity()).toBe(1);
+    expect(component.cvtRadius()).toBe('0px');
   });
 
-  it('should convert width on init', () => {
-    component.width = 200;
-    component.ngOnInit();
-    expect(component.width).toBe('200px');
+  it('should convert width to px', () => {
+    fixture.componentRef.setInput('width', 200);
+    fixture.detectChanges();
+    expect(component.cvtWidth()).toBe('200px');
   });
 
   it('should keep width as string if already string', () => {
     fixture.componentRef.setInput('width', '50%');
     fixture.detectChanges();
-    expect(component.width).toBe('50%');
+    expect(component.cvtWidth()).toBe('50%');
   });
 
-  it('should convert height on init', () => {
-    component.height = 10;
-    component.ngOnInit();
-    expect(component.height).toBe('10px');
+  it('should convert height to px', () => {
+    fixture.componentRef.setInput('height', 10);
+    fixture.detectChanges();
+    expect(component.cvtHeight()).toBe('10px');
   });
 
   it('should keep height as string if already string', () => {
     fixture.componentRef.setInput('height', '1rem');
     fixture.detectChanges();
-    expect(component.height).toBe('1rem');
+    expect(component.cvtHeight()).toBe('1rem');
   });
 
-  it('should convert radius on init', () => {
-    component.radius = 4;
-    component.ngOnInit();
-    expect(component.radius).toBe('4px');
+  it('should convert radius to px', () => {
+    fixture.componentRef.setInput('radius', 4);
+    fixture.detectChanges();
+    expect(component.cvtRadius()).toBe('4px');
   });
 
   it('should keep radius as string if already string', () => {
     fixture.componentRef.setInput('radius', '0.25rem');
     fixture.detectChanges();
-    expect(component.radius).toBe('0.25rem');
+    expect(component.cvtRadius()).toBe('0.25rem');
   });
 
   it('should set custom color', () => {
     fixture.componentRef.setInput('color', 'primary');
     fixture.detectChanges();
-    expect(component.color).toBeTruthy();
+    expect(component.cssColor()).toBeTruthy();
   });
 
   it('should set custom background color', () => {
     fixture.componentRef.setInput('bgColor', 'line-light');
     fixture.detectChanges();
-    expect(component.bgColor).toBeTruthy();
+    expect(component.cssBgColor()).toBeTruthy();
   });
 
   it('should set custom opacity', () => {
     fixture.componentRef.setInput('opacity', 0.5);
     fixture.detectChanges();
-    expect(component.opacity).toBe(0.5);
+    expect(component.opacity()).toBe(0.5);
   });
 
   it('should display progress bar', () => {

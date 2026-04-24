@@ -136,26 +136,30 @@ async function main() {
                   };
 
                   component_props_group.children.forEach((prop) => {
+                    const rawType =
+                      prop.getSignature && prop.getSignature.type
+                        ? prop.getSignature.type.toString()
+                        : prop.type
+                          ? prop.type.toString()
+                          : null;
+                    const isSignalInput = rawType?.startsWith('InputSignal<');
                     props.values.push({
                       name: prop.name,
                       optional: prop.flags.isOptional,
                       readonly: prop.flags.isReadonly,
-                      type:
-                        prop.getSignature && prop.getSignature.type
-                          ? prop.getSignature.type.toString()
-                          : prop.type
-                            ? prop.type.toString()
-                            : null,
+                      type: unwrapSignalType(rawType),
                       default:
                         (prop.type &&
                         prop.type.name === 'boolean' &&
                         !prop.defaultValue
                           ? 'false'
-                          : prop.defaultValue
+                          : prop.defaultValue &&
+                              !(isSignalInput && prop.defaultValue === '...')
                             ? prop.defaultValue.replace(/^'|'$/g, '')
                             : undefined) ??
                         getDefaultValue(prop.setSignature) ??
-                        getDefaultValue(prop.getSignature),
+                        getDefaultValue(prop.getSignature) ??
+                        getDefaultValue(prop),
                       description: (
                         prop.getSignature?.comment?.summary ||
                         prop.setSignature?.comment?.summary ||
@@ -621,6 +625,12 @@ function extractParameter(emitter) {
     }
   }
 }
+
+const unwrapSignalType = (type) => {
+  if (!type) return type;
+  const match = type.match(/^InputSignal<(.+)>$/);
+  return match ? match[1] : type;
+};
 
 const isProcessable = (value) => {
   return value && value.children && value.children.length;

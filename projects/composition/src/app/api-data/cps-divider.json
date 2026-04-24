@@ -9,32 +9,32 @@
                         "name": "vertical",
                         "optional": false,
                         "readonly": false,
-                        "type": "InputSignal<boolean>",
-                        "default": "...",
+                        "type": "boolean",
+                        "default": "false",
                         "description": "Determines whether the divider is vertically aligned."
                     },
                     {
                         "name": "color",
                         "optional": false,
                         "readonly": false,
-                        "type": "InputSignal<string>",
-                        "default": "...",
+                        "type": "string",
+                        "default": "line-mid",
                         "description": "Color of the divider."
                     },
                     {
                         "name": "type",
                         "optional": false,
                         "readonly": false,
-                        "type": "InputSignal<CpsDividerType>",
-                        "default": "...",
+                        "type": "CpsDividerType",
+                        "default": "solid",
                         "description": "Type of the divider."
                     },
                     {
                         "name": "thickness",
                         "optional": false,
                         "readonly": false,
-                        "type": "InputSignal<string | number>",
-                        "default": "...",
+                        "type": "string | number",
+                        "default": "1px",
                         "description": "Thickness of the divider, a number denoting pixels or a string."
                     }
                 ]

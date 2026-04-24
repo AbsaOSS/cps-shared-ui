@@ -1,23 +1,45 @@
-<div class="cps-file-upload" [ngStyle]="{ width: cvtWidth }">
-  <div
+<div
+  class="cps-file-upload"
+  [class.disabled]="disabled"
+  [style.width]="cvtWidth()">
+  <div class="sr-only" aria-live="polite" aria-atomic="true">
+    @if (errorMessage) {
+      {{ errorMessage }}
+    } @else if (uploadedFile) {
+      @if (isProcessingFile) {
+        File is being processed
+      } @else {
+        File successfully uploaded
+      }
+    }
+  </div>
+  <button
+    #dropzoneButton
+    type="button"
     class="cps-file-upload-dropzone"
     [ngClass]="{
       'dragged-over': isDragoverFile,
-      'with-uploads': uploadedFile?.name
+      'with-bottom-section': uploadedFile?.name || errorMessage
     }"
-    (dragend)="isDragoverFile = false"
-    (dragenter)="isDragoverFile = true"
-    (dragleave)="isDragoverFile = false"
-    (dragover)="isDragoverFile = true"
-    (mouseleave)="isDragoverFile = false"
-    (drop)="tryUploadFile($event)">
+    [disabled]="disabled"
+    [class.processing]="isProcessingFile"
+    (click)="openFilePicker()"
+    (dragend)="onDragEnd()"
+    (dragenter)="onDragEnter()"
+    (dragleave)="onDragLeave()"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+    [attr.aria-label]="ariaLabel">
     <input
       #fileInput
       (change)="tryUploadFile($event)"
       type="file"
       [accept]="extensionsString"
-      title="" />
-    <cps-icon icon="export" size="large" color="text-darkest"></cps-icon>
+      hidden />
+    <cps-icon
+      icon="export"
+      size="large"
+      [color]="disabled ? 'text-mild' : 'text-darkest'"></cps-icon>
     <div class="cps-file-upload-dropzone-title">
       Drag&Drop or choose a file to upload
     </div>
@@ -31,20 +53,32 @@
     }
     @if (fileInfo) {
       <div class="cps-file-upload-dropzone-content">
-        <cps-icon color="calm" icon="info-circle" size="xsmall"></cps-icon>
+        <cps-icon
+          [color]="disabled ? 'text-mild' : 'info'"
+          icon="info-circle"
+          size="xsmall"></cps-icon>
         {{ fileInfo }}
       </div>
     }
     @if (isProcessingFile && uploadedFile) {
       <cps-progress-linear
-        height="3"
-        radius="4"
+        height="0.1875rem"
+        radius="0.25rem"
         opacity="0.3"
+        [color]="disabled ? 'text-mild' : 'calm'"
         class="cps-file-upload-progress-bar"
         bgColor="transparent">
       </cps-progress-linear>
     }
-  </div>
+  </button>
+  @if (errorMessage) {
+    <div class="cps-file-upload-error">
+      <cps-icon
+        icon="toast-error"
+        [color]="disabled ? 'text-light' : 'error'"></cps-icon>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
   @if (uploadedFile) {
     <div class="cps-file-upload-uploaded-files">
       <div class="cps-file-upload-uploaded-file">
@@ -52,7 +86,9 @@
           <cps-icon
             class="cps-file-upload-uploaded-file-status-icon"
             [icon]="isProcessingFile ? 'pending' : 'toast-success'"
-            [color]="isProcessingFile ? 'warn' : 'success'">
+            [color]="
+              disabled ? 'text-light' : isProcessingFile ? 'warn' : 'success'
+            ">
           </cps-icon>
           <div
             class="cps-file-upload-uploaded-file-name"
@@ -63,13 +99,32 @@
             {{ uploadedFile.name }}
           </div>
         </div>
-        @if (!isProcessingFile) {
-          <cps-icon
-            class="cps-file-upload-uploaded-file-remove-icon"
-            icon="remove"
-            color="error"
-            (click)="removeUploadedFile()">
-          </cps-icon>
+        @if (!disabled) {
+          @if (isProcessingFile) {
+            <cps-icon
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Cancel file processing'"
+              class="cps-file-upload-uploaded-file-cancel-process-icon"
+              icon="close-x"
+              color="error"
+              (click)="onCancelFileProcessing($event)"
+              (keydown.enter)="onCancelFileProcessing($event)"
+              (keydown.space)="onCancelFileProcessing($event)">
+            </cps-icon>
+          } @else {
+            <cps-icon
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'Remove uploaded file'"
+              class="cps-file-upload-uploaded-file-remove-icon"
+              icon="remove"
+              color="error"
+              (click)="onRemoveUploadedFile($event)"
+              (keydown.enter)="onRemoveUploadedFile($event)"
+              (keydown.space)="onRemoveUploadedFile($event)">
+            </cps-icon>
+          }
         }
       </div>
     </div>
