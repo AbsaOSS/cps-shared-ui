@@ -1,17 +1,36 @@
 <div class="code-example">
   @if (label) {
-    <h3 class="code-example__label">{{ label }}</h3>
+    <h3 class="code-example__label" [id]="instanceId + '-label'">
+      {{ label }}
+    </h3>
   }
   <div class="code-example__card">
-    <div class="code-example__tabbar">
+    <div
+      class="code-example__tabbar"
+      role="tablist"
+      [attr.aria-labelledby]="label ? instanceId + '-label' : null"
+      [attr.aria-label]="label ? null : 'Code example'"
+      (keydown)="navigateTabs($event)">
       <button
+        type="button"
+        role="tab"
         class="code-example__tab"
+        [id]="instanceId + '-tab-preview'"
+        [attr.aria-selected]="activeTab() === 'preview'"
+        [attr.aria-controls]="instanceId + '-panel-preview'"
+        [tabindex]="activeTab() === 'preview' ? 0 : -1"
         [class.code-example__tab--active]="activeTab() === 'preview'"
         (click)="activeTab.set('preview')">
         Preview
       </button>
       <button
+        type="button"
+        role="tab"
         class="code-example__tab"
+        [id]="instanceId + '-tab-code'"
+        [attr.aria-selected]="activeTab() === 'code'"
+        [attr.aria-controls]="instanceId + '-panel-code'"
+        [tabindex]="activeTab() === 'code' ? 0 : -1"
         [class.code-example__tab--active]="activeTab() === 'code'"
         (click)="activeTab.set('code')">
         Code
@@ -19,18 +38,38 @@
     </div>
 
     <div
+      role="tabpanel"
       class="code-example__preview"
+      [id]="instanceId + '-panel-preview'"
+      [attr.aria-labelledby]="instanceId + '-tab-preview'"
+      tabindex="0"
       [class.code-example__panel--hidden]="activeTab() !== 'preview'">
       <ng-content></ng-content>
     </div>
 
     <div
+      role="tabpanel"
       class="code-example__code"
+      [id]="instanceId + '-panel-code'"
+      [attr.aria-labelledby]="instanceId + '-tab-code'"
+      tabindex="0"
       [class.code-example__panel--hidden]="activeTab() !== 'code'">
-      <button class="code-example__copy" (click)="copyCode()">
-        {{ copied() ? 'Copied!' : 'Copy' }}
-      </button>
-      <pre class="hljs"><code [innerHTML]="highlightedCode"></code></pre>
+      <cps-button
+        class="code-example__copy"
+        type="outlined"
+        size="xsmall"
+        [label]="copied() ? 'Copied!' : 'Copy'"
+        ariaLabel="Copy code to clipboard"
+        (click)="copyCode()">
+      </cps-button>
+      <span role="status" class="code-example__sr-only">{{
+        copied() ? 'Code copied to clipboard' : ''
+      }}</span>
+      <pre
+        class="hljs"
+        [attr.aria-label]="
+          (label || 'Code') + ' snippet'
+        "><code [innerHTML]="highlightedCode"></code></pre>
     </div>
   </div>
 </div>
