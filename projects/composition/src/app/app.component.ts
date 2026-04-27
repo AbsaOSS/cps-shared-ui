@@ -12,7 +12,7 @@ import { filter, map } from 'rxjs/operators';
 export class AppComponent {
   componentTitle = '';
 
-  sidebarExpanded = true;
+  sidebarExpanded = window.innerWidth >= 600;
 
   showThemeToggle =
     new URLSearchParams(window.location.search).get('experimental') === 'true';
