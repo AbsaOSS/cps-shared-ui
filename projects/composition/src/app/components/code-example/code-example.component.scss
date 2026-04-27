@@ -63,7 +63,7 @@
 
   &__code {
     position: relative;
-    background-color: #fafafa;
+    background-color: var(--cps-surface-muted);
 
     &:focus-visible {
       @include focus-ring();
