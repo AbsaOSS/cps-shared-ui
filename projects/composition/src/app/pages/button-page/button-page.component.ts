@@ -6,7 +6,11 @@ import { CodeExampleComponent } from '../../components/code-example/code-example
 import ComponentData from '../../api-data/cps-button.json';
 
 @Component({
-  imports: [CpsButtonComponent, ComponentDocsViewerComponent, CodeExampleComponent],
+  imports: [
+    CpsButtonComponent,
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
+  ],
   selector: 'app-button-page',
   templateUrl: './button-page.component.html',
   styleUrls: ['./button-page.component.scss'],

@@ -74,7 +74,7 @@ export class AutocompletePageComponent implements OnInit {
   }
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this._formBuilder.group({
