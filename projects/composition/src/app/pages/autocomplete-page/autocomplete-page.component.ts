@@ -133,17 +133,22 @@ export class AutocompletePageComponent implements OnInit {
     return of(filteredRes).pipe(delay(1000));
   }
 
+  // Method to handle selection changes for async validation
   onOptionSelected(option: any) {
     this.validating = true;
     this.selectedOption = option;
     this.externalError = '';
+    // Simulate async validation with a delay
     of(option)
-      .pipe(delay(3000))
+      .pipe(
+        delay(3000) // Simulate a delay of 2 seconds
+      )
       .subscribe({
         next: () => {
           this.validating = false;
         },
         error: () => {
+          // Handle errors and finalize validation state
           this.externalError = 'Validation failed';
         }
       });
