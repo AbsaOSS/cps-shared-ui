@@ -23,6 +23,7 @@ export class CodeExampleComponent implements OnInit {
   instanceId = `code-example-${++CodeExampleComponent.instanceCount}`;
   activeTab = signal<'preview' | 'code'>('preview');
   copied = signal(false);
+  copyFailed = signal(false);
   highlightedCode: SafeHtml = '';
 
   ngOnInit(): void {
@@ -30,10 +31,15 @@ export class CodeExampleComponent implements OnInit {
     this.highlightedCode = this.sanitizer.bypassSecurityTrustHtml(result.value);
   }
 
-  copyCode(): void {
-    navigator.clipboard.writeText(this.code.trim());
-    this.copied.set(true);
-    setTimeout(() => this.copied.set(false), 2000);
+  async copyCode(): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(this.code.trim());
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
+    } catch {
+      this.copyFailed.set(true);
+      setTimeout(() => this.copyFailed.set(false), 2000);
+    }
   }
 
   navigateTabs(event: KeyboardEvent): void {

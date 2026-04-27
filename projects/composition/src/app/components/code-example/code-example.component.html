@@ -58,12 +58,16 @@
         class="code-example__copy"
         type="outlined"
         size="xsmall"
-        [label]="copied() ? 'Copied!' : 'Copy'"
+        [label]="copied() ? 'Copied!' : copyFailed() ? 'Failed' : 'Copy'"
         ariaLabel="Copy code to clipboard"
         (click)="copyCode()">
       </cps-button>
       <span role="status" class="code-example__sr-only">{{
-        copied() ? 'Code copied to clipboard' : ''
+        copied()
+          ? 'Code copied to clipboard'
+          : copyFailed()
+            ? 'Failed to copy code'
+            : ''
       }}</span>
       <pre
         class="hljs"
