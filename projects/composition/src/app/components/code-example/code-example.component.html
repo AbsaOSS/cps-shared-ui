@@ -1,0 +1,28 @@
+<div class="code-example">
+  @if (label) {
+  <h3 class="code-example__label">{{ label }}</h3>
+  }
+  <div class="code-example__card">
+    <div class="code-example__tabbar">
+      <button class="code-example__tab" [class.code-example__tab--active]="activeTab() === 'preview'"
+        (click)="activeTab.set('preview')">
+        Preview
+      </button>
+      <button class="code-example__tab" [class.code-example__tab--active]="activeTab() === 'code'"
+        (click)="activeTab.set('code')">
+        Code
+      </button>
+    </div>
+
+    <div class="code-example__preview" [class.code-example__panel--hidden]="activeTab() !== 'preview'">
+      <ng-content></ng-content>
+    </div>
+
+    <div class="code-example__code" [class.code-example__panel--hidden]="activeTab() !== 'code'">
+      <button class="code-example__copy" (click)="copyCode()">
+        {{ copied() ? 'Copied!' : 'Copy' }}
+      </button>
+      <pre class="hljs"><code [innerHTML]="highlightedCode"></code></pre>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+.code-example {
+  margin-bottom: 1.5rem;
+
+  &__label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--cps-text-primary);
+  }
+
+  &__card {
+    border: 1px solid var(--cps-color-line);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  // We might want to replace with cps-tab-group
+  &__tabbar {
+    display: flex;
+    border-bottom: 1px solid var(--cps-color-line);
+    background-color: var(--cps-surface-elevated);
+  }
+
+  &__tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--cps-text-secondary);
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      color: var(--cps-text-primary);
+    }
+
+    &--active {
+      color: var(--cps-text-primary);
+      border-bottom-color: var(--cps-accent-primary);
+    }
+  }
+
+  &__preview {
+    padding: 1.5rem;
+    background-color: var(--cps-background-color);
+  }
+
+  &__code {
+    position: relative;
+    background-color: #fafafa;
+
+    pre {
+      margin: 0;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+        'Liberation Mono', monospace;
+    }
+  }
+
+  // We might want to replace with cps-button
+  &__copy {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-family: inherit;
+    background-color: #fff;
+    color: #57606a;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+    z-index: 1;
+
+    &:hover {
+      background-color: #f3f4f6;
+      color: #24292f;
+    }
+  }
+
+  &__panel--hidden {
+    display: none;
+  }
+}

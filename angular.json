@@ -66,7 +66,10 @@
                 "output": "assets"
               }
             ],
-            "styles": ["projects/composition/src/styles.scss"],
+            "styles": [
+              "projects/composition/src/styles.scss",
+              "node_modules/highlight.js/styles/atom-one-light.min.css"
+            ],
             "scripts": [],
             "browser": "projects/composition/src/main.ts"
           },
