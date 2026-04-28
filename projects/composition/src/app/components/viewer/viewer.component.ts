@@ -14,15 +14,17 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
   protected selectedTabIndex = 0;
 
   ngOnInit(): void {
-    if (!this._route.snapshot.params.type) {
-      this._router.navigate(['./examples'], { relativeTo: this._route });
-    }
-
-    if (this._route.snapshot.params.type === 'examples') {
-      this.selectedTabIndex = 0;
-    } else if (this._route.snapshot.params.type === 'api') {
-      this.selectedTabIndex = 1;
-    }
+    this._route.params.subscribe((params) => {
+      if (!params['type']) {
+        this._router.navigate(['./examples'], { relativeTo: this._route });
+        return;
+      }
+      if (params['type'] === 'examples') {
+        this.selectedTabIndex = 0;
+      } else if (params['type'] === 'api') {
+        this.selectedTabIndex = 1;
+      }
+    });
   }
 
   changeTab(change: CpsTabChangeEvent): void {
