@@ -249,6 +249,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     const coords = this._getCoords();
     if (!coords) {
       this._destroyTooltip();
+      console.error('Not enough space on the screen for the tooltip!');
       return;
     }
 
