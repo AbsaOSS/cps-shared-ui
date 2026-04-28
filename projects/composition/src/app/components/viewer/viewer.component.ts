@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { CpsTabChangeEvent } from 'cps-ui-kit';
 import { DOCUMENT } from '@angular/common';
@@ -11,10 +12,11 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
   private _route = inject(ActivatedRoute);
   private _router = inject(Router);
   private _document = inject(DOCUMENT);
+  private _destroyRef = inject(DestroyRef);
   protected selectedTabIndex = 0;
 
   ngOnInit(): void {
-    this._route.params.subscribe((params) => {
+    this._route.params.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((params) => {
       if (!params['type']) {
         this._router.navigate(['./examples'], { relativeTo: this._route });
         return;
@@ -36,7 +38,7 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this._router.events.subscribe((event: any) => {
+    this._router.events.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((event: any) => {
       if (event instanceof Scroll && event.anchor) {
         setTimeout(() => {
           this._scroll('#' + event.anchor);
