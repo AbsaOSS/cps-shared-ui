@@ -2,7 +2,7 @@
   class="cps-file-upload"
   [class.disabled]="disabled"
   [style.width]="cvtWidth()">
-  <div class="sr-only" aria-live="polite" aria-atomic="true">
+  <div class="cps-sr-only" aria-live="polite" aria-atomic="true">
     @if (errorMessage) {
       {{ errorMessage }}
     } @else if (uploadedFile) {

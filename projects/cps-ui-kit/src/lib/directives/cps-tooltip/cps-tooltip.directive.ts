@@ -478,8 +478,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     const el = this._document.createElement('div');
     el.setAttribute('aria-live', 'assertive');
     el.setAttribute('aria-atomic', 'true');
-    el.style.cssText =
-      'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0';
+    el.className = 'cps-sr-only';
     this._document.body.appendChild(el);
     setTimeout(() => {
       el.textContent = text;
