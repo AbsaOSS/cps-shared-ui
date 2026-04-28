@@ -171,11 +171,7 @@ export type iconSizeType =
   imports: [CommonModule],
   selector: 'cps-icon',
   templateUrl: './cps-icon.component.html',
-  styleUrls: ['./cps-icon.component.scss'],
-  host: {
-    '[attr.role]': 'ariaLabel ? "img" : null',
-    '[attr.aria-label]': 'ariaLabel || null'
-  }
+  styleUrls: ['./cps-icon.component.scss']
 })
 export class CpsIconComponent implements OnChanges {
   /**
@@ -195,12 +191,6 @@ export class CpsIconComponent implements OnChanges {
    * @group Props
    */
   @Input() color = 'currentColor';
-
-  /**
-   * Aria label of the icon for accessibility. When set, role="img" is applied.
-   * @group Props
-   */
-  @Input() ariaLabel = '';
 
   iconColor = 'currentColor';
   url = inject(ICONS_PATH, { optional: true }) ?? 'assets/';

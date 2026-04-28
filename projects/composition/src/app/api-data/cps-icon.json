@@ -28,14 +28,6 @@
                         "type": "string",
                         "default": "currentColor",
                         "description": "Color of the icon."
-                    },
-                    {
-                        "name": "ariaLabel",
-                        "optional": false,
-                        "readonly": false,
-                        "type": "string",
-                        "default": "",
-                        "description": "Aria label of the icon for accessibility. When set, role=\"img\" is applied."
                     }
                 ]
             }

@@ -39,7 +39,7 @@ export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
     '(keydown.tab)': 'onTabFromTrigger($event)',
     '(click)': 'onClick()',
     '(document:click)': 'onDocumentClick($event.target)',
-    '(window:resize)': 'onPageResize($event)'
+    '(window:resize)': 'onPageResize()'
   }
 })
 export class CpsTooltipDirective implements OnInit, OnDestroy {
@@ -139,11 +139,10 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearTimeout(this._showTimeout);
     clearTimeout(this._hideTimeout);
-    this.window.removeEventListener('scroll', this._destroyTooltip, true);
-    this._popup?.remove();
+    this._destroyTooltip(true);
   }
 
-  onMouseEnter() {
+  onMouseEnter(): void {
     if (this.tooltipOpenOn() === 'hover') {
       clearTimeout(this._hideTimeout);
       this._showTimeout = setTimeout(() => {
@@ -153,7 +152,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     }
   }
 
-  onMouseLeave() {
+  onMouseLeave(): void {
     clearTimeout(this._showTimeout);
 
     if (!this.tooltipPersistent()) {
@@ -166,7 +165,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   // Popup created synchronously so SR resolves aria-describedby on focus.
   // Visual appearance is delayed by tooltipOpenDelay.
-  onFocus() {
+  onFocus(): void {
     if (this.tooltipOpenOn() === 'hover' || this.tooltipOpenOn() === 'focus') {
       this._ariaTarget = this._resolveAriaTarget();
       clearTimeout(this._hideTimeout);
@@ -179,7 +178,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     }
   }
 
-  onFocusOut(event: FocusEvent) {
+  onFocusOut(event: FocusEvent): void {
     clearTimeout(this._showTimeout);
     if (!this._popup?.contains(event.relatedTarget as Node)) {
       this._hideTimeout = setTimeout(
@@ -191,7 +190,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   // Tab from the trigger moves focus into the persistent tooltip instead of
   // the next page element, so keyboard users can interact with tooltip content.
-  onTabFromTrigger(event: Event) {
+  onTabFromTrigger(event: Event): void {
     if (!this.tooltipPersistent() || !this._popup) return;
     const focusable = this._focusableIn(this._popup);
     if (!focusable.length) return;
@@ -199,7 +198,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     focusable[0].focus();
   }
 
-  onClick() {
+  onClick(): void {
     if (this.tooltipOpenOn() === 'click') {
       this._ariaTarget = this._resolveAriaTarget();
       clearTimeout(this._hideTimeout);
@@ -209,7 +208,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     }
   }
 
-  onDocumentClick(target: EventTarget | null) {
+  onDocumentClick(target: EventTarget | null): void {
     if (this.tooltipPersistent() && this._popup) {
       const el = target as HTMLElement | null;
       if (!el?.isConnected) return;
@@ -221,11 +220,45 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     }
   }
 
-  onPageResize(event: Event) {
-    if (this._popup) this._destroyTooltip(event);
+  onPageResize(): void {
+    this._destroyTooltip(true);
   }
 
-  private _createTooltip = () => {
+  private _onScrollDestroy = (): void => {
+    this._destroyTooltip(true);
+  };
+
+  private _onPopupKeydown = (event: KeyboardEvent): void => {
+    if (event.key !== 'Tab' || !this._popup) return;
+    const focusable = this._focusableIn(this._popup);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = this._document.activeElement;
+    if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      const next = this._getNextFocusableAfterTrigger();
+      next ? next.focus() : this._ariaTarget?.focus();
+    } else if (event.shiftKey && active === first) {
+      event.preventDefault();
+      this._ariaTarget?.focus();
+    }
+  };
+
+  private _onPopupFocusOut = (event: FocusEvent): void => {
+    const newFocus = event.relatedTarget as Node | null;
+    if (
+      !this._popup?.contains(newFocus) &&
+      !this._elementRef.nativeElement.contains(newFocus)
+    ) {
+      this._hideTimeout = setTimeout(
+        this._destroyTooltip,
+        this.tooltipCloseDelay() as number
+      );
+    }
+  };
+
+  private _createTooltip = (): void => {
     if (this._popup || this.tooltipDisabled()) return;
 
     this._popup = this._document.createElement('div');
@@ -243,7 +276,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     this._ariaTarget?.setAttribute('aria-describedby', this._tooltipId);
   };
 
-  private _positionAndShow = () => {
+  private _positionAndShow = (): void => {
     if (!this._popup) return;
 
     const coords = this._getCoords();
@@ -264,11 +297,11 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       this._popup.addEventListener('keydown', this._onPopupKeydown);
     }
 
-    this.window.addEventListener('scroll', this._destroyTooltip, true);
+    this.window.addEventListener('scroll', this._onScrollDestroy, true);
   };
 
-  private _destroyTooltip = (event?: Event) => {
-    this.window.removeEventListener('scroll', this._destroyTooltip, true);
+  private _destroyTooltip = (destroyImmediately?: boolean): void => {
+    this.window.removeEventListener('scroll', this._onScrollDestroy, true);
     if (!this._popup) return;
 
     this._popup.removeEventListener('focusout', this._onPopupFocusOut);
@@ -279,7 +312,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     this._ariaTarget?.removeAttribute('aria-describedby');
     this._ariaTarget = undefined;
 
-    if (event) {
+    if (destroyImmediately) {
       popup.remove();
     } else {
       popup.style.opacity = '0';
@@ -291,11 +324,12 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     coords: { left: number; top: number },
     popupRect: DOMRect
   ): boolean {
+    const { scrollX, scrollY, innerWidth, innerHeight } = this.window;
     return (
-      coords.top >= 0 &&
-      coords.left >= 0 &&
-      coords.left + popupRect.width <= this.window.innerWidth &&
-      coords.top + popupRect.height <= this.window.innerHeight
+      coords.top >= scrollY &&
+      coords.left >= scrollX &&
+      coords.left + popupRect.width <= scrollX + innerWidth &&
+      coords.top + popupRect.height <= scrollY + innerHeight
     );
   }
 
@@ -365,7 +399,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
       case 'left':
         return {
           left:
-            targetElRect.left -
+            targetElRect.left +
             this.window.scrollX -
             popupRect.width -
             this._getOffsetPx(),
@@ -411,23 +445,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     return result;
   }
 
-  private _onPopupKeydown = (event: KeyboardEvent) => {
-    if (event.key !== 'Tab' || !this._popup) return;
-    const focusable = this._focusableIn(this._popup);
-    if (!focusable.length) return;
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    const active = this._document.activeElement;
-    if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      const next = this._getNextFocusableAfterTrigger();
-      next ? next.focus() : this._ariaTarget?.focus();
-    } else if (event.shiftKey && active === first) {
-      event.preventDefault();
-      this._ariaTarget?.focus();
-    }
-  };
-
   private _getNextFocusableAfterTrigger(): HTMLElement | null {
     const all: HTMLElement[] = [];
     const walker = this._document.createTreeWalker(
@@ -454,19 +471,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     const idx = all.indexOf(last);
     return idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
   }
-
-  private _onPopupFocusOut = (event: FocusEvent) => {
-    const newFocus = event.relatedTarget as Node | null;
-    if (
-      !this._popup?.contains(newFocus) &&
-      !this._elementRef.nativeElement.contains(newFocus)
-    ) {
-      this._hideTimeout = setTimeout(
-        this._destroyTooltip,
-        this.tooltipCloseDelay() as number
-      );
-    }
-  };
 
   private _resolveAriaTarget(): HTMLElement | undefined {
     return (this._document.activeElement as HTMLElement | null) ?? undefined;
