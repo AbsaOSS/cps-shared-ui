@@ -60,7 +60,8 @@ describe('ViewerComponent', () => {
     it('navigates to ./examples when no type param is present', () => {
       routeParams$.next({});
       expect(mockRouter.navigate).toHaveBeenCalledWith(['./examples'], {
-        relativeTo: expect.any(Object)
+        relativeTo: expect.any(Object),
+        replaceUrl: true
       });
     });
 
@@ -76,6 +77,21 @@ describe('ViewerComponent', () => {
       expect(
         (component as unknown as { selectedTabIndex: number }).selectedTabIndex
       ).toBe(1);
+    });
+
+    it('navigates to ./examples and resets selectedTabIndex to 0 on subsequent emission without type (component reuse)', () => {
+      routeParams$.next({ type: 'api' });
+      expect(
+        (component as unknown as { selectedTabIndex: number }).selectedTabIndex
+      ).toBe(1);
+
+      mockRouter.navigate.mockClear();
+
+      routeParams$.next({});
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['./examples'], {
+        relativeTo: expect.any(Object),
+        replaceUrl: true
+      });
     });
   });
 
