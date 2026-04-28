@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, DestroyRef, OnInit, inject } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  OnInit,
+  inject
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, Scroll } from '@angular/router';
 import { CpsTabChangeEvent } from 'cps-ui-kit';
@@ -16,17 +22,19 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
   protected selectedTabIndex = 0;
 
   ngOnInit(): void {
-    this._route.params.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((params) => {
-      if (!params['type']) {
-        this._router.navigate(['./examples'], { relativeTo: this._route });
-        return;
-      }
-      if (params['type'] === 'examples') {
-        this.selectedTabIndex = 0;
-      } else if (params['type'] === 'api') {
-        this.selectedTabIndex = 1;
-      }
-    });
+    this._route.params
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((params) => {
+        if (!params.type) {
+          this._router.navigate(['./examples'], { relativeTo: this._route });
+          return;
+        }
+        if (params.type === 'examples') {
+          this.selectedTabIndex = 0;
+        } else if (params.type === 'api') {
+          this.selectedTabIndex = 1;
+        }
+      });
   }
 
   changeTab(change: CpsTabChangeEvent): void {
@@ -38,13 +46,15 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this._router.events.pipe(takeUntilDestroyed(this._destroyRef)).subscribe((event: any) => {
-      if (event instanceof Scroll && event.anchor) {
-        setTimeout(() => {
-          this._scroll('#' + event.anchor);
-        });
-      }
-    });
+    this._router.events
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((event: any) => {
+        if (event instanceof Scroll && event.anchor) {
+          setTimeout(() => {
+            this._scroll('#' + event.anchor);
+          });
+        }
+      });
   }
 
   private _scroll(query: string) {
