@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import packageJson from 'projects/cps-ui-kit/package.json';
 import { filter, map } from 'rxjs/operators';
@@ -10,12 +11,13 @@ import { filter, map } from 'rxjs/operators';
   standalone: false
 })
 export class AppComponent {
+  private readonly _platformId = inject(PLATFORM_ID);
+
   componentTitle = '';
 
-  sidebarExpanded = window.innerWidth >= 600;
+  sidebarExpanded = false;
 
-  showThemeToggle =
-    new URLSearchParams(window.location.search).get('experimental') === 'true';
+  showThemeToggle = false;
 
   version = packageJson?.version;
 
@@ -23,6 +25,12 @@ export class AppComponent {
     private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {
+    if (isPlatformBrowser(this._platformId)) {
+      this.sidebarExpanded = window.innerWidth >= 600;
+      this.showThemeToggle =
+        new URLSearchParams(window.location.search).get('experimental') ===
+        'true';
+    }
     this._router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
