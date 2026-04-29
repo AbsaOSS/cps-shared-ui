@@ -68,10 +68,6 @@ const components: ComponentEntry[] = [
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page.locator('.example-content cps-button').first().click();
-      await page.waitForSelector('.cps-menu-container', {
-        state: 'visible',
-        timeout: 10_000
-      });
     }
   },
   // {

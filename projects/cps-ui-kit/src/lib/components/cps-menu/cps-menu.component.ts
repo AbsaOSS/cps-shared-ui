@@ -706,9 +706,9 @@ export class CpsMenuComponent
       setTimeout(() => {
         const menuItems = this._getMenuItems();
         if (menuItems.length) {
-          menuItems[0].focus();
+          menuItems[0].focus({ preventScroll: true });
         } else if (this.container) {
-          this._focusableIn(this.container)[0]?.focus();
+          this._focusableIn(this.container)[0]?.focus({ preventScroll: true });
         }
       }, 5);
     });
