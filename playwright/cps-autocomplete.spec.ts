@@ -8,7 +8,7 @@ test.describe('cps-autocomplete page', () => {
 
     test('should select items properly', async ({ page }) => {
       await page.getByTestId('required-autocomplete').click();
-      await page.getByText('Rome').click();
+      await page.getByText('Rome').locator('visible=true').click();
       await expect(
         page
           .getByTestId('required-autocomplete')
@@ -16,7 +16,7 @@ test.describe('cps-autocomplete page', () => {
       ).toHaveText('Rome');
 
       await page.getByTestId('required-autocomplete').click();
-      await page.getByText('Prague').first().click();
+      await page.getByText('Prague').locator('visible=true').first().click();
       await expect(
         page
           .getByTestId('required-autocomplete')
