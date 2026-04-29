@@ -730,7 +730,8 @@ export class CpsAutocompleteComponent
   onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
     if (
       (this.loading || this.validating) &&
-      reason !== CpsMenuHideReason.KEYDOWN_ESCAPE
+      reason !== CpsMenuHideReason.KEYDOWN_ESCAPE &&
+      reason !== CpsMenuHideReason.KEYDOWN_TAB
     ) {
       return;
     }

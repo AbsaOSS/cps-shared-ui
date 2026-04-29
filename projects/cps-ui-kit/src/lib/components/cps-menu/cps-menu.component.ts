@@ -64,6 +64,7 @@ export enum CpsMenuHideReason {
   CLICK_ITEM = 'click-item',
   CLICK_OUTSIDE = 'click-outside',
   KEYDOWN_ESCAPE = 'keydown-escape',
+  KEYDOWN_TAB = 'keydown-tab',
   SCROLL = 'scroll',
   RESIZE = 'resize',
   TARGET_NOT_CONNECTED = 'target-not-connected'
@@ -344,7 +345,11 @@ export class CpsMenuComponent
   }
 
   onItemClick(event: any, item: CpsMenuItem) {
-    if (item.disabled || item.loading) return;
+    if (item.disabled || item.loading) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     if (item.action) {
       item.action({
         originalEvent: event,
@@ -356,6 +361,10 @@ export class CpsMenuComponent
   }
 
   onItemKeydown(event: KeyboardEvent, item: CpsMenuItem) {
+    if (item.disabled || item.loading) {
+      event.preventDefault();
+      return;
+    }
     if (event.key === 'Enter' || event.key === ' ') {
       if (!item.url) {
         event.preventDefault();
@@ -392,7 +401,7 @@ export class CpsMenuComponent
                   if (this.items.length > 0) {
                     event.preventDefault();
                     this.zone.run(() => {
-                      this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
+                      this.hide(CpsMenuHideReason.KEYDOWN_TAB);
                     });
                     this._focusNextTabbable(event.shiftKey);
                   } else if (this.container) {
@@ -404,7 +413,7 @@ export class CpsMenuComponent
                     ) {
                       event.preventDefault();
                       this.zone.run(() => {
-                        this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
+                        this.hide(CpsMenuHideReason.KEYDOWN_TAB);
                       });
                       (
                         this._getNextFocusableAfterTarget() ??
@@ -413,7 +422,7 @@ export class CpsMenuComponent
                     } else if (event.shiftKey && active === focusable[0]) {
                       event.preventDefault();
                       this.zone.run(() => {
-                        this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
+                        this.hide(CpsMenuHideReason.KEYDOWN_TAB);
                       });
                       (this.target as HTMLElement)?.focus();
                     }
