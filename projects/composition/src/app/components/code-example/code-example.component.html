@@ -33,8 +33,22 @@
         [tabindex]="activeTab() === 'code' ? 0 : -1"
         [class.code-example__tab--active]="activeTab() === 'code'"
         (click)="activeTab.set('code')">
-        Code
+        HTML
       </button>
+      @if (tsCode) {
+        <button
+          type="button"
+          role="tab"
+          class="code-example__tab"
+          [id]="instanceId + '-tab-ts'"
+          [attr.aria-selected]="activeTab() === 'ts'"
+          [attr.aria-controls]="instanceId + '-panel-ts'"
+          [tabindex]="activeTab() === 'ts' ? 0 : -1"
+          [class.code-example__tab--active]="activeTab() === 'ts'"
+          (click)="activeTab.set('ts')">
+          TS
+        </button>
+      }
     </div>
 
     <div
@@ -59,7 +73,7 @@
         type="outlined"
         size="xsmall"
         [label]="copied() ? 'Copied!' : copyFailed() ? 'Failed' : 'Copy'"
-        ariaLabel="Copy code to clipboard"
+        ariaLabel="Copy HTML code to clipboard"
         (click)="copyCode()">
       </cps-button>
       <span role="status" class="code-example__sr-only">{{
@@ -72,8 +86,39 @@
       <pre
         class="hljs"
         [attr.aria-label]="
-          (label || 'Code') + ' snippet'
+          (label || 'Code') + ' HTML snippet'
         "><code [innerHTML]="highlightedCode"></code></pre>
     </div>
+
+    @if (tsCode) {
+      <div
+        role="tabpanel"
+        class="code-example__code"
+        [id]="instanceId + '-panel-ts'"
+        [attr.aria-labelledby]="instanceId + '-tab-ts'"
+        tabindex="0"
+        [class.code-example__panel--hidden]="activeTab() !== 'ts'">
+        <cps-button
+          class="code-example__copy"
+          type="outlined"
+          size="xsmall"
+          [label]="copied() ? 'Copied!' : copyFailed() ? 'Failed' : 'Copy'"
+          ariaLabel="Copy TypeScript code to clipboard"
+          (click)="copyCode()">
+        </cps-button>
+        <span role="status" class="code-example__sr-only">{{
+          copied()
+            ? 'Code copied to clipboard'
+            : copyFailed()
+              ? 'Failed to copy code'
+              : ''
+        }}</span>
+        <pre
+          class="hljs"
+          [attr.aria-label]="
+            (label || 'Code') + ' TypeScript snippet'
+          "><code [innerHTML]="highlightedTsCode"></code></pre>
+      </div>
+    }
   </div>
 </div>

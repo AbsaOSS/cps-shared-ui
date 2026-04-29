@@ -3,8 +3,12 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CpsButtonComponent } from 'cps-ui-kit';
 import hljs from 'highlight.js/lib/core';
 import xml from 'highlight.js/lib/languages/xml';
+import typescript from 'highlight.js/lib/languages/typescript';
 
 hljs.registerLanguage('xml', xml);
+hljs.registerLanguage('typescript', typescript);
+
+type TabId = 'preview' | 'code' | 'ts';
 
 @Component({
   imports: [CpsButtonComponent],
@@ -16,24 +20,42 @@ export class CodeExampleComponent implements OnInit {
   private static instanceCount = 0;
 
   @Input({ required: true }) code = '';
+  @Input() tsCode: string | undefined;
   @Input() label = '';
 
   private sanitizer = inject(DomSanitizer);
 
   instanceId = `code-example-${++CodeExampleComponent.instanceCount}`;
-  activeTab = signal<'preview' | 'code'>('preview');
+  activeTab = signal<TabId>('preview');
   copied = signal(false);
   copyFailed = signal(false);
   highlightedCode: SafeHtml = '';
+  highlightedTsCode: SafeHtml = '';
+
+  private tabs: TabId[] = ['preview', 'code'];
 
   ngOnInit(): void {
-    const result = hljs.highlight(this.code.trim(), { language: 'xml' });
-    this.highlightedCode = this.sanitizer.bypassSecurityTrustHtml(result.value);
+    const htmlResult = hljs.highlight(this.code.trim(), { language: 'xml' });
+    this.highlightedCode = this.sanitizer.bypassSecurityTrustHtml(
+      htmlResult.value
+    );
+
+    if (this.tsCode) {
+      const tsResult = hljs.highlight(this.tsCode.trim(), {
+        language: 'typescript'
+      });
+      this.highlightedTsCode = this.sanitizer.bypassSecurityTrustHtml(
+        tsResult.value
+      );
+      this.tabs = ['preview', 'code', 'ts'];
+    }
   }
 
   async copyCode(): Promise<void> {
+    const textToCopy =
+      this.activeTab() === 'ts' ? (this.tsCode ?? '').trim() : this.code.trim();
     try {
-      await navigator.clipboard.writeText(this.code.trim());
+      await navigator.clipboard.writeText(textToCopy);
       this.copied.set(true);
       setTimeout(() => this.copied.set(false), 2000);
     } catch {
@@ -43,7 +65,7 @@ export class CodeExampleComponent implements OnInit {
   }
 
   navigateTabs(event: KeyboardEvent): void {
-    const tabs: Array<'preview' | 'code'> = ['preview', 'code'];
+    const tabs = this.tabs;
     const current = tabs.indexOf(this.activeTab());
     let next = current;
 
