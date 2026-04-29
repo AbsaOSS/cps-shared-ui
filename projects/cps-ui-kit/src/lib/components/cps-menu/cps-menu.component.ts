@@ -649,7 +649,6 @@ export class CpsMenuComponent
       this.bindDocumentClickListener();
       this.bindDocumentKeydownListener();
       this.bindDocumentResizeListener();
-      this.bindScrollListener();
 
       if (this.focusOnShow) {
         this.focus();
@@ -672,6 +671,10 @@ export class CpsMenuComponent
 
   onAnimationEnd(event: AnimationEvent) {
     switch (event.toState) {
+      case 'open':
+        this.bindScrollListener();
+        break;
+
       case 'void':
         if (this.destroyCallback) {
           this.destroyCallback();
