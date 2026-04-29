@@ -26,7 +26,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string | number",
-                        "default": "4",
+                        "default": "0.25rem",
                         "description": "Border radius of the button, of type number denoting pixels or string."
                     },
                     {

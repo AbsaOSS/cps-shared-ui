@@ -7,7 +7,6 @@ import {
   EventEmitter,
   Input,
   input,
-  numberAttribute,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -85,10 +84,10 @@ export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {
   @Input() fileNameTooltipPosition: CpsTooltipPosition = 'top';
 
   /**
-   * File name tooltip offset for styling.
+   * File name tooltip offset, a number denoting pixels or a string.
    * @group Props
    */
-  @Input({ transform: numberAttribute }) fileNameTooltipOffset: number = 12;
+  @Input() fileNameTooltipOffset: number | string = '0.75rem';
 
   /**
    * Width of the component, a number denoting pixels or a string.

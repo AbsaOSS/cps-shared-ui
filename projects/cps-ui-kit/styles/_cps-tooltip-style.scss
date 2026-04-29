@@ -1,16 +1,22 @@
+@use './mixins' as *;
+
 .cps-tooltip {
   position: absolute;
   top: 0;
   cursor: default;
-  font-size: 14px;
-  background: #f9f5f6;
+  font-size: 0.875rem;
+  background: var(--cps-color-bg-light);
   color: var(--cps-color-text-darkest);
   font-family: 'Source Sans Pro', sans-serif;
-  border: 1px solid var(--cps-color-calm);
+  border: 0.0625rem solid var(--cps-color-calm);
   overflow-wrap: break-word;
-  border-radius: 3px;
-  padding: 3px;
+  border-radius: 0.1875rem;
+  padding: 0.1875rem;
   transition: opacity 0.2s;
   opacity: 0;
   z-index: 2000;
+
+  *:focus-visible {
+    @include focus-ring(0.125rem, 0.25rem, inherit);
+  }
 }
