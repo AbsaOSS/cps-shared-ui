@@ -23,7 +23,7 @@ describe('CpsButtonComponent', () => {
   it('should have default values', () => {
     expect(component.color).toBe('calm');
     expect(component.contentColor).toBe('white');
-    expect(component.borderRadius).toBe('4px');
+    expect(component.borderRadius).toBe('0.25rem');
     expect(component.type).toBe('solid');
     expect(component.label).toBe('');
     expect(component.icon).toBe('');

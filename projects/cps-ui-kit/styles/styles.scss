@@ -43,3 +43,16 @@ body {
     color var(--cps-motion-base) var(--cps-motion-easing),
     box-shadow var(--cps-motion-base) var(--cps-motion-easing) !important;
 }
+
+// Visually hidden but accessible to screen readers
+.cps-sr-only {
+  position: absolute;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  padding: 0;
+  margin: -0.0625rem;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

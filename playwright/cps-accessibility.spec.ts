@@ -58,7 +58,7 @@ const components: ComponentEntry[] = [
   // },
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
   // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
-  // { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
+  { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
   // { route: '/input', name: 'Input', selector: 'cps-input' },
   // { route: '/loader', name: 'Loader', selector: 'cps-loader' },
   // {
@@ -90,7 +90,7 @@ const components: ComponentEntry[] = [
   //   name: 'Progress linear',
   //   selector: 'cps-progress-linear'
   // },
-  { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' }
+  { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
   // { route: '/scheduler', name: 'Scheduler', selector: 'cps-scheduler' },
   // {
   //   route: '/select',
@@ -120,15 +120,15 @@ const components: ComponentEntry[] = [
   //     await page.locator('cps-timepicker cps-autocomplete').first().click();
   //   }
   // },
-  // {
-  //   route: '/tooltip',
-  //   name: 'Tooltip',
-  //   selector: '.cps-tooltip',
-  //   setup: async (page) => {
-  //     await page.waitForSelector('.example-content');
-  //     await page.locator('.example-content cps-button').first().hover();
-  //   }
-  // },
+  {
+    route: '/tooltip',
+    name: 'Tooltip',
+    selector: '.cps-tooltip',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page.locator('.example-content cps-button').first().hover();
+    }
+  }
   // {
   //   route: '/tree-autocomplete',
   //   name: 'Tree autocomplete',

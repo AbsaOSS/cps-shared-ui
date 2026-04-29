@@ -13,8 +13,8 @@ $option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: var(--cps-color-highlight-selected);
 $option-highlight-background: var(--cps-color-highlight-active);
 $option-highlight-selected-background: var(--cps-color-highlight-selected-dark);
-$autocomplete-option-info-color: var(--cps-color-text-mild);
-$autocomplete-selected-option-info-color: var(--cps-color-text-medium);
+$autocomplete-option-info-color: var(--cps-color-text-medium);
+$autocomplete-selected-option-info-color: var(--cps-color-text-dark);
 $autocomplete-option-value-color: var(--cps-color-text-dark);
 $autocomplete-about-remove-color: var(--cps-color-text-light);
 $autocomplete-about-remove-background: var(--cps-color-bg-mid);
@@ -238,7 +238,7 @@ $hover-transition-duration: 0.2s;
             }
           }
           &:focus-visible {
-            @include focus-ring();
+            @include focus-ring(0.125rem, 0.25rem, 50%);
           }
 
           &-hidden {

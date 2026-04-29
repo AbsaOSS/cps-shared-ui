@@ -40,7 +40,7 @@ export class CpsButtonComponent implements OnChanges {
    * Border radius of the button, of type number denoting pixels or string.
    * @group Props
    */
-  @Input() borderRadius: number | string = 4;
+  @Input() borderRadius: number | string = '0.25rem';
 
   /**
    * Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'.
