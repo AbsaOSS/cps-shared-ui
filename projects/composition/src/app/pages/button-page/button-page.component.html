@@ -1,5 +1,5 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <app-code-example label="Solid" [code]="examples.solid">
+  <app-code-example label="Solid" [code]="examples.solid.html">
     <div class="buttons-group-row">
       <cps-button label="Large button" size="large" color="luxury"></cps-button>
       <cps-button icon="add" label="Large button" size="large"></cps-button>
@@ -80,7 +80,7 @@
     </div>
   </app-code-example>
 
-  <app-code-example label="Outlined" [code]="examples.outlined">
+  <app-code-example label="Outlined" [code]="examples.outlined.html">
     <div class="buttons-group-row">
       <cps-button
         label="Large button"
@@ -199,7 +199,7 @@
     </div>
   </app-code-example>
 
-  <app-code-example label="Borderless" [code]="examples.borderless">
+  <app-code-example label="Borderless" [code]="examples.borderless.html">
     <div class="buttons-group-row">
       <cps-button
         label="Large button"
@@ -321,7 +321,10 @@
     </div>
   </app-code-example>
 
-  <app-code-example label="Miscellaneous" [code]="examples.misc">
+  <app-code-example
+    label="Miscellaneous"
+    [code]="examples.misc.html"
+    [tsCode]="examples.misc.ts">
     <div class="buttons-group-row dark-background">
       <cps-button
         [loading]="isLoading"
