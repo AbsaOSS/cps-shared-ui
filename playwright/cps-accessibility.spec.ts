@@ -68,6 +68,10 @@ const components: ComponentEntry[] = [
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page.locator('.example-content cps-button').first().click();
+      await page.waitForSelector('.cps-menu-container', {
+        state: 'visible',
+        timeout: 10_000
+      });
     }
   },
   // {
@@ -228,7 +232,7 @@ test.describe('Accessibility - responsive axe scan', () => {
       page,
       makeAxeBuilder
     }, testInfo) => {
-      await page.setViewportSize({ width: 390, height: 812 });
+      await page.setViewportSize({ width: 375, height: 812 });
       await page.goto(route);
 
       if (setup) {
