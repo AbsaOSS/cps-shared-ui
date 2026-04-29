@@ -5,7 +5,11 @@
     <cps-button label="Standard menu" (clicked)="standardMenu.toggle($event)">
     </cps-button>
 
-    <cps-menu #standardMenuNoHeader [items]="items"> </cps-menu>
+    <cps-menu
+      #standardMenuNoHeader
+      [items]="items"
+      ariaLabel="Menu with aria label">
+    </cps-menu>
     <cps-button
       label="Standard menu without header"
       (clicked)="standardMenuNoHeader.toggle($event)">
@@ -35,16 +39,39 @@
 
     <cps-menu #arbitraryMenu>
       <div class="my-menu-content">
-        <span>Provide your own contents here</span>
+        <span>Provide your own content here</span>
         <img
           src="https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg"
           alt="kitten"
           width="200" />
+        <a href="https://www.google.com/" target="_blank">Google</a>
+        <a href="https://www.bing.com/" target="_blank">Bing</a>
       </div>
     </cps-menu>
     <cps-button
-      label="Menu with arbitrary contents"
+      label="Menu with arbitrary content"
       (clicked)="arbitraryMenu.toggle($event)">
+    </cps-button>
+
+    <cps-menu #focusMenu [items]="items" [focusOnShow]="false"></cps-menu>
+    <cps-button
+      label="Menu that opens on focus"
+      (focusin)="focusMenu.show(null, $event.target)"
+      (focusout)="onFocusMenuFocusOut($event, focusMenu)">
+    </cps-button>
+
+    <cps-menu
+      #hoverMenu
+      [items]="items"
+      [focusOnShow]="false"
+      (containerMouseLeave)="onHoverMenuMouseLeave($event, hoverMenu)">
+    </cps-menu>
+    <cps-button
+      label="Menu that opens on hover"
+      (mouseenter)="hoverMenu.show($event)"
+      (mouseleave)="onHoverMenuMouseLeave($event, hoverMenu)"
+      (focusin)="hoverMenu.show(null, $event.target)"
+      (focusout)="onHoverMenuFocusOut($event, hoverMenu)">
     </cps-button>
   </div>
 </app-component-docs-viewer>

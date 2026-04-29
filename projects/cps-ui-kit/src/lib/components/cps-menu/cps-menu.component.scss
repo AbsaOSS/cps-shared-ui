@@ -1,17 +1,27 @@
+@use '../../../../styles/mixins' as *;
+
+.cps-menu-arrow-bridge {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: 0.875rem;
+}
+
 .cps-menu-container {
   background: #ffffff;
   border: 0 none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
   position: absolute;
-  margin-top: 14px;
+  margin-top: 0.875rem;
   top: 0;
   left: 0;
   font-family: 'Source Sans Pro', sans-serif;
 }
 
 .cps-menu-container:not(.cps-menu-no-arrow):before {
-  border-width: 14px;
-  margin-left: -14px;
+  border-width: 0.875rem;
+  margin-left: -0.875rem;
   border: solid transparent;
   border-color: rgba(255, 255, 255, 0);
   border-bottom-color: var(--cps-color-line-light);
@@ -20,7 +30,7 @@
 .cps-menu-container:not(.cps-menu-no-arrow):after,
 .cps-menu-container:not(.cps-menu-no-arrow):before {
   bottom: 100%;
-  left: var(--overlayArrowLeft, 12);
+  left: var(--overlayArrowLeft, 0.75rem);
   content: ' ';
   height: 0;
   width: 0;
@@ -39,49 +49,51 @@
     font-family: 'Source Sans Pro', sans-serif;
     display: flex;
     flex-direction: column;
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+    user-select: none;
+
     .cps-menu-header {
       display: flex;
       align-items: center;
-      min-height: 50px;
-      padding-bottom: 8px;
+      min-height: 3.125rem;
+      padding-bottom: 0.5rem;
       font-weight: 600;
       color: var(--cps-color-text-dark);
       cursor: default;
     }
+
     .cps-menu-item {
       text-decoration: unset;
       display: flex;
       align-items: center;
-      padding: 8px 48px 8px 0;
-      border-top: 1px solid #0000001f;
+      padding: 0.5rem 3rem 0.5rem 0;
+      border-top: 0.0625rem solid #0000001f;
       cursor: pointer;
-      min-height: 58px;
+      min-height: 3.625rem;
 
       .cps-menu-item-icon {
-        width: 48px;
+        width: 3rem;
         align-items: center;
         display: flex;
         cps-icon {
-          margin-left: 8px;
+          margin-left: 0.5rem;
         }
       }
 
       .cps-menu-item-content {
         display: flex;
         flex-direction: column;
+
         .cps-menu-item-content-title {
           font-weight: 600;
-          font-size: 15px;
+          font-size: 0.9375rem;
           line-height: 150%;
           color: var(--cps-color-text-dark);
         }
+
         .cps-menu-item-content-desc {
-          font-size: 12px;
+          font-size: 0.75rem;
           line-height: 150%;
-          color: var(--cps-color-text-light);
+          color: var(--cps-color-text-mild);
         }
       }
 
@@ -91,33 +103,41 @@
         align-items: center;
         justify-content: center;
       }
+
+      &:focus-visible {
+        @include focus-ring(0.0625rem, 0.125rem, 0);
+      }
     }
 
     .cps-menu-item.cps-menu-item-disabled {
       pointer-events: none;
+
       .cps-menu-item-content {
         .cps-menu-item-content-title {
-          color: var(--cps-color-text-light);
+          color: var(--cps-color-text-mild);
         }
         .cps-menu-item-content-desc {
-          color: var(--cps-color-text-lightest);
+          color: var(--cps-color-text-light);
         }
       }
     }
-    .cps-menu-item:not(.cps-menu-item-disabled):hover {
+
+    .cps-menu-item:not(.cps-menu-item-disabled):hover,
+    .cps-menu-item:not(.cps-menu-item-disabled):focus-visible {
       background: var(--cps-color-highlight-hover);
+
       .cps-menu-item-content {
         .cps-menu-item-content-title {
           color: var(--cps-color-calm);
         }
         .cps-menu-item-content-desc {
-          color: var(--cps-color-text-mild);
+          color: var(--cps-color-text-dark);
         }
       }
     }
-    .cps-menu-item:not(.cps-menu-item-disabled):not(
-        .cps-menu-item-compressed
-      ):hover {
+
+    .cps-menu-item:not(.cps-menu-item-disabled):not(.cps-menu-item-compressed):hover,
+    .cps-menu-item:not(.cps-menu-item-disabled):not(.cps-menu-item-compressed):focus-visible {
       .cps-menu-item-icon {
         cps-icon {
           i {
@@ -126,6 +146,7 @@
         }
       }
     }
+
     .cps-menu-item:not(.cps-menu-item-disabled):active {
       background: var(--cps-color-highlight-active);
     }
@@ -134,14 +155,18 @@
       border-top: none;
     }
   }
+
   .cps-menu-content.cps-menu-content-compressed {
     padding: 0;
+
     .cps-menu-item {
-      padding: 0 16px 0 16px;
-      min-height: 40px;
+      padding: 0 1rem 0 1rem;
+      min-height: 2.5rem;
+
       .cps-menu-item-icon {
-        width: 36px;
+        width: 2.25rem;
       }
+
       .cps-menu-item-content {
         .cps-menu-item-content-title {
           font-weight: 500;
@@ -150,7 +175,7 @@
     }
 
     .cps-menu-item.cps-menu-item-compressed.cps-menu-item-compressed-with-icons {
-      padding: 0 26px 0 16px;
+      padding: 0 1.625rem 0 1rem;
     }
 
     .cps-menu-item:not(.cps-menu-item-disabled) {
@@ -161,6 +186,7 @@
           }
         }
       }
+
       .cps-menu-item-content {
         .cps-menu-item-content-title {
           color: var(--cps-color-prepared);
@@ -171,8 +197,8 @@
 }
 
 .cps-menu-container:not(.cps-menu-no-arrow):after {
-  border-width: 12px;
-  margin-left: -12px;
+  border-width: 0.75rem;
+  margin-left: -0.75rem;
   border: solid transparent;
   border-color: rgba(255, 255, 255, 0);
   border-bottom-color: #ffffff;
@@ -180,17 +206,17 @@
 
 .cps-menu-container-flipped {
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 0;
 }
 
 .cps-menu-container:not(.cps-menu-no-arrow):after {
-  border-width: 12px;
-  margin-left: -12px;
+  border-width: 0.75rem;
+  margin-left: -0.75rem;
 }
 
 .cps-menu-container:not(.cps-menu-no-arrow):before {
-  border-width: 14px;
-  margin-left: -14px;
+  border-width: 0.875rem;
+  margin-left: -0.875rem;
 }
 
 .cps-menu-container-flipped:not(.cps-menu-no-arrow):after,
@@ -199,10 +225,7 @@
   top: 100%;
 }
 
-.cps-menu-container.cps-menu-container-flipped:not(.cps-menu-no-arrow):after {
-  border-bottom-color: transparent;
-}
-
+.cps-menu-container.cps-menu-container-flipped:not(.cps-menu-no-arrow):after,
 .cps-menu-container.cps-menu-container-flipped:not(.cps-menu-no-arrow):before {
   border-bottom-color: transparent;
 }
@@ -210,4 +233,8 @@
 .cps-menu-no-arrow {
   margin-top: 0;
   margin-bottom: 0;
+}
+
+.cps-menu-container *:focus-visible:not([role='menuitem']) {
+  @include focus-ring(0.125rem, 0.25rem, inherit);
 }

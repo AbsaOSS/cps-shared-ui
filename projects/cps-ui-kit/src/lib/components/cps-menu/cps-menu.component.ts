@@ -20,6 +20,7 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   PLATFORM_ID,
   Renderer2,
@@ -119,12 +120,20 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class CpsMenuComponent
+  implements AfterViewInit, OnDestroy, OnChanges, OnInit
+{
   /**
    * Header title of the menu.
    * @group Props
    */
   @Input() header = '';
+
+  /**
+   * Aria label for the menu component, used for accessibility, it takes precedence over header.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * An array of menu items.
@@ -145,7 +154,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() compressed = false;
 
   /**
-   * Determines whether the menu should show on target element focus.
+   * Determines whether the menu should move focus to its first item (or first focusable element) when opened.
    * @group Props
    */
   @Input() focusOnShow = true;
@@ -200,6 +209,12 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
    */
   @Output() contentClicked = new EventEmitter();
 
+  /**
+   * Callback to invoke when the mouse leaves the menu container.
+   * @group Emits
+   */
+  @Output() containerMouseLeave = new EventEmitter<MouseEvent>();
+
   withIcons = true;
   autoZIndex = true;
   baseZIndex = 0;
@@ -228,6 +243,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   hideReason: CpsMenuHideReason | undefined;
 
+  private _rootFontSizePx = 16;
   private window: Window;
 
   // eslint-disable-next-line no-useless-constructor
@@ -249,6 +265,12 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
         });
       }
     });
+  }
+
+  ngOnInit(): void {
+    this._rootFontSizePx = parseFloat(
+      getComputedStyle(this.document.documentElement).fontSize || '16'
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -313,6 +335,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     if (!this.overlayVisible) return;
     this.hideReason = reason ?? CpsMenuHideReason.FORCED;
     this.overlayVisible = false;
+    this.isOverlayAnimationInProgress = true;
     this.cd.markForCheck();
   }
 
@@ -321,7 +344,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   onItemClick(event: any, item: CpsMenuItem) {
-    if (item.disabled) return;
+    if (item.disabled || item.loading) return;
     if (item.action) {
       item.action({
         originalEvent: event,
@@ -329,6 +352,19 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
       });
     }
     this.hide(CpsMenuHideReason.CLICK_ITEM);
+    (this.target as HTMLElement)?.focus();
+  }
+
+  onItemKeydown(event: KeyboardEvent, item: CpsMenuItem) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      if (!item.url) {
+        event.preventDefault();
+        this.onItemClick(event, item);
+      } else if (event.key === ' ') {
+        event.preventDefault();
+        (event.currentTarget as HTMLElement).click();
+      }
+    }
   }
 
   bindDocumentKeydownListener() {
@@ -344,12 +380,69 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
             documentTarget,
             'keydown',
             (event) => {
-              // escape
-              if (event.keyCode === 27) {
-                this.zone.run(() => {
-                  if (this.overlayVisible)
+              if (!this.overlayVisible) return;
+              switch (event.key) {
+                case 'Escape':
+                  this.zone.run(() => {
                     this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
-                });
+                  });
+                  (this.target as HTMLElement)?.focus();
+                  break;
+                case 'Tab':
+                  if (this.items.length > 0) {
+                    event.preventDefault();
+                    this.zone.run(() => {
+                      this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
+                    });
+                    this._focusNextTabbable(event.shiftKey);
+                  } else if (this.container) {
+                    const focusable = this._focusableIn(this.container);
+                    const active = this.document.activeElement;
+                    if (
+                      !event.shiftKey &&
+                      active === focusable[focusable.length - 1]
+                    ) {
+                      event.preventDefault();
+                      this.zone.run(() => {
+                        this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
+                      });
+                      (
+                        this._getNextFocusableAfterTarget() ??
+                        (this.target as HTMLElement)
+                      )?.focus();
+                    } else if (event.shiftKey && active === focusable[0]) {
+                      event.preventDefault();
+                      this.zone.run(() => {
+                        this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
+                      });
+                      (this.target as HTMLElement)?.focus();
+                    }
+                  }
+                  break;
+                case 'ArrowDown':
+                  if (this.items.length > 0) {
+                    event.preventDefault();
+                    this._navigateItems(1);
+                  }
+                  break;
+                case 'ArrowUp':
+                  if (this.items.length > 0) {
+                    event.preventDefault();
+                    this._navigateItems(-1);
+                  }
+                  break;
+                case 'Home':
+                  if (this.items.length > 0) {
+                    event.preventDefault();
+                    this._focusFirstItem();
+                  }
+                  break;
+                case 'End':
+                  if (this.items.length > 0) {
+                    event.preventDefault();
+                    this._focusLastItem();
+                  }
+                  break;
               }
             }
           );
@@ -439,7 +532,13 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
   }
 
+  private _pxToRem(px: number): number {
+    return px / this._rootFontSizePx;
+  }
+
   private _setPosition(element: any, target: any) {
+    if (!element || !target) return;
+
     const getPos = () => {
       const targetOffset = DomHandler.getOffset(target);
       switch (this.position) {
@@ -484,19 +583,20 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
         case 'default':
         default:
           DomHandler.absolutePosition(element, target);
+          element.style.marginTop = '';
           return undefined;
       }
     };
 
-    if (!element || !target) return;
     const pos = getPos();
     if (pos) {
-      element.style.top = (pos.top || 0) + 'px';
-      element.style.left = (pos.left || 0) + 'px';
+      element.style.top = `${this._pxToRem(pos.top || 0)}rem`;
+      element.style.left = `${this._pxToRem(pos.left || 0)}rem`;
     }
   }
 
   align() {
+    if (!this.target) return;
     if (!this.target.isConnected) {
       this.hide(CpsMenuHideReason.TARGET_NOT_CONNECTED);
       this._destroy();
@@ -517,28 +617,20 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     const targetOffset = DomHandler.getOffset(this.target);
 
     if (this.withArrow) {
-      const borderRadius =
-        this.document.defaultView
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          ?.getComputedStyle(this.container!)
-          ?.getPropertyValue('border-radius') || '0';
+      const containerWidthPx = this.container?.offsetWidth || 0;
+      const targetWidthPx = this.target?.offsetWidth || 0;
+      const arrowMinOffsetPx = 0.75 * this._rootFontSizePx;
 
-      let arrowLeft = 0;
-
-      const containerWidth = this.container?.offsetWidth || 0;
-
-      if (containerOffset.left < targetOffset.left) {
-        arrowLeft =
-          20 +
-          targetOffset.left -
-          containerOffset.left -
-          parseFloat(borderRadius) * 2;
-      } else {
-        const targetWidth = this.target?.offsetWidth || 0;
-        arrowLeft = Math.min(targetWidth / 2, containerWidth / 2);
-      }
-      arrowLeft = Math.min(Math.max(arrowLeft, 12), containerWidth - 12);
-      this.container?.style.setProperty('--overlayArrowLeft', `${arrowLeft}px`);
+      let arrowLeftPx =
+        targetOffset.left + targetWidthPx / 2 - containerOffset.left;
+      arrowLeftPx = Math.min(
+        Math.max(arrowLeftPx, arrowMinOffsetPx),
+        containerWidthPx - arrowMinOffsetPx
+      );
+      this.container?.style.setProperty(
+        '--overlayArrowLeft',
+        `${this._pxToRem(arrowLeftPx)}rem`
+      );
     }
 
     if (containerOffset.top < targetOffset.top) {
@@ -610,12 +702,88 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   focus() {
-    const focusable = DomHandler.findSingle(this.container, '[autofocus]');
-    if (focusable) {
-      this.zone.runOutsideAngular(() => {
-        setTimeout(() => focusable.focus(), 5);
-      });
+    this.zone.runOutsideAngular(() => {
+      setTimeout(() => {
+        const menuItems = this._getMenuItems();
+        if (menuItems.length) {
+          menuItems[0].focus();
+        } else if (this.container) {
+          this._focusableIn(this.container)[0]?.focus();
+        }
+      }, 5);
+    });
+  }
+
+  private _getMenuItems(): HTMLElement[] {
+    if (!this.container) return [];
+    return Array.from(
+      this.container.getElementsByClassName('cps-menu-item')
+    ) as HTMLElement[];
+  }
+
+  private _navigateItems(direction: 1 | -1) {
+    const items = this._getMenuItems();
+    if (!items.length) return;
+    const currentIndex = items.indexOf(
+      this.document.activeElement as HTMLElement
+    );
+    let nextIndex = currentIndex + direction;
+    if (nextIndex < 0) nextIndex = items.length - 1;
+    if (nextIndex >= items.length) nextIndex = 0;
+    items[nextIndex]?.focus();
+  }
+
+  private _focusFirstItem() {
+    this._getMenuItems()[0]?.focus();
+  }
+
+  private _focusLastItem() {
+    const items = this._getMenuItems();
+    items[items.length - 1]?.focus();
+  }
+
+  private _focusNextTabbable(reverse = false): void {
+    const all = this._focusableExcludingContainer();
+    const idx = all.indexOf(this.target as HTMLElement);
+    if (idx === -1) return;
+    if (reverse) {
+      const prevIdx = idx > 0 ? idx - 1 : all.length - 1;
+      all[prevIdx]?.focus();
+    } else {
+      const nextIdx = idx < all.length - 1 ? idx + 1 : 0;
+      all[nextIdx]?.focus();
     }
+  }
+
+  private _focusableExcludingContainer(): HTMLElement[] {
+    return this._focusableIn(this.document.body).filter(
+      (el) => !this.container?.contains(el)
+    );
+  }
+
+  private _focusableIn(el: HTMLElement): HTMLElement[] {
+    const result: HTMLElement[] = [];
+    const walker = this.document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT);
+    let node = walker.nextNode();
+    while (node) {
+      const child = node as HTMLElement;
+      if (child.tabIndex >= 0 && !(child as HTMLInputElement).disabled) {
+        result.push(child);
+      }
+      node = walker.nextNode();
+    }
+    return result;
+  }
+
+  private _getNextFocusableAfterTarget(): HTMLElement | null {
+    const all = this._focusableExcludingContainer();
+    const target = this.target as HTMLElement;
+    const triggerFocusables = all.filter(
+      (el) => target.contains(el) || el === target
+    );
+    const last = triggerFocusables[triggerFocusables.length - 1] ?? target;
+    const idx = all.indexOf(last);
+    return idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
   }
 
   onWindowResize() {
