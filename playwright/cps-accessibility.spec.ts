@@ -228,7 +228,7 @@ test.describe('Accessibility - responsive axe scan', () => {
       page,
       makeAxeBuilder
     }, testInfo) => {
-      await page.setViewportSize({ width: 375, height: 812 });
+      await page.setViewportSize({ width: 390, height: 812 });
       await page.goto(route);
 
       if (setup) {
