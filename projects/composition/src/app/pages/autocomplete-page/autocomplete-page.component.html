@@ -2,7 +2,8 @@
   <form [formGroup]="form">
     <app-code-example
       label="Required single autocomplete with a tooltip"
-      [code]="examples.required">
+      [code]="examples.required.html"
+      [tsCode]="examples.required.ts">
       <cps-autocomplete
         data-testid="required-autocomplete"
         label="Required single autocomplete with a tooltip"
@@ -18,7 +19,8 @@
 
     <app-code-example
       label="Single search with fetched options"
-      [code]="examples.singleAsync">
+      [code]="examples.singleAsync.html"
+      [tsCode]="examples.singleAsync.ts">
       <cps-autocomplete
         label="Single search autocomplete with fetched options list"
         hint="This autocomplete fetches matching options list from the server side based on user input"
@@ -37,7 +39,8 @@
 
     <app-code-example
       label="Multiple search with fetched options"
-      [code]="examples.multipleAsync">
+      [code]="examples.multipleAsync.html"
+      [tsCode]="examples.multipleAsync.ts">
       <cps-autocomplete
         label="Multiple search autocomplete with fetched options list"
         hint="This autocomplete fetches matching options list from the server side based on user input"
@@ -55,7 +58,7 @@
       </cps-autocomplete>
     </app-code-example>
 
-    <app-code-example label="Disabled" [code]="examples.disabled">
+    <app-code-example label="Disabled" [code]="examples.disabled.html">
       <cps-autocomplete
         label="Disabled autocomplete"
         [disabled]="true"
@@ -65,7 +68,8 @@
 
     <app-code-example
       label="Multiple, not clearable"
-      [code]="examples.multipleNotClearable">
+      [code]="examples.multipleNotClearable.html"
+      [tsCode]="examples.multipleNotClearable.ts">
       <cps-autocomplete
         label="Multiple autocomplete"
         [options]="options"
@@ -84,7 +88,8 @@
 
     <app-code-example
       label="Multiple with virtual scroll, chips and persistent clear"
-      [code]="examples.virtualScroll">
+      [code]="examples.virtualScroll.html"
+      [tsCode]="examples.virtualScroll.ts">
       <cps-autocomplete
         label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
         [options]="options"
@@ -103,7 +108,8 @@
 
     <app-code-example
       label="Multiple with non-closable chips"
-      [code]="examples.nonClosableChips">
+      [code]="examples.nonClosableChips.html"
+      [tsCode]="examples.nonClosableChips.ts">
       <cps-autocomplete
         label="Multiple autocomplete with non-closable chips"
         [returnObject]="false"
@@ -123,7 +129,8 @@
 
     <app-code-example
       label="Multiple with prefix icon"
-      [code]="examples.prefixIcon">
+      [code]="examples.prefixIcon.html"
+      [tsCode]="examples.prefixIcon.ts">
       <cps-autocomplete
         label="Multiple autocomplete with prefix icon"
         [options]="options"
@@ -140,7 +147,8 @@
 
     <app-code-example
       label="Two-way binding with initial order preserved"
-      [code]="examples.twoWayBinding">
+      [code]="examples.twoWayBinding.html"
+      [tsCode]="examples.twoWayBinding.ts">
       <div class="sync-val-example">
         <cps-autocomplete
           width="31.25rem"
@@ -165,7 +173,8 @@
 
     <app-code-example
       label="Underlined appearance"
-      [code]="examples.underlined">
+      [code]="examples.underlined.html"
+      [tsCode]="examples.underlined.ts">
       <cps-autocomplete
         label="Underlined autocomplete"
         [options]="options"
@@ -182,7 +191,8 @@
 
     <app-code-example
       label="Borderless appearance"
-      [code]="examples.borderless">
+      [code]="examples.borderless.html"
+      [tsCode]="examples.borderless.ts">
       <cps-autocomplete
         label="Borderless autocomplete"
         [options]="options"
@@ -199,7 +209,8 @@
 
     <app-code-example
       label="Async validation"
-      [code]="examples.asyncValidation">
+      [code]="examples.asyncValidation.html"
+      [tsCode]="examples.asyncValidation.ts">
       <cps-autocomplete
         label="Autocomplete with async validation"
         [options]="options"

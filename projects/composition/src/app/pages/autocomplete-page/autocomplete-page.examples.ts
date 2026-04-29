@@ -1,5 +1,23 @@
-export const autocompleteExamples = {
-  required: `
+const citiesOptionsTs = `
+options = [
+  { name: 'New York', data: { code: 'NY' } },
+  { name: 'Prague', data: { code: 'PRG' }, info: 'Prague info' },
+  { name: 'Capetown', data: { code: 'CPT' }, info: 'Capetown info' },
+  { name: 'Rome', data: { code: 'RM' } },
+  { name: 'London', data: { code: 'LDN' }, info: 'London info' },
+  { name: 'Istanbul', data: { code: 'IST' } },
+  { name: 'Paris', data: { code: 'PRS' } },
+  { name: 'Tokyo', data: { code: 'TOK' } },
+  { name: 'Oslo', data: { code: 'OSL' }, info: 'Oslo info' },
+  { name: 'Berlin', data: { code: 'BER' } }
+];`;
+
+export const autocompleteExamples: Record<
+  string,
+  { html: string; ts?: string }
+> = {
+  required: {
+    html: `
 <cps-autocomplete
   label="Required single autocomplete with a tooltip"
   [options]="options"
@@ -10,8 +28,16 @@ export const autocompleteExamples = {
   [clearable]="true"
   formControlName="requiredAutocomplete">
 </cps-autocomplete>`,
+    ts: `
+${citiesOptionsTs.trim()}
 
-  singleAsync: `
+form = this.fb.group({
+  requiredAutocomplete: [this.options[1], [Validators.required]]
+});`
+  },
+
+  singleAsync: {
+    html: `
 <cps-autocomplete
   label="Single search autocomplete with fetched options list"
   hint="Fetches matching options from the server based on user input"
@@ -25,8 +51,17 @@ export const autocompleteExamples = {
   emptyMessage="No cities found"
   (inputChanged)="onSingleInputChanged($event)">
 </cps-autocomplete>`,
+    ts: `
+isSingleLoading = false;
+singleOptionsObservable$: Observable<City[]>;
 
-  multipleAsync: `
+onSingleInputChanged(val: string): void {
+  if (val) this.filterSubject$.next(val);
+}`
+  },
+
+  multipleAsync: {
+    html: `
 <cps-autocomplete
   label="Multiple search autocomplete with fetched options list"
   hint="Fetches matching options from the server based on user input"
@@ -41,15 +76,26 @@ export const autocompleteExamples = {
   emptyMessage="No cities found"
   (inputChanged)="onMultiInputChanged($event)">
 </cps-autocomplete>`,
+    ts: `
+isMultiLoading = false;
+multiOptionsObservable$: Observable<City[]>;
 
-  disabled: `
+onMultiInputChanged(val: string): void {
+  if (val) this.filterSubject$.next(val);
+}`
+  },
+
+  disabled: {
+    html: `
 <cps-autocomplete
   label="Disabled autocomplete"
   [disabled]="true"
   hint="This autocomplete is disabled">
-</cps-autocomplete>`,
+</cps-autocomplete>`
+  },
 
-  multipleNotClearable: `
+  multipleNotClearable: {
+    html: `
 <cps-autocomplete
   label="Multiple autocomplete"
   [options]="options"
@@ -64,8 +110,11 @@ export const autocompleteExamples = {
   [value]="[{ code: 'CPT' }]"
   hint="This autocomplete is not clearable">
 </cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
 
-  virtualScroll: `
+  virtualScroll: {
+    html: `
 <cps-autocomplete
   label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
   [options]="options"
@@ -80,8 +129,11 @@ export const autocompleteExamples = {
   [persistentClear]="true"
   [value]="[options[0], options[4]]">
 </cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
 
-  nonClosableChips: `
+  nonClosableChips: {
+    html: `
 <cps-autocomplete
   label="Multiple autocomplete with non-closable chips"
   [returnObject]="false"
@@ -97,8 +149,11 @@ export const autocompleteExamples = {
   [closableChips]="false"
   [value]="[options[0].data, options[4].data]">
 </cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
 
-  prefixIcon: `
+  prefixIcon: {
+    html: `
 <cps-autocomplete
   label="Multiple autocomplete with prefix icon"
   [options]="options"
@@ -111,8 +166,11 @@ export const autocompleteExamples = {
   prefixIcon="search"
   [value]="[options[5]]">
 </cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
 
-  twoWayBinding: `
+  twoWayBinding: {
+    html: `
 <cps-autocomplete
   width="31.25rem"
   label="Multiple autocomplete with two-way binding and keeping initial items order"
@@ -131,8 +189,21 @@ export const autocompleteExamples = {
   [ngModelOptions]="{ standalone: true }">
 </cps-autocomplete>
 <span>{{ syncVal }}</span>`,
+    ts: `
+syncOptions = [
+  { title: 'Amazon', val: 'AMZN', ticker: 'AMZN' },
+  { title: 'Apple', val: 'AAPL', ticker: 'AAPL' },
+  { title: 'Google', val: 'GOOGL', ticker: 'GOOGL' },
+  { title: 'Meta', val: 'META', ticker: 'META' },
+  { title: 'Microsoft', val: 'MSFT', ticker: 'MSFT' },
+  { title: 'Netflix', val: 'NFLX', ticker: 'NFLX' },
+  { title: 'Tesla', val: 'TSLA', ticker: 'TSLA' }
+];
+syncVal: string[] = [];`
+  },
 
-  underlined: `
+  underlined: {
+    html: `
 <cps-autocomplete
   label="Underlined autocomplete"
   [options]="options"
@@ -145,8 +216,11 @@ export const autocompleteExamples = {
   prefixIcon="search"
   appearance="underlined">
 </cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
 
-  borderless: `
+  borderless: {
+    html: `
 <cps-autocomplete
   label="Borderless autocomplete"
   [options]="options"
@@ -159,8 +233,11 @@ export const autocompleteExamples = {
   prefixIcon="search"
   appearance="borderless">
 </cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
 
-  asyncValidation: `
+  asyncValidation: {
+    html: `
 <cps-autocomplete
   label="Autocomplete with async validation"
   [options]="options"
@@ -174,5 +251,19 @@ export const autocompleteExamples = {
   (valueChanged)="onOptionSelected($event)"
   [externalError]="externalError"
   hint="Simulates async validation upon selection">
-</cps-autocomplete>`
+</cps-autocomplete>`,
+    ts: `
+validating = false;
+externalError = '';
+selectedOption: Option | null = null;
+
+onOptionSelected(option: Option): void {
+  this.validating = true;
+  this.externalError = '';
+  of(option).pipe(delay(3000)).subscribe({
+    next: () => (this.validating = false),
+    error: () => (this.externalError = 'Validation failed')
+  });
+}`
+  }
 };
