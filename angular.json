@@ -64,9 +64,16 @@
                 "glob": "**/*",
                 "input": "./projects/cps-ui-kit/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "atom-one-{light,dark}.min.css",
+                "input": "node_modules/highlight.js/styles",
+                "output": "hljs-themes"
               }
             ],
-            "styles": ["projects/composition/src/styles.scss"],
+            "styles": [
+              "projects/composition/src/styles.scss"
+            ],
             "scripts": [],
             "browser": "projects/composition/src/main.ts"
           },

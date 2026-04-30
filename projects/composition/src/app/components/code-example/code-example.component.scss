@@ -1,0 +1,99 @@
+@use '../../../../../cps-ui-kit/styles/mixins' as *;
+
+.code-example {
+  margin-bottom: 1.5rem;
+
+  &__label {
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--cps-text-primary);
+  }
+
+  &__card {
+    border: 1px solid var(--cps-color-line);
+    border-radius: 8px;
+  }
+
+  // We might want to replace with cps-tab-group
+  &__tabbar {
+    display: flex;
+    border-bottom: 1px solid var(--cps-color-line);
+    background-color: var(--cps-surface-elevated);
+    border-radius: 7px 7px 0 0;
+    padding-left: 0.25rem; // prevent focus ring from being clipped on the left
+  }
+
+  &__tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    color: var(--cps-text-secondary);
+    transition:
+      color 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      color: var(--cps-text-primary);
+    }
+
+    &--active {
+      color: var(--cps-text-primary);
+      border-bottom-color: var(--cps-accent-primary);
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__preview {
+    padding: 1.5rem;
+    background-color: var(--cps-background-color);
+    border-radius: 0 0 7px 7px;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  &__code {
+    position: relative;
+    background-color: var(--cps-surface-muted);
+    border-radius: 0 0 7px 7px;
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+
+    pre {
+      margin: 0;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family:
+        ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+        'Liberation Mono', monospace;
+    }
+  }
+
+  &__copy {
+    position: absolute;
+    top: 0.625rem;
+    right: 0.75rem;
+    z-index: 1;
+  }
+
+  &__panel--hidden {
+    display: none;
+  }
+}

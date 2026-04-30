@@ -45,6 +45,7 @@
     "@primeuix/styled": "^0.7.4",
     "@primeuix/utils": "^0.7.1",
     "@types/lodash-es": "^4.17.12",
+    "highlight.js": "^11.11.1",
     "lodash-es": "^4.17.21",
     "primeicons": "^7.0.0",
     "primeng": "^21.1.3",
