@@ -1,7 +1,7 @@
 @if (render) {
   <div
     class="cps-menu-container"
-    [ngClass]="{ 'cps-menu-no-arrow': !withArrow }"
+    [class.cps-menu-no-arrow]="!withArrow"
     [class]="containerClass"
     (mousedown)="onOverlayClick($event)"
     [@animation]="{
@@ -12,7 +12,11 @@
       }
     }"
     (@animation.start)="onAnimationStart($event)"
-    (@animation.done)="onAnimationEnd($event)">
+    (@animation.done)="onAnimationEnd($event)"
+    (mouseleave)="containerMouseLeave.emit($event)">
+    @if (withArrow) {
+      <div class="cps-menu-arrow-bridge"></div>
+    }
     <div (mousedown)="onContentClick()">
       @if (items.length < 1) {
         <ng-content></ng-content>
@@ -20,7 +24,9 @@
       @if (items.length > 0) {
         <div
           class="cps-menu-content"
-          [ngClass]="{ 'cps-menu-content-compressed': compressed }">
+          [class.cps-menu-content-compressed]="compressed"
+          role="menu"
+          [attr.aria-label]="ariaLabel || header || null">
           @if (header && !compressed) {
             <div class="cps-menu-header">
               {{ header }}
@@ -29,8 +35,14 @@
           @for (item of items; track item; let i = $index) {
             @if (!item.url) {
               <a
+                role="menuitem"
+                [class]="itemsClasses[i]"
+                tabindex="-1"
+                [attr.aria-disabled]="
+                  item.disabled || item.loading ? true : null
+                "
                 (click)="onItemClick($event, item)"
-                [ngClass]="itemsClasses[i]">
+                (keydown)="onItemKeydown($event, item)">
                 <ng-container
                   *ngTemplateOutlet="
                     itemTemplate;
@@ -42,10 +54,16 @@
             }
             @if (item.url && item.url.startsWith('/')) {
               <a
+                role="menuitem"
+                [class]="itemsClasses[i]"
+                tabindex="-1"
+                [attr.aria-disabled]="
+                  item.disabled || item.loading ? true : null
+                "
                 (click)="onItemClick($event, item)"
+                (keydown)="onItemKeydown($event, item)"
                 [routerLink]="item.url"
-                [target]="item.target"
-                [ngClass]="itemsClasses[i]">
+                [target]="item.target">
                 <ng-container
                   *ngTemplateOutlet="
                     itemTemplate;
@@ -57,10 +75,16 @@
             }
             @if (item.url && !item.url.startsWith('/')) {
               <a
+                role="menuitem"
+                [class]="itemsClasses[i]"
+                tabindex="-1"
+                [attr.aria-disabled]="
+                  item.disabled || item.loading ? true : null
+                "
                 (click)="onItemClick($event, item)"
+                (keydown)="onItemKeydown($event, item)"
                 [href]="item.url"
-                [attr.target]="item.target"
-                [ngClass]="itemsClasses[i]">
+                [attr.target]="item.target">
                 <ng-container
                   *ngTemplateOutlet="
                     itemTemplate;
@@ -80,7 +104,7 @@
 <ng-template #itemTemplate let-item="item">
   @if (!item.loading) {
     @if (withIcons) {
-      <div class="cps-menu-item-icon">
+      <div class="cps-menu-item-icon" aria-hidden="true">
         @if (item.icon) {
           <cps-icon
             [icon]="item.icon"
@@ -96,7 +120,7 @@
       }
     </div>
   } @else {
-    <span class="cps-menu-item-spinner">
+    <span class="cps-menu-item-spinner" role="status" aria-label="Loading">
       <cps-progress-circular
         [strokeWidth]="2"
         [color]="compressed ? 'prepared' : 'calm'"

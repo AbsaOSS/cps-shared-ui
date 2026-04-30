@@ -14,6 +14,14 @@
                         "description": "Header title of the menu."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the menu component, used for accessibility, it takes precedence over header."
+                    },
+                    {
                         "name": "items",
                         "optional": false,
                         "readonly": false,
@@ -43,7 +51,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the menu should show on target element focus."
+                        "description": "Determines whether the menu should move focus to its first item (or first focusable element) when opened."
                     },
                     {
                         "name": "persistent",
@@ -121,6 +129,16 @@
                             }
                         ],
                         "description": "Callback to invoke when content is clicked."
+                    },
+                    {
+                        "name": "containerMouseLeave",
+                        "parameters": [
+                            {
+                                "name": "event",
+                                "type": "MouseEvent"
+                            }
+                        ],
+                        "description": "Callback to invoke when the mouse leaves the menu container."
                     }
                 ]
             }
@@ -167,6 +185,10 @@
                     {
                         "name": "KEYDOWN_ESCAPE",
                         "value": "keydown-escape"
+                    },
+                    {
+                        "name": "KEYDOWN_TAB",
+                        "value": "keydown-tab"
                     },
                     {
                         "name": "SCROLL",

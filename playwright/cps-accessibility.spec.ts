@@ -61,15 +61,15 @@ const components: ComponentEntry[] = [
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
   // { route: '/input', name: 'Input', selector: 'cps-input' },
   // { route: '/loader', name: 'Loader', selector: 'cps-loader' },
-  // {
-  //   route: '/menu',
-  //   name: 'Menu',
-  //   selector: '.cps-menu-container',
-  //   setup: async (page) => {
-  //     await page.waitForSelector('.example-content');
-  //     await page.locator('.example-content cps-button').first().click();
-  //   }
-  // },
+  {
+    route: '/menu',
+    name: 'Menu',
+    selector: '.cps-menu-container',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page.locator('.example-content cps-button').first().click();
+    }
+  },
   // {
   //   route: '/notification',
   //   name: 'Notification',
