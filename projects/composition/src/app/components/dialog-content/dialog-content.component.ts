@@ -1,8 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   CpsButtonComponent,
   CpsDialogConfig,
-  CPS_DIALOG_CONFIG,
   CpsDialogRef,
   CpsIconComponent
 } from 'cps-ui-kit';
@@ -22,7 +21,7 @@ export class DialogContentComponent implements OnInit {
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private _dialogRef: CpsDialogRef,
-    @Inject(CPS_DIALOG_CONFIG) private _config: CpsDialogConfig
+    private _config: CpsDialogConfig
   ) {
     this.info = this._config.data.info;
     this.icon = this._config.data.icon;

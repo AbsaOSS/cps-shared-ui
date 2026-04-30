@@ -1,11 +1,10 @@
-import { InjectionToken } from '@angular/core';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
  * Configuration for the dialog service.
  * @group Interface
  */
-export interface CpsDialogConfig<T = any> {
+export class CpsDialogConfig<T = any> {
   /**
    * An object to pass to the component loaded inside the Dialog.
    */
@@ -164,7 +163,3 @@ export interface CpsDialogConfig<T = any> {
     | 'bottom-left'
     | 'bottom-right';
 }
-
-export const CPS_DIALOG_CONFIG = new InjectionToken<CpsDialogConfig>(
-  'CpsDialogConfig'
-);
