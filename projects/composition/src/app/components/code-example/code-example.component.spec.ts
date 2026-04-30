@@ -21,20 +21,26 @@ describe('CodeExampleComponent', () => {
 
   describe('initialisation', () => {
     it('should create', () => {
-      component.code = '<div></div>';
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
       fixture.detectChanges();
       expect(component).toBeTruthy();
     });
 
     it('defaults to the preview tab', () => {
-      component.code = '<div></div>';
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
       fixture.detectChanges();
       expect(component.activeTab()).toBe('preview');
     });
 
     it('renders the label when provided', () => {
-      component.code = '<div></div>';
-      component.label = 'My example';
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('label', 'My example');
       fixture.detectChanges();
       const heading = fixture.debugElement.query(
         By.css('.code-example__label')
@@ -43,7 +49,9 @@ describe('CodeExampleComponent', () => {
     });
 
     it('does not render a label element when label is empty', () => {
-      component.code = '<div></div>';
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
       fixture.detectChanges();
       const heading = fixture.debugElement.query(
         By.css('.code-example__label')
@@ -52,7 +60,9 @@ describe('CodeExampleComponent', () => {
     });
 
     it('shows only Preview and HTML tabs when tsCode is not provided', () => {
-      component.code = '<div></div>';
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
       fixture.detectChanges();
       const tabs = fixture.debugElement.queryAll(By.css('[role="tab"]'));
       expect(tabs.length).toBe(2);
@@ -61,8 +71,10 @@ describe('CodeExampleComponent', () => {
     });
 
     it('shows a TypeScript tab when tsCode is provided', () => {
-      component.code = '<div></div>';
-      component.tsCode = 'const x = 1;';
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
       const tabs = fixture.debugElement.queryAll(By.css('[role="tab"]'));
       expect(tabs.length).toBe(3);
@@ -72,8 +84,8 @@ describe('CodeExampleComponent', () => {
 
   describe('tab switching', () => {
     beforeEach(() => {
-      component.code = '<div></div>';
-      component.tsCode = 'const x = 1;';
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
     });
 
@@ -105,8 +117,8 @@ describe('CodeExampleComponent', () => {
 
   describe('navigateTabs', () => {
     beforeEach(() => {
-      component.code = '<div></div>';
-      component.tsCode = 'const x = 1;';
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
     });
 
@@ -173,8 +185,8 @@ describe('CodeExampleComponent', () => {
         configurable: true
       });
 
-      component.code = '<div>html</div>';
-      component.tsCode = 'const x = 1;';
+      fixture.componentRef.setInput('code', '<div>html</div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
     });
 
@@ -204,6 +216,50 @@ describe('CodeExampleComponent', () => {
 
       expect(component.copyFailed()).toBe(true);
       expect(component.copied()).toBe(false);
+    });
+  });
+
+  describe('tabindex', () => {
+    it('preview tabpanel has tabindex -1 by default (interactive content)', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.detectChanges();
+
+      const previewPanel = fixture.debugElement.query(
+        By.css('[id*="-panel-preview"]')
+      );
+      expect(previewPanel.nativeElement.tabIndex).toBe(-1);
+    });
+
+    it('preview tabpanel has tabindex 0 when isPreviewNonInteractive is true', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('isPreviewNonInteractive', true);
+      fixture.detectChanges();
+
+      const previewPanel = fixture.debugElement.query(
+        By.css('[id*="-panel-preview"]')
+      );
+      expect(previewPanel.nativeElement.tabIndex).toBe(0);
+    });
+
+    it('preview tabpanel tabindex updates reactively when input changes', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('isPreviewNonInteractive', false);
+      fixture.detectChanges();
+
+      const previewPanel = fixture.debugElement.query(
+        By.css('[id*="-panel-preview"]')
+      );
+      expect(previewPanel.nativeElement.tabIndex).toBe(-1);
+
+      fixture.componentRef.setInput('isPreviewNonInteractive', true);
+      fixture.detectChanges();
+      expect(previewPanel.nativeElement.tabIndex).toBe(0);
     });
   });
 });

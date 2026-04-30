@@ -1,15 +1,15 @@
 <div class="code-example">
-  @if (label) {
+  @if (label()) {
     <h3 class="code-example__label" [id]="instanceId + '-label'">
-      {{ label }}
+      {{ label() }}
     </h3>
   }
   <div class="code-example__card">
     <div
       class="code-example__tabbar"
       role="tablist"
-      [attr.aria-labelledby]="label ? instanceId + '-label' : null"
-      [attr.aria-label]="label ? null : 'Code example'"
+      [attr.aria-labelledby]="label() ? instanceId + '-label' : null"
+      [attr.aria-label]="label() ? null : 'Code example'"
       (keydown)="navigateTabs($event)">
       <button
         type="button"
@@ -35,7 +35,7 @@
         (click)="activeTab.set('code')">
         HTML
       </button>
-      @if (tsCode) {
+      @if (tsCode()) {
         <button
           type="button"
           role="tab"
@@ -56,7 +56,7 @@
       class="code-example__preview"
       [id]="instanceId + '-panel-preview'"
       [attr.aria-labelledby]="instanceId + '-tab-preview'"
-      tabindex="0"
+      [tabindex]="previewTabIndex()"
       [class.code-example__panel--hidden]="activeTab() !== 'preview'">
       <ng-content></ng-content>
     </div>
@@ -66,7 +66,7 @@
       class="code-example__code"
       [id]="instanceId + '-panel-code'"
       [attr.aria-labelledby]="instanceId + '-tab-code'"
-      tabindex="0"
+      tabindex="-1"
       [class.code-example__panel--hidden]="activeTab() !== 'code'">
       <cps-button
         class="code-example__copy"
@@ -87,16 +87,16 @@
         class="hljs"
         [attr.aria-label]="
           (label || 'Code') + ' HTML snippet'
-        "><code [innerHTML]="highlightedCode"></code></pre>
+        "><code [innerHTML]="highlightedCode()"></code></pre>
     </div>
 
-    @if (tsCode) {
+    @if (tsCode()) {
       <div
         role="tabpanel"
         class="code-example__code"
         [id]="instanceId + '-panel-ts'"
         [attr.aria-labelledby]="instanceId + '-tab-ts'"
-        tabindex="0"
+        tabindex="-1"
         [class.code-example__panel--hidden]="activeTab() !== 'ts'">
         <cps-button
           class="code-example__copy"
@@ -117,7 +117,7 @@
           class="hljs"
           [attr.aria-label]="
             (label || 'Code') + ' TypeScript snippet'
-          "><code [innerHTML]="highlightedTsCode"></code></pre>
+          "><code [innerHTML]="highlightedTsCode()"></code></pre>
       </div>
     }
   </div>

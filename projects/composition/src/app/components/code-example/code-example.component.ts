@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  input,
+  inject,
+  signal,
+  ChangeDetectionStrategy,
+  computed
+} from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CpsButtonComponent } from 'cps-ui-kit';
 import hljs from 'highlight.js/lib/core';
@@ -14,14 +22,16 @@ type TabId = 'preview' | 'code' | 'ts';
   imports: [CpsButtonComponent],
   selector: 'app-code-example',
   templateUrl: './code-example.component.html',
-  styleUrl: './code-example.component.scss'
+  styleUrl: './code-example.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeExampleComponent implements OnInit {
+export class CodeExampleComponent {
   private static instanceCount = 0;
 
-  @Input({ required: true }) code = '';
-  @Input() tsCode: string | undefined;
-  @Input() label = '';
+  code = input.required<string>();
+  tsCode = input<string | undefined>();
+  label = input('');
+  isPreviewNonInteractive = input(false);
 
   private sanitizer = inject(DomSanitizer);
 
@@ -29,31 +39,40 @@ export class CodeExampleComponent implements OnInit {
   activeTab = signal<TabId>('preview');
   copied = signal(false);
   copyFailed = signal(false);
-  highlightedCode: SafeHtml = '';
-  highlightedTsCode: SafeHtml = '';
+  highlightedCode = signal<SafeHtml>('');
+  highlightedTsCode = signal<SafeHtml>('');
+  tabs = signal<TabId[]>(['preview', 'code']);
+  previewTabIndex = computed(() => (this.isPreviewNonInteractive() ? 0 : -1));
 
-  private tabs: TabId[] = ['preview', 'code'];
+  constructor() {
+    effect(() => {
+      const code = this.code();
+      const tsCode = this.tsCode();
 
-  ngOnInit(): void {
-    const htmlResult = hljs.highlight(this.code.trim(), { language: 'xml' });
-    this.highlightedCode = this.sanitizer.bypassSecurityTrustHtml(
-      htmlResult.value
-    );
-
-    if (this.tsCode) {
-      const tsResult = hljs.highlight(this.tsCode.trim(), {
-        language: 'typescript'
-      });
-      this.highlightedTsCode = this.sanitizer.bypassSecurityTrustHtml(
-        tsResult.value
+      const htmlResult = hljs.highlight(code.trim(), { language: 'xml' });
+      this.highlightedCode.set(
+        this.sanitizer.bypassSecurityTrustHtml(htmlResult.value)
       );
-      this.tabs = ['preview', 'code', 'ts'];
-    }
+
+      if (tsCode) {
+        const tsResult = hljs.highlight(tsCode.trim(), {
+          language: 'typescript'
+        });
+        this.highlightedTsCode.set(
+          this.sanitizer.bypassSecurityTrustHtml(tsResult.value)
+        );
+        this.tabs.set(['preview', 'code', 'ts']);
+      } else {
+        this.tabs.set(['preview', 'code']);
+      }
+    });
   }
 
   async copyCode(): Promise<void> {
     const textToCopy =
-      this.activeTab() === 'ts' ? (this.tsCode ?? '').trim() : this.code.trim();
+      this.activeTab() === 'ts'
+        ? (this.tsCode() ?? '').trim()
+        : this.code().trim();
     try {
       await navigator.clipboard.writeText(textToCopy);
       this.copied.set(true);
@@ -65,7 +84,7 @@ export class CodeExampleComponent implements OnInit {
   }
 
   navigateTabs(event: KeyboardEvent): void {
-    const tabs = this.tabs;
+    const tabs = this.tabs();
     const current = tabs.indexOf(this.activeTab());
     let next = current;
 
