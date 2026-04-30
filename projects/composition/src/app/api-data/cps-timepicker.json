@@ -148,7 +148,7 @@
         }
     },
     "interfaces": {
-        "description": "Defines the custom interfaces used by the module.",
+        "description": "Defines the custom interfaces used by the component or service.",
         "values": [
             {
                 "name": "CpsTime",

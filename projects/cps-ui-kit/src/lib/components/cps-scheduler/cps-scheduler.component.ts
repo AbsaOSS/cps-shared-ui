@@ -107,6 +107,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   /**
    * Time zone value.
    * @group Props
+   * @default System time zone, fallback UTC
    */
   @Input() timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 

@@ -48,5 +48,385 @@
                 "description": "Closes all dialogs."
             }
         ]
+    },
+    "interfaces": {
+        "description": "Defines the custom interfaces used by the component or service.",
+        "values": [
+            {
+                "name": "CpsDialogConfig",
+                "description": "Configuration for the dialog service.",
+                "props": [
+                    {
+                        "name": "data",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "T",
+                        "description": "An object to pass to the component loaded inside the Dialog."
+                    },
+                    {
+                        "name": "showHeader",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Determines whether to show the header or not."
+                    },
+                    {
+                        "name": "headerTitle",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Header text of the dialog."
+                    },
+                    {
+                        "name": "headerInfoTooltip",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Header information tooltip."
+                    },
+                    {
+                        "name": "headerInfoTooltipPosition",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "CpsTooltipPosition",
+                        "description": "Header information tooltip position."
+                    },
+                    {
+                        "name": "headerIcon",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Header icon."
+                    },
+                    {
+                        "name": "headerIconColor",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Header icon color."
+                    },
+                    {
+                        "name": "showHeaderLeftBorder",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Determines whether to show the header left border."
+                    },
+                    {
+                        "name": "showHeaderBottomBorder",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Determines whether to show the header bottom border."
+                    },
+                    {
+                        "name": "ariaLabelledBy",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Identifies the element (or elements) that labels the element it is applied to."
+                    },
+                    {
+                        "name": "width",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Width of the dialog."
+                    },
+                    {
+                        "name": "height",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Height of the dialog."
+                    },
+                    {
+                        "name": "minWidth",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Min-width of the dialog."
+                    },
+                    {
+                        "name": "minHeight",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Min-height of the dialog."
+                    },
+                    {
+                        "name": "maxWidth",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Max-width of the dialog."
+                    },
+                    {
+                        "name": "maxHeight",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Max-height of the dialog."
+                    },
+                    {
+                        "name": "closeOnEscape",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Specifies if pressing escape key should hide the dialog."
+                    },
+                    {
+                        "name": "baseZIndex",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "number",
+                        "description": "Base zIndex value to use in layering."
+                    },
+                    {
+                        "name": "autoZIndex",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Determines whether to automatically manage layering."
+                    },
+                    {
+                        "name": "disableClose",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Specifies whether the user is allowed to close the dialog."
+                    },
+                    {
+                        "name": "style",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "{ [klass: string]: any } | null",
+                        "description": "Inline style of the component."
+                    },
+                    {
+                        "name": "styleClass",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Style class of the component."
+                    },
+                    {
+                        "name": "contentStyle",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "{ [klass: string]: any } | null",
+                        "description": "Inline style of the content."
+                    },
+                    {
+                        "name": "contentStyleClass",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Style class of the content."
+                    },
+                    {
+                        "name": "transitionOptions",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Transition options of the animation."
+                    },
+                    {
+                        "name": "showCloseBtn",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Adds a close button to the header to hide the dialog."
+                    },
+                    {
+                        "name": "modal",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Defines if background should be blocked when dialog is displayed."
+                    },
+                    {
+                        "name": "blurredBackground",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "When modal dialog is displayed, determines whether background should be blurred."
+                    },
+                    {
+                        "name": "maskStyleClass",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Style class of the mask."
+                    },
+                    {
+                        "name": "resizable",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Enables resizing of the content."
+                    },
+                    {
+                        "name": "draggable",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Enables dragging to change the position using header."
+                    },
+                    {
+                        "name": "keepInViewport",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Keeps dialog in the viewport."
+                    },
+                    {
+                        "name": "minX",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "number",
+                        "description": "Minimum value for the left coordinate of dialog in dragging."
+                    },
+                    {
+                        "name": "minY",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "number",
+                        "description": "Minimum value for the top coordinate of dialog in dragging."
+                    },
+                    {
+                        "name": "maximizable",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Determines whether the dialog can be displayed full screen."
+                    },
+                    {
+                        "name": "maximized",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Determines whether the dialog is initially opened as full screen."
+                    },
+                    {
+                        "name": "position",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "\"left\" | \"right\" | \"top\" | \"bottom\" | \"center\" | \"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\"",
+                        "description": "Position of the dialog, options are \"center\", \"top\", \"bottom\", \"left\", \"right\", \"top-left\", \"top-right\", \"bottom-left\" or \"bottom-right\"."
+                    }
+                ]
+            }
+        ]
+    },
+    "classes": {
+        "description": "Defines classes exposed by the component or service.",
+        "values": [
+            {
+                "name": "CpsDialogRef",
+                "description": "Reference to an opened dialog, returned by CpsDialogService.open() and CpsDialogService.openConfirmationDialog().",
+                "props": [
+                    {
+                        "name": "componentInstance",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "T",
+                        "description": "The instance of the component opened into the dialog."
+                    },
+                    {
+                        "name": "disableClose",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "description": "Specifies whether the user is allowed to close the dialog."
+                    }
+                ],
+                "methods": [
+                    {
+                        "name": "close",
+                        "parameters": [
+                            {
+                                "name": "result",
+                                "type": "any"
+                            }
+                        ],
+                        "returnType": "void",
+                        "description": "Closes the dialog."
+                    },
+                    {
+                        "name": "destroy",
+                        "parameters": [],
+                        "returnType": "void",
+                        "description": "Destroys the dialog."
+                    },
+                    {
+                        "name": "maximize",
+                        "parameters": [],
+                        "returnType": "void",
+                        "description": "Sets dialog as full screen."
+                    },
+                    {
+                        "name": "minimize",
+                        "parameters": [],
+                        "returnType": "void",
+                        "description": "Switches back from full screen dialog size to normal size."
+                    },
+                    {
+                        "name": "isOpen",
+                        "parameters": [],
+                        "returnType": "boolean",
+                        "description": "Checks whether the dialog is currently opened."
+                    },
+                    {
+                        "name": "isMaximized",
+                        "parameters": [],
+                        "returnType": "boolean",
+                        "description": "Checks whether the dialog is maximized."
+                    }
+                ],
+                "events": [
+                    {
+                        "name": "onOpen",
+                        "type": "Observable<void>",
+                        "description": "Event triggered on dialog is opened."
+                    },
+                    {
+                        "name": "onClose",
+                        "type": "Observable<any>",
+                        "description": "Event triggered on dialog is closed."
+                    },
+                    {
+                        "name": "onDestroy",
+                        "type": "Observable<void>",
+                        "description": "Event triggered on dialog is destroyed."
+                    },
+                    {
+                        "name": "onDragStart",
+                        "type": "Observable<MouseEvent>",
+                        "description": "Event triggered on drag start."
+                    },
+                    {
+                        "name": "onDragEnd",
+                        "type": "Observable<MouseEvent>",
+                        "description": "Event triggered on drag end."
+                    },
+                    {
+                        "name": "onResizeStart",
+                        "type": "Observable<MouseEvent>",
+                        "description": "Event triggered on resize start."
+                    },
+                    {
+                        "name": "onResizeEnd",
+                        "type": "Observable<MouseEvent>",
+                        "description": "Event triggered on resize end."
+                    },
+                    {
+                        "name": "onMaximize",
+                        "type": "Observable<boolean>",
+                        "description": "Event triggered on dialog maximized state changed."
+                    }
+                ]
+            }
+        ]
     }
 }

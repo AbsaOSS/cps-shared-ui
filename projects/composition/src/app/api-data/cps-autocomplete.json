@@ -342,7 +342,7 @@
                         "description": "Determines whether the component is currently validating the selected value asynchronously."
                     },
                     {
-                        "name": "_value",
+                        "name": "value",
                         "optional": false,
                         "readonly": false,
                         "type": "any",
@@ -406,7 +406,7 @@
         }
     },
     "types": {
-        "description": "Defines the custom types used by the module.",
+        "description": "Defines the custom types used by the component or service.",
         "values": [
             {
                 "name": "CpsAutocompleteAppearanceType",

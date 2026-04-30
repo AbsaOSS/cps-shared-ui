@@ -130,10 +130,14 @@
             <div id="{{ interface.name }}">
               <h3>{{ interface.name }}</h3>
               <p>{{ interface.description }}</p>
+              @let interfaceHasDefaults = hasDefaults(interface.props);
               <table class="data-table">
                 <thead>
                   <th>Name</th>
                   <th>Type</th>
+                  @if (interfaceHasDefaults) {
+                    <th>Default value</th>
+                  }
                   <th>Description</th>
                 </thead>
                 <tbody>
@@ -153,11 +157,165 @@
                           <span>{{ prop.type }}</span>
                         }
                       </td>
+                      @if (interfaceHasDefaults) {
+                        <td class="highlighted-text">{{ prop.default }}</td>
+                      }
                       <td>{{ prop.description }}</td>
                     </tr>
                   }
                 </tbody>
               </table>
+            </div>
+          }
+        </div>
+      }
+      <!-- Classes -->
+      @if (
+        serviceData.classes &&
+        serviceData.classes.values &&
+        serviceData.classes.values.length > 0
+      ) {
+        <div>
+          <h2>Classes</h2>
+          <p>{{ serviceData.classes.description }}</p>
+          @for (cls of serviceData.classes.values; track cls.name) {
+            <div id="{{ cls.name }}">
+              <h3>{{ cls.name }}</h3>
+              <p>{{ cls.description }}</p>
+              @if (cls.props && cls.props.length > 0) {
+                <h4>Properties</h4>
+                @let clsHasDefaults = hasDefaults(cls.props);
+                <table class="data-table">
+                  <thead>
+                    <th>Name</th>
+                    <th>Type</th>
+                    @if (clsHasDefaults) {
+                      <th>Default value</th>
+                    }
+                    <th>Description</th>
+                  </thead>
+                  <tbody>
+                    @for (prop of cls.props; track prop) {
+                      <tr>
+                        <td class="highlighted-bg">
+                          <span>{{ prop.name }}</span>
+                        </td>
+                        <td class="highlighted-text">
+                          @if (prop.type | detectType: TypesMap; as type) {
+                            <a
+                              [routerLink]="'/' + TypesMap[type] + '/api'"
+                              fragment="{{ type }}">
+                              {{ prop.type }}
+                            </a>
+                          } @else {
+                            <span>{{ prop.type }}</span>
+                          }
+                        </td>
+                        @if (clsHasDefaults) {
+                          <td class="highlighted-text">{{ prop.default }}</td>
+                        }
+                        <td>{{ prop.description }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+              @if (cls.methods && cls.methods.length > 0) {
+                <h4>Methods</h4>
+                <table class="data-table">
+                  <thead>
+                    <th>Name</th>
+                    <th>Parameters</th>
+                    <th>Return type</th>
+                    <th>Description</th>
+                  </thead>
+                  <tbody>
+                    @for (method of cls.methods; track method) {
+                      <tr>
+                        <td class="highlighted-bg">
+                          <span>{{ method.name }}</span>
+                        </td>
+                        <td class="highlighted-text">
+                          <div class="parameters">
+                            @for (
+                              param of method.parameters;
+                              track param.name
+                            ) {
+                              <span>
+                                <strong [cpsTooltip]="param.description || ''">
+                                  {{ param.name }}:
+                                </strong>
+                                @if (
+                                  param.type | detectType: TypesMap;
+                                  as type
+                                ) {
+                                  <a
+                                    [routerLink]="'/' + TypesMap[type] + '/api'"
+                                    fragment="{{ type }}">
+                                    {{ param.type }}
+                                  </a>
+                                } @else {
+                                  <span>{{ param.type }}</span>
+                                }
+                              </span>
+                            } @empty {
+                              null
+                            }
+                          </div>
+                        </td>
+                        <td class="highlighted-text">
+                          @if (
+                            method.returnType | detectType: TypesMap;
+                            as type
+                          ) {
+                            <a
+                              [routerLink]="'/' + TypesMap[type] + '/api'"
+                              fragment="{{ type }}"
+                              >{{ method.returnType }}</a
+                            >
+                          } @else {
+                            <span>{{ method.returnType }}</span>
+                          }
+                        </td>
+                        <td class="method-description">
+                          {{ method.description }}
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
+              @if (cls.events && cls.events.length > 0) {
+                <h4>Events</h4>
+                <table class="data-table">
+                  <thead>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                  </thead>
+                  <tbody>
+                    @for (event of cls.events; track event) {
+                      <tr>
+                        <td class="highlighted-bg">
+                          <span>{{ event.name }}</span>
+                        </td>
+                        <td class="highlighted-text">
+                          @if (event.type | detectType: TypesMap; as type) {
+                            <a
+                              [routerLink]="'/' + TypesMap[type] + '/api'"
+                              fragment="{{ type }}">
+                              {{ event.type }}
+                            </a>
+                          } @else {
+                            <span>{{ event.type }}</span>
+                          }
+                        </td>
+                        <td>{{ event.description }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              }
             </div>
           }
         </div>
