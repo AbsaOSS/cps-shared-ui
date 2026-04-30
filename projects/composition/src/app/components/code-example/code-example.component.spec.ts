@@ -23,7 +23,7 @@ describe('CodeExampleComponent', () => {
     it('should create', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.detectChanges();
       expect(component).toBeTruthy();
     });
@@ -31,7 +31,7 @@ describe('CodeExampleComponent', () => {
     it('defaults to the preview tab', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.detectChanges();
       expect(component.activeTab()).toBe('preview');
     });
@@ -39,7 +39,7 @@ describe('CodeExampleComponent', () => {
     it('renders the label when provided', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.componentRef.setInput('label', 'My example');
       fixture.detectChanges();
       const heading = fixture.debugElement.query(
@@ -51,7 +51,7 @@ describe('CodeExampleComponent', () => {
     it('does not render a label element when label is empty', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.detectChanges();
       const heading = fixture.debugElement.query(
         By.css('.code-example__label')
@@ -62,7 +62,7 @@ describe('CodeExampleComponent', () => {
     it('shows only Preview and HTML tabs when tsCode is not provided', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.detectChanges();
       const tabs = fixture.debugElement.queryAll(By.css('[role="tab"]'));
       expect(tabs.length).toBe(2);
@@ -73,18 +73,49 @@ describe('CodeExampleComponent', () => {
     it('shows a TypeScript tab when tsCode is provided', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
       const tabs = fixture.debugElement.queryAll(By.css('[role="tab"]'));
       expect(tabs.length).toBe(3);
       expect(tabs[2].nativeElement.textContent.trim()).toBe('TS');
     });
+
+    it('shows only Preview and TS tabs when only tsCode is provided', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
+      fixture.detectChanges();
+      const tabs = fixture.debugElement.queryAll(By.css('[role="tab"]'));
+      expect(tabs.length).toBe(2);
+      expect(tabs[0].nativeElement.textContent.trim()).toBe('Preview');
+      expect(tabs[1].nativeElement.textContent.trim()).toBe('TS');
+    });
+
+    it('does not render HTML code panel when htmlCode is not provided', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
+      fixture.detectChanges();
+      const htmlPanel = fixture.debugElement.query(
+        By.css('[id*="-panel-html"]')
+      );
+      expect(htmlPanel).toBeNull();
+    });
+
+    it('does not render TS code panel when tsCode is not provided', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.detectChanges();
+      const tsPanel = fixture.debugElement.query(By.css('[id*="-panel-ts"]'));
+      expect(tsPanel).toBeNull();
+    });
   });
 
   describe('tab switching', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
     });
@@ -93,7 +124,7 @@ describe('CodeExampleComponent', () => {
       const htmlTab = fixture.debugElement.queryAll(By.css('[role="tab"]'))[1];
       htmlTab.nativeElement.click();
       fixture.detectChanges();
-      expect(component.activeTab()).toBe('code');
+      expect(component.activeTab()).toBe('html');
     });
 
     it('switches to TypeScript tab on click', () => {
@@ -104,7 +135,7 @@ describe('CodeExampleComponent', () => {
     });
 
     it('switches back to Preview tab on click', () => {
-      component.activeTab.set('code');
+      component.activeTab.set('html');
       fixture.detectChanges();
       const previewTab = fixture.debugElement.queryAll(
         By.css('[role="tab"]')
@@ -117,7 +148,7 @@ describe('CodeExampleComponent', () => {
 
   describe('navigateTabs', () => {
     beforeEach(() => {
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
     });
@@ -127,12 +158,12 @@ describe('CodeExampleComponent', () => {
       const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
       jest.spyOn(event, 'preventDefault');
       component.navigateTabs(event);
-      expect(component.activeTab()).toBe('code');
+      expect(component.activeTab()).toBe('html');
       expect(event.preventDefault).toHaveBeenCalled();
     });
 
     it('moves to the previous tab on ArrowLeft', () => {
-      component.activeTab.set('code');
+      component.activeTab.set('html');
       const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
       jest.spyOn(event, 'preventDefault');
       component.navigateTabs(event);
@@ -185,14 +216,14 @@ describe('CodeExampleComponent', () => {
         configurable: true
       });
 
-      fixture.componentRef.setInput('code', '<div>html</div>');
+      fixture.componentRef.setInput('htmlCode', '<div>html</div>');
       fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
     });
 
     it('copies HTML code when on the HTML tab and sets copied signal', async () => {
       writeTextMock.mockResolvedValue(undefined);
-      component.activeTab.set('code');
+      component.activeTab.set('html');
 
       await component.copyCode();
 
@@ -223,7 +254,7 @@ describe('CodeExampleComponent', () => {
     it('preview tabpanel has tabindex -1 by default (interactive content)', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.detectChanges();
 
       const previewPanel = fixture.debugElement.query(
@@ -235,7 +266,7 @@ describe('CodeExampleComponent', () => {
     it('preview tabpanel has tabindex 0 when isPreviewNonInteractive is true', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.componentRef.setInput('isPreviewNonInteractive', true);
       fixture.detectChanges();
 
@@ -248,7 +279,7 @@ describe('CodeExampleComponent', () => {
     it('preview tabpanel tabindex updates reactively when input changes', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
-      fixture.componentRef.setInput('code', '<div></div>');
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
       fixture.componentRef.setInput('isPreviewNonInteractive', false);
       fixture.detectChanges();
 

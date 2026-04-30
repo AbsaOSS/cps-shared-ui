@@ -16,7 +16,7 @@ import typescript from 'highlight.js/lib/languages/typescript';
 hljs.registerLanguage('xml', xml);
 hljs.registerLanguage('typescript', typescript);
 
-type TabId = 'preview' | 'code' | 'ts';
+type TabId = 'preview' | 'html' | 'ts';
 
 @Component({
   imports: [CpsButtonComponent],
@@ -28,7 +28,7 @@ type TabId = 'preview' | 'code' | 'ts';
 export class CodeExampleComponent {
   private static instanceCount = 0;
 
-  code = input.required<string>();
+  htmlCode = input<string | undefined>();
   tsCode = input<string | undefined>();
   label = input('');
   isPreviewNonInteractive = input(false);
@@ -41,18 +41,29 @@ export class CodeExampleComponent {
   copyFailed = signal(false);
   highlightedCode = signal<SafeHtml>('');
   highlightedTsCode = signal<SafeHtml>('');
-  tabs = signal<TabId[]>(['preview', 'code']);
+  tabs = signal<TabId[]>(['preview']);
   previewTabIndex = computed(() => (this.isPreviewNonInteractive() ? 0 : -1));
 
   constructor() {
     effect(() => {
-      const code = this.code();
+      const htmlCode = this.htmlCode();
       const tsCode = this.tsCode();
 
-      const htmlResult = hljs.highlight(code.trim(), { language: 'xml' });
-      this.highlightedCode.set(
-        this.sanitizer.bypassSecurityTrustHtml(htmlResult.value)
-      );
+      if (!htmlCode && !tsCode) {
+        console.warn(
+          'CodeExampleComponent: At least one of htmlCode or tsCode must be provided'
+        );
+      }
+
+      const availableTabs: TabId[] = ['preview'];
+
+      if (htmlCode) {
+        const htmlResult = hljs.highlight(htmlCode.trim(), { language: 'xml' });
+        this.highlightedCode.set(
+          this.sanitizer.bypassSecurityTrustHtml(htmlResult.value)
+        );
+        availableTabs.push('html');
+      }
 
       if (tsCode) {
         const tsResult = hljs.highlight(tsCode.trim(), {
@@ -61,18 +72,26 @@ export class CodeExampleComponent {
         this.highlightedTsCode.set(
           this.sanitizer.bypassSecurityTrustHtml(tsResult.value)
         );
-        this.tabs.set(['preview', 'code', 'ts']);
-      } else {
-        this.tabs.set(['preview', 'code']);
+        availableTabs.push('ts');
+      }
+
+      this.tabs.set(availableTabs);
+
+      if (!this.tabs().includes(this.activeTab())) {
+        this.activeTab.set('preview');
       }
     });
   }
 
   async copyCode(): Promise<void> {
-    const textToCopy =
-      this.activeTab() === 'ts'
-        ? (this.tsCode() ?? '').trim()
-        : this.code().trim();
+    let textToCopy = '';
+
+    if (this.activeTab() === 'ts') {
+      textToCopy = (this.tsCode() ?? '').trim();
+    } else if (this.activeTab() === 'html') {
+      textToCopy = (this.htmlCode() ?? '').trim();
+    }
+
     try {
       await navigator.clipboard.writeText(textToCopy);
       this.copied.set(true);
