@@ -40,7 +40,7 @@ form = this.fb.group({
     html: `
 <cps-autocomplete
   label="Single search autocomplete with fetched options list"
-  hint="Fetches matching options from the server based on user input"
+  hint="This autocomplete fetches matching options list from the server side based on user input"
   [options]="singleOptionsObservable$ | async"
   optionLabel="name"
   optionInfo="info"
@@ -64,7 +64,7 @@ onSingleInputChanged(val: string): void {
     html: `
 <cps-autocomplete
   label="Multiple search autocomplete with fetched options list"
-  hint="Fetches matching options from the server based on user input"
+  hint="This autocomplete fetches matching options list from the server side based on user input"
   [options]="multiOptionsObservable$ | async"
   optionLabel="name"
   optionInfo="info"
@@ -250,7 +250,7 @@ syncVal: string[] = [];`
   [validating]="validating"
   (valueChanged)="onOptionSelected($event)"
   [externalError]="externalError"
-  hint="Simulates async validation upon selection">
+  hint="This autocomplete simulates async validation upon selection.">
 </cps-autocomplete>`,
     ts: `
 validating = false;
