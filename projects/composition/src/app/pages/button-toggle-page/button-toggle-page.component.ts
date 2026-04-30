@@ -3,14 +3,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsButtonToggleComponent, CpsButtonToggleOption } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-button-toggle.json';
+import { buttonToggleExamples } from './button-toggle-page.examples';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 
 @Component({
   imports: [
     CpsButtonToggleComponent,
     ReactiveFormsModule,
     FormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-button-toggle-page',
   templateUrl: './button-toggle-page.component.html',
@@ -79,4 +82,6 @@ export class ButtonTogglePageComponent {
   syncVal = 'first';
   multiSyncVal = ['third', 'fourth'];
   componentData = ComponentData;
+
+  readonly examples = buttonToggleExamples;
 }

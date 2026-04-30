@@ -8,7 +8,9 @@ import {
 } from '@angular/forms';
 import { CpsAutocompleteComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ComponentData from '../../api-data/cps-autocomplete.json';
+import { autocompleteExamples } from './autocomplete-page.examples';
 import { Observable, Subject, of, delay } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
@@ -19,6 +21,7 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     ReactiveFormsModule,
     ComponentDocsViewerComponent,
+    CodeExampleComponent,
     CommonModule
   ],
   selector: 'app-autocomplete-page',
@@ -64,7 +67,6 @@ export class AutocompletePageComponent implements OnInit {
   private _multiFilterOptionSubject$ = new Subject<string>();
   multiOptionsObservable$?: Observable<any>;
 
-  // New properties for the validating example
   validating = false;
   selectedOption: any = null;
 
@@ -113,7 +115,6 @@ export class AutocompletePageComponent implements OnInit {
         if (single) this.isSingleLoading = true;
         else this.isMultiLoading = true;
         return this._getOptionsFromServer(value).pipe(
-          // Handle errors and finalize loading state
           tap({
             complete: () => {
               if (single) this.isSingleLoading = false;
@@ -152,4 +153,6 @@ export class AutocompletePageComponent implements OnInit {
         }
       });
   }
+
+  readonly examples = autocompleteExamples;
 }
