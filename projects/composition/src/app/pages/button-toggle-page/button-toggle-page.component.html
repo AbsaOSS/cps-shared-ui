@@ -1,40 +1,67 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <!-- Example of component's usage -->
-  <div class="btn-toggles-group">
+  <app-code-example
+    label="Single button toggles with a tooltip"
+    [htmlCode]="examples.basic.html"
+    [tsCode]="examples.basic.ts">
     <cps-button-toggle
       label="Single button toggles with a tooltip"
       infoTooltip="Provide any information here"
       [options]="options"
       [value]="options[1].value">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Partially disabled options with targeted tooltips"
+    [htmlCode]="examples.partiallyDisabled.html"
+    [tsCode]="examples.partiallyDisabled.ts">
     <cps-button-toggle
       label="Single button toggles with partially disabled options and targeted tooltips"
       [options]="partiallyDisabledOptions"
       [value]="partiallyDisabledOptions[1].value">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Disabled"
+    [htmlCode]="examples.disabled.html"
+    [tsCode]="examples.disabled.ts">
     <cps-button-toggle
       label="Disabled button toggles"
       [options]="options"
       [disabled]="true"
       [value]="options[1].value">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Without mandatory selection"
+    [htmlCode]="examples.nonMandatory.html"
+    [tsCode]="examples.nonMandatory.ts">
     <cps-button-toggle
       label="Single button toggles without mandatory selection"
       [options]="options"
       [value]="options[1].value"
       [mandatory]="false">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Multiple selection"
+    [htmlCode]="examples.multiple.html"
+    [tsCode]="examples.multiple.ts">
     <cps-button-toggle
       label="Multiple button toggles"
       [options]="options"
       [value]="[options[1].value]"
       [multiple]="true">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Multiple selection without mandatory"
+    [htmlCode]="examples.multipleNonMandatory.html"
+    [tsCode]="examples.multipleNonMandatory.ts">
     <cps-button-toggle
       label="Multiple button toggles without mandatory selection"
       [options]="options"
@@ -42,26 +69,46 @@
       [multiple]="true"
       [mandatory]="false">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Icons with unequal widths"
+    [htmlCode]="examples.iconsUnequalWidths.html"
+    [tsCode]="examples.iconsUnequalWidths.ts">
     <cps-button-toggle
       label="Single button toggles with icons and unequal widths"
       [options]="iconOptions"
       [equalWidths]="false"
       [value]="iconOptions[2].value">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Icons with equal widths"
+    [htmlCode]="examples.iconsEqualWidths.html"
+    [tsCode]="examples.iconsEqualWidths.ts">
     <cps-button-toggle
       label="Single button toggles with icons and equal widths"
       [options]="iconOptions"
       [value]="iconOptions[2].value">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Icons only with tooltips"
+    [htmlCode]="examples.iconsOnly.html"
+    [tsCode]="examples.iconsOnly.ts">
     <cps-button-toggle
       label="Single button toggles only with icons and tooltips"
       optionTooltipPosition="top"
       [options]="iconOnlyOptions">
     </cps-button-toggle>
+  </app-code-example>
 
+  <app-code-example
+    label="Two-way binding (single)"
+    [htmlCode]="examples.twoWayBinding.html"
+    [tsCode]="examples.twoWayBinding.ts">
     <div class="sync-val-example">
       <cps-button-toggle
         label="Single button toggles with two-way binding"
@@ -71,6 +118,12 @@
       </cps-button-toggle>
       <div class="sync-val">Selected value: {{ syncVal }}</div>
     </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding (multiple)"
+    [htmlCode]="examples.twoWayBindingMultiple.html"
+    [tsCode]="examples.twoWayBindingMultiple.ts">
     <div class="sync-val-example">
       <cps-button-toggle
         label="Multiple button toggles with two-way binding"
@@ -81,5 +134,5 @@
       </cps-button-toggle>
       <div class="sync-val">Selected values: {{ multiSyncVal }}</div>
     </div>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

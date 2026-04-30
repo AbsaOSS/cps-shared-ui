@@ -1,7 +1,5 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <!-- Example of component's usage -->
-  <div class="buttons-group">
-    <div class="buttons-group-title">Solid type</div>
+  <app-code-example label="Solid" [htmlCode]="examples.solid.html">
     <div class="buttons-group-row">
       <cps-button label="Large button" size="large" color="luxury"></cps-button>
       <cps-button icon="add" label="Large button" size="large"></cps-button>
@@ -80,10 +78,9 @@
         size="xsmall"
         ariaLabel="Loading button"></cps-button>
     </div>
-  </div>
+  </app-code-example>
 
-  <div class="buttons-group">
-    <div class="buttons-group-title">Outlined type</div>
+  <app-code-example label="Outlined" [htmlCode]="examples.outlined.html">
     <div class="buttons-group-row">
       <cps-button
         label="Large button"
@@ -189,7 +186,7 @@
         type="outlined"></cps-button>
       <cps-button
         icon="add"
-        label="Xsmall button"
+        label="XSmall button"
         color="luxury"
         size="xsmall"
         type="outlined"
@@ -200,10 +197,9 @@
         type="outlined"
         ariaLabel="Loading button"></cps-button>
     </div>
-  </div>
+  </app-code-example>
 
-  <div class="buttons-group">
-    <div class="buttons-group-title">Borderless type</div>
+  <app-code-example label="Borderless" [htmlCode]="examples.borderless.html">
     <div class="buttons-group-row">
       <cps-button
         label="Large button"
@@ -323,17 +319,20 @@
         type="borderless"
         ariaLabel="Loading button"></cps-button>
     </div>
-  </div>
+  </app-code-example>
 
-  <div class="buttons-group">
-    <div class="buttons-group-title">Miscellaneous</div>
+  <app-code-example
+    label="Miscellaneous"
+    [htmlCode]="examples.misc.html"
+    [tsCode]="examples.misc.ts">
     <div class="buttons-group-row dark-background">
       <cps-button
         [loading]="isLoading"
         label="Click to load"
         type="outlined"
         color="white"
-        (clicked)="onClickForLoading()"></cps-button>
+        (clicked)="onClickForLoading()">
+      </cps-button>
       <cps-button
         color="white"
         type="outlined"
@@ -360,5 +359,5 @@
       width="100%"
       size="large"
       color="depth"></cps-button>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

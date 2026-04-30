@@ -1,7 +1,9 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <!-- Example of component's usage -->
   <form [formGroup]="form">
-    <div class="autocompletes-group">
+    <app-code-example
+      label="Required single autocomplete with a tooltip"
+      [htmlCode]="examples.required.html"
+      [tsCode]="examples.required.ts">
       <cps-autocomplete
         data-testid="required-autocomplete"
         label="Required single autocomplete with a tooltip"
@@ -13,6 +15,12 @@
         [clearable]="true"
         formControlName="requiredAutocomplete">
       </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Single search with fetched options"
+      [htmlCode]="examples.singleAsync.html"
+      [tsCode]="examples.singleAsync.ts">
       <cps-autocomplete
         label="Single search autocomplete with fetched options list"
         hint="This autocomplete fetches matching options list from the server side based on user input"
@@ -27,6 +35,12 @@
         emptyMessage="No cities found"
         (inputChanged)="onSingleInputChanged($event)">
       </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Multiple search with fetched options"
+      [htmlCode]="examples.multipleAsync.html"
+      [tsCode]="examples.multipleAsync.ts">
       <cps-autocomplete
         label="Multiple search autocomplete with fetched options list"
         hint="This autocomplete fetches matching options list from the server side based on user input"
@@ -42,11 +56,20 @@
         emptyMessage="No cities found"
         (inputChanged)="onMultiInputChanged($event)">
       </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example label="Disabled" [htmlCode]="examples.disabled.html">
       <cps-autocomplete
         label="Disabled autocomplete"
         [disabled]="true"
         hint="This autocomplete is disabled">
       </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Multiple, not clearable"
+      [htmlCode]="examples.multipleNotClearable.html"
+      [tsCode]="examples.multipleNotClearable.ts">
       <cps-autocomplete
         label="Multiple autocomplete"
         [options]="options"
@@ -59,7 +82,14 @@
         [chips]="false"
         [returnObject]="false"
         [value]="[{ code: 'CPT' }]"
-        hint="This autocomplete is not clearable"></cps-autocomplete>
+        hint="This autocomplete is not clearable">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Multiple with virtual scroll, chips and persistent clear"
+      [htmlCode]="examples.virtualScroll.html"
+      [tsCode]="examples.virtualScroll.ts">
       <cps-autocomplete
         label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
         [options]="options"
@@ -72,7 +102,14 @@
         [clearable]="true"
         [multiple]="true"
         [persistentClear]="true"
-        [value]="[options[0], options[4]]"></cps-autocomplete>
+        [value]="[options[0], options[4]]">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Multiple with non-closable chips"
+      [htmlCode]="examples.nonClosableChips.html"
+      [tsCode]="examples.nonClosableChips.ts">
       <cps-autocomplete
         label="Multiple autocomplete with non-closable chips"
         [returnObject]="false"
@@ -86,7 +123,14 @@
         [clearable]="true"
         [multiple]="true"
         [closableChips]="false"
-        [value]="[options[0].data, options[4].data]"></cps-autocomplete>
+        [value]="[options[0].data, options[4].data]">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Multiple with prefix icon"
+      [htmlCode]="examples.prefixIcon.html"
+      [tsCode]="examples.prefixIcon.ts">
       <cps-autocomplete
         label="Multiple autocomplete with prefix icon"
         [options]="options"
@@ -99,6 +143,12 @@
         prefixIcon="search"
         [value]="[options[5]]">
       </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Two-way binding with initial order preserved"
+      [htmlCode]="examples.twoWayBinding.html"
+      [tsCode]="examples.twoWayBinding.ts">
       <div class="sync-val-example">
         <cps-autocomplete
           width="31.25rem"
@@ -115,9 +165,16 @@
           [multiple]="true"
           [closableChips]="false"
           [(ngModel)]="syncVal"
-          [ngModelOptions]="{ standalone: true }"></cps-autocomplete>
+          [ngModelOptions]="{ standalone: true }">
+        </cps-autocomplete>
         <span class="sync-val">{{ syncVal }}</span>
       </div>
+    </app-code-example>
+
+    <app-code-example
+      label="Underlined appearance"
+      [htmlCode]="examples.underlined.html"
+      [tsCode]="examples.underlined.ts">
       <cps-autocomplete
         label="Underlined autocomplete"
         [options]="options"
@@ -130,6 +187,12 @@
         prefixIcon="search"
         appearance="underlined">
       </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Borderless appearance"
+      [htmlCode]="examples.borderless.html"
+      [tsCode]="examples.borderless.ts">
       <cps-autocomplete
         label="Borderless autocomplete"
         [options]="options"
@@ -142,7 +205,12 @@
         prefixIcon="search"
         appearance="borderless">
       </cps-autocomplete>
+    </app-code-example>
 
+    <app-code-example
+      label="Async validation"
+      [htmlCode]="examples.asyncValidation.html"
+      [tsCode]="examples.asyncValidation.ts">
       <cps-autocomplete
         label="Autocomplete with async validation"
         [options]="options"
@@ -157,6 +225,6 @@
         [externalError]="externalError"
         hint="This autocomplete simulates async validation upon selection.">
       </cps-autocomplete>
-    </div>
+    </app-code-example>
   </form>
 </app-component-docs-viewer>

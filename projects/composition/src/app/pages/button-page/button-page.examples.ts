@@ -1,0 +1,123 @@
+export const buttonExamples: Record<string, { html: string; ts?: string }> = {
+  solid: {
+    html: `
+<!-- large -->
+<cps-button label="Large button" size="large" color="luxury"></cps-button>
+<cps-button icon="add" label="Large button" size="large"></cps-button>
+<cps-button icon="add" label="Large button" color="surprise" iconPosition="after" size="large"></cps-button>
+<cps-button icon="add" label="Large button" color="luxury" size="large" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="large" ariaLabel="Loading button"></cps-button>
+
+<!-- normal -->
+<cps-button label="Normal button" color="luxury"></cps-button>
+<cps-button icon="add" label="Normal button"></cps-button>
+<cps-button icon="add" label="Normal button" color="surprise" iconPosition="after"></cps-button>
+<cps-button icon="add" label="Normal button" color="luxury" [disabled]="true"></cps-button>
+<cps-button [loading]="true" ariaLabel="Loading button"></cps-button>
+
+<!-- small -->
+<cps-button label="Small button" size="small" color="luxury"></cps-button>
+<cps-button icon="add" label="Small button" size="small"></cps-button>
+<cps-button icon="add" label="Small button" color="surprise" iconPosition="after" size="small"></cps-button>
+<cps-button icon="add" label="Small button" color="luxury" size="small" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="small" ariaLabel="Loading button"></cps-button>
+
+<!-- xsmall -->
+<cps-button label="XSmall button" size="xsmall" color="luxury"></cps-button>
+<cps-button icon="add" label="XSmall button" size="xsmall"></cps-button>
+<cps-button icon="add" label="XSmall button" color="surprise" iconPosition="after" size="xsmall"></cps-button>
+<cps-button icon="add" label="XSmall button" color="luxury" size="xsmall" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="xsmall" ariaLabel="Loading button"></cps-button>`
+  },
+
+  outlined: {
+    html: `
+<!-- large -->
+<cps-button label="Large button" size="large" type="outlined" color="luxury"></cps-button>
+<cps-button icon="add" label="Large button" size="large" type="outlined"></cps-button>
+<cps-button icon="add" label="Large button" color="surprise" iconPosition="after" size="large" type="outlined"></cps-button>
+<cps-button icon="add" label="Large button" color="luxury" size="large" type="outlined" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="large" type="outlined" ariaLabel="Loading button"></cps-button>
+
+<!-- normal -->
+<cps-button label="Normal button" type="outlined" color="luxury"></cps-button>
+<cps-button icon="add" label="Normal button" type="outlined"></cps-button>
+<cps-button icon="add" label="Normal button" color="surprise" iconPosition="after" type="outlined"></cps-button>
+<cps-button icon="add" label="Normal button" color="luxury" type="outlined" [disabled]="true"></cps-button>
+<cps-button [loading]="true" type="outlined" ariaLabel="Loading button"></cps-button>
+
+<!-- small -->
+<cps-button label="Small button" size="small" type="outlined" color="luxury"></cps-button>
+<cps-button icon="add" label="Small button" size="small" type="outlined"></cps-button>
+<cps-button icon="add" label="Small button" color="surprise" iconPosition="after" size="small" type="outlined"></cps-button>
+<cps-button icon="add" label="Small button" color="luxury" size="small" type="outlined" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="small" type="outlined" ariaLabel="Loading button"></cps-button>
+
+<!-- xsmall -->
+<cps-button label="XSmall button" size="xsmall" type="outlined" color="luxury"></cps-button>
+<cps-button icon="add" label="XSmall button" size="xsmall" type="outlined"></cps-button>
+<cps-button icon="add" label="XSmall button" color="surprise" iconPosition="after" size="xsmall" type="outlined"></cps-button>
+<cps-button icon="add" label="XSmall button" color="luxury" size="xsmall" type="outlined" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="xsmall" type="outlined" ariaLabel="Loading button"></cps-button>`
+  },
+
+  borderless: {
+    html: `
+<!-- large -->
+<cps-button label="Large button" size="large" type="borderless" color="luxury"></cps-button>
+<cps-button icon="add" label="Large button" size="large" type="borderless"></cps-button>
+<cps-button icon="add" label="Large button" color="surprise" iconPosition="after" size="large" type="borderless"></cps-button>
+<cps-button icon="add" label="Large button" color="luxury" size="large" type="borderless" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="large" type="borderless" ariaLabel="Loading button"></cps-button>
+
+<!-- normal -->
+<cps-button label="Normal button" type="borderless" color="luxury"></cps-button>
+<cps-button icon="add" label="Normal button" type="borderless"></cps-button>
+<cps-button icon="add" label="Normal button" color="surprise" iconPosition="after" type="borderless"></cps-button>
+<cps-button icon="add" label="Normal button" color="luxury" type="borderless" [disabled]="true"></cps-button>
+<cps-button [loading]="true" type="borderless" ariaLabel="Loading button"></cps-button>
+
+<!-- small -->
+<cps-button label="Small button" size="small" type="borderless" color="luxury"></cps-button>
+<cps-button icon="add" label="Small button" size="small" type="borderless"></cps-button>
+<cps-button icon="add" label="Small button" color="surprise" iconPosition="after" size="small" type="borderless"></cps-button>
+<cps-button icon="add" label="Small button" color="luxury" size="small" type="borderless" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="small" type="borderless" ariaLabel="Loading button"></cps-button>
+
+<!-- xsmall -->
+<cps-button label="XSmall button" size="xsmall" type="borderless" color="luxury"></cps-button>
+<cps-button icon="add" label="XSmall button" size="xsmall" type="borderless"></cps-button>
+<cps-button icon="add" label="XSmall button" color="surprise" iconPosition="after" size="xsmall" type="borderless"></cps-button>
+<cps-button icon="add" label="XSmall button" color="luxury" size="xsmall" type="borderless" [disabled]="true"></cps-button>
+<cps-button [loading]="true" size="xsmall" type="borderless" ariaLabel="Loading button"></cps-button>`
+  },
+
+  misc: {
+    html: `
+<!-- Interactive loading state -->
+<cps-button
+  label="Click to load"
+  type="outlined"
+  color="white"
+  [loading]="isLoading"
+  (clicked)="onClickForLoading()">
+</cps-button>
+
+<!-- Icon-only -->
+<cps-button color="white" type="outlined" icon="like" ariaLabel="Like" size="large"></cps-button>
+<cps-button color="graphite" icon="eye" size="large" ariaLabel="View"></cps-button>
+
+<!-- Custom size -->
+<cps-button label="Custom size" borderRadius="2rem" width="300" height="60" color="white" type="outlined" icon="avatar-top-menu"></cps-button>
+
+<!-- Block / full-width -->
+<cps-button label="Block large button" borderRadius="0" width="100%" size="large" color="depth"></cps-button>`,
+    ts: `
+isLoading = false;
+
+onClickForLoading(): void {
+  this.isLoading = true;
+  setTimeout(() => (this.isLoading = false), 2000);
+}`
+  }
+};

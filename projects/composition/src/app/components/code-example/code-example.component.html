@@ -1,0 +1,131 @@
+<div class="code-example">
+  @if (label()) {
+    <h3 class="code-example__label" [id]="instanceId + '-label'">
+      {{ label() }}
+    </h3>
+  }
+  <div class="code-example__card">
+    <div
+      class="code-example__tabbar"
+      role="tablist"
+      [attr.aria-labelledby]="label() ? instanceId + '-label' : null"
+      [attr.aria-label]="label() ? null : 'Code example'"
+      (keydown)="navigateTabs($event)">
+      <button
+        type="button"
+        role="tab"
+        class="code-example__tab"
+        [id]="instanceId + '-tab-preview'"
+        [attr.aria-selected]="activeTab() === 'preview'"
+        [attr.aria-controls]="instanceId + '-panel-preview'"
+        [tabindex]="activeTab() === 'preview' ? 0 : -1"
+        [class.code-example__tab--active]="activeTab() === 'preview'"
+        (click)="activeTab.set('preview')">
+        Preview
+      </button>
+      @if (htmlCode()) {
+        <button
+          type="button"
+          role="tab"
+          class="code-example__tab"
+          [id]="instanceId + '-tab-html'"
+          [attr.aria-selected]="activeTab() === 'html'"
+          [attr.aria-controls]="instanceId + '-panel-html'"
+          [tabindex]="activeTab() === 'html' ? 0 : -1"
+          [class.code-example__tab--active]="activeTab() === 'html'"
+          (click)="activeTab.set('html')">
+          HTML
+        </button>
+      }
+      @if (tsCode()) {
+        <button
+          type="button"
+          role="tab"
+          class="code-example__tab"
+          [id]="instanceId + '-tab-ts'"
+          [attr.aria-selected]="activeTab() === 'ts'"
+          [attr.aria-controls]="instanceId + '-panel-ts'"
+          [tabindex]="activeTab() === 'ts' ? 0 : -1"
+          [class.code-example__tab--active]="activeTab() === 'ts'"
+          (click)="activeTab.set('ts')">
+          TS
+        </button>
+      }
+    </div>
+
+    <div
+      role="tabpanel"
+      class="code-example__preview"
+      [id]="instanceId + '-panel-preview'"
+      [attr.aria-labelledby]="instanceId + '-tab-preview'"
+      [attr.aria-hidden]="activeTab() !== 'preview'"
+      [tabindex]="previewTabIndex()"
+      [class.code-example__panel--hidden]="activeTab() !== 'preview'">
+      <ng-content></ng-content>
+    </div>
+
+    @if (htmlCode()) {
+      <div
+        role="tabpanel"
+        class="code-example__code"
+        [id]="instanceId + '-panel-html'"
+        [attr.aria-labelledby]="instanceId + '-tab-html'"
+        [attr.aria-hidden]="activeTab() !== 'html'"
+        tabindex="-1"
+        [class.code-example__panel--hidden]="activeTab() !== 'html'">
+        <cps-button
+          class="code-example__copy"
+          type="outlined"
+          size="xsmall"
+          [label]="copied() ? 'Copied!' : copyFailed() ? 'Failed' : 'Copy'"
+          ariaLabel="Copy HTML code to clipboard"
+          (click)="copyCode()">
+        </cps-button>
+        <span role="status" class="cps-sr-only">{{
+          copied()
+            ? 'Code copied to clipboard'
+            : copyFailed()
+              ? 'Failed to copy code'
+              : ''
+        }}</span>
+        <pre
+          class="hljs"
+          [attr.aria-label]="
+            (label() || 'Code') + ' HTML snippet'
+          "><code [innerHTML]="highlightedCode()"></code></pre>
+      </div>
+    }
+
+    @if (tsCode()) {
+      <div
+        role="tabpanel"
+        class="code-example__code"
+        [id]="instanceId + '-panel-ts'"
+        [attr.aria-labelledby]="instanceId + '-tab-ts'"
+        [attr.aria-hidden]="activeTab() !== 'ts'"
+        tabindex="-1"
+        [class.code-example__panel--hidden]="activeTab() !== 'ts'">
+        <cps-button
+          class="code-example__copy"
+          type="outlined"
+          size="xsmall"
+          [label]="copied() ? 'Copied!' : copyFailed() ? 'Failed' : 'Copy'"
+          ariaLabel="Copy TypeScript code to clipboard"
+          (click)="copyCode()">
+        </cps-button>
+        <span role="status" class="cps-sr-only">{{
+          copied()
+            ? 'Code copied to clipboard'
+            : copyFailed()
+              ? 'Failed to copy code'
+              : ''
+        }}</span>
+        <pre
+          class="hljs"
+          [attr.aria-label]="
+            (label() || 'Code') + ' TypeScript snippet'
+          "><code [innerHTML]="highlightedTsCode()"></code></pre>
+      </div>
+    }
+  </div>
+</div>
