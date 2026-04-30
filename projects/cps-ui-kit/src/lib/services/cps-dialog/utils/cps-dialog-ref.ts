@@ -1,6 +1,10 @@
 import { Observable, Subject, take } from 'rxjs';
 import { CpsDialogComponent } from '../internal/components/cps-dialog/cps-dialog.component';
 
+/**
+ * Reference to an opened dialog, returned by CpsDialogService.open() and CpsDialogService.openConfirmationDialog().
+ * @group Classes
+ */
 export class CpsDialogRef<T = any> {
   private _containerInstance!: CpsDialogComponent;
 

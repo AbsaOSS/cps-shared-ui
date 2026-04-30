@@ -30,7 +30,10 @@ import { SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
 import { ZIndexUtils } from 'primeng/utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
-import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
+import {
+  CpsDialogConfig,
+  CPS_DIALOG_CONFIG
+} from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
@@ -176,7 +179,7 @@ export class CpsDialogComponent implements AfterViewInit, OnDestroy {
     private _dialogRef: CpsDialogRef,
     private _cdRef: ChangeDetectorRef,
     public renderer: Renderer2,
-    public config: CpsDialogConfig,
+    @Inject(CPS_DIALOG_CONFIG) public config: CpsDialogConfig,
     public zone: NgZone,
     public primeNG: PrimeNG
   ) {}

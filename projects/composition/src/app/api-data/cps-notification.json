@@ -102,7 +102,7 @@
         ]
     },
     "interfaces": {
-        "description": "Defines the custom interfaces used by the module.",
+        "description": "Defines the custom interfaces used by the component or service.",
         "values": [
             {
                 "name": "CpsNotificationConfig",
@@ -113,6 +113,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "CpsNotificationPosition",
+                        "default": "top-right",
                         "description": "Position of the notification, options are \"center\", \"top\", \"bottom\", \"left\", \"right\", \"top-left\", \"top-right\", \"bottom-left\" or \"bottom-right\"."
                     },
                     {
@@ -120,6 +121,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "CpsNotificationAppearance",
+                        "default": "filled",
                         "description": "Appearance of the notification, options are \"filled\" or \"outlined\"."
                     },
                     {
@@ -127,6 +129,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "number",
+                        "default": "5000",
                         "description": "The duration (in milliseconds) that the notification will be displayed before automatically closing.\nValue 0 means that the notification is persistent and will not be automatically closed."
                     },
                     {
@@ -134,6 +137,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "boolean",
+                        "default": "undefined",
                         "description": "Whether to allow duplicates of the same notification to be displayed within a positioned container."
                     },
                     {
@@ -141,6 +145,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "number",
+                        "default": "undefined",
                         "description": "Max amount of notifications that can be simultaneously visualized within a positioned container."
                     },
                     {
@@ -148,6 +153,7 @@
                         "optional": true,
                         "readonly": false,
                         "type": "string",
+                        "default": "undefined",
                         "description": "Max width of the notification of type number denoting pixels or string."
                     }
                 ]

@@ -13,11 +13,12 @@ const staticMessages = {
     'Defines emit that determine the behavior of the component based on a given condition or report the actions that the component takes.',
   templates: 'Defines the templates used by the component.',
   events: "Defines the custom events used by the component's emitters.",
-  interfaces: 'Defines the custom interfaces used by the module.',
-  types: 'Defines the custom types used by the module.',
+  interfaces: 'Defines the custom interfaces used by the component or service.',
+  types: 'Defines the custom types used by the component or service.',
   props: 'Defines the input properties of the component.',
   service: 'Defines the service used by the component.',
-  enums: 'Defines enums used by the component or service.'
+  enums: 'Defines enums used by the component or service.',
+  classes: 'Defines classes exposed by the component or service.'
 };
 
 async function main() {
@@ -74,6 +75,31 @@ async function main() {
         : undefined;
     };
 
+    const fileLineCache = {};
+    const getInputAlias = (prop) => {
+      const src = prop.sources && prop.sources[0];
+      if (!src || !src.fullFileName) return null;
+      try {
+        if (!fileLineCache[src.fullFileName]) {
+          fileLineCache[src.fullFileName] = fs
+            .readFileSync(src.fullFileName, 'utf8')
+            .split('\n');
+        }
+        const lines = fileLineCache[src.fullFileName];
+        const lineIdx = src.line - 1;
+        for (let i = Math.max(0, lineIdx - 2); i <= lineIdx; i++) {
+          const line = lines[i] || '';
+          const signalAlias = line.match(/alias:\s*['"]([^'"]+)['"]/);
+          if (signalAlias) return signalAlias[1];
+          const inputAlias = line.match(/@Input\s*\(\s*['"]([^'"]+)['"]\s*\)/);
+          if (inputAlias) return inputAlias[1];
+        }
+      } catch (_) {
+        // ignore unreadable files
+      }
+      return null;
+    };
+
     const modules = project.groups.find((g) => g.title === 'Modules');
 
     if (isProcessable(modules)) {
@@ -112,6 +138,9 @@ async function main() {
             const module_enums_group = module.groups.find(
               (g) => g.title === 'Enums'
             );
+            const module_classes_group = module.groups.find(
+              (g) => g.title === 'Classes'
+            );
             // Todo: Add support for type aliases
 
             if (isProcessable(module_components_group)) {
@@ -144,11 +173,14 @@ async function main() {
                           : null;
                     const isSignalInput = rawType?.startsWith('InputSignal<');
                     props.values.push({
-                      name: prop.name,
+                      name: getInputAlias(prop) ?? prop.name,
                       optional: prop.flags.isOptional,
                       readonly: prop.flags.isReadonly,
                       type: unwrapSignalType(rawType),
                       default:
+                        getDefaultValue(prop.setSignature) ??
+                        getDefaultValue(prop.getSignature) ??
+                        getDefaultValue(prop) ??
                         (prop.type &&
                         prop.type.name === 'boolean' &&
                         !prop.defaultValue
@@ -156,10 +188,7 @@ async function main() {
                           : prop.defaultValue &&
                               !(isSignalInput && prop.defaultValue === '...')
                             ? prop.defaultValue.replace(/^'|'$/g, '')
-                            : undefined) ??
-                        getDefaultValue(prop.setSignature) ??
-                        getDefaultValue(prop.getSignature) ??
-                        getDefaultValue(prop),
+                            : undefined),
                       description: (
                         prop.getSignature?.comment?.summary ||
                         prop.setSignature?.comment?.summary ||
@@ -451,26 +480,48 @@ async function main() {
                     int.comment.summary.map((s) => s.text || '').join(' '),
                   props:
                     int.children &&
-                    int.children.map((child) => ({
-                      name: child.name,
-                      optional: child.flags.isOptional,
-                      readonly: child.flags.isReadonly,
-                      type: child.type
-                        ? child.type.toString()
-                        : extractParameter(int),
-                      description:
-                        child.comment &&
-                        child.comment.summary
-                          .map((s) => s.text || '')
-                          .join(' '),
-                      deprecated: getDeprecatedText(child)
-                    }))
+                    int.children
+                      .filter(
+                        (child) =>
+                          child.kindString !== 'Constructor' &&
+                          child.name !== 'constructor'
+                      )
+                      .map((child) => {
+                        const sig = child.signatures && child.signatures[0];
+                        let type;
+                        if (sig) {
+                          const params = (sig.parameters ?? [])
+                            .map(
+                              (p) =>
+                                `${p.name}${p.flags?.isOptional ? '?' : ''}: ${p.type?.toString() ?? 'unknown'}`
+                            )
+                            .join(', ');
+                          type = `(${params}) => ${sig.type?.toString() ?? 'void'}`;
+                        } else {
+                          type = child.type
+                            ? child.type.toString()
+                            : extractParameter(int);
+                        }
+                        return {
+                          name: child.name,
+                          optional: child.flags.isOptional,
+                          readonly: child.flags.isReadonly,
+                          type,
+                          default:
+                            (child.defaultValue
+                              ? child.defaultValue.replace(/^'|'$/g, '')
+                              : undefined) ?? getDefaultValue(child),
+                          description: (
+                            sig?.comment?.summary || child.comment?.summary
+                          )
+                            ?.map((s) => s.text || '')
+                            .join(' '),
+                          deprecated:
+                            getDeprecatedText(sig) || getDeprecatedText(child)
+                        };
+                      })
                 });
-                typesMap[int.name] =
-                  int.comment.blockTags
-                    ?.find((tag) => tag.tag === '@customPath')
-                    ?.content?.map((s) => s.text || '')
-                    .join(' ') ?? name.replace('cps-', '');
+                typesMap[int.name] = name.replace('cps-', '');
               });
 
               if (doc[name]?.interfaces) {
@@ -497,11 +548,7 @@ async function main() {
                     t.comment.summary &&
                     t.comment.summary.map((s) => s.text || '').join(' ')
                 });
-                typesMap[t.name] =
-                  t.comment.blockTags
-                    ?.find((tag) => tag.tag === '@customPath')
-                    ?.content?.map((s) => s.text || '')
-                    .join(' ') ?? name.replace('cps-', '');
+                typesMap[t.name] = name.replace('cps-', '');
               });
 
               if (doc[name]?.types) {
@@ -531,11 +578,7 @@ async function main() {
                     value: value.type.value
                   }))
                 });
-                typesMap[e.name] =
-                  e.comment.blockTags
-                    ?.find((tag) => tag.tag === '@customPath')
-                    ?.content?.map((s) => s.text || '')
-                    .join(' ') ?? name.replace('cps-', '');
+                typesMap[e.name] = name.replace('cps-', '');
               });
 
               if (doc[name]?.enums) {
@@ -545,6 +588,111 @@ async function main() {
                 };
               } else {
                 doc[name].enums = enums;
+              }
+            }
+
+            if (isProcessable(module_classes_group)) {
+              const classes = {
+                description: staticMessages.classes,
+                values: []
+              };
+
+              module_classes_group.children
+                .filter((cls) =>
+                  cls.comment?.blockTags?.some(
+                    (tag) =>
+                      tag.tag === '@group' &&
+                      tag.content?.some((c) => c.text?.trim() === 'Classes')
+                  )
+                )
+                .forEach((cls) => {
+                  const classEntry = {
+                    name: cls.name,
+                    description:
+                      cls.comment &&
+                      cls.comment.summary.map((s) => s.text || '').join(' ')
+                  };
+
+                  const cls_props_group = cls.groups?.find(
+                    (g) => g.title === 'Props'
+                  );
+                  if (isProcessable(cls_props_group)) {
+                    classEntry.props = cls_props_group.children.map((prop) => ({
+                      name: prop.name,
+                      optional: prop.flags.isOptional,
+                      readonly: prop.flags.isReadonly,
+                      type: prop.type ? prop.type.toString() : null,
+                      default:
+                        (prop.defaultValue
+                          ? prop.defaultValue.replace(/^'|'$/g, '')
+                          : undefined) ?? getDefaultValue(prop),
+                      description:
+                        prop.comment &&
+                        prop.comment.summary.map((s) => s.text || '').join(' '),
+                      deprecated: getDeprecatedText(prop)
+                    }));
+                  }
+
+                  const cls_methods_group = cls.groups?.find(
+                    (g) => g.title === 'Method'
+                  );
+                  if (isProcessable(cls_methods_group)) {
+                    classEntry.methods = cls_methods_group.children.map(
+                      (method) => {
+                        const signature = method.getAllSignatures()[0];
+                        return {
+                          name: signature.name,
+                          parameters: signature.parameters.map((param) => ({
+                            name: param.name,
+                            type: param.type.toString(),
+                            description:
+                              param.comment &&
+                              param.comment.summary
+                                .map((s) => s.text || '')
+                                .join(' ')
+                          })),
+                          returnType: signature.type.toString(),
+                          description:
+                            signature.comment &&
+                            signature.comment.summary
+                              .map((s) => s.text || '')
+                              .join(' ')
+                        };
+                      }
+                    );
+                  }
+
+                  const cls_events_group = cls.groups?.find(
+                    (g) => g.title === 'Events'
+                  );
+                  if (isProcessable(cls_events_group)) {
+                    classEntry.events = cls_events_group.children.map(
+                      (event) => ({
+                        name: event.name,
+                        type: event.type ? event.type.toString() : null,
+                        description:
+                          event.comment &&
+                          event.comment.summary
+                            .map((s) => s.text || '')
+                            .join(' '),
+                        deprecated: getDeprecatedText(event)
+                      })
+                    );
+                  }
+
+                  classes.values.push(classEntry);
+                  typesMap[cls.name] = name.replace('cps-', '');
+                });
+
+              if (classes.values.length > 0) {
+                if (doc[name]?.classes) {
+                  doc[name].classes = {
+                    ...doc[name].classes,
+                    values: [...doc[name].classes.values, ...classes.values]
+                  };
+                } else {
+                  doc[name].classes = classes;
+                }
               }
             }
           }

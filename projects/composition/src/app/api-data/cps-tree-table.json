@@ -766,7 +766,7 @@
         }
     },
     "types": {
-        "description": "Defines the custom types used by the module.",
+        "description": "Defines the custom types used by the component or service.",
         "values": [
             {
                 "name": "CpsTreeTableSize",

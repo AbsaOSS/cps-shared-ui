@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsConfirmationComponent } from './cps-confirmation.component';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
-import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
+import {
+  CpsDialogConfig,
+  CPS_DIALOG_CONFIG
+} from '../../../utils/cps-dialog-config';
 
 describe('CpsConfirmationComponent', () => {
   let component: CpsConfirmationComponent;
@@ -17,7 +20,7 @@ describe('CpsConfirmationComponent', () => {
       imports: [CpsConfirmationComponent],
       providers: [
         { provide: CpsDialogRef, useValue: mockDialogRef },
-        { provide: CpsDialogConfig, useValue: mockDialogConfig }
+        { provide: CPS_DIALOG_CONFIG, useValue: mockDialogConfig }
       ]
     });
 

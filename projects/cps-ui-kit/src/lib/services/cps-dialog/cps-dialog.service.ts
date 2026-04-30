@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { CpsDialogRef } from './utils/cps-dialog-ref';
-import { CpsDialogConfig } from './utils/cps-dialog-config';
+import { CpsDialogConfig, CPS_DIALOG_CONFIG } from './utils/cps-dialog-config';
 import { CpsDialogComponent } from './internal/components/cps-dialog/cps-dialog.component';
 import { CpsConfirmationComponent } from './internal/components/cps-confirmation/cps-confirmation.component';
 
@@ -112,7 +112,7 @@ export class CpsDialogService implements OnDestroy {
     const componentRef = createComponent(CpsDialogComponent, {
       environmentInjector: createEnvironmentInjector(
         [
-          { provide: CpsDialogConfig, useValue: config },
+          { provide: CPS_DIALOG_CONFIG, useValue: config },
           { provide: CpsDialogRef, useValue: dialogRef }
         ],
         this._environmentInjector

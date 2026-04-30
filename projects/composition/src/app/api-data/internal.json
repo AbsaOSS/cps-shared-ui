@@ -222,7 +222,7 @@
                         "description": "An array of objects to display as the available options."
                     },
                     {
-                        "name": "_value",
+                        "name": "value",
                         "optional": false,
                         "readonly": false,
                         "type": "any",
