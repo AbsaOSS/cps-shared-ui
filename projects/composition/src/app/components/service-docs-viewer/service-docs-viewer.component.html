@@ -130,13 +130,12 @@
             <div id="{{ interface.name }}">
               <h3>{{ interface.name }}</h3>
               <p>{{ interface.description }}</p>
-              @let hasDefaults =
-                (interface.props ?? []).some((p) => p.default != null);
+              @let interfaceHasDefaults = hasDefaults(interface.props);
               <table class="data-table">
                 <thead>
                   <th>Name</th>
                   <th>Type</th>
-                  @if (hasDefaults) {
+                  @if (interfaceHasDefaults) {
                     <th>Default value</th>
                   }
                   <th>Description</th>
@@ -158,7 +157,7 @@
                           <span>{{ prop.type }}</span>
                         }
                       </td>
-                      @if (hasDefaults) {
+                      @if (interfaceHasDefaults) {
                         <td class="highlighted-text">{{ prop.default }}</td>
                       }
                       <td>{{ prop.description }}</td>
@@ -185,12 +184,12 @@
               <p>{{ cls.description }}</p>
               @if (cls.props && cls.props.length > 0) {
                 <h4>Properties</h4>
-                @let hasDefaults = cls.props.some((p) => p.default != null);
+                @let clsHasDefaults = hasDefaults(cls.props);
                 <table class="data-table">
                   <thead>
                     <th>Name</th>
                     <th>Type</th>
-                    @if (hasDefaults) {
+                    @if (clsHasDefaults) {
                       <th>Default value</th>
                     }
                     <th>Description</th>
@@ -212,7 +211,7 @@
                             <span>{{ prop.type }}</span>
                           }
                         </td>
-                        @if (hasDefaults) {
+                        @if (clsHasDefaults) {
                           <td class="highlighted-text">{{ prop.default }}</td>
                         }
                         <td>{{ prop.description }}</td>
