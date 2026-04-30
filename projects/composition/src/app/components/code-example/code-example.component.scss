@@ -12,7 +12,6 @@
   &__card {
     border: 1px solid var(--cps-color-line);
     border-radius: 8px;
-    overflow: hidden;
   }
 
   // We might want to replace with cps-tab-group
@@ -20,6 +19,8 @@
     display: flex;
     border-bottom: 1px solid var(--cps-color-line);
     background-color: var(--cps-surface-elevated);
+    border-radius: 7px 7px 0 0;
+    padding-left: 0.25rem; // prevent focus ring from being clipped on the left
   }
 
   &__tab {
@@ -47,25 +48,27 @@
     }
 
     &:focus-visible {
-      @include focus-ring(0);
+      @include focus-ring();
     }
   }
 
   &__preview {
     padding: 1.5rem;
     background-color: var(--cps-background-color);
+    border-radius: 0 0 7px 7px;
 
     &:focus-visible {
-      @include focus-ring(0);
+      @include focus-ring();
     }
   }
 
   &__code {
     position: relative;
     background-color: var(--cps-surface-muted);
+    border-radius: 0 0 7px 7px;
 
     &:focus-visible {
-      @include focus-ring(0);
+      @include focus-ring();
     }
 
     pre {
