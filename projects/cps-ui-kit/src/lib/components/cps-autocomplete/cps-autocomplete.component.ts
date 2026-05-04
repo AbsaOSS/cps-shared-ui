@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -12,6 +12,7 @@ import {
   OnInit,
   Optional,
   Output,
+  PLATFORM_ID,
   Self,
   SimpleChanges,
   ViewChild
@@ -22,7 +23,13 @@ import {
   NgControl,
   Validators
 } from '@angular/forms';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import {
+  Subject,
+  debounceTime,
+  distinctUntilChanged,
+  fromEvent,
+  takeUntil
+} from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
   generateUniqueId,
@@ -445,7 +452,16 @@ export class CpsAutocompleteComponent
     'cps-autocomplete-option'
   );
 
-  private _rootFontSizePx = 16;
+  private _rootFontSizePxCache: number | null = null;
+  private get _rootFontSizePx(): number {
+    if (!isPlatformBrowser(this.platformId)) return 16;
+    if (this._rootFontSizePxCache == null) {
+      this._rootFontSizePxCache = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
+      );
+    }
+    return this._rootFontSizePxCache;
+  }
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
@@ -456,6 +472,7 @@ export class CpsAutocompleteComponent
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: object,
     private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
@@ -473,9 +490,6 @@ export class CpsAutocompleteComponent
   }
 
   ngOnInit() {
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this.document.documentElement).fontSize || '16'
-    );
     this.virtualScrollItemSizePx =
       this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
@@ -505,6 +519,14 @@ export class CpsAutocompleteComponent
         this.inputTextDebounced = this.inputText;
         this.inputChanged.emit(val);
       });
+
+    if (isPlatformBrowser(this.platformId)) {
+      fromEvent(this.document.defaultView as Window, 'resize')
+        .pipe(takeUntil(this._destroy$))
+        .subscribe(() => {
+          this._rootFontSizePxCache = null;
+        });
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

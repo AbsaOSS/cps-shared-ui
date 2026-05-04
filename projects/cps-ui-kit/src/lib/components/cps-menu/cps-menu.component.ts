@@ -20,7 +20,6 @@ import {
   NgZone,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   PLATFORM_ID,
   Renderer2,
@@ -121,9 +120,7 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class CpsMenuComponent
-  implements AfterViewInit, OnDestroy, OnChanges, OnInit
-{
+export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   /**
    * Header title of the menu.
    * @group Props
@@ -244,7 +241,17 @@ export class CpsMenuComponent
 
   hideReason: CpsMenuHideReason | undefined;
 
-  private _rootFontSizePx = 16;
+  private _rootFontSizePxCache: number | null = null;
+  private get _rootFontSizePx(): number {
+    if (!isPlatformBrowser(this.platformId)) return 16;
+    if (this._rootFontSizePxCache == null) {
+      this._rootFontSizePxCache = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
+      );
+    }
+    return this._rootFontSizePxCache;
+  }
+
   private window: Window;
 
   // eslint-disable-next-line no-useless-constructor
@@ -266,12 +273,6 @@ export class CpsMenuComponent
         });
       }
     });
-  }
-
-  ngOnInit(): void {
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this.document.documentElement).fontSize || '16'
-    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -799,6 +800,7 @@ export class CpsMenuComponent
   }
 
   onWindowResize() {
+    this._rootFontSizePxCache = null;
     if (this.overlayVisible && !DomHandler.isTouchDevice()) {
       this.hide(CpsMenuHideReason.RESIZE);
     }

@@ -5,11 +5,11 @@ import {
   inject,
   input,
   OnDestroy,
-  OnInit,
+  PLATFORM_ID,
   SecurityContext
 } from '@angular/core';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { generateUniqueId } from '../../utils/internal/accessibility-utils';
 
@@ -42,7 +42,7 @@ export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
     '(window:resize)': 'onPageResize()'
   }
 })
-export class CpsTooltipDirective implements OnInit, OnDestroy {
+export class CpsTooltipDirective implements OnDestroy {
   /**
    * Tooltip text or html to show.
    * @group Props
@@ -119,21 +119,26 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   private _ariaTarget?: HTMLElement;
 
   private readonly _tooltipId = generateUniqueId('cps-tooltip');
-  private _rootFontSizePx = 16;
+  private _rootFontSizePxCache: number | null = null;
+  private get _rootFontSizePx(): number {
+    if (!isPlatformBrowser(this._platformId)) return 16;
+    if (this._rootFontSizePxCache == null) {
+      this._rootFontSizePxCache = parseFloat(
+        getComputedStyle(this._document.documentElement).fontSize || '16'
+      );
+    }
+    return this._rootFontSizePxCache;
+  }
+
   private window: Window;
 
   private _elementRef = inject(ElementRef<HTMLElement>);
   private _document = inject(DOCUMENT);
+  private _platformId = inject(PLATFORM_ID);
   private _domSanitizer = inject(DomSanitizer);
 
   constructor() {
     this.window = this._document.defaultView as Window;
-  }
-
-  ngOnInit(): void {
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this._document.documentElement).fontSize || '16'
-    );
   }
 
   ngOnDestroy(): void {
@@ -221,6 +226,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   onPageResize(): void {
+    this._rootFontSizePxCache = null;
     this._destroyTooltip(true);
   }
 

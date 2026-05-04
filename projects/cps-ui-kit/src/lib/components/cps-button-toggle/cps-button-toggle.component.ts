@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -6,13 +6,16 @@ import {
   Inject,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Optional,
   Output,
+  PLATFORM_ID,
   Renderer2,
   Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Subject, fromEvent, takeUntil } from 'rxjs';
 import { isEqual } from 'lodash-es';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -53,7 +56,7 @@ export type CpsButtonToggleOption = {
   styleUrls: ['./cps-button-toggle.component.scss']
 })
 export class CpsButtonToggleComponent
-  implements ControlValueAccessor, OnInit, OnChanges
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * Label of the button toggle component.
@@ -157,11 +160,22 @@ export class CpsButtonToggleComponent
 
   largestButtonWidthRem = 0;
 
-  private _rootFontSizePx = 16;
+  private _rootFontSizePxCache: number | null = null;
+  private _destroy$ = new Subject<void>();
+  private get _rootFontSizePx(): number {
+    if (!isPlatformBrowser(this.platformId)) return 16;
+    if (this._rootFontSizePxCache == null) {
+      this._rootFontSizePxCache = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
+      );
+    }
+    return this._rootFontSizePxCache;
+  }
 
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: object,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef
   ) {
@@ -174,9 +188,13 @@ export class CpsButtonToggleComponent
     if (this.multiple && !this._value) {
       this._value = [];
     }
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this.document.documentElement).fontSize || '16'
-    );
+    if (isPlatformBrowser(this.platformId)) {
+      fromEvent(this.document.defaultView as Window, 'resize')
+        .pipe(takeUntil(this._destroy$))
+        .subscribe(() => {
+          this._rootFontSizePxCache = null;
+        });
+    }
     if (this.document?.fonts?.ready) {
       this.document.fonts.ready.then(() => {
         this._setEqualWidths();
@@ -209,6 +227,11 @@ export class CpsButtonToggleComponent
   onTouched = () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(disabled: boolean) {}
+
+  ngOnDestroy() {
+    this._destroy$.next();
+    this._destroy$.complete();
+  }
 
   registerOnChange(fn: any) {
     this.onChange = fn;
