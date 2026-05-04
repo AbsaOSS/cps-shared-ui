@@ -123,6 +123,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   documentDragEndListener!: VoidListener | null;
 
+  private _windowResizeCacheListener: VoidListener | null = null;
+
   private _focusTrapListener: VoidListener | null = null;
 
   private _previouslyFocusedElement: HTMLElement | null = null;
@@ -133,6 +135,17 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   _resizeStarted = new EventEmitter<MouseEvent>();
   _resizeEnded = new EventEmitter<MouseEvent>();
   _maximizedStateChanged = new EventEmitter<boolean>();
+
+  private _rootFontSizePxCache: number | null = null;
+  private get _rootFontSizePx(): number {
+    if (!isPlatformBrowser(this.platformId)) return 16;
+    if (this._rootFontSizePxCache == null) {
+      this._rootFontSizePxCache = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
+      );
+    }
+    return this._rootFontSizePxCache;
+  }
 
   get ariaLabel(): string | null {
     if (this.config.ariaLabelledBy) return null;
@@ -198,6 +211,16 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const win = this.document.defaultView as Window;
+      this._windowResizeCacheListener = this.renderer.listen(
+        win,
+        'resize',
+        () => {
+          this._rootFontSizePxCache = null;
+        }
+      );
+    }
     if (
       !this.config.ariaLabel?.trim() &&
       !this.config.ariaLabelledBy?.trim() &&
@@ -220,6 +243,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this._windowResizeCacheListener?.();
+    this._windowResizeCacheListener = null;
     this.onContainerDestroy();
     this.componentRef?.destroy();
   }
@@ -870,10 +895,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       this.maskClickListener();
       this.maskClickListener = null;
     }
-  }
-
-  private get _rootFontSizePx(): number {
-    return parseFloat(getComputedStyle(this.document.documentElement).fontSize);
   }
 
   private _pxToRem(px: number): string {
