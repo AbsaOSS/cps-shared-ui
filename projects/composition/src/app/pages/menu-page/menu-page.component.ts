@@ -116,17 +116,7 @@ export class MenuPageComponent {
     }
   }
 
-  onHoverMenuMouseLeave(event: MouseEvent, menu: CpsMenuComponent) {
-    const rel = event.relatedTarget as Node;
-    if (
-      !menu.container?.contains(rel) &&
-      !(menu.target as HTMLElement)?.contains(rel)
-    ) {
-      menu.hide();
-    }
-  }
-
-  onHoverMenuFocusOut(event: FocusEvent, menu: CpsMenuComponent) {
+  onMenuLeave(event: MouseEvent | FocusEvent, menu: CpsMenuComponent) {
     const rel = event.relatedTarget as Node;
     if (
       !menu.container?.contains(rel) &&

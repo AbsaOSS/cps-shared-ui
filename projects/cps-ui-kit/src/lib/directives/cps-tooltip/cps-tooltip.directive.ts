@@ -443,7 +443,15 @@ export class CpsTooltipDirective implements OnDestroy {
     let node = walker.nextNode();
     while (node) {
       const child = node as HTMLElement;
-      if (child.tabIndex >= 0 && !(child as HTMLInputElement).disabled) {
+      if (
+        child.tabIndex >= 0 &&
+        !(child as HTMLInputElement).disabled &&
+        !!(
+          child.offsetWidth ||
+          child.offsetHeight ||
+          child.getClientRects().length
+        )
+      ) {
         result.push(child);
       }
       node = walker.nextNode();
@@ -453,20 +461,28 @@ export class CpsTooltipDirective implements OnDestroy {
 
   private _getNextFocusableAfterTrigger(): HTMLElement | null {
     const all: HTMLElement[] = [];
+    const popup = this._popup;
     const walker = this._document.createTreeWalker(
       this._document.body,
-      NodeFilter.SHOW_ELEMENT
+      NodeFilter.SHOW_ELEMENT,
+      {
+        acceptNode(node: Node): number {
+          if (node === popup) return NodeFilter.FILTER_REJECT;
+          const el = node as HTMLElement;
+          if (
+            el.tabIndex >= 0 &&
+            !(el as HTMLInputElement).disabled &&
+            !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
+          ) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_SKIP;
+        }
+      }
     );
     let node = walker.nextNode();
     while (node) {
-      const el = node as HTMLElement;
-      if (
-        el.tabIndex >= 0 &&
-        !(el as HTMLInputElement).disabled &&
-        !this._popup?.contains(el)
-      ) {
-        all.push(el);
-      }
+      all.push(node as HTMLElement);
       node = walker.nextNode();
     }
     const trigger = this._elementRef.nativeElement;

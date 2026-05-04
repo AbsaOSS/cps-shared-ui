@@ -63,7 +63,10 @@
                 (click)="onItemClick($event, item)"
                 (keydown)="onItemKeydown($event, item)"
                 [routerLink]="item.url"
-                [target]="item.target">
+                [target]="item.target"
+                [attr.rel]="
+                  item.target === '_blank' ? 'noopener noreferrer' : null
+                ">
                 <ng-container
                   *ngTemplateOutlet="
                     itemTemplate;
@@ -84,7 +87,10 @@
                 (click)="onItemClick($event, item)"
                 (keydown)="onItemKeydown($event, item)"
                 [href]="item.url"
-                [attr.target]="item.target">
+                [attr.target]="item.target"
+                [attr.rel]="
+                  item.target === '_blank' ? 'noopener noreferrer' : null
+                ">
                 <ng-container
                   *ngTemplateOutlet="
                     itemTemplate;

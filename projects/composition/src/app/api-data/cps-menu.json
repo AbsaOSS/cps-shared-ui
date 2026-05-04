@@ -11,7 +11,7 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "Header title of the menu."
+                        "description": "Header title of the menu.\nOnly applies when items are provided."
                     },
                     {
                         "name": "ariaLabel",
@@ -19,7 +19,7 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "Aria label for the menu component, used for accessibility, it takes precedence over header."
+                        "description": "Aria label for the menu component, used for accessibility, it takes precedence over header.\nOnly applies when items are provided."
                     },
                     {
                         "name": "items",

@@ -74,14 +74,14 @@
       #hoverMenu
       [items]="items"
       [focusOnShow]="false"
-      (containerMouseLeave)="onHoverMenuMouseLeave($event, hoverMenu)">
+      (containerMouseLeave)="onMenuLeave($event, hoverMenu)">
     </cps-menu>
     <cps-button
       label="Menu that opens on hover"
       (mouseenter)="hoverMenu.show($event)"
-      (mouseleave)="onHoverMenuMouseLeave($event, hoverMenu)"
+      (mouseleave)="onMenuLeave($event, hoverMenu)"
       (focusin)="hoverMenu.show(null, $event.target)"
-      (focusout)="onHoverMenuFocusOut($event, hoverMenu)">
+      (focusout)="onMenuLeave($event, hoverMenu)">
     </cps-button>
   </div>
 </app-component-docs-viewer>

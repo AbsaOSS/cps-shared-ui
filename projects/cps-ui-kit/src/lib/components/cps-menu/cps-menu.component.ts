@@ -123,12 +123,14 @@ export type CpsMenuAttachPosition = 'tr' | 'br' | 'tl' | 'bl' | 'default';
 export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   /**
    * Header title of the menu.
+   * Only applies when items are provided.
    * @group Props
    */
   @Input() header = '';
 
   /**
    * Aria label for the menu component, used for accessibility, it takes precedence over header.
+   * Only applies when items are provided.
    * @group Props
    */
   @Input() ariaLabel = '';
@@ -769,9 +771,32 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   private _focusableExcludingContainer(): HTMLElement[] {
-    return this._focusableIn(this.document.body).filter(
-      (el) => !this.container?.contains(el)
+    const result: HTMLElement[] = [];
+    const container = this.container;
+    const walker = this.document.createTreeWalker(
+      this.document.body,
+      NodeFilter.SHOW_ELEMENT,
+      {
+        acceptNode(node: Node): number {
+          if (node === container) return NodeFilter.FILTER_REJECT;
+          const el = node as HTMLElement;
+          if (
+            el.tabIndex >= 0 &&
+            !(el as HTMLInputElement).disabled &&
+            !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
+          ) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_SKIP;
+        }
+      }
     );
+    let node = walker.nextNode();
+    while (node) {
+      result.push(node as HTMLElement);
+      node = walker.nextNode();
+    }
+    return result;
   }
 
   private _focusableIn(el: HTMLElement): HTMLElement[] {
@@ -780,7 +805,15 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     let node = walker.nextNode();
     while (node) {
       const child = node as HTMLElement;
-      if (child.tabIndex >= 0 && !(child as HTMLInputElement).disabled) {
+      if (
+        child.tabIndex >= 0 &&
+        !(child as HTMLInputElement).disabled &&
+        !!(
+          child.offsetWidth ||
+          child.offsetHeight ||
+          child.getClientRects().length
+        )
+      ) {
         result.push(child);
       }
       node = walker.nextNode();
