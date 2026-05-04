@@ -53,4 +53,8 @@ export class ServiceDocsViewerComponent extends ViewerComponent {
       )
       .join(', ');
   }
+
+  hasDefaults(props?: { default?: string }[]): boolean {
+    return (props ?? []).some((p) => p.default != null);
+  }
 }

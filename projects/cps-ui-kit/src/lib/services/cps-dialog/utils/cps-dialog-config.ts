@@ -1,5 +1,9 @@
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 
+/**
+ * Configuration for the dialog service.
+ * @group Interface
+ */
 export class CpsDialogConfig<T = any> {
   /**
    * An object to pass to the component loaded inside the Dialog.

@@ -110,7 +110,7 @@
                         "description": "Position of infoTooltip, it can be 'top', 'bottom', 'left' or 'right'."
                     },
                     {
-                        "name": "_value",
+                        "name": "value",
                         "optional": false,
                         "readonly": false,
                         "type": "any",
@@ -137,7 +137,7 @@
         }
     },
     "types": {
-        "description": "Defines the custom types used by the module.",
+        "description": "Defines the custom types used by the component or service.",
         "values": [
             {
                 "name": "CpsButtonToggleOption",

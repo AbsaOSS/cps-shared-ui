@@ -60,3 +60,40 @@ export interface EnumsAPI {
   description: string;
   values: EnumAPI[];
 }
+
+export interface ClassPropAPI {
+  name: string;
+  optional: boolean;
+  readonly: boolean;
+  type: string;
+  default?: string;
+  description?: string;
+  deprecated?: string;
+}
+
+export interface ClassMethodAPI {
+  name: string;
+  parameters: { name: string; type: string; description?: string }[];
+  returnType: string;
+  description?: string;
+}
+
+export interface ClassEventAPI {
+  name: string;
+  type: string;
+  description?: string;
+  deprecated?: string;
+}
+
+export interface ClassAPI {
+  name: string;
+  description?: string;
+  props?: ClassPropAPI[];
+  methods?: ClassMethodAPI[];
+  events?: ClassEventAPI[];
+}
+
+export interface ClassesAPI {
+  description: string;
+  values: ClassAPI[];
+}
