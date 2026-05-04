@@ -1,6 +1,10 @@
+@use '../../../../../../../styles/mixins' as *;
+
 $cps-overlay-background: rgba(0, 0, 0, 0.2);
 $header-drag-hover-background: var(--cps-color-highlight-hover);
 $header-drag-active-background: var(--cps-color-highlight-active);
+$resizable-handle-hover-background: var(--cps-color-highlight-hover);
+$resizable-handle-active-background: var(--cps-color-highlight-active);
 $animation-duration: 150ms;
 
 .cps-dialog-mask {
@@ -43,7 +47,7 @@ $animation-duration: 150ms;
 }
 
 .cps-dialog-blurred-overlay {
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(0.375rem);
 }
 
 @keyframes cps-dialog-overlay-enter-animation {
@@ -54,6 +58,7 @@ $animation-duration: 150ms;
     background-color: $cps-overlay-background;
   }
 }
+
 @keyframes cps-dialog-overlay-leave-animation {
   from {
     background-color: $cps-overlay-background;
@@ -66,21 +71,22 @@ $animation-duration: 150ms;
 @keyframes cps-dialog-blurred-overlay-enter-animation {
   from {
     background-color: transparent;
-    backdrop-filter: blur(0px);
+    backdrop-filter: blur(0);
   }
   to {
     background-color: $cps-overlay-background;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(0.375rem);
   }
 }
+
 @keyframes cps-dialog-blurred-overlay-leave-animation {
   from {
     background-color: $cps-overlay-background;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(0.375rem);
   }
   to {
     background-color: transparent;
-    backdrop-filter: blur(0px);
+    backdrop-filter: blur(0);
   }
 }
 
@@ -91,12 +97,16 @@ $animation-duration: 150ms;
   pointer-events: auto;
   transform: scale(1);
   position: relative;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
   border: 0 none;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 1rem;
   font-weight: normal;
+
+  &:focus-visible {
+    @include focus-ring(0.0625rem, 0.125rem, inherit);
+  }
 }
 
 .cps-dialog {
@@ -106,23 +116,23 @@ $animation-duration: 150ms;
     background: #ffffff;
     color: var(--cps-color-text-dark);
     padding: 1rem;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
+    border-top-right-radius: 0.25rem;
+    border-top-left-radius: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
     &.cps-dialog-header-left-bordered {
-      border-left: 4px solid var(--cps-color-surprise);
+      border-left: 0.25rem solid var(--cps-color-surprise);
     }
     &.cps-dialog-header-bottom-bordered {
-      border-bottom: 1px solid var(--cps-color-line-mid);
+      border-bottom: 0.0625rem solid var(--cps-color-line-mid);
     }
     .cps-dialog-header-left {
       display: flex;
       align-items: center;
       .cps-dialog-header-icon {
-        margin-right: 8px;
+        margin-right: 0.5rem;
         display: flex;
       }
       .cps-dialog-header-title {
@@ -131,11 +141,11 @@ $animation-duration: 150ms;
         font-size: 1.25rem;
       }
       .cps-dialog-header-info-circle {
-        margin-left: 8px;
+        margin-left: 0.5rem;
         cursor: default;
         display: flex;
         cps-info-circle {
-          margin-top: 2px;
+          margin-top: 0.125rem;
         }
       }
     }
@@ -149,8 +159,8 @@ $animation-duration: 150ms;
 }
 
 .cps-dialog .cps-dialog-content:last-of-type {
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
 }
 
 .cps-dialog-content {
@@ -165,8 +175,17 @@ $animation-duration: 150ms;
 .cps-dialog-draggable {
   .cps-dialog-header {
     cursor: move;
+    overflow: visible;
     &:hover {
       background-color: $header-drag-hover-background;
+    }
+    &:focus-visible {
+      background-color: $header-drag-hover-background;
+      @include focus-ring(0.125rem, 0.25rem, inherit);
+    }
+    &.cps-dialog-header-moving,
+    &.cps-dialog-header-moving:focus-visible {
+      background-color: $header-drag-active-background;
     }
     .cps-dialog-header-left {
       .cps-dialog-header-title {
@@ -190,7 +209,7 @@ $animation-duration: 150ms;
 .cps-dialog-bottom-left .cps-dialog,
 .cps-dialog-bottom-right .cps-dialog {
   margin: 0.75rem;
-  transform: translate3d(0px, 0px, 0px);
+  transform: translate3d(0, 0, 0);
 }
 
 .cps-dialog-maximized {
@@ -199,8 +218,8 @@ $animation-duration: 150ms;
   transform: none;
   width: 100vw !important;
   height: 100vh !important;
-  top: 0px !important;
-  left: 0px !important;
+  top: 0 !important;
+  left: 0 !important;
   max-height: 100%;
   height: 100%;
 }
@@ -248,22 +267,46 @@ $animation-duration: 150ms;
   position: absolute;
   display: block;
   cursor: nwse-resize;
-  width: 12px;
-  height: 12px;
+  width: 1.5rem;
+  height: 1.5rem;
   right: 0;
   bottom: 0;
-  overflow: hidden;
-  &::after {
-    content: '';
+  overflow: visible;
+  &:focus-visible {
+    background-color: $resizable-handle-hover-background;
+  }
+  &.cps-dialog-resizable-handle-resizing,
+  &.cps-dialog-resizable-handle-resizing:focus-visible {
+    background-color: $resizable-handle-active-background;
+  }
+  @include focus-ring(0.125rem, 0.25rem, 0);
+  position: absolute;
+  &:not(:focus-visible) {
+    &::before,
+    &::after {
+      display: none;
+    }
+  }
+  .cps-dialog-resizable-handle-grip {
     position: absolute;
+    inset: 0;
+    overflow: hidden;
     display: block;
-    width: 40px;
-    height: 0;
-    box-shadow: 0 0px 0 1px var(--cps-color-calm),
-      0 7px 0 1px var(--cps-color-calm), 0 14px 0 1px var(--cps-color-calm);
-    transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
-    top: 50%;
-    left: 50%;
+    &::after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 3.125rem;
+      height: 0;
+      box-shadow:
+        0 0 0 0.0625rem var(--cps-color-calm),
+        0 0.4375rem 0 0.0625rem var(--cps-color-calm),
+        0 0.875rem 0 0.0625rem var(--cps-color-calm),
+        0 1.3125rem 0 0.0625rem var(--cps-color-calm);
+      transform: translate(-50%, -50%) rotate(-45deg) scale(0.5);
+      top: 65%;
+      left: 65%;
+    }
   }
 }
 

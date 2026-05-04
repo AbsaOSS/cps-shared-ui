@@ -124,49 +124,71 @@
                         "optional": true,
                         "readonly": false,
                         "type": "string",
-                        "description": "Identifies the element (or elements) that labels the element it is applied to."
+                        "description": "Identifies the element that labels the element it is applied to. Takes precedence over ariaLabel."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Defines a string value that labels the dialog for assistive technologies when no visible title or ariaLabelledBy is present."
+                    },
+                    {
+                        "name": "ariaDescribedBy",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string",
+                        "description": "Identifies the element that describes the dialog content for assistive technologies."
+                    },
+                    {
+                        "name": "autoFocus",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "string | boolean",
+                        "default": "true",
+                        "description": "Defines which element receives focus when the dialog opens.\n- 'dialog' - focuses the dialog container\n- 'first-tabbable' / true - focuses the first tabbable element\n- string (a CSS selector) - focuses the first matching element\n- false - disables auto-focus"
                     },
                     {
                         "name": "width",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
-                        "description": "Width of the dialog."
+                        "type": "string | number",
+                        "description": "Width of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "height",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
-                        "description": "Height of the dialog."
+                        "type": "string | number",
+                        "description": "Height of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "minWidth",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
-                        "description": "Min-width of the dialog."
+                        "type": "string | number",
+                        "description": "Min-width of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "minHeight",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
-                        "description": "Min-height of the dialog."
+                        "type": "string | number",
+                        "description": "Min-height of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "maxWidth",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
-                        "description": "Max-width of the dialog."
+                        "type": "string | number",
+                        "description": "Max-width of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "maxHeight",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
-                        "description": "Max-height of the dialog."
+                        "type": "string | number",
+                        "description": "Max-height of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "closeOnEscape",
@@ -284,15 +306,15 @@
                         "name": "minX",
                         "optional": true,
                         "readonly": false,
-                        "type": "number",
-                        "description": "Minimum value for the left coordinate of dialog in dragging."
+                        "type": "string | number",
+                        "description": "Minimum value for the left coordinate of dialog in dragging, a number denoting pixels or a string."
                     },
                     {
                         "name": "minY",
                         "optional": true,
                         "readonly": false,
-                        "type": "number",
-                        "description": "Minimum value for the top coordinate of dialog in dragging."
+                        "type": "string | number",
+                        "description": "Minimum value for the top coordinate of dialog in dragging, a number denoting pixels or a string."
                     },
                     {
                         "name": "maximizable",
@@ -316,6 +338,16 @@
                         "description": "Position of the dialog, options are \"center\", \"top\", \"bottom\", \"left\", \"right\", \"top-left\", \"top-right\", \"bottom-left\" or \"bottom-right\"."
                     }
                 ]
+            }
+        ]
+    },
+    "types": {
+        "description": "Defines the custom types used by the component or service.",
+        "values": [
+            {
+                "name": "CpsDialogAutoFocusTarget",
+                "value": "\"dialog\" | \"first-tabbable\"",
+                "description": "Defines the auto-focus target when the dialog opens.\n- 'dialog' - focuses the dialog container itself\n- 'first-tabbable' - focuses the first tabbable element inside the dialog"
             }
         ]
     },

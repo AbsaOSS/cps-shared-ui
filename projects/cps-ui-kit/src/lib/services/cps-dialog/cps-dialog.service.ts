@@ -71,8 +71,8 @@ export class CpsDialogService implements OnDestroy {
     if (!config.headerTitle) config.headerTitle = 'Confirm the action';
     if (!config.headerIcon) config.headerIcon = 'warning';
     if (!config.headerIconColor) config.headerIconColor = 'calm';
-    if (!config.minWidth) config.minWidth = '400px';
-    if (!config.maxWidth) config.maxWidth = '600px';
+    if (!config.minWidth) config.minWidth = '25rem';
+    if (!config.maxWidth) config.maxWidth = '37.5rem';
     const dialogRef = this.appendDialogComponentToBody(config);
 
     const instance = this.dialogComponentRefMap.get(dialogRef)?.instance;

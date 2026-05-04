@@ -57,6 +57,7 @@ export class DialogPageComponent {
 
   openBlurredBgDialog() {
     this._dialogService.open(DialogContentComponent, {
+      autoFocus: 'dialog',
       headerTitle: 'Dialog with blurred background',
       blurredBackground: true,
       data: {
@@ -69,7 +70,7 @@ export class DialogPageComponent {
   openDraggableDialog() {
     const dialogRef = this._dialogService.open(DialogContentComponent, {
       headerTitle: 'Draggable dialog',
-      minWidth: '600px',
+      minWidth: '37.5rem',
       showHeaderLeftBorder: false,
       draggable: true,
       data: {
@@ -107,10 +108,10 @@ export class DialogPageComponent {
   openResizableDialog() {
     const dialogRef = this._dialogService.open(DialogContentComponent, {
       headerTitle: 'Resizable dialog',
-      minWidth: '200px',
-      minHeight: '200px',
-      maxWidth: '800px',
-      maxHeight: '800px',
+      minWidth: '12.5rem',
+      minHeight: '12.5rem',
+      maxWidth: '50rem',
+      maxHeight: '50rem',
       showHeaderLeftBorder: false,
       showHeaderBottomBorder: false,
       showCloseBtn: false,

@@ -37,19 +37,19 @@ const components: ComponentEntry[] = [
   //     await page.locator('cps-datepicker .cps-icon').first().click();
   //   }
   // },
-  // {
-  //   route: '/dialog',
-  //   name: 'Dialog',
-  //   selector: '[role="dialog"]',
-  //   setup: async (page) => {
-  //     await page.waitForSelector('.example-content');
-  //     await page
-  //       .locator('.example-content cps-button')
-  //       .filter({ hasText: /dialog/i })
-  //       .first()
-  //       .click();
-  //   }
-  // },
+  {
+    route: '/dialog',
+    name: 'Dialog',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /dialog/i })
+        .first()
+        .click();
+    }
+  },
   // { route: '/divider', name: 'Divider', selector: 'cps-divider' },
   // {
   //   route: '/expansion-panel',

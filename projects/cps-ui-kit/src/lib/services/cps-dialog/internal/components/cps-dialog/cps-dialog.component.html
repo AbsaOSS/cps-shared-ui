@@ -42,18 +42,17 @@
       (@animation.start)="onAnimationStart($event)"
       (@animation.done)="onAnimationEnd($event)"
       role="dialog"
-      [style.width]="config.width"
-      [style.height]="config.height"
-      [style.minWidth]="config.minWidth"
-      [style.minHeight]="config.minHeight"
-      [style.maxWidth]="maximized ? '' : config.maxWidth"
-      [style.maxHeight]="maximized ? '' : config.maxHeight">
-      @if (resizable && !maximized) {
-        <div
-          class="cps-dialog-resizable-handle"
-          style="z-index: 90"
-          (mousedown)="initResize($event)"></div>
-      }
+      [attr.aria-modal]="config.modal !== false ? 'true' : null"
+      tabindex="-1"
+      [attr.aria-labelledby]="config.ariaLabelledBy || null"
+      [attr.aria-label]="ariaLabel"
+      [attr.aria-describedby]="config.ariaDescribedBy || null"
+      [style.width]="cvtSize(config.width)"
+      [style.height]="cvtSize(config.height)"
+      [style.minWidth]="cvtSize(config.minWidth)"
+      [style.minHeight]="cvtSize(config.minHeight)"
+      [style.maxWidth]="maximized ? '' : cvtSize(config.maxWidth)"
+      [style.maxHeight]="maximized ? '' : cvtSize(config.maxHeight)">
       @if (config.showHeader !== false) {
         <div
           #header
@@ -64,7 +63,17 @@
             'cps-dialog-header-bottom-bordered':
               config.showHeaderBottomBorder !== false
           }"
-          (mousedown)="initDrag($event)">
+          [attr.tabindex]="draggable && !maximized ? '0' : null"
+          [attr.role]="draggable && !maximized ? 'button' : null"
+          [attr.aria-label]="draggable && !maximized ? 'Move dialog' : null"
+          [attr.aria-description]="
+            draggable && !maximized
+              ? 'Use arrow keys to move the dialog.'
+              : null
+          "
+          (mousedown)="initDrag($event)"
+          (keydown)="onHeaderKeydown($event)"
+          (keyup)="onHeaderKeyup($event)">
           <div class="cps-dialog-header-left">
             <div class="cps-dialog-header-icon">
               @if (config.headerIcon) {
@@ -94,7 +103,7 @@
                 [icon]="maximized ? 'minimize' : 'maximize'"
                 [ariaLabel]="maximized ? 'Minimize dialog' : 'Maximize dialog'"
                 size="small"
-                width="32"
+                width="2rem"
                 color="graphite"
                 type="borderless"
                 (clicked)="toggleMaximized()">
@@ -106,7 +115,7 @@
                 icon="close-x-2"
                 ariaLabel="Close dialog"
                 size="small"
-                width="32"
+                width="2rem"
                 color="graphite"
                 type="borderless"
                 (clicked)="hide()">
@@ -122,6 +131,21 @@
         [class]="config.contentStyleClass || ''">
         <ng-template cpsDialogContent></ng-template>
       </div>
+      @if (resizable && !maximized) {
+        <div
+          class="cps-dialog-resizable-handle"
+          style="z-index: 90"
+          tabindex="0"
+          role="button"
+          aria-label="Resize dialog. Use arrow keys to resize."
+          (mousedown)="initResize($event)"
+          (keydown)="onResizeHandleKeydown($event)"
+          (keyup)="onResizeHandleKeyup($event)">
+          <span
+            class="cps-dialog-resizable-handle-grip"
+            aria-hidden="true"></span>
+        </div>
+      }
     </div>
   }
 </div>
