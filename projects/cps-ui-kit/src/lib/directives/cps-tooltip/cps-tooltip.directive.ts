@@ -5,8 +5,9 @@ import {
   inject,
   input,
   OnDestroy,
-  PLATFORM_ID,
-  SecurityContext
+  OnInit,
+  SecurityContext,
+  PLATFORM_ID
 } from '@angular/core';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
@@ -42,7 +43,7 @@ export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
     '(window:resize)': 'onPageResize()'
   }
 })
-export class CpsTooltipDirective implements OnDestroy {
+export class CpsTooltipDirective implements OnInit, OnDestroy {
   /**
    * Tooltip text or html to show.
    * @group Props
@@ -119,17 +120,7 @@ export class CpsTooltipDirective implements OnDestroy {
   private _ariaTarget?: HTMLElement;
 
   private readonly _tooltipId = generateUniqueId('cps-tooltip');
-  private _rootFontSizePxCache: number | null = null;
-  private get _rootFontSizePx(): number {
-    if (!isPlatformBrowser(this._platformId)) return 16;
-    if (this._rootFontSizePxCache == null) {
-      this._rootFontSizePxCache = parseFloat(
-        getComputedStyle(this._document.documentElement).fontSize || '16'
-      );
-    }
-    return this._rootFontSizePxCache;
-  }
-
+  private _rootFontSizePx = 16;
   private window: Window;
 
   private _elementRef = inject(ElementRef<HTMLElement>);
@@ -139,6 +130,14 @@ export class CpsTooltipDirective implements OnDestroy {
 
   constructor() {
     this.window = this._document.defaultView as Window;
+  }
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this._platformId)) {
+      this._rootFontSizePx = parseFloat(
+        getComputedStyle(this._document.documentElement).fontSize || '16'
+      );
+    }
   }
 
   ngOnDestroy(): void {
@@ -226,7 +225,6 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   onPageResize(): void {
-    this._rootFontSizePxCache = null;
     this._destroyTooltip(true);
   }
 
