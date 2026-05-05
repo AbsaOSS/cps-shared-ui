@@ -129,6 +129,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   private _keyboardDragging = false;
   private _keyboardResizing = false;
   private _previouslyFocusedElement: HTMLElement | null = null;
+  private _shouldRestoreFocus = false;
 
   _openStateChanged = new EventEmitter<void>();
   _dragStarted = new EventEmitter<MouseEvent | KeyboardEvent>();
@@ -299,6 +300,9 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         break;
 
       case 'void':
+        this._shouldRestoreFocus =
+          this.config.modal !== false ||
+          !!this.container?.contains(this.document.activeElement);
         if (this.wrapper && this.config.modal !== false) {
           if (this.config.blurredBackground) {
             DomHandler.addClass(
@@ -332,7 +336,12 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.container = null;
 
-    this._previouslyFocusedElement?.focus();
+    if (
+      this._shouldRestoreFocus &&
+      this._previouslyFocusedElement?.isConnected
+    ) {
+      this._previouslyFocusedElement.focus();
+    }
     this._previouslyFocusedElement = null;
   }
 
