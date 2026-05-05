@@ -39,14 +39,25 @@ const components: ComponentEntry[] = [
   // },
   {
     route: '/dialog',
-    name: 'Dialog',
+    name: 'Confirmation dialog',
     selector: '[role="dialog"]',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
         .locator('.example-content cps-button')
-        .filter({ hasText: /dialog/i })
-        .first()
+        .filter({ hasText: /Confirmation dialog/i })
+        .click();
+    }
+  },
+  {
+    route: '/dialog',
+    name: 'Regular dialog',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /Regular dialog/i })
         .click();
     }
   },
