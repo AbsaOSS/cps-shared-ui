@@ -434,22 +434,22 @@
                     },
                     {
                         "name": "onDragStart",
-                        "type": "Observable<MouseEvent>",
+                        "type": "Observable<KeyboardEvent | MouseEvent>",
                         "description": "Event triggered on drag start."
                     },
                     {
                         "name": "onDragEnd",
-                        "type": "Observable<MouseEvent>",
+                        "type": "Observable<KeyboardEvent | MouseEvent>",
                         "description": "Event triggered on drag end."
                     },
                     {
                         "name": "onResizeStart",
-                        "type": "Observable<MouseEvent>",
+                        "type": "Observable<KeyboardEvent | MouseEvent>",
                         "description": "Event triggered on resize start."
                     },
                     {
                         "name": "onResizeEnd",
-                        "type": "Observable<MouseEvent>",
+                        "type": "Observable<KeyboardEvent | MouseEvent>",
                         "description": "Event triggered on resize end."
                     },
                     {

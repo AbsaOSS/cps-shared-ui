@@ -158,7 +158,8 @@ $animation-duration: 150ms;
   padding: 1rem;
 }
 
-.cps-dialog .cps-dialog-content:last-of-type {
+.cps-dialog .cps-dialog-content:last-of-type,
+.cps-dialog-resizable .cps-dialog-content {
   border-bottom-right-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
 }
@@ -179,18 +180,19 @@ $animation-duration: 150ms;
     &:hover {
       background-color: $header-drag-hover-background;
     }
-    &:focus-visible {
-      background-color: $header-drag-hover-background;
-      @include focus-ring(0.125rem, 0.25rem, inherit);
-    }
-    &.cps-dialog-header-moving,
-    &.cps-dialog-header-moving:focus-visible {
+    &.cps-dialog-header-moving {
       background-color: $header-drag-active-background;
     }
     .cps-dialog-header-left {
       .cps-dialog-header-title {
         cursor: unset;
       }
+    }
+  }
+
+  .cps-dialog-drag-handle {
+    &:focus-visible {
+      @include focus-ring(0.25rem, 0.375rem, 0.25rem);
     }
   }
 }

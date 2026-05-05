@@ -338,17 +338,18 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   private _getOffsetPx(): number {
-    const { value, unit } = parseSize(this.cvtTooltipOffset());
-    if (unit === 'px') return value;
-    if (unit === 'rem') return value * this._rootFontSizePx;
-    if (unit === 'em')
+    const parsed = parseSize(this.cvtTooltipOffset());
+    if (!parsed) throw new Error(`Unsupported value for tooltipOffset.`);
+    if (parsed.unit === 'px') return parsed.value;
+    if (parsed.unit === 'rem') return parsed.value * this._rootFontSizePx;
+    if (parsed.unit === 'em')
       return (
-        value *
+        parsed.value *
         parseFloat(
           getComputedStyle(this._elementRef.nativeElement).fontSize || '16'
         )
       );
-    throw new Error(`Unsupported unit "${unit}" for tooltipOffset.`);
+    throw new Error(`Unsupported unit "${parsed.unit}" for tooltipOffset.`);
   }
 
   private _getCoords(): { left: number; top: number } | undefined {

@@ -17,18 +17,26 @@ export class CpsDialogRef<T = any> {
     this._containerInstance?._openStateChanged.pipe(take(1)).subscribe(() => {
       this._onOpen.next();
     });
-    this._containerInstance?._dragStarted.subscribe((event: MouseEvent) => {
-      this._onDragStart.next(event);
-    });
-    this._containerInstance?._dragEnded.subscribe((event: MouseEvent) => {
-      this._onDragEnd.next(event);
-    });
-    this._containerInstance?._resizeStarted.subscribe((event: MouseEvent) => {
-      this._onResizeStart.next(event);
-    });
-    this._containerInstance?._resizeEnded.subscribe((event: MouseEvent) => {
-      this._onResizeEnd.next(event);
-    });
+    this._containerInstance?._dragStarted.subscribe(
+      (event: MouseEvent | KeyboardEvent) => {
+        this._onDragStart.next(event);
+      }
+    );
+    this._containerInstance?._dragEnded.subscribe(
+      (event: MouseEvent | KeyboardEvent) => {
+        this._onDragEnd.next(event);
+      }
+    );
+    this._containerInstance?._resizeStarted.subscribe(
+      (event: MouseEvent | KeyboardEvent) => {
+        this._onResizeStart.next(event);
+      }
+    );
+    this._containerInstance?._resizeEnded.subscribe(
+      (event: MouseEvent | KeyboardEvent) => {
+        this._onResizeEnd.next(event);
+      }
+    );
     this._containerInstance?._maximizedStateChanged.subscribe(
       (value: boolean) => {
         this._onMaximize.next(value);
@@ -113,37 +121,41 @@ export class CpsDialogRef<T = any> {
    */
   onDestroy: Observable<void> = this._onDestroy.asObservable();
 
-  private readonly _onDragStart = new Subject<MouseEvent>();
+  private readonly _onDragStart = new Subject<MouseEvent | KeyboardEvent>();
   /**
    * Event triggered on drag start.
-   * @param {MouseEvent} event - Mouse event.
+   * @param {MouseEvent | KeyboardEvent} event - Mouse or keyboard event.
    * @group Events
    */
-  onDragStart: Observable<MouseEvent> = this._onDragStart.asObservable();
+  onDragStart: Observable<MouseEvent | KeyboardEvent> =
+    this._onDragStart.asObservable();
 
-  private readonly _onDragEnd = new Subject<MouseEvent>();
+  private readonly _onDragEnd = new Subject<MouseEvent | KeyboardEvent>();
   /**
    * Event triggered on drag end.
-   * @param {MouseEvent} event - Mouse event.
+   * @param {MouseEvent | KeyboardEvent} event - Mouse or keyboard event.
    * @group Events
    */
-  onDragEnd: Observable<MouseEvent> = this._onDragEnd.asObservable();
+  onDragEnd: Observable<MouseEvent | KeyboardEvent> =
+    this._onDragEnd.asObservable();
 
-  private readonly _onResizeStart = new Subject<MouseEvent>();
+  private readonly _onResizeStart = new Subject<MouseEvent | KeyboardEvent>();
   /**
    * Event triggered on resize start.
-   * @param {MouseEvent} event - Mouse event.
+   * @param {MouseEvent | KeyboardEvent} event - Mouse or keyboard event.
    * @group Events
    */
-  onResizeStart: Observable<MouseEvent> = this._onResizeStart.asObservable();
+  onResizeStart: Observable<MouseEvent | KeyboardEvent> =
+    this._onResizeStart.asObservable();
 
-  private readonly _onResizeEnd = new Subject<MouseEvent>();
+  private readonly _onResizeEnd = new Subject<MouseEvent | KeyboardEvent>();
   /**
    * Event triggered on resize end.
-   * @param {MouseEvent} event - Mouse event.
+   * @param {MouseEvent | KeyboardEvent} event - Mouse or keyboard event.
    * @group Events
    */
-  onResizeEnd: Observable<MouseEvent> = this._onResizeEnd.asObservable();
+  onResizeEnd: Observable<MouseEvent | KeyboardEvent> =
+    this._onResizeEnd.asObservable();
 
   private readonly _onMaximize = new Subject<boolean>();
   /**

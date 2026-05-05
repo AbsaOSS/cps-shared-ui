@@ -102,6 +102,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mask') maskViewChild: Nullable<ElementRef>;
   @ViewChild('content') contentViewChild: Nullable<ElementRef>;
   @ViewChild('header') headerViewChild: Nullable<ElementRef>;
+  @ViewChild('dragHandle', { read: ElementRef })
+  dragHandleViewChild: Nullable<ElementRef>;
 
   childComponentType: Nullable<Type<any>>;
 
@@ -123,33 +125,47 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   documentDragEndListener!: VoidListener | null;
 
-  private _windowResizeCacheListener: VoidListener | null = null;
-
   private _focusTrapListener: VoidListener | null = null;
-
+  private _keyboardDragging = false;
+  private _keyboardResizing = false;
   private _previouslyFocusedElement: HTMLElement | null = null;
 
   _openStateChanged = new EventEmitter<void>();
-  _dragStarted = new EventEmitter<MouseEvent>();
-  _dragEnded = new EventEmitter<MouseEvent>();
-  _resizeStarted = new EventEmitter<MouseEvent>();
-  _resizeEnded = new EventEmitter<MouseEvent>();
+  _dragStarted = new EventEmitter<MouseEvent | KeyboardEvent>();
+  _dragEnded = new EventEmitter<MouseEvent | KeyboardEvent>();
+  _resizeStarted = new EventEmitter<MouseEvent | KeyboardEvent>();
+  _resizeEnded = new EventEmitter<MouseEvent | KeyboardEvent>();
   _maximizedStateChanged = new EventEmitter<boolean>();
 
-  private _rootFontSizePxCache: number | null = null;
-  private get _rootFontSizePx(): number {
-    if (!isPlatformBrowser(this.platformId)) return 16;
-    if (this._rootFontSizePxCache == null) {
-      this._rootFontSizePxCache = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
-    return this._rootFontSizePxCache;
-  }
+  private _rootFontSizePx = 16;
 
   get ariaLabel(): string | null {
     if (this.config.ariaLabelledBy) return null;
     return this.config.ariaLabel || this.config.headerTitle || null;
+  }
+
+  get cvtWidth(): string {
+    return convertSize(this.config.width);
+  }
+
+  get cvtHeight(): string {
+    return convertSize(this.config.height);
+  }
+
+  get cvtMinWidth(): string {
+    return convertSize(this.config.minWidth);
+  }
+
+  get cvtMinHeight(): string {
+    return convertSize(this.config.minHeight);
+  }
+
+  get cvtMaxWidth(): string {
+    return this.maximized ? '' : convertSize(this.config.maxWidth);
+  }
+
+  get cvtMaxHeight(): string {
+    return this.maximized ? '' : convertSize(this.config.maxHeight);
   }
 
   get minX(): number {
@@ -201,7 +217,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   // eslint-disable-next-line no-useless-constructor
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: any,
+    @Inject(PLATFORM_ID) private platformId: object,
     private _dialogRef: CpsDialogRef,
     private _cdRef: ChangeDetectorRef,
     public renderer: Renderer2,
@@ -212,13 +228,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const win = this.document.defaultView as Window;
-      this._windowResizeCacheListener = this.renderer.listen(
-        win,
-        'resize',
-        () => {
-          this._rootFontSizePxCache = null;
-        }
+      this._rootFontSizePx = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
       );
     }
     if (
@@ -243,8 +254,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._windowResizeCacheListener?.();
-    this._windowResizeCacheListener = null;
     this.onContainerDestroy();
     this.componentRef?.destroy();
   }
@@ -307,8 +316,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       this.onContainerDestroy();
       this._dialogRef.destroy();
     } else {
-      this._openStateChanged.emit();
-      this.focus();
+      this.focus(() => this._openStateChanged.emit());
     }
   }
 
@@ -377,36 +385,49 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  focus() {
+  focus(afterFocus?: () => void) {
     const autoFocus = this.config.autoFocus ?? true;
-    if (autoFocus === false) return;
+    if (autoFocus === false) {
+      afterFocus?.();
+      return;
+    }
 
     const containerEl = this.container as HTMLDivElement | null;
-    if (!containerEl) return;
+    if (!containerEl) {
+      afterFocus?.();
+      return;
+    }
 
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
+        let handled = false;
+
         if (autoFocus === 'dialog') {
           containerEl.focus();
-          return;
-        }
-
-        if (typeof autoFocus === 'string' && autoFocus !== 'first-tabbable') {
+          handled = true;
+        } else if (
+          typeof autoFocus === 'string' &&
+          autoFocus !== 'first-tabbable'
+        ) {
           const target = containerEl.querySelector<HTMLElement>(autoFocus);
           if (target) {
             target.focus();
-            return;
+            handled = true;
           }
         }
 
-        // 'first-tabbable' or true (default)
-        const focusable: HTMLElement[] =
-          DomHandler.getFocusableElements(containerEl);
-        if (focusable && focusable.length > 0) {
-          focusable[0].focus();
-        } else {
-          containerEl.focus();
+        if (!handled) {
+          // 'first-tabbable', true (default), or selector not found
+          const focusable: HTMLElement[] =
+            DomHandler.getFocusableElements(containerEl);
+          if (focusable && focusable.length > 0) {
+            focusable[0].focus();
+          } else {
+            containerEl.focus();
+          }
         }
+
+        if (afterFocus) this.zone.run(afterFocus);
       }, 5);
     });
   }
@@ -422,6 +443,10 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const handleEl = event.target as HTMLElement;
     this.renderer.addClass(handleEl, 'cps-dialog-resizable-handle-resizing');
+    if (!this._keyboardResizing) {
+      this._keyboardResizing = true;
+      this._resizeStarted.emit(event);
+    }
 
     const containerEl = this.container as HTMLDivElement;
     const step = this._rootFontSizePx;
@@ -434,23 +459,33 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     else if (event.key === 'ArrowDown') newHeight += step;
     else if (event.key === 'ArrowUp') newHeight -= step;
 
-    const minW = this._toPx(this.config.minWidth);
-    const minH = this._toPx(this.config.minHeight);
+    const contentEl = (this.contentViewChild as ElementRef)?.nativeElement;
+    const headerEl = (this.headerViewChild as ElementRef)?.nativeElement;
+    const contentWidth = contentEl ? DomHandler.getOuterWidth(contentEl) : 0;
+    const contentHeight = contentEl ? DomHandler.getOuterHeight(contentEl) : 0;
+    const headerWidth = headerEl ? DomHandler.getOuterWidth(headerEl) : 0;
+    const headerHeight = headerEl ? DomHandler.getOuterHeight(headerEl) : 0;
+
+    const viewport = DomHandler.getViewport();
+    const minW = this._resolveMinPx(this.config.minWidth, 'minWidth');
+    const minH = this._resolveMinPx(this.config.minHeight, 'minHeight');
     const maxW = this.config.maxWidth
-      ? this._toPx(this.config.maxWidth)
+      ? this._toPx(this.config.maxWidth, Infinity)
       : Infinity;
     const maxH = this.config.maxHeight
-      ? this._toPx(this.config.maxHeight)
+      ? this._toPx(this.config.maxHeight, Infinity)
       : Infinity;
-    const viewport = DomHandler.getViewport();
     const offset = containerEl.getBoundingClientRect();
 
     newWidth = Math.max(
       minW,
+      contentWidth,
+      headerWidth,
       Math.min(newWidth, maxW, viewport.width - offset.left)
     );
     newHeight = Math.max(
       minH,
+      headerHeight + contentHeight,
       Math.min(newHeight, maxH, viewport.height - offset.top)
     );
 
@@ -468,24 +503,31 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         event.target as HTMLElement,
         'cps-dialog-resizable-handle-resizing'
       );
+      this._keyboardResizing = false;
+      this._resizeEnded.emit(event);
     }
   }
 
   onHeaderKeyup(event: KeyboardEvent): void {
     if (
-      event.target === this.headerViewChild?.nativeElement &&
+      this.dragHandleViewChild?.nativeElement?.contains(event.target as Node) &&
       ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)
     ) {
       const headerEl = this.headerViewChild
         ?.nativeElement as HTMLElement | null;
       if (headerEl)
         this.renderer.removeClass(headerEl, 'cps-dialog-header-moving');
+      this._keyboardDragging = false;
+      this._dragEnded.emit(event);
     }
   }
 
   onHeaderKeydown(event: KeyboardEvent): void {
     if (!this.draggable || this.maximized) return;
-    if (event.target !== this.headerViewChild?.nativeElement) return;
+    if (
+      !this.dragHandleViewChild?.nativeElement?.contains(event.target as Node)
+    )
+      return;
     if (
       !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)
     )
@@ -495,6 +537,10 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const headerEl = this.headerViewChild?.nativeElement as HTMLElement | null;
     if (headerEl) this.renderer.addClass(headerEl, 'cps-dialog-header-moving');
+    if (!this._keyboardDragging) {
+      this._keyboardDragging = true;
+      this._dragStarted.emit(event);
+    }
 
     const containerEl = this.container as HTMLDivElement;
     const step = this._rootFontSizePx;
@@ -592,8 +638,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         : 0;
       let newWidth = containerWidth + deltaX;
       let newHeight = containerHeight + deltaY;
-      const minWidth = this._toPx(this.config.minWidth);
-      const minHeight = this._toPx(this.config.minHeight);
+      const minWidth = this._resolveMinPx(this.config.minWidth, 'minWidth');
+      const minHeight = this._resolveMinPx(this.config.minHeight, 'minHeight');
       const offset = (this.container as HTMLDivElement).getBoundingClientRect();
       const viewport = DomHandler.getViewport();
       const hasBeenDragged =
@@ -897,22 +943,33 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private _resolveMinPx(
+    configMin: number | string | undefined,
+    prop: 'minWidth' | 'minHeight'
+  ): number {
+    return Math.max(
+      this._toPx(configMin),
+      this._toPx(this.container?.style[prop])
+    );
+  }
+
   private _pxToRem(px: number): string {
     return `${px / this._rootFontSizePx}rem`;
   }
 
-  private _toPx(size: number | string | undefined, fallback = 0): number {
+  private _toPx(
+    size: number | string | null | undefined,
+    fallback = 0
+  ): number {
     if (size == null) return fallback;
-    const str = convertSize(size);
-    if (!str) return fallback;
-    const { value, unit } = parseSize(str);
-    if (unit === 'px') return value;
-    if (unit === 'rem' || unit === 'em') return value * this._rootFontSizePx;
-    return fallback;
-  }
-
-  cvtSize(size: number | string | undefined): string {
-    return size != null ? convertSize(size) : '';
+    if (typeof size === 'number') return size;
+    const parsed = parseSize(convertSize(size));
+    if (!parsed) return fallback;
+    if (parsed.unit === 'px') return parsed.value;
+    if (parsed.unit === 'rem') return parsed.value * this._rootFontSizePx;
+    throw new Error(
+      `Unsupported unit "${parsed.unit}" in dialog config. Use px or rem.`
+    );
   }
 
   private _clampDragPos(

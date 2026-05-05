@@ -47,12 +47,12 @@
       [attr.aria-labelledby]="config.ariaLabelledBy || null"
       [attr.aria-label]="ariaLabel"
       [attr.aria-describedby]="config.ariaDescribedBy || null"
-      [style.width]="cvtSize(config.width)"
-      [style.height]="cvtSize(config.height)"
-      [style.minWidth]="cvtSize(config.minWidth)"
-      [style.minHeight]="cvtSize(config.minHeight)"
-      [style.maxWidth]="maximized ? '' : cvtSize(config.maxWidth)"
-      [style.maxHeight]="maximized ? '' : cvtSize(config.maxHeight)">
+      [style.width]="cvtWidth"
+      [style.height]="cvtHeight"
+      [style.minWidth]="cvtMinWidth"
+      [style.minHeight]="cvtMinHeight"
+      [style.maxWidth]="cvtMaxWidth"
+      [style.maxHeight]="cvtMaxHeight">
       @if (config.showHeader !== false) {
         <div
           #header
@@ -63,17 +63,20 @@
             'cps-dialog-header-bottom-bordered':
               config.showHeaderBottomBorder !== false
           }"
-          [attr.tabindex]="draggable && !maximized ? '0' : null"
-          [attr.role]="draggable && !maximized ? 'button' : null"
-          [attr.aria-label]="draggable && !maximized ? 'Move dialog' : null"
-          [attr.aria-description]="
-            draggable && !maximized
-              ? 'Use arrow keys to move the dialog.'
-              : null
-          "
-          (mousedown)="initDrag($event)"
-          (keydown)="onHeaderKeydown($event)"
-          (keyup)="onHeaderKeyup($event)">
+          (mousedown)="initDrag($event)">
+          @if (draggable && !maximized) {
+            <cps-icon
+              #dragHandle
+              class="cps-dialog-drag-handle"
+              icon="dots"
+              role="button"
+              tabindex="0"
+              aria-label="Move dialog"
+              aria-description="Use arrow keys to move"
+              (keydown)="onHeaderKeydown($event)"
+              (keyup)="onHeaderKeyup($event)">
+            </cps-icon>
+          }
           <div class="cps-dialog-header-left">
             <div class="cps-dialog-header-icon">
               @if (config.headerIcon) {
@@ -137,7 +140,8 @@
           style="z-index: 90"
           tabindex="0"
           role="button"
-          aria-label="Resize dialog. Use arrow keys to resize."
+          aria-label="Resize dialog"
+          aria-description="Use arrow keys to resize"
           (mousedown)="initResize($event)"
           (keydown)="onResizeHandleKeydown($event)"
           (keyup)="onResizeHandleKeyup($event)">

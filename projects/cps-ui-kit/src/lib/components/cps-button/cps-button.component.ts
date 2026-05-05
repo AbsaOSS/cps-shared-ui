@@ -154,12 +154,14 @@ export class CpsButtonComponent implements OnChanges {
       this.cvtHeight = convertSize(this.height);
       if (this.cvtHeight) {
         const parsedHeight = parseSize(this.cvtHeight);
-        const unit = parsedHeight.unit;
-        const size = parsedHeight.value * 0.4;
-        const isPx = unit === 'px';
+        if (parsedHeight) {
+          const unit = parsedHeight.unit;
+          const size = parsedHeight.value * 0.4;
+          const isPx = unit === 'px';
 
-        this.cvtFontSize = `${isPx ? Math.floor(size) : size}${unit}`;
-        this.cvtIconSize = `${isPx ? Math.ceil(size) : size}${unit}`;
+          this.cvtFontSize = `${isPx ? Math.floor(size) : size}${unit}`;
+          this.cvtIconSize = `${isPx ? Math.ceil(size) : size}${unit}`;
+        }
       }
     } else {
       switch (this.size) {

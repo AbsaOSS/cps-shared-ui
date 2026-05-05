@@ -1,25 +1,19 @@
-export const convertSize = (size: number | string): string => {
+export const convertSize = (
+  size: number | string | null | undefined
+): string => {
+  if (size == null) return '';
   const res = String(size).trim();
-  if (!res) {
-    return '';
-  }
-
-  if (res.startsWith('calc(') && res.endsWith(')')) return res;
-
-  if (/^\d+(\.\d+)?$/i.test(res)) {
-    return res + 'px';
-  }
-  if (/^\d+(\.\d+)?(px|rem|em|%)$/i.test(res)) {
-    return res;
-  }
-
-  throw new Error(`Invalid size value: ${size}`);
+  if (!res) return '';
+  if (/^\d+(\.\d+)?$/i.test(res)) return res + 'px';
+  if (/^\d+(\.\d+)?(px|rem|em|%)$/i.test(res)) return res;
+  // calc(), auto, fit-content, min(), vw, etc. - pass through as-is
+  return res;
 };
 
-export const parseSize = (size: string): { value: number; unit: string } => {
-  const match = size.match(/^(\d+(?:\.\d+)?)(px|rem|em|%)$/);
-  if (!match) throw new Error(`Invalid size value: ${size}`);
-  const value = parseFloat(match[1]);
-  const unit = match[2];
-  return { value, unit };
+export const parseSize = (
+  size: string
+): { value: number; unit: string } | null => {
+  const match = size.match(/^(-?\d+(?:\.\d+)?)(px|rem|em|%)$/);
+  if (!match) return null;
+  return { value: parseFloat(match[1]), unit: match[2] };
 };
