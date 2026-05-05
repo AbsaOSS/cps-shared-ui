@@ -24,6 +24,7 @@ import {
   PLATFORM_ID,
   Renderer2,
   SimpleChanges,
+  ViewChild,
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
@@ -243,16 +244,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   hideReason: CpsMenuHideReason | undefined;
 
-  private _rootFontSizePxCache: number | null = null;
-  private get _rootFontSizePx(): number {
-    if (!isPlatformBrowser(this.platformId)) return 16;
-    if (this._rootFontSizePxCache == null) {
-      this._rootFontSizePxCache = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
-    return this._rootFontSizePxCache;
-  }
+  @ViewChild('menuArrow') private _menuArrow?: ElementRef<HTMLElement>;
 
   private window: Window;
 
@@ -402,28 +394,19 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
                   break;
                 case 'Tab':
                   if (this.items.length > 0) {
-                    event.preventDefault();
                     this.zone.run(() => {
                       this.hide(CpsMenuHideReason.KEYDOWN_TAB);
                     });
-                    this._focusNextTabbable(event.shiftKey);
+                    (this.target as HTMLElement)?.focus();
                   } else if (this.container) {
                     const focusable = this._focusableIn(this.container);
                     const active = this.document.activeElement;
-                    if (
-                      !event.shiftKey &&
-                      active === focusable[focusable.length - 1]
-                    ) {
-                      event.preventDefault();
-                      this.zone.run(() => {
-                        this.hide(CpsMenuHideReason.KEYDOWN_TAB);
-                      });
-                      (
-                        this._getNextFocusableAfterTarget() ??
-                        (this.target as HTMLElement)
-                      )?.focus();
-                    } else if (event.shiftKey && active === focusable[0]) {
-                      event.preventDefault();
+                    const atBoundary =
+                      (!event.shiftKey &&
+                        active === focusable[focusable.length - 1]) ||
+                      (event.shiftKey && active === focusable[0]);
+                    if (atBoundary) {
+                      if (event.shiftKey) event.preventDefault();
                       this.zone.run(() => {
                         this.hide(CpsMenuHideReason.KEYDOWN_TAB);
                       });
@@ -544,10 +527,6 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
   }
 
-  private _pxToRem(px: number): number {
-    return px / this._rootFontSizePx;
-  }
-
   private _setPosition(element: any, target: any) {
     if (!element || !target) return;
 
@@ -602,8 +581,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     const pos = getPos();
     if (pos) {
-      element.style.top = `${this._pxToRem(pos.top || 0)}rem`;
-      element.style.left = `${this._pxToRem(pos.left || 0)}rem`;
+      element.style.top = `${pos.top || 0}px`;
+      element.style.left = `${pos.left || 0}px`;
     }
   }
 
@@ -629,20 +608,20 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     const targetOffset = DomHandler.getOffset(this.target);
 
     if (this.withArrow) {
-      const containerWidthPx = this.container?.offsetWidth || 0;
-      const targetWidthPx = this.target?.offsetWidth || 0;
-      const arrowMinOffsetPx = 0.75 * this._rootFontSizePx;
+      const arrowEl = this._menuArrow?.nativeElement;
+      if (arrowEl) {
+        const containerWidth = this.container?.offsetWidth || 0;
+        const targetWidth = this.target?.offsetWidth || 0;
+        const arrowMinOffset = arrowEl.offsetWidth / 2;
 
-      let arrowLeftPx =
-        targetOffset.left + targetWidthPx / 2 - containerOffset.left;
-      arrowLeftPx = Math.min(
-        Math.max(arrowLeftPx, arrowMinOffsetPx),
-        containerWidthPx - arrowMinOffsetPx
-      );
-      this.container?.style.setProperty(
-        '--overlayArrowLeft',
-        `${this._pxToRem(arrowLeftPx)}rem`
-      );
+        let arrowLeftPx =
+          targetOffset.left + targetWidth / 2 - containerOffset.left;
+        arrowLeftPx = Math.min(
+          Math.max(arrowLeftPx, arrowMinOffset + 1),
+          containerWidth - arrowMinOffset - 1
+        );
+        arrowEl.style.left = `${arrowLeftPx}px`;
+      }
     }
 
     if (containerOffset.top < targetOffset.top) {
@@ -757,48 +736,6 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     items[items.length - 1]?.focus();
   }
 
-  private _focusNextTabbable(reverse = false): void {
-    const all = this._focusableExcludingContainer();
-    const idx = all.indexOf(this.target as HTMLElement);
-    if (idx === -1) return;
-    if (reverse) {
-      const prevIdx = idx > 0 ? idx - 1 : all.length - 1;
-      all[prevIdx]?.focus();
-    } else {
-      const nextIdx = idx < all.length - 1 ? idx + 1 : 0;
-      all[nextIdx]?.focus();
-    }
-  }
-
-  private _focusableExcludingContainer(): HTMLElement[] {
-    const result: HTMLElement[] = [];
-    const container = this.container;
-    const walker = this.document.createTreeWalker(
-      this.document.body,
-      NodeFilter.SHOW_ELEMENT,
-      {
-        acceptNode(node: Node): number {
-          if (node === container) return NodeFilter.FILTER_REJECT;
-          const el = node as HTMLElement;
-          if (
-            el.tabIndex >= 0 &&
-            !(el as HTMLInputElement).disabled &&
-            !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
-          ) {
-            return NodeFilter.FILTER_ACCEPT;
-          }
-          return NodeFilter.FILTER_SKIP;
-        }
-      }
-    );
-    let node = walker.nextNode();
-    while (node) {
-      result.push(node as HTMLElement);
-      node = walker.nextNode();
-    }
-    return result;
-  }
-
   private _focusableIn(el: HTMLElement): HTMLElement[] {
     const result: HTMLElement[] = [];
     const walker = this.document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT);
@@ -821,19 +758,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     return result;
   }
 
-  private _getNextFocusableAfterTarget(): HTMLElement | null {
-    const all = this._focusableExcludingContainer();
-    const target = this.target as HTMLElement;
-    const triggerFocusables = all.filter(
-      (el) => target.contains(el) || el === target
-    );
-    const last = triggerFocusables[triggerFocusables.length - 1] ?? target;
-    const idx = all.indexOf(last);
-    return idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
-  }
-
   onWindowResize() {
-    this._rootFontSizePxCache = null;
     if (this.overlayVisible && !DomHandler.isTouchDevice()) {
       this.hide(CpsMenuHideReason.RESIZE);
     }

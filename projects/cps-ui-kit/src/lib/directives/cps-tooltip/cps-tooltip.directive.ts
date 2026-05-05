@@ -242,9 +242,7 @@ export class CpsTooltipDirective implements OnDestroy {
     const last = focusable[focusable.length - 1];
     const active = this._document.activeElement;
     if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      const next = this._getNextFocusableAfterTrigger();
-      next ? next.focus() : this._ariaTarget?.focus();
+      this._ariaTarget?.focus();
     } else if (event.shiftKey && active === first) {
       event.preventDefault();
       this._ariaTarget?.focus();
@@ -457,41 +455,6 @@ export class CpsTooltipDirective implements OnDestroy {
       node = walker.nextNode();
     }
     return result;
-  }
-
-  private _getNextFocusableAfterTrigger(): HTMLElement | null {
-    const all: HTMLElement[] = [];
-    const popup = this._popup;
-    const walker = this._document.createTreeWalker(
-      this._document.body,
-      NodeFilter.SHOW_ELEMENT,
-      {
-        acceptNode(node: Node): number {
-          if (node === popup) return NodeFilter.FILTER_REJECT;
-          const el = node as HTMLElement;
-          if (
-            el.tabIndex >= 0 &&
-            !(el as HTMLInputElement).disabled &&
-            !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
-          ) {
-            return NodeFilter.FILTER_ACCEPT;
-          }
-          return NodeFilter.FILTER_SKIP;
-        }
-      }
-    );
-    let node = walker.nextNode();
-    while (node) {
-      all.push(node as HTMLElement);
-      node = walker.nextNode();
-    }
-    const trigger = this._elementRef.nativeElement;
-    const triggerFocusables = all.filter(
-      (el) => trigger.contains(el) || el === trigger
-    );
-    const last = triggerFocusables[triggerFocusables.length - 1] ?? trigger;
-    const idx = all.indexOf(last);
-    return idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
   }
 
   private _resolveAriaTarget(): HTMLElement | undefined {

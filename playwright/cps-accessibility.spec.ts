@@ -63,11 +63,20 @@ const components: ComponentEntry[] = [
   // { route: '/loader', name: 'Loader', selector: 'cps-loader' },
   {
     route: '/menu',
-    name: 'Menu',
+    name: 'Menu standard',
     selector: '.cps-menu-container',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page.locator('.example-content cps-button').first().click();
+    }
+  },
+  {
+    route: '/menu',
+    name: 'Menu compressed',
+    selector: '.cps-menu-container',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page.locator('.example-content cps-button').nth(2).click();
     }
   },
   // {

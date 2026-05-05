@@ -16,6 +16,7 @@
     (mouseleave)="containerMouseLeave.emit($event)">
     @if (withArrow) {
       <div class="cps-menu-arrow-bridge"></div>
+      <div class="cps-menu-arrow" #menuArrow></div>
     }
     <div (mousedown)="onContentClick()">
       @if (items.length < 1) {
@@ -129,7 +130,7 @@
     <span class="cps-menu-item-spinner" role="status" aria-label="Loading">
       <cps-progress-circular
         [strokeWidth]="2"
-        [color]="compressed ? 'prepared' : 'calm'"
+        [color]="compressed ? 'prepared-darken2' : 'calm'"
         [diameter]="16">
       </cps-progress-circular>
     </span>
