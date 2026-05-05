@@ -109,4 +109,20 @@ export class MenuPageComponent {
   doConsoleLog(event: any) {
     console.log(event.item.title + ' clicked');
   }
+
+  onFocusMenuFocusOut(event: FocusEvent, menu: CpsMenuComponent) {
+    if (!menu.container?.contains(event.relatedTarget as Node)) {
+      menu.hide();
+    }
+  }
+
+  onMenuLeave(event: MouseEvent | FocusEvent, menu: CpsMenuComponent) {
+    const rel = event.relatedTarget as Node;
+    if (
+      !menu.container?.contains(rel) &&
+      !(menu.target as HTMLElement)?.contains(rel)
+    ) {
+      menu.hide();
+    }
+  }
 }

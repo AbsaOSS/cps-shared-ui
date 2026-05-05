@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -14,7 +14,8 @@ import {
   Output,
   Self,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  PLATFORM_ID
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -456,6 +457,7 @@ export class CpsAutocompleteComponent
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: object,
     private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
@@ -473,9 +475,11 @@ export class CpsAutocompleteComponent
   }
 
   ngOnInit() {
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this.document.documentElement).fontSize || '16'
-    );
+    if (isPlatformBrowser(this.platformId)) {
+      this._rootFontSizePx = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
+      );
+    }
     this.virtualScrollItemSizePx =
       this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
@@ -730,7 +734,8 @@ export class CpsAutocompleteComponent
   onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
     if (
       (this.loading || this.validating) &&
-      reason !== CpsMenuHideReason.KEYDOWN_ESCAPE
+      reason !== CpsMenuHideReason.KEYDOWN_ESCAPE &&
+      reason !== CpsMenuHideReason.KEYDOWN_TAB
     ) {
       return;
     }
