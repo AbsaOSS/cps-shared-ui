@@ -257,6 +257,7 @@
           @if (virtualScroll) {
             <p-virtualscroller
               #virtualList
+              [tabindex]="-1"
               [items]="filteredOptions"
               [delay]="0"
               [scrollHeight]="virtualListHeightRem + 'rem'"

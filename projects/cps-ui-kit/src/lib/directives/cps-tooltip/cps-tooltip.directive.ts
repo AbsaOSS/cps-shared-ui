@@ -6,10 +6,11 @@ import {
   input,
   OnDestroy,
   OnInit,
-  SecurityContext
+  SecurityContext,
+  PLATFORM_ID
 } from '@angular/core';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 
 /**
@@ -121,6 +122,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   private _elementRef = inject(ElementRef<HTMLElement>);
   private _document = inject(DOCUMENT);
+  private _platformId = inject(PLATFORM_ID);
   private _domSanitizer = inject(DomSanitizer);
 
   constructor() {
@@ -128,9 +130,11 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this._document.documentElement).fontSize || '16'
-    );
+    if (isPlatformBrowser(this._platformId)) {
+      this._rootFontSizePx = parseFloat(
+        getComputedStyle(this._document.documentElement).fontSize || '16'
+      );
+    }
   }
 
   ngOnDestroy(): void {
@@ -234,9 +238,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     const last = focusable[focusable.length - 1];
     const active = this._document.activeElement;
     if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      const next = this._getNextFocusableAfterTrigger();
-      next ? next.focus() : this._ariaTarget?.focus();
+      this._ariaTarget?.focus();
     } else if (event.shiftKey && active === first) {
       event.preventDefault();
       this._ariaTarget?.focus();
@@ -438,39 +440,20 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     let node = walker.nextNode();
     while (node) {
       const child = node as HTMLElement;
-      if (child.tabIndex >= 0 && !(child as HTMLInputElement).disabled) {
+      if (
+        child.tabIndex >= 0 &&
+        !(child as HTMLInputElement).disabled &&
+        !!(
+          child.offsetWidth ||
+          child.offsetHeight ||
+          child.getClientRects().length
+        )
+      ) {
         result.push(child);
       }
       node = walker.nextNode();
     }
     return result;
-  }
-
-  private _getNextFocusableAfterTrigger(): HTMLElement | null {
-    const all: HTMLElement[] = [];
-    const walker = this._document.createTreeWalker(
-      this._document.body,
-      NodeFilter.SHOW_ELEMENT
-    );
-    let node = walker.nextNode();
-    while (node) {
-      const el = node as HTMLElement;
-      if (
-        el.tabIndex >= 0 &&
-        !(el as HTMLInputElement).disabled &&
-        !this._popup?.contains(el)
-      ) {
-        all.push(el);
-      }
-      node = walker.nextNode();
-    }
-    const trigger = this._elementRef.nativeElement;
-    const triggerFocusables = all.filter(
-      (el) => trigger.contains(el) || el === trigger
-    );
-    const last = triggerFocusables[triggerFocusables.length - 1] ?? trigger;
-    const idx = all.indexOf(last);
-    return idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
   }
 
   private _resolveAriaTarget(): HTMLElement | undefined {

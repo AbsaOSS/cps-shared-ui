@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -10,7 +10,8 @@ import {
   Optional,
   Output,
   Renderer2,
-  Self
+  Self,
+  PLATFORM_ID
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
@@ -162,6 +163,7 @@ export class CpsButtonToggleComponent
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: object,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef
   ) {
@@ -174,9 +176,11 @@ export class CpsButtonToggleComponent
     if (this.multiple && !this._value) {
       this._value = [];
     }
-    this._rootFontSizePx = parseFloat(
-      getComputedStyle(this.document.documentElement).fontSize || '16'
-    );
+    if (isPlatformBrowser(this.platformId)) {
+      this._rootFontSizePx = parseFloat(
+        getComputedStyle(this.document.documentElement).fontSize || '16'
+      );
+    }
     if (this.document?.fonts?.ready) {
       this.document.fonts.ready.then(() => {
         this._setEqualWidths();
