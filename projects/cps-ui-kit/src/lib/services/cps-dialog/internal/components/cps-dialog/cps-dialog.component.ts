@@ -345,19 +345,19 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     this._previouslyFocusedElement = null;
   }
 
-  close() {
-    if (this.config?.disableClose || this._dialogRef?.disableClose) return;
+  isCloseDisabled() {
+    return !!this.config?.disableClose || !!this._dialogRef?.disableClose;
+  }
 
+  close() {
+    if (this.isCloseDisabled()) return;
     this.visible = false;
     this._cdRef.markForCheck();
   }
 
   hide() {
-    if (this.config?.disableClose) return;
-
-    if (this._dialogRef) {
-      if (!this._dialogRef.disableClose) this._dialogRef.close();
-    }
+    if (this.isCloseDisabled()) return;
+    this._dialogRef?.close();
   }
 
   enableModality() {
