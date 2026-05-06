@@ -5,7 +5,7 @@ export const convertSize = (
   const res = String(size).trim();
   if (!res) return '';
   if (/^\d+(\.\d+)?$/i.test(res)) return res + 'px';
-  if (/^\d+(\.\d+)?(px|rem|em|%)$/i.test(res)) return res;
+
   // calc(), auto, fit-content, min(), vw, etc. - pass through as-is
   return res;
 };
