@@ -8,7 +8,7 @@ import {
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
-class InputModalityService {
+export class InputModalityService {
   private readonly _platformId = inject(PLATFORM_ID);
   private readonly _document = inject(DOCUMENT);
 
@@ -18,7 +18,20 @@ class InputModalityService {
     if (!isPlatformBrowser(this._platformId)) return;
 
     this._document.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab' || e.key === 'Enter' || e.key === ' ') {
+      const navigationKeys = new Set([
+        'Tab',
+        'Enter',
+        ' ',
+        'ArrowUp',
+        'ArrowDown',
+        'ArrowLeft',
+        'ArrowRight',
+        'Home',
+        'End',
+        'PageUp',
+        'PageDown'
+      ]);
+      if (navigationKeys.has(e.key)) {
         this.lastInput.set('keyboard');
       }
     });

@@ -59,5 +59,7 @@ export * from './lib/services/cps-dialog/utils/cps-dialog-ref';
 export * from './lib/services/cps-notification/cps-notification.service';
 export * from './lib/services/cps-notification/utils/cps-notification-config';
 
+export * from './lib/services/input-modality.service';
+
 export * from './lib/services/cps-theme/cps-theme.service';
 export * from './lib/utils/colors-utils';
