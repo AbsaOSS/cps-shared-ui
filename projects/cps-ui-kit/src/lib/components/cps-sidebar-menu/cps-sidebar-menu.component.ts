@@ -106,7 +106,11 @@ export class CpsSidebarMenuComponent {
 
   cvtHeight = computed(() => convertSize(this.height()));
 
-  showMenu(event: any, menu: CpsMenuComponent, item?: CpsSidebarMenuItem) {
+  showMenu(
+    event: MouseEvent | FocusEvent,
+    menu: CpsMenuComponent,
+    item?: CpsSidebarMenuItem
+  ) {
     if ((event.currentTarget as HTMLElement)?.classList.contains('disabled'))
       return;
     if (event.type === 'focusin' && item) {
@@ -138,7 +142,7 @@ export class CpsSidebarMenuComponent {
   }
 
   leaveMenu(event: MouseEvent | FocusEvent, menu: CpsMenuComponent) {
-    const rel = (event as any).relatedTarget as Node;
+    const rel = event.relatedTarget as Node;
     if (
       !menu.container?.contains(rel) &&
       !(menu.target as HTMLElement)?.contains(rel)
