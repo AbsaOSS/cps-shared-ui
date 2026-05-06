@@ -5,9 +5,17 @@ export const convertSize = (
   const res = String(size).trim();
   if (!res) return '';
   if (/^\d+(\.\d+)?$/i.test(res)) return res + 'px';
-
-  // calc(), auto, fit-content, min(), vw, etc. - pass through as-is
-  return res;
+  if (
+    /^-?\d+(\.\d+)?(px|rem|em|%|vw|vh|vmin|vmax|dvw|dvh|svw|svh|lvw|lvh|ch|ex|cm|mm|in|pt|pc|fr)$/i.test(
+      res
+    ) ||
+    /^(auto|min-content|max-content|fit-content|none|inherit|initial|unset|normal)$/i.test(
+      res
+    ) ||
+    /^(calc|min|max|clamp|fit-content|var|env)\(.+\)$/i.test(res)
+  )
+    return res;
+  return '';
 };
 
 export const parseSize = (
