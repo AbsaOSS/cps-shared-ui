@@ -1,9 +1,10 @@
 import {
   Component,
   Input,
-  OnInit,
   QueryList,
-  ViewChildren
+  ViewChildren,
+  computed,
+  input
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -54,7 +55,7 @@ export type CpsSidebarMenuItem = {
       state(
         'expanded',
         style({
-          marginTop: '6px',
+          marginTop: '0.375rem',
           opacity: '1'
         })
       ),
@@ -64,7 +65,7 @@ export type CpsSidebarMenuItem = {
     ])
   ]
 })
-export class CpsSidebarMenuComponent implements OnInit {
+export class CpsSidebarMenuComponent {
   /**
    * An array of menu items.
    * @group Props
@@ -84,24 +85,69 @@ export class CpsSidebarMenuComponent implements OnInit {
   @Input() exactRoutes = false;
 
   /**
-   * Height of the sidebar, of type number denoting pixels or string.
+   * Aria label for the sidebar, used for accessibility.
    * @group Props
    */
-  @Input() height: number | string = '100%';
+  @Input() ariaLabel = 'Main navigation';
+
+  /**
+   * Height of the sidebar, of type number denoting pixels or string.
+   * @group Props
+   * @default 100%
+   */
+  height = input<number | string>('100%');
 
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;
+
+  focusedItemWithMenu: CpsSidebarMenuItem | null = null;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _router: Router) {}
 
-  ngOnInit(): void {
-    this.height = convertSize(this.height);
+  cvtHeight = computed(() => convertSize(this.height()));
+
+  showMenu(event: any, menu: CpsMenuComponent, item?: CpsSidebarMenuItem) {
+    if ((event.currentTarget as HTMLElement)?.classList.contains('disabled'))
+      return;
+    if (event.type === 'focusin' && item) {
+      this.focusedItemWithMenu = item;
+    }
+    if (menu.isVisible()) {
+      if (event.type === 'focusin') menu.show(null, event.currentTarget, 'tr');
+      return;
+    }
+    this.allMenus?.forEach((m) => m.hide());
+    menu.show(null, event.currentTarget, 'tr');
   }
 
-  toggleMenu(event: any, menu: CpsMenuComponent) {
-    const isVisible = menu.isVisible();
-    this.allMenus?.forEach((m) => m.hide());
-    if (!isVisible) menu.toggle(event, event.currentTarget, 'tr');
+  toggleMenu(
+    event: MouseEvent,
+    menu: CpsMenuComponent,
+    item: CpsSidebarMenuItem
+  ) {
+    if ((event.currentTarget as HTMLElement)?.classList.contains('disabled'))
+      return;
+    if (menu.isVisible()) {
+      this.focusedItemWithMenu = item;
+      menu.hide();
+    } else {
+      this.focusedItemWithMenu = item;
+      this.allMenus?.forEach((m) => m.hide());
+      menu.show(null, event.currentTarget as HTMLElement, 'tr');
+    }
+  }
+
+  leaveMenu(event: MouseEvent | FocusEvent, menu: CpsMenuComponent) {
+    const rel = (event as any).relatedTarget as Node;
+    if (
+      !menu.container?.contains(rel) &&
+      !(menu.target as HTMLElement)?.contains(rel)
+    ) {
+      menu.hide();
+      if (event.type === 'focusout') {
+        this.focusedItemWithMenu = null;
+      }
+    }
   }
 
   isActive(item: CpsSidebarMenuItem) {

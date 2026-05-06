@@ -26,7 +26,8 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  ViewRef
+  ViewRef,
+  inject
 } from '@angular/core';
 import { OverlayService, SharedModule } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -35,6 +36,7 @@ import { Subscription } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { PrimeNG } from 'primeng/config';
+import { INPUT_MODALITY_SERVICE } from '../../services/input-modality.service';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
@@ -45,6 +47,7 @@ type VoidListener = () => void | null | undefined;
  */
 export type CpsMenuItem = {
   title?: string;
+  ariaLabel?: string;
   action?: (event?: any) => void;
   icon?: string;
   desc?: string;
@@ -243,6 +246,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   itemsClasses: string[] = [];
 
   hideReason: CpsMenuHideReason | undefined;
+  private _openedByKeyboard = false;
+  private readonly _inputModalityService = inject(INPUT_MODALITY_SERVICE);
 
   @ViewChild('menuArrow') private _menuArrow?: ElementRef<HTMLElement>;
 
@@ -273,6 +278,15 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     if (changes.items || changes.compressed) {
       if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
       this._setItemsClasses();
+    }
+    const hasItemsA11yViolation = this.items.some(
+      (item) => !item.title?.trim() && !item.ariaLabel?.trim()
+    );
+
+    if (hasItemsA11yViolation) {
+      console.error(
+        'CpsMenuComponent: all untitled menu items must have an ariaLabel for accessibility.'
+      );
     }
   }
 
@@ -321,6 +335,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     this.target = target || event?.currentTarget || event?.target;
     if (this.target) this.resizeObserver.observe(this.target);
+    this._openedByKeyboard =
+      this._inputModalityService?.lastInput() === 'keyboard';
     this.overlayVisible = true;
     this.render = true;
     this.position = pos || 'default';
@@ -390,7 +406,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
                   this.zone.run(() => {
                     this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
                   });
-                  (this.target as HTMLElement)?.focus();
+                  this._focusTarget(this._openedByKeyboard);
                   break;
                 case 'Tab':
                   if (this.items.length > 0) {
@@ -706,6 +722,22 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
         }
       }, 5);
     });
+  }
+
+  private _focusTarget(showRing: boolean): void {
+    const el: HTMLElement | undefined | null = this.target;
+    if (!el) return;
+    if (!showRing) {
+      el.classList.add('suppress-focus-visible');
+      el.addEventListener(
+        'blur',
+        () => el.classList.remove('suppress-focus-visible'),
+        {
+          once: true
+        }
+      );
+    }
+    el.focus();
   }
 
   private _getMenuItems(): HTMLElement[] {
