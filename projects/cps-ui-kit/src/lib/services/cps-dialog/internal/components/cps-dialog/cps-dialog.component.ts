@@ -468,13 +468,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     else if (event.key === 'ArrowDown') newHeight += step;
     else if (event.key === 'ArrowUp') newHeight -= step;
 
-    const contentEl = (this.contentViewChild as ElementRef)?.nativeElement;
-    const headerEl = (this.headerViewChild as ElementRef)?.nativeElement;
-    const contentWidth = contentEl ? DomHandler.getOuterWidth(contentEl) : 0;
-    const contentHeight = contentEl ? DomHandler.getOuterHeight(contentEl) : 0;
-    const headerWidth = headerEl ? DomHandler.getOuterWidth(headerEl) : 0;
-    const headerHeight = headerEl ? DomHandler.getOuterHeight(headerEl) : 0;
-
     const viewport = DomHandler.getViewport();
     const minW = this._resolveMinPx(this.config.minWidth, 'minWidth');
     const minH = this._resolveMinPx(this.config.minHeight, 'minHeight');
@@ -488,13 +481,10 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
     newWidth = Math.max(
       minW,
-      contentWidth,
-      headerWidth,
       Math.min(newWidth, maxW, viewport.width - offset.left)
     );
     newHeight = Math.max(
       minH,
-      headerHeight + contentHeight,
       Math.min(newHeight, maxH, viewport.height - offset.top)
     );
 
