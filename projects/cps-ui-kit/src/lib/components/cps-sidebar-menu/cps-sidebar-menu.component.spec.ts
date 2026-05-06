@@ -50,22 +50,19 @@ describe('CpsSidebarMenuComponent', () => {
     expect(component.ariaLabel).toBe('Main navigation');
   });
 
-  it('should convert numeric height to px string on init', () => {
+  it('should convert numeric height to px string', () => {
     fixture.componentRef.setInput('height', 500);
-    component.ngOnInit();
-    expect(component.height).toBe('500px');
+    expect(component.cvtHeight()).toBe('500px');
   });
 
-  it('should preserve percentage height string on init', () => {
+  it('should preserve percentage height string', () => {
     fixture.componentRef.setInput('height', '80%');
-    component.ngOnInit();
-    expect(component.height).toBe('80%');
+    expect(component.cvtHeight()).toBe('80%');
   });
 
-  it('should preserve rem height string on init', () => {
+  it('should preserve rem height string', () => {
     fixture.componentRef.setInput('height', '10rem');
-    component.ngOnInit();
-    expect(component.height).toBe('10rem');
+    expect(component.cvtHeight()).toBe('10rem');
   });
 
   describe('toggleSidebar', () => {
@@ -325,7 +322,6 @@ describe('CpsSidebarMenuComponent', () => {
   describe('template', () => {
     it('should apply the given height style', () => {
       fixture.componentRef.setInput('height', '200px');
-      component.ngOnInit();
       fixture.detectChanges();
       const el = fixture.nativeElement.querySelector('.cps-sidebar-menu');
       expect(el.style.height).toBe('200px');
