@@ -4,7 +4,7 @@ export const convertSize = (
   if (size == null) return '';
   const res = String(size).trim();
   if (!res) return '';
-  if (/^\d+(\.\d+)?$/i.test(res)) return res + 'px';
+  if (/^-?\d+(\.\d+)?$/i.test(res)) return res + 'px';
   if (
     /^-?\d+(\.\d+)?(px|rem|em|%|vw|vh|vmin|vmax|dvw|dvh|svw|svh|lvw|lvh|ch|ex|cm|mm|in|pt|pc|fr)$/i.test(
       res
