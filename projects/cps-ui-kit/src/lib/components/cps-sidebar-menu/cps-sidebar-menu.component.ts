@@ -131,11 +131,11 @@ export class CpsSidebarMenuComponent {
   ) {
     if ((event.currentTarget as HTMLElement)?.classList.contains('disabled'))
       return;
+
+    this.focusedItemWithMenu = item;
     if (menu.isVisible()) {
-      this.focusedItemWithMenu = item;
       menu.hide();
     } else {
-      this.focusedItemWithMenu = item;
       this.allMenus?.forEach((m) => m.hide());
       menu.show(null, event.currentTarget as HTMLElement, 'tr');
     }

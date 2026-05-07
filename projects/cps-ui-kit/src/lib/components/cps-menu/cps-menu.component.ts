@@ -281,14 +281,17 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
       if (this.compressed) this.withIcons = this.items.some((itm) => itm.icon);
       this._setItemsClasses();
     }
-    const hasItemsA11yViolation = this.items.some(
-      (item) => !item.title?.trim() && !item.ariaLabel?.trim()
-    );
 
-    if (hasItemsA11yViolation) {
-      console.error(
-        'CpsMenuComponent: all untitled menu items must have an ariaLabel for accessibility.'
+    if (changes.items) {
+      const hasItemsA11yViolation = this.items.some(
+        (item) => !item.title?.trim() && !item.ariaLabel?.trim()
       );
+
+      if (hasItemsA11yViolation) {
+        console.error(
+          'CpsMenuComponent: all untitled menu items must have an ariaLabel for accessibility.'
+        );
+      }
     }
   }
 

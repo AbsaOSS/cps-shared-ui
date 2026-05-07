@@ -37,24 +37,25 @@ export class CpsInputModalityService {
    */
   readonly lastInput = signal<'keyboard' | 'pointer'>('pointer');
 
+  private readonly _navigationKeys = new Set([
+    'Tab',
+    'Enter',
+    ' ',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'Home',
+    'End',
+    'PageUp',
+    'PageDown'
+  ]);
+
   constructor() {
     if (!isPlatformBrowser(this._platformId)) return;
 
     this._document.addEventListener('keydown', (e) => {
-      const navigationKeys = new Set([
-        'Tab',
-        'Enter',
-        ' ',
-        'ArrowUp',
-        'ArrowDown',
-        'ArrowLeft',
-        'ArrowRight',
-        'Home',
-        'End',
-        'PageUp',
-        'PageDown'
-      ]);
-      if (navigationKeys.has(e.key)) {
+      if (this._navigationKeys.has(e.key)) {
         this.lastInput.set('keyboard');
       }
     });
