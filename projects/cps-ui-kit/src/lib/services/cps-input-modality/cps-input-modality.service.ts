@@ -65,6 +65,21 @@ export class CpsInputModalityService {
   }
 }
 
+/**
+ * Injection token for the input modality service.
+ *
+ * By default it resolves to the singleton {@link CpsInputModalityService}.
+ * Consumer applications can override it to:
+ * - Supply a custom subclass
+ * - Provide `null` to disable dynamic tracking entirely
+ *
+ * @example Disable dynamic tracking:
+ * ```typescript
+ * providers: [
+ *   { provide: CPS_INPUT_MODALITY_SERVICE, useValue: null }
+ * ]
+ * ```
+ */
 export const CPS_INPUT_MODALITY_SERVICE =
   new InjectionToken<CpsInputModalityService | null>(
     'CpsInputModalityService',
