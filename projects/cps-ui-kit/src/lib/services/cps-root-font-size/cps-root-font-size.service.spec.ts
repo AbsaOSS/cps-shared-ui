@@ -11,7 +11,7 @@ const SENTINEL_ATTR = 'data-cps-root-font-size-sentinel';
 describe('CpsRootFontSizeService', () => {
   let service: CpsRootFontSizeService;
   let document: Document;
-  let resizeCallback: ResizeObserverCallback;
+  let resizeCallback: (entries: unknown[], observer: unknown) => void;
   let mockObserve: jest.Mock;
   let mockDisconnect: jest.Mock;
   let computedFontSize: string;
@@ -22,7 +22,7 @@ describe('CpsRootFontSizeService', () => {
     mockDisconnect = jest.fn();
 
     (globalThis as any).ResizeObserver = jest.fn(
-      (cb: ResizeObserverCallback) => {
+      (cb: (entries: unknown[], observer: unknown) => void) => {
         resizeCallback = cb;
         return { observe: mockObserve, disconnect: mockDisconnect };
       }
@@ -138,9 +138,9 @@ describe('CpsRootFontSizeService', () => {
     });
 
     it('should keep tracking after the owning instance is destroyed: surviving instance still updates on resize', () => {
-      const callbacks: ResizeObserverCallback[] = [];
+      const callbacks: ((entries: unknown[], observer: unknown) => void)[] = [];
       (globalThis as any).ResizeObserver = jest.fn(
-        (cb: ResizeObserverCallback) => {
+        (cb: (entries: unknown[], observer: unknown) => void) => {
           callbacks.push(cb);
           return { observe: mockObserve, disconnect: mockDisconnect };
         }
