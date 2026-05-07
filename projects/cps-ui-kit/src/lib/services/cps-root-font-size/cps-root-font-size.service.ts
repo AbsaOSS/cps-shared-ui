@@ -25,7 +25,9 @@ import {
  * In microfrontend environments the sentinel element is keyed by a known DOM
  * attribute (`data-cps-root-font-size-sentinel`) and reused if already present,
  * so only one sentinel node exists per document regardless of how many
- * instances of this service are created.
+ * instances of this service are created. The sentinel is intentionally never
+ * removed from the DOM — it is a lightweight, invisible element and removing it
+ * could silently break any other live service instance still observing it.
  *
  * Only active in browser environments. Under SSR the `fontSize` signal is
  * initialized to `16` (the standard browser default) and no DOM observers are created.
@@ -55,7 +57,6 @@ export class CpsRootFontSizeService implements OnDestroy {
   );
 
   private _sentinel: HTMLElement | null = null;
-  private _sentinelOwned = false;
   private _sentinelObserver: ResizeObserver | null = null;
 
   /** Reactive signal containing the current root font size in pixels. */
@@ -68,11 +69,6 @@ export class CpsRootFontSizeService implements OnDestroy {
 
   ngOnDestroy(): void {
     this._sentinelObserver?.disconnect();
-
-    if (this._sentinelOwned && this._sentinel) {
-      this._sentinel.remove();
-    }
-
     this._sentinelObserver = null;
     this._sentinel = null;
   }
@@ -97,7 +93,6 @@ export class CpsRootFontSizeService implements OnDestroy {
         left: '0'
       });
       this._document.documentElement.appendChild(sentinel);
-      this._sentinelOwned = true;
     }
 
     this._sentinel = sentinel;

@@ -85,7 +85,7 @@ describe('CpsRootFontSizeService', () => {
     expect(service.fontSize()).toBe(20);
   });
 
-  it('should NOT update fontSize signal when the size has not changed', () => {
+  it('should not update fontSize signal when the size has not changed', () => {
     resizeCallback([], null as unknown as ResizeObserver);
     expect(service.fontSize()).toBe(16);
   });
@@ -96,13 +96,9 @@ describe('CpsRootFontSizeService', () => {
       expect(mockDisconnect).toHaveBeenCalledTimes(1);
     });
 
-    it('should remove the sentinel element when owned', () => {
-      const sentinel = document.querySelector(`[${SENTINEL_ATTR}]`);
-      expect(sentinel).not.toBeNull();
-
+    it('should not remove the sentinel element on destroy', () => {
       service.ngOnDestroy();
-
-      expect(document.querySelector(`[${SENTINEL_ATTR}]`)).toBeNull();
+      expect(document.querySelector(`[${SENTINEL_ATTR}]`)).not.toBeNull();
     });
 
     it('should null out internal references after destroy', () => {
@@ -112,14 +108,66 @@ describe('CpsRootFontSizeService', () => {
   });
 
   describe('sentinel reuse (microfrontend scenario)', () => {
-    it('should reuse an existing sentinel and NOT remove it on destroy', () => {
+    it('should reuse the existing sentinel when a second instance is created', () => {
       const service2 = TestBed.runInInjectionContext(
         () => new CpsRootFontSizeService()
       );
 
-      const sentinels = document.querySelectorAll(`[${SENTINEL_ATTR}]`);
-      expect(sentinels.length).toBe(1);
+      expect(document.querySelectorAll(`[${SENTINEL_ATTR}]`).length).toBe(1);
 
+      service2.ngOnDestroy();
+    });
+
+    it('should keep the sentinel alive when the non-owning instance is destroyed', () => {
+      const service2 = TestBed.runInInjectionContext(
+        () => new CpsRootFontSizeService()
+      );
+
+      service2.ngOnDestroy();
+      expect(document.querySelector(`[${SENTINEL_ATTR}]`)).not.toBeNull();
+    });
+
+    it('should keep the sentinel alive when the owning (first) instance is destroyed while another is active', () => {
+      const service2 = TestBed.runInInjectionContext(
+        () => new CpsRootFontSizeService()
+      );
+
+      service.ngOnDestroy();
+      expect(document.querySelector(`[${SENTINEL_ATTR}]`)).not.toBeNull();
+      service2.ngOnDestroy();
+    });
+
+    it('should keep tracking after the owning instance is destroyed: surviving instance still updates on resize', () => {
+      const callbacks: ResizeObserverCallback[] = [];
+      (globalThis as any).ResizeObserver = jest.fn(
+        (cb: ResizeObserverCallback) => {
+          callbacks.push(cb);
+          return { observe: mockObserve, disconnect: mockDisconnect };
+        }
+      );
+
+      const service2 = TestBed.runInInjectionContext(
+        () => new CpsRootFontSizeService()
+      );
+
+      service.ngOnDestroy();
+
+      (window.getComputedStyle as jest.Mock).mockReturnValue({
+        fontSize: '20px'
+      } as CSSStyleDeclaration);
+
+      callbacks[0]([], null as unknown as ResizeObserver);
+
+      expect(service2.fontSize()).toBe(20);
+      service2.ngOnDestroy();
+    });
+
+    it('should keep the sentinel alive even after all instances are destroyed', () => {
+      const service2 = TestBed.runInInjectionContext(
+        () => new CpsRootFontSizeService()
+      );
+
+      service.ngOnDestroy();
       service2.ngOnDestroy();
 
       expect(document.querySelector(`[${SENTINEL_ATTR}]`)).not.toBeNull();
@@ -151,7 +199,7 @@ describe('CpsRootFontSizeService (SSR)', () => {
     expect(service.fontSize()).toBe(16);
   });
 
-  it('should NOT create a sentinel element in SSR', () => {
+  it('should not create a sentinel element in SSR', () => {
     TestBed.configureTestingModule({
       providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
     });
@@ -160,7 +208,7 @@ describe('CpsRootFontSizeService (SSR)', () => {
     expect(doc.querySelector(`[${SENTINEL_ATTR}]`)).toBeNull();
   });
 
-  it('should NOT create a ResizeObserver in SSR', () => {
+  it('should not create a ResizeObserver in SSR', () => {
     const observerCtor = (globalThis as any).ResizeObserver as jest.Mock;
     TestBed.configureTestingModule({
       providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
