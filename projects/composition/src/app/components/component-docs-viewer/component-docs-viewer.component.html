@@ -199,10 +199,12 @@
             <div>
               <table class="data-table">
                 <thead>
-                  <th>Name</th>
-                  <th>Parameters</th>
-                  <th>Return type</th>
-                  <th>Description</th>
+                  <tr>
+                    <th>Name</th>
+                    <th>Parameters</th>
+                    <th>Return type</th>
+                    <th>Description</th>
+                  </tr>
                 </thead>
                 <tbody>
                   @for (method of service.methods.values; track method) {
@@ -214,7 +216,9 @@
                         <div class="parameters">
                           @for (param of method.parameters; track param.name) {
                             <span>
-                              <strong [cpsTooltip]="param.description || ''">
+                              <strong
+                                [cpsTooltip]="param.description || ''"
+                                tabindex="0">
                                 {{ param.name }}:
                               </strong>
                               @if (param.type | detectType: TypesMap; as type) {
@@ -264,9 +268,11 @@
               <div>
                 <table class="data-table">
                   <thead>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Description</th>
+                    </tr>
                   </thead>
                   <tbody>
                     @for (token of tokens.values; track token.name) {
