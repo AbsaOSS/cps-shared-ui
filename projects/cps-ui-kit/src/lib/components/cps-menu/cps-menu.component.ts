@@ -36,7 +36,7 @@ import { Subscription } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { PrimeNG } from 'primeng/config';
-import { INPUT_MODALITY_SERVICE } from '../../services/input-modality.service';
+import { CPS_INPUT_MODALITY_SERVICE } from '../../services/cps-input-modality/cps-input-modality.service';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
@@ -247,7 +247,9 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   hideReason: CpsMenuHideReason | undefined;
   private _openedByKeyboard = false;
-  private readonly _inputModalityService = inject(INPUT_MODALITY_SERVICE);
+  private readonly _cpsInputModalityService = inject(
+    CPS_INPUT_MODALITY_SERVICE
+  );
 
   @ViewChild('menuArrow') private _menuArrow?: ElementRef<HTMLElement>;
 
@@ -336,7 +338,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.target = target || event?.currentTarget || event?.target;
     if (this.target) this.resizeObserver.observe(this.target);
     this._openedByKeyboard =
-      this._inputModalityService?.lastInput() === 'keyboard';
+      this._cpsInputModalityService?.lastInput() === 'keyboard';
     this.overlayVisible = true;
     this.render = true;
     this.position = pos || 'default';
