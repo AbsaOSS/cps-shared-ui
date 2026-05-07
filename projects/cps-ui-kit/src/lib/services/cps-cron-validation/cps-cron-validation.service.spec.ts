@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { CronValidationService } from './cron-validation.service';
+import {
+  CpsCronValidationService,
+  CPS_CRON_VALIDATION_SERVICE
+} from './cps-cron-validation.service';
 
-describe('CronValidationService', () => {
-  let service: CronValidationService;
+describe('CpsCronValidationService', () => {
+  let service: CpsCronValidationService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CronValidationService);
+    service = TestBed.inject(CpsCronValidationService);
   });
 
   it('should be created', () => {
@@ -271,6 +274,39 @@ describe('CronValidationService', () => {
     it('should validate reporting schedules', () => {
       expect(service.isValidCron('0 8 1,15 * ? *')).toBe(true); // Bi-monthly
       expect(service.isValidCron('0 8 ? * MON#1 *')).toBe(true); // First Monday
+    });
+  });
+
+  describe('CPS_CRON_VALIDATION_SERVICE token', () => {
+    afterEach(() => {
+      TestBed.resetTestingModule();
+    });
+
+    it('should provide CpsCronValidationService by default', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const tokenService = TestBed.inject(CPS_CRON_VALIDATION_SERVICE);
+      expect(tokenService).toBeInstanceOf(CpsCronValidationService);
+    });
+
+    it('should allow overriding with a custom implementation', () => {
+      const customService = { isValidCron: () => true };
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: CPS_CRON_VALIDATION_SERVICE, useValue: customService }
+        ]
+      });
+      const tokenService = TestBed.inject(CPS_CRON_VALIDATION_SERVICE);
+      expect(tokenService.isValidCron('')).toBe(true);
+    });
+
+    it('should delegate isValidCron to the underlying service', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const tokenService = TestBed.inject(CPS_CRON_VALIDATION_SERVICE);
+      expect(tokenService.isValidCron('0 12 * * ? *')).toBe(true);
+      expect(tokenService.isValidCron('invalid')).toBe(false);
     });
   });
 });

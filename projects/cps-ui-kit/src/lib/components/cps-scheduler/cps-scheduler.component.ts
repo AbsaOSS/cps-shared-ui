@@ -18,7 +18,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { CronValidationService } from '../../services/cron-validation.service';
+import { CPS_CRON_VALIDATION_SERVICE } from '../../services/cps-cron-validation/cps-cron-validation.service';
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 import {
   CpsButtonToggleComponent,
@@ -186,7 +186,7 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
 
   private readonly _fb = inject(FormBuilder);
   private readonly _cdr = inject(ChangeDetectorRef);
-  private readonly _cronValidationService = inject(CronValidationService);
+  private readonly _cronValidationService = inject(CPS_CRON_VALIDATION_SERVICE);
 
   activeScheduleType = 'Not set';
   selectOptions = this._getSelectOptions();
