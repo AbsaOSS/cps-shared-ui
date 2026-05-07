@@ -724,6 +724,12 @@ async function main() {
     }
 
     for (const key in mergedDocs) {
+      const doc = mergedDocs[key];
+      const isEmpty =
+        Object.keys(doc).length === 1 &&
+        doc.components &&
+        Object.keys(doc.components).length === 0;
+      if (isEmpty) continue;
       const typedocJSON = JSON.stringify(mergedDocs[key], null, 4);
       !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
       fs.writeFileSync(path.resolve(outputPath, `${key}.json`), typedocJSON);
