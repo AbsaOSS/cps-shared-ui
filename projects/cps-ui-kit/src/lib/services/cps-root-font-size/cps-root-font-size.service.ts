@@ -1,9 +1,10 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
   inject,
   Injectable,
   InjectionToken,
   OnDestroy,
+  PLATFORM_ID,
   signal,
   Signal
 } from '@angular/core';
@@ -26,6 +27,9 @@ import {
  * so only one sentinel node exists per document regardless of how many
  * instances of this service are created.
  *
+ * Only active in browser environments. Under SSR the `fontSize` signal is
+ * initialized to `16` (the standard browser default) and no DOM observers are created.
+ *
  * Prefer injecting {@link CPS_ROOT_FONT_SIZE_SERVICE} over this class directly
  * to allow consumer applications to override the behavior.
  *
@@ -42,10 +46,13 @@ import {
 })
 export class CpsRootFontSizeService implements OnDestroy {
   private readonly _document = inject(DOCUMENT);
+  private readonly _platformId = inject(PLATFORM_ID);
 
   private static readonly _SENTINEL_ATTR = 'data-cps-root-font-size-sentinel';
 
-  private readonly _fontSize = signal<number>(this._readRootFontSize());
+  private readonly _fontSize = signal<number>(
+    isPlatformBrowser(this._platformId) ? this._readRootFontSize() : 16
+  );
 
   private _sentinel: HTMLElement | null = null;
   private _sentinelOwned = false;
@@ -55,6 +62,7 @@ export class CpsRootFontSizeService implements OnDestroy {
   readonly fontSize: Signal<number> = this._fontSize.asReadonly();
 
   constructor() {
+    if (!isPlatformBrowser(this._platformId)) return;
     this._setupObservers();
   }
 

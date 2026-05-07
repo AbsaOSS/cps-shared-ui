@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DOCUMENT } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 import {
   CpsRootFontSizeService,
   CPS_ROOT_FONT_SIZE_SERVICE
@@ -123,6 +124,49 @@ describe('CpsRootFontSizeService', () => {
 
       expect(document.querySelector(`[${SENTINEL_ATTR}]`)).not.toBeNull();
     });
+  });
+});
+
+describe('CpsRootFontSizeService (SSR)', () => {
+  beforeEach(() => {
+    (globalThis as any).ResizeObserver = jest.fn(() => ({
+      observe: jest.fn(),
+      disconnect: jest.fn()
+    }));
+    jest
+      .spyOn(window, 'getComputedStyle')
+      .mockReturnValue({ fontSize: '16px' } as CSSStyleDeclaration);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+    delete (globalThis as any).ResizeObserver;
+  });
+
+  it('should initialize fontSize to 16 in SSR', () => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+    });
+    const service = TestBed.inject(CpsRootFontSizeService);
+    expect(service.fontSize()).toBe(16);
+  });
+
+  it('should NOT create a sentinel element in SSR', () => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+    });
+    TestBed.inject(CpsRootFontSizeService);
+    const doc = TestBed.inject(DOCUMENT);
+    expect(doc.querySelector(`[${SENTINEL_ATTR}]`)).toBeNull();
+  });
+
+  it('should NOT create a ResizeObserver in SSR', () => {
+    const observerCtor = (globalThis as any).ResizeObserver as jest.Mock;
+    TestBed.configureTestingModule({
+      providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+    });
+    TestBed.inject(CpsRootFontSizeService);
+    expect(observerCtor).not.toHaveBeenCalled();
   });
 });
 
