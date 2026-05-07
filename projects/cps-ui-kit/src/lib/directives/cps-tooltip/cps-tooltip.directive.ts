@@ -344,13 +344,15 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     if (!parsed) throw new Error(`Unsupported value for tooltipOffset.`);
     if (parsed.unit === 'px') return parsed.value;
     if (parsed.unit === 'rem') return parsed.value * this._rootFontSizePx;
-    if (parsed.unit === 'em')
-      return (
-        parsed.value *
-        parseFloat(
-          getComputedStyle(this._elementRef.nativeElement).fontSize || '16'
-        )
-      );
+    if (parsed.unit === 'em') {
+      const fontSize = isPlatformBrowser(this._platformId)
+        ? parseFloat(
+            getComputedStyle(this._elementRef.nativeElement).fontSize || '16'
+          )
+        : 16;
+      return parsed.value * fontSize;
+    }
+
     throw new Error(`Unsupported unit "${parsed.unit}" for tooltipOffset.`);
   }
 
