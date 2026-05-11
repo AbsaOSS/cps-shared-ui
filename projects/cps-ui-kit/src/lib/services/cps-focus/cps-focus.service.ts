@@ -8,7 +8,7 @@ import {
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 /**
- * Manages focus-related concerns:
+ * CpsFocusService manages focus-related concerns:
  * - Tracks the most recent user input modality (keyboard vs. pointer)
  * - Focuses elements with conditional focus-ring suppression
  * - Traps focus within a container (e.g. a modal dialog)
