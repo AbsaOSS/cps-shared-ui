@@ -16,6 +16,7 @@ import {
   ComponentRef,
   ElementRef,
   EventEmitter,
+  inject,
   Inject,
   NgZone,
   OnDestroy,
@@ -41,6 +42,7 @@ import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
+import { CPS_FOCUS_SERVICE } from '../../../../cps-focus/cps-focus.service';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -125,7 +127,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   documentDragEndListener!: VoidListener | null;
 
-  private _focusTrapListener: VoidListener | null = null;
+  private _focusTrapTeardown: (() => void) | null = null;
   private _keyboardDragging = false;
   private _keyboardResizing = false;
   private _previouslyFocusedElement: HTMLElement | null = null;
@@ -139,6 +141,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   _maximizedStateChanged = new EventEmitter<boolean>();
 
   private _rootFontSizePx = 16;
+  private _openedByKeyboard = false;
+  private readonly _cpsFocusService = inject(CPS_FOCUS_SERVICE);
 
   get ariaLabel(): string | null {
     if (this.config.ariaLabelledBy) return null;
@@ -288,6 +292,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         this.wrapper = (this.container as HTMLDivElement).parentElement;
         this._previouslyFocusedElement = this.document
           .activeElement as HTMLElement;
+        this._openedByKeyboard = this._cpsFocusService?.isKeyboard() ?? false;
         this.moveOnTop();
         if (this.parent) {
           this.unbindGlobalListeners();
@@ -340,7 +345,14 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       this._shouldRestoreFocus &&
       this._previouslyFocusedElement?.isConnected
     ) {
-      this._previouslyFocusedElement.focus();
+      if (this._cpsFocusService) {
+        this._cpsFocusService.focusElement(
+          this._previouslyFocusedElement,
+          this._openedByKeyboard
+        );
+      } else {
+        this._previouslyFocusedElement.focus();
+      }
     }
     this._previouslyFocusedElement = null;
   }
@@ -894,45 +906,17 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   bindFocusTrapListener() {
     if (!isPlatformBrowser(this.platformId) || !this.container) return;
-
-    this._focusTrapListener = this.renderer.listen(
-      this.container,
-      'keydown',
-      (event: KeyboardEvent) => {
-        if (event.key !== 'Tab') return;
-
-        const focusable = DomHandler.getFocusableElements(
-          this.container as HTMLDivElement
-        );
-        if (!focusable || focusable.length === 0) {
-          event.preventDefault();
-          return;
-        }
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        const active = this.document.activeElement;
-
-        if (event.shiftKey) {
-          if (active === first || active === this.container) {
-            event.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (active === last || active === this.container) {
-            event.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    );
+    if (this._cpsFocusService) {
+      this._focusTrapTeardown = this._cpsFocusService.trapFocus(
+        this.container,
+        (el) => DomHandler.getFocusableElements(el)
+      );
+    }
   }
 
   unbindFocusTrapListener() {
-    if (this._focusTrapListener) {
-      this._focusTrapListener();
-      this._focusTrapListener = null;
-    }
+    this._focusTrapTeardown?.();
+    this._focusTrapTeardown = null;
   }
 
   unbindMaskClickListener() {
