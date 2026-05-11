@@ -307,14 +307,14 @@
                         "optional": true,
                         "readonly": false,
                         "type": "string | number",
-                        "description": "Minimum value for the left coordinate of dialog in dragging, a number denoting pixels or a string."
+                        "description": "Minimum value for the left coordinate of dialog in dragging.\nA number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px')."
                     },
                     {
                         "name": "minY",
                         "optional": true,
                         "readonly": false,
                         "type": "string | number",
-                        "description": "Minimum value for the top coordinate of dialog in dragging, a number denoting pixels or a string."
+                        "description": "Minimum value for the top coordinate of dialog in dragging.\nA number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px')."
                     },
                     {
                         "name": "maximizable",

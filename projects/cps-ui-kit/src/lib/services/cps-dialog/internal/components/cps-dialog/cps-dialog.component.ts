@@ -481,24 +481,10 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     else if (event.key === 'ArrowUp') newHeight -= step;
 
     const viewport = DomHandler.getViewport();
-    const minW = this._resolveMinPx(this.config.minWidth, 'minWidth');
-    const minH = this._resolveMinPx(this.config.minHeight, 'minHeight');
-    const maxW = this.config.maxWidth
-      ? this._toPx(this.config.maxWidth, Infinity)
-      : Infinity;
-    const maxH = this.config.maxHeight
-      ? this._toPx(this.config.maxHeight, Infinity)
-      : Infinity;
     const offset = containerEl.getBoundingClientRect();
 
-    newWidth = Math.max(
-      minW,
-      Math.min(newWidth, maxW, viewport.width - offset.left)
-    );
-    newHeight = Math.max(
-      minH,
-      Math.min(newHeight, maxH, viewport.height - offset.top)
-    );
+    newWidth = Math.min(newWidth, viewport.width - offset.left);
+    newHeight = Math.min(newHeight, viewport.height - offset.top);
 
     this._style.width = this._pxToRem(newWidth);
     this._style.height = this._pxToRem(newHeight);
@@ -649,8 +635,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         : 0;
       let newWidth = containerWidth + deltaX;
       let newHeight = containerHeight + deltaY;
-      const minWidth = this._resolveMinPx(this.config.minWidth, 'minWidth');
-      const minHeight = this._resolveMinPx(this.config.minHeight, 'minHeight');
       const offset = (this.container as HTMLDivElement).getBoundingClientRect();
       const viewport = DomHandler.getViewport();
       const hasBeenDragged =
@@ -662,10 +646,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         newHeight += deltaY;
       }
 
-      if (
-        (!minWidth || newWidth > minWidth) &&
-        offset.left + newWidth < viewport.width
-      ) {
+      if (offset.left + newWidth < viewport.width) {
         const newContentWidth = contentWidth + newWidth - containerWidth;
         const newHeaderWidth = headerWidth + newWidth - containerWidth;
         this._style.width = this._pxToRem(
@@ -674,10 +655,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
         (this.container as HTMLDivElement).style.width = this._style.width;
       }
 
-      if (
-        (!minHeight || newHeight > minHeight) &&
-        offset.top + newHeight < viewport.height
-      ) {
+      if (offset.top + newHeight < viewport.height) {
         const newContentHeight = contentHeight + newHeight - containerHeight;
         this._style.height = this._pxToRem(
           Math.max(newHeight, headerHeight + newContentHeight)
@@ -924,16 +902,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
       this.maskClickListener();
       this.maskClickListener = null;
     }
-  }
-
-  private _resolveMinPx(
-    configMin: number | string | undefined,
-    prop: 'minWidth' | 'minHeight'
-  ): number {
-    return Math.max(
-      this._toPx(configMin),
-      this._toPx(this.container?.style[prop])
-    );
   }
 
   private _pxToRem(px: number): string {

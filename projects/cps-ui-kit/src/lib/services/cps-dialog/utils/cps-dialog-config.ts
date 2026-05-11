@@ -159,11 +159,13 @@ export class CpsDialogConfig<T = any> {
    */
   keepInViewport?: boolean;
   /**
-   * Minimum value for the left coordinate of dialog in dragging, a number denoting pixels or a string.
+   * Minimum value for the left coordinate of dialog in dragging.
+   * A number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px').
    */
   minX?: number | string;
   /**
-   * Minimum value for the top coordinate of dialog in dragging, a number denoting pixels or a string.
+   * Minimum value for the top coordinate of dialog in dragging.
+   * A number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px').
    */
   minY?: number | string;
   /**
