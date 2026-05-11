@@ -1,50 +1,78 @@
 <div
   class="cps-sidebar-menu"
-  [style.height]="height"
-  [ngClass]="{ 'cps-sidebar-menu-collapsed': !isExpanded }">
-  @for (item of items; track item) {
-    @if (item.url) {
-      <a
-        class="cps-sidebar-menu-item"
-        [routerLink]="[item.url]"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: exactRoutes }"
-        [ngClass]="{ disabled: item.disabled }">
-        <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-        <span
-          class="cps-sidebar-menu-item-label"
-          [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
-          {{ item.title }}
-        </span>
-      </a>
+  [style.height]="cvtHeight()"
+  [class.cps-sidebar-menu-collapsed]="!isExpanded">
+  <nav
+    class="cps-sidebar-menubar"
+    [attr.aria-label]="ariaLabel"
+    [attr.aria-description]="`Sidebar ${isExpanded ? 'expanded' : 'collapsed'}`">
+    @for (item of items; track item) {
+      @if (item.url) {
+        <a
+          class="cps-sidebar-menu-item"
+          tabindex="0"
+          [routerLink]="item.disabled ? null : [item.url]"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+          [routerLinkActiveOptions]="{ exact: exactRoutes }"
+          [class.disabled]="item.disabled"
+          [attr.aria-disabled]="item.disabled || null"
+          [attr.aria-label]="item.title">
+          <cps-icon [icon]="item.icon" size="normal" aria-hidden="true">
+          </cps-icon>
+          <span
+            class="cps-sidebar-menu-item-label"
+            [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+            {{ item.title }}
+          </span>
+        </a>
+      }
+      @if (!item.url) {
+        <cps-menu
+          #popupMenu
+          [items]="item.items || []"
+          [header]="item.title"
+          [focusOnShow]="false"
+          showTransitionOptions="0s"
+          hideTransitionOptions="0s"
+          [withArrow]="false"
+          (containerMouseLeave)="leaveMenu($event, popupMenu)">
+        </cps-menu>
+        <button
+          type="button"
+          (mouseenter)="showMenu($event, popupMenu)"
+          (mouseleave)="leaveMenu($event, popupMenu)"
+          (focusin)="showMenu($event, popupMenu, item)"
+          (focusout)="leaveMenu($event, popupMenu)"
+          (click)="toggleMenu($event, popupMenu, item)"
+          class="cps-sidebar-menu-item menu-trigger"
+          [class.active]="isActive(item)"
+          [class.menu-open]="popupMenu.isVisible()"
+          [class.disabled]="item.disabled"
+          [attr.aria-haspopup]="'menu'"
+          [attr.aria-expanded]="
+            focusedItemWithMenu === item ? popupMenu.isVisible() : null
+          "
+          [attr.aria-current]="isActive(item) ? 'page' : null"
+          [attr.aria-disabled]="item.disabled || null"
+          [attr.aria-label]="item.title">
+          <cps-icon [icon]="item.icon" size="normal" aria-hidden="true">
+          </cps-icon>
+          <span
+            class="cps-sidebar-menu-item-label"
+            [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+            {{ item.title }}
+          </span>
+        </button>
+      }
     }
-    @if (!item.url) {
-      <cps-menu
-        #popupMenu
-        [items]="item.items || []"
-        [header]="item.title"
-        showTransitionOptions="0s"
-        hideTransitionOptions="0s"
-        [withArrow]="false">
-      </cps-menu>
-      <div
-        (click)="toggleMenu($event, popupMenu)"
-        class="cps-sidebar-menu-item menu-trigger"
-        [ngClass]="{
-          active: isActive(item),
-          'menu-open': popupMenu.isVisible(),
-          disabled: item.disabled
-        }">
-        <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
-        <span
-          class="cps-sidebar-menu-item-label"
-          [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
-          {{ item.title }}
-        </span>
-      </div>
-    }
-  }
-  <div class="expand-area" (click)="toggleSidebar()">
-    <cps-icon icon="menu-shrink" size="fill"> </cps-icon>
-  </div>
+  </nav>
+  <button
+    type="button"
+    class="expand-area"
+    (click)="toggleSidebar()"
+    [attr.aria-label]="isExpanded ? 'Collapse sidebar' : 'Expand sidebar'"
+    [attr.aria-expanded]="isExpanded">
+    <cps-icon icon="menu-shrink" size="normal" aria-hidden="true"> </cps-icon>
+  </button>
 </div>

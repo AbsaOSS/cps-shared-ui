@@ -22,12 +22,17 @@
   }
 
   &::before {
-    inset: -#{$inner-offset}; /* inner offset */
+    inset: #{-$inner-offset};
     border: $inner-width solid var(--cps-color-calm);
   }
 
   &::after {
-    inset: -#{$outer-offset}; /* outer offset */
+    inset: #{-$outer-offset};
     border: $outer-width solid var(--cps-color-calm-highlighten);
+  }
+
+  &.suppress-focus-visible::before,
+  &.suppress-focus-visible::after {
+    display: none;
   }
 }

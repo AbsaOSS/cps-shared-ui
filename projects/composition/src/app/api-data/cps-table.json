@@ -744,7 +744,7 @@
         "values": [
             {
                 "name": "CpsColumnFilterCategoryOption",
-                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"icon\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "value": "{\n    \"value\": \"any\",\n    \"label?\": \"string\",\n    \"icon?\": \"string\",\n    \"disabled?\": \"boolean\",\n    \"tooltip?\": \"string\"\n}",
                 "description": "CpsColumnFilterCategoryOption is used to define the options of the CpsColumnFilterCategoryComponent."
             },
             {
