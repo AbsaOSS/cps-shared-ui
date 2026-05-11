@@ -50,6 +50,7 @@ export class MenuPageComponent {
       }
     },
     {
+      ariaLabel: 'Sixth item is loading',
       loading: true
     },
     {
@@ -95,6 +96,7 @@ export class MenuPageComponent {
       }
     },
     {
+      ariaLabel: 'Sixth item is loading',
       loading: true
     },
     {

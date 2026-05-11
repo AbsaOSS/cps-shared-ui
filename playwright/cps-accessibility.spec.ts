@@ -110,11 +110,11 @@ const components: ComponentEntry[] = [
   //     await page.locator('cps-select').first().click();
   //   }
   // },
-  // {
-  //   route: '/sidebar-menu',
-  //   name: 'Sidebar menu',
-  //   selector: 'cps-sidebar-menu'
-  // },
+  {
+    route: '/sidebar-menu',
+    name: 'Sidebar menu',
+    selector: 'cps-sidebar-menu'
+  },
   // { route: '/switch', name: 'Switch', selector: 'cps-switch' },
   // { route: '/tab-group', name: 'Tab group', selector: 'cps-tab-group' },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
