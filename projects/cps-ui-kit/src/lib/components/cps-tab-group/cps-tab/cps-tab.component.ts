@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+  signal,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 
 /**
  * CpsTabComponent is a tab within a tab-group.
@@ -9,64 +17,91 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
   imports: [CommonModule],
   selector: 'cps-tab',
   templateUrl: './cps-tab.component.html',
-  styleUrls: ['./cps-tab.component.scss']
+  styleUrls: ['./cps-tab.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CpsTabComponent {
   /**
    * Label of the tab.
    * @group Props
+   * @default ''
    */
-  @Input() label = '';
+  readonly label = input('');
+
+  /**
+   * Aria label for the tab component, used for accessibility, it takes precedence over label.
+   * @group Props
+   * @default ''
+   */
+  readonly ariaLabel = input('');
 
   /**
    * Icon before the label.
    * @group Props
+   * @default ''
    */
-  @Input() icon = '';
+  readonly icon = input('');
 
   /**
    * Determines whether tab is disabled.
    * @group Props
+   * @default false
    */
-  @Input() disabled = false;
+  readonly disabled = input(false);
 
   /**
    * Determines whether to show the tooltip on tab hover.
    * @group Props
+   * @default ''
    */
-  @Input() tooltipText = '';
+  readonly tooltipText = input('');
 
   /**
    * Class for styling the tab tooltip.
    * @group Props
+   * @default 'cps-tooltip-content'
    */
-  @Input() tooltipContentClass = 'cps-tooltip-content';
+  readonly tooltipContentClass = input('cps-tooltip-content');
 
   /**
    * Max width of the tooltip, of type number denoting pixels or string.
    * @group Props
+   * @default 100%
    */
-  @Input() tooltipMaxWidth: number | string = '100%';
+  readonly tooltipMaxWidth = input<number | string>('100%');
 
   /**
    * Determines whether the tooltip should have persistent info.
    * @group Props
+   * @default false
    */
-  @Input() tooltipPersistent = false;
+  readonly tooltipPersistent = input(false);
 
   /**
    * Badge value to show on the tab after the label in a form of a circle.
    * @group Props
+   * @default ''
    */
-  @Input() badgeValue = '';
+  readonly badgeValue = input('');
 
   /**
    * Tooltip text to show on badge hover.
    * @group Props
+   * @default ''
    */
-  @Input() badgeTooltip = '';
+  readonly badgeTooltip = input('');
 
-  @ViewChild(TemplateRef) content!: TemplateRef<any>;
+  @ViewChild(TemplateRef) content!: TemplateRef<unknown>;
 
-  active = false;
+  readonly active = signal(false);
+
+  constructor() {
+    effect(() => {
+      if (!this.label()?.trim() && !this.ariaLabel()?.trim()) {
+        console.error(
+          'CpsTabComponent: unlabeled tab component must have an ariaLabel for accessibility.'
+        );
+      }
+    });
+  }
 }

@@ -9,28 +9,43 @@
   }"
   [ngStyle]="{ 'background-color': tabsBackground }">
   @if (!backBtnVisible) {
-    <div
+    <button
+      type="button"
       class="nav-btn nav-btn-back"
-      [ngStyle]="{ 'background-color': navButtonsBackground }"
+      [style.background-color]="navButtonsBackground"
+      aria-label="Scroll tabs backward"
+      tabindex="-1"
       #backBtn
       (click)="navBackward()">
-      <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
-    </div>
+      <cps-icon
+        icon="chevron-down"
+        color="text-dark"
+        aria-hidden="true"></cps-icon>
+    </button>
   }
-  <ul #tabsList class="cps-tabs-list">
+  <ul #tabsList class="cps-tabs-list" role="tablist">
     @for (tab of tabs; track tab; let tabIndex = $index) {
-      @if (tab.tooltipText) {
+      @if (tab.tooltipText()) {
         <li
           class="cps-tab"
-          (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
-          [ngClass]="{ active: tab.active, disabled: tab.disabled }"
-          [cpsTooltip]="tab.tooltipText"
+          role="tab"
+          [id]="getTabId(tabIndex)"
+          [attr.aria-label]="tab.ariaLabel() || tab.label() || null"
+          [attr.aria-selected]="tab.active()"
+          [attr.aria-disabled]="tab.disabled() ? true : null"
+          [attr.tabindex]="tab.active() ? 0 : -1"
+          [attr.aria-controls]="getPanelId(tabIndex)"
+          (click)="!tab.disabled() ? onTabClick(tabIndex) : ''"
+          (keydown)="onTabKeydown($event, tabIndex)"
+          [class.active]="tab.active()"
+          [class.disabled]="tab.disabled()"
+          [cpsTooltip]="tab.tooltipText()"
           tooltipOpenDelay="1000"
           tooltipCloseDelay="0"
           tooltipPosition="bottom"
-          [tooltipMaxWidth]="tab.tooltipMaxWidth"
-          [tooltipPersistent]="tab.tooltipPersistent"
-          [tooltipContentClass]="tab.tooltipContentClass">
+          [tooltipMaxWidth]="tab.tooltipMaxWidth()"
+          [tooltipPersistent]="tab.tooltipPersistent()"
+          [tooltipContentClass]="tab.tooltipContentClass()">
           <ng-container
             *ngTemplateOutlet="
               tabHeaderTemplate;
@@ -39,12 +54,20 @@
               }
             "></ng-container>
         </li>
-      }
-      @if (!tab.tooltipText) {
+      } @else {
         <li
           class="cps-tab"
-          (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
-          [ngClass]="{ active: tab.active, disabled: tab.disabled }">
+          role="tab"
+          [id]="getTabId(tabIndex)"
+          [attr.aria-label]="tab.ariaLabel() || tab.label() || null"
+          [attr.aria-selected]="tab.active()"
+          [attr.aria-disabled]="tab.disabled() ? true : null"
+          [attr.tabindex]="tab.active() ? 0 : -1"
+          [attr.aria-controls]="getPanelId(tabIndex)"
+          (click)="!tab.disabled() ? onTabClick(tabIndex) : ''"
+          (keydown)="onTabKeydown($event, tabIndex)"
+          [class.active]="tab.active()"
+          [class.disabled]="tab.disabled()">
           <ng-container
             *ngTemplateOutlet="
               tabHeaderTemplate;
@@ -57,13 +80,19 @@
     }
   </ul>
   @if (!forwardBtnVisible) {
-    <div
+    <button
+      type="button"
       class="nav-btn nav-btn-forward"
-      [ngStyle]="{ 'background-color': navButtonsBackground }"
+      [style.background-color]="navButtonsBackground"
+      aria-label="Scroll tabs forward"
+      tabindex="-1"
       #forwardBtn
       (click)="navForward()">
-      <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
-    </div>
+      <cps-icon
+        icon="chevron-down"
+        color="text-dark"
+        aria-hidden="true"></cps-icon>
+    </button>
   }
 </div>
 <div
@@ -72,9 +101,14 @@
   [ngClass]="{
     'cps-tab-content-wrap-subtabs': isSubTabs
   }">
-  @for (tab of tabs; track tab) {
-    @if (tab.active) {
-      <div class="cps-tab-content">
+  @for (tab of tabs; track tab; let panelIndex = $index) {
+    @if (tab.active()) {
+      <div
+        class="cps-tab-content"
+        role="tabpanel"
+        [id]="getPanelId(panelIndex)"
+        [attr.aria-labelledby]="getTabId(panelIndex)"
+        [attr.tabindex]="getPanelTabindex(panelIndex)">
         @if (animationType === 'slide') {
           <div [@slideInOut]="animationState" class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
@@ -91,19 +125,23 @@
 </div>
 
 <ng-template #tabHeaderTemplate let-tab="tab">
-  @if (tab.icon) {
-    <cps-icon class="cps-tab-icon" [icon]="tab.icon"> </cps-icon>
+  @if (tab.icon()) {
+    <cps-icon class="cps-tab-icon" [icon]="tab.icon()" aria-hidden="true">
+    </cps-icon>
   }
-  <a class="cps-tab-link">{{ tab.label }}</a>
-  @if (tab.badgeValue) {
-    @if (tab.badgeTooltip) {
-      <div class="cps-tab-badge" [cpsTooltip]="tab.badgeTooltip">
-        <span>{{ tab.badgeValue }}</span>
+  <span class="cps-tab-link">{{ tab.label() }}</span>
+  @if (tab.badgeValue()) {
+    @if (tab.badgeTooltip()) {
+      <div
+        class="cps-tab-badge"
+        [cpsTooltip]="tab.badgeTooltip()"
+        [attr.tabindex]="tab.active() ? 0 : -1"
+        role="note">
+        <span>{{ tab.badgeValue() }}</span>
       </div>
-    }
-    @if (!tab.badgeTooltip) {
+    } @else {
       <div class="cps-tab-badge">
-        <span>{{ tab.badgeValue }}</span>
+        <span>{{ tab.badgeValue() }}</span>
       </div>
     }
   }

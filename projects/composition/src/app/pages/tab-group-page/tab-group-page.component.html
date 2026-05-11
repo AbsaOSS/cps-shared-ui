@@ -2,8 +2,7 @@
   <!-- Example of component's usage -->
   <div class="tabs-elems-group">
     <div class="tabs-elems-group-title">
-      Center-aligned tabs with slide transition, first tab badge and disabled
-      last tab
+      Center-aligned tabs with slide transition, badges and disabled last tab
     </div>
     <cps-tab-group
       tabsBackground="bg-light"
@@ -11,11 +10,13 @@
       class="tab-example--center-aligned"
       [selectedIndex]="selectedTabIndex"
       (afterTabChanged)="changeTab($event)">
-      <cps-tab label="Tab 1" badgeValue="7" badgeTooltip="Badge tooltip"
+      <cps-tab label="Tab 1" badgeValue="7" badgeTooltip="First tab badge"
         >Content of tab 1</cps-tab
       >
       <cps-tab label="Tab 2">Content of tab 2</cps-tab>
-      <cps-tab label="Tab 3">Content of tab 3</cps-tab>
+      <cps-tab label="Tab 3" badgeValue="5" badgeTooltip="Third tab badge"
+        >Content of tab 3</cps-tab
+      >
       <cps-tab label="Tab 4" [disabled]="true">Content of tab 4</cps-tab>
     </cps-tab-group>
   </div>
@@ -93,9 +94,12 @@
   </div>
 
   <div class="tabs-elems-group">
-    <div class="tabs-elems-group-title">Right-aligned tabs with icons</div>
+    <div class="tabs-elems-group-title">
+      Right-aligned tabs with icons and without auto activation
+    </div>
     <cps-tab-group
       alignment="right"
+      [autoActivation]="false"
       (afterTabChanged)="changeTab($event)"
       tabsBackground="bg-light">
       <cps-tab label="Tab 1" icon="survivorship" id="tab1"

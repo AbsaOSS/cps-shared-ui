@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 :host {
   background-color: inherit;
   margin: 0 !important;
@@ -17,6 +19,10 @@
       cursor: pointer;
       position: absolute;
       height: 100%;
+      border: none;
+      padding: 0;
+      background: transparent;
+      z-index: 1;
 
       &:hover {
         ::ng-deep cps-icon .cps-icon {
@@ -79,6 +85,9 @@
           cursor: default;
           color: var(--cps-color-text-light);
         }
+        &:focus-visible {
+          @include focus-ring(-0.0625rem, 0, 0);
+        }
 
         .cps-tab-link {
           text-decoration: none;
@@ -96,6 +105,10 @@
           display: flex;
           align-items: center;
           justify-content: center;
+
+          &:focus-visible {
+            @include focus-ring(0.125rem, 0.25rem, 50%);
+          }
         }
       }
 
@@ -129,7 +142,8 @@
         border-bottom: 3px solid var(--cps-color-line-dark);
       }
 
-      &:hover:not(:active, .active, .disabled) {
+      &:hover:not(:active, .active, .disabled),
+      &:focus-visible:not(:active, .active, .disabled) {
         border-bottom: 3px solid var(--cps-color-line-light);
       }
 
@@ -147,7 +161,8 @@
       &.active {
         background-color: #fff;
       }
-      &:hover:not(.disabled) {
+      &:hover:not(.disabled),
+      &:focus-visible:not(.disabled) {
         color: var(--cps-color-calm);
       }
     }
@@ -174,6 +189,11 @@
       right: 0;
       bottom: 0;
       outline: 0;
+
+      &:focus-visible {
+        @include focus-ring(-0.0625rem, 0, 0);
+      }
+
       .cps-tab-content-inner {
         height: 100%;
         overflow: auto;

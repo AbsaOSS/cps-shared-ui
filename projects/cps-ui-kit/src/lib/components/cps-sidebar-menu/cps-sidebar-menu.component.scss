@@ -45,7 +45,7 @@
       }
 
       &:focus-visible {
-        @include focus-ring(0, -0.125rem, 0);
+        @include focus-ring(0, -0.0625rem, 0);
         position: absolute;
       }
 
@@ -74,7 +74,7 @@
       font: inherit;
 
       &:focus-visible {
-        @include focus-ring(0, -0.125rem, 0);
+        @include focus-ring(0, -0.0625rem, 0);
       }
 
       &:focus-visible:not(.active):not(.disabled) {
