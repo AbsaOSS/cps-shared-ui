@@ -284,11 +284,14 @@ export class CpsTabGroupComponent
 
   getTabAriaLabel(tab: CpsTabComponent): string | null {
     const label = tab.ariaLabel() || tab.label();
-    return (
-      (tab.badgeValue()
-        ? `${label}, Badge: ${tab.badgeValue()}, ${tab.badgeTooltip()}`
-        : label) || null
-    );
+    const badgeValue = tab.badgeValue().trim();
+
+    if (!badgeValue) {
+      return label || null;
+    }
+
+    const badgeTooltip = tab.badgeTooltip().trim();
+    return `${label}, Badge: ${badgeValue}${badgeTooltip ? `, ${badgeTooltip}` : ''}`;
   }
 
   onTabClick(index: number) {

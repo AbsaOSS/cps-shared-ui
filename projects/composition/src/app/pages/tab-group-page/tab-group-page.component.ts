@@ -53,16 +53,15 @@ export class TabGroupPageComponent {
     tooltipText: `Tooltip of tab ${i + 1}`
   }));
 
-  rightAlignedTabs: Array<{ label: string; icon: string; id: string | null }> =
-    [
-      { label: 'Tab 1', icon: 'survivorship', id: 'tab1' },
-      { label: 'Tab 2', icon: 'kris', id: null },
-      { label: 'Tab 3', icon: 'dq', id: null }
-    ];
+  rightAlignedTabs = [
+    { label: 'Tab 1', icon: 'survivorship', id: 'tab1' },
+    { label: 'Tab 2', icon: 'kris', id: null },
+    { label: 'Tab 3', icon: 'dq', id: null }
+  ];
 
   stretchedTabs = [{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }];
 
-  subTabs: Array<{ label: string; icon: string; id: string | null }> = [
+  subTabs = [
     { label: 'Tab 1', icon: 'avatar', id: 'tab1' },
     { label: 'Tab 2', icon: '', id: null },
     { label: 'Tab 3', icon: '', id: null }

@@ -168,7 +168,7 @@ describe('CpsTabGroupComponent', () => {
     expect(tabs[0].active()).toBe(false);
   });
 
-  it('should skip disabled tab when selectedIndex points to it', () => {
+  it('should activate a disabled tab when selectedIndex points to it programmatically', () => {
     host.selectedIndex = 2;
     hostFixture.detectChanges();
     const tabs = component.tabs.toArray();

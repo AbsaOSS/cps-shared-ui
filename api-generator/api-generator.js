@@ -91,7 +91,7 @@ async function main() {
           fileLineCache[src.fullFileName][src.line - 1] || ''
         ).trim();
         const match = line.match(
-          /(?:readonly\s+)?[a-zA-Z_$][\w$]*\s*\??\s*:\s*(.+?)\s*;?\s*$/
+          /(?:readonly\s+)?[a-zA-Z_$][\w$]*\s*\??\s*:\s*(.+?)(?=\s*(?:;|=(?!>)|\/\/|\/\*|$))/
         );
         return match ? match[1].trim() : fallback();
       } catch (_) {
