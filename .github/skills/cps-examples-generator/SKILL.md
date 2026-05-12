@@ -150,9 +150,12 @@ onButtonClick() {
 
 ## After generating examples.ts
 
-Remind the user of the two integration steps still needed:
+Immediately apply the two integration steps — do not just describe them.
 
-**1. In `<component>-page.component.ts`**, import `CodeExampleComponent` and the examples:
+### Step A — Update `<component>-page.component.ts`
+
+1. Add `CodeExampleComponent` to the `imports` array (already imported from `'../../components/code-example/code-example.component'`)
+2. Add the examples import and expose it as a readonly class property
 
 ```typescript
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
@@ -165,19 +168,20 @@ imports: [..., CodeExampleComponent],
 readonly examples = componentExamples;
 ```
 
-**2. In `<component>-page.component.html`**, wrap each preview:
+### Step B — Update `<component>-page.component.html`
+
+Wrap each live preview block in `<app-code-example>`. The `label` must match the key used in the examples object (human-readable form). If the example has a `ts` entry, bind `[tsCode]` too; omit it otherwise.
 
 ```html
 <app-code-example
   label="Primary button"
   [htmlCode]="examples.primaryButton.html"
   [tsCode]="examples.primaryButton.ts">
-  <!-- existing preview markup goes here -->
+  <!-- existing preview markup stays here unchanged -->
 </app-code-example>
 ```
 
-Point them to an already-wired component (Autocomplete, Button, Button Toggle from PR #554)
-as a reference if they want to see a complete end-to-end example.
+After applying both steps, confirm to the user that all three files have been written.
 
 ## Handling Ambiguity
 
