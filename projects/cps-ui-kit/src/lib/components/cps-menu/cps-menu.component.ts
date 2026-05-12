@@ -36,7 +36,7 @@ import { Subscription } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { PrimeNG } from 'primeng/config';
-import { CPS_INPUT_MODALITY_SERVICE } from '../../services/cps-input-modality/cps-input-modality.service';
+import { CPS_FOCUS_SERVICE } from '../../services/cps-focus/cps-focus.service';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
@@ -247,9 +247,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   hideReason: CpsMenuHideReason | undefined;
   private _openedByKeyboard = false;
-  private readonly _cpsInputModalityService = inject(
-    CPS_INPUT_MODALITY_SERVICE
-  );
+  private readonly _cpsFocusService = inject(CPS_FOCUS_SERVICE);
 
   @ViewChild('menuArrow') private _menuArrow?: ElementRef<HTMLElement>;
 
@@ -340,8 +338,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
 
     this.target = target || event?.currentTarget || event?.target;
     if (this.target) this.resizeObserver.observe(this.target);
-    this._openedByKeyboard =
-      this._cpsInputModalityService?.lastInput() === 'keyboard';
+    this._openedByKeyboard = this._cpsFocusService?.isKeyboard() ?? false;
     this.overlayVisible = true;
     this.render = true;
     this.position = pos || 'default';
@@ -411,7 +408,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
                   this.zone.run(() => {
                     this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
                   });
-                  this._focusTarget(this._openedByKeyboard);
+                  this._focusTarget();
                   break;
                 case 'Tab':
                   if (this.items.length > 0) {
@@ -729,20 +726,14 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     });
   }
 
-  private _focusTarget(showRing: boolean): void {
+  private _focusTarget(): void {
     const el: HTMLElement | undefined | null = this.target;
     if (!el) return;
-    if (!showRing) {
-      el.classList.add('suppress-focus-visible');
-      el.addEventListener(
-        'blur',
-        () => el.classList.remove('suppress-focus-visible'),
-        {
-          once: true
-        }
-      );
+    if (this._cpsFocusService) {
+      this._cpsFocusService.focusElement(el, this._openedByKeyboard);
+    } else {
+      el.focus();
     }
-    el.focus();
   }
 
   private _getMenuItems(): HTMLElement[] {

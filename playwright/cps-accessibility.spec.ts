@@ -37,19 +37,66 @@ const components: ComponentEntry[] = [
   //     await page.locator('cps-datepicker .cps-icon').first().click();
   //   }
   // },
-  // {
-  //   route: '/dialog',
-  //   name: 'Dialog',
-  //   selector: '[role="dialog"]',
-  //   setup: async (page) => {
-  //     await page.waitForSelector('.example-content');
-  //     await page
-  //       .locator('.example-content cps-button')
-  //       .filter({ hasText: /dialog/i })
-  //       .first()
-  //       .click();
-  //   }
-  // },
+  {
+    route: '/dialog',
+    name: 'Confirmation dialog',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /Confirmation dialog/i })
+        .click();
+    }
+  },
+  {
+    route: '/dialog',
+    name: 'Regular dialog',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /Regular dialog/i })
+        .click();
+    }
+  },
+  {
+    route: '/dialog',
+    name: 'Draggable dialog',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /Draggable dialog/i })
+        .click();
+    }
+  },
+  {
+    route: '/dialog',
+    name: 'Resizable dialog',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /Resizable dialog/i })
+        .click();
+    }
+  },
+  {
+    route: '/dialog',
+    name: 'Dialog with blurred background and container autofocus',
+    selector: '[role="dialog"]',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /blurred background/i })
+        .click();
+    }
+  },
   // { route: '/divider', name: 'Divider', selector: 'cps-divider' },
   // {
   //   route: '/expansion-panel',
