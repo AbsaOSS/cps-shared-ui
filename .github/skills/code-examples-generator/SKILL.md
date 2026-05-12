@@ -47,9 +47,9 @@ Produce a complete `<component>-page.examples.ts` that:
 
 1. Exports a **single const object** (e.g. `export const buttonExamples = { ... }`)
 2. Has one key per `<app-code-example>` block (camelCase, matching the `label`)
-3. Each key maps to `{ html: string, ts: string }`
-4. The `html` string is a **faithful, minimal reproduction** of that preview block — stripped of the outer `<app-code-example>` wrapper but keeping inner content verbatim (attributes, bindings, classes, event bindings — everything)
-5. The `ts` string shows only what is **relevant to that example**: signal/property declarations, option arrays, event handlers, imports — nothing unrelated to the example
+3. Each key maps to `{ html?: string, ts?: string }` — at least one of the two must be present; omit whichever is not needed
+4. The `html` string is a **faithful, minimal reproduction** of that preview block — stripped of the outer `<app-code-example>` wrapper, with all `cps-*` component attributes and Angular syntax preserved exactly, but composition-only layout wrapper elements removed (see Strict Rules)
+5. The `ts` string shows only what is **relevant to that example**: signal/property declarations, option arrays, event handlers — nothing unrelated to the example, and never imports
 
 ## Step-by-Step Process
 
@@ -62,12 +62,37 @@ Ask the user to paste (or point to) the following files for the component being 
 
 If both are available in context already, proceed without asking.
 
+Then scan a few existing `*.examples.ts` files from other component pages under
+`projects/composition/src/app/pages/` to calibrate:
+
+- The level of detail expected in `html` and `ts` strings for similar patterns
+  (e.g. option arrays, event handlers, disabled states, multi-variant sections)
+- How section comments (`<!-- large -->`, `<!-- small -->`) are used in practice
+- Any recurring shared-const patterns (factored `ts` strings reused across entries)
+
+Use these as a style reference, not a template to copy. The goal is consistency
+with the rest of the codebase, not uniformity.
+
 ### 2. Identify examples
 
-Scan the HTML template for every `<app-code-example>` block. For each block:
+**If the template already contains `<app-code-example>` blocks** (already migrated):
 
 - Note the `label` input value → this becomes the camelCase key
 - Extract the inner content (the live preview markup) → this becomes the `html` string
+
+**If the template has no `<app-code-example>` blocks** (pre-migration — initial wiring):
+
+Identify example boundaries by looking for natural groupings in the template. Treat each of the following as a separate example:
+
+- A discrete preview section separated by a heading, comment, or `<hr>`
+- A self-contained component usage block with its own set of inputs/bindings that differ meaningfully from its neighbours
+- Any block the page's `.ts` file describes separately (e.g. distinct signal declarations, separate option arrays)
+
+For each identified block:
+
+- Infer a short, human-readable label from its heading or the variant it demonstrates (e.g. `"Primary button"`, `"Disabled state"`)
+- Treat the raw markup of that block as the `html` string
+- You will wrap it in `<app-code-example>` in Step B after generating the examples file
 
 ### 3. Extract relevant TS per example
 
@@ -91,7 +116,7 @@ Follow the project's Prettier config: **single quotes, semicolons, no trailing c
 ```typescript
 // <component>-page.examples.ts
 
-export const <component>Examples: Record<string, { html: string; ts?: string }> = {
+export const <component>Examples: Record<string, { html?: string; ts?: string }> = {
   exampleOneLabel: {
     html: `
 <cps-some-component
@@ -115,20 +140,22 @@ handler(event: SomeType) {
 
 | Rule                                                                                                              | Why                                                                         |
 | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| **Copy HTML verbatim** — do not paraphrase, simplify, or reformat attributes                                      | Users copy these snippets; any change breaks their code                     |
+| **Preserve component markup exactly** — copy every attribute, binding, directive, and event handler of `cps-*` elements without paraphrasing or reordering | Users copy these snippets; any change breaks their code |
+| **Strip composition-only layout wrappers** — omit outer `<div>` elements whose sole purpose is page layout and whose class is defined only in the page's `.scss` file (e.g. `.checkboxes-group`); keep structural wrappers that are semantically part of the example (e.g. a div that displays a bound value) | Those classes don't exist outside the composition app and mislead consumers |
+| **Add section comments for multi-variant examples** — when one example contains multiple size or style variants, label each group with an HTML comment (e.g. `<!-- large -->`, `<!-- small -->`) as in the existing button examples | Helps consumers scan the snippet without running it |
 | **Preserve Angular syntax exactly** — `[input]`, `(event)`, `*ngIf`, `@if`, signal calls `()`, etc.               | Angular is strict about template syntax                                     |
 | **No hallucinated properties** — only include TS properties you actually see used in that specific example's HTML | Hallucinated props compile-error or mislead users                           |
 | **No invented imports** — never add import statements to the `ts` string                                          | They vary by project setup and add noise                                    |
 | **One object export per file** — don't split into multiple exports or use `default export`                        | The component imports it as `import { xExamples } from './x-page.examples'` |
 | **Preserve indentation style** — if the project uses 2-space indent, keep it                                      | Consistency with the codebase                                               |
-| **Omit `ts` when unused** — if an example needs no TypeScript, leave out the `ts` key entirely (it is `ts?: string`) | Omitting is cleaner than `ts: ''`; `CodeExampleComponent` handles absence gracefully |
+| **Omit unused keys** — omit `html` when the example has no template, omit `ts` when it needs no TypeScript; at least one must be present | Omitting is cleaner than empty strings; `CodeExampleComponent` handles absence gracefully |
 
 ## Example Output (Button)
 
 ```typescript
 // button-page.examples.ts
 
-export const buttonExamples: Record<string, { html: string; ts?: string }> = {
+export const buttonExamples: Record<string, { html?: string; ts?: string }> = {
   primaryButton: {
     html: `
 <cps-button label="Click me" (clicked)="onButtonClick()"></cps-button>`,
@@ -172,7 +199,7 @@ readonly examples = componentExamples;
 
 ### Step B — Update `<component>-page.component.html`
 
-Wrap each live preview block in `<app-code-example>`. The `label` must match the key used in the examples object (human-readable form). If the example has a `ts` entry, bind `[tsCode]` too; omit it otherwise.
+Wrap each live preview block in `<app-code-example>`. The `label` must match the key used in the examples object (human-readable form). Bind `[htmlCode]` and `[tsCode]` only for entries that have the corresponding key; omit bindings for absent keys.
 
 ```html
 <app-code-example
