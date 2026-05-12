@@ -22,7 +22,10 @@ import {
   Output,
   QueryList,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  afterRenderEffect,
+  signal,
+  viewChild
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
@@ -201,6 +204,10 @@ export class CpsTabGroupComponent
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
 
+  private readonly _tabPanelEl = viewChild<ElementRef>('tabPanel');
+
+  readonly panelTabindex = signal(0);
+
   private _currentTabIndex = 0;
   private _previousTabIndex = 0;
 
@@ -208,7 +215,12 @@ export class CpsTabGroupComponent
   constructor(
     private cdRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) {
+    afterRenderEffect(() => {
+      const el = this._tabPanelEl()?.nativeElement;
+      this.panelTabindex.set(el && this._hasFocusableIn(el) ? -1 : 0);
+    });
+  }
 
   ngOnInit(): void {
     this.tabsBackground = getCSSColor(this.tabsBackground, this.document);
@@ -259,15 +271,18 @@ export class CpsTabGroupComponent
     return `${this.tabGroupId}-panel-${index}`;
   }
 
+  getTabAriaLabel(tab: CpsTabComponent): string | null {
+    const label = tab.ariaLabel() || tab.label();
+    return (
+      (tab.badgeValue()
+        ? `${label}, Badge: ${tab.badgeValue()}, ${tab.badgeTooltip()}`
+        : label) || null
+    );
+  }
+
   onTabClick(index: number) {
     this.selectedIndex = index;
     this.selectTab();
-  }
-
-  getPanelTabindex(panelIndex: number): number {
-    const panelEl = this.document.getElementById(this.getPanelId(panelIndex));
-    if (!panelEl) return 0;
-    return this._hasFocusableIn(panelEl) ? -1 : 0;
   }
 
   onTabKeydown(event: KeyboardEvent, index: number): void {
@@ -302,25 +317,24 @@ export class CpsTabGroupComponent
         return;
     }
 
-    if (targetIndex !== null) {
-      event.preventDefault();
-      if (this.autoActivation) {
-        this.onTabClick(targetIndex);
-      }
-      const tabEls = Array.from<HTMLElement>(
-        this.tabsList.nativeElement.querySelectorAll('[role="tab"]')
-      );
-      const targetEl = tabEls[targetIndex];
-      if (targetEl) {
-        this._scrollTabIntoView(targetEl);
-        targetEl.focus({ preventScroll: true });
-      }
+    if (targetIndex == null) return;
+
+    event.preventDefault();
+    if (this.autoActivation) {
+      this.onTabClick(targetIndex);
+    }
+    const tabEls = Array.from<HTMLElement>(
+      this.tabsList.nativeElement.querySelectorAll('[role="tab"]')
+    );
+    const targetEl = tabEls[targetIndex];
+    if (targetEl) {
+      this._scrollTabIntoView(targetEl);
+      targetEl.focus({ preventScroll: true });
     }
   }
 
   private _scrollTabIntoView(tabEl: HTMLElement): void {
     const list: HTMLElement = this.tabsList.nativeElement;
-    const MARGIN = 8;
     const backW = this.backBtn?.nativeElement?.offsetWidth ?? 0;
     const fwdW = this.forwardBtn?.nativeElement?.offsetWidth ?? 0;
 
@@ -329,10 +343,10 @@ export class CpsTabGroupComponent
     const viewStart = list.scrollLeft + backW;
     const viewEnd = list.scrollLeft + list.clientWidth - fwdW;
 
-    if (tabStart - MARGIN < viewStart) {
-      list.scrollLeft = tabStart - backW - MARGIN;
-    } else if (tabEnd + MARGIN > viewEnd) {
-      list.scrollLeft = tabEnd + fwdW + MARGIN - list.clientWidth;
+    if (tabStart < viewStart) {
+      list.scrollLeft = tabStart - backW;
+    } else if (tabEnd > viewEnd) {
+      list.scrollLeft = tabEnd + fwdW - list.clientWidth;
     }
   }
 

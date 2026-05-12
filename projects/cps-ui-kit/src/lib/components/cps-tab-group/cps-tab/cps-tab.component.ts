@@ -17,7 +17,6 @@ import {
   imports: [CommonModule],
   selector: 'cps-tab',
   templateUrl: './cps-tab.component.html',
-  styleUrls: ['./cps-tab.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CpsTabComponent {

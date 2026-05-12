@@ -13,7 +13,7 @@
       type="button"
       class="nav-btn nav-btn-back"
       [style.background-color]="navButtonsBackground"
-      aria-label="Scroll tabs backward"
+      aria-hidden="true"
       tabindex="-1"
       #backBtn
       (click)="navBackward()">
@@ -30,7 +30,7 @@
           class="cps-tab"
           role="tab"
           [id]="getTabId(tabIndex)"
-          [attr.aria-label]="tab.ariaLabel() || tab.label() || null"
+          [attr.aria-label]="getTabAriaLabel(tab)"
           [attr.aria-selected]="tab.active()"
           [attr.aria-disabled]="tab.disabled() ? true : null"
           [attr.tabindex]="tab.active() ? 0 : -1"
@@ -59,7 +59,7 @@
           class="cps-tab"
           role="tab"
           [id]="getTabId(tabIndex)"
-          [attr.aria-label]="tab.ariaLabel() || tab.label() || null"
+          [attr.aria-label]="getTabAriaLabel(tab)"
           [attr.aria-selected]="tab.active()"
           [attr.aria-disabled]="tab.disabled() ? true : null"
           [attr.tabindex]="tab.active() ? 0 : -1"
@@ -84,7 +84,7 @@
       type="button"
       class="nav-btn nav-btn-forward"
       [style.background-color]="navButtonsBackground"
-      aria-label="Scroll tabs forward"
+      aria-hidden="true"
       tabindex="-1"
       #forwardBtn
       (click)="navForward()">
@@ -104,11 +104,12 @@
   @for (tab of tabs; track tab; let panelIndex = $index) {
     @if (tab.active()) {
       <div
+        #tabPanel
         class="cps-tab-content"
         role="tabpanel"
         [id]="getPanelId(panelIndex)"
         [attr.aria-labelledby]="getTabId(panelIndex)"
-        [attr.tabindex]="getPanelTabindex(panelIndex)">
+        [attr.tabindex]="panelTabindex()">
         @if (animationType === 'slide') {
           <div [@slideInOut]="animationState" class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
@@ -135,12 +136,11 @@
       <div
         class="cps-tab-badge"
         [cpsTooltip]="tab.badgeTooltip()"
-        [attr.tabindex]="tab.active() ? 0 : -1"
-        role="note">
+        aria-hidden="true">
         <span>{{ tab.badgeValue() }}</span>
       </div>
     } @else {
-      <div class="cps-tab-badge">
+      <div class="cps-tab-badge" aria-hidden="true">
         <span>{{ tab.badgeValue() }}</span>
       </div>
     }

@@ -15,7 +15,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 32px;
+      width: 2rem;
       cursor: pointer;
       position: absolute;
       height: 100%;
@@ -33,7 +33,7 @@
 
     .nav-btn-back {
       left: 0;
-      box-shadow: 2px 0 2px -1px #0003;
+      box-shadow: 0.125rem 0 0.125rem -0.0625rem #0003;
       cps-icon {
         transform: rotate(90deg);
       }
@@ -41,7 +41,7 @@
 
     .nav-btn-forward {
       right: 0;
-      box-shadow: -2px 0 2px -1px #0003;
+      box-shadow: -0.125rem 0 0.125rem -0.0625rem #0003;
       cps-icon {
         transform: rotate(270deg);
       }
@@ -65,17 +65,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 150px;
-        padding: 0 24px;
+        min-width: 9.375rem;
+        padding: 0 1.5rem;
         font-family: 'Source Sans Pro', sans-serif;
         font-style: normal;
         font-weight: 500;
-        font-size: 15px;
-        line-height: 20px;
+        font-size: 0.9375rem;
+        line-height: 1.25rem;
         color: var(--cps-color-text-dark);
         opacity: 1;
         cursor: pointer;
-        border-bottom: 3px solid transparent;
+        border-bottom: 0.1875rem solid transparent;
         transition: border-bottom 0.2s;
 
         &.active:not(.disabled) {
@@ -91,17 +91,17 @@
 
         .cps-tab-link {
           text-decoration: none;
-          padding: 10px;
+          padding: 0.625rem;
           color: inherit;
         }
         .cps-tab-badge {
-          min-width: 20px;
-          padding: 0 3px;
-          height: 20px;
+          min-width: 1.25rem;
+          padding: 0 0.1875rem;
+          height: 1.25rem;
           border-radius: 50%;
           background-color: var(--cps-color-surprise);
           color: white;
-          font-size: 12px;
+          font-size: 0.75rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -133,29 +133,29 @@
   }
 
   .cps-tabs:not(.cps-tabs-subtabs) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.12);
     .cps-tabs-list .cps-tab {
       &.active:not(.disabled) {
-        border-bottom: 3px solid var(--cps-color-surprise);
+        border-bottom: 0.1875rem solid var(--cps-color-surprise);
       }
       &.active.disabled {
-        border-bottom: 3px solid var(--cps-color-line-dark);
+        border-bottom: 0.1875rem solid var(--cps-color-line-dark);
       }
 
       &:hover:not(:active, .active, .disabled),
       &:focus-visible:not(:active, .active, .disabled) {
-        border-bottom: 3px solid var(--cps-color-line-light);
+        border-bottom: 0.1875rem solid var(--cps-color-line-light);
       }
 
       &:active:not(.disabled, .active) {
-        border-bottom: 3px solid var(--cps-color-line-mid);
+        border-bottom: 0.1875rem solid var(--cps-color-line-mid);
       }
     }
   }
 
   .cps-tabs.cps-tabs-subtabs {
     .cps-tabs-list .cps-tab {
-      height: 33px;
+      height: 2.0625rem;
       background-color: #d7d7d759;
 
       &.active {
@@ -171,7 +171,7 @@
   .cps-tab-content-wrap {
     display: flex;
     position: relative;
-    min-height: 100px;
+    min-height: 6.25rem;
     font-family: 'Source Sans Pro', sans-serif;
     color: var(--cps-color-text-dark);
     flex: 1;
