@@ -83,7 +83,7 @@
         }
         &.disabled {
           cursor: default;
-          color: var(--cps-color-text-light);
+          color: var(--cps-color-text-mild);
         }
         &:focus-visible {
           @include focus-ring(-0.0625rem, 0, 0);

@@ -163,7 +163,11 @@ const components: ComponentEntry[] = [
     selector: 'cps-sidebar-menu'
   },
   // { route: '/switch', name: 'Switch', selector: 'cps-switch' },
-  { route: '/tab-group', name: 'Tabs', selector: 'cps-tab-group' },
+  {
+    route: '/tab-group',
+    name: 'Tabs',
+    selector: '.example-content cps-tab-group'
+  },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
   // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   // { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
