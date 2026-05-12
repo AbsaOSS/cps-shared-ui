@@ -11,7 +11,15 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "Header title of the menu."
+                        "description": "Header title of the menu.\nOnly applies when items are provided."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the menu component, used for accessibility, it takes precedence over header.\nOnly applies when items are provided."
                     },
                     {
                         "name": "items",
@@ -43,7 +51,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "true",
-                        "description": "Determines whether the menu should show on target element focus."
+                        "description": "Determines whether the menu should move focus to its first item (or first focusable element) when opened."
                     },
                     {
                         "name": "persistent",
@@ -121,17 +129,27 @@
                             }
                         ],
                         "description": "Callback to invoke when content is clicked."
+                    },
+                    {
+                        "name": "containerMouseLeave",
+                        "parameters": [
+                            {
+                                "name": "event",
+                                "type": "MouseEvent"
+                            }
+                        ],
+                        "description": "Callback to invoke when the mouse leaves the menu container."
                     }
                 ]
             }
         }
     },
     "types": {
-        "description": "Defines the custom types used by the module.",
+        "description": "Defines the custom types used by the component or service.",
         "values": [
             {
                 "name": "CpsMenuItem",
-                "value": "{\n    \"title\": \"string\",\n    \"action\": \"(event?: any) => void\",\n    \"icon\": \"string\",\n    \"desc\": \"string\",\n    \"url\": \"string\",\n    \"target\": \"string\",\n    \"disabled\": \"boolean\",\n    \"loading\": \"boolean\"\n}",
+                "value": "{\n    \"title?\": \"string\",\n    \"ariaLabel?\": \"string\",\n    \"action?\": \"(event?: any) => void\",\n    \"icon?\": \"string\",\n    \"desc?\": \"string\",\n    \"url?\": \"string\",\n    \"target?\": \"string\",\n    \"disabled?\": \"boolean\",\n    \"loading?\": \"boolean\"\n}",
                 "description": "CpsMenuItem is used to define the items of the CpsMenuComponent."
             },
             {
@@ -167,6 +185,10 @@
                     {
                         "name": "KEYDOWN_ESCAPE",
                         "value": "keydown-escape"
+                    },
+                    {
+                        "name": "KEYDOWN_TAB",
+                        "value": "keydown-tab"
                     },
                     {
                         "name": "SCROLL",

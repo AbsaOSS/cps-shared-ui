@@ -3,12 +3,12 @@
   app-component-docs-viewer {
     height: 100%;
   }
-  padding: 0 24px 0 24px;
+  padding: 0 1.5rem 0 1.5rem;
   .desc {
-    margin-top: 24px;
+    margin-top: 1.5rem;
     color: var(--cps-color-text-dark);
-    margin-left: 24px;
-    font-size: 18px;
+    margin-left: 1.5rem;
+    font-size: 1.125rem;
   }
   ::ng-deep {
     .example-content {

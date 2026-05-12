@@ -30,6 +30,9 @@
     "CpsTreeTableSortMode": "tree-table",
     "CpsTooltipPosition": "tooltip",
     "CpsTooltipOpenOn": "tooltip",
+    "CpsDialogConfig": "dialog",
+    "CpsDialogAutoFocusTarget": "dialog",
+    "CpsDialogRef": "dialog",
     "CpsNotificationConfig": "notification",
     "CpsNotificationAppearance": "notification",
     "CpsNotificationPosition": "notification"
