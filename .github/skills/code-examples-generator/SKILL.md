@@ -1,5 +1,5 @@
 ---
-name: cps-examples-generator
+name: code-examples-generator
 description: >
   Generates `.examples.ts` files for cps-shared-ui composition pages. Use this skill
   whenever someone asks to add code examples, create an examples file, generate
@@ -10,7 +10,7 @@ description: >
   when working on cps-shared-ui example generation tasks.
 ---
 
-# CPS Examples Generator
+# Code Examples Generator
 
 Generates `<component>-page.examples.ts` files for the `cps-shared-ui` composition app.
 These files hold the HTML and TypeScript code strings shown in the `CodeExampleComponent`
