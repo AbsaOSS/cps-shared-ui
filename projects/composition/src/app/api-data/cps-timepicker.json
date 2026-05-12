@@ -176,7 +176,7 @@
                         "name": "dayPeriod",
                         "optional": true,
                         "readonly": false,
-                        "type": "\"AM\" | \"PM\""
+                        "type": "'AM' | 'PM'"
                     }
                 ]
             }

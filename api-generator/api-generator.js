@@ -76,6 +76,28 @@ async function main() {
     };
 
     const fileLineCache = {};
+    const getSourceTypeAnnotation = (child, fallbackNode) => {
+      const fallback = () =>
+        child.type ? child.type.toString() : extractParameter(fallbackNode);
+      const src = child.sources && child.sources[0];
+      if (!src || !src.fullFileName) return fallback();
+      try {
+        if (!fileLineCache[src.fullFileName]) {
+          fileLineCache[src.fullFileName] = fs
+            .readFileSync(src.fullFileName, 'utf8')
+            .split('\n');
+        }
+        const line = (
+          fileLineCache[src.fullFileName][src.line - 1] || ''
+        ).trim();
+        const match = line.match(
+          /(?:readonly\s+)?[a-zA-Z_$][\w$]*\s*\??\s*:\s*(.+?)\s*;?\s*$/
+        );
+        return match ? match[1].trim() : fallback();
+      } catch (_) {
+        return fallback();
+      }
+    };
     const getInputAlias = (prop) => {
       const src = prop.sources && prop.sources[0];
       if (!src || !src.fullFileName) return null;
@@ -498,9 +520,7 @@ async function main() {
                             .join(', ');
                           type = `(${params}) => ${sig.type?.toString() ?? 'void'}`;
                         } else {
-                          type = child.type
-                            ? child.type.toString()
-                            : extractParameter(int);
+                          type = getSourceTypeAnnotation(child, int);
                         }
                         return {
                           name: child.name,

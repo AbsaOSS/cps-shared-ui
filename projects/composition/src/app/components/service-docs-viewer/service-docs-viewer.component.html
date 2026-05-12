@@ -41,12 +41,14 @@
                               <strong [cpsTooltip]="param.description || ''">
                                 {{ param.name }}:
                               </strong>
-                              @if (param.type | detectType: TypesMap; as type) {
+                              @if (param.type | detectType: TypesMap; as link) {
                                 <a
-                                  [routerLink]="'/' + TypesMap[type] + '/api'"
-                                  fragment="{{ type }}">
-                                  {{ param.type }}
-                                </a>
+                                  [routerLink]="
+                                    '/' + TypesMap[link.type] + '/api'
+                                  "
+                                  fragment="{{ link.type }}"
+                                  >{{ link.type }}</a
+                                >{{ link.rest }}
                               } @else {
                                 <span>{{ param.type }}</span>
                               }
@@ -59,13 +61,13 @@
                       <td class="highlighted-text">
                         @if (
                           method.returnType | detectType: TypesMap;
-                          as type
+                          as link
                         ) {
                           <a
-                            [routerLink]="'/' + TypesMap[type] + '/api'"
-                            fragment="{{ type }}"
-                            >{{ method.returnType }}</a
-                          >
+                            [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                            fragment="{{ link.type }}"
+                            >{{ link.type }}</a
+                          >{{ link.rest }}
                         } @else {
                           <span>{{ method.returnType }}</span>
                         }
@@ -98,7 +100,7 @@
                 </thead>
                 <tbody>
                   @for (type of serviceData.types.values; track type) {
-                    <tr>
+                    <tr id="{{ type.name }}">
                       <td class="highlighted-bg">
                         <span>{{ type.name }}</span>
                       </td>
@@ -147,12 +149,12 @@
                         <span>{{ prop.name }}</span>
                       </td>
                       <td class="highlighted-text">
-                        @if (prop.type | detectType: TypesMap; as type) {
+                        @if (prop.type | detectType: TypesMap; as link) {
                           <a
-                            [routerLink]="'/' + TypesMap[type] + '/api'"
-                            fragment="{{ type }}"
-                            >{{ prop.type }}</a
-                          >
+                            [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                            fragment="{{ link.type }}"
+                            >{{ link.type }}</a
+                          >{{ link.rest }}
                         } @else {
                           <span>{{ prop.type }}</span>
                         }
@@ -201,12 +203,12 @@
                           <span>{{ prop.name }}</span>
                         </td>
                         <td class="highlighted-text">
-                          @if (prop.type | detectType: TypesMap; as type) {
+                          @if (prop.type | detectType: TypesMap; as link) {
                             <a
-                              [routerLink]="'/' + TypesMap[type] + '/api'"
-                              fragment="{{ type }}">
-                              {{ prop.type }}
-                            </a>
+                              [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                              fragment="{{ link.type }}"
+                              >{{ link.type }}</a
+                            >{{ link.rest }}
                           } @else {
                             <span>{{ prop.type }}</span>
                           }
@@ -247,13 +249,15 @@
                                 </strong>
                                 @if (
                                   param.type | detectType: TypesMap;
-                                  as type
+                                  as link
                                 ) {
                                   <a
-                                    [routerLink]="'/' + TypesMap[type] + '/api'"
-                                    fragment="{{ type }}">
-                                    {{ param.type }}
-                                  </a>
+                                    [routerLink]="
+                                      '/' + TypesMap[link.type] + '/api'
+                                    "
+                                    fragment="{{ link.type }}"
+                                    >{{ link.type }}</a
+                                  >{{ link.rest }}
                                 } @else {
                                   <span>{{ param.type }}</span>
                                 }
@@ -266,13 +270,13 @@
                         <td class="highlighted-text">
                           @if (
                             method.returnType | detectType: TypesMap;
-                            as type
+                            as link
                           ) {
                             <a
-                              [routerLink]="'/' + TypesMap[type] + '/api'"
-                              fragment="{{ type }}"
-                              >{{ method.returnType }}</a
-                            >
+                              [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                              fragment="{{ link.type }}"
+                              >{{ link.type }}</a
+                            >{{ link.rest }}
                           } @else {
                             <span>{{ method.returnType }}</span>
                           }
@@ -300,12 +304,12 @@
                           <span>{{ event.name }}</span>
                         </td>
                         <td class="highlighted-text">
-                          @if (event.type | detectType: TypesMap; as type) {
+                          @if (event.type | detectType: TypesMap; as link) {
                             <a
-                              [routerLink]="'/' + TypesMap[type] + '/api'"
-                              fragment="{{ type }}">
-                              {{ event.type }}
-                            </a>
+                              [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                              fragment="{{ link.type }}"
+                              >{{ link.type }}</a
+                            >{{ link.rest }}
                           } @else {
                             <span>{{ event.type }}</span>
                           }

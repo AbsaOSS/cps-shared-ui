@@ -37,12 +37,12 @@
                           <span>{{ prop.name }}</span>
                         </td>
                         <td class="highlighted-text">
-                          @if (prop.type | detectType: TypesMap; as type) {
+                          @if (prop.type | detectType: TypesMap; as link) {
                             <a
-                              [routerLink]="'/' + TypesMap[type] + '/api'"
-                              fragment="{{ type }}"
-                              >{{ prop.type }}</a
-                            >
+                              [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                              fragment="{{ link.type }}"
+                              >{{ link.type }}</a
+                            >{{ link.rest }}
                           } @else {
                             <span>{{ prop.type }}</span>
                           }
@@ -80,13 +80,15 @@
                             <td class="highlighted-text">
                               @if (
                                 event.parameters[0].type | detectType: TypesMap;
-                                as type
+                                as link
                               ) {
                                 <a
-                                  [routerLink]="'/' + TypesMap[type] + '/api'"
-                                  fragment="{{ type }}"
-                                  >{{ event.parameters[0].type }}</a
-                                >
+                                  [routerLink]="
+                                    '/' + TypesMap[link.type] + '/api'
+                                  "
+                                  fragment="{{ link.type }}"
+                                  >{{ link.type }}</a
+                                >{{ link.rest }}
                               } @else {
                                 <span>{{ event.parameters[0].type }}</span>
                               }
@@ -165,12 +167,12 @@
                         <span>{{ prop.name }}</span>
                       </td>
                       <td class="highlighted-text">
-                        @if (prop.type | detectType: TypesMap; as type) {
+                        @if (prop.type | detectType: TypesMap; as link) {
                           <a
-                            [routerLink]="'/' + TypesMap[type] + '/api'"
-                            fragment="{{ type }}"
-                            >{{ prop.type }}</a
-                          >
+                            [routerLink]="'/' + TypesMap[link.type] + '/api'"
+                            fragment="{{ link.type }}"
+                            >{{ link.type }}</a
+                          >{{ link.rest }}
                         } @else {
                           <span>{{ prop.type }}</span>
                         }
