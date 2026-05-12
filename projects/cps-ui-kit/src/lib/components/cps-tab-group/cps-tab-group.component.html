@@ -23,7 +23,7 @@
         aria-hidden="true"></cps-icon>
     </button>
   }
-  <ul #tabsList class="cps-tabs-list" role="tablist">
+  <ul #tabsList class="cps-tabs-list" role="tablist" tabindex="-1">
     @for (tab of tabs; track tab; let tabIndex = $index) {
       @if (tab.tooltipText()) {
         <li
@@ -33,7 +33,7 @@
           [attr.aria-label]="getTabAriaLabel(tab)"
           [attr.aria-selected]="tab.active()"
           [attr.aria-disabled]="tab.disabled() ? true : null"
-          [attr.tabindex]="tab.active() ? 0 : -1"
+          [attr.tabindex]="getTabFocusOrderTabIndex(tabIndex)"
           [attr.aria-controls]="getPanelId(tabIndex)"
           (click)="!tab.disabled() ? onTabClick(tabIndex) : ''"
           (keydown)="onTabKeydown($event, tabIndex)"
@@ -62,7 +62,7 @@
           [attr.aria-label]="getTabAriaLabel(tab)"
           [attr.aria-selected]="tab.active()"
           [attr.aria-disabled]="tab.disabled() ? true : null"
-          [attr.tabindex]="tab.active() ? 0 : -1"
+          [attr.tabindex]="getTabFocusOrderTabIndex(tabIndex)"
           [attr.aria-controls]="getPanelId(tabIndex)"
           (click)="!tab.disabled() ? onTabClick(tabIndex) : ''"
           (keydown)="onTabKeydown($event, tabIndex)"

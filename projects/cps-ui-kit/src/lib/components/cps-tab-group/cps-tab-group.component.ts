@@ -271,6 +271,17 @@ export class CpsTabGroupComponent
     return `${this.tabGroupId}-panel-${index}`;
   }
 
+  getTabFocusOrderTabIndex(tabIndex: number): 0 | -1 {
+    const _tabs = this.tabs.toArray();
+    const activeTab = _tabs[this._currentTabIndex];
+    if (!activeTab?.disabled()) {
+      return tabIndex === this._currentTabIndex ? 0 : -1;
+    }
+    // Edge case: active tab is disabled - move focus to the first non-disabled tab
+    const firstEnabled = _tabs.findIndex((t) => !t.disabled());
+    return tabIndex === firstEnabled ? 0 : -1;
+  }
+
   getTabAriaLabel(tab: CpsTabComponent): string | null {
     const label = tab.ariaLabel() || tab.label();
     return (
@@ -281,6 +292,7 @@ export class CpsTabGroupComponent
   }
 
   onTabClick(index: number) {
+    if (index === this.selectedIndex) return;
     this.selectedIndex = index;
     this.selectTab();
   }
@@ -308,7 +320,7 @@ export class CpsTabGroupComponent
       }
       case 'Enter':
       case ' ':
-        if (!this.autoActivation && !_tabs[index]?.disabled()) {
+        if (!_tabs[index]?.disabled()) {
           event.preventDefault();
           this.onTabClick(index);
         }
