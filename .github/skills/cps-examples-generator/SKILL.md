@@ -30,8 +30,8 @@ The `CodeExampleComponent` accepts:
 ```html
 <app-code-example
   label="Example label"
-  [html]="examples.someExample.html"
-  [ts]="examples.someExample.ts">
+  [htmlCode]="examples.someExample.html"
+  [tsCode]="examples.someExample.ts">
   <!-- live preview content here -->
 </app-code-example>
 ```
@@ -89,7 +89,7 @@ Do **not** include:
 ```typescript
 // <component>-page.examples.ts
 
-export const <component>Examples = {
+export const <component>Examples: Record<string, { html: string; ts?: string }> = {
   exampleOneLabel: {
     html: `
 <cps-some-component
@@ -105,11 +105,8 @@ handler(event: SomeType) {
 
   exampleTwoLabel: {
     html: `...`,
-    ts: `...`,
   },
 };
-
-export type <Component>Examples = typeof <component>Examples;
 ```
 
 ## Strict Rules (never break these)
@@ -122,14 +119,14 @@ export type <Component>Examples = typeof <component>Examples;
 | **No invented imports** — never add import statements to the `ts` string                                          | They vary by project setup and add noise                                    |
 | **One object export per file** — don't split into multiple exports or use `default export`                        | The component imports it as `import { xExamples } from './x-page.examples'` |
 | **Preserve indentation style** — if the project uses 2-space indent, keep it                                      | Consistency with the codebase                                               |
-| **`ts` string may be empty** — if an example needs no TypeScript at all, use `ts: ''`                             | `CodeExampleComponent` handles empty TS gracefully                          |
+| **Omit `ts` when unused** — if an example needs no TypeScript, leave out the `ts` key entirely (it is `ts?: string`) | Omitting is cleaner than `ts: ''`; `CodeExampleComponent` handles absence gracefully |
 
 ## Example Output (Button)
 
 ```typescript
 // button-page.examples.ts
 
-export const buttonExamples = {
+export const buttonExamples: Record<string, { html: string; ts?: string }> = {
   primaryButton: {
     html: `
 <cps-button label="Click me" (clicked)="onButtonClick()"></cps-button>`,
@@ -141,18 +138,14 @@ onButtonClick() {
 
   disabledButton: {
     html: `
-<cps-button label="Disabled" [disabled]="true"></cps-button>`,
-    ts: ``
+<cps-button label="Disabled" [disabled]="true"></cps-button>`
   },
 
   buttonWithIcon: {
     html: `
-<cps-button label="Download" icon="arrow-down-to-line"></cps-button>`,
-    ts: ``
+<cps-button label="Download" icon="arrow-down-to-line"></cps-button>`
   }
 };
-
-export type ButtonExamples = typeof buttonExamples;
 ```
 
 ## After generating examples.ts
@@ -177,8 +170,8 @@ readonly examples = componentExamples;
 ```html
 <app-code-example
   label="Primary button"
-  [html]="examples.primaryButton.html"
-  [ts]="examples.primaryButton.ts">
+  [htmlCode]="examples.primaryButton.html"
+  [tsCode]="examples.primaryButton.ts">
   <!-- existing preview markup goes here -->
 </app-code-example>
 ```
@@ -189,7 +182,7 @@ as a reference if they want to see a complete end-to-end example.
 ## Handling Ambiguity
 
 - **Signal vs property unclear?** Default to property syntax in the `ts` string; it's safe for both
-- **Example has complex reactive setup shared across examples?** Extract the shared state once into both `ts` strings — duplication is fine; accuracy matters more
+- **Multiple examples share the same TS setup?** Extract it into a local `const` at the top of the file and reference it in each entry — e.g. `const citiesOptionsTs = \`options = [...]\`;` then `ts: citiesOptionsTs`. Duplication is fine when setups differ; factoring is preferred when they are identical.
 - **Template uses `@if` / `@for` control flow?** Include in `html` verbatim; do NOT convert to `*ngIf`/`*ngFor`
 - **Example uses a service injected in constructor?** Show the injection in the `ts` string as a comment: `// inject(MyService) used here`
 
