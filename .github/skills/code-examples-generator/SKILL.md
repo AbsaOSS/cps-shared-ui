@@ -86,6 +86,8 @@ Do **not** include:
 
 ### 4. Format the output
 
+Follow the project's Prettier config: **single quotes, semicolons, no trailing commas, 80-char print width, 2-space indent.**
+
 ```typescript
 // <component>-page.examples.ts
 
@@ -100,12 +102,12 @@ export const <component>Examples: Record<string, { html: string; ts?: string }> 
 someValue = 'hello';
 handler(event: SomeType) {
   // ...
-}`,
+}`
   },
 
   exampleTwoLabel: {
-    html: `...`,
-  },
+    html: `...`
+  }
 };
 ```
 
@@ -181,7 +183,15 @@ Wrap each live preview block in `<app-code-example>`. The `label` must match the
 </app-code-example>
 ```
 
-After applying both steps, confirm to the user that all three files have been written.
+### Step C — Run lint
+
+After all three files are written, run:
+
+```bash
+npm run lint -- --fix
+```
+
+If any errors remain that `--fix` cannot resolve, fix them manually before confirming the task is done.
 
 ## Handling Ambiguity
 
