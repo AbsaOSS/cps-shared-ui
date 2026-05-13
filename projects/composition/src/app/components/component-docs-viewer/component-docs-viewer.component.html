@@ -37,15 +37,9 @@
                           <span>{{ prop.name }}</span>
                         </td>
                         <td class="highlighted-text">
-                          @if (prop.type | detectType: TypesMap; as link) {
-                            <a
-                              [routerLink]="'/' + TypesMap[link.type] + '/api'"
-                              fragment="{{ link.type }}"
-                              >{{ link.type }}</a
-                            >{{ link.rest }}
-                          } @else {
-                            <span>{{ prop.type }}</span>
-                          }
+                          <app-api-type
+                            [type]="prop.type"
+                            [typesMap]="TypesMap" />
                         </td>
                         <td class="value-style">
                           <span>{{
@@ -78,20 +72,9 @@
                               <span>{{ event.name }}</span>
                             </td>
                             <td class="highlighted-text">
-                              @if (
-                                event.parameters[0].type | detectType: TypesMap;
-                                as link
-                              ) {
-                                <a
-                                  [routerLink]="
-                                    '/' + TypesMap[link.type] + '/api'
-                                  "
-                                  fragment="{{ link.type }}"
-                                  >{{ link.type }}</a
-                                >{{ link.rest }}
-                              } @else {
-                                <span>{{ event.parameters[0].type }}</span>
-                              }
+                              <app-api-type
+                                [type]="event.parameters[0].type"
+                                [typesMap]="TypesMap" />
                             </td>
                             <td>{{ event.description }}</td>
                           </tr>
@@ -167,15 +150,9 @@
                         <span>{{ prop.name }}</span>
                       </td>
                       <td class="highlighted-text">
-                        @if (prop.type | detectType: TypesMap; as link) {
-                          <a
-                            [routerLink]="'/' + TypesMap[link.type] + '/api'"
-                            fragment="{{ link.type }}"
-                            >{{ link.type }}</a
-                          >{{ link.rest }}
-                        } @else {
-                          <span>{{ prop.type }}</span>
-                        }
+                        <app-api-type
+                          [type]="prop.type"
+                          [typesMap]="TypesMap" />
                       </td>
                       <td>{{ prop.description }}</td>
                     </tr>
@@ -223,17 +200,9 @@
                                 tabindex="0">
                                 {{ param.name }}:
                               </strong>
-                              @if (param.type | detectType: TypesMap; as type) {
-                                <a
-                                  [routerLink]="
-                                    '/' + TypesMap[type.type] + '/api'
-                                  "
-                                  fragment="{{ type.type }}">
-                                  {{ param.type }}
-                                </a>
-                              } @else {
-                                <span>{{ param.type }}</span>
-                              }
+                              <app-api-type
+                                [type]="param.type"
+                                [typesMap]="TypesMap" />
                             </span>
                           } @empty {
                             null
@@ -241,18 +210,9 @@
                         </div>
                       </td>
                       <td class="highlighted-text">
-                        @if (
-                          method.returnType | detectType: TypesMap;
-                          as type
-                        ) {
-                          <a
-                            [routerLink]="'/' + TypesMap[type.type] + '/api'"
-                            fragment="{{ type.type }}">
-                            {{ method.returnType }}
-                          </a>
-                        } @else {
-                          <span>{{ method.returnType }}</span>
-                        }
+                        <app-api-type
+                          [type]="method.returnType"
+                          [typesMap]="TypesMap" />
                       </td>
                       <td class="method-description">
                         {{ method.description }}

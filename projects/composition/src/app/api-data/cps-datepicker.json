@@ -25,7 +25,7 @@
                         "name": "width",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "100%",
                         "description": "Width of the datepicker of type number denoting pixels or string."
                     },
@@ -105,7 +105,7 @@
                         "name": "infoTooltipMaxWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "100%",
                         "description": "Size of infoTooltip, of type number denoting pixels or string."
                     },

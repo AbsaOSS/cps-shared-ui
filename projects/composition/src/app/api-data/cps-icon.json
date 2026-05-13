@@ -9,7 +9,7 @@
                         "name": "icon",
                         "optional": false,
                         "readonly": false,
-                        "type": "string",
+                        "type": "IconType",
                         "default": "",
                         "description": "Name of the icon."
                     },

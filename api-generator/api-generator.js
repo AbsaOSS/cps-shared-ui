@@ -87,13 +87,26 @@ async function main() {
             .readFileSync(src.fullFileName, 'utf8')
             .split('\n');
         }
-        const line = (
-          fileLineCache[src.fullFileName][src.line - 1] || ''
-        ).trim();
-        const match = line.match(
-          /(?:readonly\s+)?[a-zA-Z_$][\w$]*\s*\??\s*:\s*(.+?)(?=\s*(?:;|=(?!>)|\/\/|\/\*|$))/
+        const lines = fileLineCache[src.fullFileName];
+        let collected = '';
+        for (let i = src.line - 1; i < lines.length; i++) {
+          collected += (collected ? ' ' : '') + lines[i].trim();
+          if (/(?:=(?!>)|;)/.test(collected.replace(/<[^>]*>/g, ''))) break;
+        }
+        const escapedName = child.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const match = collected.match(
+          new RegExp(
+            `(?:readonly\\s+)?${escapedName}\\s*\\??\\s*:\\s*([\\s\\S]+?)(?=\\s*(?:;|=(?!>)|$))`
+          )
         );
-        return match ? match[1].trim() : fallback();
+        if (!match) return fallback();
+        const type = match[1]
+          .replace(/\s*\|\s*/g, ' | ')
+          .trim()
+          .replace(/^\|\s*/, '')
+          .replace(/\bArray<([^>]+)>/g, '$1[]')
+          .trim();
+        return type || fallback();
       } catch (_) {
         return fallback();
       }
@@ -190,18 +203,19 @@ async function main() {
                   };
 
                   component_props_group.children.forEach((prop) => {
-                    const rawType =
-                      prop.getSignature && prop.getSignature.type
-                        ? prop.getSignature.type.toString()
-                        : prop.type
-                          ? prop.type.toString()
-                          : null;
-                    const isSignalInput = rawType?.startsWith('InputSignal<');
+                    const typedocType =
+                      (prop.getSignature?.type ?? prop.type)?.toString() ??
+                      null;
+                    const resolvedType =
+                      !prop.getSignature &&
+                      !typedocType?.startsWith('InputSignal<')
+                        ? getSourceTypeAnnotation(prop, null)
+                        : typedocType;
                     props.values.push({
                       name: getInputAlias(prop) ?? prop.name,
                       optional: prop.flags.isOptional,
                       readonly: prop.flags.isReadonly,
-                      type: unwrapSignalType(rawType),
+                      type: unwrapSignalType(resolvedType),
                       default:
                         getDefaultValue(prop.setSignature) ??
                         getDefaultValue(prop.getSignature) ??
@@ -211,7 +225,10 @@ async function main() {
                         !prop.defaultValue
                           ? 'false'
                           : prop.defaultValue &&
-                              !(isSignalInput && prop.defaultValue === '...')
+                              !(
+                                typedocType?.startsWith('InputSignal<') &&
+                                prop.defaultValue === '...'
+                              )
                             ? prop.defaultValue.replace(/^'|'$/g, '')
                             : undefined),
                       description: (
