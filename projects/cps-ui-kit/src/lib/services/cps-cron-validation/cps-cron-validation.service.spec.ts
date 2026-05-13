@@ -298,15 +298,15 @@ describe('CpsCronValidationService', () => {
         ]
       });
       const tokenService = TestBed.inject(CPS_CRON_VALIDATION_SERVICE);
-      expect(tokenService.isValidCron('')).toBe(true);
+      expect(tokenService?.isValidCron('')).toBe(true);
     });
 
     it('should delegate isValidCron to the underlying service', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({});
       const tokenService = TestBed.inject(CPS_CRON_VALIDATION_SERVICE);
-      expect(tokenService.isValidCron('0 12 * * ? *')).toBe(true);
-      expect(tokenService.isValidCron('invalid')).toBe(false);
+      expect(tokenService?.isValidCron('0 12 * * ? *')).toBe(true);
+      expect(tokenService?.isValidCron('invalid')).toBe(false);
     });
   });
 });

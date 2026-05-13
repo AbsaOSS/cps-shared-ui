@@ -59,7 +59,7 @@ describe('CpsDialogService', () => {
   function setupAppendSpy() {
     jest
       .spyOn(service as any, 'appendDialogComponentToBody')
-      .mockImplementation((config: CpsDialogConfig) => {
+      .mockImplementation(() => {
         const dialogRef = new CpsDialogRef();
         const mockRef = makeMockComponentRef();
         lastCreatedMockRef = mockRef;

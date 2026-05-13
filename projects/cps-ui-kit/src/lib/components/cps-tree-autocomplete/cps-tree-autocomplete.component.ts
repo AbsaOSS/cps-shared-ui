@@ -302,7 +302,7 @@ export class CpsTreeAutocompleteComponent
     if (this.treeSelection?.length) {
       if (this.backspaceClickedOnce) {
         this.treeSelection = this.treeSelection.filter(
-          (v: TreeNode, index: number) =>
+          (_v: TreeNode, index: number) =>
             index !== this.treeSelection.length - 1
         );
         this.updateValue(this.treeSelectionToValue(this.treeSelection));
