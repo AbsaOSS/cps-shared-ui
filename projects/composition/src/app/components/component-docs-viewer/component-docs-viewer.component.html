@@ -225,8 +225,10 @@
                               </strong>
                               @if (param.type | detectType: TypesMap; as type) {
                                 <a
-                                  [routerLink]="'/' + TypesMap[type] + '/api'"
-                                  fragment="{{ type }}">
+                                  [routerLink]="
+                                    '/' + TypesMap[type.type] + '/api'
+                                  "
+                                  fragment="{{ type.type }}">
                                   {{ param.type }}
                                 </a>
                               } @else {
@@ -244,8 +246,8 @@
                           as type
                         ) {
                           <a
-                            [routerLink]="'/' + TypesMap[type] + '/api'"
-                            fragment="{{ type }}">
+                            [routerLink]="'/' + TypesMap[type.type] + '/api'"
+                            fragment="{{ type.type }}">
                             {{ method.returnType }}
                           </a>
                         } @else {
