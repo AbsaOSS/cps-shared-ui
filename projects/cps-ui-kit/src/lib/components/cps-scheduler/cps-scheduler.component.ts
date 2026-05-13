@@ -423,7 +423,9 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
    * @returns boolean - True if the cron expression is valid
    */
   private _isValidCron(cron: string): boolean {
-    return this._cronValidationService.isValidCron(cron, this.showNotSet);
+    return (
+      this._cronValidationService?.isValidCron(cron, this.showNotSet) ?? true
+    );
   }
 
   private _validateAdvancedExpr(

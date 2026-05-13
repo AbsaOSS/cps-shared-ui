@@ -492,10 +492,17 @@ export class CpsCronValidationService {
  * // Override with a custom implementation
  * providers: [{ provide: CPS_CRON_VALIDATION_SERVICE, useClass: MyCustomCronValidationService }]
  *
+ * @example
+ * // Disable cron validation entirely
+ * providers: [{ provide: CPS_CRON_VALIDATION_SERVICE, useValue: null }]
+ *
  * @group Tokens
  */
 export const CPS_CRON_VALIDATION_SERVICE =
-  new InjectionToken<CpsCronValidationService>('CPS_CRON_VALIDATION_SERVICE', {
-    providedIn: 'root',
-    factory: () => inject(CpsCronValidationService)
-  });
+  new InjectionToken<CpsCronValidationService | null>(
+    'CPS_CRON_VALIDATION_SERVICE',
+    {
+      providedIn: 'root',
+      factory: () => inject(CpsCronValidationService)
+    }
+  );
