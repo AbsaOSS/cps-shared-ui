@@ -622,7 +622,7 @@ export class CpsAutocompleteComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
+  onChange = (_event: any) => {};
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
@@ -702,7 +702,7 @@ export class CpsAutocompleteComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
+  setDisabledState(_disabled: boolean) {}
 
   onBlur() {
     this.isActive = false;

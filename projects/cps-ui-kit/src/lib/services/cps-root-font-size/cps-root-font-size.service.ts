@@ -56,7 +56,6 @@ export class CpsRootFontSizeService implements OnDestroy {
     isPlatformBrowser(this._platformId) ? this._readRootFontSize() : 16
   );
 
-  private _sentinel: HTMLElement | null = null;
   private _sentinelObserver: ResizeObserver | null = null;
 
   /** Reactive signal containing the current root font size in pixels. */
@@ -70,7 +69,6 @@ export class CpsRootFontSizeService implements OnDestroy {
   ngOnDestroy(): void {
     this._sentinelObserver?.disconnect();
     this._sentinelObserver = null;
-    this._sentinel = null;
   }
 
   private _setupObservers(): void {
@@ -94,8 +92,6 @@ export class CpsRootFontSizeService implements OnDestroy {
       });
       this._document.documentElement.appendChild(sentinel);
     }
-
-    this._sentinel = sentinel;
 
     this._sentinelObserver = new ResizeObserver(() => this._refresh());
     this._sentinelObserver.observe(sentinel);
