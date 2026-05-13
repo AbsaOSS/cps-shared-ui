@@ -102,14 +102,15 @@
     'cps-tab-content-wrap-subtabs': isSubTabs
   }">
   @for (tab of tabs; track tab; let panelIndex = $index) {
-    @if (tab.active()) {
-      <div
-        #tabPanel
-        class="cps-tab-content"
-        role="tabpanel"
-        [id]="getPanelId(panelIndex)"
-        [attr.aria-labelledby]="getTabId(panelIndex)"
-        [attr.tabindex]="panelTabindex()">
+    <div
+      #tabPanel
+      class="cps-tab-content"
+      role="tabpanel"
+      [id]="getPanelId(panelIndex)"
+      [attr.aria-labelledby]="getTabId(panelIndex)"
+      [attr.tabindex]="tab.active() ? panelTabindex() : null"
+      [hidden]="!tab.active()">
+      @if (tab.active()) {
         @if (animationType === 'slide') {
           <div [@slideInOut]="animationState" class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
@@ -120,8 +121,8 @@
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
-      </div>
-    }
+      }
+    </div>
   }
 </div>
 

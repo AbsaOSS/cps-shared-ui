@@ -25,7 +25,7 @@ import {
   ViewChild,
   afterRenderEffect,
   signal,
-  viewChild
+  viewChildren
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
@@ -204,7 +204,7 @@ export class CpsTabGroupComponent
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
 
-  private readonly _tabPanelEl = viewChild<ElementRef>('tabPanel');
+  private readonly _tabPanelEls = viewChildren<ElementRef>('tabPanel');
 
   readonly panelTabindex = signal(0);
 
@@ -217,8 +217,11 @@ export class CpsTabGroupComponent
     @Inject(DOCUMENT) private document: Document
   ) {
     afterRenderEffect(() => {
-      const el = this._tabPanelEl()?.nativeElement;
-      this.panelTabindex.set(el && this._hasFocusableIn(el) ? -1 : 0);
+      const activeEl =
+        this._tabPanelEls()[this._currentTabIndex]?.nativeElement;
+      this.panelTabindex.set(
+        activeEl && this._hasFocusableIn(activeEl) ? -1 : 0
+      );
     });
   }
 
