@@ -1,6 +1,14 @@
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
+ * Defines the auto-focus target when the dialog opens.
+ * - 'dialog' - focuses the dialog container itself
+ * - 'first-tabbable' - focuses the first tabbable element inside the dialog
+ * @group Types
+ */
+export type CpsDialogAutoFocusTarget = 'dialog' | 'first-tabbable';
+
+/**
  * Configuration for the dialog service.
  * @group Interface
  */
@@ -42,33 +50,50 @@ export class CpsDialogConfig<T = any> {
    */
   showHeaderBottomBorder?: boolean;
   /**
-   * Identifies the element (or elements) that labels the element it is applied to.
+   * Identifies the element that labels the element it is applied to. Takes precedence over ariaLabel.
    */
   ariaLabelledBy?: string;
   /**
-   * Width of the dialog.
+   * Defines a string value that labels the dialog for assistive technologies when no visible title or ariaLabelledBy is present.
    */
-  width?: string;
+  ariaLabel?: string;
   /**
-   * Height of the dialog.
+   * Identifies the element that describes the dialog content for assistive technologies.
    */
-  height?: string;
+  ariaDescribedBy?: string;
   /**
-   * Min-width of the dialog.
+   * Defines which element receives focus when the dialog opens.
+   * - 'dialog' - focuses the dialog container
+   * - 'first-tabbable' / true - focuses the first tabbable element
+   * - string (a CSS selector) - focuses the first matching element
+   * - false - disables auto-focus
+   * @default true
    */
-  minWidth?: string;
+  autoFocus?: CpsDialogAutoFocusTarget | string | boolean;
   /**
-   * Min-height of the dialog.
+   * Width of the dialog, a number denoting pixels or a string.
    */
-  minHeight?: string;
+  width?: number | string;
   /**
-   * Max-width of the dialog.
+   * Height of the dialog, a number denoting pixels or a string.
    */
-  maxWidth?: string;
+  height?: number | string;
   /**
-   * Max-height of the dialog.
+   * Min-width of the dialog, a number denoting pixels or a string.
    */
-  maxHeight?: string;
+  minWidth?: number | string;
+  /**
+   * Min-height of the dialog, a number denoting pixels or a string.
+   */
+  minHeight?: number | string;
+  /**
+   * Max-width of the dialog, a number denoting pixels or a string.
+   */
+  maxWidth?: number | string;
+  /**
+   * Max-height of the dialog, a number denoting pixels or a string.
+   */
+  maxHeight?: number | string;
   /**
    * Specifies if pressing escape key should hide the dialog.
    */
@@ -135,12 +160,14 @@ export class CpsDialogConfig<T = any> {
   keepInViewport?: boolean;
   /**
    * Minimum value for the left coordinate of dialog in dragging.
+   * A number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px').
    */
-  minX?: number;
+  minX?: number | string;
   /**
    * Minimum value for the top coordinate of dialog in dragging.
+   * A number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px').
    */
-  minY?: number;
+  minY?: number | string;
   /**
    * Determines whether the dialog can be displayed full screen.
    */

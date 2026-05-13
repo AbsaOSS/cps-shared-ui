@@ -12,7 +12,6 @@ import {
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
-import { generateUniqueId } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsTooltipPosition is used to define the position of the tooltip.
@@ -118,8 +117,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   private _showTimeout?: ReturnType<typeof setTimeout>;
   private _hideTimeout?: ReturnType<typeof setTimeout>;
   private _ariaTarget?: HTMLElement;
-
-  private readonly _tooltipId = generateUniqueId('cps-tooltip');
   private _rootFontSizePx = 16;
   private window: Window;
 
@@ -171,6 +168,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   // Visual appearance is delayed by tooltipOpenDelay.
   onFocus(): void {
     if (this.tooltipOpenOn() === 'hover' || this.tooltipOpenOn() === 'focus') {
+      if (!this._document.activeElement?.matches(':focus-visible')) return;
       this._ariaTarget = this._resolveAriaTarget();
       clearTimeout(this._hideTimeout);
       clearTimeout(this._showTimeout);
@@ -273,9 +271,11 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
     this._popup.classList.add('cps-tooltip');
     this._popup.style.maxWidth = convertSize(this.tooltipMaxWidth());
     this._popup.setAttribute('role', 'tooltip');
-    this._popup.id = this._tooltipId;
     this._document.body.appendChild(this._popup);
-    this._ariaTarget?.setAttribute('aria-describedby', this._tooltipId);
+    this._ariaTarget?.setAttribute(
+      'aria-description',
+      this._popup.textContent ?? ''
+    );
   };
 
   private _positionAndShow = (): void => {
@@ -311,7 +311,7 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
     const popup = this._popup;
     this._popup = undefined;
-    this._ariaTarget?.removeAttribute('aria-describedby');
+    this._ariaTarget?.removeAttribute('aria-description');
     this._ariaTarget = undefined;
 
     if (destroyImmediately) {
@@ -340,17 +340,20 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   }
 
   private _getOffsetPx(): number {
-    const { value, unit } = parseSize(this.cvtTooltipOffset());
-    if (unit === 'px') return value;
-    if (unit === 'rem') return value * this._rootFontSizePx;
-    if (unit === 'em')
-      return (
-        value *
-        parseFloat(
-          getComputedStyle(this._elementRef.nativeElement).fontSize || '16'
-        )
-      );
-    throw new Error(`Unsupported unit "${unit}" for tooltipOffset.`);
+    const parsed = parseSize(this.cvtTooltipOffset());
+    if (!parsed) throw new Error(`Unsupported value for tooltipOffset.`);
+    if (parsed.unit === 'px') return parsed.value;
+    if (parsed.unit === 'rem') return parsed.value * this._rootFontSizePx;
+    if (parsed.unit === 'em') {
+      const fontSize = isPlatformBrowser(this._platformId)
+        ? parseFloat(
+            getComputedStyle(this._elementRef.nativeElement).fontSize || '16'
+          )
+        : 16;
+      return parsed.value * fontSize;
+    }
+
+    throw new Error(`Unsupported unit "${parsed.unit}" for tooltipOffset.`);
   }
 
   private _getCoords(): { left: number; top: number } | undefined {

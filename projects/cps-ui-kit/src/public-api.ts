@@ -60,5 +60,6 @@ export * from './lib/services/cps-notification/cps-notification.service';
 export * from './lib/services/cps-notification/utils/cps-notification-config';
 
 export * from './lib/services/cps-root-font-size/cps-root-font-size.service';
+export * from './lib/services/cps-focus/cps-focus.service';
 export * from './lib/services/cps-theme/cps-theme.service';
 export * from './lib/utils/colors-utils';

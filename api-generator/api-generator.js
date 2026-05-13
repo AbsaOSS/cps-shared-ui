@@ -724,13 +724,13 @@ async function main() {
     }
 
     for (const key in mergedDocs) {
-      const moduleDoc = mergedDocs[key];
+      const doc = mergedDocs[key];
       const isEmpty =
-        Object.keys(moduleDoc).length === 1 &&
-        moduleDoc.components &&
-        Object.keys(moduleDoc.components).length === 0;
+        Object.keys(doc).length === 1 &&
+        doc.components &&
+        Object.keys(doc.components).length === 0;
       if (isEmpty) continue;
-      const typedocJSON = JSON.stringify(moduleDoc, null, 4);
+      const typedocJSON = JSON.stringify(doc, null, 4);
       !fs.existsSync(outputPath) && fs.mkdirSync(outputPath);
       fs.writeFileSync(path.resolve(outputPath, `${key}.json`), typedocJSON);
     }
@@ -820,7 +820,8 @@ const getTypesValue = (typeobj) => {
   // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
   if (Array.isArray(children) && children.length) {
     const entries = children.map((ch) => ({
-      [ch.name]: ch.type?.toString?.() ?? 'unknown'
+      [ch.flags?.isOptional ? ch.name + '?' : ch.name]:
+        ch.type?.toString?.() ?? 'unknown'
     }));
     return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
@@ -830,7 +831,8 @@ const getTypesValue = (typeobj) => {
   // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
   if (type?.type === 'reflection' && type.declaration?.children?.length) {
     const entries = type.declaration.children.map((ch) => ({
-      [ch.name]: ch.type?.toString?.() ?? 'unknown'
+      [ch.flags?.isOptional ? ch.name + '?' : ch.name]:
+        ch.type?.toString?.() ?? 'unknown'
     }));
     return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
