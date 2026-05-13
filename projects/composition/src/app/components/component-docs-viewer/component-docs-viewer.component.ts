@@ -5,7 +5,12 @@ import {
   InterfaceAPI,
   TypesAPI
 } from '../../models/component-api.model';
-import { CpsTabComponent, CpsTabGroupComponent } from 'cps-ui-kit';
+import { ServiceAPI } from '../../models/service-api.model';
+import {
+  CpsTabComponent,
+  CpsTabGroupComponent,
+  CpsTooltipDirective
+} from 'cps-ui-kit';
 import { ObjectEntriesPipe } from '../../pipes/object-entries.pipe';
 
 import TypesMap from '../../api-data/types_map.json';
@@ -24,7 +29,8 @@ import { EnumsComponent } from '../shared/enums/enums.component';
     ObjectEntriesPipe,
     RouterModule,
     DetectTypePipe,
-    EnumsComponent
+    EnumsComponent,
+    CpsTooltipDirective
   ]
 })
 export class ComponentDocsViewerComponent extends ViewerComponent {
@@ -34,6 +40,8 @@ export class ComponentDocsViewerComponent extends ViewerComponent {
     interfaces?: InterfaceAPI;
     enums?: EnumsAPI;
   };
+
+  @Input() services?: ServiceAPI[];
 
   TypesMap: Record<string, string> = TypesMap;
 
