@@ -187,5 +187,112 @@
       <!-- Enums -->
       <app-enums [enums]="componentData.enums"></app-enums>
     }
+    <!-- Services -->
+    @for (service of services; track service.name) {
+      <div>
+        <h1>{{ service.name }}</h1>
+        <p>{{ service.description }}</p>
+        @if (service.methods.values && service.methods.values.length > 0) {
+          <div>
+            <h2>Methods</h2>
+            <p>{{ service.methods.description }}</p>
+            <div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Parameters</th>
+                    <th>Return type</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (method of service.methods.values; track method) {
+                    <tr>
+                      <td class="highlighted-bg">
+                        <span>{{ method.name }}</span>
+                      </td>
+                      <td class="highlighted-text">
+                        <div class="parameters">
+                          @for (param of method.parameters; track param.name) {
+                            <span>
+                              <strong
+                                [cpsTooltip]="param.description || ''"
+                                tabindex="0">
+                                {{ param.name }}:
+                              </strong>
+                              @if (param.type | detectType: TypesMap; as type) {
+                                <a
+                                  [routerLink]="'/' + TypesMap[type] + '/api'"
+                                  fragment="{{ type }}">
+                                  {{ param.type }}
+                                </a>
+                              } @else {
+                                <span>{{ param.type }}</span>
+                              }
+                            </span>
+                          } @empty {
+                            null
+                          }
+                        </div>
+                      </td>
+                      <td class="highlighted-text">
+                        @if (
+                          method.returnType | detectType: TypesMap;
+                          as type
+                        ) {
+                          <a
+                            [routerLink]="'/' + TypesMap[type] + '/api'"
+                            fragment="{{ type }}">
+                            {{ method.returnType }}
+                          </a>
+                        } @else {
+                          <span>{{ method.returnType }}</span>
+                        }
+                      </td>
+                      <td class="method-description">
+                        {{ method.description }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+        @if (service.tokens; as tokens) {
+          @if (tokens.values && tokens.values.length > 0) {
+            <div>
+              <h2>Tokens</h2>
+              <p>{{ tokens.description }}</p>
+              <div>
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (token of tokens.values; track token.name) {
+                      <tr>
+                        <td class="highlighted-bg">
+                          <span>{{ token.name }}</span>
+                        </td>
+                        <td class="highlighted-text">
+                          <span>{{ token.type }}</span>
+                        </td>
+                        <td>{{ token.description }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
   </cps-tab>
 </cps-tab-group>

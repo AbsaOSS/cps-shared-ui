@@ -61,4 +61,6 @@ export * from './lib/services/cps-notification/utils/cps-notification-config';
 
 export * from './lib/services/cps-focus/cps-focus.service';
 export * from './lib/services/cps-theme/cps-theme.service';
+export * from './lib/services/cps-cron-validation/cps-cron-validation.service';
+
 export * from './lib/utils/colors-utils';

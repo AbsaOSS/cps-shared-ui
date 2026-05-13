@@ -3,7 +3,7 @@
     "name": "CpsNotificationService",
     "description": "Service for showing notifications.",
     "methods": {
-        "description": "Methods used in service.",
+        "description": "Methods used in the service.",
         "values": [
             {
                 "name": "info",
