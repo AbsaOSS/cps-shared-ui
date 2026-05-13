@@ -121,31 +121,31 @@
                     {
                         "name": "label",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "''",
+                        "default": "",
                         "description": "Label of the tab."
                     },
                     {
                         "name": "ariaLabel",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "''",
+                        "default": "",
                         "description": "Aria label for the tab component, used for accessibility, it takes precedence over label."
                     },
                     {
                         "name": "icon",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "''",
+                        "default": "",
                         "description": "Icon before the label."
                     },
                     {
                         "name": "disabled",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "boolean",
                         "default": "false",
                         "description": "Determines whether tab is disabled."
@@ -153,31 +153,31 @@
                     {
                         "name": "tooltipText",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "''",
+                        "default": "",
                         "description": "Determines whether to show the tooltip on tab hover."
                     },
                     {
                         "name": "tooltipContentClass",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "'cps-tooltip-content'",
+                        "default": "cps-tooltip-content",
                         "description": "Class for styling the tab tooltip."
                     },
                     {
                         "name": "tooltipMaxWidth",
                         "optional": false,
-                        "readonly": true,
-                        "type": "string | number",
+                        "readonly": false,
+                        "type": "number | string",
                         "default": "100%",
                         "description": "Max width of the tooltip, of type number denoting pixels or string."
                     },
                     {
                         "name": "tooltipPersistent",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "boolean",
                         "default": "false",
                         "description": "Determines whether the tooltip should have persistent info."
@@ -185,17 +185,17 @@
                     {
                         "name": "badgeValue",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "''",
+                        "default": "",
                         "description": "Badge value to show on the tab after the label in a form of a circle."
                     },
                     {
                         "name": "badgeTooltip",
                         "optional": false,
-                        "readonly": true,
+                        "readonly": false,
                         "type": "string",
-                        "default": "''",
+                        "default": "",
                         "description": "Tooltip text to show on badge hover."
                     }
                 ]

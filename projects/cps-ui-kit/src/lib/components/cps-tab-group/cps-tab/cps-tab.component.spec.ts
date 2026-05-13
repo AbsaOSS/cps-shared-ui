@@ -60,96 +60,96 @@ describe('CpsTabComponent', () => {
     host.ariaLabel = 'fallback';
     hostFixture.detectChanges();
 
-    expect(component.ariaLabel()).toBe('fallback');
-    expect(component.icon()).toBe('');
-    expect(component.disabled()).toBe(false);
-    expect(component.tooltipText()).toBe('');
-    expect(component.tooltipContentClass()).toBe('cps-tooltip-content');
-    expect(component.tooltipMaxWidth()).toBe('100%');
-    expect(component.tooltipPersistent()).toBe(false);
-    expect(component.badgeValue()).toBe('');
-    expect(component.badgeTooltip()).toBe('');
+    expect(component.ariaLabel).toBe('fallback');
+    expect(component.icon).toBe('');
+    expect(component.disabled).toBe(false);
+    expect(component.tooltipText).toBe('');
+    expect(component.tooltipContentClass).toBe('cps-tooltip-content');
+    expect(component.tooltipMaxWidth).toBe('100%');
+    expect(component.tooltipPersistent).toBe(false);
+    expect(component.badgeValue).toBe('');
+    expect(component.badgeTooltip).toBe('');
   });
 
   it('should start as inactive', () => {
-    expect(component.active()).toBe(false);
+    expect(component.active).toBe(false);
   });
 
   it('should reflect label input', () => {
     host.label = 'My Tab';
     hostFixture.detectChanges();
-    expect(component.label()).toBe('My Tab');
+    expect(component.label).toBe('My Tab');
   });
 
   it('should reflect ariaLabel input', () => {
     host.ariaLabel = 'Accessible name';
     hostFixture.detectChanges();
-    expect(component.ariaLabel()).toBe('Accessible name');
+    expect(component.ariaLabel).toBe('Accessible name');
   });
 
   it('should reflect icon input', () => {
     host.icon = 'home';
     hostFixture.detectChanges();
-    expect(component.icon()).toBe('home');
+    expect(component.icon).toBe('home');
   });
 
   it('should reflect disabled input', () => {
     host.disabled = true;
     hostFixture.detectChanges();
-    expect(component.disabled()).toBe(true);
+    expect(component.disabled).toBe(true);
   });
 
   it('should reflect tooltipText input', () => {
     host.tooltipText = 'Hover me';
     hostFixture.detectChanges();
-    expect(component.tooltipText()).toBe('Hover me');
+    expect(component.tooltipText).toBe('Hover me');
   });
 
   it('should reflect tooltipContentClass input', () => {
     host.tooltipContentClass = 'custom-class';
     hostFixture.detectChanges();
-    expect(component.tooltipContentClass()).toBe('custom-class');
+    expect(component.tooltipContentClass).toBe('custom-class');
   });
 
   it('should reflect tooltipMaxWidth input as number', () => {
     host.tooltipMaxWidth = 300;
     hostFixture.detectChanges();
-    expect(component.tooltipMaxWidth()).toBe(300);
+    expect(component.tooltipMaxWidth).toBe(300);
   });
 
   it('should reflect tooltipMaxWidth input as string', () => {
     host.tooltipMaxWidth = '50%';
     hostFixture.detectChanges();
-    expect(component.tooltipMaxWidth()).toBe('50%');
+    expect(component.tooltipMaxWidth).toBe('50%');
   });
 
   it('should reflect tooltipPersistent input', () => {
     host.tooltipPersistent = true;
     hostFixture.detectChanges();
-    expect(component.tooltipPersistent()).toBe(true);
+    expect(component.tooltipPersistent).toBe(true);
   });
 
   it('should reflect badgeValue input', () => {
     host.badgeValue = '5';
     hostFixture.detectChanges();
-    expect(component.badgeValue()).toBe('5');
+    expect(component.badgeValue).toBe('5');
   });
 
   it('should reflect badgeTooltip input', () => {
     host.badgeTooltip = 'Five items';
     hostFixture.detectChanges();
-    expect(component.badgeTooltip()).toBe('Five items');
+    expect(component.badgeTooltip).toBe('Five items');
   });
 
-  it('should become active when active signal is set to true', () => {
-    component.active.set(true);
-    expect(component.active()).toBe(true);
+  it('should become active when active is set to true', () => {
+    component.active = true;
+    expect(component.active).toBe(true);
   });
 
-  it('should become inactive when active signal is set back to false', () => {
-    component.active.set(true);
-    component.active.set(false);
-    expect(component.active()).toBe(false);
+  it('should become inactive when active is set back to false', () => {
+    component.active = true;
+    component.active = false;
+    expect(component.active).toBe(false);
   });
 
   it('should expose a content TemplateRef', () => {

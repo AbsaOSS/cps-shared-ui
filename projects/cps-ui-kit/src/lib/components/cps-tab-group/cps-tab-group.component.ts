@@ -263,7 +263,7 @@ export class CpsTabGroupComponent
   }
 
   get selectedTab(): CpsTabComponent | undefined {
-    return this.tabs.find((t) => t.active());
+    return this.tabs.find((t) => t.active);
   }
 
   getTabId(index: number): string {
@@ -277,23 +277,23 @@ export class CpsTabGroupComponent
   getTabFocusOrderTabIndex(tabIndex: number): 0 | -1 {
     const _tabs = this.tabs.toArray();
     const activeTab = _tabs[this._currentTabIndex];
-    if (!activeTab?.disabled()) {
+    if (!activeTab?.disabled) {
       return tabIndex === this._currentTabIndex ? 0 : -1;
     }
     // Edge case: active tab is disabled - move focus to the first non-disabled tab
-    const firstEnabled = _tabs.findIndex((t) => !t.disabled());
+    const firstEnabled = _tabs.findIndex((t) => !t.disabled);
     return tabIndex === firstEnabled ? 0 : -1;
   }
 
   getTabAriaLabel(tab: CpsTabComponent): string | null {
-    const label = tab.ariaLabel() || tab.label();
-    const badgeValue = tab.badgeValue().trim();
+    const label = tab.ariaLabel || tab.label;
+    const badgeValue = tab.badgeValue.trim();
 
     if (!badgeValue) {
       return label || null;
     }
 
-    const badgeTooltip = tab.badgeTooltip().trim();
+    const badgeTooltip = tab.badgeTooltip.trim();
     return `${label}, Badge: ${badgeValue}${badgeTooltip ? `, ${badgeTooltip}` : ''}`;
   }
 
@@ -315,18 +315,18 @@ export class CpsTabGroupComponent
         targetIndex = this._nextEnabledTab(index, -1, _tabs);
         break;
       case 'Home': {
-        const first = _tabs.findIndex((t) => !t.disabled());
+        const first = _tabs.findIndex((t) => !t.disabled);
         targetIndex = first !== -1 ? first : null;
         break;
       }
       case 'End': {
-        const last = _tabs.map((t) => !t.disabled()).lastIndexOf(true);
+        const last = _tabs.map((t) => !t.disabled).lastIndexOf(true);
         targetIndex = last !== -1 ? last : null;
         break;
       }
       case 'Enter':
       case ' ':
-        if (!_tabs[index]?.disabled()) {
+        if (!_tabs[index]?.disabled) {
           event.preventDefault();
           this.onTabClick(index);
         }
@@ -388,17 +388,17 @@ export class CpsTabGroupComponent
     const len = tabs.length;
     if (direction === 1) {
       for (let i = from + 1; i < len; i++) {
-        if (!tabs[i].disabled()) return i;
+        if (!tabs[i].disabled) return i;
       }
       for (let i = 0; i < from; i++) {
-        if (!tabs[i].disabled()) return i;
+        if (!tabs[i].disabled) return i;
       }
     } else {
       for (let i = from - 1; i >= 0; i--) {
-        if (!tabs[i].disabled()) return i;
+        if (!tabs[i].disabled) return i;
       }
       for (let i = len - 1; i > from; i--) {
-        if (!tabs[i].disabled()) return i;
+        if (!tabs[i].disabled) return i;
       }
     }
     return null;
@@ -406,11 +406,17 @@ export class CpsTabGroupComponent
 
   selectTab(silent = false) {
     const _tabs = this.tabs.toArray();
-    const currentSelectedTab = _tabs[this._previousTabIndex];
 
-    currentSelectedTab?.active.set(false);
+    const currentSelectedTab = _tabs[this._previousTabIndex];
+    if (currentSelectedTab) {
+      currentSelectedTab.active = false;
+    }
+
     const newSelectedTab = _tabs[this._currentTabIndex];
-    newSelectedTab?.active.set(true);
+    if (newSelectedTab) {
+      newSelectedTab.active = true;
+    }
+
     if (this._currentTabIndex === this._previousTabIndex) {
       return;
     }

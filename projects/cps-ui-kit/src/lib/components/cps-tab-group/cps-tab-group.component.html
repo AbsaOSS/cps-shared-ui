@@ -25,27 +25,27 @@
   }
   <ul #tabsList class="cps-tabs-list" role="tablist" tabindex="-1">
     @for (tab of tabs; track tab; let tabIndex = $index) {
-      @if (tab.tooltipText()) {
+      @if (tab.tooltipText) {
         <li
           class="cps-tab"
           role="tab"
           [id]="getTabId(tabIndex)"
           [attr.aria-label]="getTabAriaLabel(tab)"
-          [attr.aria-selected]="tab.active()"
-          [attr.aria-disabled]="tab.disabled() ? true : null"
+          [attr.aria-selected]="tab.active"
+          [attr.aria-disabled]="tab.disabled ? true : null"
           [attr.tabindex]="getTabFocusOrderTabIndex(tabIndex)"
           [attr.aria-controls]="getPanelId(tabIndex)"
-          (click)="!tab.disabled() ? onTabClick(tabIndex) : ''"
+          (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
           (keydown)="onTabKeydown($event, tabIndex)"
-          [class.active]="tab.active()"
-          [class.disabled]="tab.disabled()"
-          [cpsTooltip]="tab.tooltipText()"
+          [class.active]="tab.active"
+          [class.disabled]="tab.disabled"
+          [cpsTooltip]="tab.tooltipText"
           tooltipOpenDelay="1000"
           tooltipCloseDelay="0"
           tooltipPosition="bottom"
-          [tooltipMaxWidth]="tab.tooltipMaxWidth()"
-          [tooltipPersistent]="tab.tooltipPersistent()"
-          [tooltipContentClass]="tab.tooltipContentClass()">
+          [tooltipMaxWidth]="tab.tooltipMaxWidth"
+          [tooltipPersistent]="tab.tooltipPersistent"
+          [tooltipContentClass]="tab.tooltipContentClass">
           <ng-container
             *ngTemplateOutlet="
               tabHeaderTemplate;
@@ -60,14 +60,14 @@
           role="tab"
           [id]="getTabId(tabIndex)"
           [attr.aria-label]="getTabAriaLabel(tab)"
-          [attr.aria-selected]="tab.active()"
-          [attr.aria-disabled]="tab.disabled() ? true : null"
+          [attr.aria-selected]="tab.active"
+          [attr.aria-disabled]="tab.disabled ? true : null"
           [attr.tabindex]="getTabFocusOrderTabIndex(tabIndex)"
           [attr.aria-controls]="getPanelId(tabIndex)"
-          (click)="!tab.disabled() ? onTabClick(tabIndex) : ''"
+          (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
           (keydown)="onTabKeydown($event, tabIndex)"
-          [class.active]="tab.active()"
-          [class.disabled]="tab.disabled()">
+          [class.active]="tab.active"
+          [class.disabled]="tab.disabled">
           <ng-container
             *ngTemplateOutlet="
               tabHeaderTemplate;
@@ -108,9 +108,9 @@
       role="tabpanel"
       [id]="getPanelId(panelIndex)"
       [attr.aria-labelledby]="getTabId(panelIndex)"
-      [attr.tabindex]="tab.active() ? panelTabindex() : null"
-      [hidden]="!tab.active()">
-      @if (tab.active()) {
+      [attr.tabindex]="tab.active ? panelTabindex() : null"
+      [hidden]="!tab.active">
+      @if (tab.active) {
         @if (animationType === 'slide') {
           <div [@slideInOut]="animationState" class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
@@ -127,22 +127,22 @@
 </div>
 
 <ng-template #tabHeaderTemplate let-tab="tab">
-  @if (tab.icon()) {
-    <cps-icon class="cps-tab-icon" [icon]="tab.icon()" aria-hidden="true">
+  @if (tab.icon) {
+    <cps-icon class="cps-tab-icon" [icon]="tab.icon" aria-hidden="true">
     </cps-icon>
   }
-  <span class="cps-tab-link">{{ tab.label() }}</span>
-  @if (tab.badgeValue()) {
-    @if (tab.badgeTooltip()) {
+  <span class="cps-tab-link">{{ tab.label }}</span>
+  @if (tab.badgeValue) {
+    @if (tab.badgeTooltip) {
       <div
         class="cps-tab-badge"
-        [cpsTooltip]="tab.badgeTooltip()"
+        [cpsTooltip]="tab.badgeTooltip"
         aria-hidden="true">
-        <span>{{ tab.badgeValue() }}</span>
+        <span>{{ tab.badgeValue }}</span>
       </div>
     } @else {
       <div class="cps-tab-badge" aria-hidden="true">
-        <span>{{ tab.badgeValue() }}</span>
+        <span>{{ tab.badgeValue }}</span>
       </div>
     }
   }

@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
-  input,
-  signal,
+  Input,
+  OnChanges,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  type SimpleChanges
 } from '@angular/core';
 
 /**
@@ -19,88 +19,78 @@ import {
   templateUrl: './cps-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CpsTabComponent {
+export class CpsTabComponent implements OnChanges {
   /**
    * Label of the tab.
    * @group Props
-   * @default ''
    */
-  readonly label = input('');
+  @Input() label = '';
 
   /**
    * Aria label for the tab component, used for accessibility, it takes precedence over label.
    * @group Props
-   * @default ''
    */
-  readonly ariaLabel = input('');
+  @Input() ariaLabel = '';
 
   /**
    * Icon before the label.
    * @group Props
-   * @default ''
    */
-  readonly icon = input('');
+  @Input() icon = '';
 
   /**
    * Determines whether tab is disabled.
    * @group Props
-   * @default false
    */
-  readonly disabled = input(false);
+  @Input() disabled = false;
 
   /**
    * Determines whether to show the tooltip on tab hover.
    * @group Props
-   * @default ''
    */
-  readonly tooltipText = input('');
+  @Input() tooltipText = '';
 
   /**
    * Class for styling the tab tooltip.
    * @group Props
-   * @default 'cps-tooltip-content'
    */
-  readonly tooltipContentClass = input('cps-tooltip-content');
+  @Input() tooltipContentClass = 'cps-tooltip-content';
 
   /**
    * Max width of the tooltip, of type number denoting pixels or string.
    * @group Props
-   * @default 100%
    */
-  readonly tooltipMaxWidth = input<number | string>('100%');
+  @Input() tooltipMaxWidth: number | string = '100%';
 
   /**
    * Determines whether the tooltip should have persistent info.
    * @group Props
-   * @default false
    */
-  readonly tooltipPersistent = input(false);
+  @Input() tooltipPersistent = false;
 
   /**
    * Badge value to show on the tab after the label in a form of a circle.
    * @group Props
-   * @default ''
    */
-  readonly badgeValue = input('');
+  @Input() badgeValue = '';
 
   /**
    * Tooltip text to show on badge hover.
    * @group Props
-   * @default ''
    */
-  readonly badgeTooltip = input('');
+  @Input() badgeTooltip = '';
 
-  @ViewChild(TemplateRef) content!: TemplateRef<unknown>;
+  @ViewChild(TemplateRef) content!: TemplateRef<any>;
 
-  readonly active = signal(false);
+  active = false;
 
-  constructor() {
-    effect(() => {
-      if (!this.label()?.trim() && !this.ariaLabel()?.trim()) {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.label || changes.ariaLabel) {
+      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
         console.error(
           'CpsTabComponent: unlabeled tab component must have an ariaLabel for accessibility.'
         );
       }
-    });
+    }
   }
 }

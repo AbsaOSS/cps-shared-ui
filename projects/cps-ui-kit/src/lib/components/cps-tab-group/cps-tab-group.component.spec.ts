@@ -99,8 +99,8 @@ describe('CpsTabGroupComponent', () => {
 
   it('should activate the first tab by default', () => {
     const tabs = component.tabs.toArray();
-    expect(tabs[0].active()).toBe(true);
-    expect(tabs[1].active()).toBe(false);
+    expect(tabs[0].active).toBe(true);
+    expect(tabs[1].active).toBe(false);
   });
 
   it('should render tab labels', () => {
@@ -164,23 +164,23 @@ describe('CpsTabGroupComponent', () => {
     host.selectedIndex = 1;
     hostFixture.detectChanges();
     const tabs = component.tabs.toArray();
-    expect(tabs[1].active()).toBe(true);
-    expect(tabs[0].active()).toBe(false);
+    expect(tabs[1].active).toBe(true);
+    expect(tabs[0].active).toBe(false);
   });
 
   it('should activate a disabled tab when selectedIndex points to it programmatically', () => {
     host.selectedIndex = 2;
     hostFixture.detectChanges();
     const tabs = component.tabs.toArray();
-    expect(tabs[2].active()).toBe(true);
+    expect(tabs[2].active).toBe(true);
   });
 
   it('should activate tab on click', () => {
     component.onTabClick(1);
     hostFixture.detectChanges();
     const tabs = component.tabs.toArray();
-    expect(tabs[1].active()).toBe(true);
-    expect(tabs[0].active()).toBe(false);
+    expect(tabs[1].active).toBe(true);
+    expect(tabs[0].active).toBe(false);
   });
 
   it('should emit beforeTabChanged on click', () => {
@@ -219,8 +219,8 @@ describe('CpsTabGroupComponent', () => {
     tabEls[2].click();
     hostFixture.detectChanges();
     const tabs = component.tabs.toArray();
-    expect(tabs[2].active()).toBe(false);
-    expect(tabs[0].active()).toBe(true);
+    expect(tabs[2].active).toBe(false);
+    expect(tabs[0].active).toBe(true);
   });
 
   it('should not emit events when same tab is clicked again', () => {
@@ -262,7 +262,7 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[0], 'ArrowRight');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[1].active()).toBe(true);
+    expect(component.tabs.toArray()[1].active).toBe(true);
   });
 
   it('should skip disabled tab on ArrowRight', () => {
@@ -271,7 +271,7 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[1], 'ArrowRight');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[3].active()).toBe(true);
+    expect(component.tabs.toArray()[3].active).toBe(true);
   });
 
   it('should wrap around to first tab on ArrowRight from last enabled tab', () => {
@@ -280,7 +280,7 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[3], 'ArrowRight');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[0].active()).toBe(true);
+    expect(component.tabs.toArray()[0].active).toBe(true);
   });
 
   it('should move to previous tab on ArrowLeft', () => {
@@ -289,7 +289,7 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[1], 'ArrowLeft');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[0].active()).toBe(true);
+    expect(component.tabs.toArray()[0].active).toBe(true);
   });
 
   it('should skip disabled tab on ArrowLeft', () => {
@@ -298,14 +298,14 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[3], 'ArrowLeft');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[1].active()).toBe(true);
+    expect(component.tabs.toArray()[1].active).toBe(true);
   });
 
   it('should wrap around to last enabled tab on ArrowLeft from first tab', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[0], 'ArrowLeft');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[3].active()).toBe(true);
+    expect(component.tabs.toArray()[3].active).toBe(true);
   });
 
   it('should move to first enabled tab on Home', () => {
@@ -314,14 +314,14 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[3], 'Home');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[0].active()).toBe(true);
+    expect(component.tabs.toArray()[0].active).toBe(true);
   });
 
   it('should move to last enabled tab on End', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[0], 'End');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[3].active()).toBe(true);
+    expect(component.tabs.toArray()[3].active).toBe(true);
   });
 
   it('should not activate on ArrowRight when autoActivation is false (only focuses)', () => {
@@ -330,7 +330,7 @@ describe('CpsTabGroupComponent', () => {
     const tabEls = getTabEls(hostFixture);
     dispatchKeydown(tabEls[0], 'ArrowRight');
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[0].active()).toBe(true);
+    expect(component.tabs.toArray()[0].active).toBe(true);
   });
 
   it('should activate focused tab on Enter when autoActivation is false', () => {
@@ -343,7 +343,7 @@ describe('CpsTabGroupComponent', () => {
     });
     component.onTabKeydown(event, 1);
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[1].active()).toBe(true);
+    expect(component.tabs.toArray()[1].active).toBe(true);
   });
 
   it('should activate focused tab on Space when autoActivation is false', () => {
@@ -356,7 +356,7 @@ describe('CpsTabGroupComponent', () => {
     });
     component.onTabKeydown(event, 3);
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[3].active()).toBe(true);
+    expect(component.tabs.toArray()[3].active).toBe(true);
   });
 
   it('should not activate disabled tab on Enter when autoActivation is false', () => {
@@ -369,7 +369,7 @@ describe('CpsTabGroupComponent', () => {
     });
     component.onTabKeydown(event, 2);
     hostFixture.detectChanges();
-    expect(component.tabs.toArray()[2].active()).toBe(false);
+    expect(component.tabs.toArray()[2].active).toBe(false);
   });
 
   it('should return label when no badge', () => {
@@ -384,14 +384,14 @@ describe('CpsTabGroupComponent', () => {
 
   it('should use ariaLabel over label when set', () => {
     const tab = component.tabs.toArray()[1];
-    jest.spyOn(tab, 'ariaLabel').mockReturnValue('Custom aria');
+    tab.ariaLabel = 'Custom aria';
     expect(component.getTabAriaLabel(tab)).toBe('Custom aria');
   });
 
   it('should return null when label and ariaLabel are empty', () => {
     const tab = component.tabs.toArray()[1];
-    jest.spyOn(tab, 'ariaLabel').mockReturnValue('');
-    jest.spyOn(tab, 'label').mockReturnValue('');
+    tab.ariaLabel = '';
+    tab.label = '';
     expect(component.getTabAriaLabel(tab)).toBeNull();
   });
 

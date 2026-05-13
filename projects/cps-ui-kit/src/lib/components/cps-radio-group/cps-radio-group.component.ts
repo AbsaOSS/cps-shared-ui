@@ -10,7 +10,8 @@ import {
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  type SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -184,11 +185,13 @@ export class CpsRadioGroupComponent
     );
   }
 
-  ngOnChanges(): void {
-    if (!this.groupLabel?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsRadioGroupComponent: unlabeled radio group component must have an ariaLabel for accessibility.'
-      );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.groupLabel || changes.ariaLabel) {
+      if (!this.groupLabel?.trim() && !this.ariaLabel?.trim()) {
+        console.error(
+          'CpsRadioGroupComponent: unlabeled radio group component must have an ariaLabel for accessibility.'
+        );
+      }
     }
   }
 
