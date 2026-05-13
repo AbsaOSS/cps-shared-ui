@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CpsSchedulerComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-scheduler.json';
+import ServiceData from '../../api-data/cps-cron-validation.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
@@ -12,6 +13,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 })
 export class SchedulerPageComponent {
   componentData = ComponentData;
+  serviceData = [ServiceData];
 
   cronExpression = '30 9 ? 7/4 WED#5 *';
   timeZone = 'UTC';

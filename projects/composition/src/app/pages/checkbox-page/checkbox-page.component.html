@@ -1,30 +1,44 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <!-- Example of component's usage -->
-  <div class="checkboxes-group">
-    <cps-checkbox
-      label="Checkbox with tooltip"
-      [value]="false"
-      infoTooltip="Provide any information here">
-    </cps-checkbox>
-    <cps-checkbox label="Basic checkbox" [value]="true"></cps-checkbox>
-    <cps-checkbox ariaLabel="Unlabeled checkbox" [value]="true"></cps-checkbox>
-    <cps-checkbox
-      label="Checkbox with icon"
-      [value]="false"
-      icon="avatar"></cps-checkbox>
-    <cps-checkbox
-      label="Disabled checkbox checked"
-      [disabled]="true"
-      [value]="true"></cps-checkbox>
-    <cps-checkbox
-      label="Disabled checkbox unchecked"
-      [disabled]="true"
-      [value]="false"></cps-checkbox>
+  <app-code-example label="Default" [htmlCode]="examples.default.html">
+    <div class="checkboxes-group">
+      <cps-checkbox
+        label="Checkbox with tooltip"
+        [value]="false"
+        infoTooltip="Provide any information here">
+      </cps-checkbox>
+      <cps-checkbox label="Basic checkbox" [value]="true"></cps-checkbox>
+      <cps-checkbox
+        ariaLabel="Unlabeled checkbox"
+        [value]="true"></cps-checkbox>
+      <cps-checkbox
+        label="Checkbox with icon"
+        [value]="false"
+        icon="avatar"></cps-checkbox>
+    </div>
+  </app-code-example>
+
+  <app-code-example label="Disabled" [htmlCode]="examples.disabled.html">
+    <div class="checkboxes-group">
+      <cps-checkbox
+        label="Disabled checkbox checked"
+        [disabled]="true"
+        [value]="true"></cps-checkbox>
+      <cps-checkbox
+        label="Disabled checkbox unchecked"
+        [disabled]="true"
+        [value]="false"></cps-checkbox>
+    </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBinding.html"
+    [tsCode]="examples.twoWayBinding.ts">
     <div class="sync-val-example">
       <cps-checkbox
         label="Checkbox with two-way binding"
         [(ngModel)]="syncVal"></cps-checkbox>
       <div class="sync-val">Is checked: {{ syncVal }}</div>
     </div>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

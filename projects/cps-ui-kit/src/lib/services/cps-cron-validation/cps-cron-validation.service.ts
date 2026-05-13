@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 
 /**
  * Service for validating 6-field cron expressions with extended features.
@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class CronValidationService {
+export class CpsCronValidationService {
   /**
    * Validates a complete 6-field cron expression.
    *
@@ -41,7 +41,7 @@ export class CronValidationService {
       return false;
     }
 
-    return this.validateCronFields(parts);
+    return this._validateCronFields(parts);
   }
 
   /**
@@ -67,29 +67,30 @@ export class CronValidationService {
    * @param parts - Array of 6 cron field strings [minutes, hours, dayOfMonth, month, dayOfWeek, year]
    * @returns boolean - True if all fields are valid and follow extended cron rules
    */
-  private validateCronFields(parts: string[]): boolean {
+  private _validateCronFields(parts: string[]): boolean {
     const [minutes, hours, dayOfMonth, month, dayOfWeek, year] = parts;
 
     // Validate minutes (0-59) - use enhanced validation
-    if (!this.validateComplexField(minutes, 0, 59, 'minutes')) return false;
+    if (!this._validateComplexField(minutes, 0, 59, 'minutes')) return false;
 
     // Validate hours (0-23) - use enhanced validation
-    if (!this.validateComplexField(hours, 0, 23, 'hours')) return false;
+    if (!this._validateComplexField(hours, 0, 23, 'hours')) return false;
 
     // Validate day of month (1-31 or wildcards)
-    if (!this.validateDayOfMonth(dayOfMonth)) return false;
+    if (!this._validateDayOfMonth(dayOfMonth)) return false;
 
     // Validate month (1-12 or JAN-DEC) - use enhanced validation
-    if (!this.validateMonth(month)) return false;
+    if (!this._validateMonth(month)) return false;
 
     // Validate day of week (1-7 or SUN-SAT) - enhanced method will handle this
-    if (!this.validateDayOfWeek(dayOfWeek)) return false;
+    if (!this._validateDayOfWeek(dayOfWeek)) return false;
 
     // Validate year (1970-2199) - use enhanced validation
-    if (!this.validateComplexField(year, 1970, 2199, 'year')) return false;
+    if (!this._validateComplexField(year, 1970, 2199, 'year')) return false;
 
     // Validate mutual exclusivity of day-of-month and day-of-week
-    if (!this.validateDayMutualExclusivity(dayOfMonth, dayOfWeek)) return false;
+    if (!this._validateDayMutualExclusivity(dayOfMonth, dayOfWeek))
+      return false;
 
     return true;
   }
@@ -114,7 +115,7 @@ export class CronValidationService {
    * @param type - The cron field type ('minutes', 'hours', 'dayOfMonth', 'month', 'dayOfWeek', 'year')
    * @returns boolean - True if the field is valid according to EventBridge Scheduler rules
    */
-  private validateComplexField(
+  private _validateComplexField(
     field: string,
     min: number,
     max: number,
@@ -133,7 +134,7 @@ export class CronValidationService {
       return field.split(',').every((val) => {
         const trimmedVal = val.trim();
         // Recursively validate each part of the list
-        return this.validateComplexField(trimmedVal, min, max, type);
+        return this._validateComplexField(trimmedVal, min, max, type);
       });
     }
 
@@ -142,26 +143,26 @@ export class CronValidationService {
     if (field.includes('-') && field.includes('/')) {
       const [range, step] = field.split('/');
       const [start, end] = range.split('-');
-      return this.validateRangeWithStep(start, end, step, min, max, type);
+      return this._validateRangeWithStep(start, end, step, min, max, type);
     }
 
     // Handle simple range patterns: "1-5" (values from 1 to 5), "MON-FRI" (Monday to Friday)
     // Extended cron supports both numeric and named ranges for time-based scheduling
     if (field.includes('-')) {
       const [start, end] = field.split('-');
-      return this.validateSimpleRange(start, end, min, max, type);
+      return this._validateSimpleRange(start, end, min, max, type);
     }
 
     // Handle step patterns from start: "5/10" (every 10th value starting from 5)
     // Extended cron uses this for interval-based scheduling from a specific starting point
     if (field.includes('/')) {
       const [start, step] = field.split('/');
-      return this.validateStepField(start, step, min, max, type);
+      return this._validateStepField(start, step, min, max, type);
     }
 
     // Handle single values and special characters (L, W, #)
     // These provide advanced scheduling capabilities like "last day of month" or "3rd Tuesday"
-    return this.validateSingleValue(field, min, max, type);
+    return this._validateSingleValue(field, min, max, type);
   }
 
   /**
@@ -184,7 +185,7 @@ export class CronValidationService {
    * @param type - The cron field type for context-specific validation
    * @returns boolean - True if the value is valid for EventBridge Scheduler
    */
-  private validateSingleValue(
+  private _validateSingleValue(
     value: string,
     min: number,
     max: number,
@@ -208,22 +209,22 @@ export class CronValidationService {
       // 'MONL' = last Monday of month (last occurrence)
       if (value.endsWith('L')) {
         const day = value.slice(0, -1);
-        return this.isValidDayOfWeek(day);
+        return this._isValidDayOfWeek(day);
       }
       // '3#2' = 3rd Tuesday of month (3=Tuesday, 2=second occurrence)
       if (value.includes('#')) {
         const [day, week] = value.split('#');
         return (
-          this.isValidDayOfWeek(day) && Number(week) >= 1 && Number(week) <= 5
+          this._isValidDayOfWeek(day) && Number(week) >= 1 && Number(week) <= 5
         );
       }
       // Standard day names: SUN, MON, TUE, etc.
-      if (this.isValidDayOfWeek(value)) return true;
+      if (this._isValidDayOfWeek(value)) return true;
     }
 
     // Handle month names (JAN, FEB, MAR, etc.) for month field
     // Extended cron allows both numeric (1-12) and named month values
-    if (type === 'month' && this.isValidMonthName(value)) return true;
+    if (type === 'month' && this._isValidMonthName(value)) return true;
 
     // Validate numeric values within the specified range
     // This covers standard numeric scheduling (minutes: 0-59, hours: 0-23, etc.)
@@ -248,7 +249,7 @@ export class CronValidationService {
    * @param type - Field type for context-aware validation (dayOfWeek gets special handling)
    * @returns boolean - True if the range-step pattern is valid for EventBridge
    */
-  private validateRangeWithStep(
+  private _validateRangeWithStep(
     start: string,
     end: string,
     step: string,
@@ -261,20 +262,20 @@ export class CronValidationService {
     if (isNaN(stepNum) || stepNum <= 0) return false;
 
     // Special handling for day-of-week ranges (supports named days like MON-FRI)
-    // Extended cron allows both numeric (1-7) and named (SUN-SAT) day ranges
+    // Extended cron allows both numeric (1-7) and named day ranges
     if (type === 'dayOfWeek') {
-      return this.isValidDayOfWeek(start) && this.isValidDayOfWeek(end);
+      return this._isValidDayOfWeek(start) && this._isValidDayOfWeek(end);
     }
 
     // Special handling for month ranges (supports named months like JAN-DEC)
-    // Extended cron allows both numeric (1-12) and named (JAN-DEC) month ranges
+    // Extended cron allows both numeric (1-12) and named month ranges
     if (type === 'month') {
       const startValid =
-        this.isValidMonthName(start) ||
-        this.validateSingleValue(start, min, max, type);
+        this._isValidMonthName(start) ||
+        this._validateSingleValue(start, min, max, type);
       const endValid =
-        this.isValidMonthName(end) ||
-        this.validateSingleValue(end, min, max, type);
+        this._isValidMonthName(end) ||
+        this._validateSingleValue(end, min, max, type);
       return startValid && endValid;
     }
 
@@ -310,7 +311,7 @@ export class CronValidationService {
    * @param type - Field type for validation context (affects named value handling)
    * @returns boolean - True if the range pattern is valid for EventBridge
    */
-  private validateSimpleRange(
+  private _validateSimpleRange(
     start: string,
     end: string,
     min: number,
@@ -320,18 +321,18 @@ export class CronValidationService {
     // Handle day-of-week ranges with named values (MON-FRI, SUN-SAT, etc.)
     // Extended cron supports both numeric (1-7) and named day ranges
     if (type === 'dayOfWeek') {
-      return this.isValidDayOfWeek(start) && this.isValidDayOfWeek(end);
+      return this._isValidDayOfWeek(start) && this._isValidDayOfWeek(end);
     }
 
     // Handle month ranges with named values (JAN-DEC, etc.)
     // Extended cron allows both numeric (1-12) and named month ranges
     if (type === 'month') {
       const startValid =
-        this.isValidMonthName(start) ||
-        this.validateSingleValue(start, min, max, type);
+        this._isValidMonthName(start) ||
+        this._validateSingleValue(start, min, max, type);
       const endValid =
-        this.isValidMonthName(end) ||
-        this.validateSingleValue(end, min, max, type);
+        this._isValidMonthName(end) ||
+        this._validateSingleValue(end, min, max, type);
       return startValid && endValid;
     }
 
@@ -367,7 +368,7 @@ export class CronValidationService {
    * @param type - Field type for validation context
    * @returns boolean - True if the step pattern is valid for EventBridge
    */
-  private validateStepField(
+  private _validateStepField(
     start: string,
     step: string,
     min: number,
@@ -385,7 +386,7 @@ export class CronValidationService {
     // Handle named day values for day-of-week step patterns
     // Extended cron supports patterns like "MON/2" (every 2nd occurrence starting Monday)
     if (type === 'dayOfWeek') {
-      return this.isValidDayOfWeek(start);
+      return this._isValidDayOfWeek(start);
     }
 
     // Validate numeric start values - must be within field's valid range
@@ -397,21 +398,21 @@ export class CronValidationService {
   /**
    * Validates day-of-month field with special characters.
    */
-  private validateDayOfMonth(dayOfMonth: string): boolean {
-    return this.validateComplexField(dayOfMonth, 1, 31, 'dayOfMonth');
+  private _validateDayOfMonth(dayOfMonth: string): boolean {
+    return this._validateComplexField(dayOfMonth, 1, 31, 'dayOfMonth');
   }
 
   /**
    * Validates month field with support for named months.
    */
-  private validateMonth(month: string): boolean {
-    return this.validateComplexField(month, 1, 12, 'month');
+  private _validateMonth(month: string): boolean {
+    return this._validateComplexField(month, 1, 12, 'month');
   }
 
   /**
    * Validates day-of-week field with support for named days and special characters.
    */
-  private validateDayOfWeek(dayOfWeek: string): boolean {
+  private _validateDayOfWeek(dayOfWeek: string): boolean {
     // Check for multiple hash expressions in day-of-week field
     if (dayOfWeek.includes(',') && dayOfWeek.includes('#')) {
       const parts = dayOfWeek.split(',');
@@ -425,14 +426,14 @@ export class CronValidationService {
       }
     }
 
-    return this.validateComplexField(dayOfWeek, 1, 7, 'dayOfWeek');
+    return this._validateComplexField(dayOfWeek, 1, 7, 'dayOfWeek');
   }
 
   /**
    * Validates mutual exclusivity rule for day-of-month and day-of-week fields.
    * Extended cron requires that one of these fields must be a wildcard.
    */
-  private validateDayMutualExclusivity(
+  private _validateDayMutualExclusivity(
     dayOfMonth: string,
     dayOfWeek: string
   ): boolean {
@@ -446,7 +447,7 @@ export class CronValidationService {
   /**
    * Checks if a value represents a valid day of the week (numeric or named).
    */
-  private isValidDayOfWeek(day: string): boolean {
+  private _isValidDayOfWeek(day: string): boolean {
     const validDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
     if (validDays.includes(day.toUpperCase())) return true;
 
@@ -457,7 +458,7 @@ export class CronValidationService {
   /**
    * Checks if a value represents a valid month name.
    */
-  private isValidMonthName(month: string): boolean {
+  private _isValidMonthName(month: string): boolean {
     const validMonths = [
       'JAN',
       'FEB',
@@ -475,3 +476,33 @@ export class CronValidationService {
     return validMonths.includes(month.toUpperCase());
   }
 }
+
+/**
+ * Injection token for `CpsCronValidationService`.
+ *
+ * Always inject this token instead of `CpsCronValidationService` directly.
+ * This allows consumer applications to override or disable cron validation by
+ * providing an alternative implementation via `providers`.
+ *
+ * @example
+ * // Inject in a component or service
+ * private readonly cronValidation = inject(CPS_CRON_VALIDATION_SERVICE);
+ *
+ * @example
+ * // Override with a custom implementation
+ * providers: [{ provide: CPS_CRON_VALIDATION_SERVICE, useClass: MyCustomCronValidationService }]
+ *
+ * @example
+ * // Disable cron validation entirely
+ * providers: [{ provide: CPS_CRON_VALIDATION_SERVICE, useValue: null }]
+ *
+ * @group Tokens
+ */
+export const CPS_CRON_VALIDATION_SERVICE =
+  new InjectionToken<CpsCronValidationService | null>(
+    'CPS_CRON_VALIDATION_SERVICE',
+    {
+      providedIn: 'root',
+      factory: () => inject(CpsCronValidationService)
+    }
+  );

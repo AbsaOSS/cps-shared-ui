@@ -163,6 +163,9 @@ async function main() {
             const module_classes_group = module.groups.find(
               (g) => g.title === 'Classes'
             );
+            const module_tokens_group = module.groups.find(
+              (g) => g.title === 'Tokens'
+            );
             // Todo: Add support for type aliases
 
             if (isProcessable(module_components_group)) {
@@ -454,7 +457,7 @@ async function main() {
                 );
                 if (isProcessable(service_methods_group)) {
                   const methods = {
-                    description: 'Methods used in service.',
+                    description: 'Methods used in the service.',
                     values: []
                   };
 
@@ -486,6 +489,25 @@ async function main() {
                   doc[name].methods = methods;
                 }
               });
+            }
+
+            if (isProcessable(module_tokens_group)) {
+              const tokens = {
+                description: 'Injection tokens exposed by the service.',
+                values: []
+              };
+
+              module_tokens_group.children.forEach((token) => {
+                tokens.values.push({
+                  name: token.name,
+                  type: token.type ? token.type.toString() : 'InjectionToken',
+                  description:
+                    token.comment &&
+                    token.comment.summary.map((s) => s.text || '').join(' ')
+                });
+              });
+
+              doc[name].tokens = tokens;
             }
 
             if (isProcessable(module_interface_group)) {

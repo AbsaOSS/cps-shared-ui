@@ -337,7 +337,7 @@ export class CpsInputComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
+  onChange = (_event: any) => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
@@ -383,7 +383,7 @@ export class CpsInputComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
+  setDisabledState(_disabled: boolean) {}
 
   onClickPrefixIcon() {
     if (!this.prefixIconClickable || this.readonly || this.disabled) return;

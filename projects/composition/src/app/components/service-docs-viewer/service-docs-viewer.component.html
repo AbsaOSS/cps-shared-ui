@@ -38,7 +38,9 @@
                         <div class="parameters">
                           @for (param of method.parameters; track param.name) {
                             <span>
-                              <strong [cpsTooltip]="param.description || ''">
+                              <strong
+                                [cpsTooltip]="param.description || ''"
+                                tabindex="0">
                                 {{ param.name }}:
                               </strong>
                               @if (param.type | detectType: TypesMap; as link) {
@@ -244,7 +246,9 @@
                               track param.name
                             ) {
                               <span>
-                                <strong [cpsTooltip]="param.description || ''">
+                                <strong
+                                  [cpsTooltip]="param.description || ''"
+                                  tabindex="0">
                                   {{ param.name }}:
                                 </strong>
                                 @if (

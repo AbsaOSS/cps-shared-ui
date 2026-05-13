@@ -224,7 +224,7 @@ export class CpsTimepickerComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange = (event: any) => {};
+  onChange = (_event: any) => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onTouched = () => {};
 
@@ -237,7 +237,7 @@ export class CpsTimepickerComponent
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setDisabledState(disabled: boolean) {}
+  setDisabledState(_disabled: boolean) {}
 
   writeValue(value: CpsTime | undefined) {
     this.value = value;

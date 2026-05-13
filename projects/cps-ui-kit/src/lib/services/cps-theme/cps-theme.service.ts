@@ -284,13 +284,13 @@ export class CpsThemeService {
   }
 
   // TODO: Use as fallback in getInitialTheme() once dark mode is fully supported across all components.
-  private getSystemTheme(): CpsTheme {
-    const win = this.document.defaultView;
-    if (!win?.matchMedia) return 'light';
-    return win.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-  }
+  // private getSystemTheme(): CpsTheme {
+  //   const win = this.document.defaultView;
+  //   if (!win?.matchMedia) return 'light';
+  //   return win.matchMedia('(prefers-color-scheme: dark)').matches
+  //     ? 'dark'
+  //     : 'light';
+  // }
 
   // TODO: Enable system preference fallback once dark mode is fully supported across all components.
   private watchSystemTheme(): void {

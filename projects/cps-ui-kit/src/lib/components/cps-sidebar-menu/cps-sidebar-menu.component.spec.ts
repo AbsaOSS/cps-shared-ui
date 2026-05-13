@@ -231,7 +231,7 @@ describe('CpsSidebarMenuComponent', () => {
     it('should not toggle when target element has disabled class', () => {
       const el = document.createElement('button');
       el.classList.add('disabled');
-      const event = { currentTarget: el } as MouseEvent;
+      const event = { currentTarget: el } as unknown as MouseEvent;
       component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
       expect(mockMenu.show).not.toHaveBeenCalled();
       expect(mockMenu.hide).not.toHaveBeenCalled();
@@ -239,7 +239,7 @@ describe('CpsSidebarMenuComponent', () => {
 
     it('should hide menu when it is visible', () => {
       const el = document.createElement('button');
-      const event = { currentTarget: el } as MouseEvent;
+      const event = { currentTarget: el } as unknown as MouseEvent;
       (mockMenu.isVisible as jest.Mock).mockReturnValue(true);
       component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
       expect(mockMenu.hide).toHaveBeenCalled();
@@ -248,7 +248,7 @@ describe('CpsSidebarMenuComponent', () => {
 
     it('should hide all other menus and show this one when not visible', () => {
       const el = document.createElement('button');
-      const event = { currentTarget: el } as MouseEvent;
+      const event = { currentTarget: el } as unknown as MouseEvent;
       (mockMenu.isVisible as jest.Mock).mockReturnValue(false);
       component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
       expect((component.allMenus as any).forEach).toHaveBeenCalled();
@@ -257,7 +257,7 @@ describe('CpsSidebarMenuComponent', () => {
 
     it('should always set focusedItemWithMenu to the given item', () => {
       const el = document.createElement('button');
-      const event = { currentTarget: el } as MouseEvent;
+      const event = { currentTarget: el } as unknown as MouseEvent;
       component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
       expect(component.focusedItemWithMenu).toBe(item);
     });

@@ -16,6 +16,17 @@ export interface MethodAPI {
   returnType: string;
 }
 
+export interface TokenAPI {
+  name: string;
+  type: string;
+  description: string;
+}
+
+export interface TokensAPI {
+  description: string;
+  values: TokenAPI[];
+}
+
 export interface ServiceAPI {
   name: string;
   description: string;
@@ -23,6 +34,7 @@ export interface ServiceAPI {
     description: string;
     values: MethodAPI[];
   };
+  tokens?: TokensAPI;
   types?: TypesAPI;
   interfaces?: InterfaceAPI;
   classes?: ClassesAPI;
