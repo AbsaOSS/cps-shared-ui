@@ -141,7 +141,7 @@
         "values": [
             {
                 "name": "CpsButtonToggleOption",
-                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"ariaLabel\": \"string\",\n    \"icon\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "value": "{\n    \"value\": \"any\",\n    \"label?\": \"string\",\n    \"ariaLabel?\": \"string\",\n    \"icon?\": \"string\",\n    \"disabled?\": \"boolean\",\n    \"tooltip?\": \"string\"\n}",
                 "description": "CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent."
             }
         ]

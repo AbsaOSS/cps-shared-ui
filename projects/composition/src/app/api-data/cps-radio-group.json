@@ -241,7 +241,7 @@
         "values": [
             {
                 "name": "CpsRadioOption",
-                "value": "{\n    \"value\": \"any\",\n    \"label\": \"string\",\n    \"ariaLabel\": \"string\",\n    \"disabled\": \"boolean\",\n    \"tooltip\": \"string\"\n}",
+                "value": "{\n    \"value\": \"any\",\n    \"label?\": \"string\",\n    \"ariaLabel?\": \"string\",\n    \"disabled?\": \"boolean\",\n    \"tooltip?\": \"string\"\n}",
                 "description": "CpsRadioOption is used to define the options of the CpsRadioGroupComponent."
             }
         ]
