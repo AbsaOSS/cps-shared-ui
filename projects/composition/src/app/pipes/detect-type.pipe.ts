@@ -1,52 +1,78 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-export interface TypeSegment {
+interface TypeSegment {
   text: string;
   route?: string;
   fragment?: string;
 }
 
-@Pipe({ name: 'detectType', pure: true, standalone: true })
+interface TypeGroup {
+  hasSeparator: boolean;
+  segments: TypeSegment[];
+}
+
+function splitTopLevelUnion(value: string): string[] {
+  const parts: string[] = [];
+  let depth = 0;
+  let current = '';
+  for (const char of value) {
+    if ('<({['.includes(char)) depth++;
+    else if ('>)}]'.includes(char)) depth--;
+    if (char === '|' && depth === 0) {
+      parts.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  parts.push(current);
+  return parts;
+}
+
+@Pipe({ name: 'detectType', pure: true })
 export class DetectTypePipe implements PipeTransform {
-  public transform(
-    value: string,
-    types: Record<string, string>
-  ): TypeSegment[] {
-    if (!value) return [{ text: value }];
+  public transform(value: string, types: Record<string, string>): TypeGroup[] {
+    if (!value) return [{ hasSeparator: false, segments: [{ text: value }] }];
     const isArray = value.endsWith('[]');
     const base = isArray ? value.slice(0, -2) : value;
 
-    const segments: TypeSegment[] = base.split('|').flatMap((part, i) => {
+    const groups: TypeGroup[] = splitTopLevelUnion(base).map((part, i) => {
       const typeName = part.trim();
-      const separator: TypeSegment[] = i > 0 ? [{ text: '|' }] : [];
+      const hasSeparator = i > 0;
       if (typeName in types) {
-        return [
-          ...separator,
-          {
-            text: typeName,
-            route: `/${types[typeName]}/api`,
-            fragment: typeName
-          }
-        ];
+        return {
+          hasSeparator,
+          segments: [
+            {
+              text: typeName,
+              route: `/${types[typeName]}/api`,
+              fragment: typeName
+            }
+          ]
+        };
       }
       const genericMatch = typeName.match(/^([^<]+<)([\w$]+)(>.*)$/);
       if (genericMatch && genericMatch[2] in types) {
         const innerType = genericMatch[2];
-        return [
-          ...separator,
-          { text: genericMatch[1] },
-          {
-            text: innerType,
-            route: `/${types[innerType]}/api`,
-            fragment: innerType
-          },
-          { text: genericMatch[3] }
-        ];
+        return {
+          hasSeparator,
+          segments: [
+            { text: genericMatch[1] },
+            {
+              text: innerType,
+              route: `/${types[innerType]}/api`,
+              fragment: innerType
+            },
+            { text: genericMatch[3] }
+          ]
+        };
       }
-      return [...separator, { text: typeName }];
+      return { hasSeparator, segments: [{ text: typeName }] };
     });
 
-    if (isArray) segments.push({ text: '[]' });
-    return segments;
+    if (isArray && groups.length > 0) {
+      groups[groups.length - 1].segments.push({ text: '[]' });
+    }
+    return groups;
   }
 }
