@@ -30,6 +30,14 @@
                         "description": "Horizontal alignment of tabs."
                     },
                     {
+                        "name": "autoActivation",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "When true, tabs activate automatically as focus moves between them via arrow keys.\nWhen false, arrow keys only move focus; press Enter or Space to activate the focused tab."
+                    },
+                    {
                         "name": "contentWrapClass",
                         "optional": false,
                         "readonly": false,
@@ -117,6 +125,14 @@
                         "type": "string",
                         "default": "",
                         "description": "Label of the tab."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the tab component, used for accessibility, it takes precedence over label."
                     },
                     {
                         "name": "icon",

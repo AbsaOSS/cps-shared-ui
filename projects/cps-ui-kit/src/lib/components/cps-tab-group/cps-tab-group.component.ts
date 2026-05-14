@@ -22,12 +22,18 @@ import {
   Output,
   QueryList,
   SimpleChanges,
-  ViewChild
+  ViewChild,
+  afterRenderEffect,
+  inject,
+  signal,
+  viewChildren
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
 import { CpsTooltipDirective } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { getCSSColor } from '../../utils/colors-utils';
+import { generateUniqueId } from '../../utils/internal/accessibility-utils';
+import { CpsFocusService } from '../../services/cps-focus/cps-focus.service';
 import {
   Subscription,
   debounceTime,
@@ -129,6 +135,13 @@ export class CpsTabGroupComponent
   @Input() alignment: CpsTabsAlignmentType = 'left';
 
   /**
+   * When true, tabs activate automatically as focus moves between them via arrow keys.
+   * When false, arrow keys only move focus; press Enter or Space to activate the focused tab.
+   * @group Props
+   */
+  @Input() autoActivation = true;
+
+  /**
    * Class to apply to the tab content wrapper.
    * @group Props
    */
@@ -188,17 +201,33 @@ export class CpsTabGroupComponent
   forwardBtnVisible = false;
   animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' = 'fadeIn';
 
+  readonly tabGroupId = generateUniqueId('cps-tab-group');
+
   windowResize$: Subscription = Subscription.EMPTY;
   listScroll$: Subscription = Subscription.EMPTY;
 
+  private readonly _tabPanelEls = viewChildren<ElementRef>('tabPanel');
+
+  readonly panelTabindex = signal(0);
+
   private _currentTabIndex = 0;
   private _previousTabIndex = 0;
+
+  private readonly _focusService = inject(CpsFocusService);
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private cdRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) {
+    afterRenderEffect(() => {
+      const activeEl =
+        this._tabPanelEls()[this._currentTabIndex]?.nativeElement;
+      this.panelTabindex.set(
+        activeEl && this._hasFocusableIn(activeEl) ? -1 : 0
+      );
+    });
+  }
 
   ngOnInit(): void {
     this.tabsBackground = getCSSColor(this.tabsBackground, this.document);
@@ -241,18 +270,163 @@ export class CpsTabGroupComponent
     return this.tabs.find((t) => t.active);
   }
 
+  getTabId(index: number): string {
+    return `${this.tabGroupId}-tab-${index}`;
+  }
+
+  getPanelId(index: number): string {
+    return `${this.tabGroupId}-panel-${index}`;
+  }
+
+  getTabFocusOrderTabIndex(tabIndex: number): 0 | -1 {
+    const _tabs = this.tabs.toArray();
+    const activeTab = _tabs[this._currentTabIndex];
+    if (!activeTab?.disabled) {
+      return tabIndex === this._currentTabIndex ? 0 : -1;
+    }
+    // Edge case: active tab is disabled - move focus to the first non-disabled tab
+    const firstEnabled = _tabs.findIndex((t) => !t.disabled);
+    return tabIndex === firstEnabled ? 0 : -1;
+  }
+
+  getTabAriaLabel(tab: CpsTabComponent): string | null {
+    const label = tab.ariaLabel || tab.label;
+    const badgeValue = tab.badgeValue.trim();
+
+    if (!badgeValue) {
+      return label || null;
+    }
+
+    const badgeTooltip = tab.badgeTooltip.trim();
+    return `${label}, Badge: ${badgeValue}${badgeTooltip ? `, ${badgeTooltip}` : ''}`;
+  }
+
   onTabClick(index: number) {
+    if (index === this.selectedIndex) return;
     this.selectedIndex = index;
     this.selectTab();
   }
 
+  onMouseDown(event: MouseEvent): void {
+    this._focusService.suppressNextFocusRing(
+      event.currentTarget as HTMLElement
+    );
+  }
+
+  onTabKeydown(event: KeyboardEvent, index: number): void {
+    const _tabs = this.tabs.toArray();
+    let targetIndex: number | null = null;
+
+    switch (event.key) {
+      case 'ArrowRight':
+        targetIndex = this._nextEnabledTab(index, 1, _tabs);
+        break;
+      case 'ArrowLeft':
+        targetIndex = this._nextEnabledTab(index, -1, _tabs);
+        break;
+      case 'Home': {
+        const first = _tabs.findIndex((t) => !t.disabled);
+        targetIndex = first !== -1 ? first : null;
+        break;
+      }
+      case 'End': {
+        const last = _tabs.map((t) => !t.disabled).lastIndexOf(true);
+        targetIndex = last !== -1 ? last : null;
+        break;
+      }
+      case 'Enter':
+      case ' ':
+        if (!_tabs[index]?.disabled) {
+          event.preventDefault();
+          this.onTabClick(index);
+        }
+        return;
+      default:
+        return;
+    }
+
+    if (targetIndex == null) return;
+
+    event.preventDefault();
+    if (this.autoActivation) {
+      this.onTabClick(targetIndex);
+    }
+    const tabEls = Array.from<HTMLElement>(
+      this.tabsList.nativeElement.querySelectorAll('[role="tab"]')
+    );
+    const targetEl = tabEls[targetIndex];
+    if (targetEl) {
+      this._scrollTabIntoView(targetEl);
+      targetEl.focus({ preventScroll: true });
+    }
+  }
+
+  private _scrollTabIntoView(tabEl: HTMLElement): void {
+    const list: HTMLElement = this.tabsList.nativeElement;
+    const backW = this.backBtn?.nativeElement?.offsetWidth ?? 0;
+    const fwdW = this.forwardBtn?.nativeElement?.offsetWidth ?? 0;
+
+    const tabStart = tabEl.offsetLeft;
+    const tabEnd = tabStart + tabEl.offsetWidth;
+    const viewStart = list.scrollLeft + backW;
+    const viewEnd = list.scrollLeft + list.clientWidth - fwdW;
+
+    if (tabStart < viewStart) {
+      list.scrollLeft = tabStart - backW;
+    } else if (tabEnd > viewEnd) {
+      list.scrollLeft = tabEnd + fwdW - list.clientWidth;
+    }
+  }
+
+  private _hasFocusableIn(container: HTMLElement): boolean {
+    const walker = this.document.createTreeWalker(
+      container,
+      NodeFilter.SHOW_ELEMENT
+    );
+    while (walker.nextNode()) {
+      const el = walker.currentNode as HTMLElement & { disabled?: boolean };
+      if (el.tabIndex >= 0 && !el.disabled) return true;
+    }
+    return false;
+  }
+
+  private _nextEnabledTab(
+    from: number,
+    direction: 1 | -1,
+    tabs: CpsTabComponent[]
+  ): number | null {
+    const len = tabs.length;
+    if (direction === 1) {
+      for (let i = from + 1; i < len; i++) {
+        if (!tabs[i].disabled) return i;
+      }
+      for (let i = 0; i < from; i++) {
+        if (!tabs[i].disabled) return i;
+      }
+    } else {
+      for (let i = from - 1; i >= 0; i--) {
+        if (!tabs[i].disabled) return i;
+      }
+      for (let i = len - 1; i > from; i--) {
+        if (!tabs[i].disabled) return i;
+      }
+    }
+    return null;
+  }
+
   selectTab(silent = false) {
     const _tabs = this.tabs.toArray();
-    const currentSelectedTab = _tabs && _tabs[this._previousTabIndex];
 
-    currentSelectedTab && (currentSelectedTab.active = false);
-    const newSelectedTab = _tabs && _tabs[this._currentTabIndex];
-    newSelectedTab && (newSelectedTab.active = true);
+    const currentSelectedTab = _tabs[this._previousTabIndex];
+    if (currentSelectedTab) {
+      currentSelectedTab.active = false;
+    }
+
+    const newSelectedTab = _tabs[this._currentTabIndex];
+    if (newSelectedTab) {
+      newSelectedTab.active = true;
+    }
+
     if (this._currentTabIndex === this._previousTabIndex) {
       return;
     }

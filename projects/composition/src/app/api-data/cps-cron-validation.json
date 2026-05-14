@@ -30,7 +30,7 @@
         "values": [
             {
                 "name": "CPS_CRON_VALIDATION_SERVICE",
-                "type": "InjectionToken<CpsCronValidationService>",
+                "type": "InjectionToken<CpsCronValidationService | null>",
                 "description": "Injection token for  `CpsCronValidationService` .\n\nAlways inject this token instead of  `CpsCronValidationService`  directly.\nThis allows consumer applications to override or disable cron validation by\nproviding an alternative implementation via  `providers` ."
             }
         ]

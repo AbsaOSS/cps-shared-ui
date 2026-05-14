@@ -1,12 +1,12 @@
 :host {
   .tabs-elems-group {
-    margin-bottom: 4px;
+    margin-bottom: 0.25rem;
 
     &-title {
-      font-size: 24px;
+      font-size: 1.5rem;
       color: var(--cps-color-depth);
-      margin-bottom: 12px;
-      padding-bottom: 8px;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
       font-weight: 600;
     }
 
@@ -17,7 +17,11 @@
     }
 
     ::ng-deep .cps-tab-content-wrap {
-      padding: 10px;
+      padding: 0.625rem;
+    }
+
+    .my-tab-content {
+      padding: 0.625rem;
     }
   }
 }

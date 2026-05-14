@@ -9,7 +9,8 @@ import {
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  type SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -127,11 +128,13 @@ export class CpsCheckboxComponent
     this.iconColor = getCSSColor(this.iconColor, this.document);
   }
 
-  ngOnChanges(): void {
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
-      );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.label || changes.ariaLabel) {
+      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+        console.error(
+          'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
+        );
+      }
     }
   }
 
