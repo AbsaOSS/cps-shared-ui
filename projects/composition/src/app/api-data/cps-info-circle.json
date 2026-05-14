@@ -41,7 +41,7 @@
                         "name": "tooltipMaxWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "100%",
                         "description": "Max width of the tooltip of type number denoting pixels or string."
                     },

@@ -43,9 +43,15 @@
                                 tabindex="0">
                                 {{ param.name }}:
                               </strong>
-                              <app-api-type
-                                [type]="param.type"
-                                [typesMap]="TypesMap" />
+                              @if (param.type | detectType: TypesMap; as type) {
+                                <a
+                                  [routerLink]="'/' + TypesMap[type] + '/api'"
+                                  fragment="{{ type }}">
+                                  {{ param.type }}
+                                </a>
+                              } @else {
+                                <span>{{ param.type }}</span>
+                              }
                             </span>
                           } @empty {
                             null
@@ -53,9 +59,18 @@
                         </div>
                       </td>
                       <td class="highlighted-text">
-                        <app-api-type
-                          [type]="method.returnType"
-                          [typesMap]="TypesMap" />
+                        @if (
+                          method.returnType | detectType: TypesMap;
+                          as type
+                        ) {
+                          <a
+                            [routerLink]="'/' + TypesMap[type] + '/api'"
+                            fragment="{{ type }}"
+                            >{{ method.returnType }}</a
+                          >
+                        } @else {
+                          <span>{{ method.returnType }}</span>
+                        }
                       </td>
                       <td class="method-description">
                         {{ method.description }}
@@ -85,7 +100,7 @@
                 </thead>
                 <tbody>
                   @for (type of serviceData.types.values; track type) {
-                    <tr id="{{ type.name }}">
+                    <tr>
                       <td class="highlighted-bg">
                         <span>{{ type.name }}</span>
                       </td>
@@ -134,9 +149,15 @@
                         <span>{{ prop.name }}</span>
                       </td>
                       <td class="highlighted-text">
-                        <app-api-type
-                          [type]="prop.type"
-                          [typesMap]="TypesMap" />
+                        @if (prop.type | detectType: TypesMap; as type) {
+                          <a
+                            [routerLink]="'/' + TypesMap[type] + '/api'"
+                            fragment="{{ type }}"
+                            >{{ prop.type }}</a
+                          >
+                        } @else {
+                          <span>{{ prop.type }}</span>
+                        }
                       </td>
                       @if (interfaceHasDefaults) {
                         <td class="highlighted-text">{{ prop.default }}</td>
@@ -182,9 +203,15 @@
                           <span>{{ prop.name }}</span>
                         </td>
                         <td class="highlighted-text">
-                          <app-api-type
-                            [type]="prop.type"
-                            [typesMap]="TypesMap" />
+                          @if (prop.type | detectType: TypesMap; as type) {
+                            <a
+                              [routerLink]="'/' + TypesMap[type] + '/api'"
+                              fragment="{{ type }}">
+                              {{ prop.type }}
+                            </a>
+                          } @else {
+                            <span>{{ prop.type }}</span>
+                          }
                         </td>
                         @if (clsHasDefaults) {
                           <td class="highlighted-text">{{ prop.default }}</td>
@@ -222,9 +249,18 @@
                                   tabindex="0">
                                   {{ param.name }}:
                                 </strong>
-                                <app-api-type
-                                  [type]="param.type"
-                                  [typesMap]="TypesMap" />
+                                @if (
+                                  param.type | detectType: TypesMap;
+                                  as type
+                                ) {
+                                  <a
+                                    [routerLink]="'/' + TypesMap[type] + '/api'"
+                                    fragment="{{ type }}">
+                                    {{ param.type }}
+                                  </a>
+                                } @else {
+                                  <span>{{ param.type }}</span>
+                                }
                               </span>
                             } @empty {
                               null
@@ -232,9 +268,18 @@
                           </div>
                         </td>
                         <td class="highlighted-text">
-                          <app-api-type
-                            [type]="method.returnType"
-                            [typesMap]="TypesMap" />
+                          @if (
+                            method.returnType | detectType: TypesMap;
+                            as type
+                          ) {
+                            <a
+                              [routerLink]="'/' + TypesMap[type] + '/api'"
+                              fragment="{{ type }}"
+                              >{{ method.returnType }}</a
+                            >
+                          } @else {
+                            <span>{{ method.returnType }}</span>
+                          }
                         </td>
                         <td class="method-description">
                           {{ method.description }}
@@ -259,9 +304,15 @@
                           <span>{{ event.name }}</span>
                         </td>
                         <td class="highlighted-text">
-                          <app-api-type
-                            [type]="event.type"
-                            [typesMap]="TypesMap" />
+                          @if (event.type | detectType: TypesMap; as type) {
+                            <a
+                              [routerLink]="'/' + TypesMap[type] + '/api'"
+                              fragment="{{ type }}">
+                              {{ event.type }}
+                            </a>
+                          } @else {
+                            <span>{{ event.type }}</span>
+                          }
                         </td>
                         <td>{{ event.description }}</td>
                       </tr>

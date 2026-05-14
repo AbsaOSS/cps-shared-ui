@@ -14,9 +14,10 @@ import {
 import { ObjectEntriesPipe } from '../../pipes/object-entries.pipe';
 
 import TypesMap from '../../api-data/types_map.json';
+import { RouterModule } from '@angular/router';
 import { ViewerComponent } from '../viewer/viewer.component';
+import { DetectTypePipe } from '../../pipes/detect-type.pipe';
 import { EnumsComponent } from '../shared/enums/enums.component';
-import { ApiTypeComponent } from '../shared/api-type/api-type.component';
 
 @Component({
   selector: 'app-component-docs-viewer',
@@ -26,7 +27,8 @@ import { ApiTypeComponent } from '../shared/api-type/api-type.component';
     CpsTabComponent,
     CpsTabGroupComponent,
     ObjectEntriesPipe,
-    ApiTypeComponent,
+    RouterModule,
+    DetectTypePipe,
     EnumsComponent,
     CpsTooltipDirective
   ]

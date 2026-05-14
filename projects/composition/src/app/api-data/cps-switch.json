@@ -41,7 +41,7 @@
                         "name": "infoTooltipMaxWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "100%",
                         "description": "Size of infoTooltip, of type number denoting pixels or string."
                     },

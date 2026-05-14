@@ -1,9 +1,0 @@
-@for (seg of type() | detectType: typesMap(); track $index) {
-  @if (seg.route) {
-    <a class="type-part" [routerLink]="seg.route" [fragment]="seg.fragment">{{
-      seg.text
-    }}</a>
-  } @else {
-    <span class="type-part">{{ seg.text }}</span>
-  }
-}

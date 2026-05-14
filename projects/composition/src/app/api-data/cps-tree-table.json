@@ -49,7 +49,7 @@
                         "name": "minWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "",
                         "description": "Treetable min width of type number denoting pixels or string."
                     },
@@ -344,7 +344,7 @@
                         "name": "emptyBodyHeight",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "",
                         "description": "Height of treetable's body when there is no data, of type number denoting pixels or string."
                     },
@@ -592,7 +592,7 @@
                         "name": "columnResizeMode",
                         "optional": false,
                         "readonly": false,
-                        "type": "'fit' | 'expand'",
+                        "type": "\"expand\" | \"fit\"",
                         "default": "fit",
                         "description": "Determines how the columns are resized. It can be 'fit' (total width of the table stays the same) or 'expand' (total width of the table changes when resizing columns).\nNote: This setting only takes effect if 'resizableColumns' is true."
                     }

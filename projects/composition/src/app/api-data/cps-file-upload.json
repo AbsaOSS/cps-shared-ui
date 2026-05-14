@@ -65,7 +65,7 @@
                         "name": "fileNameTooltipOffset",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "0.75rem",
                         "description": "File name tooltip offset, a number denoting pixels or a string."
                     },

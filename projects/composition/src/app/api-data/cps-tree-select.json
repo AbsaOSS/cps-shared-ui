@@ -57,7 +57,7 @@
                         "name": "width",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "100%",
                         "description": "Width of the component, of type number denoting pixels or string."
                     },
@@ -129,7 +129,7 @@
                         "name": "prefixIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "IconType",
+                        "type": "string",
                         "default": "",
                         "description": "Icon before input value."
                     },
@@ -185,7 +185,7 @@
                         "name": "infoTooltipMaxWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "number | string",
+                        "type": "string | number",
                         "default": "100%",
                         "description": "Max width of infoTooltip of type number denoting pixels or string."
                     },
