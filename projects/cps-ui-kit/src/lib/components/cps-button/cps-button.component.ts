@@ -6,7 +6,8 @@ import {
   Inject,
   Input,
   OnChanges,
-  Output
+  Output,
+  type SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
@@ -125,7 +126,7 @@ export class CpsButtonComponent implements OnChanges {
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.buttonColor = getCSSColor(this.color, this.document);
     this.borderRadius = convertSize(this.borderRadius);
     this.textColor =
@@ -135,10 +136,12 @@ export class CpsButtonComponent implements OnChanges {
     if (this.disabled || this.loading) {
       this.enterActive = false;
     }
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
-      );
+    if (changes.label || changes.ariaLabel) {
+      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+        console.error(
+          'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
+        );
+      }
     }
     this.setClasses();
   }

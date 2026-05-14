@@ -11,7 +11,8 @@ import {
   Output,
   Renderer2,
   Self,
-  PLATFORM_ID
+  PLATFORM_ID,
+  type SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
@@ -191,19 +192,23 @@ export class CpsButtonToggleComponent
     }
   }
 
-  ngOnChanges() {
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
-      );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.label || changes.ariaLabel) {
+      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+        console.error(
+          'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
+        );
+      }
     }
-    const hasInaccessibleOption = this.options.some(
-      (opt) => !opt.label?.trim() && !opt.ariaLabel?.trim()
-    );
-    if (hasInaccessibleOption) {
-      console.error(
-        'CpsButtonToggleComponent: each unlabeled option must have an ariaLabel for accessibility.'
+    if (changes.options) {
+      const hasInaccessibleOption = this.options.some(
+        (opt) => !opt.label?.trim() && !opt.ariaLabel?.trim()
       );
+      if (hasInaccessibleOption) {
+        console.error(
+          'CpsButtonToggleComponent: each unlabeled option must have an ariaLabel for accessibility.'
+        );
+      }
     }
   }
 

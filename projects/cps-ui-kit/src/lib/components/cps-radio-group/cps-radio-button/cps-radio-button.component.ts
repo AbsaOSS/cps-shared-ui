@@ -3,7 +3,8 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
+  type SimpleChanges
 } from '@angular/core';
 import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
@@ -68,11 +69,13 @@ export class CpsRadioButtonComponent implements OnChanges {
 
   readonly inputId = generateUniqueId('cps-radio-button-input');
 
-  ngOnChanges(): void {
-    if (!this.option.label?.trim() && !this.option.ariaLabel?.trim()) {
-      console.error(
-        'CpsRadioButtonComponent: unlabeled radio button component must have an ariaLabel for accessibility.'
-      );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.option) {
+      if (!this.option.label?.trim() && !this.option.ariaLabel?.trim()) {
+        console.error(
+          'CpsRadioButtonComponent: unlabeled radio button component must have an ariaLabel for accessibility.'
+        );
+      }
     }
   }
 

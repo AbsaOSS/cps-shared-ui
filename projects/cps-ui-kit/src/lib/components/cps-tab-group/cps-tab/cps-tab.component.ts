@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  TemplateRef,
+  ViewChild,
+  type SimpleChanges
+} from '@angular/core';
 
 /**
  * CpsTabComponent is a tab within a tab-group.
@@ -9,14 +17,20 @@ import { Component, Input, TemplateRef, ViewChild } from '@angular/core';
   imports: [CommonModule],
   selector: 'cps-tab',
   templateUrl: './cps-tab.component.html',
-  styleUrls: ['./cps-tab.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CpsTabComponent {
+export class CpsTabComponent implements OnChanges {
   /**
    * Label of the tab.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the tab component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Icon before the label.
@@ -69,4 +83,14 @@ export class CpsTabComponent {
   @ViewChild(TemplateRef) content!: TemplateRef<any>;
 
   active = false;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.label || changes.ariaLabel) {
+      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+        console.error(
+          'CpsTabComponent: unlabeled tab component must have an ariaLabel for accessibility.'
+        );
+      }
+    }
+  }
 }
