@@ -9,7 +9,7 @@
                         "name": "diameter",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "40",
                         "description": "Diameter of the progress bar, of type number denoting pixels or string."
                     },
@@ -17,7 +17,7 @@
                         "name": "strokeWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "4",
                         "description": "Thickness of the progress bar, of type number denoting pixels or string."
                     },

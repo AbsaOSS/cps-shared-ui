@@ -57,7 +57,7 @@
                         "name": "borderRadius",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "0",
                         "description": "The border radius of the component."
                     },
@@ -73,7 +73,7 @@
                         "name": "width",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "100%",
                         "description": "The width of the expansion panel of type number denoting pixels or string."
                     },
@@ -81,7 +81,7 @@
                         "name": "prefixIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "string",
+                        "type": "IconType",
                         "default": "",
                         "description": "Name of the icon in front of the title."
                     }

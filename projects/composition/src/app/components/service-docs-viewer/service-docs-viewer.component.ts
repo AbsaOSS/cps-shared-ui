@@ -7,9 +7,8 @@ import {
 } from 'cps-ui-kit';
 import { ViewerComponent } from '../viewer/viewer.component';
 import TypesMap from '../../api-data/types_map.json';
-import { RouterLink } from '@angular/router';
-import { DetectTypePipe } from '../../pipes/detect-type.pipe';
 import { EnumsComponent } from '../shared/enums/enums.component';
+import { ApiTypeComponent } from '../shared/api-type/api-type.component';
 
 @Component({
   selector: 'app-service-docs-viewer',
@@ -18,8 +17,7 @@ import { EnumsComponent } from '../shared/enums/enums.component';
   imports: [
     CpsTabComponent,
     CpsTabGroupComponent,
-    RouterLink,
-    DetectTypePipe,
+    ApiTypeComponent,
     CpsTooltipDirective,
     EnumsComponent
   ]

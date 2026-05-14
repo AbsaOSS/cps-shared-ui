@@ -76,6 +76,41 @@ async function main() {
     };
 
     const fileLineCache = {};
+    const getSourceTypeAnnotation = (child, fallbackNode) => {
+      const fallback = () =>
+        child.type ? child.type.toString() : extractParameter(fallbackNode);
+      const src = child.sources && child.sources[0];
+      if (!src || !src.fullFileName) return fallback();
+      try {
+        if (!fileLineCache[src.fullFileName]) {
+          fileLineCache[src.fullFileName] = fs
+            .readFileSync(src.fullFileName, 'utf8')
+            .split('\n');
+        }
+        const lines = fileLineCache[src.fullFileName];
+        let collected = '';
+        for (let i = src.line - 1; i < lines.length; i++) {
+          collected += (collected ? ' ' : '') + lines[i].trim();
+          if (/(?:=(?!>)|;)/.test(collected.replace(/<[^>]*>/g, ''))) break;
+        }
+        const escapedName = child.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const match = collected.match(
+          new RegExp(
+            `(?:readonly\\s+)?${escapedName}\\s*\\??\\s*:\\s*([\\s\\S]+?)(?=\\s*(?:;|=(?!>)|$))`
+          )
+        );
+        if (!match) return fallback();
+        const type = match[1]
+          .replace(/\s*\|\s*/g, ' | ')
+          .trim()
+          .replace(/^\|\s*/, '')
+          .replace(/\bArray<([^>]+)>/g, '$1[]')
+          .trim();
+        return type || fallback();
+      } catch (_) {
+        return fallback();
+      }
+    };
     const getInputAlias = (prop) => {
       const src = prop.sources && prop.sources[0];
       if (!src || !src.fullFileName) return null;
@@ -168,18 +203,19 @@ async function main() {
                   };
 
                   component_props_group.children.forEach((prop) => {
-                    const rawType =
-                      prop.getSignature && prop.getSignature.type
-                        ? prop.getSignature.type.toString()
-                        : prop.type
-                          ? prop.type.toString()
-                          : null;
-                    const isSignalInput = rawType?.startsWith('InputSignal<');
+                    const typedocType =
+                      (prop.getSignature?.type ?? prop.type)?.toString() ??
+                      null;
+                    const resolvedType =
+                      !prop.getSignature &&
+                      !typedocType?.startsWith('InputSignal<')
+                        ? getSourceTypeAnnotation(prop, null)
+                        : typedocType;
                     props.values.push({
                       name: getInputAlias(prop) ?? prop.name,
                       optional: prop.flags.isOptional,
                       readonly: prop.flags.isReadonly,
-                      type: unwrapSignalType(rawType),
+                      type: unwrapSignalType(resolvedType),
                       default:
                         getDefaultValue(prop.setSignature) ??
                         getDefaultValue(prop.getSignature) ??
@@ -189,7 +225,10 @@ async function main() {
                         !prop.defaultValue
                           ? 'false'
                           : prop.defaultValue &&
-                              !(isSignalInput && prop.defaultValue === '...')
+                              !(
+                                typedocType?.startsWith('InputSignal<') &&
+                                prop.defaultValue === '...'
+                              )
                             ? prop.defaultValue.replace(/^'|'$/g, '')
                             : undefined),
                       description: (
@@ -520,9 +559,7 @@ async function main() {
                             .join(', ');
                           type = `(${params}) => ${sig.type?.toString() ?? 'void'}`;
                         } else {
-                          type = child.type
-                            ? child.type.toString()
-                            : extractParameter(int);
+                          type = getSourceTypeAnnotation(child, int);
                         }
                         return {
                           name: child.name,
