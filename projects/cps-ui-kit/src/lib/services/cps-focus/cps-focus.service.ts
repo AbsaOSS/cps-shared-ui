@@ -45,6 +45,22 @@ export class CpsFocusService {
   }
 
   /**
+   * Suppresses the focus-visible ring on `el` for its next focus event.
+   *
+   * Adds `suppress-focus-visible` to the element and removes it automatically
+   * on the next `blur`. Call from a `mousedown` handler to prevent the ring
+   * from appearing when the browser moves focus to the element via pointer.
+   */
+  suppressNextFocusRing(el: HTMLElement): void {
+    el.classList.add('suppress-focus-visible');
+    el.addEventListener(
+      'blur',
+      () => el.classList.remove('suppress-focus-visible'),
+      { once: true }
+    );
+  }
+
+  /**
    * Focuses `el`, conditionally suppressing the focus-visible ring.
    *
    * When `showFocusRing` is `false`, adds the `suppress-focus-visible` CSS
@@ -53,12 +69,7 @@ export class CpsFocusService {
    */
   focusElement(el: HTMLElement, showFocusRing: boolean): void {
     if (!showFocusRing) {
-      el.classList.add('suppress-focus-visible');
-      el.addEventListener(
-        'blur',
-        () => el.classList.remove('suppress-focus-visible'),
-        { once: true }
-      );
+      this.suppressNextFocusRing(el);
     }
     el.focus();
   }

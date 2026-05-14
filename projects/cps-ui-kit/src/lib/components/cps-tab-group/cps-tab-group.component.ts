@@ -24,6 +24,7 @@ import {
   SimpleChanges,
   ViewChild,
   afterRenderEffect,
+  inject,
   signal,
   viewChildren
 } from '@angular/core';
@@ -32,6 +33,7 @@ import { CpsTabComponent } from './cps-tab/cps-tab.component';
 import { CpsTooltipDirective } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { getCSSColor } from '../../utils/colors-utils';
 import { generateUniqueId } from '../../utils/internal/accessibility-utils';
+import { CpsFocusService } from '../../services/cps-focus/cps-focus.service';
 import {
   Subscription,
   debounceTime,
@@ -211,6 +213,8 @@ export class CpsTabGroupComponent
   private _currentTabIndex = 0;
   private _previousTabIndex = 0;
 
+  private readonly _focusService = inject(CpsFocusService);
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -301,6 +305,12 @@ export class CpsTabGroupComponent
     if (index === this.selectedIndex) return;
     this.selectedIndex = index;
     this.selectTab();
+  }
+
+  onMouseDown(event: MouseEvent): void {
+    this._focusService.suppressNextFocusRing(
+      event.currentTarget as HTMLElement
+    );
   }
 
   onTabKeydown(event: KeyboardEvent, index: number): void {

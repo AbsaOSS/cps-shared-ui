@@ -36,6 +36,7 @@
           [attr.tabindex]="getTabFocusOrderTabIndex(tabIndex)"
           [attr.aria-controls]="getPanelId(tabIndex)"
           (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
+          (mousedown)="onMouseDown($event)"
           (keydown)="onTabKeydown($event, tabIndex)"
           [class.active]="tab.active"
           [class.disabled]="tab.disabled"
@@ -65,6 +66,7 @@
           [attr.tabindex]="getTabFocusOrderTabIndex(tabIndex)"
           [attr.aria-controls]="getPanelId(tabIndex)"
           (click)="!tab.disabled ? onTabClick(tabIndex) : ''"
+          (mousedown)="onMouseDown($event)"
           (keydown)="onTabKeydown($event, tabIndex)"
           [class.active]="tab.active"
           [class.disabled]="tab.disabled">
@@ -109,7 +111,8 @@
       [id]="getPanelId(panelIndex)"
       [attr.aria-labelledby]="getTabId(panelIndex)"
       [attr.tabindex]="tab.active ? panelTabindex() : null"
-      [hidden]="!tab.active">
+      [hidden]="!tab.active"
+      (mousedown)="onMouseDown($event)">
       @if (tab.active) {
         @if (animationType === 'slide') {
           <div [@slideInOut]="animationState" class="cps-tab-content-inner">
