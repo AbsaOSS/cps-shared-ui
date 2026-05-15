@@ -208,6 +208,21 @@
     </app-code-example>
 
     <app-code-example
+      label="Function-based optionLabel (nested property)"
+      [htmlCode]="examples.functionOptionKey.html"
+      [tsCode]="examples.functionOptionKey.ts">
+      <cps-autocomplete
+        label="Autocomplete with function-based optionLabel (nested property)"
+        [options]="options"
+        [optionLabel]="getCode"
+        optionInfo="name"
+        placeholder="Enter a city code"
+        hint="optionLabel uses a function: (option) => option.data.code"
+        [clearable]="true">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
       label="Async validation"
       [htmlCode]="examples.asyncValidation.html"
       [tsCode]="examples.asyncValidation.ts">

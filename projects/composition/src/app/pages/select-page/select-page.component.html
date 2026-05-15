@@ -103,6 +103,14 @@
         <span class="sync-val">{{ syncVal }}</span>
       </div>
       <cps-select
+        label="Select with function-based optionLabel (nested property)"
+        [options]="options"
+        [optionLabel]="getCode"
+        optionInfo="name"
+        placeholder="Select a city code"
+        hint="optionLabel uses a function: (option) => option.data.code">
+      </cps-select>
+      <cps-select
         label="Underlined select"
         [options]="options"
         optionLabel="name"
