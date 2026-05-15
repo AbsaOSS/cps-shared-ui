@@ -602,7 +602,7 @@ async function main() {
               module_types_group.children.forEach((t) => {
                 types.values.push({
                   name: t.name,
-                  value: getTypesValue(t),
+                  value: getTypesValue(t, project),
                   description:
                     t.comment.summary &&
                     t.comment.summary.map((s) => s.text || '').join(' ')
@@ -857,10 +857,43 @@ const allowed = (name) => {
   );
 };
 
-const getTypesValue = (typeobj) => {
+const getTypesValue = (typeobj, project) => {
   const { type, children, indexSignature } = typeobj ?? {};
 
-  // 1) Handle index signatures (e.g., { [key: string]: number })
+  // 1) Handle `typeof SomeArray[number]` — parse the source file and expand string literals to a union.
+  if (
+    type?.type === 'indexedAccess' &&
+    type.objectType?.type === 'query' &&
+    type.indexType?.type === 'intrinsic' &&
+    type.indexType?.name === 'number'
+  ) {
+    const refName = type.objectType.queryType?.name;
+    const variable = refName
+      ? project
+          ?.getReflectionsByKind(TypeDoc.ReflectionKind.Variable)
+          ?.find((r) => r.name === refName)
+      : null;
+    const sourceFile = variable?.sources?.[0]?.fullFileName;
+    if (sourceFile) {
+      try {
+        const src = fs.readFileSync(sourceFile, 'utf-8');
+        const arrayMatch = src.match(
+          new RegExp(
+            `(?:export\\s+)?const\\s+${refName}\\s*=\\s*\\[([\\s\\S]*?)\\]`,
+            'm'
+          )
+        );
+        if (arrayMatch) {
+          const items = [...arrayMatch[1].matchAll(/'([^']+)'/g)].map(
+            (m) => `'${m[1]}'`
+          );
+          if (items.length) return items.join(' | ');
+        }
+      } catch (_) {}
+    }
+  }
+
+  // 2) Handle index signatures (e.g., { [key: string]: number })
   // If the type has an index signature, extract the key and value types.
   // Example: { [key: string]: number } -> { "[key:string]": "number" }
   if (indexSignature) {
@@ -874,7 +907,7 @@ const getTypesValue = (typeobj) => {
     }
   }
 
-  // 2) Handle object-literal type aliases (NEWER TypeDoc behavior)
+  // 3) Handle object-literal type aliases (NEWER TypeDoc behavior)
   // Some object-literal type aliases have their properties directly in the `children` array.
   // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
   if (Array.isArray(children) && children.length) {
@@ -885,7 +918,7 @@ const getTypesValue = (typeobj) => {
     return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
 
-  // 3) Handle object-literal type aliases under reflection (OLDER TypeDoc behavior)
+  // 4) Handle object-literal type aliases under reflection (OLDER TypeDoc behavior)
   // Older versions of TypeDoc store object-literal properties under `type.declaration.children`.
   // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
   if (type?.type === 'reflection' && type.declaration?.children?.length) {
@@ -896,7 +929,7 @@ const getTypesValue = (typeobj) => {
     return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
 
-  // 4) Handle function type aliases
+  // 5) Handle function type aliases
   // If the type is a function alias, serialize its signature.
   // Example: (name: string, age: number) => boolean
   if (type?.type === 'reflection' && type.declaration?.signatures?.length) {
@@ -908,7 +941,6 @@ const getTypesValue = (typeobj) => {
     return `(${params}) => ${ret}`;
   }
 
-  // TODO: Handle "typeof iconNames[number] properly
   return type?.toString?.();
 };
 
