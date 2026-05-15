@@ -54,7 +54,7 @@
               <span class="single-item">
                 {{
                   returnObject
-                    ? value[optionLabel]
+                    ? getProp(value, optionLabel)
                     : (value
                       | labelByValue: options : optionValue : optionLabel)
                 }}</span
@@ -83,7 +83,7 @@
                     (closed)="select(val, true)"
                     [label]="
                       returnObject
-                        ? val[optionLabel]
+                        ? getProp(val, optionLabel)
                         : (val
                           | labelByValue: options : optionValue : optionLabel)
                     ">
@@ -212,14 +212,14 @@
       <span
         class="cps-select-options-option-label"
         [class.virtual-row]="virtualScroll"
-        >{{ item[optionLabel] }}</span
+        >{{ getProp(item, optionLabel) }}</span
       >
     </span>
 
     <span
       class="cps-select-options-option-right"
       [class.virtual-row]="virtualScroll">
-      {{ item[optionInfo] }}
+      {{ getProp(item, optionInfo) }}
       @if (item[optionIcon]) {
         <cps-icon
           [icon]="item[optionIcon]"

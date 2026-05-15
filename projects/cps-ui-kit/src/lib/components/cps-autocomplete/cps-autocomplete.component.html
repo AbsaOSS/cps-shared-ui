@@ -55,7 +55,7 @@
                 <div class="single-item-selection">
                   <span [style.opacity]="activeSingle ? 0 : 1">{{
                     returnObject
-                      ? value[optionLabel]
+                      ? getProp(value, optionLabel)
                       : (value
                         | labelByValue: options : optionValue : optionLabel)
                   }}</span>
@@ -87,7 +87,7 @@
                       }">
                       {{
                         returnObject
-                          ? val[optionLabel]
+                          ? getProp(val, optionLabel)
                           : (val
                             | labelByValue
                               : options
@@ -125,7 +125,7 @@
                       }"
                       [label]="
                         returnObject
-                          ? val[optionLabel]
+                          ? getProp(val, optionLabel)
                           : (val
                             | labelByValue: options : optionValue : optionLabel)
                       ">
@@ -371,14 +371,14 @@
         data-testid="cps-autocomplete-options"
         class="cps-autocomplete-options-option-label"
         [class.virtual-row]="virtualScroll"
-        >{{ item[optionLabel] }}</span
+        >{{ getProp(item, optionLabel) }}</span
       >
     </span>
 
     <span
       class="cps-autocomplete-options-option-right"
       [class.virtual-row]="virtualScroll"
-      >{{ item[optionInfo] }}</span
+      >{{ getProp(item, optionInfo) }}</span
     >
   </div>
 </ng-template>

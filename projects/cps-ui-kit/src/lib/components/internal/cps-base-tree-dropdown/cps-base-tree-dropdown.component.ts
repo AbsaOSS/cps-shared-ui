@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
 import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import { getOptionProp, OptionKey } from '../../../utils/internal/option-utils';
 import { convertSize } from '../../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
@@ -90,16 +91,16 @@ export class CpsBaseTreeDropdownComponent
   @Input() openOnClear = true;
 
   /**
-   * Name of the label field of an option.
+   * Name of the label field of an option, or a function that receives the option and returns the label.
    * @group Props
    */
-  @Input() optionLabel = 'label';
+  @Input() optionLabel: OptionKey = 'label';
 
   /**
-   * Name of the info field of an option, shows the additional information text.
+   * Name of the info field of an option, or a function that receives the option and returns the info text.
    * @group Props
    */
-  @Input() optionInfo = 'info';
+  @Input() optionInfo: OptionKey = 'info';
 
   /**
    * Options for hiding details.
@@ -649,15 +650,15 @@ export class CpsBaseTreeDropdownComponent
   private _toInnerOptions(_options: any[]): TreeNode[] {
     const mapOption = (
       o: any,
-      optionLabel: string,
-      optionInfo: string,
+      optionLabel: OptionKey,
+      optionInfo: OptionKey,
       key: string,
       originalOptionsMap: any
     ) => {
       const inner = {
         inner: true,
-        label: o[optionLabel],
-        info: o[optionInfo],
+        label: getOptionProp(o, optionLabel),
+        info: getOptionProp(o, optionInfo),
         key,
         styleClass: 'key-' + key
       } as TreeNode;
