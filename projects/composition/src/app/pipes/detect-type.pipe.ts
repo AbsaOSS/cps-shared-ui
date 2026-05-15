@@ -71,7 +71,9 @@ export class DetectTypePipe implements PipeTransform {
     });
 
     if (isArray && groups.length > 0) {
-      groups[groups.length - 1].segments.push({ text: '[]' });
+      const lastGroup = groups[groups.length - 1];
+      const lastSeg = lastGroup.segments[lastGroup.segments.length - 1];
+      lastSeg.text += '[]';
     }
     return groups;
   }
