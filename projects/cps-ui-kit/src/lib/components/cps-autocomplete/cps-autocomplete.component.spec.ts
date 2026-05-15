@@ -441,6 +441,88 @@ describe('CpsAutocompleteComponent', () => {
     expect(component.filteredOptions.length).toBe(3);
   });
 
+  describe('function-based option keys', () => {
+    const nestedOptions = [
+      { meta: { title: 'Alpha', id: 1 } },
+      { meta: { title: 'Beta', id: 2 } },
+      { meta: { title: 'Gamma', id: 3 } }
+    ];
+
+    it('getProp should return property value when key is a string', () => {
+      expect(component.getProp({ label: 'hello' }, 'label')).toBe('hello');
+    });
+
+    it('getProp should invoke the function and return its result when key is a function', () => {
+      const fn = (o: any) => o.meta.title;
+      expect(component.getProp({ meta: { title: 'hello' } }, fn)).toBe('hello');
+    });
+
+    it('should display selected label using function optionLabel', () => {
+      fixture.componentRef.setInput('options', nestedOptions);
+      fixture.componentRef.setInput('optionLabel', (o: any) => o.meta.title);
+      component.value = nestedOptions[0];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const selectedLabel = fixture.debugElement.query(
+        By.css('.single-item-selection span')
+      );
+      expect(selectedLabel.nativeElement.textContent.trim()).toBe('Alpha');
+    });
+
+    it('should filter options using function optionLabel', fakeAsync(() => {
+      fixture.componentRef.setInput('options', nestedOptions);
+      fixture.componentRef.setInput('optionLabel', (o: any) => o.meta.title);
+      fixture.detectChanges();
+      const inputElement = fixture.debugElement.query(
+        By.css('.cps-autocomplete-box-input')
+      );
+      inputElement.nativeElement.value = 'bet';
+      inputElement.nativeElement.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      tick(component.inputChangeDebounceTime);
+      fixture.detectChanges();
+      expect(component.filteredOptions.length).toBe(1);
+      expect(component.filteredOptions[0]).toBe(nestedOptions[1]);
+    }));
+
+    it('should emit the function-derived value when optionValue is a function and returnObject is false', () => {
+      fixture.componentRef.setInput('options', nestedOptions);
+      fixture.componentRef.setInput('optionLabel', (o: any) => o.meta.title);
+      fixture.componentRef.setInput('optionValue', (o: any) => o.meta.id);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.detectChanges();
+      jest.spyOn(component.valueChanged, 'emit');
+      component.select(nestedOptions[1], false);
+      expect(component.valueChanged.emit).toHaveBeenCalledWith(2);
+    });
+
+    it('should collect all function-derived values when toggleAll is called with returnObject false', () => {
+      fixture.componentRef.setInput('options', nestedOptions);
+      fixture.componentRef.setInput('optionLabel', (o: any) => o.meta.title);
+      fixture.componentRef.setInput('optionValue', (o: any) => o.meta.id);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.toggleAll();
+      expect(component.value).toEqual([1, 2, 3]);
+    });
+
+    it('should display chips with labels from function optionLabel', () => {
+      fixture.componentRef.setInput('options', nestedOptions);
+      fixture.componentRef.setInput('optionLabel', (o: any) => o.meta.title);
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [nestedOptions[0], nestedOptions[2]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const chipElements = fixture.debugElement.queryAll(By.css('cps-chip'));
+      expect(chipElements.length).toBe(2);
+      expect(chipElements[0].nativeElement.textContent.trim()).toBe('Alpha');
+      expect(chipElements[1].nativeElement.textContent.trim()).toBe('Gamma');
+    });
+  });
+
   describe('aria-label', () => {
     it('should set aria-label from ariaLabel input', () => {
       fixture.componentRef.setInput('ariaLabel', 'Search options');
