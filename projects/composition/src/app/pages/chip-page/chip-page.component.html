@@ -1,18 +1,31 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <!-- Example of component's usage -->
-  <div class="chips-group">
-    <cps-chip label="Basic chip"></cps-chip>
-    <cps-chip label="Left icon chip" icon="checked"></cps-chip>
-    <cps-chip
-      label="Right icon chip"
-      icon="checked"
-      iconPosition="after"></cps-chip>
-    <cps-chip label="Disabled chip" icon="eye" [disabled]="true"></cps-chip>
-    <cps-chip
-      label="Chip with colored icon"
-      icon="avatar"
-      iconColor="success"></cps-chip>
-    <div>
+  <app-code-example label="Basic" [htmlCode]="examples.basic.html">
+    <div class="chips-group-row">
+      <cps-chip label="Basic chip"></cps-chip>
+      <cps-chip label="Disabled chip" [disabled]="true"></cps-chip>
+    </div>
+  </app-code-example>
+
+  <app-code-example label="With icon" [htmlCode]="examples.withIcon.html">
+    <div class="chips-group-row">
+      <cps-chip label="Left icon chip" icon="checked"></cps-chip>
+      <cps-chip
+        label="Right icon chip"
+        icon="checked"
+        iconPosition="after"></cps-chip>
+      <cps-chip
+        label="Chip with colored icon"
+        icon="avatar"
+        iconColor="success"></cps-chip>
+      <cps-chip label="Disabled chip" icon="eye" [disabled]="true"></cps-chip>
+    </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Closable"
+    [htmlCode]="examples.closable.html"
+    [tsCode]="examples.closable.ts">
+    <div class="chips-group-row">
       @if (!chipClosed) {
         <cps-chip
           label="Closable chip"
@@ -26,5 +39,5 @@
           size="xsmall"></cps-button>
       }
     </div>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>
