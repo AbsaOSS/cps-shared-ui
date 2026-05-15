@@ -40,6 +40,7 @@
       <div class="cps-autocomplete-box-area">
         @if (prefixIcon) {
           <cps-icon
+            aria-hidden="true"
             [icon]="prefixIcon"
             [style.color]="disabled ? 'var(--cps-text-muted)' : null"
             [size]="prefixIconSize"
@@ -163,7 +164,10 @@
                   (!multiple || !value?.length) &&
                   (multiple || isEmptyValue())
               }">
-              <cps-icon icon="delete" size="small"></cps-icon>
+              <cps-icon
+                icon="delete"
+                size="small"
+                aria-hidden="true"></cps-icon>
             </span>
           }
           @if (showChevron && options.length) {
@@ -178,6 +182,7 @@
               "
               [tabindex]="disabled ? -1 : 0">
               <cps-icon
+                aria-hidden="true"
                 icon="chevron-down"
                 size="small"
                 [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>

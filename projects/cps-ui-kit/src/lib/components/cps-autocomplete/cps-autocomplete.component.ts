@@ -686,10 +686,11 @@ export class CpsAutocompleteComponent
     event?.stopPropagation();
     event?.preventDefault();
 
-    if (
+    const hadValue =
       (!this.multiple && !this.isEmptyValue()) ||
-      (this.multiple && this.value?.length > 0)
-    ) {
+      (this.multiple && this.value?.length > 0);
+
+    if (hadValue) {
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
@@ -698,9 +699,11 @@ export class CpsAutocompleteComponent
     }
     this.clearInput();
     this._dehighlightOption();
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
+    if (hadValue) {
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -747,7 +750,6 @@ export class CpsAutocompleteComponent
     }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
-    this.onBlur();
   }
 
   onBoxClick() {
@@ -1151,9 +1153,12 @@ export class CpsAutocompleteComponent
 
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
-      if (this.multiple) return;
-      // Only reset the value if the inputText was changed by the user
-      if (this.inputText !== this._getValueLabel()) {
+      if (this.multiple) {
+        this._closeAndClear();
+        return;
+      }
+      // Only reset the value if the user actively edited the input to empty
+      if (this.activeSingle && this.inputText !== this._getValueLabel()) {
         this.updateValue(this._getEmptyValue());
       }
       this.cdRef.detectChanges();
