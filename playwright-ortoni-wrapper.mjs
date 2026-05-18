@@ -20,6 +20,6 @@ const args = process.argv.slice(2).map((arg) => {
   return `--grep="${value}"`;
 });
 
-execSync(`npx bddgen && npx playwright test ${args.join(' ')}`, {
+execSync(`npx playwright test ${args.join(' ')}`, {
   stdio: 'inherit'
 });

@@ -24,13 +24,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.associations": {
-    "**/*.cy.ts": "typescriptreact",
     "**/src/**/*.spec.ts": "typescriptreact"
-  },
-  "files.watcherExclude": {
-    "**/.bloop": true,
-    "**/.metals": true,
-    "**/.ammonite": true
   },
   "git.enableCommitSigning": true,
   "editor.codeLens": true,
@@ -40,7 +34,8 @@
   },
   "OrtoniRunner.environments": {
     "chromium": "node playwright-ortoni-wrapper.mjs --project=chromium --config=playwright.config.ts",
-    "webkit": "node playwright-ortoni-wrapper.mjs --project=webkit --config=playwright.config.ts"
+    "webkit": "node playwright-ortoni-wrapper.mjs --project=webkit --config=playwright.config.ts",
+    "accessibility": "node playwright-ortoni-wrapper.mjs --project=accessibility --config=playwright.config.ts"
   },
   "OrtoniRunner.defaultEnvironment": "chromium",
   "jest.jestCommandLine": "npx jest --config jest.config.js",

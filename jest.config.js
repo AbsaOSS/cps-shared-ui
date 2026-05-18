@@ -1,17 +1,24 @@
 module.exports = {
   roots: ['<rootDir>/projects'],
+  preset: 'jest-preset-angular',
   moduleNameMapper: {
-    '^lodash-es$': 'lodash'
+    '^lodash-es$': 'lodash',
+    '^cps-ui-kit$': '<rootDir>/projects/cps-ui-kit/src/public-api.ts'
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(.*.mjs$|@angular/common/locales/.*.js$))'
+  ],
   transform: {
-    '^.+\\.(ts|js|mjs|html|svg)$': [
+    '^.+.(ts|js|mjs|html|svg)$': [
       'jest-preset-angular',
       {
-        diagnostics: false
+        diagnostics: false,
+        stringifyContentPathRegex: '.(html|svg)$'
       }
     ]
   },
   testEnvironment: 'jest-environment-jsdom',
+  setupFiles: ['zone.js'],
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   coverageReporters: ['text', 'html', 'lcov', 'json-summary'],
   collectCoverageFrom: [
