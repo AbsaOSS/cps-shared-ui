@@ -2,7 +2,7 @@
 // Wraps 'playwright test', translating --name= (OrtoniRunner) to --grep= (Playwright).
 // OrtoniRunner appends --name="^scenario$" which Playwright does not recognise.
 // Cross-platform replacement for playwright-ortoni-wrapper.sh.
-import { execSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,6 +20,8 @@ const args = process.argv.slice(2).map((arg) => {
   return `--grep="${value}"`;
 });
 
-execSync(`npx playwright test ${args.join(' ')}`, {
-  stdio: 'inherit'
+const result = spawnSync('npx', ['playwright', 'test', ...args], {
+  stdio: 'inherit',
+  shell: false
 });
+process.exit(result.status ?? 1);

@@ -9,5 +9,6 @@
     "src/**/*.spec.ts",
     "src/**/*.d.ts",
     "../../projects/cps-ui-kit/src/**/*.ts"
-  ]
+  ],
+  "exclude": ["../../projects/cps-ui-kit/src/**/*.spec.ts"]
 }
