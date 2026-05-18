@@ -76,6 +76,41 @@ async function main() {
     };
 
     const fileLineCache = {};
+    const getSourceTypeAnnotation = (child, fallbackNode) => {
+      const fallback = () =>
+        child.type ? child.type.toString() : extractParameter(fallbackNode);
+      const src = child.sources && child.sources[0];
+      if (!src || !src.fullFileName) return fallback();
+      try {
+        if (!fileLineCache[src.fullFileName]) {
+          fileLineCache[src.fullFileName] = fs
+            .readFileSync(src.fullFileName, 'utf8')
+            .split('\n');
+        }
+        const lines = fileLineCache[src.fullFileName];
+        let collected = '';
+        for (let i = src.line - 1; i < lines.length; i++) {
+          collected += (collected ? ' ' : '') + lines[i].trim();
+          if (/(?:=(?!>)|;)/.test(collected.replace(/<[^>]*>/g, ''))) break;
+        }
+        const escapedName = child.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const match = collected.match(
+          new RegExp(
+            `(?:readonly\\s+)?${escapedName}\\s*\\??\\s*:\\s*([\\s\\S]+?)(?=\\s*(?:;|=(?!>)|$))`
+          )
+        );
+        if (!match) return fallback();
+        const type = match[1]
+          .replace(/\s*\|\s*/g, ' | ')
+          .trim()
+          .replace(/^\|\s*/, '')
+          .replace(/\bArray<([^>]+)>/g, '$1[]')
+          .trim();
+        return type || fallback();
+      } catch (_) {
+        return fallback();
+      }
+    };
     const getInputAlias = (prop) => {
       const src = prop.sources && prop.sources[0];
       if (!src || !src.fullFileName) return null;
@@ -168,18 +203,19 @@ async function main() {
                   };
 
                   component_props_group.children.forEach((prop) => {
-                    const rawType =
-                      prop.getSignature && prop.getSignature.type
-                        ? prop.getSignature.type.toString()
-                        : prop.type
-                          ? prop.type.toString()
-                          : null;
-                    const isSignalInput = rawType?.startsWith('InputSignal<');
+                    const typedocType =
+                      (prop.getSignature?.type ?? prop.type)?.toString() ??
+                      null;
+                    const resolvedType =
+                      !prop.getSignature &&
+                      !typedocType?.startsWith('InputSignal<')
+                        ? getSourceTypeAnnotation(prop, null)
+                        : typedocType;
                     props.values.push({
                       name: getInputAlias(prop) ?? prop.name,
                       optional: prop.flags.isOptional,
                       readonly: prop.flags.isReadonly,
-                      type: unwrapSignalType(rawType),
+                      type: unwrapSignalType(resolvedType),
                       default:
                         getDefaultValue(prop.setSignature) ??
                         getDefaultValue(prop.getSignature) ??
@@ -189,7 +225,10 @@ async function main() {
                         !prop.defaultValue
                           ? 'false'
                           : prop.defaultValue &&
-                              !(isSignalInput && prop.defaultValue === '...')
+                              !(
+                                typedocType?.startsWith('InputSignal<') &&
+                                prop.defaultValue === '...'
+                              )
                             ? prop.defaultValue.replace(/^'|'$/g, '')
                             : undefined),
                       description: (
@@ -520,9 +559,7 @@ async function main() {
                             .join(', ');
                           type = `(${params}) => ${sig.type?.toString() ?? 'void'}`;
                         } else {
-                          type = child.type
-                            ? child.type.toString()
-                            : extractParameter(int);
+                          type = getSourceTypeAnnotation(child, int);
                         }
                         return {
                           name: child.name,
@@ -565,7 +602,7 @@ async function main() {
               module_types_group.children.forEach((t) => {
                 types.values.push({
                   name: t.name,
-                  value: getTypesValue(t),
+                  value: getTypesValue(t, project),
                   description:
                     t.comment.summary &&
                     t.comment.summary.map((s) => s.text || '').join(' ')
@@ -820,10 +857,43 @@ const allowed = (name) => {
   );
 };
 
-const getTypesValue = (typeobj) => {
+const getTypesValue = (typeobj, project) => {
   const { type, children, indexSignature } = typeobj ?? {};
 
-  // 1) Handle index signatures (e.g., { [key: string]: number })
+  // 1) Handle `typeof SomeArray[number]` — parse the source file and expand string literals to a union.
+  if (
+    type?.type === 'indexedAccess' &&
+    type.objectType?.type === 'query' &&
+    type.indexType?.type === 'intrinsic' &&
+    type.indexType?.name === 'number'
+  ) {
+    const refName = type.objectType.queryType?.name;
+    const variable = refName
+      ? project
+          ?.getReflectionsByKind(TypeDoc.ReflectionKind.Variable)
+          ?.find((r) => r.name === refName)
+      : null;
+    const sourceFile = variable?.sources?.[0]?.fullFileName;
+    if (sourceFile) {
+      try {
+        const src = fs.readFileSync(sourceFile, 'utf-8');
+        const arrayMatch = src.match(
+          new RegExp(
+            `(?:export\\s+)?const\\s+${refName}\\s*=\\s*\\[([\\s\\S]*?)\\]`,
+            'm'
+          )
+        );
+        if (arrayMatch) {
+          const items = [...arrayMatch[1].matchAll(/'([^']+)'/g)].map(
+            (m) => `'${m[1]}'`
+          );
+          if (items.length) return items.join(' | ');
+        }
+      } catch (_) {}
+    }
+  }
+
+  // 2) Handle index signatures (e.g., { [key: string]: number })
   // If the type has an index signature, extract the key and value types.
   // Example: { [key: string]: number } -> { "[key:string]": "number" }
   if (indexSignature) {
@@ -837,7 +907,7 @@ const getTypesValue = (typeobj) => {
     }
   }
 
-  // 2) Handle object-literal type aliases (NEWER TypeDoc behavior)
+  // 3) Handle object-literal type aliases (NEWER TypeDoc behavior)
   // Some object-literal type aliases have their properties directly in the `children` array.
   // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
   if (Array.isArray(children) && children.length) {
@@ -848,7 +918,7 @@ const getTypesValue = (typeobj) => {
     return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
 
-  // 3) Handle object-literal type aliases under reflection (OLDER TypeDoc behavior)
+  // 4) Handle object-literal type aliases under reflection (OLDER TypeDoc behavior)
   // Older versions of TypeDoc store object-literal properties under `type.declaration.children`.
   // Example: { name: string; age: number } -> { "name": "string", "age": "number" }
   if (type?.type === 'reflection' && type.declaration?.children?.length) {
@@ -859,7 +929,7 @@ const getTypesValue = (typeobj) => {
     return JSON.stringify(Object.assign({}, ...entries), null, 4);
   }
 
-  // 4) Handle function type aliases
+  // 5) Handle function type aliases
   // If the type is a function alias, serialize its signature.
   // Example: (name: string, age: number) => boolean
   if (type?.type === 'reflection' && type.declaration?.signatures?.length) {
@@ -871,7 +941,6 @@ const getTypesValue = (typeobj) => {
     return `(${params}) => ${ret}`;
   }
 
-  // TODO: Handle "typeof iconNames[number] properly
   return type?.toString?.();
 };
 

@@ -17,7 +17,7 @@
                         "name": "opacity",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "0.1",
                         "description": "Option to control the opacity of the loader component."
                     },

@@ -1,0 +1,16 @@
+:host {
+  display: inline-flex;
+  flex-wrap: wrap;
+  column-gap: 0.35rem;
+
+  .type-group {
+    flex-wrap: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .type-part {
+    white-space: nowrap;
+  }
+}

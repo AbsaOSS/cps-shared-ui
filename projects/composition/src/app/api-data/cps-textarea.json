@@ -65,7 +65,7 @@
                         "name": "width",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "100%",
                         "description": "Width of the textarea, it can be of type number denoting pixels or string."
                     },
@@ -105,7 +105,7 @@
                         "name": "resizable",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"none\" | \"vertical\"",
+                        "type": "'vertical' | 'none'",
                         "default": "vertical",
                         "description": "Determines whether the component can be resized vertically or not."
                     },
@@ -129,7 +129,7 @@
                         "name": "infoTooltipMaxWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "100%",
                         "description": "Max width of infoTooltip, of type number denoting pixels or string."
                     },
