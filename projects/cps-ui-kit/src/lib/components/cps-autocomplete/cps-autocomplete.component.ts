@@ -512,6 +512,9 @@ export class CpsAutocompleteComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
     if (changes.options) {
       this.filteredOptions = this.options;
       this.recalcVirtualListHeight();

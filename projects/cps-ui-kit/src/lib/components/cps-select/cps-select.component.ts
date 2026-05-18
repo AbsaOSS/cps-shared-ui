@@ -409,6 +409,9 @@ export class CpsSelectComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
     if (changes.options) {
       this._optionIds = new WeakMap<object, string>();
       this.options.forEach((opt, index) => {
