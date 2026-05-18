@@ -1,0 +1,83 @@
+{
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.associations": {
+    "**/*.cy.ts": "typescriptreact",
+    "**/src/**/*.spec.ts": "typescriptreact"
+  },
+  "files.watcherExclude": {
+    "**/.bloop": true,
+    "**/.metals": true,
+    "**/.ammonite": true
+  },
+  "git.enableCommitSigning": true,
+  "editor.codeLens": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "cucumberautocomplete.steps": ["playwright/steps/**/*.steps.ts"],
+  "cucumberautocomplete.syncfeatures": "playwright/features/**/*.feature",
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.strictGherkinValidation": true,
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.skipDocStringsFormat": false,
+  "cucumberautocomplete.onTypeFormat": true,
+  "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then)\\(",
+  "cucumberautocomplete.stepRegExSymbol": "'",
+  "cucumberautocomplete.pureTextSteps": false,
+  "cucumberautocomplete.stepsInvariants": true,
+  "cucumberautocomplete.formatConfOverride": {
+    "Feature": 0,
+    "Background": 1,
+    "Scenario": 1,
+    "Scenario Outline": 1,
+    "Examples": 2,
+    "Given": 2,
+    "When": 2,
+    "Then": 2,
+    "And": 2,
+    "But": 2,
+    "Feature tags": 0,
+    "Scenario tags": 1
+  },
+  "cucumberautocomplete.pages": {
+    "Login Page": "playwright/pages/LoginPage.ts",
+    "Dashboard Page": "playwright/pages/DashboardPage.ts"
+  },
+  "cucumberautocomplete.customParameters": [
+    {
+      "parameter": "{domainStatus}",
+      "value": "(draft|committed|published)"
+    }
+  ],
+  "OrtoniRunner.environments": {
+    "chromium": "node playwright-ortoni-wrapper.mjs --project=chromium --config=playwright.config.ts",
+    "webkit": "node playwright-ortoni-wrapper.mjs --project=webkit --config=playwright.config.ts"
+  },
+  "OrtoniRunner.defaultEnvironment": "chromium",
+  "jest.jestCommandLine": "npx jest --config jest.config.js",
+  "jest.runMode": "on-demand"
+}

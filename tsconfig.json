@@ -30,5 +30,12 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
+  "files": [],
+  "references": [
+    { "path": "./projects/cps-ui-kit/tsconfig.lib.json" },
+    { "path": "./projects/cps-ui-kit/tsconfig.spec.json" },
+    { "path": "./projects/composition/tsconfig.app.json" },
+    { "path": "./projects/composition/tsconfig.spec.json" }
+  ],
   "exclude": ["playwright/**/*.ts", "playwright.config.ts"]
 }

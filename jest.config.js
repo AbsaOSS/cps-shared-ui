@@ -4,9 +4,12 @@ module.exports = {
     '^lodash-es$': 'lodash'
   },
   transform: {
-    '^.+\\.(ts|js|mjs|html|svg)$': ['jest-preset-angular', {
-      diagnostics: false
-    }]
+    '^.+\\.(ts|js|mjs|html|svg)$': [
+      'jest-preset-angular',
+      {
+        diagnostics: false
+      }
+    ]
   },
   testEnvironment: 'jest-environment-jsdom',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
