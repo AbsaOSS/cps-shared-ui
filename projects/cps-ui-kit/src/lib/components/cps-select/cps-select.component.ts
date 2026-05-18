@@ -421,12 +421,10 @@ export class CpsSelectComponent
       });
       this.recalcVirtualListHeight();
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsSelectComponent: unlabeled select component must have an ariaLabel for accessibility.'
-        );
-      }
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsSelectComponent: unlabeled select component must have an ariaLabel for accessibility.'
+      );
     }
   }
 

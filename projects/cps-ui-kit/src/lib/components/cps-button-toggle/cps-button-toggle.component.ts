@@ -193,12 +193,10 @@ export class CpsButtonToggleComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
-        );
-      }
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
+      );
     }
     if (changes.options) {
       const hasInaccessibleOption = this.options.some(

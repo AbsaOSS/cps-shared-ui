@@ -528,12 +528,10 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
-        );
-      }
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
+      );
     }
   }
 

@@ -5,8 +5,7 @@ import {
   Input,
   OnChanges,
   TemplateRef,
-  ViewChild,
-  type SimpleChanges
+  ViewChild
 } from '@angular/core';
 
 /**
@@ -84,13 +83,11 @@ export class CpsTabComponent implements OnChanges {
 
   active = false;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsTabComponent: unlabeled tab component must have an ariaLabel for accessibility.'
-        );
-      }
+  ngOnChanges(): void {
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsTabComponent: unlabeled tab component must have an ariaLabel for accessibility.'
+      );
     }
   }
 }
