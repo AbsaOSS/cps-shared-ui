@@ -72,8 +72,18 @@ $color-text-mild: var(--cps-color-text-mild);
 
     &.cps-chip--icon-after {
       .cps-chip-icon {
-        margin-right: 0.375rem;
+        margin-left: 0.375rem;
         order: 1;
+
+        &:not(:has(~ .cps-chip-close-icon)) {
+          margin-right: 0.375rem;
+        }
+      }
+      .cps-chip-close-icon {
+        order: 2;
+      }
+      .cps-chip-label {
+        margin-right: 0;
       }
     }
   }

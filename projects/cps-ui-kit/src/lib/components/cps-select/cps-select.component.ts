@@ -731,6 +731,7 @@ export class CpsSelectComponent
 
   clear(event?: any): void {
     event?.stopPropagation();
+    event?.preventDefault();
 
     const hadValue =
       (!this.multiple && !this.isEmptyValue()) ||
