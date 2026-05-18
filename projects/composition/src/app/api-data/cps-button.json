@@ -25,7 +25,7 @@
                         "name": "borderRadius",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "0.25rem",
                         "description": "Border radius of the button, of type number denoting pixels or string."
                     },
@@ -33,7 +33,7 @@
                         "name": "type",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"outlined\" | \"borderless\" | \"solid\"",
+                        "type": "'solid' | 'outlined' | 'borderless'",
                         "default": "solid",
                         "description": "Type of the button in terms of appearance, it can be 'solid' or 'outlined' or 'borderless'."
                     },
@@ -57,7 +57,7 @@
                         "name": "icon",
                         "optional": false,
                         "readonly": false,
-                        "type": "string",
+                        "type": "IconType",
                         "default": "",
                         "description": "Name of the icon on the button."
                     },
@@ -65,7 +65,7 @@
                         "name": "iconPosition",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"before\" | \"after\"",
+                        "type": "'before' | 'after'",
                         "default": "before",
                         "description": "Position of the icon on the button, it can be 'before' or 'after'."
                     },
@@ -73,7 +73,7 @@
                         "name": "size",
                         "optional": false,
                         "readonly": false,
-                        "type": "\"small\" | \"xsmall\" | \"normal\" | \"large\"",
+                        "type": "'xsmall' | 'small' | 'normal' | 'large'",
                         "default": "normal",
                         "description": "Size on the button, it can be 'xsmall', 'small', 'normal' or 'large'."
                     },
@@ -81,7 +81,7 @@
                         "name": "width",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "0",
                         "description": "Width on the button, of type number denoting pixels or string."
                     },
@@ -89,7 +89,7 @@
                         "name": "height",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "0",
                         "description": "Height on the button, of type number denoting pixels or string."
                     },

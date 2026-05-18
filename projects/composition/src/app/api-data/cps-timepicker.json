@@ -73,7 +73,7 @@
                         "name": "infoTooltipMaxWidth",
                         "optional": false,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "default": "100%",
                         "description": "Max width of infoTooltip, of type number denoting pixels or string."
                     },
@@ -176,7 +176,7 @@
                         "name": "dayPeriod",
                         "optional": true,
                         "readonly": false,
-                        "type": "\"AM\" | \"PM\""
+                        "type": "'AM' | 'PM'"
                     }
                 ]
             }
