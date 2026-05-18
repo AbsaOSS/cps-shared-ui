@@ -173,24 +173,24 @@ describe('CpsAutocompleteComponent', () => {
 
   it('should allow options menu to close with ESCAPE key when validating', () => {
     fixture.componentRef.setInput('validating', true);
-    const onBlurStub = jest.spyOn(component, 'onBlur');
+    jest.spyOn(component, 'clearInput');
     fixture.detectChanges();
     const result = component.onBeforeOptionsHidden(
       CpsMenuHideReason.KEYDOWN_ESCAPE
     );
     expect(result).toBe(undefined);
-    expect(onBlurStub).toHaveBeenCalledTimes(1);
+    expect(component.clearInput).toHaveBeenCalled();
   });
 
   it('should allow options menu to close with TAB key when validating', () => {
     fixture.componentRef.setInput('validating', true);
-    const onBlurStub = jest.spyOn(component, 'onBlur');
+    jest.spyOn(component, 'clearInput');
     fixture.detectChanges();
     const result = component.onBeforeOptionsHidden(
       CpsMenuHideReason.KEYDOWN_TAB
     );
     expect(result).toBe(undefined);
-    expect(onBlurStub).toHaveBeenCalledTimes(1);
+    expect(component.clearInput).toHaveBeenCalled();
   });
 
   it('should display loading indicator when validating', () => {
