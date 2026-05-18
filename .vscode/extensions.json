@@ -6,7 +6,6 @@
     "ms-vscode.vscode-typescript-next",
     "christian-kohler.npm-intellisense",
     "ms-playwright.playwright",
-    "alexkrechik.cucumberautocomplete",
     "ortoni.ortoni",
     "orta.vscode-jest"
   ]
