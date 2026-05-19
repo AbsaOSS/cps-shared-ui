@@ -7,12 +7,18 @@
   box-sizing: border-box;
 }
 
+* {
+  scrollbar-width: thin;
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 100%;
+  background: var(--cps-background-color);
+  color: var(--cps-text-primary);
 }
 
 .composition-page {
