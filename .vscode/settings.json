@@ -33,9 +33,9 @@
     "source.fixAll.eslint": "explicit"
   },
   "OrtoniRunner.environments": {
-    "chromium": "node playwright-ortoni-wrapper.mjs --project=chromium --config=playwright.config.ts",
-    "webkit": "node playwright-ortoni-wrapper.mjs --project=webkit --config=playwright.config.ts",
-    "accessibility": "node playwright-ortoni-wrapper.mjs --project=accessibility --config=playwright.config.ts"
+    "chromium": "${--project=chromium --config=playwright.config.ts}",
+    "webkit": "${--project=webkit --config=playwright.config.ts}",
+    "accessibility": "${--project=accessibility --config=playwright.config.ts}"
   },
   "OrtoniRunner.defaultEnvironment": "chromium",
   "jest.jestCommandLine": "npx jest --config jest.config.js",
