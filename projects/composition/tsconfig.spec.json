@@ -2,7 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
+    "rootDir": "../../",
     "types": ["jest"]
   },
-  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts",
+    "../../projects/cps-ui-kit/src/**/*.ts"
+  ],
+  "exclude": ["../../projects/cps-ui-kit/src/**/*.spec.ts"]
 }
