@@ -535,24 +535,11 @@ export class CpsSelectComponent
     }
   }
 
-  private _getHTMLOptions() {
-    return (this.optionsList.nativeElement.querySelectorAll(
-      '.cps-select-options-option'
-    ) || []) as any;
-  }
-
-  private _dehighlightOption(el?: HTMLElement) {
-    if (el) el.classList.remove('highlighten');
-    else {
-      if (this.optionHighlightedIndex < 0) return;
-      const optionItems = this._getHTMLOptions();
-      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
-      this.optionHighlightedIndex = -1;
-    }
+  private _dehighlightOption() {
+    this.optionHighlightedIndex = -1;
   }
 
   private _highlightOption(el: HTMLElement) {
-    el.classList.add('highlighten');
     const parent = el.parentElement;
     if (!parent) return;
     const parentRect = parent.getBoundingClientRect();
@@ -568,31 +555,22 @@ export class CpsSelectComponent
   private _navigateOptionsByArrows(up: boolean) {
     if (!this.isOpened) return;
 
-    const optionItems = this._getHTMLOptions();
-    const len = optionItems.length;
-    if (len < 1) return;
+    if (this.optionsAriaSetSize < 1) return;
 
-    if (len === 1) {
-      this.optionHighlightedIndex = 0;
-      this._highlightOption(optionItems[0]);
-      return;
-    }
+    this.optionHighlightedIndex = this._nextHighlightIndex(
+      up,
+      this.optionsAriaSetSize
+    );
 
-    if (up) {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex =
-        this.optionHighlightedIndex < 1
-          ? len - 1
-          : this.optionHighlightedIndex - 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    } else {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex = [-1, len - 1].includes(
-        this.optionHighlightedIndex
-      )
-        ? 0
-        : this.optionHighlightedIndex + 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    const activeId = this._getHighlightedOptionId();
+    if (!activeId) return;
+
+    const activeOption = this.optionsList?.nativeElement?.querySelector(
+      `#${activeId}`
+    ) as HTMLElement | null;
+
+    if (activeOption) {
+      this._highlightOption(activeOption);
     }
   }
 
