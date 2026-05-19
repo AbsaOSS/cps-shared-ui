@@ -1,8 +1,9 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Inject,
   Input,
   OnChanges,
@@ -11,11 +12,11 @@ import {
   Output,
   Renderer2,
   Self,
-  PLATFORM_ID,
   type SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -159,12 +160,14 @@ export class CpsButtonToggleComponent
 
   largestButtonWidthRem = 0;
 
-  private _rootFontSizePx = 16;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() ?? 16;
+  }
 
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object,
     private renderer: Renderer2,
     private cdr: ChangeDetectorRef
   ) {
@@ -176,11 +179,6 @@ export class CpsButtonToggleComponent
   ngOnInit() {
     if (this.multiple && !this._value) {
       this._value = [];
-    }
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
     }
     if (this.document?.fonts?.ready) {
       this.document.fonts.ready.then(() => {

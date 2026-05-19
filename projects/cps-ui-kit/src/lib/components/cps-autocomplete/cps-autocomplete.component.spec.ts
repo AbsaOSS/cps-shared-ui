@@ -13,6 +13,11 @@ import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selec
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
 import { CpsAutocompleteComponent } from './cps-autocomplete.component';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
+
+const mockRootFontSizeService = {
+  fontSize: () => 16
+};
 
 describe('CpsAutocompleteComponent', () => {
   let component: CpsAutocompleteComponent;
@@ -26,7 +31,14 @@ describe('CpsAutocompleteComponent', () => {
         CpsAutocompleteComponent,
         NoopAnimationsModule
       ],
-      providers: [LabelByValuePipe, CheckOptionSelectedPipe],
+      providers: [
+        LabelByValuePipe,
+        CheckOptionSelectedPipe,
+        {
+          provide: CPS_ROOT_FONT_SIZE_SERVICE,
+          useValue: mockRootFontSizeService
+        }
+      ],
       schemas: [NO_ERRORS_SCHEMA] // Ignore unknown elements and attributes
     }).compileComponents();
   });

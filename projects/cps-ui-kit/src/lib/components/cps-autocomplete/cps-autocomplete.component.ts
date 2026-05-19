@@ -1,11 +1,11 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -14,7 +14,6 @@ import {
   Output,
   Self,
   ViewChild,
-  PLATFORM_ID,
   type SimpleChanges
 } from '@angular/core';
 import {
@@ -25,6 +24,7 @@ import {
 } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
   getComputedLabel
@@ -446,7 +446,10 @@ export class CpsAutocompleteComponent
     'cps-autocomplete-option'
   );
 
-  private _rootFontSizePx = 16;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() ?? 16;
+  }
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
@@ -456,8 +459,6 @@ export class CpsAutocompleteComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object,
     private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
@@ -475,11 +476,6 @@ export class CpsAutocompleteComponent
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
     this.virtualScrollItemSizePx =
       this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
