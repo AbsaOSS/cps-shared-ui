@@ -25,6 +25,9 @@ describe('CpsMenuComponent', () => {
   let fixture: ComponentFixture<CpsMenuComponent>;
 
   beforeEach(async () => {
+    mockFocusService.isKeyboard.mockReturnValue(false);
+    mockFocusService.focusElement.mockReset();
+
     await TestBed.configureTestingModule({
       imports: [CpsMenuComponent, NoopAnimationsModule],
       providers: [
@@ -40,7 +43,7 @@ describe('CpsMenuComponent', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.restoreAllMocks();
   });
 
   it('should create', () => {
