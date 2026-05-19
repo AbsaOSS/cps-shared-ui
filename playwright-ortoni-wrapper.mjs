@@ -8,17 +8,19 @@ import { fileURLToPath } from 'node:url';
 
 process.chdir(dirname(fileURLToPath(import.meta.url)));
 
-const args = process.argv.slice(2).map((arg) => {
-  if (!arg.startsWith('--name=')) return arg;
+const args = process.argv
+  .slice(2)
+  .filter((arg) => !['npx', 'playwright', 'test'].includes(arg))
+  .map((arg) => {
+    if (!arg.startsWith('--name=')) return arg;
 
-  // OrtoniRunner passes --name="^scenario name$" but Playwright BDD wraps tests
-  // in a describe block, making the full title "Feature > scenario name".
-  // Strip the anchors so --grep matches as a substring of the full title.
-  let value = arg.slice('--name='.length);
-  value = value.replace(/^"(.*)"$/, '$1'); // strip surrounding quotes if any
-  value = value.replace(/^\^/, '').replace(/\$$/, ''); // strip ^ and $ anchors
-  return `--grep="${value}"`;
-});
+    // OrtoniRunner passes --name="^test name$"; strip anchors so --grep matches
+    // as a substring of the full title (e.g. "describe > test name").
+    let value = arg.slice('--name='.length);
+    value = value.replace(/^"(.*)"$/, '$1'); // strip surrounding quotes if any
+    value = value.replace(/^\^/, '').replace(/\$$/, ''); // strip ^ and $ anchors
+    return `--grep="${value}"`;
+  });
 
 const result = spawnSync('npx', ['playwright', 'test', ...args], {
   stdio: 'inherit',
