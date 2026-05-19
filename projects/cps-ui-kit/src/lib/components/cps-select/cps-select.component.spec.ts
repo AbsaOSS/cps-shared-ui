@@ -11,8 +11,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
 import { CpsSelectComponent } from './cps-select.component';
+
+const mockRootFontSizeService = {
+  fontSize: () => 16
+};
 
 const OPTIONS = [
   { label: 'Option 1', value: 'opt1' },
@@ -32,7 +37,15 @@ describe('CpsSelectComponent', () => {
         CpsSelectComponent,
         NoopAnimationsModule
       ],
-      providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
+      providers: [
+        LabelByValuePipe,
+        CombineLabelsPipe,
+        CheckOptionSelectedPipe,
+        {
+          provide: CPS_ROOT_FONT_SIZE_SERVICE,
+          useValue: mockRootFontSizeService
+        }
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   });

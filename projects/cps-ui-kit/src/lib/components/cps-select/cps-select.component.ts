@@ -1,17 +1,16 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
-  PLATFORM_ID,
   Self,
   ViewChild,
   type SimpleChanges
@@ -41,6 +40,7 @@ import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   CpsMenuComponent,
   CpsMenuHideReason
@@ -359,18 +359,17 @@ export class CpsSelectComponent
   selectBoxWidthRem = 0;
   resizeObserver: ResizeObserver;
 
-  private _rootFontSizePx = 16;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() ?? 16;
+  }
 
   readonly optionsListId = generateUniqueId('cps-select-options-list');
   readonly selectAllOptionId = generateUniqueId('cps-select-option-select-all');
   private readonly _optionIdPrefix = generateUniqueId('cps-select-option');
   private _optionIds = new WeakMap<object, string>();
 
-  constructor(
-    @Self() @Optional() private _control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) {
+  constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -385,11 +384,6 @@ export class CpsSelectComponent
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
     this.virtualScrollItemSizePx =
       this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
