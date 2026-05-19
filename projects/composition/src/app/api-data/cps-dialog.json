@@ -144,7 +144,7 @@
                         "name": "autoFocus",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | boolean",
+                        "type": "CpsDialogAutoFocusTarget | string | boolean",
                         "default": "true",
                         "description": "Defines which element receives focus when the dialog opens.\n- 'dialog' - focuses the dialog container\n- 'first-tabbable' / true - focuses the first tabbable element\n- string (a CSS selector) - focuses the first matching element\n- false - disables auto-focus"
                     },
@@ -152,42 +152,42 @@
                         "name": "width",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Width of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "height",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Height of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "minWidth",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Min-width of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "minHeight",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Min-height of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "maxWidth",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Max-width of the dialog, a number denoting pixels or a string."
                     },
                     {
                         "name": "maxHeight",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Max-height of the dialog, a number denoting pixels or a string."
                     },
                     {
@@ -222,7 +222,7 @@
                         "name": "style",
                         "optional": true,
                         "readonly": false,
-                        "type": "{ [klass: string]: any } | null",
+                        "type": "{ [klass: string]: any } | null | undefined",
                         "description": "Inline style of the component."
                     },
                     {
@@ -236,7 +236,7 @@
                         "name": "contentStyle",
                         "optional": true,
                         "readonly": false,
-                        "type": "{ [klass: string]: any } | null",
+                        "type": "{ [klass: string]: any } | null | undefined",
                         "description": "Inline style of the content."
                     },
                     {
@@ -306,14 +306,14 @@
                         "name": "minX",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Minimum value for the left coordinate of dialog in dragging.\nA number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px')."
                     },
                     {
                         "name": "minY",
                         "optional": true,
                         "readonly": false,
-                        "type": "string | number",
+                        "type": "number | string",
                         "description": "Minimum value for the top coordinate of dialog in dragging.\nA number is treated as pixels, a string must use 'px' or 'rem' units (e.g. '2rem', '32px')."
                     },
                     {
@@ -334,7 +334,7 @@
                         "name": "position",
                         "optional": true,
                         "readonly": false,
-                        "type": "\"left\" | \"right\" | \"top\" | \"bottom\" | \"center\" | \"top-left\" | \"top-right\" | \"bottom-left\" | \"bottom-right\"",
+                        "type": "'center' | 'top' | 'bottom' | 'left' | 'right' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
                         "description": "Position of the dialog, options are \"center\", \"top\", \"bottom\", \"left\", \"right\", \"top-left\", \"top-right\", \"bottom-left\" or \"bottom-right\"."
                     }
                 ]

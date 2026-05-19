@@ -148,7 +148,7 @@ export const iconNames = [
  * IconType is used to define the type of the icon.
  * @group Types
  */
-export type IconType = (typeof iconNames)[number]; // Todo: Fix api generator to handle this type properly
+export type IconType = (typeof iconNames)[number];
 
 /**
  * iconSizeType is used to define the size of the icon.

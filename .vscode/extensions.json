@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "johnpapa.angular-essentials",
+    "github.vscode-github-actions",
+    "eamodio.gitlens",
+    "ms-vscode.vscode-typescript-next",
+    "christian-kohler.npm-intellisense",
+    "ms-playwright.playwright",
+    "ortoni.ortoni",
+    "orta.vscode-jest"
+  ]
+}
