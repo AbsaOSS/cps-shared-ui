@@ -753,14 +753,18 @@ export class CpsAutocompleteComponent
   }
 
   onBoxClick() {
+    const wasOpened = this.isOpened;
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
-      if (!this.isOpened) this.filteredOptions = this.options;
+      if (!wasOpened) this.filteredOptions = this.options;
     }
     this._dehighlightOption();
     setTimeout(() => {
-      this.focus();
+      this.focusInput();
+      if (!wasOpened) {
+        this._toggleOptions(true);
+      }
     });
   }
 
@@ -832,7 +836,7 @@ export class CpsAutocompleteComponent
   }
 
   focusInput() {
-    this.autocompleteContainer?.nativeElement?.querySelector('input')?.focus();
+    this.autocompleteInput?.nativeElement?.focus();
   }
 
   focus() {
@@ -1168,12 +1172,19 @@ export class CpsAutocompleteComponent
         this._closeAndClear();
         return;
       }
-      // Only reset the value if the user actively edited the input to empty
-      if (this.activeSingle && this.inputText !== this._getValueLabel()) {
-        this.updateValue(this._getEmptyValue());
+      const shouldUpdateValue =
+        this.activeSingle && this.inputText !== this._getValueLabel();
+      this.clearInput();
+      this._dehighlightOption();
+      if (shouldUpdateValue) {
+        setTimeout(() => {
+          this.updateValue(this._getEmptyValue());
+          if (needFocusInput) {
+            this.cdRef.detectChanges();
+            this.focusInput();
+          }
+        }, 0);
       }
-      this.cdRef.detectChanges();
-      this._closeAndClear();
       return;
     }
 
