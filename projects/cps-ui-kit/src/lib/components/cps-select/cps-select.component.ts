@@ -351,6 +351,7 @@ export class CpsSelectComponent
   isOpened = false;
   isActive = false;
   optionHighlightedIndex = -1;
+  isArrowNavigating = false;
 
   virtualScrollItemSizePx = DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX;
   virtualListHeightRem =
@@ -452,6 +453,7 @@ export class CpsSelectComponent
 
     setTimeout(() => {
       if (this.isOpened && this.options.length > 0) {
+        this._syncHighlightToValue();
         const selected =
           this.optionsList.nativeElement.querySelector('.selected');
         if (selected) {
@@ -460,15 +462,8 @@ export class CpsSelectComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (this.virtualScroll && !this.isEmptyValue()) {
-          let v: any;
-          if (this.multiple) {
-            if (this.value.length > 0) {
-              v = this.value[0];
-            }
-          } else v = this.value;
-          const idx = this.options.findIndex((o) => isEqual(o, v));
-          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        } else if (this.virtualScroll && this.optionHighlightedIndex >= 0) {
+          this._scrollVirtualListToIndex(this.optionHighlightedIndex);
         }
       }
     });
@@ -537,6 +532,19 @@ export class CpsSelectComponent
 
   private _dehighlightOption() {
     this.optionHighlightedIndex = -1;
+    this.isArrowNavigating = false;
+  }
+
+  private _syncHighlightToValue(): void {
+    if (!this.hasSelectedValue()) return;
+
+    const firstSelected = this.multiple ? this.value[0] : this.value;
+    const idx = this.options.findIndex((o) =>
+      isEqual(this.returnObject ? o : o[this.optionValue], firstSelected)
+    );
+    if (idx < 0) return;
+
+    this.optionHighlightedIndex = idx + (this.isSelectAllVisible ? 1 : 0);
   }
 
   private _highlightOption(el: HTMLElement) {
@@ -557,6 +565,7 @@ export class CpsSelectComponent
 
     if (this.optionsAriaSetSize < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(
       up,
       this.optionsAriaSetSize
@@ -705,9 +714,7 @@ export class CpsSelectComponent
     event?.stopPropagation();
     event?.preventDefault();
 
-    const hadValue =
-      (!this.multiple && !this.isEmptyValue()) ||
-      (this.multiple && this.value?.length > 0);
+    const hadValue = this.hasSelectedValue();
 
     if (hadValue) {
       if (this.openOnClear) {
@@ -810,12 +817,14 @@ export class CpsSelectComponent
     return this.getOptionId(activeOption, optionIndex);
   }
 
-  isEmptyValue(): boolean {
+  hasSelectedValue(): boolean {
+    if (this.multiple) {
+      return this.value?.length > 0;
+    }
     return (
-      this.value === null ||
-      this.value === undefined ||
-      (typeof this.value === 'string' && this.value.trim() === '') ||
-      Number.isNaN(this.value)
+      this.value != null &&
+      !(typeof this.value === 'string' && this.value.trim() === '') &&
+      !Number.isNaN(this.value)
     );
   }
 
@@ -825,6 +834,7 @@ export class CpsSelectComponent
     const len = this.options.length;
     if (len < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
     this._scrollVirtualListToIndex(this.optionHighlightedIndex);
   }

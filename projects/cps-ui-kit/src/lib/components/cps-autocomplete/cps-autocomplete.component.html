@@ -47,9 +47,7 @@
             class="prefix-icon">
           </cps-icon>
         }
-        @if (
-          (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
-        ) {
+        @if (hasSelectedValue()) {
           <div class="cps-autocomplete-box-items">
             @if (!multiple) {
               <span class="single-item">
@@ -160,9 +158,7 @@
               class="cps-autocomplete-box-clear-icon"
               [ngClass]="{
                 'cps-autocomplete-box-clear-icon-hidden':
-                  !persistentClear &&
-                  (!multiple || !value?.length) &&
-                  (multiple || isEmptyValue())
+                  !persistentClear && !hasSelectedValue()
               }">
               <cps-icon
                 icon="delete"
@@ -245,7 +241,9 @@
             [attr.aria-posinset]="1"
             [attr.aria-selected]="value?.length === options.length"
             [class.allselected]="value?.length === options.length"
-            [class.highlighten]="optionHighlightedIndex === 0"
+            [class.highlighten]="
+              isArrowNavigating && optionHighlightedIndex === 0
+            "
             (mousedown)="$event.preventDefault()"
             (click)="toggleAll()">
             <span class="cps-autocomplete-options-option-left">
@@ -336,11 +334,7 @@
     [attr.aria-required]="isRequired || null"
     [ngClass]="inputClass"
     [ngStyle]="inputStyle"
-    [placeholder]="
-      (!multiple && isEmptyValue()) || (value?.length < 1 && multiple)
-        ? placeholder
-        : ''
-    "
+    [placeholder]="!hasSelectedValue() ? placeholder : ''"
     (input)="filterOptions($event)"
     (keydown)="onInputKeyDown($event)"
     [(ngModel)]="inputText"
@@ -360,6 +354,7 @@
     (mousedown)="$event.preventDefault()"
     (click)="onOptionClick(item)"
     [class.highlighten]="
+      isArrowNavigating &&
       itemIndex === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)
     "
     [attr.aria-selected]="

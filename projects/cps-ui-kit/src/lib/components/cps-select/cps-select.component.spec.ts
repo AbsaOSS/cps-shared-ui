@@ -191,19 +191,19 @@ describe('CpsSelectComponent', () => {
       expect(component.value).toContainEqual(OPTIONS[1]);
     });
 
-    it('isEmptyValue should return true for undefined', () => {
+    it('hasSelectedValue should return false for undefined', () => {
       component.writeValue(undefined);
-      expect(component.isEmptyValue()).toBe(true);
+      expect(component.hasSelectedValue()).toBe(false);
     });
 
-    it('isEmptyValue should return true for null', () => {
+    it('hasSelectedValue should return false for null', () => {
       component.writeValue(null);
-      expect(component.isEmptyValue()).toBe(true);
+      expect(component.hasSelectedValue()).toBe(false);
     });
 
-    it('isEmptyValue should return false for a valid object', () => {
+    it('hasSelectedValue should return true for a valid object', () => {
       component.writeValue(OPTIONS[0]);
-      expect(component.isEmptyValue()).toBe(false);
+      expect(component.hasSelectedValue()).toBe(true);
     });
   });
 
@@ -363,7 +363,7 @@ describe('CpsSelectComponent', () => {
       fixture.componentRef.setInput('openOnClear', false);
       component.clear();
       tick();
-      expect(component.isEmptyValue()).toBe(true);
+      expect(component.hasSelectedValue()).toBe(false);
     }));
 
     it('should clear multiple value when clear is called', fakeAsync(() => {

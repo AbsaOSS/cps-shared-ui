@@ -52,14 +52,11 @@
             class="prefix-icon">
           </cps-icon>
         }
-        @if ((!multiple && isEmptyValue()) || (value?.length < 1 && multiple)) {
+        @if (!hasSelectedValue()) {
           <div class="cps-select-box-placeholder">
             {{ placeholder }}
           </div>
-        }
-        @if (
-          (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
-        ) {
+        } @else {
           <div class="cps-select-box-items">
             @if (!multiple) {
               <span class="single-item">
@@ -121,9 +118,7 @@
             (keydown.enter)="clear($event)"
             (keydown.space)="clear($event)"
             [style.visibility]="
-              persistentClear ||
-              (!persistentClear &&
-                ((multiple && value?.length) || (!multiple && !isEmptyValue())))
+              persistentClear || (!persistentClear && hasSelectedValue())
                 ? 'visible'
                 : 'hidden'
             "
@@ -179,7 +174,9 @@
               [attr.aria-posinset]="1"
               [attr.aria-selected]="value?.length === options.length"
               [class.allselected]="value?.length === options.length"
-              [class.highlighten]="optionHighlightedIndex === 0"
+              [class.highlighten]="
+                isArrowNavigating && optionHighlightedIndex === 0
+              "
               (mousedown)="$event.preventDefault()"
               (click)="toggleAll()">
               <span class="cps-select-options-option-left">
@@ -260,6 +257,7 @@
     (mousedown)="$event.preventDefault()"
     (click)="onOptionClick(item)"
     [class.highlighten]="
+      isArrowNavigating &&
       itemIdx === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)
     "
     [class.selected]="
