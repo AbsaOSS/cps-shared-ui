@@ -20,9 +20,9 @@
   <div class="cps-timepicker-body">
     <cps-autocomplete
       #hoursField
-      ariaLabel="Hours"
+      [ariaLabel]="`Hours, ${ariaLabel || label}`"
       (keypress)="numberOnly($event)"
-      width="60"
+      width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="hoursOptions"
       [withOptionsAliases]="!use24HourTime"
@@ -43,7 +43,7 @@
       #minutesField
       ariaLabel="Minutes"
       (keypress)="numberOnly($event)"
-      width="60"
+      width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="minutesOptions"
       [hideDetails]="true"
@@ -65,7 +65,7 @@
         #secondsField
         ariaLabel="Seconds"
         (keypress)="numberOnly($event)"
-        width="60"
+        width="3.75rem"
         [emptyOptionIndex]="mandatoryValue ? 0 : -1"
         [options]="secondsOptions"
         [hideDetails]="true"

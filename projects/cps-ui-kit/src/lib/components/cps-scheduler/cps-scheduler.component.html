@@ -103,6 +103,7 @@
               </cps-select>
               day(s) at
               <cps-timepicker
+                ariaLabel="Time"
                 data-testid="daily-timepicker"
                 [disabled]="disabled || state.daily.subTab !== 'everyDays'"
                 [use24HourTime]="use24HourTime"
@@ -128,6 +129,7 @@
               ">
               Every working day at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -199,6 +201,7 @@
         <div class="cps-scheduler-tab-pane-row">
           at
           <cps-timepicker
+            ariaLabel="Time"
             [disabled]="disabled"
             data-testid="weekly-timepicker"
             [use24HourTime]="use24HourTime"
@@ -258,6 +261,7 @@
               </cps-select>
               month(s) at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -348,6 +352,7 @@
               </cps-select>
               at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
                 "
@@ -417,6 +422,7 @@
               </cps-select>
               at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
                 "
@@ -496,6 +502,7 @@
               </cps-select>
               at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "
