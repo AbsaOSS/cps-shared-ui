@@ -50,25 +50,17 @@ describe('CpsMenuComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('default input values', () => {
-    it('should have empty header', () => expect(component.header).toBe(''));
-    it('should have empty ariaLabel', () =>
-      expect(component.ariaLabel).toBe(''));
-    it('should have empty items array', () =>
-      expect(component.items).toEqual([]));
-    it('should have withArrow true', () =>
-      expect(component.withArrow).toBe(true));
-    it('should have compressed false', () =>
-      expect(component.compressed).toBe(false));
-    it('should have focusOnShow true', () =>
-      expect(component.focusOnShow).toBe(true));
-    it('should have persistent false', () =>
-      expect(component.persistent).toBe(false));
-    it('should have empty containerClass', () =>
-      expect(component.containerClass).toBe(''));
-    it('should have overlayVisible false', () =>
-      expect(component.overlayVisible).toBe(false));
-    it('should have render false', () => expect(component.render).toBe(false));
+  it('should have correct initial values', () => {
+    expect(component.header).toBe('');
+    expect(component.ariaLabel).toBe('');
+    expect(component.items).toEqual([]);
+    expect(component.withArrow).toBe(true);
+    expect(component.compressed).toBe(false);
+    expect(component.focusOnShow).toBe(true);
+    expect(component.persistent).toBe(false);
+    expect(component.containerClass).toBe('');
+    expect(component.overlayVisible).toBe(false);
+    expect(component.render).toBe(false);
   });
 
   describe('ngAfterViewInit', () => {
