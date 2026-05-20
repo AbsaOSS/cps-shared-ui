@@ -20,18 +20,6 @@
   top: -9999px;
 }
 
-/* Custom scrollbar */
-* {
-  scrollbar-width: thin;
-}
-
-html,
-body {
-  font-family: 'Source Sans Pro', sans-serif;
-  background: var(--cps-background-color);
-  color: var(--cps-text-primary);
-}
-
 // Theme transition hook used by CpsThemeService
 .cps-theme-transition,
 .cps-theme-transition *,
