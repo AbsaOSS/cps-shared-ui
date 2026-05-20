@@ -20,7 +20,7 @@
   }
   <div
     class="cps-select-container"
-    tabindex="0"
+    [tabindex]="disabled ? -1 : 0"
     role="combobox"
     aria-haspopup="listbox"
     [attr.aria-expanded]="isOpened"
