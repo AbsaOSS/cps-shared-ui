@@ -559,13 +559,10 @@ describe('CpsMenuComponent', () => {
     it('should hide when mousedown is outside the container and target', () => {
       jest.spyOn(component, 'hide');
       component.bindDocumentClickListener();
-      const outside = document.createElement('span');
-      document.body.appendChild(outside);
       document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
       expect(component.hide).toHaveBeenCalledWith(
         CpsMenuHideReason.CLICK_OUTSIDE
       );
-      document.body.removeChild(outside);
     });
 
     it('should not hide when persistent is true', () => {
