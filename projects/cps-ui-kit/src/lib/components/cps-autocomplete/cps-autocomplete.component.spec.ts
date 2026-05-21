@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -13,6 +13,12 @@ import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selec
 import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
 import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
 import { CpsAutocompleteComponent } from './cps-autocomplete.component';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
+
+const mockFontSize = signal(16);
+const mockRootFontSizeService = {
+  fontSize: mockFontSize.asReadonly()
+};
 
 describe('CpsAutocompleteComponent', () => {
   let component: CpsAutocompleteComponent;
@@ -26,7 +32,14 @@ describe('CpsAutocompleteComponent', () => {
         CpsAutocompleteComponent,
         NoopAnimationsModule
       ],
-      providers: [LabelByValuePipe, CheckOptionSelectedPipe],
+      providers: [
+        LabelByValuePipe,
+        CheckOptionSelectedPipe,
+        {
+          provide: CPS_ROOT_FONT_SIZE_SERVICE,
+          useValue: mockRootFontSizeService
+        }
+      ],
       schemas: [NO_ERRORS_SCHEMA] // Ignore unknown elements and attributes
     }).compileComponents();
   });
@@ -43,8 +56,17 @@ describe('CpsAutocompleteComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    mockFontSize.set(16);
+  });
+
   it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should update virtualScrollItemSizePx when root font size changes', () => {
+    mockFontSize.set(20);
+    expect(component.virtualScrollItemSizePx()).toBe(20 * 2.75);
   });
 
   it('should display the label when provided', () => {

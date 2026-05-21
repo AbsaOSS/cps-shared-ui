@@ -7,12 +7,16 @@ import {
 import { CpsTooltipDirective } from './cps-tooltip.directive';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
 @Component({
   template: `<div cpsTooltip="<style onload='alert(420);'></style>"></div>`,
   imports: [CpsTooltipDirective]
 })
 class MaliciousTooltipComponent {}
+const mockRootFontSizeService = {
+  fontSize: () => 16
+};
 
 @Component({
   template: `<div cpsTooltip="<h1>Legit tooltip</h1>"></div>`,
@@ -29,7 +33,13 @@ describe('CpsTooltipDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: []
+      imports: [],
+      providers: [
+        {
+          provide: CPS_ROOT_FONT_SIZE_SERVICE,
+          useValue: mockRootFontSizeService
+        }
+      ]
     }).compileComponents();
   });
 

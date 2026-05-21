@@ -11,9 +11,14 @@ import { DomHandler } from 'primeng/dom';
 import { CpsDialogComponent } from './cps-dialog.component';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
 @Component({ template: '' })
 class TestChildComponent {}
+
+const mockRootFontSizeService = {
+  fontSize: () => 16
+};
 
 describe('CpsDialogComponent', () => {
   let component: CpsDialogComponent;
@@ -41,6 +46,10 @@ describe('CpsDialogComponent', () => {
       providers: [
         { provide: CpsDialogRef, useValue: mockDialogRef },
         { provide: CpsDialogConfig, useValue: config },
+        {
+          provide: CPS_ROOT_FONT_SIZE_SERVICE,
+          useValue: mockRootFontSizeService
+        },
         PrimeNG
       ]
     });

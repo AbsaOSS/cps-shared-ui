@@ -43,6 +43,7 @@ import { CpsButtonComponent } from '../../../../../components/cps-button/cps-but
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CPS_FOCUS_SERVICE } from '../../../../cps-focus/cps-focus.service';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -140,9 +141,12 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   _resizeEnded = new EventEmitter<MouseEvent | KeyboardEvent>();
   _maximizedStateChanged = new EventEmitter<boolean>();
 
-  private _rootFontSizePx = 16;
   private _openedByKeyboard = false;
   private readonly _cpsFocusService = inject(CPS_FOCUS_SERVICE);
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() ?? 16;
+  }
 
   get ariaLabel(): string | null {
     if (this.config.ariaLabelledBy) return null;
@@ -232,11 +236,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
     if (
       !this.config.ariaLabel?.trim() &&
       !this.config.ariaLabelledBy?.trim() &&
