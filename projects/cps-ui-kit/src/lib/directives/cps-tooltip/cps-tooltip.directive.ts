@@ -5,13 +5,13 @@ import {
   inject,
   input,
   OnDestroy,
-  OnInit,
   SecurityContext,
   PLATFORM_ID
 } from '@angular/core';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**
  * CpsTooltipPosition is used to define the position of the tooltip.
@@ -42,7 +42,7 @@ export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
     '(window:resize)': 'onPageResize()'
   }
 })
-export class CpsTooltipDirective implements OnInit, OnDestroy {
+export class CpsTooltipDirective implements OnDestroy {
   /**
    * Tooltip text or html to show.
    * @group Props
@@ -117,8 +117,12 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
   private _showTimeout?: ReturnType<typeof setTimeout>;
   private _hideTimeout?: ReturnType<typeof setTimeout>;
   private _ariaTarget?: HTMLElement;
-  private _rootFontSizePx = 16;
   private window: Window;
+
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() ?? 16;
+  }
 
   private _elementRef = inject(ElementRef<HTMLElement>);
   private _document = inject(DOCUMENT);
@@ -127,14 +131,6 @@ export class CpsTooltipDirective implements OnInit, OnDestroy {
 
   constructor() {
     this.window = this._document.defaultView as Window;
-  }
-
-  ngOnInit(): void {
-    if (isPlatformBrowser(this._platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this._document.documentElement).fontSize || '16'
-      );
-    }
   }
 
   ngOnDestroy(): void {
