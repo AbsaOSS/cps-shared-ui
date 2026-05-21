@@ -83,6 +83,14 @@ $hover-transition-duration: 0.2s;
           }
         }
       }
+
+      &:focus-visible {
+        @include focus-ring(0, -0.0625rem, 0.25rem);
+        &::before,
+        &::after {
+          pointer-events: none;
+        }
+      }
     }
 
     .cps-select-label {
