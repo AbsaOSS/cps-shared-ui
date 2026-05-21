@@ -1,11 +1,12 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
-  Inject,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -14,7 +15,6 @@ import {
   Output,
   Self,
   ViewChild,
-  PLATFORM_ID,
   type SimpleChanges
 } from '@angular/core';
 import {
@@ -25,6 +25,7 @@ import {
 } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
   getComputedLabel
@@ -47,7 +48,6 @@ import {
 } from '../cps-menu/cps-menu.component';
 import { Scroller, ScrollerModule } from 'primeng/scroller';
 
-const DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX = 44;
 const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.75;
 const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
 
@@ -429,11 +429,16 @@ export class CpsAutocompleteComponent
   optionHighlightedIndex = -1;
   isArrowNavigating = false;
 
-  virtualScrollItemSizePx = DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX;
+  readonly virtualScrollItemSizePx = computed(
+    () =>
+      (this._cpsRootFontSizeService?.fontSize() ?? 16) *
+      VIRTUAL_SCROLL_ITEM_SIZE_REM
+  );
+
   virtualListHeightRem =
     VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
 
-  autocompleteBoxWidthRem = 0;
+  autocompleteBoxWidthPx = 0;
   resizeObserver: ResizeObserver;
 
   isTimePickerField = false;
@@ -447,7 +452,7 @@ export class CpsAutocompleteComponent
     'cps-autocomplete-option'
   );
 
-  private _rootFontSizePx = 16;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
@@ -457,8 +462,6 @@ export class CpsAutocompleteComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object,
     private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
@@ -468,24 +471,14 @@ export class CpsAutocompleteComponent
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         if (entry?.target)
-          this.autocompleteBoxWidthRem = this._pxToRem(
-            (entry.target as any).offsetWidth
-          );
+          this.autocompleteBoxWidthPx = (entry.target as any).offsetWidth;
       });
     });
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
-    this.virtualScrollItemSizePx =
-      this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
-    this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
     }
@@ -850,6 +843,7 @@ export class CpsAutocompleteComponent
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM *
       Math.min(currentLen, VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS);
+    this.virtualList?.setSpacerSize();
   }
 
   hasSelectedValue(): boolean {
@@ -1141,8 +1135,8 @@ export class CpsAutocompleteComponent
       return;
     }
 
-    const itemTop = index * this.virtualScrollItemSizePx;
-    const itemBottom = itemTop + this.virtualScrollItemSizePx;
+    const itemTop = index * this.virtualScrollItemSizePx();
+    const itemBottom = itemTop + this.virtualScrollItemSizePx();
 
     const viewportTop = scrollerEl.scrollTop;
     const viewportBottom = viewportTop + scrollerEl.clientHeight;
@@ -1224,9 +1218,5 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       this.focusInput();
     }, 0);
-  }
-
-  private _pxToRem(px: number): number {
-    return px / this._rootFontSizePx;
   }
 }
