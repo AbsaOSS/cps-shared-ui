@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -15,8 +15,9 @@ import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
 import { CpsAutocompleteComponent } from './cps-autocomplete.component';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
+const mockFontSize = signal(16);
 const mockRootFontSizeService = {
-  fontSize: () => 16
+  fontSize: mockFontSize.asReadonly()
 };
 
 describe('CpsAutocompleteComponent', () => {
@@ -55,8 +56,17 @@ describe('CpsAutocompleteComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    mockFontSize.set(16);
+  });
+
   it('should create the component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should update virtualScrollItemSizePx when root font size changes', () => {
+    mockFontSize.set(20);
+    expect(component.virtualScrollItemSizePx()).toBe(20 * 2.75);
   });
 
   it('should display the label when provided', () => {
