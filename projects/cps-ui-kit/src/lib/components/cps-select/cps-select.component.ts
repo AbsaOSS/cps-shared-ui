@@ -28,6 +28,7 @@ import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { getOptionProp, OptionKey } from '../../utils/internal/option-utils';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { Scroller, ScrollerModule } from 'primeng/scroller';
 
@@ -148,22 +149,22 @@ export class CpsSelectComponent
   @Input() keepInitialOrder = false;
 
   /**
-   * Name of the label field of an option.
+   * Name of the label field of an option, or a function that receives the option and returns the label.
    * @group Props
    */
-  @Input() optionLabel = 'label';
+  @Input() optionLabel: OptionKey = 'label';
 
   /**
-   * Name of the value field of an option. Needed only if returnObject prop is false.
+   * Name of the value field of an option, or a function that receives the option and returns the value. Needed only if returnObject prop is false.
    * @group Props
    */
-  @Input() optionValue = 'value';
+  @Input() optionValue: OptionKey = 'value';
 
   /**
-   * Name of the info field of an option, shows the additional information text.
+   * Name of the info field of an option, or a function that receives the option and returns the info text.
    * @group Props
    */
-  @Input() optionInfo = 'info';
+  @Input() optionInfo: OptionKey = 'info';
 
   /**
    * Name of the icon field of an option, shows the icon.
@@ -419,6 +420,10 @@ export class CpsSelectComponent
     );
   }
 
+  getProp(option: any, key: OptionKey): any {
+    return getOptionProp(option, key);
+  }
+
   select(option: any, byValue: boolean): void {
     function includes(array: any[], val: any): boolean {
       return array?.some((item) => isEqual(item, val)) || false;
@@ -427,7 +432,7 @@ export class CpsSelectComponent
       ? option
       : this.returnObject
         ? option
-        : option[this.optionValue];
+        : getOptionProp(option, this.optionValue);
     if (this.multiple) {
       let res = [];
       if (includes(this.value, val)) {
@@ -435,7 +440,9 @@ export class CpsSelectComponent
       } else {
         if (this.keepInitialOrder) {
           this.options.forEach((o) => {
-            const ov = this.returnObject ? o : o[this.optionValue];
+            const ov = this.returnObject
+              ? o
+              : getOptionProp(o, this.optionValue);
             if (
               this.value.some((v: any) => isEqual(v, ov)) ||
               isEqual(val, ov)
@@ -445,12 +452,15 @@ export class CpsSelectComponent
           });
         } else {
           const opt = this.options.find((o) => {
-            return isEqual(val, this.returnObject ? o : o[this.optionValue]);
+            return isEqual(
+              val,
+              this.returnObject ? o : getOptionProp(o, this.optionValue)
+            );
           });
           if (opt) {
             res = [
               ...this.value,
-              this.returnObject ? opt : opt[this.optionValue]
+              this.returnObject ? opt : getOptionProp(opt, this.optionValue)
             ];
           }
         }
@@ -578,7 +588,7 @@ export class CpsSelectComponent
         res = this.options;
       } else {
         this.options.forEach((o) => {
-          res.push(o[this.optionValue]);
+          res.push(getOptionProp(o, this.optionValue));
         });
       }
     }

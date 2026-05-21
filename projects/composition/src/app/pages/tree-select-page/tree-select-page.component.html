@@ -90,6 +90,15 @@
       </div>
 
       <cps-tree-select
+        label="Tree select with function-based optionLabel (computed value)"
+        [options]="options"
+        [optionLabel]="getLabel"
+        optionInfo="attrType"
+        placeholder="Select element"
+        [clearable]="true"
+        hint="optionLabel uses a function: (option) => option.label + ' (' + option.attrType + ')'">
+      </cps-tree-select>
+      <cps-tree-select
         label="Underlined tree select"
         appearance="underlined"
         [options]="options"

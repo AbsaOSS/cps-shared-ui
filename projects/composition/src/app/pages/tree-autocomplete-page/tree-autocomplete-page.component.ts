@@ -124,6 +124,9 @@ export class TreeAutocompletePageComponent implements OnInit {
 
   componentData = ComponentData;
 
+  getLabel = (option: any): string =>
+    option.label + (option.attrType ? ` (${option.attrType})` : '');
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 

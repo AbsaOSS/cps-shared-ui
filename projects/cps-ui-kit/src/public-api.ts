@@ -65,3 +65,4 @@ export * from './lib/services/cps-theme/cps-theme.service';
 export * from './lib/services/cps-cron-validation/cps-cron-validation.service';
 
 export * from './lib/utils/colors-utils';
+export { OptionKey } from './lib/utils/internal/option-utils';
