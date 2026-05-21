@@ -25,6 +25,7 @@ describe('CpsButtonComponent', () => {
     expect(component.contentColor).toBe('white');
     expect(component.borderRadius).toBe('0.25rem');
     expect(component.type).toBe('solid');
+    expect(component.nativeType).toBe('button');
     expect(component.label).toBe('');
     expect(component.icon).toBe('');
     expect(component.iconPosition).toBe('before');
@@ -249,6 +250,36 @@ describe('CpsButtonComponent', () => {
     const button = fixture.nativeElement.querySelector('button');
     button.dispatchEvent(new Event('blur'));
     expect(component.enterActive).toBe(false);
+  });
+
+  describe('nativeType', () => {
+    it('should default native type attribute to "button"', () => {
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+    });
+
+    it('should set native type attribute to "submit"', () => {
+      fixture.componentRef.setInput('nativeType', 'submit');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('submit');
+    });
+
+    it('should set native type attribute to "reset"', () => {
+      fixture.componentRef.setInput('nativeType', 'reset');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('reset');
+    });
+
+    it('should not affect styling type when nativeType changes', () => {
+      fixture.componentRef.setInput('type', 'outlined');
+      fixture.componentRef.setInput('nativeType', 'submit');
+      fixture.detectChanges();
+      expect(component.classesList).toContain('cps-button--outlined');
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('submit');
+    });
   });
 
   describe('aria-label', () => {

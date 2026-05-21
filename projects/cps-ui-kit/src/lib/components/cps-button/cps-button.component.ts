@@ -50,6 +50,12 @@ export class CpsButtonComponent implements OnChanges {
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
 
   /**
+   * Native HTML button type attribute, it can be 'button', 'submit' or 'reset'.
+   * @group Props
+   */
+  @Input() nativeType: 'button' | 'submit' | 'reset' = 'button';
+
+  /**
    * Label or text on the button.
    * @group Props
    */
