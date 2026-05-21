@@ -8,22 +8,26 @@ on:
       - 'projects/cps-ui-kit/**'
       - '.github/workflows/cps-ui-kit-publish.yml'
 
+permissions:
+  contents: read
+
 jobs:
   version-bump:
     if: "!contains(github.event.head_commit.message, 'Bump version to') && !contains(github.event.head_commit.message, '#SkipVersionBump')"
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Use Node.js v22.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
           node-version: 22.x
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Bump version
         id: bump
@@ -32,7 +36,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           version=$(npm version minor -m "Bump version to %s")
-          echo "::set-output name=version::$version"
+          echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Commit and push
         working-directory: projects/cps-ui-kit
@@ -45,29 +49,23 @@ jobs:
     needs: version-bump
     runs-on: ubuntu-latest
     if: always() && !cancelled() && !failure() && !contains(github.event.head_commit.message, 'Bump version to')
-
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fetch latest commits
         run: git pull origin master
 
-      - name: Use Node.js v22.x
-        uses: actions/setup-node@v3
+      - name: Use Node.js v24.x
+        uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: projects/cps-ui-kit/node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('projects/cps-ui-kit/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node_modules-
 
       - name: Install dependencies
         run: npm ci
@@ -81,6 +79,4 @@ jobs:
 
       - name: Publish to NPM registry
         working-directory: dist/cps-ui-kit
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: NODE_AUTH_TOKEN="" npm publish
