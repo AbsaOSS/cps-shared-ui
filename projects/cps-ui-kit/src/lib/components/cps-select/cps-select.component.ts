@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
   inject,
@@ -53,7 +54,6 @@ import { Scroller, ScrollerModule } from 'primeng/scroller';
  */
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
-const DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX = 44;
 const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.75;
 const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
 
@@ -353,17 +353,19 @@ export class CpsSelectComponent
   optionHighlightedIndex = -1;
   isArrowNavigating = false;
 
-  virtualScrollItemSizePx = DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX;
+  readonly virtualScrollItemSizePx = computed(
+    () =>
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
+      VIRTUAL_SCROLL_ITEM_SIZE_REM
+  );
+
   virtualListHeightRem =
     VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
 
-  selectBoxWidthRem = 0;
+  selectBoxWidthPx = 0;
   resizeObserver: ResizeObserver;
 
   private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
-  private get _rootFontSizePx(): number {
-    return this._cpsRootFontSizeService?.fontSize() ?? 16;
-  }
 
   readonly optionsListId = generateUniqueId('cps-select-options-list');
   readonly selectAllOptionId = generateUniqueId('cps-select-option-select-all');
@@ -377,16 +379,12 @@ export class CpsSelectComponent
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         if (entry?.target)
-          this.selectBoxWidthRem = this._pxToRem(
-            (entry.target as any).offsetWidth
-          );
+          this.selectBoxWidthPx = (entry.target as any).offsetWidth;
       });
     });
   }
 
   ngOnInit() {
-    this.virtualScrollItemSizePx =
-      this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
     this.cvtWidth = convertSize(this.width);
@@ -475,6 +473,7 @@ export class CpsSelectComponent
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM *
       Math.min(currentLen, VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS);
+    this.virtualList?.setSpacerSize();
   }
 
   select(option: any, byValue: boolean): void {
@@ -859,8 +858,8 @@ export class CpsSelectComponent
       return;
     }
 
-    const itemTop = index * this.virtualScrollItemSizePx;
-    const itemBottom = itemTop + this.virtualScrollItemSizePx;
+    const itemTop = index * this.virtualScrollItemSizePx();
+    const itemBottom = itemTop + this.virtualScrollItemSizePx();
 
     const viewportTop = scrollerEl.scrollTop;
     const viewportBottom = viewportTop + scrollerEl.clientHeight;
@@ -879,9 +878,5 @@ export class CpsSelectComponent
       scrollerEl.scrollHeight - scrollerEl.clientHeight
     );
     scrollerEl.scrollTop = Math.min(Math.max(0, nextTop), maxTop);
-  }
-
-  private _pxToRem(px: number): number {
-    return px / this._rootFontSizePx;
   }
 }

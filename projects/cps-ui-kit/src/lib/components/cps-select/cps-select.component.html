@@ -161,7 +161,7 @@
         aria-orientation="vertical"
         [attr.aria-multiselectable]="!!multiple"
         class="cps-select-options"
-        [style.width.rem]="selectBoxWidthRem">
+        [style.width.px]="selectBoxWidthPx">
         @if (!virtualScroll) {
           @if (multiple && selectAll && options.length > 1) {
             <div
@@ -206,7 +206,7 @@
             [delay]="0"
             [scrollHeight]="virtualListHeightRem + 'rem'"
             [options]="{ numToleratedItems: numToleratedItems }"
-            [itemSize]="virtualScrollItemSizePx">
+            [itemSize]="virtualScrollItemSizePx()">
             <ng-template pTemplate="item" let-item let-options="options">
               <ng-container
                 *ngTemplateOutlet="

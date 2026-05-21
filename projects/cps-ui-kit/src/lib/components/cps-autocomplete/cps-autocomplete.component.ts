@@ -431,7 +431,7 @@ export class CpsAutocompleteComponent
 
   readonly virtualScrollItemSizePx = computed(
     () =>
-      (this._cpsRootFontSizeService?.fontSize() ?? 16) *
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
       VIRTUAL_SCROLL_ITEM_SIZE_REM
   );
 
@@ -479,6 +479,7 @@ export class CpsAutocompleteComponent
   ngOnInit() {
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
+    this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
     }
