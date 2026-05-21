@@ -1,13 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SimpleChange } from '@angular/core';
+import { signal, SimpleChange } from '@angular/core';
 import {
   CpsButtonToggleComponent,
   CpsButtonToggleOption
 } from './cps-button-toggle.component';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
+const mockFontSize = signal(16);
+
 const mockRootFontSizeService = {
-  fontSize: () => 16
+  fontSize: mockFontSize.asReadonly()
 };
 
 const OPTIONS: CpsButtonToggleOption[] = [
@@ -35,6 +37,10 @@ describe('CpsButtonToggleComponent', () => {
     component = fixture.componentInstance;
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    mockFontSize.set(16);
   });
 
   it('should create', () => {
@@ -353,12 +359,12 @@ describe('CpsButtonToggleComponent', () => {
     it('should not modify largestButtonWidthRem when equalWidths is false', () => {
       component.largestButtonWidthRem = 5;
       fixture.componentRef.setInput('equalWidths', false);
-      (component as any)._setEqualWidths();
+      (component as any)._setEqualWidths(16);
       expect(component.largestButtonWidthRem).toBe(5);
     });
 
     it('should set largestButtonWidthRem to padding baseline when all option labels have offsetWidth=0', () => {
-      (component as any)._setEqualWidths();
+      (component as any)._setEqualWidths(16);
       expect(component.largestButtonWidthRem).toBeCloseTo(1.625);
     });
 
@@ -366,7 +372,7 @@ describe('CpsButtonToggleComponent', () => {
       fixture.componentRef.setInput('options', [
         { value: 'a', icon: 'home', label: 'Home' }
       ]);
-      (component as any)._setEqualWidths();
+      (component as any)._setEqualWidths(16);
       expect(component.largestButtonWidthRem).toBeCloseTo(3.125);
     });
 
@@ -374,7 +380,7 @@ describe('CpsButtonToggleComponent', () => {
       fixture.componentRef.setInput('options', [
         { value: 'a', icon: 'home', ariaLabel: 'Home' }
       ]);
-      (component as any)._setEqualWidths();
+      (component as any)._setEqualWidths(16);
       expect(component.largestButtonWidthRem).toBeCloseTo(2.625);
     });
 
@@ -383,8 +389,16 @@ describe('CpsButtonToggleComponent', () => {
         { value: 'a', label: 'Alpha' },
         { value: 'b', icon: 'home', label: 'Beta' }
       ]);
-      (component as any)._setEqualWidths();
+      (component as any)._setEqualWidths(16);
       expect(component.largestButtonWidthRem).toBeCloseTo(3.125);
+    });
+
+    it('should recalculate equal widths when root font size signal changes', async () => {
+      const spy = jest.spyOn(component as any, '_setEqualWidths');
+      mockFontSize.set(20);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(spy).toHaveBeenCalledWith(20);
     });
   });
 });
