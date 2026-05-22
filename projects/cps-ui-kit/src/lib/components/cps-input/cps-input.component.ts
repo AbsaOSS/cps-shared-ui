@@ -261,8 +261,10 @@ export class CpsInputComponent
 
   currentType = '';
   cvtWidth = '';
+  isKeyboardFocused = false;
   readonly inputId = generateUniqueId('cps-input');
 
+  private _mouseActivated = false;
   private _statusChangesSubscription?: Subscription;
   private _value = '';
 
@@ -419,13 +421,20 @@ export class CpsInputComponent
   }
 
   onBlur() {
+    this.isKeyboardFocused = false;
     this._checkErrors();
     this.blurred.emit();
   }
 
   onFocus() {
+    this.isKeyboardFocused = !this._mouseActivated;
+    this._mouseActivated = false;
     this._control?.control?.markAsTouched();
     this.focused.emit();
+  }
+
+  onInputMousedown() {
+    this._mouseActivated = true;
   }
 
   focus() {

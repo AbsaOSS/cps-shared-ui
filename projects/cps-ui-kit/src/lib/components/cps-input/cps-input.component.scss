@@ -52,6 +52,13 @@ $hover-transition-duration: 0.2s;
       &:focus-within:not(:has(input:read-only)) {
         border-color: $color-calm;
       }
+      &.keyboard-focused {
+        @include focus-ring(0, -0.0625rem);
+        &::before,
+        &::after {
+          pointer-events: none;
+        }
+      }
       &:has(input:disabled:not([readonly])) {
         background-color: $input-background-disabled;
       }

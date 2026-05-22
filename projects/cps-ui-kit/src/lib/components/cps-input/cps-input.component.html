@@ -25,7 +25,8 @@
     [class.clearable]="clearable"
     [class.persistent-clear]="persistentClear"
     [class.borderless]="appearance === 'borderless'"
-    [class.underlined]="appearance === 'underlined'">
+    [class.underlined]="appearance === 'underlined'"
+    [class.keyboard-focused]="isKeyboardFocused">
     @if (!valueToDisplay) {
       <input
         [id]="inputId"
@@ -42,6 +43,7 @@
         [readonly]="readonly"
         (keydown.enter)="onInputEnterKeyDown()"
         [style.width]="cvtWidth"
+        (mousedown)="onInputMousedown()"
         (blur)="onBlur()"
         (focus)="onFocus()" />
     }
