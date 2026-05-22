@@ -379,13 +379,13 @@ describe('CpsInputComponent', () => {
       expect(focusSpy).toHaveBeenCalled();
     });
 
-    it('should blur input on enter key', () => {
+    it('should not blur input on enter key', () => {
       const input = fixture.nativeElement.querySelector('input');
       const blurSpy = jest.spyOn(input, 'blur');
 
       component.onInputEnterKeyDown();
 
-      expect(blurSpy).toHaveBeenCalled();
+      expect(blurSpy).not.toHaveBeenCalled();
     });
 
     it('should mark control as touched on focus', () => {
