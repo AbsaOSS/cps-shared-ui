@@ -24,6 +24,7 @@
     role="combobox"
     aria-haspopup="listbox"
     [attr.aria-expanded]="isOpened"
+    [attr.aria-busy]="loading ? true : null"
     [attr.aria-controls]="optionsListId"
     [attr.aria-activedescendant]="activeDescendantId"
     [attr.aria-required]="isRequired || null"

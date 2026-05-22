@@ -33,6 +33,7 @@
         [attr.aria-label]="computedLabel"
         [attr.aria-invalid]="error ? 'true' : null"
         [attr.aria-required]="isRequired || null"
+        [attr.aria-busy]="loading ? true : null"
         spellcheck="false"
         [type]="currentType"
         autocomplete="off"
@@ -51,6 +52,7 @@
     @if (valueToDisplay) {
       <input
         [attr.aria-label]="computedLabel"
+        [attr.aria-busy]="loading ? true : null"
         [value]="valueToDisplay"
         [disabled]="true"
         [readonly]="true"

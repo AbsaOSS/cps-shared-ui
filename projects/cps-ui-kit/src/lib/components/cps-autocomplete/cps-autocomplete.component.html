@@ -327,6 +327,7 @@
     role="combobox"
     aria-autocomplete="list"
     aria-haspopup="listbox"
+    [attr.aria-busy]="loading || validating ? true : null"
     [attr.aria-invalid]="error || externalError ? 'true' : null"
     [attr.aria-controls]="optionsListId"
     [attr.aria-activedescendant]="activeDescendantId"
