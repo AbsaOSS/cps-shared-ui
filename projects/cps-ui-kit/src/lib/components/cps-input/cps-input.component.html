@@ -97,15 +97,15 @@
       <div class="cps-input-action-btns">
         @if (clearable) {
           <span
+            class="clear-btn"
+            role="button"
+            tabindex="0"
+            aria-label="Clear"
             [style.visibility]="
               persistentClear || (!persistentClear && value)
                 ? 'visible'
                 : 'hidden'
             "
-            role="button"
-            tabindex="0"
-            aria-label="Clear"
-            class="clear-btn"
             (mousedown)="$event.preventDefault()"
             (keydown.enter)="onClear()"
             (keydown.space)="$event.preventDefault(); onClear()">
@@ -115,19 +115,19 @@
         @if (type === 'password') {
           <span
             class="password-show-btn"
+            [class.password-show-btn-active]="currentType === 'text'"
             role="button"
             tabindex="0"
             [attr.aria-label]="
               currentType === 'password' ? 'Show password' : 'Hide password'
             "
             [attr.aria-pressed]="currentType !== 'password'"
-            [class.password-show-btn-active]="currentType === 'text'"
             (mousedown)="$event.preventDefault()"
             (keydown.enter)="togglePassword()"
             (keydown.space)="$event.preventDefault(); togglePassword()">
             <cps-icon
               icon="eye"
-              size="18px"
+              size="1.125rem"
               (click)="togglePassword()"></cps-icon>
           </span>
         }

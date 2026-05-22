@@ -123,14 +123,16 @@ $hover-transition-duration: 0.2s;
       .cps-input-action-btns {
         display: flex;
         position: absolute;
-        top: 50%;
-        right: 0.6875rem;
-        margin-top: -0.5rem;
+        top: 0;
+        bottom: 0;
+        right: 0.5rem;
+        align-items: center;
 
         .clear-btn {
           display: flex;
           cursor: pointer;
           color: var(--cps-state-error);
+          padding: 0.25rem;
           cps-icon {
             opacity: 0;
             transition-duration: $hover-transition-duration;
@@ -150,9 +152,12 @@ $hover-transition-duration: 0.2s;
         }
 
         .password-show-btn {
-          margin-left: 0.5rem;
+          margin-top: 0.125rem;
+          margin-left: 0.0625rem;
           cursor: pointer;
           color: $input-pass-show-btn-color;
+          display: flex;
+          padding: 0.1875rem;
           &-active {
             color: $color-calm;
           }
@@ -234,12 +239,12 @@ $hover-transition-duration: 0.2s;
     }
 
     .password.clearable > input {
-      padding-right: 3.8rem;
+      padding-right: 3.75rem;
     }
 
     .password > input,
     .clearable > input {
-      padding-right: 2.2rem;
+      padding-right: 2.5rem;
     }
 
     .cps-input-hint {
