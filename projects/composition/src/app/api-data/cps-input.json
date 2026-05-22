@@ -106,7 +106,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "iconSizeType",
-                        "default": "18px",
+                        "default": "1.125rem",
                         "description": "Size of icon before input value."
                     },
                     {
@@ -196,6 +196,14 @@
                         "type": "string",
                         "default": "",
                         "description": "Readonly value to display inside of input field."
+                    },
+                    {
+                        "name": "prefixIconAriaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the clickable prefix icon, required when prefixIconClickable is true."
                     },
                     {
                         "name": "value",
