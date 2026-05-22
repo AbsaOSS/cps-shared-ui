@@ -49,9 +49,7 @@ $hover-transition-duration: 0.2s;
           }
         }
       }
-      &:focus-within:not(:has(input:read-only)) {
-        border-color: $color-calm;
-      }
+      &:focus-within:not(:has(input:read-only)),
       &.keyboard-focused:has(input:read-only) {
         border-color: $color-calm;
       }
