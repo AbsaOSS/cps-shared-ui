@@ -52,13 +52,21 @@ $hover-transition-duration: 0.2s;
       &:focus-within:not(:has(input:read-only)) {
         border-color: $color-calm;
       }
+      &.keyboard-focused:has(input:read-only) {
+        border-color: $color-calm;
+      }
       &.keyboard-focused {
-        @include focus-ring(0, -0.0625rem);
+        @include focus-ring(0.0625rem, 0, 0.25rem);
         &::before,
         &::after {
           pointer-events: none;
         }
       }
+      &.keyboard-focused.underlined,
+      &.keyboard-focused.borderless {
+        @include focus-ring(0, -0.0625rem, 0.25rem);
+      }
+
       &:has(input:disabled:not([readonly])) {
         background-color: $input-background-disabled;
       }
@@ -280,6 +288,7 @@ $hover-transition-duration: 0.2s;
       }
     }
     ::placeholder {
+      user-select: none;
       font-family: inherit;
       color: $input-placeholder-color;
       font-style: italic;
