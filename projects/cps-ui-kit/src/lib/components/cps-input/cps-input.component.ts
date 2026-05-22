@@ -131,6 +131,12 @@ export class CpsInputComponent
   @Input() prefixIconSize: iconSizeType = '1.125rem';
 
   /**
+   * Aria label for the clickable prefix icon, required when prefixIconClickable is true.
+   * @group Props
+   */
+  @Input() prefixIconAriaLabel = '';
+
+  /**
    * Text before input value.
    * @group Props
    */
@@ -195,12 +201,6 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() valueToDisplay = '';
-
-  /**
-   * Aria label for the clickable prefix icon, required when prefixIconClickable is true.
-   * @group Props
-   */
-  @Input() prefixIconAriaLabel = '';
 
   /**
    * Value of the input.
