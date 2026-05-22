@@ -141,6 +141,7 @@ $hover-transition-duration: 0.2s;
         outline: none;
         font-family: inherit;
         &::placeholder {
+          user-select: none;
           color: $autocomplete-placeholder-color;
           font-style: italic;
           opacity: 1; /* Firefox */
