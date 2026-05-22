@@ -34,7 +34,7 @@ $hover-transition-duration: 0.2s;
       align-items: stretch;
       min-height: 2.375rem;
       border: 0.0625rem solid $input-border-color;
-      border-radius: var(--cps-border-radius-small);
+      border-radius: 0.25rem;
       background: var(--cps-input-background);
       transition-duration: $hover-transition-duration;
       &:hover {
