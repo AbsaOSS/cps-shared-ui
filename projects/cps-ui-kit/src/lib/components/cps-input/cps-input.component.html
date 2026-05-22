@@ -87,6 +87,7 @@
 
     @if (valueToDisplay) {
       <input
+        [id]="inputId"
         [attr.aria-label]="computedLabel"
         [attr.aria-busy]="loading ? true : null"
         [value]="valueToDisplay"
@@ -109,9 +110,10 @@
                 : 'hidden'
             "
             (mousedown)="$event.preventDefault()"
+            (click)="onClear()"
             (keydown.enter)="onClear()"
             (keydown.space)="$event.preventDefault(); onClear()">
-            <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
+            <cps-icon icon="delete" size="small"></cps-icon>
           </span>
         }
         @if (type === 'password') {
@@ -125,12 +127,10 @@
             "
             [attr.aria-pressed]="currentType !== 'password'"
             (mousedown)="$event.preventDefault()"
+            (click)="togglePassword()"
             (keydown.enter)="togglePassword()"
             (keydown.space)="$event.preventDefault(); togglePassword()">
-            <cps-icon
-              icon="eye"
-              size="1.125rem"
-              (click)="togglePassword()"></cps-icon>
+            <cps-icon icon="eye" size="1.125rem"></cps-icon>
           </span>
         }
       </div>
