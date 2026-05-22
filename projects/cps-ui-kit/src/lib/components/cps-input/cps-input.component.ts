@@ -360,7 +360,7 @@ export class CpsInputComponent
   onTouched = () => {};
 
   onInputEnterKeyDown() {
-    this.elementRef?.nativeElement?.querySelector('input')?.blur();
+    this._checkErrors();
     this.enterClicked.emit();
   }
 
@@ -398,6 +398,7 @@ export class CpsInputComponent
   onClear() {
     this.clear();
     this.cleared.emit();
+    this.focus();
   }
 
   clear() {
