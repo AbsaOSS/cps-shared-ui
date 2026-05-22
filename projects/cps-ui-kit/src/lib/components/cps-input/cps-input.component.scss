@@ -190,13 +190,14 @@ $hover-transition-duration: 0.2s;
         display: flex;
         order: -1;
         flex-shrink: 0;
-        padding-left: 0.75rem;
+        padding-left: 0.5rem;
         &-icon {
           display: flex;
-          flex-direction: column;
-          justify-content: center;
+          align-self: center;
+          padding: 0.1875rem;
+          margin-left: 0.0625rem;
+          margin-right: 0.3125rem;
           transition-duration: $hover-transition-duration;
-          padding-right: 0.5rem;
           color: $input-prefix-icon-color;
           &:focus {
             outline: none;
@@ -212,6 +213,7 @@ $hover-transition-duration: 0.2s;
           color: $input-prefix-text-color;
           cursor: default;
           line-height: 1.2;
+          padding-left: 0.25rem;
           padding-right: 0.5rem;
         }
       }
