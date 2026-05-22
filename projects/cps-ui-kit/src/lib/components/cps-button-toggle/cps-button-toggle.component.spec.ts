@@ -35,6 +35,7 @@ describe('CpsButtonToggleComponent', () => {
 
     fixture = TestBed.createComponent(CpsButtonToggleComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Toggle group');
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
   });
@@ -49,19 +50,22 @@ describe('CpsButtonToggleComponent', () => {
 
   describe('default values', () => {
     it('should have correct default input values', () => {
-      expect(component.label).toBe('');
-      expect(component.ariaLabel).toBe('');
-      expect(component.multiple).toBe(false);
-      expect(component.disabled).toBe(false);
-      expect(component.mandatory).toBe(true);
-      expect(component.equalWidths).toBe(true);
-      expect(component.optionTooltipPosition).toBe('bottom');
-      expect(component.infoTooltip).toBe('');
-      expect(component.infoTooltipClass).toBe('cps-tooltip-content');
-      expect(component.infoTooltipMaxWidth).toBe('100%');
-      expect(component.infoTooltipPersistent).toBe(false);
-      expect(component.infoTooltipPosition).toBe('top');
-      expect(component.value).toBeUndefined();
+      const defaultComponent = TestBed.createComponent(
+        CpsButtonToggleComponent
+      ).componentInstance;
+      expect(defaultComponent.label).toBe('');
+      expect(defaultComponent.ariaLabel).toBe('');
+      expect(defaultComponent.multiple).toBe(false);
+      expect(defaultComponent.disabled).toBe(false);
+      expect(defaultComponent.mandatory).toBe(true);
+      expect(defaultComponent.equalWidths).toBe(true);
+      expect(defaultComponent.optionTooltipPosition).toBe('bottom');
+      expect(defaultComponent.infoTooltip).toBe('');
+      expect(defaultComponent.infoTooltipClass).toBe('cps-tooltip-content');
+      expect(defaultComponent.infoTooltipMaxWidth).toBe('100%');
+      expect(defaultComponent.infoTooltipPersistent).toBe(false);
+      expect(defaultComponent.infoTooltipPosition).toBe('top');
+      expect(defaultComponent.value).toBeUndefined();
     });
   });
 
@@ -106,6 +110,7 @@ describe('CpsButtonToggleComponent', () => {
 
     it('should fall back to label for role=group aria-label when ariaLabel is empty', () => {
       fixture.componentRef.setInput('label', 'My Label');
+      fixture.componentRef.setInput('ariaLabel', '');
       fixture.detectChanges();
       const group = fixture.nativeElement.querySelector('[role="group"]');
       expect(group.getAttribute('aria-label')).toBe('My Label');
@@ -245,6 +250,7 @@ describe('CpsButtonToggleComponent', () => {
 
     it('should initialize value to [] when multiple is true and no value is set', () => {
       const newFixture = TestBed.createComponent(CpsButtonToggleComponent);
+      newFixture.componentRef.setInput('ariaLabel', 'Toggle group');
       newFixture.componentRef.setInput('multiple', true);
       newFixture.componentRef.setInput('options', OPTIONS);
       newFixture.detectChanges();
@@ -283,9 +289,10 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.ariaLabel = '';
       component.ngOnChanges({
         label: new SimpleChange('My Label', '', false),
-        ariaLabel: new SimpleChange('', '', false)
+        ariaLabel: new SimpleChange('Toggle group', '', false)
       });
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('ariaLabel')
@@ -297,6 +304,7 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.ariaLabel = '';
       fixture.componentRef.setInput('label', 'My Label');
       fixture.detectChanges();
       expect(consoleSpy).not.toHaveBeenCalled();
@@ -332,6 +340,7 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.label = 'Toggle';
       const goodOptions = [{ value: 'x', label: 'X' }];
       component.options = goodOptions;
       component.ngOnChanges({
@@ -345,6 +354,7 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.label = 'Toggle';
       const ariaOptions = [{ value: 'x', ariaLabel: 'X' }];
       component.options = ariaOptions;
       component.ngOnChanges({

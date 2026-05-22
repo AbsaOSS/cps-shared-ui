@@ -145,7 +145,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly _cpsFocusService = inject(CPS_FOCUS_SERVICE);
   private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
   private get _rootFontSizePx(): number {
-    return this._cpsRootFontSizeService?.fontSize() ?? 16;
+    return this._cpsRootFontSizeService?.fontSize() || 16;
   }
 
   get ariaLabel(): string | null {

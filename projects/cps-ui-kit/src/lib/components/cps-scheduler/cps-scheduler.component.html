@@ -23,6 +23,7 @@
         <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
+            ariaLabel="Select minutes frequency"
             width="70px"
             [disabled]="disabled"
             [returnObject]="false"
@@ -43,6 +44,7 @@
         <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
+            ariaLabel="Select hours frequency"
             width="70px"
             [disabled]="disabled"
             [returnObject]="false"
@@ -55,6 +57,7 @@
           </cps-select>
           hour(s) on minute
           <cps-select
+            ariaLabel="Select on which minute"
             width="70px"
             [disabled]="disabled"
             [returnObject]="false"
@@ -91,6 +94,7 @@
               ">
               Every
               <cps-select
+                ariaLabel="Select days frequency"
                 width="70px"
                 data-testid="daily-every-days-input"
                 [disabled]="disabled || state.daily.subTab !== 'everyDays'"
@@ -237,6 +241,7 @@
               ">
               On the
               <cps-select
+                ariaLabel="Select day of month"
                 width="120px"
                 data-testid="monthly-day-select"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
@@ -249,6 +254,7 @@
               </cps-select>
               of every
               <cps-select
+                ariaLabel="Select months frequency"
                 width="70px"
                 data-testid="monthly-months-input"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
@@ -297,6 +303,7 @@
               ">
               On the
               <cps-select
+                ariaLabel="Select weekday occurrence"
                 width="106px"
                 data-testid="monthly-week-select"
                 [disabled]="
@@ -310,6 +317,7 @@
                 class="cps-scheduler-select-control">
               </cps-select>
               <cps-select
+                ariaLabel="Select weekday"
                 width="130px"
                 data-testid="monthly-weekday-select"
                 [disabled]="
@@ -324,6 +332,7 @@
               </cps-select>
               of every
               <cps-select
+                ariaLabel="Select months frequency"
                 width="90px"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
@@ -338,6 +347,7 @@
               </cps-select>
               month(s) starting in
               <cps-select
+                ariaLabel="Select starting month"
                 width="120px"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
@@ -394,6 +404,7 @@
               ">
               Every
               <cps-select
+                ariaLabel="Select month"
                 width="120px"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
@@ -408,6 +419,7 @@
               </cps-select>
               on the
               <cps-select
+                ariaLabel="Select day of month"
                 width="120px"
                 data-testid="yearly-day-select"
                 [disabled]="
@@ -462,6 +474,7 @@
               ">
               On the
               <cps-select
+                ariaLabel="Select weekday occurrence"
                 width="106px"
                 data-testid="yearly-week-select"
                 [disabled]="
@@ -475,6 +488,7 @@
                 class="cps-scheduler-select-control">
               </cps-select>
               <cps-select
+                ariaLabel="Select weekday"
                 width="120px"
                 data-testid="yearly-weekday-select"
                 [disabled]="
@@ -489,6 +503,7 @@
               </cps-select>
               of
               <cps-select
+                ariaLabel="Select month"
                 width="120px"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
