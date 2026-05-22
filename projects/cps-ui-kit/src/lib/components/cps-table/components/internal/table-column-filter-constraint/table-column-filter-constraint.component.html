@@ -1,6 +1,7 @@
 @switch (type) {
   @case ('text') {
     <cps-input
+      ariaLabel="Text filter"
       [placeholder]="placeholder"
       [hideDetails]="true"
       (keydown.enter)="onEnterKeyDown($event)"
@@ -10,6 +11,7 @@
   }
   @case ('number') {
     <cps-input
+      ariaLabel="Number filter"
       [hideDetails]="true"
       [placeholder]="placeholder"
       (keydown.enter)="onEnterKeyDown($event)"
@@ -30,6 +32,7 @@
   }
   @case ('date') {
     <cps-datepicker
+      ariaLabel="Date filter"
       [openOnInputFocus]="true"
       [hideDetails]="true"
       [placeholder]="placeholder"

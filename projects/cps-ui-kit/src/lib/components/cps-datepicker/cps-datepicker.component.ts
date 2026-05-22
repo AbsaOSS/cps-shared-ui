@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
@@ -44,13 +45,19 @@ export type CpsDatepickerAppearanceType =
   styleUrls: ['./cps-datepicker.component.scss']
 })
 export class CpsDatepickerComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * Label of the datepicker element.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the datepicker component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Determines whether datepicker is disabled.
@@ -206,6 +213,14 @@ export class CpsDatepickerComponent
         this._checkErrors();
       }
     );
+  }
+
+  ngOnChanges() {
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsDatepickerComponent: unlabeled datepicker component must have an ariaLabel for accessibility.'
+      );
+    }
   }
 
   ngOnDestroy() {

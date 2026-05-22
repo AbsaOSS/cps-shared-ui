@@ -14,6 +14,7 @@ describe('CpsInputComponent', () => {
 
     fixture = TestBed.createComponent(CpsInputComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Test input');
     fixture.detectChanges();
   });
 
