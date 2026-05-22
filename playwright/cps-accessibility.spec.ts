@@ -106,7 +106,7 @@ const components: ComponentEntry[] = [
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
   // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
-  // { route: '/input', name: 'Input', selector: 'cps-input' },
+  { route: '/input', name: 'Input', selector: 'cps-input' },
   // { route: '/loader', name: 'Loader', selector: 'cps-loader' },
   {
     route: '/menu',

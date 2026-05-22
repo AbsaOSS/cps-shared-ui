@@ -28,6 +28,7 @@
     [class.underlined]="appearance === 'underlined'">
     @if (!valueToDisplay) {
       <input
+        [attr.aria-label]="computedLabel"
         spellcheck="false"
         [type]="currentType"
         autocomplete="off"

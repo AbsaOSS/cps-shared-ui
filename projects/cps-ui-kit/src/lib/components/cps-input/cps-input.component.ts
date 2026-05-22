@@ -6,11 +6,13 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
@@ -24,6 +26,7 @@ import {
 } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import { getComputedLabel } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsInputAppearanceType is used to define the border of the input field.
@@ -47,13 +50,19 @@ export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
   styleUrls: ['./cps-input.component.scss']
 })
 export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   /**
    * Label of the input element.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the input component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Bottom hint text for the input field.
@@ -286,6 +295,17 @@ export class CpsInputComponent
     this.cdRef.detectChanges();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsInputComponent: unlabeled input component must have an ariaLabel for accessibility.'
+      );
+    }
+  }
+
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
   }
@@ -367,6 +387,14 @@ export class CpsInputComponent
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
+  }
+
+  get computedLabel(): string | null {
+    return getComputedLabel({
+      label: this.ariaLabel || this.label,
+      error: this.error,
+      hideDetails: this.hideDetails
+    });
   }
 
   onClear() {
