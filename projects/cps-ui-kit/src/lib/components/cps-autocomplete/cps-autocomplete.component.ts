@@ -427,10 +427,11 @@ export class CpsAutocompleteComponent
   backspaceClickedOnce = false;
   activeSingle = false;
   optionHighlightedIndex = -1;
+  isArrowNavigating = false;
 
   readonly virtualScrollItemSizePx = computed(
     () =>
-      (this._cpsRootFontSizeService?.fontSize() ?? 16) *
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
       VIRTUAL_SCROLL_ITEM_SIZE_REM
   );
 
@@ -478,6 +479,7 @@ export class CpsAutocompleteComponent
   ngOnInit() {
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
+    this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
     }
@@ -521,12 +523,10 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
-        );
-      }
+    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
+      console.error(
+        'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
+      );
     }
   }
 
@@ -682,10 +682,9 @@ export class CpsAutocompleteComponent
     event?.stopPropagation();
     event?.preventDefault();
 
-    if (
-      (!this.multiple && !this.isEmptyValue()) ||
-      (this.multiple && this.value?.length > 0)
-    ) {
+    const hadValue = this.hasSelectedValue();
+
+    if (hadValue) {
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
@@ -694,9 +693,11 @@ export class CpsAutocompleteComponent
     }
     this.clearInput();
     this._dehighlightOption();
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
+    if (hadValue) {
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -743,18 +744,21 @@ export class CpsAutocompleteComponent
     }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
-    this.onBlur();
   }
 
   onBoxClick() {
+    const wasOpened = this.isOpened;
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
-      if (!this.isOpened) this.filteredOptions = this.options;
+      if (!wasOpened) this.filteredOptions = this.options;
     }
     this._dehighlightOption();
     setTimeout(() => {
-      this.focus();
+      this.focusInput();
+      if (!wasOpened) {
+        this._toggleOptions(true);
+      }
     });
   }
 
@@ -826,7 +830,7 @@ export class CpsAutocompleteComponent
   }
 
   focusInput() {
-    this.autocompleteContainer?.nativeElement?.querySelector('input')?.focus();
+    this.autocompleteInput?.nativeElement?.focus();
   }
 
   focus() {
@@ -843,12 +847,14 @@ export class CpsAutocompleteComponent
     this.virtualList?.setSpacerSize();
   }
 
-  isEmptyValue(): boolean {
+  hasSelectedValue(): boolean {
+    if (this.multiple) {
+      return this.value?.length > 0;
+    }
     return (
-      this.value === null ||
-      this.value === undefined ||
-      (typeof this.value === 'string' && this.value.trim() === '') ||
-      Number.isNaN(this.value)
+      this.value != null &&
+      !(typeof this.value === 'string' && this.value.trim() === '') &&
+      !Number.isNaN(this.value)
     );
   }
 
@@ -944,6 +950,7 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       if (this.isOpened && this.filteredOptions.length > 0) {
         this.recalcVirtualListHeight();
+        this._syncHighlightToValue();
 
         const selected =
           this.optionsList.nativeElement.querySelector('.selected');
@@ -953,15 +960,8 @@ export class CpsAutocompleteComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (this.virtualScroll && !this.isEmptyValue()) {
-          let v: any;
-          if (this.multiple) {
-            if (this.value.length > 0) {
-              v = this.value[0];
-            }
-          } else v = this.value;
-          const idx = this.filteredOptions.findIndex((o) => isEqual(o, v));
-          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        } else if (this.virtualScroll && this.optionHighlightedIndex >= 0) {
+          this._scrollVirtualListToIndex(this.optionHighlightedIndex);
         }
       }
     });
@@ -1008,7 +1008,7 @@ export class CpsAutocompleteComponent
   }
 
   private _getValueLabel() {
-    return !this.isEmptyValue()
+    return this.hasSelectedValue()
       ? this.returnObject
         ? this.value[this.optionLabel]
         : this._labelByValue.transform(
@@ -1028,6 +1028,19 @@ export class CpsAutocompleteComponent
 
   private _dehighlightOption() {
     this.optionHighlightedIndex = -1;
+    this.isArrowNavigating = false;
+  }
+
+  private _syncHighlightToValue(): void {
+    if (!this.hasSelectedValue()) return;
+
+    const firstSelected = this.multiple ? this.value[0] : this.value;
+    const idx = this.filteredOptions.findIndex((o) =>
+      isEqual(this.returnObject ? o : o[this.optionValue], firstSelected)
+    );
+    if (idx < 0) return;
+
+    this.optionHighlightedIndex = idx + (this.isSelectAllVisible ? 1 : 0);
   }
 
   private _getHighlightedOptionId(): string | null {
@@ -1067,6 +1080,7 @@ export class CpsAutocompleteComponent
 
     if (this.optionsAriaSetSize < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(
       up,
       this.optionsAriaSetSize
@@ -1090,6 +1104,7 @@ export class CpsAutocompleteComponent
     const len = this.filteredOptions.length;
     if (len < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
     this._syncVirtualHighlightedOptionIntoView();
   }
@@ -1148,13 +1163,23 @@ export class CpsAutocompleteComponent
 
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
-      if (this.multiple) return;
-      // Only reset the value if the inputText was changed by the user
-      if (this.inputText !== this._getValueLabel()) {
-        this.updateValue(this._getEmptyValue());
+      if (this.multiple) {
+        this._closeAndClear();
+        return;
       }
-      this.cdRef.detectChanges();
-      this._closeAndClear();
+      const shouldUpdateValue =
+        this.activeSingle && this.inputText !== this._getValueLabel();
+      this.clearInput();
+      this._dehighlightOption();
+      if (shouldUpdateValue) {
+        setTimeout(() => {
+          this.updateValue(this._getEmptyValue());
+          if (needFocusInput) {
+            this.cdRef.detectChanges();
+            this.focusInput();
+          }
+        }, 0);
+      }
       return;
     }
 

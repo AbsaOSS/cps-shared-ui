@@ -148,15 +148,15 @@ const components: ComponentEntry[] = [
   // },
   { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
   // { route: '/scheduler', name: 'Scheduler', selector: 'cps-scheduler' },
-  // {
-  //   route: '/select',
-  //   name: 'Select',
-  //   selector: ['cps-select', '.cps-select-options-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-select');
-  //     await page.locator('cps-select').first().click();
-  //   }
-  // },
+  {
+    route: '/select',
+    name: 'Select',
+    selector: ['cps-select', '.cps-select-options-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-select');
+      await page.locator('cps-select').first().click();
+    }
+  },
   {
     route: '/sidebar-menu',
     name: 'Sidebar menu',
