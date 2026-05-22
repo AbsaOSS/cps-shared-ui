@@ -27,38 +27,6 @@
     [class.borderless]="appearance === 'borderless'"
     [class.underlined]="appearance === 'underlined'"
     [class.keyboard-focused]="isKeyboardFocused">
-    @if (!valueToDisplay) {
-      <input
-        [id]="inputId"
-        [attr.aria-label]="computedLabel"
-        [attr.aria-invalid]="error ? 'true' : null"
-        [attr.aria-required]="isRequired || null"
-        [attr.aria-busy]="loading ? true : null"
-        spellcheck="false"
-        [type]="currentType"
-        autocomplete="off"
-        [value]="value"
-        (input)="updateValueEvent($event)"
-        [placeholder]="placeholder"
-        [disabled]="disabled"
-        [readonly]="readonly"
-        (keydown.enter)="onInputEnterKeyDown()"
-        [style.width]="cvtWidth"
-        (mousedown)="onInputMousedown()"
-        (blur)="onBlur()"
-        (focus)="onFocus()" />
-    }
-
-    @if (valueToDisplay) {
-      <input
-        [attr.aria-label]="computedLabel"
-        [attr.aria-busy]="loading ? true : null"
-        [value]="valueToDisplay"
-        [disabled]="true"
-        [readonly]="true"
-        [style.width]="cvtWidth" />
-    }
-
     @if (prefixIcon || prefixText) {
       <div class="cps-input-prefix">
         @if (prefixIcon) {
@@ -93,6 +61,38 @@
           </span>
         }
       </div>
+    }
+
+    @if (!valueToDisplay) {
+      <input
+        [id]="inputId"
+        [attr.aria-label]="computedLabel"
+        [attr.aria-invalid]="error ? 'true' : null"
+        [attr.aria-required]="isRequired || null"
+        [attr.aria-busy]="loading ? true : null"
+        spellcheck="false"
+        [type]="currentType"
+        autocomplete="off"
+        [value]="value"
+        (input)="updateValueEvent($event)"
+        [placeholder]="placeholder"
+        [disabled]="disabled"
+        [readonly]="readonly"
+        (keydown.enter)="onInputEnterKeyDown()"
+        [style.width]="cvtWidth"
+        (mousedown)="onInputMousedown()"
+        (blur)="onBlur()"
+        (focus)="onFocus()" />
+    }
+
+    @if (valueToDisplay) {
+      <input
+        [attr.aria-label]="computedLabel"
+        [attr.aria-busy]="loading ? true : null"
+        [value]="valueToDisplay"
+        [disabled]="true"
+        [readonly]="true"
+        [style.width]="cvtWidth" />
     }
 
     @if (!disabled && !readonly) {

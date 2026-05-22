@@ -111,12 +111,12 @@ $hover-transition-duration: 0.2s;
         padding-left: 0;
       }
 
-      input:focus:not(:read-only) + .cps-input-prefix > .cps-input-prefix-icon,
-      input:hover:not(:read-only) + .cps-input-prefix > .cps-input-prefix-icon {
+      &:has(input:focus:not(:read-only)) .cps-input-prefix-icon,
+      &:has(input:hover:not(:read-only)) .cps-input-prefix-icon {
         color: $color-calm;
       }
 
-      input:disabled + .cps-input-prefix > .cps-input-prefix-icon {
+      &:has(input:disabled) .cps-input-prefix-icon {
         color: $input-prefix-icon-color;
       }
 
@@ -182,13 +182,14 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      input:not(:read-only) + .cps-input-prefix:hover > .cps-input-prefix-icon {
+      &:has(input:not(:read-only))
+        .cps-input-prefix:hover
+        > .cps-input-prefix-icon {
         color: $color-calm;
       }
 
       .cps-input-prefix {
         display: flex;
-        order: -1;
         flex-shrink: 0;
         padding-left: 0.5rem;
         &-icon {
