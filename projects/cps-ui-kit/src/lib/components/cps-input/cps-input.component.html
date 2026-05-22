@@ -3,7 +3,7 @@
     <div
       class="cps-input-label"
       [class.cps-input-label-disabled]="disabled && !readonly">
-      <label>{{ label }}</label>
+      <label [attr.for]="inputId">{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
           class="cps-input-label-info-circle"
@@ -28,7 +28,10 @@
     [class.underlined]="appearance === 'underlined'">
     @if (!valueToDisplay) {
       <input
+        [id]="inputId"
         [attr.aria-label]="computedLabel"
+        [attr.aria-invalid]="error ? 'true' : null"
+        [attr.aria-required]="isRequired || null"
         spellcheck="false"
         [type]="currentType"
         autocomplete="off"
@@ -45,6 +48,7 @@
 
     @if (valueToDisplay) {
       <input
+        [attr.aria-label]="computedLabel"
         [value]="valueToDisplay"
         [disabled]="true"
         [readonly]="true"
@@ -54,7 +58,18 @@
     @if (prefixIcon || prefixText) {
       <div class="cps-input-prefix">
         @if (prefixIcon) {
-          <span class="cps-input-prefix-icon">
+          <span
+            class="cps-input-prefix-icon"
+            [attr.role]="prefixIconClickable ? 'button' : null"
+            [attr.tabindex]="
+              prefixIconClickable && !disabled && !readonly ? 0 : null
+            "
+            [attr.aria-label]="
+              prefixIconClickable ? prefixIconAriaLabel || null : null
+            "
+            (click)="onClickPrefixIcon()"
+            (keydown.enter)="onClickPrefixIcon()"
+            (keydown.space)="$event.preventDefault(); onClickPrefixIcon()">
             <cps-icon
               [icon]="prefixIcon"
               [size]="prefixIconSize"
@@ -63,8 +78,7 @@
                 prefixIconClickable && !disabled && !readonly
                   ? 'pointer'
                   : 'default'
-              "
-              (click)="onClickPrefixIcon()">
+              ">
             </cps-icon>
           </span>
         }
@@ -86,14 +100,29 @@
                 ? 'visible'
                 : 'hidden'
             "
-            class="clear-btn">
+            role="button"
+            tabindex="0"
+            aria-label="Clear"
+            class="clear-btn"
+            (mousedown)="$event.preventDefault()"
+            (keydown.enter)="onClear()"
+            (keydown.space)="$event.preventDefault(); onClear()">
             <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
           </span>
         }
         @if (type === 'password') {
           <span
             class="password-show-btn"
-            [class.password-show-btn-active]="currentType === 'text'">
+            role="button"
+            tabindex="0"
+            [attr.aria-label]="
+              currentType === 'password' ? 'Show password' : 'Hide password'
+            "
+            [attr.aria-pressed]="currentType !== 'password'"
+            [class.password-show-btn-active]="currentType === 'text'"
+            (mousedown)="$event.preventDefault()"
+            (keydown.enter)="togglePassword()"
+            (keydown.space)="$event.preventDefault(); togglePassword()">
             <cps-icon
               icon="eye"
               size="18px"
@@ -118,7 +147,7 @@
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-input-error">
+    <div class="cps-input-error" role="alert" aria-live="assertive">
       {{ error }}
     </div>
   }

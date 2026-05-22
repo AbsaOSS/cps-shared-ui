@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $input-hint-color: var(--cps-color-text-mild);
 $input-label-disabled-color: var(--cps-color-text-mild);
@@ -129,6 +131,15 @@ $hover-transition-duration: 0.2s;
               opacity: 1 !important;
             }
           }
+          &:focus {
+            outline: none;
+          }
+          &:focus-visible {
+            @include focus-ring(0.125rem, 0.25rem, 50%);
+            cps-icon {
+              opacity: 1;
+            }
+          }
         }
 
         .password-show-btn {
@@ -143,6 +154,12 @@ $hover-transition-duration: 0.2s;
             &:hover {
               color: $color-calm;
             }
+          }
+          &:focus {
+            outline: none;
+          }
+          &:focus-visible {
+            @include focus-ring();
           }
         }
       }
@@ -163,6 +180,12 @@ $hover-transition-duration: 0.2s;
           transition-duration: $hover-transition-duration;
           padding-right: 0.5rem;
           color: $input-prefix-icon-color;
+          &:focus {
+            outline: none;
+          }
+          &:focus-visible {
+            @include focus-ring();
+          }
         }
         &-text {
           display: flex;

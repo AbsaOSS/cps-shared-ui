@@ -12,7 +12,7 @@ import {
   Self,
   SimpleChanges
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { convertSize } from '../../utils/internal/size-utils';
@@ -23,7 +23,10 @@ import {
 } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
-import { getComputedLabel } from '../../utils/internal/accessibility-utils';
+import {
+  generateUniqueId,
+  getComputedLabel
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsInputAppearanceType is used to define the border of the input field.
@@ -125,7 +128,7 @@ export class CpsInputComponent
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '18px';
+  @Input() prefixIconSize: iconSizeType = '1.125rem';
 
   /**
    * Text before input value.
@@ -194,6 +197,12 @@ export class CpsInputComponent
   @Input() valueToDisplay = '';
 
   /**
+   * Aria label for the clickable prefix icon, required when prefixIconClickable is true.
+   * @group Props
+   */
+  @Input() prefixIconAriaLabel = '';
+
+  /**
    * Value of the input.
    * @default ''
    * @group Props
@@ -252,6 +261,7 @@ export class CpsInputComponent
 
   currentType = '';
   cvtWidth = '';
+  readonly inputId = generateUniqueId('cps-input');
 
   private _statusChangesSubscription?: Subscription;
   private _value = '';
@@ -283,6 +293,11 @@ export class CpsInputComponent
     if (!this.label?.trim() && !this.ariaLabel?.trim()) {
       console.error(
         'CpsInputComponent: unlabeled input component must have an ariaLabel for accessibility.'
+      );
+    }
+    if (this.prefixIconClickable && !this.prefixIconAriaLabel?.trim()) {
+      console.error(
+        'CpsInputComponent: prefixIconClickable requires a prefixIconAriaLabel for accessibility.'
       );
     }
   }
@@ -393,6 +408,10 @@ export class CpsInputComponent
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(_disabled: boolean) {}
+
+  get isRequired(): boolean {
+    return this._control?.control?.hasValidator(Validators.required) ?? false;
+  }
 
   onClickPrefixIcon() {
     if (!this.prefixIconClickable || this.readonly || this.disabled) return;

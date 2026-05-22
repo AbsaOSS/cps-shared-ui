@@ -53,7 +53,9 @@
         <span class="sync-val">{{ syncVal }}</span>
       </div>
       <cps-input
-        label="Underlined input"
+        label="Underlined input with clickable prefix icon"
+        [prefixIconClickable]="true"
+        (prefixIconClicked)="onClickPrefixIcon()"
         prefixIcon="search"
         appearance="underlined"
         placeholder="Search something"

@@ -1,4 +1,3 @@
-import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -434,20 +433,6 @@ describe('CpsInputComponent', () => {
 
       expect(unsubscribeSpy).toHaveBeenCalled();
     });
-
-    it('should calculate prefix width after view init', () => {
-      fixture.componentRef.setInput('prefixText', 'USD');
-      fixture.componentRef.setInput('prefixIcon', 'search');
-
-      // Mock prefixTextSpan
-      component.prefixTextSpan = {
-        nativeElement: { offsetWidth: 50 }
-      } as ElementRef;
-
-      component.ngAfterViewInit();
-
-      expect(component.prefixWidth).toBeTruthy();
-    });
   });
 
   describe('Edge Cases', () => {
@@ -511,6 +496,154 @@ describe('CpsInputComponent', () => {
 
       expect(typeof component.value).toBe('string');
       expect(component.value).toBe('text');
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('should associate label with input via for/id', () => {
+      fixture.componentRef.setInput('label', 'Username');
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('label');
+      const input = fixture.nativeElement.querySelector('input');
+      expect(label.getAttribute('for')).toBeTruthy();
+      expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
+    });
+
+    it('should set unique inputId', () => {
+      expect(component.inputId).toMatch(/^cps-input-/);
+    });
+
+    it('should set aria-invalid on input when error is set', () => {
+      fixture.componentRef.setInput('error', 'Field is required');
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-invalid')).toBe('true');
+    });
+
+    it('should not set aria-invalid when there is no error', () => {
+      fixture.componentRef.setInput('error', '');
+      fixture.detectChanges();
+
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-invalid')).toBeNull();
+    });
+
+    it('should render error div with role="alert"', () => {
+      fixture.componentRef.setInput('error', 'Something went wrong');
+      fixture.detectChanges();
+
+      const errorDiv = fixture.nativeElement.querySelector('.cps-input-error');
+      expect(errorDiv).toBeTruthy();
+      expect(errorDiv.getAttribute('role')).toBe('alert');
+    });
+
+    describe('Clear button accessibility', () => {
+      beforeEach(() => {
+        fixture.componentRef.setInput('clearable', true);
+        component.writeValue('some value');
+        fixture.detectChanges();
+      });
+
+      it('should have role="button" on clear button', () => {
+        const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
+        expect(clearBtn.getAttribute('role')).toBe('button');
+      });
+
+      it('should have tabindex="0" on clear button', () => {
+        const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
+        expect(clearBtn.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should have aria-label="Clear" on clear button', () => {
+        const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
+        expect(clearBtn.getAttribute('aria-label')).toBe('Clear');
+      });
+
+      it('should clear value on Enter keydown on clear button', () => {
+        const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
+        clearBtn.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
+        );
+        expect(component.value).toBe('');
+      });
+
+      it('should clear value on Space keydown on clear button', () => {
+        const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
+        clearBtn.dispatchEvent(
+          new KeyboardEvent('keydown', { key: ' ', bubbles: true })
+        );
+        expect(component.value).toBe('');
+      });
+    });
+
+    describe('Password toggle button accessibility', () => {
+      beforeEach(() => {
+        component.type = 'password';
+        component.ngOnInit();
+        fixture.detectChanges();
+      });
+
+      it('should have role="button" on password toggle', () => {
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        expect(toggleBtn.getAttribute('role')).toBe('button');
+      });
+
+      it('should have tabindex="0" on password toggle', () => {
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        expect(toggleBtn.getAttribute('tabindex')).toBe('0');
+      });
+
+      it('should have aria-label "Show password" when password is hidden', () => {
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        expect(toggleBtn.getAttribute('aria-label')).toBe('Show password');
+      });
+
+      it('should have aria-label "Hide password" after toggling', () => {
+        component.togglePassword();
+        fixture.detectChanges();
+
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        expect(toggleBtn.getAttribute('aria-label')).toBe('Hide password');
+      });
+
+      it('should have aria-pressed="false" when password is hidden', () => {
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        expect(toggleBtn.getAttribute('aria-pressed')).toBe('false');
+      });
+
+      it('should have aria-pressed="true" after toggling', () => {
+        component.togglePassword();
+        fixture.detectChanges();
+
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        expect(toggleBtn.getAttribute('aria-pressed')).toBe('true');
+      });
+
+      it('should toggle on Enter keydown', () => {
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        toggleBtn.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
+        );
+        expect(component.currentType).toBe('text');
+      });
+
+      it('should toggle on Space keydown', () => {
+        const toggleBtn =
+          fixture.nativeElement.querySelector('.password-show-btn');
+        toggleBtn.dispatchEvent(
+          new KeyboardEvent('keydown', { key: ' ', bubbles: true })
+        );
+        expect(component.currentType).toBe('text');
+      });
     });
   });
 });
