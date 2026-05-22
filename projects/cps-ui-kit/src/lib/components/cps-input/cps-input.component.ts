@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -12,8 +10,7 @@ import {
   Optional,
   Output,
   Self,
-  SimpleChanges,
-  ViewChild
+  SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -50,7 +47,7 @@ export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
   styleUrls: ['./cps-input.component.scss']
 })
 export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * Label of the input element.
@@ -253,10 +250,7 @@ export class CpsInputComponent
    */
   @Output() enterClicked = new EventEmitter();
 
-  @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
-
   currentType = '';
-  prefixWidth = '';
   cvtWidth = '';
 
   private _statusChangesSubscription?: Subscription;
@@ -264,8 +258,7 @@ export class CpsInputComponent
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    public elementRef: ElementRef<HTMLElement>,
-    private cdRef: ChangeDetectorRef
+    public elementRef: ElementRef<HTMLElement>
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -281,18 +274,6 @@ export class CpsInputComponent
         this._checkErrors();
       }
     );
-  }
-
-  ngAfterViewInit() {
-    let w = 0;
-    if (this.prefixText) {
-      w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
-    }
-    if (this.prefixIcon) {
-      w += 38 - (this.prefixText ? 14 : 0);
-    }
-    this.prefixWidth = w > 0 ? `${w}px` : '';
-    this.cdRef.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges) {

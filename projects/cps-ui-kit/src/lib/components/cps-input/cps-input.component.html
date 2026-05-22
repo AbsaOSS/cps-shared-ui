@@ -1,4 +1,4 @@
-<div class="cps-input-container" [ngStyle]="{ width: cvtWidth }">
+<div class="cps-input-container" [style.width]="cvtWidth">
   @if (label) {
     <div
       class="cps-input-label"
@@ -38,10 +38,7 @@
         [disabled]="disabled"
         [readonly]="readonly"
         (keydown.enter)="onInputEnterKeyDown()"
-        [ngStyle]="{
-          width: cvtWidth,
-          'padding-left': prefixWidth || 'none'
-        }"
+        [style.width]="cvtWidth"
         (blur)="onBlur()"
         (focus)="onFocus()" />
     }
@@ -51,35 +48,34 @@
         [value]="valueToDisplay"
         [disabled]="true"
         [readonly]="true"
-        [ngStyle]="{
-          width: cvtWidth,
-          'padding-left': prefixWidth || 'none'
-        }" />
+        [style.width]="cvtWidth" />
     }
 
-    <div class="cps-input-prefix">
-      @if (prefixIcon) {
-        <span class="cps-input-prefix-icon">
-          <cps-icon
-            [icon]="prefixIcon"
-            [size]="prefixIconSize"
-            [style.color]="disabled ? 'var(--cps-text-muted)' : null"
-            [style.cursor]="
-              prefixIconClickable && !disabled && !readonly
-                ? 'pointer'
-                : 'default'
-            "
-            (click)="onClickPrefixIcon()">
-          </cps-icon>
-        </span>
-      }
+    @if (prefixIcon || prefixText) {
+      <div class="cps-input-prefix">
+        @if (prefixIcon) {
+          <span class="cps-input-prefix-icon">
+            <cps-icon
+              [icon]="prefixIcon"
+              [size]="prefixIconSize"
+              [style.color]="disabled ? 'var(--cps-text-muted)' : null"
+              [style.cursor]="
+                prefixIconClickable && !disabled && !readonly
+                  ? 'pointer'
+                  : 'default'
+              "
+              (click)="onClickPrefixIcon()">
+            </cps-icon>
+          </span>
+        }
 
-      @if (prefixText) {
-        <span class="cps-input-prefix-text" #prefixTextSpan>
-          {{ prefixText }}
-        </span>
-      }
-    </div>
+        @if (prefixText) {
+          <span class="cps-input-prefix-text">
+            {{ prefixText }}
+          </span>
+        }
+      </div>
+    }
 
     @if (!disabled && !readonly) {
       <div class="cps-input-action-btns">
