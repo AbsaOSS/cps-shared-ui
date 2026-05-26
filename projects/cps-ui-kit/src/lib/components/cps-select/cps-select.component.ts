@@ -26,7 +26,8 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
   generateUniqueId,
-  getComputedLabel
+  getComputedLabel,
+  logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
@@ -399,6 +400,8 @@ export class CpsSelectComponent
     );
 
     this.recalcVirtualListHeight();
+
+    logMissingAriaLabelError('CpsSelectComponent', this.label, this.ariaLabel);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -414,11 +417,8 @@ export class CpsSelectComponent
       });
       this.recalcVirtualListHeight();
     }
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsSelectComponent: unlabeled select component must have an ariaLabel for accessibility.'
-      );
-    }
+
+    logMissingAriaLabelError('CpsSelectComponent', this.label, this.ariaLabel);
   }
 
   ngAfterViewInit(): void {
