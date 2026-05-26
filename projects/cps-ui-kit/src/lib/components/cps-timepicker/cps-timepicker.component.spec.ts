@@ -76,7 +76,7 @@ describe('CpsTimepickerComponent', () => {
       component.ariaLabel = '';
       component.ngOnChanges();
       expect(consoleSpy).toHaveBeenCalledWith(
-        'CpsTimepickerComponent: unlabeled timepicker component must have an ariaLabel for accessibility.'
+        'CpsTimepickerComponent: unlabeled component must have an ariaLabel for accessibility.'
       );
     });
 
