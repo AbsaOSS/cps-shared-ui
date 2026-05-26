@@ -38,7 +38,7 @@
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
       placeholder="HH"></cps-autocomplete>
-    <span class="cps-timepicker-delimiter">:</span>
+    <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
       ariaLabel="Minutes"
@@ -58,9 +58,7 @@
       [externalError]="minutesError"
       placeholder="MM"></cps-autocomplete>
     @if (withSeconds) {
-      <span class="cps-timepicker-delimiter">:</span>
-    }
-    @if (withSeconds) {
+      <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
       <cps-autocomplete
         #secondsField
         ariaLabel="Seconds"
