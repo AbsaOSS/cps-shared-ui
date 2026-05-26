@@ -19,7 +19,8 @@ import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.com
 import { Subscription } from 'rxjs';
 import {
   generateUniqueId,
-  getComputedLabel
+  getComputedLabel,
+  logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 
 /**
@@ -182,14 +183,19 @@ export class CpsRadioGroupComponent
         this._checkErrors();
       }
     );
+    logMissingAriaLabelError(
+      'CpsRadioGroupComponent',
+      this.groupLabel,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(): void {
-    if (!this.groupLabel?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsRadioGroupComponent: unlabeled radio group component must have an ariaLabel for accessibility.'
-      );
-    }
+    logMissingAriaLabelError(
+      'CpsRadioGroupComponent',
+      this.groupLabel,
+      this.ariaLabel
+    );
   }
 
   ngOnDestroy() {

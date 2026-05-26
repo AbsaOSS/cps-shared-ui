@@ -32,3 +32,15 @@ export const focusElement = (element?: HTMLElement): void => {
     setTimeout(() => element.focus());
   }
 };
+
+export const logMissingAriaLabelError = (
+  componentName: string,
+  label?: string,
+  ariaLabel?: string
+): void => {
+  if (!label?.trim() && !ariaLabel?.trim()) {
+    console.error(
+      `${componentName}: unlabeled component must have an ariaLabel for accessibility.`
+    );
+  }
+};

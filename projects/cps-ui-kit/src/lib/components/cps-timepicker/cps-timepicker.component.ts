@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
@@ -20,6 +21,7 @@ import {
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsTime is used to define the time format.
@@ -49,13 +51,19 @@ export interface CpsTime {
   styleUrls: ['./cps-timepicker.component.scss']
 })
 export class CpsTimepickerComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   /**
    * Label of the timepicker.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the timepicker component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Determines whether the timepicker is disabled.
@@ -211,12 +219,26 @@ export class CpsTimepickerComponent
         this._checkErrors();
       }
     );
+
+    logMissingAriaLabelError(
+      'CpsTimepickerComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngAfterViewInit(): void {
     if (this.hoursField) this.hoursField.isTimePickerField = true;
     if (this.minutesField) this.minutesField.isTimePickerField = true;
     if (this.secondsField) this.secondsField.isTimePickerField = true;
+  }
+
+  ngOnChanges(): void {
+    logMissingAriaLabelError(
+      'CpsTimepickerComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnDestroy() {

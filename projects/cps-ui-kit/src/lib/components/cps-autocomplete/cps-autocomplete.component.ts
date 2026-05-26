@@ -28,7 +28,8 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
-  getComputedLabel
+  getComputedLabel,
+  logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
@@ -504,6 +505,12 @@ export class CpsAutocompleteComponent
         this.inputTextDebounced = this.inputText;
         this.inputChanged.emit(val);
       });
+
+    logMissingAriaLabelError(
+      'CpsAutocompleteComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -523,11 +530,12 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
-      );
-    }
+
+    logMissingAriaLabelError(
+      'CpsAutocompleteComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngAfterViewInit(): void {

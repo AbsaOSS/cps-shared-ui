@@ -16,6 +16,7 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsCheckboxComponent is a checkbox element.
@@ -125,14 +126,19 @@ export class CpsCheckboxComponent
 
   ngOnInit(): void {
     this.iconColor = getCSSColor(this.iconColor, this.document);
+    logMissingAriaLabelError(
+      'CpsCheckboxComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(): void {
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
-      );
-    }
+    logMissingAriaLabelError(
+      'CpsCheckboxComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
