@@ -25,7 +25,8 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import {
   generateUniqueId,
-  getComputedLabel
+  getComputedLabel,
+  logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 
 /**
@@ -286,22 +287,31 @@ export class CpsInputComponent
         this._checkErrors();
       }
     );
-  }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.width) {
-      this.cvtWidth = convertSize(this.width);
-    }
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsInputComponent: unlabeled input component must have an ariaLabel for accessibility.'
-      );
-    }
     if (this.prefixIconClickable && !this.prefixIconAriaLabel?.trim()) {
       console.error(
         'CpsInputComponent: prefixIconClickable requires a prefixIconAriaLabel for accessibility.'
       );
     }
+
+    logMissingAriaLabelError('CpsInputComponent', this.label, this.ariaLabel);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.type) {
+      this.currentType = this.type;
+    }
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+
+    if (this.prefixIconClickable && !this.prefixIconAriaLabel?.trim()) {
+      console.error(
+        'CpsInputComponent: prefixIconClickable requires a prefixIconAriaLabel for accessibility.'
+      );
+    }
+
+    logMissingAriaLabelError('CpsInputComponent', this.label, this.ariaLabel);
   }
 
   ngOnDestroy() {

@@ -18,6 +18,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsDatepickerAppearanceType is used to define the border of the datepicker input.
@@ -213,14 +214,20 @@ export class CpsDatepickerComponent
         this._checkErrors();
       }
     );
+
+    logMissingAriaLabelError(
+      'CpsDatepickerComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges() {
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsDatepickerComponent: unlabeled datepicker component must have an ariaLabel for accessibility.'
-      );
-    }
+    logMissingAriaLabelError(
+      'CpsDatepickerComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnDestroy() {
