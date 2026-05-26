@@ -24,6 +24,7 @@ import {
   CpsTooltipDirective,
   CpsTooltipPosition
 } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent.
@@ -187,14 +188,14 @@ export class CpsButtonToggleComponent
     if (this.multiple && !this._value) {
       this._value = [];
     }
+    logMissingAriaLabelError(
+      'CpsButtonToggleComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-      console.error(
-        'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
-      );
-    }
     if (changes.options) {
       const hasInaccessibleOption = this.options.some(
         (opt) => !opt.label?.trim() && !opt.ariaLabel?.trim()
@@ -205,6 +206,11 @@ export class CpsButtonToggleComponent
         );
       }
     }
+    logMissingAriaLabelError(
+      'CpsButtonToggleComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

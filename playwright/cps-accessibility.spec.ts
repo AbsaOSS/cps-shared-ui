@@ -171,15 +171,15 @@ const components: ComponentEntry[] = [
   // { route: '/table', name: 'Table', selector: 'cps-table' },
   // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   // { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
-  // {
-  //   route: '/timepicker',
-  //   name: 'Timepicker',
-  //   selector: ['cps-timepicker', '.cps-autocomplete-options-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-timepicker');
-  //     await page.locator('cps-timepicker cps-autocomplete').first().click();
-  //   }
-  // },
+  {
+    route: '/timepicker',
+    name: 'Timepicker',
+    selector: ['cps-timepicker', '.cps-autocomplete-options-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-timepicker');
+      await page.locator('cps-timepicker cps-autocomplete').first().click();
+    }
+  },
   {
     route: '/tooltip',
     name: 'Tooltip',

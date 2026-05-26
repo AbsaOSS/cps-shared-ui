@@ -20,9 +20,9 @@
   <div class="cps-timepicker-body">
     <cps-autocomplete
       #hoursField
-      ariaLabel="Hours"
+      [ariaLabel]="`Hours, ${ariaLabel || label}`"
       (keypress)="numberOnly($event)"
-      width="60"
+      width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="hoursOptions"
       [withOptionsAliases]="!use24HourTime"
@@ -38,12 +38,12 @@
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
       placeholder="HH"></cps-autocomplete>
-    <span class="cps-timepicker-delimiter">:</span>
+    <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
       ariaLabel="Minutes"
       (keypress)="numberOnly($event)"
-      width="60"
+      width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="minutesOptions"
       [hideDetails]="true"
@@ -58,14 +58,12 @@
       [externalError]="minutesError"
       placeholder="MM"></cps-autocomplete>
     @if (withSeconds) {
-      <span class="cps-timepicker-delimiter">:</span>
-    }
-    @if (withSeconds) {
+      <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
       <cps-autocomplete
         #secondsField
         ariaLabel="Seconds"
         (keypress)="numberOnly($event)"
-        width="60"
+        width="3.75rem"
         [emptyOptionIndex]="mandatoryValue ? 0 : -1"
         [options]="secondsOptions"
         [hideDetails]="true"
