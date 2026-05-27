@@ -503,4 +503,72 @@ describe('CpsAutocompleteComponent', () => {
       );
     });
   });
+
+  describe('keyboard focus ring', () => {
+    it('should set isKeyboardFocused to true when focused via keyboard', () => {
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should not set isKeyboardFocused when focus follows a mouse box click', () => {
+      component.onBoxClick();
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should reset isKeyboardFocused on blur', () => {
+      component.isKeyboardFocused = true;
+      component.onBlur();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should allow next keyboard focus to show ring after blur resets mouse state', () => {
+      component.onBoxClick();
+      component.onBlur();
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should reset isKeyboardFocused when the box is clicked via mouse', () => {
+      component.isKeyboardFocused = true;
+      component.onBoxClick();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should reset isKeyboardFocused when an option is clicked', () => {
+      component.isKeyboardFocused = true;
+      component.onOptionClick(component.options[0]);
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should set isKeyboardFocused to true when arrow-down is pressed', () => {
+      component.onContainerKeyDown({ keyCode: 40 });
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should set isKeyboardFocused to true when Enter is pressed in the dropdown', () => {
+      jest.spyOn(component, 'select').mockImplementation(() => {});
+      component.onContainerKeyDown({ keyCode: 13 });
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should not change isKeyboardFocused when Tab is pressed in the container', () => {
+      component.isKeyboardFocused = false;
+      component.onContainerKeyDown({ keyCode: 9 });
+      expect(component.isKeyboardFocused).toBe(false);
+
+      component.isKeyboardFocused = true;
+      component.onContainerKeyDown({ keyCode: 9 });
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should apply keyboard-focused class to container when isKeyboardFocused is true', () => {
+      component.isKeyboardFocused = true;
+      fixture.detectChanges();
+      const container = fixture.debugElement.query(
+        By.css('.cps-autocomplete-container.keyboard-focused')
+      );
+      expect(container).toBeTruthy();
+    });
+  });
 });

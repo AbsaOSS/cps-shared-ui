@@ -422,6 +422,7 @@ export class CpsAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   isActive = false;
+  isKeyboardFocused = false;
   inputText = '';
   inputTextDebounced = '';
   filteredOptions: any[] = [];
@@ -458,6 +459,7 @@ export class CpsAutocompleteComponent
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
 
+  private _mouseActivated = false;
   private _options: any[] = [];
   private _optionIds = new WeakMap<object, string>();
 
@@ -607,6 +609,8 @@ export class CpsAutocompleteComponent
   }
 
   onOptionClick(option: any) {
+    this.isKeyboardFocused = false;
+    this._mouseActivated = true;
     this._clickOption(option);
   }
 
@@ -713,6 +717,8 @@ export class CpsAutocompleteComponent
 
   onBlur() {
     this.isActive = false;
+    this.isKeyboardFocused = false;
+    this._mouseActivated = false;
 
     this._confirmInput(this.inputText || '', false);
 
@@ -727,7 +733,9 @@ export class CpsAutocompleteComponent
   onFocus() {
     if (!this.disabled) {
       this.isActive = true;
+      this.isKeyboardFocused = !this._mouseActivated;
     }
+    this._mouseActivated = false;
 
     if (!this.multiple) {
       this.activeSingle = true;
@@ -755,6 +763,8 @@ export class CpsAutocompleteComponent
   }
 
   onBoxClick() {
+    this._mouseActivated = true;
+    this.isKeyboardFocused = false;
     const wasOpened = this.isOpened;
     if (!this.multiple) {
       this.activeSingle = true;
@@ -772,6 +782,9 @@ export class CpsAutocompleteComponent
 
   onContainerKeyDown(event: any) {
     const code = event.keyCode;
+    if ([13, 38, 40].includes(code)) {
+      this.isKeyboardFocused = true;
+    }
     // enter
     if (code === 13) {
       let idx = this.optionHighlightedIndex;
