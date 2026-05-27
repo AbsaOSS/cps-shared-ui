@@ -706,9 +706,13 @@ export class CpsAutocompleteComponent
     this.clearInput();
     this._dehighlightOption();
     if (hadValue) {
+      this._mouseActivated = !(event instanceof KeyboardEvent);
       setTimeout(() => {
         this.focusInput();
       }, 0);
+    }
+    if (!(event instanceof KeyboardEvent)) {
+      this.isKeyboardFocused = false;
     }
   }
 
@@ -762,9 +766,11 @@ export class CpsAutocompleteComponent
     this._closeAndClear();
   }
 
-  onBoxClick() {
-    this._mouseActivated = true;
-    this.isKeyboardFocused = false;
+  onBoxClick(fromKeyboard = false) {
+    this._mouseActivated = !fromKeyboard;
+    if (!fromKeyboard) {
+      this.isKeyboardFocused = false;
+    }
     const wasOpened = this.isOpened;
     if (!this.multiple) {
       this.activeSingle = true;
@@ -846,7 +852,7 @@ export class CpsAutocompleteComponent
     if (this.isOpened) {
       this._closeAndClear();
     } else {
-      this.onBoxClick();
+      this.onBoxClick(event instanceof KeyboardEvent);
     }
   }
 

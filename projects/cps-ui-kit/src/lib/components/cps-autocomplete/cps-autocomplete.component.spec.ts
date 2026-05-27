@@ -4,6 +4,7 @@ import {
   TestBed,
   discardPeriodicTasks,
   fakeAsync,
+  flush,
   tick
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -510,11 +511,45 @@ describe('CpsAutocompleteComponent', () => {
       expect(component.isKeyboardFocused).toBe(true);
     });
 
-    it('should not set isKeyboardFocused when focus follows a mouse box click', () => {
+    it('should not set isKeyboardFocused when focus follows a mouse box click', fakeAsync(() => {
       component.onBoxClick();
       component.onFocus();
       expect(component.isKeyboardFocused).toBe(false);
-    });
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should set isKeyboardFocused when chevron is activated via keyboard', fakeAsync(() => {
+      component.onChevronClick(new KeyboardEvent('keydown', { key: 'Enter' }));
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should not set isKeyboardFocused when clear is triggered by mouse', fakeAsync(() => {
+      fixture.componentRef.setInput('openOnClear', false);
+      component.value = component.options[0];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.clear(new MouseEvent('click'));
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(false);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should set isKeyboardFocused when clear is triggered by keyboard', fakeAsync(() => {
+      fixture.componentRef.setInput('openOnClear', false);
+      component.value = component.options[0];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.clear(new KeyboardEvent('keydown', { key: 'Enter' }));
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+      flush();
+      discardPeriodicTasks();
+    }));
 
     it('should reset isKeyboardFocused on blur', () => {
       component.isKeyboardFocused = true;
@@ -522,18 +557,22 @@ describe('CpsAutocompleteComponent', () => {
       expect(component.isKeyboardFocused).toBe(false);
     });
 
-    it('should allow next keyboard focus to show ring after blur resets mouse state', () => {
+    it('should allow next keyboard focus to show ring after blur resets mouse state', fakeAsync(() => {
       component.onBoxClick();
       component.onBlur();
       component.onFocus();
       expect(component.isKeyboardFocused).toBe(true);
-    });
+      flush();
+      discardPeriodicTasks();
+    }));
 
-    it('should reset isKeyboardFocused when the box is clicked via mouse', () => {
+    it('should reset isKeyboardFocused when the box is clicked via mouse', fakeAsync(() => {
       component.isKeyboardFocused = true;
       component.onBoxClick();
       expect(component.isKeyboardFocused).toBe(false);
-    });
+      flush();
+      discardPeriodicTasks();
+    }));
 
     it('should reset isKeyboardFocused when an option is clicked', () => {
       component.isKeyboardFocused = true;
