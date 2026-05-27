@@ -17,10 +17,14 @@
       }
     </div>
   }
-  <div class="cps-timepicker-body">
+  <div
+    class="cps-timepicker-body"
+    role="group"
+    [attr.aria-describedby]="describedBy"
+    [attr.aria-label]="computedLabel">
     <cps-autocomplete
       #hoursField
-      [ariaLabel]="`Hours, ${ariaLabel || label}`"
+      ariaLabel="Hours"
       (keypress)="numberOnly($event)"
       width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
@@ -90,12 +94,12 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-timepicker-hint">
+    <div [id]="hintId" class="cps-timepicker-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-timepicker-error">
+    <div class="cps-timepicker-error" role="alert" aria-live="assertive">
       {{ error }}
     </div>
   }

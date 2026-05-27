@@ -501,18 +501,16 @@ describe('CpsInputComponent', () => {
   });
 
   describe('Accessibility', () => {
-    it('should associate label with input via for/id', () => {
+    it('should give the input an accessible label via aria-label', () => {
       fixture.componentRef.setInput('label', 'Username');
       fixture.detectChanges();
 
-      const label = fixture.nativeElement.querySelector('label');
       const input = fixture.nativeElement.querySelector('input');
-      expect(label.getAttribute('for')).toBeTruthy();
-      expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
+      expect(input.getAttribute('aria-label')).toBeTruthy();
     });
 
-    it('should set unique inputId', () => {
-      expect(component.inputId).toMatch(/^cps-input-/);
+    it('should have a unique hintId', () => {
+      expect(component.hintId).toMatch(/^cps-input-hint-/);
     });
 
     it('should set aria-invalid on input when error is set', () => {

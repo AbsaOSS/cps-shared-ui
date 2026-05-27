@@ -2,6 +2,7 @@
   class="cps-radio-group"
   role="radiogroup"
   [attr.aria-label]="computedLabel"
+  [attr.aria-describedby]="describedBy"
   [attr.aria-disabled]="disabled || null"
   [attr.aria-required]="isRequired || null"
   [attr.aria-invalid]="error ? 'true' : null">
@@ -49,7 +50,7 @@
     </div>
   }
   @if (!error && !hideDetails) {
-    <div class="cps-radio-hint">
+    <div [id]="hintId" class="cps-radio-hint">
       {{ hint }}
     </div>
   }

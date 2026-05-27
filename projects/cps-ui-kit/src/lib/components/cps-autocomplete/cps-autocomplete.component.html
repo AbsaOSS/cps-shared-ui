@@ -303,7 +303,7 @@
     }
   </div>
   @if (!error && !externalError && !hideDetails) {
-    <div class="cps-autocomplete-hint">
+    <div [id]="hintId" class="cps-autocomplete-hint">
       {{ hint }}
     </div>
   }
@@ -341,6 +341,7 @@
     [(ngModel)]="inputText"
     (focus)="onFocus()"
     (blur)="onBlur()"
+    [attr.aria-describedby]="describedBy"
     [attr.aria-label]="computedLabel" />
 </ng-template>
 

@@ -165,6 +165,11 @@ export class CpsRadioGroupComponent
   @Output() focused = new EventEmitter();
 
   readonly groupName = generateUniqueId('cps-radio-group');
+  readonly hintId = generateUniqueId('cps-radio-group-hint');
+
+  get describedBy(): string | null {
+    return this.hint && !this.hideDetails && !this.error ? this.hintId : null;
+  }
 
   private _statusChangesSubscription?: Subscription;
   private _value: any = undefined;

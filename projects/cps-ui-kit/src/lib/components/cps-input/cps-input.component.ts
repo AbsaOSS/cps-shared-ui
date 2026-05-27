@@ -90,6 +90,18 @@ export class CpsInputComponent
   @Input() readonly = false;
 
   /**
+   * Determines whether the value of the input can be automatically completed by the browser.
+   * @group Props
+   */
+  @Input() autocomplete: string = 'off';
+
+  /**
+   * Determines whether the value of the input may be checked for spelling errors.
+   * @group Props
+   */
+  @Input() spellcheck = false;
+
+  /**
    * Width of the input field, of type number denoting pixels or string.
    * @group Props
    */
@@ -263,7 +275,12 @@ export class CpsInputComponent
   currentType = '';
   cvtWidth = '';
   isKeyboardFocused = false;
-  readonly inputId = generateUniqueId('cps-input');
+
+  readonly hintId = generateUniqueId('cps-input-hint');
+
+  get describedBy(): string | null {
+    return this.hint && !this.hideDetails && !this.error ? this.hintId : null;
+  }
 
   private _mouseActivated = false;
   private _statusChangesSubscription?: Subscription;

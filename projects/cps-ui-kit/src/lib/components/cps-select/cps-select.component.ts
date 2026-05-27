@@ -370,6 +370,12 @@ export class CpsSelectComponent
 
   readonly optionsListId = generateUniqueId('cps-select-options-list');
   readonly selectAllOptionId = generateUniqueId('cps-select-option-select-all');
+  readonly hintId = generateUniqueId('cps-select-hint');
+
+  get describedBy(): string | null {
+    return this.hint && !this.hideDetails && !this.error ? this.hintId : null;
+  }
+
   private readonly _optionIdPrefix = generateUniqueId('cps-select-option');
   private _optionIds = new WeakMap<object, string>();
 

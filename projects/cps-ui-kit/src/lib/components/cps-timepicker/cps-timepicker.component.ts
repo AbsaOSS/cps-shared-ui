@@ -21,7 +21,11 @@ import {
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import {
+  generateUniqueId,
+  getComputedLabel,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsTime is used to define the time format.
@@ -191,6 +195,12 @@ export class CpsTimepickerComponent
 
   private _statusChangesSubscription?: Subscription;
 
+  readonly hintId = generateUniqueId('cps-timepicker-hint');
+
+  get describedBy(): string | null {
+    return this.hint && !this.hideDetails && !this.error ? this.hintId : null;
+  }
+
   error = '';
   hoursError = '';
   minutesError = '';
@@ -243,6 +253,14 @@ export class CpsTimepickerComponent
 
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
+  }
+
+  get computedLabel(): string | null {
+    return getComputedLabel({
+      label: this.ariaLabel || this.label,
+      error: this.error,
+      hideDetails: this.hideDetails
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

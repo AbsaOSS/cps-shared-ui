@@ -54,6 +54,22 @@
                         "description": "Determines whether input is readonly."
                     },
                     {
+                        "name": "autocomplete",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "off",
+                        "description": "Determines whether the value of the input can be automatically completed by the browser."
+                    },
+                    {
+                        "name": "spellcheck",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the value of the input may be checked for spelling errors."
+                    },
+                    {
                         "name": "width",
                         "optional": false,
                         "readonly": false,

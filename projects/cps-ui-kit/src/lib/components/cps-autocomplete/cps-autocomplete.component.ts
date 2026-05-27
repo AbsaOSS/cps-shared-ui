@@ -449,6 +449,14 @@ export class CpsAutocompleteComponent
     'cps-autocomplete-option-select-all'
   );
 
+  readonly hintId = generateUniqueId('cps-autocomplete-hint');
+
+  get describedBy(): string | null {
+    return this.hint && !this.hideDetails && !this.error && !this.externalError
+      ? this.hintId
+      : null;
+  }
+
   private readonly _optionIdPrefix = generateUniqueId(
     'cps-autocomplete-option'
   );
