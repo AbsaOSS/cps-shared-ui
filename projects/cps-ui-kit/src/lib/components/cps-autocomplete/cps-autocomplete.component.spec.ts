@@ -4,6 +4,7 @@ import {
   TestBed,
   discardPeriodicTasks,
   fakeAsync,
+  flush,
   tick
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -501,6 +502,111 @@ describe('CpsAutocompleteComponent', () => {
       expect(console.error).toHaveBeenCalledWith(
         expect.stringContaining('ariaLabel')
       );
+    });
+  });
+
+  describe('keyboard focus ring', () => {
+    it('should set isKeyboardFocused to true when focused via keyboard', () => {
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should not set isKeyboardFocused when focus follows a mouse box click', fakeAsync(() => {
+      component.onBoxClick();
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(false);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should set isKeyboardFocused when chevron is activated via keyboard', fakeAsync(() => {
+      component.onChevronClick(new KeyboardEvent('keydown', { key: 'Enter' }));
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should not set isKeyboardFocused when clear is triggered by mouse', fakeAsync(() => {
+      fixture.componentRef.setInput('openOnClear', false);
+      component.value = component.options[0];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.clear(new MouseEvent('click'));
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(false);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should set isKeyboardFocused when clear is triggered by keyboard', fakeAsync(() => {
+      fixture.componentRef.setInput('openOnClear', false);
+      component.value = component.options[0];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.clear(new KeyboardEvent('keydown', { key: 'Enter' }));
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should reset isKeyboardFocused on blur', () => {
+      component.isKeyboardFocused = true;
+      component.onBlur();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should allow next keyboard focus to show ring after blur resets mouse state', fakeAsync(() => {
+      component.onBoxClick();
+      component.onBlur();
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should reset isKeyboardFocused when the box is clicked via mouse', fakeAsync(() => {
+      component.isKeyboardFocused = true;
+      component.onBoxClick();
+      expect(component.isKeyboardFocused).toBe(false);
+      flush();
+      discardPeriodicTasks();
+    }));
+
+    it('should reset isKeyboardFocused when an option is clicked', () => {
+      component.isKeyboardFocused = true;
+      component.onOptionClick(component.options[0]);
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should set isKeyboardFocused to true when arrow-down is pressed', () => {
+      component.onContainerKeyDown({ keyCode: 40 });
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should set isKeyboardFocused to true when Enter is pressed in the dropdown', () => {
+      component.onContainerKeyDown({ keyCode: 13 });
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should not change isKeyboardFocused when Tab is pressed in the container', () => {
+      component.isKeyboardFocused = false;
+      component.onContainerKeyDown({ keyCode: 9 });
+      expect(component.isKeyboardFocused).toBe(false);
+
+      component.isKeyboardFocused = true;
+      component.onContainerKeyDown({ keyCode: 9 });
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should apply keyboard-focused class to container when isKeyboardFocused is true', () => {
+      component.isKeyboardFocused = true;
+      fixture.detectChanges();
+      const container = fixture.debugElement.query(
+        By.css('.cps-autocomplete-container.keyboard-focused')
+      );
+      expect(container).toBeTruthy();
     });
   });
 });

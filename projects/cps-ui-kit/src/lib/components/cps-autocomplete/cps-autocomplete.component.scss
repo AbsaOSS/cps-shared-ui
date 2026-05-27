@@ -55,6 +55,14 @@ $hover-transition-duration: 0.2s;
           border-bottom: 0.0625rem solid $autocomplete-border-color !important;
         }
       }
+
+      &.keyboard-focused {
+        @include focus-ring(0, -0.0625rem, 0.25rem);
+        &::before,
+        &::after {
+          pointer-events: none;
+        }
+      }
     }
 
     &.active {

@@ -28,6 +28,7 @@
     (keydown)="onContainerKeyDown($event)"
     class="cps-autocomplete-container"
     [class.active]="isActive"
+    [class.keyboard-focused]="isKeyboardFocused"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',
