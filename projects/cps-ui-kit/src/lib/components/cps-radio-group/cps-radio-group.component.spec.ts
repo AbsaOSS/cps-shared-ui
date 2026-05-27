@@ -149,7 +149,7 @@ describe('CpsRadioGroupComponent', () => {
       const radiogroup = fixture.nativeElement.querySelector(
         '[role="radiogroup"]'
       );
-      expect(radiogroup.getAttribute('aria-label')).toBe('My radio group.');
+      expect(radiogroup.getAttribute('aria-label')).toBe('My radio group');
     });
 
     it('should fall back to groupLabel for aria-label when ariaLabel is not set', () => {
@@ -159,7 +159,7 @@ describe('CpsRadioGroupComponent', () => {
       const radiogroup = fixture.nativeElement.querySelector(
         '[role="radiogroup"]'
       );
-      expect(radiogroup.getAttribute('aria-label')).toBe('Choose an option.');
+      expect(radiogroup.getAttribute('aria-label')).toBe('Choose an option');
     });
 
     it('should prefer ariaLabel over groupLabel', () => {
@@ -169,7 +169,7 @@ describe('CpsRadioGroupComponent', () => {
       const radiogroup = fixture.nativeElement.querySelector(
         '[role="radiogroup"]'
       );
-      expect(radiogroup.getAttribute('aria-label')).toBe('Explicit label.');
+      expect(radiogroup.getAttribute('aria-label')).toBe('Explicit label');
     });
 
     it('should log an error when neither ariaLabel nor groupLabel is provided', () => {

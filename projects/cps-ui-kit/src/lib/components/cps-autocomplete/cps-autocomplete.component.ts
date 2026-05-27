@@ -28,7 +28,6 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
-  getComputedLabel,
   logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 import {
@@ -450,11 +449,13 @@ export class CpsAutocompleteComponent
   );
 
   readonly hintId = generateUniqueId('cps-autocomplete-hint');
+  readonly errorId = generateUniqueId('cps-autocomplete-error');
 
   get describedBy(): string | null {
-    return this.hint && !this.hideDetails && !this.error && !this.externalError
-      ? this.hintId
-      : null;
+    if (this.hideDetails) return null;
+    if (this.error || this.externalError) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
   }
 
   private readonly _optionIdPrefix = generateUniqueId(
@@ -885,14 +886,6 @@ export class CpsAutocompleteComponent
 
   get isRequired(): boolean {
     return this._control?.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.label,
-      error: this.error || this.externalError,
-      hideDetails: this.hideDetails
-    });
   }
 
   get isSelectAllVisible(): boolean {

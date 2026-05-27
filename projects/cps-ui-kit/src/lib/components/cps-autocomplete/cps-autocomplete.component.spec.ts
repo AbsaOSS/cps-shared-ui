@@ -470,7 +470,7 @@ describe('CpsAutocompleteComponent', () => {
       const input = fixture.nativeElement.querySelector(
         '.cps-autocomplete-box-input'
       );
-      expect(input.getAttribute('aria-label')).toBe('Search options.');
+      expect(input.getAttribute('aria-label')).toBe('Search options');
     });
 
     it('should set aria-label from label when ariaLabel is not provided', () => {
@@ -480,7 +480,7 @@ describe('CpsAutocompleteComponent', () => {
       const input = fixture.nativeElement.querySelector(
         '.cps-autocomplete-box-input'
       );
-      expect(input.getAttribute('aria-label')).toBe('My Field.');
+      expect(input.getAttribute('aria-label')).toBe('My Field');
     });
 
     it('should prefer ariaLabel over label', () => {
@@ -490,7 +490,7 @@ describe('CpsAutocompleteComponent', () => {
       const input = fixture.nativeElement.querySelector(
         '.cps-autocomplete-box-input'
       );
-      expect(input.getAttribute('aria-label')).toBe('Override label.');
+      expect(input.getAttribute('aria-label')).toBe('Override label');
     });
 
     it('should error when neither label nor ariaLabel is provided', () => {

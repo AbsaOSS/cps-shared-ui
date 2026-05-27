@@ -19,7 +19,6 @@ import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.com
 import { Subscription } from 'rxjs';
 import {
   generateUniqueId,
-  getComputedLabel,
   logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 
@@ -166,9 +165,13 @@ export class CpsRadioGroupComponent
 
   readonly groupName = generateUniqueId('cps-radio-group');
   readonly hintId = generateUniqueId('cps-radio-group-hint');
+  readonly errorId = generateUniqueId('cps-radio-group-error');
 
   get describedBy(): string | null {
-    return this.hint && !this.hideDetails && !this.error ? this.hintId : null;
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
   }
 
   private _statusChangesSubscription?: Subscription;
@@ -250,14 +253,6 @@ export class CpsRadioGroupComponent
 
   get isRequired(): boolean {
     return this._control?.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.groupLabel,
-      error: this.error,
-      hideDetails: this.hideDetails
-    });
   }
 
   private _checkErrors() {

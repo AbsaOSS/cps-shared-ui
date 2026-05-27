@@ -29,7 +29,7 @@
     [attr.aria-activedescendant]="activeDescendantId"
     [attr.aria-required]="isRequired || null"
     [attr.aria-invalid]="error ? 'true' : null"
-    [attr.aria-label]="computedLabel"
+    [attr.aria-label]="ariaLabel || label || null"
     [attr.aria-describedby]="describedBy"
     [attr.aria-disabled]="disabled || null"
     [ngClass]="{
@@ -238,7 +238,11 @@
     <div [id]="hintId" class="cps-select-hint">{{ hint }}</div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-select-error" role="alert" aria-live="assertive">
+    <div
+      [id]="errorId"
+      class="cps-select-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

@@ -21,7 +21,7 @@
     class="cps-timepicker-body"
     role="group"
     [attr.aria-describedby]="describedBy"
-    [attr.aria-label]="computedLabel">
+    [attr.aria-label]="ariaLabel || label || null">
     <cps-autocomplete
       #hoursField
       ariaLabel="Hours"
@@ -99,7 +99,11 @@
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-timepicker-error" role="alert" aria-live="assertive">
+    <div
+      [id]="errorId"
+      class="cps-timepicker-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

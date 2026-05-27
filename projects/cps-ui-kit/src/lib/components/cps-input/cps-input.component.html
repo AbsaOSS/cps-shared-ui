@@ -65,7 +65,7 @@
 
     @if (!valueToDisplay) {
       <input
-        [attr.aria-label]="computedLabel"
+        [attr.aria-label]="ariaLabel || label || null"
         [attr.aria-describedby]="describedBy"
         [attr.aria-invalid]="error ? 'true' : null"
         [attr.aria-required]="isRequired || null"
@@ -87,7 +87,7 @@
 
     @if (valueToDisplay) {
       <input
-        [attr.aria-label]="computedLabel"
+        [attr.aria-label]="ariaLabel || label || null"
         [attr.aria-describedby]="describedBy"
         [attr.aria-busy]="loading ? true : null"
         [value]="valueToDisplay"
@@ -151,7 +151,11 @@
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-input-error" role="alert" aria-live="assertive">
+    <div
+      [id]="errorId"
+      class="cps-input-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

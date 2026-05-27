@@ -529,13 +529,13 @@ describe('CpsInputComponent', () => {
       expect(input.getAttribute('aria-invalid')).toBeNull();
     });
 
-    it('should render error div with role="alert"', () => {
+    it('should render error div with aria-live="polite"', () => {
       fixture.componentRef.setInput('error', 'Something went wrong');
       fixture.detectChanges();
 
       const errorDiv = fixture.nativeElement.querySelector('.cps-input-error');
       expect(errorDiv).toBeTruthy();
-      expect(errorDiv.getAttribute('role')).toBe('alert');
+      expect(errorDiv.getAttribute('aria-live')).toBe('polite');
     });
 
     describe('Clear button accessibility', () => {

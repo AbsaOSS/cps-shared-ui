@@ -25,7 +25,6 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import {
   generateUniqueId,
-  getComputedLabel,
   logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 
@@ -277,9 +276,13 @@ export class CpsInputComponent
   isKeyboardFocused = false;
 
   readonly hintId = generateUniqueId('cps-input-hint');
+  readonly errorId = generateUniqueId('cps-input-error');
 
   get describedBy(): string | null {
-    return this.hint && !this.hideDetails && !this.error ? this.hintId : null;
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
   }
 
   private _mouseActivated = false;
@@ -412,14 +415,6 @@ export class CpsInputComponent
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.label,
-      error: this.error,
-      hideDetails: this.hideDetails
-    });
   }
 
   onClear() {
