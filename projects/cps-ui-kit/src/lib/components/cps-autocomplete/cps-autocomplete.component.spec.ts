@@ -547,7 +547,6 @@ describe('CpsAutocompleteComponent', () => {
     });
 
     it('should set isKeyboardFocused to true when Enter is pressed in the dropdown', () => {
-      jest.spyOn(component, 'select').mockImplementation(() => {});
       component.onContainerKeyDown({ keyCode: 13 });
       expect(component.isKeyboardFocused).toBe(true);
     });
