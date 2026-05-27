@@ -11,7 +11,7 @@
       role="button"
       [tabindex]="disabled ? -1 : 0"
       [attr.aria-label]="closeButtonAriaLabel"
-      [attr.aria-disabled]="disabled"
+      [attr.aria-disabled]="disabled || null"
       class="cps-chip-close-icon"
       icon="close-x"
       size="xsmall"

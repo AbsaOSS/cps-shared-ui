@@ -2,16 +2,18 @@
   [componentData]="componentData"
   [services]="serviceData">
   <!-- Example of component's usage -->
-  <cps-scheduler
-    label="Frequency"
-    [disabled]="false"
-    [(cron)]="cronExpression"
-    (cronChange)="onCronExpressionChanged($event)"
-    [(timeZone)]="timeZone"
-    (timeZoneChange)="onTimezoneChanged($event)"
-    [showAdvanced]="true"
-    [use24HourTime]="true"
-    [showNotSet]="true"
-    [showTimeZone]="true"
-    infoTooltip="Provide frequency"></cps-scheduler>
+  <div class="scheduler-wrapper">
+    <cps-scheduler
+      label="Frequency"
+      [disabled]="false"
+      [(cron)]="cronExpression"
+      (cronChange)="onCronExpressionChanged($event)"
+      [(timeZone)]="timeZone"
+      (timeZoneChange)="onTimezoneChanged($event)"
+      [showAdvanced]="true"
+      [use24HourTime]="true"
+      [showNotSet]="true"
+      [showTimeZone]="true"
+      infoTooltip="Provide frequency"></cps-scheduler>
+  </div>
 </app-component-docs-viewer>

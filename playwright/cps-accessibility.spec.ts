@@ -147,7 +147,7 @@ const components: ComponentEntry[] = [
   //   selector: 'cps-progress-linear'
   // },
   { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
-  // { route: '/scheduler', name: 'Scheduler', selector: 'cps-scheduler' },
+  { route: '/scheduler', name: 'Scheduler', selector: 'cps-scheduler' },
   {
     route: '/select',
     name: 'Select',
