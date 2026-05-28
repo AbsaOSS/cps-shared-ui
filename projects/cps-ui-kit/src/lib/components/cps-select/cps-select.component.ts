@@ -26,7 +26,6 @@ import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
   generateUniqueId,
-  getComputedLabel,
   logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 import {
@@ -370,6 +369,16 @@ export class CpsSelectComponent
 
   readonly optionsListId = generateUniqueId('cps-select-options-list');
   readonly selectAllOptionId = generateUniqueId('cps-select-option-select-all');
+  readonly hintId = generateUniqueId('cps-select-hint');
+  readonly errorId = generateUniqueId('cps-select-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
+
   private readonly _optionIdPrefix = generateUniqueId('cps-select-option');
   private _optionIds = new WeakMap<object, string>();
 
@@ -758,14 +767,6 @@ export class CpsSelectComponent
 
   get isRequired(): boolean {
     return this._control?.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.label,
-      error: this.error,
-      hideDetails: this.hideDetails
-    });
   }
 
   get isSelectAllVisible(): boolean {

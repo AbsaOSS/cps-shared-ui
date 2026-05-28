@@ -21,7 +21,10 @@ import {
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsTime is used to define the time format.
@@ -190,6 +193,16 @@ export class CpsTimepickerComponent
   secondsOptions: { label: string; value: string }[] = [];
 
   private _statusChangesSubscription?: Subscription;
+
+  readonly hintId = generateUniqueId('cps-timepicker-hint');
+  readonly errorId = generateUniqueId('cps-timepicker-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
 
   error = '';
   hoursError = '';

@@ -24,11 +24,13 @@
     role="combobox"
     aria-haspopup="listbox"
     [attr.aria-expanded]="isOpened"
+    [attr.aria-busy]="loading ? true : null"
     [attr.aria-controls]="optionsListId"
     [attr.aria-activedescendant]="activeDescendantId"
     [attr.aria-required]="isRequired || null"
     [attr.aria-invalid]="error ? 'true' : null"
-    [attr.aria-label]="computedLabel"
+    [attr.aria-label]="ariaLabel || label || null"
+    [attr.aria-describedby]="describedBy"
     [attr.aria-disabled]="disabled || null"
     [ngClass]="{
       'persistent-clear': persistentClear,
@@ -233,10 +235,14 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-select-hint">{{ hint }}</div>
+    <div [id]="hintId" class="cps-select-hint">{{ hint }}</div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-select-error" role="alert" aria-live="assertive">
+    <div
+      [id]="errorId"
+      class="cps-select-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }
