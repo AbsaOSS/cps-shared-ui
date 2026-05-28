@@ -314,6 +314,7 @@ describe('CpsTextareaComponent', () => {
         get: () => 100,
         configurable: true
       });
+      (component as any)._singleRowHeightPx = 20;
     });
 
     it('should increase height on ArrowDown', () => {
@@ -333,7 +334,17 @@ describe('CpsTextareaComponent', () => {
         cancelable: true
       });
       component.onResizeHandleKeydown(event);
-      expect(textarea.style.height).toBe(`${Math.max(100 - step, 0)}px`);
+      expect(textarea.style.height).toBe(`${100 - step}px`);
+    });
+
+    it('should not shrink below single row height on ArrowUp', () => {
+      (component as any)._singleRowHeightPx = 80;
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowUp',
+        cancelable: true
+      });
+      component.onResizeHandleKeydown(event);
+      expect(textarea.style.height).toBe('80px');
     });
 
     it('should cap height at maxHeightPx on ArrowDown', () => {
