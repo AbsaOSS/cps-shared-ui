@@ -130,33 +130,27 @@ $hover-transition-duration: 0.2s;
 
       .clear-btn {
         position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
+        top: 0.4375rem;
+        right: 0.4375rem;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.5rem;
-        height: 1.5rem;
-        line-height: 1;
-        border-radius: 50%;
         cursor: pointer;
         color: var(--cps-state-error);
         padding: 0.25rem;
         cps-icon {
           opacity: 0;
           transition-duration: $hover-transition-duration;
-          &:hover {
-            opacity: 1 !important;
-          }
+        }
+        &:hover cps-icon {
+          opacity: 1 !important;
         }
         &:focus {
           outline: none;
         }
         &:focus-visible {
-          @include focus-ring(0, -0.0625rem, 50%);
+          @include focus-ring(-0.125rem, -0.25rem, 50%);
           position: absolute;
-          top: 0.75rem;
-          right: 0.75rem;
+          top: 0.4375rem;
+          right: 0.4375rem;
           &::before,
           &::after {
             pointer-events: none;
