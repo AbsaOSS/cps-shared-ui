@@ -25,6 +25,7 @@
     [class.persistent-clear]="persistentClear"
     [class.keyboard-focused]="isKeyboardFocused">
     <textarea
+      #textareaEl
       [attr.spellcheck]="spellcheck"
       [attr.aria-label]="ariaLabel || label || null"
       [attr.aria-invalid]="error ? 'true' : null"
@@ -37,12 +38,23 @@
       [placeholder]="placeholder"
       [value]="value"
       [style.width]="cvtWidth"
+      [style.max-height.px]="maxHeightPx"
       [style.resize]="resizable"
       (mousedown)="onTextareaMousedown()"
       (blur)="onBlur()"
       (focus)="onFocus()"
       (input)="updateValueEvent($event)">
     </textarea>
+
+    @if (resizable === 'vertical' && !disabled) {
+      <div
+        class="cps-textarea-resize-handle"
+        role="button"
+        tabindex="0"
+        aria-label="Vertically resize textarea"
+        aria-description="Use up and down arrow keys to resize"
+        (keydown)="onResizeHandleKeydown($event)"></div>
+    }
 
     @if (clearable && !disabled) {
       <span

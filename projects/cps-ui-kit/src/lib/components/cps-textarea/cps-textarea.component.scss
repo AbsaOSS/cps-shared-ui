@@ -100,6 +100,30 @@ $hover-transition-duration: 0.2s;
         }
       }
 
+      .cps-textarea-resize-handle {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        pointer-events: none;
+
+        &:focus {
+          outline: none;
+        }
+
+        &:focus-visible {
+          @include focus-ring(0, -0.0625rem, 0.25rem);
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          &::before,
+          &::after {
+            pointer-events: none;
+          }
+        }
+      }
+
       .clear-btn {
         position: absolute;
         top: 0.75rem;
