@@ -31,7 +31,7 @@ $hover-transition-duration: 0.2s;
       border: 0.0625rem solid $textarea-border-color;
       border-radius: 0.25rem;
       &:hover {
-        &:has(textarea:enabled) {
+        &:has(textarea:enabled:not(:read-only)) {
           border-color: $color-calm;
         }
         .clear-btn {
@@ -41,7 +41,8 @@ $hover-transition-duration: 0.2s;
         }
       }
 
-      &:focus-within {
+      &:focus-within:not(:has(textarea:read-only)),
+      &.keyboard-focused:has(textarea:read-only) {
         border-color: $color-calm;
       }
 
@@ -77,6 +78,9 @@ $hover-transition-duration: 0.2s;
         width: 100%;
         &:focus {
           outline: 0;
+        }
+        &:read-only {
+          cursor: default;
         }
         &:disabled {
           color: $textarea-text-disabled-color;

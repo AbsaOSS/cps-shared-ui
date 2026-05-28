@@ -88,6 +88,12 @@ export class CpsTextareaComponent
   @Input() spellcheck = false;
 
   /**
+   * Determines whether the value of the textarea can be automatically completed by the browser.
+   * @group Props
+   */
+  @Input() autocomplete: string = 'off';
+
+  /**
    * Bottom hint text for the textarea.
    * @group Props
    */
@@ -98,6 +104,12 @@ export class CpsTextareaComponent
    * @group Props
    */
   @Input() disabled = false;
+
+  /**
+   * Determines whether the textarea is readonly.
+   * @group Props
+   */
+  @Input() readonly = false;
 
   /**
    * Width of the textarea, it can be of type number denoting pixels or string.

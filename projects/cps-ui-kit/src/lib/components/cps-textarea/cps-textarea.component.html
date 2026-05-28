@@ -2,7 +2,7 @@
   @if (label) {
     <div
       class="cps-textarea-label"
-      [class.cps-textarea-label-disabled]="disabled">
+      [class.cps-textarea-label-disabled]="disabled && !readonly">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -27,6 +27,7 @@
     <textarea
       #textareaEl
       [attr.spellcheck]="spellcheck"
+      [attr.autocomplete]="autocomplete"
       [attr.aria-label]="ariaLabel || label || null"
       [attr.aria-invalid]="error ? 'true' : null"
       [attr.aria-required]="isRequired || null"
@@ -35,6 +36,7 @@
       [rows]="rows"
       [autofocus]="autofocus"
       [disabled]="disabled"
+      [readonly]="readonly"
       [placeholder]="placeholder"
       [value]="value"
       [style.width]="cvtWidth"
@@ -56,7 +58,7 @@
         (keydown)="onResizeHandleKeydown($event)"></div>
     }
 
-    @if (clearable && !disabled) {
+    @if (clearable && !disabled && !readonly) {
       <span
         class="clear-btn"
         role="button"
