@@ -13,6 +13,7 @@ describe('CpsTextareaComponent', () => {
 
     fixture = TestBed.createComponent(CpsTextareaComponent);
     component = fixture.componentInstance;
+    component.ariaLabel = 'Textarea';
     fixture.detectChanges();
   });
 
