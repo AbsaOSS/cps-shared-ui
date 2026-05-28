@@ -2,7 +2,7 @@
   @if (label) {
     <div
       class="cps-textarea-label"
-      [ngClass]="{ 'cps-textarea-label-disabled': disabled }">
+      [class.cps-textarea-label-disabled]="disabled">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -20,11 +20,10 @@
 
   <div
     class="cps-textarea-wrap"
-    [ngClass]="{
-      'cps-textarea-wrap-error': error,
-      clearable: clearable,
-      'persistent-clear': persistentClear
-    }">
+    [class.cps-textarea-wrap-error]="!!error"
+    [class.clearable]="clearable"
+    [class.persistent-clear]="persistentClear"
+    [class.keyboard-focused]="isKeyboardFocused">
     <textarea
       [attr.spellcheck]="spellcheck"
       [attr.aria-label]="ariaLabel || label || null"
@@ -37,10 +36,9 @@
       [disabled]="disabled"
       [placeholder]="placeholder"
       [value]="value"
-      [ngStyle]="{
-        width: cvtWidth,
-        resize: resizable
-      }"
+      [style.width]="cvtWidth"
+      [style.resize]="resizable"
+      (mousedown)="onTextareaMousedown()"
       (blur)="onBlur()"
       (focus)="onFocus()"
       (input)="updateValueEvent($event)">
@@ -48,11 +46,17 @@
 
     @if (clearable && !disabled) {
       <span
-        [style.visibility]="
-          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
-        "
-        class="clear-btn">
-        <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+        class="clear-btn"
+        role="button"
+        [attr.tabindex]="isClearButtonVisible ? 0 : null"
+        aria-label="Clear"
+        [attr.aria-hidden]="isClearButtonVisible ? null : 'true'"
+        [style.visibility]="isClearButtonVisible ? 'visible' : 'hidden'"
+        (mousedown)="$event.preventDefault()"
+        (click)="onClear($event)"
+        (keydown.enter)="onClear($event)"
+        (keydown.space)="onClear($event)">
+        <cps-icon icon="delete" size="small"></cps-icon>
       </span>
     }
   </div>

@@ -213,6 +213,9 @@ export class CpsTextareaComponent
   }
 
   cvtWidth = '';
+  isKeyboardFocused = false;
+
+  private _mouseActivated = false;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
@@ -331,17 +334,35 @@ export class CpsTextareaComponent
     if (this.value !== '') this._updateValue('');
   }
 
+  onClear(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.clear();
+    this.focus();
+  }
+
+  get isClearButtonVisible(): boolean {
+    return this.persistentClear || !!this.value;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(_disabled: boolean) {}
 
   onBlur() {
+    this.isKeyboardFocused = false;
     this._checkErrors();
     this.blurred.emit();
   }
 
   onFocus() {
+    this.isKeyboardFocused = !this._mouseActivated;
+    this._mouseActivated = false;
     this._control?.control?.markAsTouched();
     this.focused.emit();
+  }
+
+  onTextareaMousedown() {
+    this._mouseActivated = true;
   }
 
   focus() {
