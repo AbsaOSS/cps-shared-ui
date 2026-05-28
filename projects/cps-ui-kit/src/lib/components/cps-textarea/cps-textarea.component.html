@@ -41,7 +41,7 @@
       [value]="value"
       [style.width]="cvtWidth"
       [style.max-height.px]="maxHeightPx"
-      [style.resize]="resizable"
+      [style.resize]="readonly || disabled ? 'none' : resizable"
       (mousedown)="onTextareaMousedown()"
       (blur)="onBlur()"
       (focus)="onFocus()"
@@ -64,7 +64,7 @@
       </span>
     }
 
-    @if (resizable === 'vertical' && !disabled) {
+    @if (resizable === 'vertical' && !disabled && !readonly) {
       <div
         class="cps-textarea-resize-handle"
         role="button"
