@@ -117,7 +117,13 @@ $hover-transition-duration: 0.2s;
         }
 
         &:focus-visible {
-          @include focus-ring(0, -0.0625rem, 0.25rem);
+          @include focus-ring(0.0625rem, 0, 0.25rem);
+          &::before,
+          &::after {
+            margin-left: 0.6875rem;
+            margin-top: 0.6875rem;
+          }
+
           position: absolute;
           bottom: 0;
           right: 0;
