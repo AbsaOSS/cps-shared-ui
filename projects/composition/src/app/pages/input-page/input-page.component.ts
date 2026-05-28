@@ -8,7 +8,7 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { CpsInputComponent } from 'cps-ui-kit';
+import { CpsInputComponent, CpsNotificationService } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-input.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -31,7 +31,10 @@ export class InputPageComponent implements OnInit {
   componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
-  constructor(private _formBuilder: UntypedFormBuilder) {}
+  constructor(
+    private _notifService: CpsNotificationService,
+    private _formBuilder: UntypedFormBuilder
+  ) {}
 
   ngOnInit() {
     this.form = this._formBuilder.group({
@@ -54,5 +57,11 @@ export class InputPageComponent implements OnInit {
       return { mustMatch8Dig: 'Field must contain exactly 8 digits' };
     }
     return null;
+  }
+
+  onClickPrefixIcon() {
+    this._notifService.info(`Prefix icon clicked`, undefined, {
+      timeout: 2000
+    });
   }
 }

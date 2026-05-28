@@ -304,12 +304,16 @@
     }
   </div>
   @if (!error && !externalError && !hideDetails) {
-    <div class="cps-autocomplete-hint">
+    <div [id]="hintId" class="cps-autocomplete-hint">
       {{ hint }}
     </div>
   }
   @if ((error || externalError) && !hideDetails) {
-    <div class="cps-autocomplete-error" role="alert" aria-live="assertive">
+    <div
+      [id]="errorId"
+      class="cps-autocomplete-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error || externalError }}
     </div>
   }
@@ -328,6 +332,7 @@
     role="combobox"
     aria-autocomplete="list"
     aria-haspopup="listbox"
+    [attr.aria-busy]="loading || validating ? true : null"
     [attr.aria-invalid]="error || externalError ? 'true' : null"
     [attr.aria-controls]="optionsListId"
     [attr.aria-activedescendant]="activeDescendantId"
@@ -341,7 +346,8 @@
     [(ngModel)]="inputText"
     (focus)="onFocus()"
     (blur)="onBlur()"
-    [attr.aria-label]="computedLabel" />
+    [attr.aria-describedby]="describedBy"
+    [attr.aria-label]="ariaLabel || label || null" />
 </ng-template>
 
 <ng-template #itemTemplate let-item="item" let-itemIndex="itemIndex">

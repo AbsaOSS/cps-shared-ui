@@ -43,17 +43,20 @@
         placeholder="Enter amount"></cps-input>
       <div class="sync-val-example">
         <cps-input
-          width="400"
+          width="25rem"
           label="Input with two-way binding, type something in"
           [(ngModel)]="syncVal"
-          hint="This input has a fixed width of 400px"
+          hint="This input has a fixed width of 25rem"
           [ngModelOptions]="{ standalone: true }">
           ></cps-input
         >
         <span class="sync-val">{{ syncVal }}</span>
       </div>
       <cps-input
-        label="Underlined input"
+        label="Underlined input with clickable prefix icon"
+        [prefixIconClickable]="true"
+        prefixIconAriaLabel="Search"
+        (prefixIconClicked)="onClickPrefixIcon()"
         prefixIcon="search"
         appearance="underlined"
         placeholder="Search something"

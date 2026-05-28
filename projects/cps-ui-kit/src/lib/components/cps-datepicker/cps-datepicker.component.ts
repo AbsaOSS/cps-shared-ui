@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
@@ -17,6 +18,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { DatePickerModule } from 'primeng/datepicker';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsDatepickerAppearanceType is used to define the border of the datepicker input.
@@ -44,13 +46,19 @@ export type CpsDatepickerAppearanceType =
   styleUrls: ['./cps-datepicker.component.scss']
 })
 export class CpsDatepickerComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * Label of the datepicker element.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the datepicker component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Determines whether datepicker is disabled.
@@ -205,6 +213,20 @@ export class CpsDatepickerComponent
       () => {
         this._checkErrors();
       }
+    );
+
+    logMissingAriaLabelError(
+      'CpsDatepickerComponent',
+      this.label,
+      this.ariaLabel
+    );
+  }
+
+  ngOnChanges() {
+    logMissingAriaLabelError(
+      'CpsDatepickerComponent',
+      this.label,
+      this.ariaLabel
     );
   }
 
