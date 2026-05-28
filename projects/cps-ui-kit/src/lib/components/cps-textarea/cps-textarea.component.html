@@ -1,4 +1,4 @@
-<div class="cps-textarea-container" [ngStyle]="{ width: cvtWidth }">
+<div class="cps-textarea-container" [style.width]="cvtWidth">
   @if (label) {
     <div
       class="cps-textarea-label"
@@ -26,7 +26,11 @@
       'persistent-clear': persistentClear
     }">
     <textarea
-      spellcheck="false"
+      [attr.spellcheck]="spellcheck"
+      [attr.aria-label]="ariaLabel || label || null"
+      [attr.aria-invalid]="error ? 'true' : null"
+      [attr.aria-required]="isRequired || null"
+      [attr.aria-describedby]="describedBy"
       [cols]="cols"
       [rows]="rows"
       [autofocus]="autofocus"
@@ -39,7 +43,8 @@
       }"
       (blur)="onBlur()"
       (focus)="onFocus()"
-      (input)="updateValueEvent($event)"></textarea>
+      (input)="updateValueEvent($event)">
+    </textarea>
 
     @if (clearable && !disabled) {
       <span
@@ -52,12 +57,16 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-textarea-hint">
+    <div [id]="hintId" class="cps-textarea-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-textarea-error">
+    <div
+      [id]="errorId"
+      class="cps-textarea-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

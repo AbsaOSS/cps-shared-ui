@@ -3,19 +3,25 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  type SimpleChanges
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsTextareaComponent is a textarea component.
@@ -28,13 +34,19 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.dir
   styleUrls: ['./cps-textarea.component.scss']
 })
 export class CpsTextareaComponent
-  implements ControlValueAccessor, OnInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * Label of the textarea.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the textarea component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Placeholder text for the textarea.
@@ -59,6 +71,12 @@ export class CpsTextareaComponent
    * @group Props
    */
   @Input() autofocus = false;
+
+  /**
+   * Determines whether the value of the textarea may be checked for spelling errors.
+   * @group Props
+   */
+  @Input() spellcheck = false;
 
   /**
    * Bottom hint text for the textarea.
@@ -184,6 +202,16 @@ export class CpsTextareaComponent
   private _statusChangesSubscription?: Subscription;
   private _value = '';
 
+  readonly hintId = generateUniqueId('cps-textarea-hint');
+  readonly errorId = generateUniqueId('cps-textarea-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
+
   cvtWidth = '';
 
   constructor(
@@ -202,6 +230,22 @@ export class CpsTextareaComponent
       () => {
         this._checkErrors();
       }
+    );
+    logMissingAriaLabelError(
+      'CpsTextareaComponent',
+      this.label,
+      this.ariaLabel
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+    logMissingAriaLabelError(
+      'CpsTextareaComponent',
+      this.label,
+      this.ariaLabel
     );
   }
 
@@ -248,6 +292,10 @@ export class CpsTextareaComponent
     const message = errArr.find((msg) => typeof msg === 'string');
 
     this.error = message || 'Unknown error';
+  }
+
+  get isRequired(): boolean {
+    return this._control?.control?.hasValidator(Validators.required) ?? false;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
