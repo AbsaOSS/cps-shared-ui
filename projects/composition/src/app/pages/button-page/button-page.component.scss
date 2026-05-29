@@ -27,3 +27,15 @@
   padding-left: 1.125rem;
   padding-right: 1.125rem;
 }
+
+.native-types-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 25rem;
+
+  &__message {
+    color: var(--cps-color-depth);
+    font-style: italic;
+  }
+}
