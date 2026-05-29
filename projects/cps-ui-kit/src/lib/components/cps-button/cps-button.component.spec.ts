@@ -294,6 +294,29 @@ describe('CpsButtonComponent', () => {
       const button = fixture.nativeElement.querySelector('button');
       expect(button.getAttribute('type')).toBe('button');
     });
+
+    it('should fall back to "button" and warn if nativeType is an invalid string', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput('nativeType', 'invalid-type');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+      expect(component.nativeType).toBe('button');
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid nativeType value')
+      );
+      warnSpy.mockRestore();
+    });
+
+    it('should not warn for valid nativeType values', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput('nativeType', 'submit');
+      fixture.detectChanges();
+      fixture.componentRef.setInput('nativeType', 'reset');
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    });
   });
 
   describe('aria-label', () => {
