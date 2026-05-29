@@ -7,7 +7,8 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output
+  Output,
+  SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
@@ -137,7 +138,7 @@ export class CpsButtonComponent implements OnInit, OnChanges {
     logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.buttonColor = getCSSColor(this.color, this.document);
     this.borderRadius = convertSize(this.borderRadius);
     this.textColor =
@@ -149,6 +150,16 @@ export class CpsButtonComponent implements OnInit, OnChanges {
     }
     this.setClasses();
     logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
+
+    if (
+      changes['nativeType]'] &&
+      !['button', 'submit', 'reset'].includes(this.nativeType)
+    ) {
+      console.warn(
+        `Invalid nativeType value: ${this.nativeType}. Expected 'button', 'submit', or 'reset'. Defaulting to 'button'.`
+      );
+      this.nativeType = 'button';
+    }
   }
 
   setClasses() {
