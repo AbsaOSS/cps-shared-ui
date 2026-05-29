@@ -94,24 +94,49 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 
 See [playwright/README.md](playwright/README.md) for full details.
 
+#### Commit / PR title convention
+
+Versioning and the changelog are driven by [Conventional Commits](https://www.conventionalcommits.org/). Because PRs are **squash-merged**, the **PR title** becomes the single commit on `master`, so the PR title is what must follow the convention (enforced by the `Check PR Title` workflow):
+
+```text
+<type>(<scope>): <subject>
+```
+
+**Type** determines the version bump and changelog section:
+
+| Type                                                          | Bump      | Changelog                  |
+| ------------------------------------------------------------- | --------- | -------------------------- |
+| `feat`                                                        | **minor** | Features                   |
+| `fix`                                                         | **patch** | Bug Fixes                  |
+| `perf`                                                        | **patch** | Performance Improvements   |
+| `feat!` / `fix!` / `BREAKING CHANGE:` footer                  | **major** | Breaking section           |
+| `docs`, `style`, `refactor`, `test`, `build`, `ci`, `chore`   | none      | hidden                     |
+
+**Scope** _(optional)_ is the component the change targets, written as the component name **without the `cps-` prefix**. It only affects how the entry is grouped/labelled in the changelog (this is a single package, so the scope does not change versioning). Use the component name from the list above:
+
+```text
+feat(chip): add dismissible variant
+fix(scheduler): correct keyboard navigation in month view
+fix(tree-table): resolve a11y issue with row focus
+```
+
+Omit the scope for cross-cutting changes that don't map to a single component (theming, shared utilities, build, repo-wide a11y sweeps):
+
+```text
+chore: bump X package to v1.2.3
+```
+
+> There is intentionally **no fixed list of allowed scopes**: scope is free-form so new components don't require a CI change. Keep names consistent with the component directory (minus `cps-`).
+
 #### Versioning and publishing
 
-The CI/CD pipeline automatically bumps the **minor version** and publishes the package to NPM on every push to `master` that either touches files under `projects/cps-ui-kit/**` or modifies `.github/workflows/cps-ui-kit-publish.yml`.
+Publishing is fully automated by [Release Please](https://github.com/googleapis/release-please). **You never edit the version in `package.json` by hand.**
 
-To publish a **major** or **patch** version instead:
+1. Merge feature/fix PRs to `master` as usual (squash merge, conventional title).
+2. Release Please keeps an open **"release" PR** up to date, accumulating the next version bump and the generated `CHANGELOG.md` from the merged commits.
+3. When you're ready to ship, **merge the release PR**. That tags the release and triggers the publish job, which builds and publishes to NPM via [trusted publishing (OIDC)](https://docs.npmjs.com/trusted-publishers), with no NPM token required.
 
-1. Manually update the version in [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) to the desired version.
-2. Include `#SkipVersionBump` in the commit message so the pipeline skips the automatic minor bump and publishes exactly the version you set.
-
-Example commit message for the **final/head commit in the push** (the workflow checks only `github.event.head_commit.message`, so `#SkipVersionBump` must appear in the last commit message; the token is matched against the full message, so placing it in the footer is preferred):
-
-```
-chore: release patch fix
-
-#SkipVersionBump
-```
-
-> **Note:** Without `#SkipVersionBump`, any manual version change in `package.json` will be overwritten by the automatic minor bump before publishing.
+The current released version is tracked in [`.release-please-manifest.json`](.release-please-manifest.json); Release Please updates both it and [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) inside the release PR.
 
 #### Run accessibility tests
 
