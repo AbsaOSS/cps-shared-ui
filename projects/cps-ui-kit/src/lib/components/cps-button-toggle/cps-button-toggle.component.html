@@ -69,7 +69,6 @@
       "
       [disabled]="option.disabled || disabled"
       (change)="onRadioChange(option.value)"
-      (click)="onRadioClick($event, option.value)"
       [attr.aria-label]="option.ariaLabel || option.label || null" />
     <span class="cps-btn-toggle-content-option-inner">
       @if (option.icon) {

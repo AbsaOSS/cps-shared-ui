@@ -284,14 +284,6 @@ export class CpsButtonToggleComponent
     this._updateValue(val);
   }
 
-  onRadioClick(event: MouseEvent, val: any): void {
-    if (this.mandatory || this.disabled) return;
-    if (isEqual(this._value, val)) {
-      event.preventDefault();
-      this._updateValue(undefined);
-    }
-  }
-
   private _updateValue(value: any) {
     this.writeValue(value);
     this.onChange(value);
