@@ -170,7 +170,7 @@ const components: ComponentEntry[] = [
   },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
   // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
-  // { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
+  { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
     route: '/timepicker',
     name: 'Timepicker',
