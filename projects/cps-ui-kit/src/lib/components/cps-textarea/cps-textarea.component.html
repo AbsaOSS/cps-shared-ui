@@ -1,8 +1,8 @@
-<div class="cps-textarea-container" [ngStyle]="{ width: cvtWidth }">
+<div class="cps-textarea-container" [style.width]="cvtWidth">
   @if (label) {
     <div
       class="cps-textarea-label"
-      [ngClass]="{ 'cps-textarea-label-disabled': disabled }">
+      [class.cps-textarea-label-disabled]="disabled && !readonly">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -20,44 +20,71 @@
 
   <div
     class="cps-textarea-wrap"
-    [ngClass]="{
-      'cps-textarea-wrap-error': error,
-      clearable: clearable,
-      'persistent-clear': persistentClear
-    }">
+    [class.cps-textarea-wrap-error]="!!error"
+    [class.clearable]="clearable"
+    [class.persistent-clear]="persistentClear"
+    [class.keyboard-focused]="isKeyboardFocused">
     <textarea
-      spellcheck="false"
+      #textareaEl
+      [attr.spellcheck]="spellcheck"
+      [attr.autocomplete]="autocomplete"
+      [attr.aria-label]="ariaLabel || label || null"
+      [attr.aria-invalid]="error ? 'true' : null"
+      [attr.aria-required]="isRequired || null"
+      [attr.aria-describedby]="describedBy"
       [cols]="cols"
       [rows]="rows"
       [autofocus]="autofocus"
       [disabled]="disabled"
+      [readonly]="readonly"
       [placeholder]="placeholder"
       [value]="value"
-      [ngStyle]="{
-        width: cvtWidth,
-        resize: resizable
-      }"
+      [style.width]="cvtWidth"
+      [style.max-height.px]="maxHeightPx"
+      [style.resize]="readonly || disabled ? 'none' : resizable"
+      (mousedown)="onTextareaMousedown()"
       (blur)="onBlur()"
       (focus)="onFocus()"
-      (input)="updateValueEvent($event)"></textarea>
+      (input)="updateValueEvent($event)">
+    </textarea>
 
-    @if (clearable && !disabled) {
+    @if (clearable && !disabled && !readonly) {
       <span
-        [style.visibility]="
-          persistentClear || (!persistentClear && value) ? 'visible' : 'hidden'
-        "
-        class="clear-btn">
-        <cps-icon icon="delete" size="small" (click)="clear()"></cps-icon>
+        class="clear-btn"
+        role="button"
+        [attr.tabindex]="isClearButtonVisible ? 0 : null"
+        aria-label="Clear"
+        [attr.aria-hidden]="isClearButtonVisible ? null : 'true'"
+        [style.visibility]="isClearButtonVisible ? 'visible' : 'hidden'"
+        (mousedown)="$event.preventDefault()"
+        (click)="onClear($event)"
+        (keydown.enter)="onClear($event)"
+        (keydown.space)="onClear($event)">
+        <cps-icon icon="delete" size="small"></cps-icon>
       </span>
+    }
+
+    @if (resizable === 'vertical' && !disabled && !readonly) {
+      <div
+        class="cps-textarea-resize-handle"
+        role="button"
+        tabindex="0"
+        aria-label="Vertically resize textarea"
+        aria-description="Use up and down arrow keys to resize"
+        (keydown)="onResizeHandleKeydown($event)"></div>
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-textarea-hint">
+    <div [id]="hintId" class="cps-textarea-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-textarea-error">
+    <div
+      [id]="errorId"
+      class="cps-textarea-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

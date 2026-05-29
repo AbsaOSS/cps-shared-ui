@@ -14,6 +14,13 @@
       <cps-textarea label="Disabled textarea" [disabled]="true"></cps-textarea>
 
       <cps-textarea
+        label="Readonly textarea"
+        hint="This textarea is readonly"
+        value="Value to show"
+        [readonly]="true">
+      </cps-textarea>
+
+      <cps-textarea
         label="Clearable textarea with persistent clear icon"
         hint="This textarea is clearable"
         value="Clear me"
@@ -23,14 +30,14 @@
 
       <div class="sync-val-example">
         <cps-textarea
-          width="400"
+          width="25rem"
           label="Textarea with two-way binding, type something in"
           [(ngModel)]="syncVal"
           resizable="none"
-          hint="This textarea has a fixed width of 400px"
+          hint="This textarea has a fixed width of 25rem and is not resizable"
           [ngModelOptions]="{ standalone: true }">
-          ></cps-textarea
-        >
+          >
+        </cps-textarea>
         <span class="sync-val">{{ syncVal }}</span>
       </div>
     </div>

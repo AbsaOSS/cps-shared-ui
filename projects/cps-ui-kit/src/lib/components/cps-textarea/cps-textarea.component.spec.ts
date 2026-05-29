@@ -13,6 +13,7 @@ describe('CpsTextareaComponent', () => {
 
     fixture = TestBed.createComponent(CpsTextareaComponent);
     component = fixture.componentInstance;
+    component.ariaLabel = 'Textarea';
     fixture.detectChanges();
   });
 
@@ -28,12 +29,14 @@ describe('CpsTextareaComponent', () => {
     expect(component.autofocus).toBe(false);
     expect(component.hint).toBe('');
     expect(component.disabled).toBe(false);
+    expect(component.readonly).toBe(false);
     expect(component.width).toBe('100%');
     expect(component.clearable).toBe(false);
     expect(component.hideDetails).toBe(false);
     expect(component.persistentClear).toBe(false);
     expect(component.error).toBe('');
     expect(component.resizable).toBe('vertical');
+    expect(component.maxHeight).toBe(Infinity);
   });
 
   it('should render label when provided', () => {
@@ -219,5 +222,140 @@ describe('CpsTextareaComponent', () => {
     component.ngOnDestroy();
     // Verify component can be destroyed without errors
     expect(component).toBeTruthy();
+  });
+
+  describe('readonly', () => {
+    it('should set readonly attribute on textarea', () => {
+      fixture.componentRef.setInput('readonly', true);
+      fixture.detectChanges();
+      const textarea = fixture.nativeElement.querySelector('textarea');
+      expect(textarea.readOnly).toBe(true);
+    });
+
+    it('should hide clear button when readonly', () => {
+      fixture.componentRef.setInput('clearable', true);
+      fixture.componentRef.setInput('readonly', true);
+      component.value = 'Some text';
+      fixture.detectChanges();
+      const clearBtn = fixture.nativeElement.querySelector('.clear-btn');
+      expect(clearBtn).toBeFalsy();
+    });
+
+    it('should hide resize handle when readonly', () => {
+      fixture.componentRef.setInput('readonly', true);
+      fixture.detectChanges();
+      const handle = fixture.nativeElement.querySelector(
+        '.cps-textarea-resize-handle'
+      );
+      expect(handle).toBeFalsy();
+    });
+
+    it('should not dim label when readonly', () => {
+      fixture.componentRef.setInput('label', 'Label');
+      fixture.componentRef.setInput('readonly', true);
+      fixture.detectChanges();
+      const label = fixture.nativeElement.querySelector('.cps-textarea-label');
+      expect(label.classList).not.toContain('cps-textarea-label-disabled');
+    });
+
+    it('should dim label when disabled and not readonly', () => {
+      fixture.componentRef.setInput('label', 'Label');
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const label = fixture.nativeElement.querySelector('.cps-textarea-label');
+      expect(label.classList).toContain('cps-textarea-label-disabled');
+    });
+  });
+
+  describe('keyboard focus tracking', () => {
+    it('should set isKeyboardFocused to true on keyboard focus', () => {
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(true);
+    });
+
+    it('should not set isKeyboardFocused when focused after mousedown', () => {
+      component.onTextareaMousedown();
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+
+    it('should clear isKeyboardFocused on blur', () => {
+      component.onFocus();
+      component.onBlur();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+  });
+
+  describe('maxHeight', () => {
+    it('should have maxHeightPx as null when maxHeight is Infinity', () => {
+      expect(component.maxHeightPx).toBeNull();
+    });
+
+    it('should set maxHeightPx when maxHeight is set in pixels', () => {
+      fixture.componentRef.setInput('maxHeight', 300);
+      fixture.detectChanges();
+      expect(component.maxHeightPx).toBe(300);
+    });
+
+    it('should set maxHeightPx to null when resizable is none', () => {
+      fixture.componentRef.setInput('maxHeight', 300);
+      fixture.componentRef.setInput('resizable', 'none');
+      fixture.detectChanges();
+      expect(component.maxHeightPx).toBeNull();
+    });
+  });
+
+  describe('resize handle keyboard interaction', () => {
+    let textarea: HTMLTextAreaElement;
+
+    beforeEach(() => {
+      textarea = fixture.nativeElement.querySelector('textarea');
+      Object.defineProperty(textarea, 'offsetHeight', {
+        get: () => 100,
+        configurable: true
+      });
+      (component as any)._singleRowHeightPx = 20;
+    });
+
+    it('should increase height on ArrowDown', () => {
+      const step = (component as any)._resizeStepPx();
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowDown',
+        cancelable: true
+      });
+      component.onResizeHandleKeydown(event);
+      expect(textarea.style.height).toBe(`${100 + step}px`);
+    });
+
+    it('should decrease height on ArrowUp', () => {
+      const step = (component as any)._resizeStepPx();
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowUp',
+        cancelable: true
+      });
+      component.onResizeHandleKeydown(event);
+      expect(textarea.style.height).toBe(`${100 - step}px`);
+    });
+
+    it('should not shrink below single row height on ArrowUp', () => {
+      (component as any)._singleRowHeightPx = 80;
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowUp',
+        cancelable: true
+      });
+      component.onResizeHandleKeydown(event);
+      expect(textarea.style.height).toBe('80px');
+    });
+
+    it('should cap height at maxHeightPx on ArrowDown', () => {
+      fixture.componentRef.setInput('maxHeight', 110);
+      fixture.detectChanges();
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowDown',
+        cancelable: true
+      });
+      component.onResizeHandleKeydown(event);
+      expect(textarea.style.height).toBe('110px');
+    });
   });
 });
