@@ -347,9 +347,9 @@
           type="borderless"
           color="surprise"></cps-button>
       </div>
-      @if (nativeSubmitMessage) {
-        <div class="native-types-form__message">{{ nativeSubmitMessage }}</div>
-      }
+      <div class="native-types-form__message" aria-live="polite">
+        {{ nativeSubmitMessage }}
+      </div>
     </form>
   </app-code-example>
 

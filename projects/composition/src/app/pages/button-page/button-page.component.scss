@@ -37,5 +37,6 @@
   &__message {
     color: var(--cps-color-depth);
     font-style: italic;
+    min-height: 1.5em;
   }
 }
