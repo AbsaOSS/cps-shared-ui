@@ -3,6 +3,7 @@
     data-testid="schedule-type-toggle"
     [options]="scheduleTypes"
     [disabled]="disabled"
+    [ariaLabel]="ariaLabel"
     [label]="label"
     [infoTooltip]="infoTooltip"
     [(ngModel)]="activeScheduleType"
@@ -23,7 +24,8 @@
         <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
-            width="70px"
+            ariaLabel="Select minutes frequency"
+            width="4.375rem"
             [disabled]="disabled"
             [returnObject]="false"
             [hideDetails]="true"
@@ -43,7 +45,8 @@
         <div class="cps-scheduler-tab-pane-row">
           Every
           <cps-select
-            width="70px"
+            ariaLabel="Select hours frequency"
+            width="4.375rem"
             [disabled]="disabled"
             [returnObject]="false"
             [hideDetails]="true"
@@ -55,7 +58,8 @@
           </cps-select>
           hour(s) on minute
           <cps-select
-            width="70px"
+            ariaLabel="Select on which minute"
+            width="4.375rem"
             [disabled]="disabled"
             [returnObject]="false"
             [hideDetails]="true"
@@ -91,7 +95,8 @@
               ">
               Every
               <cps-select
-                width="70px"
+                ariaLabel="Select days frequency"
+                width="4.375rem"
                 data-testid="daily-every-days-input"
                 [disabled]="disabled || state.daily.subTab !== 'everyDays'"
                 [returnObject]="false"
@@ -103,6 +108,7 @@
               </cps-select>
               day(s) at
               <cps-timepicker
+                ariaLabel="Time"
                 data-testid="daily-timepicker"
                 [disabled]="disabled || state.daily.subTab !== 'everyDays'"
                 [use24HourTime]="use24HourTime"
@@ -128,6 +134,7 @@
               ">
               Every working day at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -199,6 +206,7 @@
         <div class="cps-scheduler-tab-pane-row">
           at
           <cps-timepicker
+            ariaLabel="Time"
             [disabled]="disabled"
             data-testid="weekly-timepicker"
             [use24HourTime]="use24HourTime"
@@ -234,7 +242,8 @@
               ">
               On the
               <cps-select
-                width="120px"
+                ariaLabel="Select day of month"
+                width="7.5rem"
                 data-testid="monthly-day-select"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [returnObject]="false"
@@ -246,7 +255,8 @@
               </cps-select>
               of every
               <cps-select
-                width="70px"
+                ariaLabel="Select months frequency"
+                width="4.375rem"
                 data-testid="monthly-months-input"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [returnObject]="false"
@@ -258,6 +268,7 @@
               </cps-select>
               month(s) at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -293,7 +304,8 @@
               ">
               On the
               <cps-select
-                width="106px"
+                ariaLabel="Select weekday occurrence"
+                width="6.625rem"
                 data-testid="monthly-week-select"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
@@ -306,7 +318,8 @@
                 class="cps-scheduler-select-control">
               </cps-select>
               <cps-select
-                width="130px"
+                ariaLabel="Select weekday"
+                width="8.125rem"
                 data-testid="monthly-weekday-select"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
@@ -320,7 +333,8 @@
               </cps-select>
               of every
               <cps-select
-                width="90px"
+                ariaLabel="Select months frequency"
+                width="5.625rem"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
                 "
@@ -334,7 +348,8 @@
               </cps-select>
               month(s) starting in
               <cps-select
-                width="120px"
+                ariaLabel="Select starting month"
+                width="7.5rem"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
                 "
@@ -348,6 +363,7 @@
               </cps-select>
               at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="
                   disabled || state.monthly.subTab !== 'specificWeekDay'
                 "
@@ -389,7 +405,8 @@
               ">
               Every
               <cps-select
-                width="120px"
+                ariaLabel="Select month"
+                width="7.5rem"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
                 "
@@ -403,7 +420,8 @@
               </cps-select>
               on the
               <cps-select
-                width="120px"
+                ariaLabel="Select day of month"
+                width="7.5rem"
                 data-testid="yearly-day-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
@@ -417,6 +435,7 @@
               </cps-select>
               at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
                 "
@@ -456,7 +475,8 @@
               ">
               On the
               <cps-select
-                width="106px"
+                ariaLabel="Select weekday occurrence"
+                width="6.625rem"
                 data-testid="yearly-week-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
@@ -469,7 +489,8 @@
                 class="cps-scheduler-select-control">
               </cps-select>
               <cps-select
-                width="120px"
+                ariaLabel="Select weekday"
+                width="7.5rem"
                 data-testid="yearly-weekday-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
@@ -483,7 +504,8 @@
               </cps-select>
               of
               <cps-select
-                width="120px"
+                ariaLabel="Select month"
+                width="7.5rem"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "
@@ -496,6 +518,7 @@
               </cps-select>
               at
               <cps-timepicker
+                ariaLabel="Time"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "
@@ -517,10 +540,10 @@
       <div data-testid="advanced-config">
         <form [formGroup]="form">
           <cps-input
-            label=""
+            ariaLabel="Advanced cron expression"
             data-testid="advanced-cron-input"
             [disabled]="disabled"
-            width="500px"
+            width="31.25rem"
             placeholder="Please enter"
             formControlName="advanced"
             (valueChanged)="regenerateCron()">
@@ -534,11 +557,12 @@
     <div class="cps-scheduler-time-zone" data-testid="timezone-selector">
       <cps-autocomplete
         label="Time zone"
+        [disabled]="disabled"
         data-testid="timezone-select"
         [(ngModel)]="timeZone"
         (valueChanged)="onTimeZoneChanged($event)"
         [returnObject]="false"
-        width="300"
+        width="18.75rem"
         [options]="timeZoneOptions">
       </cps-autocomplete>
     </div>

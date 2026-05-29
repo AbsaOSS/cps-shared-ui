@@ -10,8 +10,7 @@ import {
   OnInit,
   Optional,
   Output,
-  Self,
-  type SimpleChanges
+  Self
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -20,7 +19,7 @@ import { CpsRadioButtonComponent } from './cps-radio-button/cps-radio-button.com
 import { Subscription } from 'rxjs';
 import {
   generateUniqueId,
-  getComputedLabel
+  logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 
 /**
@@ -165,6 +164,15 @@ export class CpsRadioGroupComponent
   @Output() focused = new EventEmitter();
 
   readonly groupName = generateUniqueId('cps-radio-group');
+  readonly hintId = generateUniqueId('cps-radio-group-hint');
+  readonly errorId = generateUniqueId('cps-radio-group-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
 
   private _statusChangesSubscription?: Subscription;
   private _value: any = undefined;
@@ -183,16 +191,19 @@ export class CpsRadioGroupComponent
         this._checkErrors();
       }
     );
+    logMissingAriaLabelError(
+      'CpsRadioGroupComponent',
+      this.groupLabel,
+      this.ariaLabel
+    );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.groupLabel || changes.ariaLabel) {
-      if (!this.groupLabel?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsRadioGroupComponent: unlabeled radio group component must have an ariaLabel for accessibility.'
-        );
-      }
-    }
+  ngOnChanges(): void {
+    logMissingAriaLabelError(
+      'CpsRadioGroupComponent',
+      this.groupLabel,
+      this.ariaLabel
+    );
   }
 
   ngOnDestroy() {
@@ -242,14 +253,6 @@ export class CpsRadioGroupComponent
 
   get isRequired(): boolean {
     return this._control?.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.groupLabel,
-      error: this.error,
-      hideDetails: this.hideDetails
-    });
   }
 
   private _checkErrors() {

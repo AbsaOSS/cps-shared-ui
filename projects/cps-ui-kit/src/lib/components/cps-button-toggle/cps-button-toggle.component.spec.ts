@@ -35,6 +35,7 @@ describe('CpsButtonToggleComponent', () => {
 
     fixture = TestBed.createComponent(CpsButtonToggleComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Toggle group');
     fixture.componentRef.setInput('options', OPTIONS);
     fixture.detectChanges();
   });
@@ -49,28 +50,32 @@ describe('CpsButtonToggleComponent', () => {
 
   describe('default values', () => {
     it('should have correct default input values', () => {
-      expect(component.label).toBe('');
-      expect(component.ariaLabel).toBe('');
-      expect(component.multiple).toBe(false);
-      expect(component.disabled).toBe(false);
-      expect(component.mandatory).toBe(true);
-      expect(component.equalWidths).toBe(true);
-      expect(component.optionTooltipPosition).toBe('bottom');
-      expect(component.infoTooltip).toBe('');
-      expect(component.infoTooltipClass).toBe('cps-tooltip-content');
-      expect(component.infoTooltipMaxWidth).toBe('100%');
-      expect(component.infoTooltipPersistent).toBe(false);
-      expect(component.infoTooltipPosition).toBe('top');
-      expect(component.value).toBeUndefined();
+      const defaultComponent = TestBed.createComponent(
+        CpsButtonToggleComponent
+      ).componentInstance;
+      expect(defaultComponent.label).toBe('');
+      expect(defaultComponent.ariaLabel).toBe('');
+      expect(defaultComponent.multiple).toBe(false);
+      expect(defaultComponent.disabled).toBe(false);
+      expect(defaultComponent.mandatory).toBe(true);
+      expect(defaultComponent.radioNavigation).toBe(true);
+      expect(defaultComponent.equalWidths).toBe(true);
+      expect(defaultComponent.optionTooltipPosition).toBe('bottom');
+      expect(defaultComponent.infoTooltip).toBe('');
+      expect(defaultComponent.infoTooltipClass).toBe('cps-tooltip-content');
+      expect(defaultComponent.infoTooltipMaxWidth).toBe('100%');
+      expect(defaultComponent.infoTooltipPersistent).toBe(false);
+      expect(defaultComponent.infoTooltipPosition).toBe('top');
+      expect(defaultComponent.value).toBeUndefined();
     });
   });
 
   describe('template', () => {
     it('should render one button per option', () => {
-      const buttons = fixture.nativeElement.querySelectorAll(
-        'button.cps-btn-toggle-content-option'
+      const options = fixture.nativeElement.querySelectorAll(
+        '.cps-btn-toggle-content-option'
       );
-      expect(buttons.length).toBe(OPTIONS.length);
+      expect(options.length).toBe(OPTIONS.length);
     });
 
     it('should show label element when label is set', () => {
@@ -89,79 +94,80 @@ describe('CpsButtonToggleComponent', () => {
       expect(label).toBeNull();
     });
 
-    it('should set aria-label on role=group from ariaLabel', () => {
+    it('should set aria-label on the container from ariaLabel', () => {
       fixture.componentRef.setInput('ariaLabel', 'Toggle group');
       fixture.detectChanges();
-      const group = fixture.nativeElement.querySelector('[role="group"]');
+      const group = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
       expect(group.getAttribute('aria-label')).toBe('Toggle group');
     });
 
-    it('should prefer ariaLabel over label for role=group aria-label', () => {
+    it('should prefer ariaLabel over label for container aria-label', () => {
       fixture.componentRef.setInput('label', 'My Label');
       fixture.componentRef.setInput('ariaLabel', 'Aria Label');
       fixture.detectChanges();
-      const group = fixture.nativeElement.querySelector('[role="group"]');
+      const group = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
       expect(group.getAttribute('aria-label')).toBe('Aria Label');
     });
 
-    it('should fall back to label for role=group aria-label when ariaLabel is empty', () => {
+    it('should fall back to label for container aria-label when ariaLabel is empty', () => {
       fixture.componentRef.setInput('label', 'My Label');
+      fixture.componentRef.setInput('ariaLabel', '');
       fixture.detectChanges();
-      const group = fixture.nativeElement.querySelector('[role="group"]');
+      const group = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
       expect(group.getAttribute('aria-label')).toBe('My Label');
     });
 
-    it('should mark selected option with aria-pressed="true"', () => {
+    it('should mark selected option with checked input in radio mode', () => {
       fixture.componentRef.setInput('value', 'b');
       fixture.detectChanges();
-      const buttons = fixture.nativeElement.querySelectorAll(
-        'button.cps-btn-toggle-content-option'
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
       );
-      expect(buttons[0].getAttribute('aria-pressed')).toBe('false');
-      expect(buttons[1].getAttribute('aria-pressed')).toBe('true');
-      expect(buttons[2].getAttribute('aria-pressed')).toBe('false');
+      expect(inputs[0].checked).toBe(false);
+      expect(inputs[1].checked).toBe(true);
+      expect(inputs[2].checked).toBe(false);
     });
 
-    it('should disable all buttons when component is disabled', () => {
+    it('should disable all radio inputs when component is disabled', () => {
       fixture.componentRef.setInput('disabled', true);
       fixture.detectChanges();
-      const buttons = fixture.nativeElement.querySelectorAll(
-        'button.cps-btn-toggle-content-option'
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
       );
-      buttons.forEach((btn: HTMLButtonElement) => {
-        expect(btn.disabled).toBe(true);
+      inputs.forEach((input: HTMLInputElement) => {
+        expect(input.disabled).toBe(true);
       });
     });
 
-    it('should disable only the matching button when option.disabled is true', () => {
+    it('should disable only the matching radio input when option.disabled is true', () => {
       fixture.componentRef.setInput('options', [
         { value: 'a', label: 'Alpha', disabled: true },
         { value: 'b', label: 'Beta' }
       ]);
       fixture.detectChanges();
-      const buttons = fixture.nativeElement.querySelectorAll(
-        'button.cps-btn-toggle-content-option'
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
       );
-      expect(buttons[0].disabled).toBe(true);
-      expect(buttons[1].disabled).toBe(false);
+      expect(inputs[0].disabled).toBe(true);
+      expect(inputs[1].disabled).toBe(false);
     });
   });
 
   describe('updateValueOnClick - single select', () => {
     it('should update value when clicking an option', () => {
-      const buttons = fixture.nativeElement.querySelectorAll(
-        'button.cps-btn-toggle-content-option'
-      );
-      buttons[1].click();
+      component.updateValueOnClick('b');
       expect(component.value).toBe('b');
     });
 
     it('should emit valueChanged when clicking an option', () => {
       jest.spyOn(component.valueChanged, 'emit');
-      const buttons = fixture.nativeElement.querySelectorAll(
-        'button.cps-btn-toggle-content-option'
-      );
-      buttons[0].click();
+      component.updateValueOnClick('a');
       expect(component.valueChanged.emit).toHaveBeenCalledWith('a');
     });
 
@@ -245,6 +251,7 @@ describe('CpsButtonToggleComponent', () => {
 
     it('should initialize value to [] when multiple is true and no value is set', () => {
       const newFixture = TestBed.createComponent(CpsButtonToggleComponent);
+      newFixture.componentRef.setInput('ariaLabel', 'Toggle group');
       newFixture.componentRef.setInput('multiple', true);
       newFixture.componentRef.setInput('options', OPTIONS);
       newFixture.detectChanges();
@@ -283,9 +290,10 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.ariaLabel = '';
       component.ngOnChanges({
         label: new SimpleChange('My Label', '', false),
-        ariaLabel: new SimpleChange('', '', false)
+        ariaLabel: new SimpleChange('Toggle group', '', false)
       });
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('ariaLabel')
@@ -297,6 +305,7 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.ariaLabel = '';
       fixture.componentRef.setInput('label', 'My Label');
       fixture.detectChanges();
       expect(consoleSpy).not.toHaveBeenCalled();
@@ -332,6 +341,7 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.label = 'Toggle';
       const goodOptions = [{ value: 'x', label: 'X' }];
       component.options = goodOptions;
       component.ngOnChanges({
@@ -345,6 +355,7 @@ describe('CpsButtonToggleComponent', () => {
       const consoleSpy = jest
         .spyOn(console, 'error')
         .mockImplementation(() => {});
+      component.label = 'Toggle';
       const ariaOptions = [{ value: 'x', ariaLabel: 'X' }];
       component.options = ariaOptions;
       component.ngOnChanges({
@@ -399,6 +410,157 @@ describe('CpsButtonToggleComponent', () => {
       fixture.detectChanges();
       await fixture.whenStable();
       expect(spy).toHaveBeenCalledWith(20);
+    });
+  });
+
+  describe('radio navigation', () => {
+    it('should use role="radiogroup" by default for single-select', () => {
+      const container = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
+      expect(container.getAttribute('role')).toBe('radiogroup');
+    });
+
+    it('should use role="group" when radioNavigation is false', () => {
+      fixture.componentRef.setInput('radioNavigation', false);
+      fixture.detectChanges();
+      const container = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
+      expect(container.getAttribute('role')).toBe('group');
+    });
+
+    it('should use role="group" when multiple is true regardless of radioNavigation', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.detectChanges();
+      const container = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
+      expect(container.getAttribute('role')).toBe('group');
+    });
+
+    it('should render native radio inputs in radio mode', () => {
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input[type="radio"].cps-btn-toggle-radio-input'
+      );
+      expect(inputs.length).toBe(OPTIONS.length);
+    });
+
+    it('should group radio inputs under a shared name', () => {
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
+      );
+      const names = Array.from(inputs).map((i: any) => i.name);
+      expect(new Set(names).size).toBe(1);
+      expect(names[0]).toBe(component.groupName);
+    });
+
+    it('should not render radio inputs when radioNavigation is false', () => {
+      fixture.componentRef.setInput('radioNavigation', false);
+      fixture.detectChanges();
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
+      );
+      expect(inputs.length).toBe(0);
+    });
+
+    it('should not render radio inputs when mandatory is false', () => {
+      fixture.componentRef.setInput('mandatory', false);
+      fixture.detectChanges();
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
+      );
+      expect(inputs.length).toBe(0);
+    });
+
+    it('should use role="group" when mandatory is false', () => {
+      fixture.componentRef.setInput('mandatory', false);
+      fixture.detectChanges();
+      const container = fixture.nativeElement.querySelector(
+        '.cps-btn-toggle-content'
+      );
+      expect(container.getAttribute('role')).toBe('group');
+    });
+
+    it('should not render radio inputs when multiple is true', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.detectChanges();
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
+      );
+      expect(inputs.length).toBe(0);
+    });
+
+    it('should render buttons when radioNavigation is false', () => {
+      fixture.componentRef.setInput('radioNavigation', false);
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        'button.cps-btn-toggle-content-option'
+      );
+      expect(buttons.length).toBe(OPTIONS.length);
+    });
+
+    it('should mark disabled radio input when option.disabled is true', () => {
+      fixture.componentRef.setInput('options', [
+        { value: 'a', label: 'Alpha', disabled: true },
+        { value: 'b', label: 'Beta' }
+      ]);
+      fixture.detectChanges();
+      const inputs = fixture.nativeElement.querySelectorAll(
+        'input.cps-btn-toggle-radio-input'
+      );
+      expect(inputs[0].disabled).toBe(true);
+      expect(inputs[1].disabled).toBe(false);
+    });
+
+    it('should add is-disabled class to label when component is disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const labels = fixture.nativeElement.querySelectorAll(
+        'label.cps-btn-toggle-content-option'
+      );
+      labels.forEach((label: HTMLLabelElement) => {
+        expect(label.classList.contains('is-disabled')).toBe(true);
+      });
+    });
+
+    it('should use aria-pressed (not radio input) when radioNavigation is false', () => {
+      fixture.componentRef.setInput('radioNavigation', false);
+      fixture.componentRef.setInput('value', 'a');
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        'button.cps-btn-toggle-content-option'
+      );
+      expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should use aria-pressed on buttons in multiple mode', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('value', ['a']);
+      fixture.detectChanges();
+      const buttons = fixture.nativeElement.querySelectorAll(
+        'button.cps-btn-toggle-content-option'
+      );
+      expect(buttons[0].getAttribute('aria-pressed')).toBe('true');
+    });
+
+    it('should update value on onRadioChange', () => {
+      component.onRadioChange('b');
+      expect(component.value).toBe('b');
+    });
+
+    it('should emit valueChanged on onRadioChange', () => {
+      jest.spyOn(component.valueChanged, 'emit');
+      component.onRadioChange('c');
+      expect(component.valueChanged.emit).toHaveBeenCalledWith('c');
+    });
+
+    it('should not update value on onRadioChange when disabled', () => {
+      fixture.componentRef.setInput('value', 'a');
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      component.onRadioChange('b');
+      expect(component.value).toBe('a');
     });
   });
 });

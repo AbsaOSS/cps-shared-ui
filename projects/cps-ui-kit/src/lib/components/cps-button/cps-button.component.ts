@@ -6,13 +6,14 @@ import {
   Inject,
   Input,
   OnChanges,
-  Output,
-  type SimpleChanges
+  OnInit,
+  Output
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsButtonComponent is a button element.
@@ -24,7 +25,7 @@ import { convertSize, parseSize } from '../../utils/internal/size-utils';
   templateUrl: './cps-button.component.html',
   styleUrls: ['./cps-button.component.scss']
 })
-export class CpsButtonComponent implements OnChanges {
+export class CpsButtonComponent implements OnInit, OnChanges {
   /**
    * Color of the button.
    * @group Props
@@ -132,7 +133,11 @@ export class CpsButtonComponent implements OnChanges {
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnInit(): void {
+    logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
+  }
+
+  ngOnChanges(): void {
     this.buttonColor = getCSSColor(this.color, this.document);
     this.borderRadius = convertSize(this.borderRadius);
     this.textColor =
@@ -142,14 +147,8 @@ export class CpsButtonComponent implements OnChanges {
     if (this.disabled || this.loading) {
       this.enterActive = false;
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
-        );
-      }
-    }
     this.setClasses();
+    logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
   }
 
   setClasses() {

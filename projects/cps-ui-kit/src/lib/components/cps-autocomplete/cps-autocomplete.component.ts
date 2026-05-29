@@ -28,7 +28,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
-  getComputedLabel
+  logMissingAriaLabelError
 } from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
@@ -421,16 +421,18 @@ export class CpsAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   isActive = false;
+  isKeyboardFocused = false;
   inputText = '';
   inputTextDebounced = '';
   filteredOptions: any[] = [];
   backspaceClickedOnce = false;
   activeSingle = false;
   optionHighlightedIndex = -1;
+  isArrowNavigating = false;
 
   readonly virtualScrollItemSizePx = computed(
     () =>
-      (this._cpsRootFontSizeService?.fontSize() ?? 16) *
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
       VIRTUAL_SCROLL_ITEM_SIZE_REM
   );
 
@@ -447,6 +449,16 @@ export class CpsAutocompleteComponent
     'cps-autocomplete-option-select-all'
   );
 
+  readonly hintId = generateUniqueId('cps-autocomplete-hint');
+  readonly errorId = generateUniqueId('cps-autocomplete-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error || this.externalError) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
+
   private readonly _optionIdPrefix = generateUniqueId(
     'cps-autocomplete-option'
   );
@@ -456,6 +468,7 @@ export class CpsAutocompleteComponent
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
 
+  private _mouseActivated = false;
   private _options: any[] = [];
   private _optionIds = new WeakMap<object, string>();
 
@@ -478,6 +491,7 @@ export class CpsAutocompleteComponent
   ngOnInit() {
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
+    this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
     }
@@ -502,6 +516,12 @@ export class CpsAutocompleteComponent
         this.inputTextDebounced = this.inputText;
         this.inputChanged.emit(val);
       });
+
+    logMissingAriaLabelError(
+      'CpsAutocompleteComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -521,13 +541,12 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
-        );
-      }
-    }
+
+    logMissingAriaLabelError(
+      'CpsAutocompleteComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngAfterViewInit(): void {
@@ -599,6 +618,8 @@ export class CpsAutocompleteComponent
   }
 
   onOptionClick(option: any) {
+    this.isKeyboardFocused = false;
+    this._mouseActivated = true;
     this._clickOption(option);
   }
 
@@ -682,10 +703,9 @@ export class CpsAutocompleteComponent
     event?.stopPropagation();
     event?.preventDefault();
 
-    if (
-      (!this.multiple && !this.isEmptyValue()) ||
-      (this.multiple && this.value?.length > 0)
-    ) {
+    const hadValue = this.hasSelectedValue();
+
+    if (hadValue) {
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
@@ -694,9 +714,15 @@ export class CpsAutocompleteComponent
     }
     this.clearInput();
     this._dehighlightOption();
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
+    if (hadValue) {
+      this._mouseActivated = !(event instanceof KeyboardEvent);
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
+    if (!(event instanceof KeyboardEvent)) {
+      this.isKeyboardFocused = false;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -704,6 +730,8 @@ export class CpsAutocompleteComponent
 
   onBlur() {
     this.isActive = false;
+    this.isKeyboardFocused = false;
+    this._mouseActivated = false;
 
     this._confirmInput(this.inputText || '', false);
 
@@ -718,7 +746,9 @@ export class CpsAutocompleteComponent
   onFocus() {
     if (!this.disabled) {
       this.isActive = true;
+      this.isKeyboardFocused = !this._mouseActivated;
     }
+    this._mouseActivated = false;
 
     if (!this.multiple) {
       this.activeSingle = true;
@@ -743,23 +773,33 @@ export class CpsAutocompleteComponent
     }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
-    this.onBlur();
   }
 
-  onBoxClick() {
+  onBoxClick(fromKeyboard = false) {
+    this._mouseActivated = !fromKeyboard;
+    if (!fromKeyboard) {
+      this.isKeyboardFocused = false;
+    }
+    const wasOpened = this.isOpened;
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
-      if (!this.isOpened) this.filteredOptions = this.options;
+      if (!wasOpened) this.filteredOptions = this.options;
     }
     this._dehighlightOption();
     setTimeout(() => {
-      this.focus();
+      this.focusInput();
+      if (!wasOpened) {
+        this._toggleOptions(true);
+      }
     });
   }
 
   onContainerKeyDown(event: any) {
     const code = event.keyCode;
+    if ([13, 38, 40].includes(code)) {
+      this.isKeyboardFocused = true;
+    }
     // enter
     if (code === 13) {
       let idx = this.optionHighlightedIndex;
@@ -821,12 +861,12 @@ export class CpsAutocompleteComponent
     if (this.isOpened) {
       this._closeAndClear();
     } else {
-      this.onBoxClick();
+      this.onBoxClick(event instanceof KeyboardEvent);
     }
   }
 
   focusInput() {
-    this.autocompleteContainer?.nativeElement?.querySelector('input')?.focus();
+    this.autocompleteInput?.nativeElement?.focus();
   }
 
   focus() {
@@ -843,12 +883,14 @@ export class CpsAutocompleteComponent
     this.virtualList?.setSpacerSize();
   }
 
-  isEmptyValue(): boolean {
+  hasSelectedValue(): boolean {
+    if (this.multiple) {
+      return this.value?.length > 0;
+    }
     return (
-      this.value === null ||
-      this.value === undefined ||
-      (typeof this.value === 'string' && this.value.trim() === '') ||
-      Number.isNaN(this.value)
+      this.value != null &&
+      !(typeof this.value === 'string' && this.value.trim() === '') &&
+      !Number.isNaN(this.value)
     );
   }
 
@@ -863,14 +905,6 @@ export class CpsAutocompleteComponent
 
   get isRequired(): boolean {
     return this._control?.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.label,
-      error: this.error || this.externalError,
-      hideDetails: this.hideDetails
-    });
   }
 
   get isSelectAllVisible(): boolean {
@@ -944,6 +978,7 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       if (this.isOpened && this.filteredOptions.length > 0) {
         this.recalcVirtualListHeight();
+        this._syncHighlightToValue();
 
         const selected =
           this.optionsList.nativeElement.querySelector('.selected');
@@ -953,15 +988,8 @@ export class CpsAutocompleteComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (this.virtualScroll && !this.isEmptyValue()) {
-          let v: any;
-          if (this.multiple) {
-            if (this.value.length > 0) {
-              v = this.value[0];
-            }
-          } else v = this.value;
-          const idx = this.filteredOptions.findIndex((o) => isEqual(o, v));
-          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        } else if (this.virtualScroll && this.optionHighlightedIndex >= 0) {
+          this._scrollVirtualListToIndex(this.optionHighlightedIndex);
         }
       }
     });
@@ -1008,7 +1036,7 @@ export class CpsAutocompleteComponent
   }
 
   private _getValueLabel() {
-    return !this.isEmptyValue()
+    return this.hasSelectedValue()
       ? this.returnObject
         ? this.value[this.optionLabel]
         : this._labelByValue.transform(
@@ -1028,6 +1056,19 @@ export class CpsAutocompleteComponent
 
   private _dehighlightOption() {
     this.optionHighlightedIndex = -1;
+    this.isArrowNavigating = false;
+  }
+
+  private _syncHighlightToValue(): void {
+    if (!this.hasSelectedValue()) return;
+
+    const firstSelected = this.multiple ? this.value[0] : this.value;
+    const idx = this.filteredOptions.findIndex((o) =>
+      isEqual(this.returnObject ? o : o[this.optionValue], firstSelected)
+    );
+    if (idx < 0) return;
+
+    this.optionHighlightedIndex = idx + (this.isSelectAllVisible ? 1 : 0);
   }
 
   private _getHighlightedOptionId(): string | null {
@@ -1067,6 +1108,7 @@ export class CpsAutocompleteComponent
 
     if (this.optionsAriaSetSize < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(
       up,
       this.optionsAriaSetSize
@@ -1090,6 +1132,7 @@ export class CpsAutocompleteComponent
     const len = this.filteredOptions.length;
     if (len < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
     this._syncVirtualHighlightedOptionIntoView();
   }
@@ -1148,13 +1191,23 @@ export class CpsAutocompleteComponent
 
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
-      if (this.multiple) return;
-      // Only reset the value if the inputText was changed by the user
-      if (this.inputText !== this._getValueLabel()) {
-        this.updateValue(this._getEmptyValue());
+      if (this.multiple) {
+        this._closeAndClear();
+        return;
       }
-      this.cdRef.detectChanges();
-      this._closeAndClear();
+      const shouldUpdateValue =
+        this.activeSingle && this.inputText !== this._getValueLabel();
+      this.clearInput();
+      this._dehighlightOption();
+      if (shouldUpdateValue) {
+        setTimeout(() => {
+          this.updateValue(this._getEmptyValue());
+          if (needFocusInput) {
+            this.cdRef.detectChanges();
+            this.focusInput();
+          }
+        }, 0);
+      }
       return;
     }
 

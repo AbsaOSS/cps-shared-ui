@@ -4,10 +4,11 @@ import {
   Component,
   Input,
   OnChanges,
+  OnInit,
   TemplateRef,
-  ViewChild,
-  type SimpleChanges
+  ViewChild
 } from '@angular/core';
+import { logMissingAriaLabelError } from '../../../utils/internal/accessibility-utils';
 
 /**
  * CpsTabComponent is a tab within a tab-group.
@@ -19,7 +20,7 @@ import {
   templateUrl: './cps-tab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CpsTabComponent implements OnChanges {
+export class CpsTabComponent implements OnInit, OnChanges {
   /**
    * Label of the tab.
    * @group Props
@@ -84,13 +85,11 @@ export class CpsTabComponent implements OnChanges {
 
   active = false;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsTabComponent: unlabeled tab component must have an ariaLabel for accessibility.'
-        );
-      }
-    }
+  ngOnInit(): void {
+    logMissingAriaLabelError('CpsTabComponent', this.label, this.ariaLabel);
+  }
+
+  ngOnChanges(): void {
+    logMissingAriaLabelError('CpsTabComponent', this.label, this.ariaLabel);
   }
 }

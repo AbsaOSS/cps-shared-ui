@@ -181,7 +181,7 @@ onMultiInputChanged(val: string): void {
   optionValue="val"
   optionInfo="ticker"
   placeholder="Enter a company"
-  hint="This autocomplete has a fixed width of 500px"
+  hint="This autocomplete has a fixed width of 31.25rem"
   [clearable]="true"
   [multiple]="true"
   [closableChips]="false"

@@ -21,6 +21,7 @@
       @if (isShowOperator) {
         <div class="cps-table-col-filter-menu-content-operator">
           <cps-select
+            ariaLabel="Select operator"
             [hideDetails]="true"
             [disabled]="!fieldConstraints || fieldConstraints.length < 2"
             [returnObject]="false"
@@ -38,6 +39,7 @@
           <div class="cps-table-col-filter-menu-content-constraint">
             @if (showMatchModes && currentMatchModes) {
               <cps-select
+                ariaLabel="Select match mode"
                 class="cps-table-col-filter-match-mode-select"
                 [hideDetails]="true"
                 [returnObject]="false"

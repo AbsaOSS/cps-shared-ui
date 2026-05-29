@@ -17,12 +17,16 @@
       }
     </div>
   }
-  <div class="cps-timepicker-body">
+  <div
+    class="cps-timepicker-body"
+    role="group"
+    [attr.aria-describedby]="describedBy"
+    [attr.aria-label]="ariaLabel || label || null">
     <cps-autocomplete
       #hoursField
       ariaLabel="Hours"
       (keypress)="numberOnly($event)"
-      width="60"
+      width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="hoursOptions"
       [withOptionsAliases]="!use24HourTime"
@@ -38,12 +42,12 @@
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
       placeholder="HH"></cps-autocomplete>
-    <span class="cps-timepicker-delimiter">:</span>
+    <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
     <cps-autocomplete
       #minutesField
       ariaLabel="Minutes"
       (keypress)="numberOnly($event)"
-      width="60"
+      width="3.75rem"
       [emptyOptionIndex]="mandatoryValue ? 0 : -1"
       [options]="minutesOptions"
       [hideDetails]="true"
@@ -58,14 +62,12 @@
       [externalError]="minutesError"
       placeholder="MM"></cps-autocomplete>
     @if (withSeconds) {
-      <span class="cps-timepicker-delimiter">:</span>
-    }
-    @if (withSeconds) {
+      <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
       <cps-autocomplete
         #secondsField
         ariaLabel="Seconds"
         (keypress)="numberOnly($event)"
-        width="60"
+        width="3.75rem"
         [emptyOptionIndex]="mandatoryValue ? 0 : -1"
         [options]="secondsOptions"
         [hideDetails]="true"
@@ -92,12 +94,16 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-timepicker-hint">
+    <div [id]="hintId" class="cps-timepicker-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-timepicker-error">
+    <div
+      [id]="errorId"
+      class="cps-timepicker-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

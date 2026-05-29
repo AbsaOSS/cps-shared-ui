@@ -49,6 +49,10 @@ $option-active-background: var(--cps-color-highlight-active);
 
       &:not(:last-child) .cps-btn-toggle-content-option {
         border-right: 0;
+
+        .cps-btn-toggle-radio-input {
+          inset-inline-end: 0;
+        }
       }
     }
 
@@ -79,7 +83,8 @@ $option-active-background: var(--cps-color-highlight-active);
         transition: background-color 0.2s ease;
       }
 
-      &:focus-visible {
+      &:focus-visible,
+      &:has(.cps-btn-toggle-radio-input:focus-visible) {
         &:not(.is-selected):not(:active) {
           background: $option-hover-background;
         }
@@ -92,13 +97,15 @@ $option-active-background: var(--cps-color-highlight-active);
         color: white;
       }
 
-      &:disabled {
+      &:disabled,
+      &.is-disabled {
         background: $disabled-background-color;
         color: $disabled-option-label-color;
         cursor: default;
       }
 
-      &:disabled.is-selected {
+      &:disabled.is-selected,
+      &.is-disabled.is-selected {
         background: $selected-disabled-background-color;
         color: $selected-disabled-option-label-color;
         opacity: 1;
@@ -122,6 +129,20 @@ $option-active-background: var(--cps-color-highlight-active);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    .cps-btn-toggle-radio-input {
+      position: absolute;
+      inset: -0.0625rem;
+      margin: 0;
+      opacity: 0;
+      pointer-events: none;
+      cursor: inherit;
+
+      &:focus,
+      &:focus-visible {
+        outline: none;
+      }
     }
   }
 }

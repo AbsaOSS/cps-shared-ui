@@ -1,19 +1,18 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
-  ViewChild
+  SimpleChanges
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { convertSize } from '../../utils/internal/size-utils';
@@ -24,6 +23,10 @@ import {
 } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsInputAppearanceType is used to define the border of the input field.
@@ -47,13 +50,19 @@ export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
   styleUrls: ['./cps-input.component.scss']
 })
 export class CpsInputComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, OnDestroy
 {
   /**
    * Label of the input element.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the input component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Bottom hint text for the input field.
@@ -78,6 +87,18 @@ export class CpsInputComponent
    * @group Props
    */
   @Input() readonly = false;
+
+  /**
+   * Determines whether the value of the input can be automatically completed by the browser.
+   * @group Props
+   */
+  @Input() autocomplete: string = 'off';
+
+  /**
+   * Determines whether the value of the input may be checked for spelling errors.
+   * @group Props
+   */
+  @Input() spellcheck = false;
 
   /**
    * Width of the input field, of type number denoting pixels or string.
@@ -119,7 +140,13 @@ export class CpsInputComponent
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '18px';
+  @Input() prefixIconSize: iconSizeType = '1.125rem';
+
+  /**
+   * Aria label for the clickable prefix icon, required when prefixIconClickable is true.
+   * @group Props
+   */
+  @Input() prefixIconAriaLabel = '';
 
   /**
    * Text before input value.
@@ -244,19 +271,27 @@ export class CpsInputComponent
    */
   @Output() enterClicked = new EventEmitter();
 
-  @ViewChild('prefixTextSpan') prefixTextSpan: ElementRef | undefined;
-
   currentType = '';
-  prefixWidth = '';
   cvtWidth = '';
+  isKeyboardFocused = false;
 
+  readonly hintId = generateUniqueId('cps-input-hint');
+  readonly errorId = generateUniqueId('cps-input-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
+
+  private _mouseActivated = false;
   private _statusChangesSubscription?: Subscription;
   private _value = '';
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    public elementRef: ElementRef<HTMLElement>,
-    private cdRef: ChangeDetectorRef
+    public elementRef: ElementRef<HTMLElement>
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -272,18 +307,31 @@ export class CpsInputComponent
         this._checkErrors();
       }
     );
+
+    if (this.prefixIconClickable && !this.prefixIconAriaLabel?.trim()) {
+      console.error(
+        'CpsInputComponent: prefixIconClickable requires a prefixIconAriaLabel for accessibility.'
+      );
+    }
+
+    logMissingAriaLabelError('CpsInputComponent', this.label, this.ariaLabel);
   }
 
-  ngAfterViewInit() {
-    let w = 0;
-    if (this.prefixText) {
-      w = this.prefixTextSpan?.nativeElement?.offsetWidth + 22;
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.type) {
+      this.currentType = this.type;
     }
-    if (this.prefixIcon) {
-      w += 38 - (this.prefixText ? 14 : 0);
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
     }
-    this.prefixWidth = w > 0 ? `${w}px` : '';
-    this.cdRef.detectChanges();
+
+    if (this.prefixIconClickable && !this.prefixIconAriaLabel?.trim()) {
+      console.error(
+        'CpsInputComponent: prefixIconClickable requires a prefixIconAriaLabel for accessibility.'
+      );
+    }
+
+    logMissingAriaLabelError('CpsInputComponent', this.label, this.ariaLabel);
   }
 
   ngOnDestroy() {
@@ -342,7 +390,7 @@ export class CpsInputComponent
   onTouched = () => {};
 
   onInputEnterKeyDown() {
-    this.elementRef?.nativeElement?.querySelector('input')?.blur();
+    this._checkErrors();
     this.enterClicked.emit();
   }
 
@@ -372,6 +420,7 @@ export class CpsInputComponent
   onClear() {
     this.clear();
     this.cleared.emit();
+    this.focus();
   }
 
   clear() {
@@ -385,19 +434,30 @@ export class CpsInputComponent
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(_disabled: boolean) {}
 
+  get isRequired(): boolean {
+    return this._control?.control?.hasValidator(Validators.required) ?? false;
+  }
+
   onClickPrefixIcon() {
     if (!this.prefixIconClickable || this.readonly || this.disabled) return;
     this.prefixIconClicked.emit();
   }
 
   onBlur() {
+    this.isKeyboardFocused = false;
     this._checkErrors();
     this.blurred.emit();
   }
 
   onFocus() {
+    this.isKeyboardFocused = !this._mouseActivated;
+    this._mouseActivated = false;
     this._control?.control?.markAsTouched();
     this.focused.emit();
+  }
+
+  onInputMousedown() {
+    this._mouseActivated = true;
   }
 
   focus() {

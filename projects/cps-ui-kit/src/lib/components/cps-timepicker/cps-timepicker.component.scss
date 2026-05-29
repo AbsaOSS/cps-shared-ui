@@ -2,7 +2,7 @@ $color-error: var(--cps-state-error);
 $timepicker-hint-color: var(--cps-color-text-mild);
 $timepicker-label-color: var(--cps-color-text-dark);
 $timepicker-label-disabled-color: var(--cps-color-text-mild);
-$timepicker-delimeter-color: var(--cps-color-text-lightest);
+$timepicker-delimeter-color: var(--cps-color-text-mild);
 
 :host {
   .cps-timepicker {
@@ -18,7 +18,7 @@ $timepicker-delimeter-color: var(--cps-color-text-lightest);
       font-weight: 600;
 
       &-info-circle {
-        margin-left: 8px;
+        margin-left: 0.5rem;
       }
 
       &-disabled {
@@ -31,14 +31,14 @@ $timepicker-delimeter-color: var(--cps-color-text-lightest);
       flex-direction: row;
 
       .cps-timepicker-am-pm-selector {
-        margin-left: 10px;
+        margin-left: 0.625rem;
         margin-top: 0;
       }
 
       .cps-timepicker-delimiter {
         color: $timepicker-delimeter-color;
-        font-size: 24px;
-        margin: 0 10px;
+        font-size: 1.5rem;
+        margin: 0 0.625rem;
       }
     }
 

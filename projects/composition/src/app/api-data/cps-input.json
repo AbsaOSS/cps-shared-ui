@@ -14,6 +14,14 @@
                         "description": "Label of the input element."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the input component, used for accessibility, it takes precedence over label."
+                    },
+                    {
                         "name": "hint",
                         "optional": false,
                         "readonly": false,
@@ -44,6 +52,22 @@
                         "type": "boolean",
                         "default": "false",
                         "description": "Determines whether input is readonly."
+                    },
+                    {
+                        "name": "autocomplete",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "off",
+                        "description": "Determines whether the value of the input can be automatically completed by the browser."
+                    },
+                    {
+                        "name": "spellcheck",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the value of the input may be checked for spelling errors."
                     },
                     {
                         "name": "width",
@@ -98,8 +122,16 @@
                         "optional": false,
                         "readonly": false,
                         "type": "iconSizeType",
-                        "default": "18px",
+                        "default": "1.125rem",
                         "description": "Size of icon before input value."
+                    },
+                    {
+                        "name": "prefixIconAriaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the clickable prefix icon, required when prefixIconClickable is true."
                     },
                     {
                         "name": "prefixText",

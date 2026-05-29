@@ -2,19 +2,32 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  type SimpleChanges
 } from '@angular/core';
-import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormsModule,
+  NgControl,
+  Validators
+} from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
   iconSizeType,
@@ -28,7 +41,11 @@ import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
+import {
+  CpsMenuComponent,
+  CpsMenuHideReason
+} from '../cps-menu/cps-menu.component';
 import { Scroller, ScrollerModule } from 'primeng/scroller';
 
 /**
@@ -36,6 +53,9 @@ import { Scroller, ScrollerModule } from 'primeng/scroller';
  * @group Types
  */
 export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
+
+const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.75;
+const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
 
 /**
  * CpsSelectComponent is used to select items from a collection.
@@ -61,13 +81,19 @@ export type CpsSelectAppearanceType = 'outlined' | 'underlined' | 'borderless';
   styleUrls: ['./cps-select.component.scss']
 })
 export class CpsSelectComponent
-  implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy
+  implements ControlValueAccessor, OnInit, OnChanges, AfterViewInit, OnDestroy
 {
   /**
    * Label of the select component.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the select component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Placeholder text for the select component.
@@ -199,7 +225,7 @@ export class CpsSelectComponent
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '18px';
+  @Input() prefixIconSize: iconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.
@@ -323,13 +349,38 @@ export class CpsSelectComponent
   error = '';
   cvtWidth = '';
   isOpened = false;
+  isActive = false;
   optionHighlightedIndex = -1;
+  isArrowNavigating = false;
 
-  virtualListHeight = 242;
-  virtualScrollItemSize = 44;
+  readonly virtualScrollItemSizePx = computed(
+    () =>
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
+      VIRTUAL_SCROLL_ITEM_SIZE_REM
+  );
 
-  selectBoxWidth = 0;
+  virtualListHeightRem =
+    VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
+
+  selectBoxWidthPx = 0;
   resizeObserver: ResizeObserver;
+
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+
+  readonly optionsListId = generateUniqueId('cps-select-options-list');
+  readonly selectAllOptionId = generateUniqueId('cps-select-option-select-all');
+  readonly hintId = generateUniqueId('cps-select-hint');
+  readonly errorId = generateUniqueId('cps-select-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
+
+  private readonly _optionIdPrefix = generateUniqueId('cps-select-option');
+  private _optionIds = new WeakMap<object, string>();
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
@@ -338,12 +389,14 @@ export class CpsSelectComponent
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         if (entry?.target)
-          this.selectBoxWidth = (entry.target as any).offsetWidth;
+          this.selectBoxWidthPx = (entry.target as any).offsetWidth;
       });
     });
   }
 
   ngOnInit() {
+    this.virtualListHeightRem =
+      VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
     this.cvtWidth = convertSize(this.width);
     if (this.multiple && !this._value) {
       this._value = [];
@@ -355,7 +408,26 @@ export class CpsSelectComponent
       }
     );
 
-    this._recalcVirtualListHeight();
+    this.recalcVirtualListHeight();
+
+    logMissingAriaLabelError('CpsSelectComponent', this.label, this.ariaLabel);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+    if (changes.options) {
+      this._optionIds = new WeakMap<object, string>();
+      this.options.forEach((opt, index) => {
+        if (opt && typeof opt === 'object') {
+          this._optionIds.set(opt, this._buildOptionId(index));
+        }
+      });
+      this.recalcVirtualListHeight();
+    }
+
+    logMissingAriaLabelError('CpsSelectComponent', this.label, this.ariaLabel);
   }
 
   ngAfterViewInit(): void {
@@ -388,6 +460,7 @@ export class CpsSelectComponent
 
     setTimeout(() => {
       if (this.isOpened && this.options.length > 0) {
+        this._syncHighlightToValue();
         const selected =
           this.optionsList.nativeElement.querySelector('.selected');
         if (selected) {
@@ -396,27 +469,20 @@ export class CpsSelectComponent
             block: 'nearest',
             inline: 'center'
           });
-        } else if (this.virtualScroll && !this.isEmptyValue()) {
-          let v: any;
-          if (this.multiple) {
-            if (this.value.length > 0) {
-              v = this.value[0];
-            }
-          } else v = this.value;
-          const idx = this.options.findIndex((o) => isEqual(o, v));
-          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        } else if (this.virtualScroll && this.optionHighlightedIndex >= 0) {
+          this._scrollVirtualListToIndex(this.optionHighlightedIndex);
         }
       }
     });
   }
 
-  private _recalcVirtualListHeight() {
+  recalcVirtualListHeight() {
     if (!this.virtualScroll) return;
     const currentLen = this.options?.length || 0;
-    this.virtualListHeight = Math.min(
-      this.virtualScrollItemSize * currentLen,
-      242
-    );
+    this.virtualListHeightRem =
+      VIRTUAL_SCROLL_ITEM_SIZE_REM *
+      Math.min(currentLen, VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS);
+    this.virtualList?.setSpacerSize();
   }
 
   select(option: any, byValue: boolean): void {
@@ -472,24 +538,24 @@ export class CpsSelectComponent
     }
   }
 
-  private _getHTMLOptions() {
-    return (this.optionsList.nativeElement.querySelectorAll(
-      '.cps-select-options-option'
-    ) || []) as any;
+  private _dehighlightOption() {
+    this.optionHighlightedIndex = -1;
+    this.isArrowNavigating = false;
   }
 
-  private _dehighlightOption(el?: HTMLElement) {
-    if (el) el.classList.remove('highlighten');
-    else {
-      if (this.optionHighlightedIndex < 0) return;
-      const optionItems = this._getHTMLOptions();
-      optionItems[this.optionHighlightedIndex].classList.remove('highlighten');
-      this.optionHighlightedIndex = -1;
-    }
+  private _syncHighlightToValue(): void {
+    if (!this.hasSelectedValue()) return;
+
+    const firstSelected = this.multiple ? this.value[0] : this.value;
+    const idx = this.options.findIndex((o) =>
+      isEqual(this.returnObject ? o : o[this.optionValue], firstSelected)
+    );
+    if (idx < 0) return;
+
+    this.optionHighlightedIndex = idx + (this.isSelectAllVisible ? 1 : 0);
   }
 
   private _highlightOption(el: HTMLElement) {
-    el.classList.add('highlighten');
     const parent = el.parentElement;
     if (!parent) return;
     const parentRect = parent.getBoundingClientRect();
@@ -505,57 +571,70 @@ export class CpsSelectComponent
   private _navigateOptionsByArrows(up: boolean) {
     if (!this.isOpened) return;
 
-    const optionItems = this._getHTMLOptions();
-    const len = optionItems.length;
-    if (len < 1) return;
+    if (this.optionsAriaSetSize < 1) return;
 
-    if (len === 1) {
-      this.optionHighlightedIndex = 0;
-      this._highlightOption(optionItems[0]);
-      return;
-    }
+    this.isArrowNavigating = true;
+    this.optionHighlightedIndex = this._nextHighlightIndex(
+      up,
+      this.optionsAriaSetSize
+    );
 
-    if (up) {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex =
-        this.optionHighlightedIndex < 1
-          ? len - 1
-          : this.optionHighlightedIndex - 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
-    } else {
-      this._dehighlightOption(optionItems[this.optionHighlightedIndex]);
-      this.optionHighlightedIndex = [-1, len - 1].includes(
-        this.optionHighlightedIndex
-      )
-        ? 0
-        : this.optionHighlightedIndex + 1;
-      this._highlightOption(optionItems[this.optionHighlightedIndex]);
+    const activeId = this._getHighlightedOptionId();
+    if (!activeId) return;
+
+    const activeOption = this.optionsList?.nativeElement?.querySelector(
+      `#${activeId}`
+    ) as HTMLElement | null;
+
+    if (activeOption) {
+      this._highlightOption(activeOption);
     }
   }
 
-  onBeforeOptionsHidden() {
+  onBeforeOptionsHidden(reason: CpsMenuHideReason): void {
+    if ([CpsMenuHideReason.SCROLL, CpsMenuHideReason.RESIZE].includes(reason)) {
+      this._toggleOptions(false);
+      return;
+    }
     this._toggleOptions(false);
     this._dehighlightOption();
   }
 
   onBoxClick() {
-    this._toggleOptions();
+    if (!this.isOpened) {
+      this.selectContainer?.nativeElement?.focus();
+      this._toggleOptions(true);
+    }
     this._dehighlightOption();
   }
 
-  onKeyDown(event: any) {
+  onChevronClick(event: any) {
+    event.stopPropagation();
     event.preventDefault();
-    const code = event.keyCode;
-    // escape
-    if (code === 27) {
+    if (this.isOpened) {
       this._toggleOptions(false);
-      this._dehighlightOption();
+    } else {
+      this.selectContainer?.nativeElement?.focus();
+      this._toggleOptions(true);
     }
-    // enter
-    else if (code === 13) {
+    this._dehighlightOption();
+  }
+
+  onContainerKeyDown(event: any) {
+    const code = event.keyCode;
+    // enter or space
+    if (code === 13 || code === 32) {
+      event.preventDefault();
+      if (!this.isOpened) {
+        this._toggleOptions(true);
+        return;
+      }
       let idx = this.optionHighlightedIndex;
-      if (idx < 0) return;
-      if (this.multiple && this.selectAll && !this.virtualScroll) {
+      if (idx < 0) {
+        this._toggleOptions(false);
+        return;
+      }
+      if (this.isSelectAllVisible) {
         if (idx === 0) {
           this.toggleAll();
           return;
@@ -566,8 +645,16 @@ export class CpsSelectComponent
     }
     // vertical arrows
     else if ([38, 40].includes(code)) {
-      // Arrows navigation doesn't work with virtual scroll
-      if (!this.virtualScroll) this._navigateOptionsByArrows(code === 38);
+      event.preventDefault();
+      if (!this.isOpened) {
+        this._toggleOptions(true);
+        return;
+      }
+      if (this.virtualScroll) {
+        this._navigateVirtualOptionsByArrows(code === 38);
+      } else {
+        this._navigateOptionsByArrows(code === 38);
+      }
     }
   }
 
@@ -633,11 +720,11 @@ export class CpsSelectComponent
 
   clear(event?: any): void {
     event?.stopPropagation();
+    event?.preventDefault();
 
-    if (
-      (!this.multiple && !this.isEmptyValue()) ||
-      (this.multiple && this.value?.length > 0)
-    ) {
+    const hadValue = this.hasSelectedValue();
+
+    if (hadValue) {
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
@@ -645,17 +732,30 @@ export class CpsSelectComponent
       this.updateValue(val);
     }
     this._dehighlightOption();
+    if (hadValue) {
+      setTimeout(() => {
+        this.selectContainer?.nativeElement?.focus();
+      }, 0);
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setDisabledState(_disabled: boolean) {}
 
   onBlur() {
+    this.isActive = false;
+    if (this.isOpened) {
+      this._toggleOptions(false);
+      this._dehighlightOption();
+    }
     this._checkErrors();
     this.blurred.emit();
   }
 
   onFocus() {
+    if (!this.disabled) {
+      this.isActive = true;
+    }
     this._control?.control?.markAsTouched();
     this.focused.emit();
   }
@@ -665,12 +765,119 @@ export class CpsSelectComponent
     this._toggleOptions(true);
   }
 
-  isEmptyValue(): boolean {
+  get isRequired(): boolean {
+    return this._control?.control?.hasValidator(Validators.required) ?? false;
+  }
+
+  get isSelectAllVisible(): boolean {
     return (
-      this.value === null ||
-      this.value === undefined ||
-      (typeof this.value === 'string' && this.value.trim() === '') ||
-      Number.isNaN(this.value)
+      !this.virtualScroll &&
+      this.multiple &&
+      this.selectAll &&
+      this.options.length > 1
     );
+  }
+
+  get optionsAriaSetSize(): number {
+    return this.options.length + (this.isSelectAllVisible ? 1 : 0);
+  }
+
+  get activeDescendantId(): string | null {
+    if (!this.isOpened || this.optionHighlightedIndex < 0) {
+      return null;
+    }
+    return this._getHighlightedOptionId();
+  }
+
+  getOptionAriaPosInSet(itemIndex: number): number {
+    return itemIndex + 1 + (this.isSelectAllVisible ? 1 : 0);
+  }
+
+  getOptionId(option: any, index: number): string {
+    if (option && typeof option === 'object') {
+      return this._optionIds.get(option) || this._buildOptionId(index);
+    }
+    return this._buildOptionId(index);
+  }
+
+  private _buildOptionId(index: number): string {
+    return `${this._optionIdPrefix}-${index}`;
+  }
+
+  private _getHighlightedOptionId(): string | null {
+    if (this.isSelectAllVisible && this.optionHighlightedIndex === 0) {
+      return this.selectAllOptionId;
+    }
+    const optionIndex =
+      this.optionHighlightedIndex - (this.isSelectAllVisible ? 1 : 0);
+    const activeOption = this.options[optionIndex];
+    if (!activeOption) {
+      return null;
+    }
+    return this.getOptionId(activeOption, optionIndex);
+  }
+
+  hasSelectedValue(): boolean {
+    if (this.multiple) {
+      return this.value?.length > 0;
+    }
+    return (
+      this.value != null &&
+      !(typeof this.value === 'string' && this.value.trim() === '') &&
+      !Number.isNaN(this.value)
+    );
+  }
+
+  private _navigateVirtualOptionsByArrows(up: boolean) {
+    if (!this.isOpened) return;
+
+    const len = this.options.length;
+    if (len < 1) return;
+
+    this.isArrowNavigating = true;
+    this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
+    this._scrollVirtualListToIndex(this.optionHighlightedIndex);
+  }
+
+  private _nextHighlightIndex(up: boolean, len: number): number {
+    if (up) {
+      return this.optionHighlightedIndex < 1
+        ? len - 1
+        : this.optionHighlightedIndex - 1;
+    }
+    return [-1, len - 1].includes(this.optionHighlightedIndex)
+      ? 0
+      : this.optionHighlightedIndex + 1;
+  }
+
+  private _scrollVirtualListToIndex(index: number) {
+    const scrollerEl = this.optionsList?.nativeElement?.querySelector(
+      '.p-virtualscroller'
+    ) as HTMLElement | null;
+    if (!scrollerEl) {
+      this.virtualList?.scrollToIndex(index);
+      return;
+    }
+
+    const itemTop = index * this.virtualScrollItemSizePx();
+    const itemBottom = itemTop + this.virtualScrollItemSizePx();
+
+    const viewportTop = scrollerEl.scrollTop;
+    const viewportBottom = viewportTop + scrollerEl.clientHeight;
+
+    let nextTop = viewportTop;
+    if (itemTop < viewportTop) {
+      nextTop = itemTop;
+    } else if (itemBottom > viewportBottom) {
+      nextTop = itemBottom - scrollerEl.clientHeight;
+    }
+
+    if (nextTop === viewportTop) return;
+
+    const maxTop = Math.max(
+      0,
+      scrollerEl.scrollHeight - scrollerEl.clientHeight
+    );
+    scrollerEl.scrollTop = Math.min(Math.max(0, nextTop), maxTop);
   }
 }

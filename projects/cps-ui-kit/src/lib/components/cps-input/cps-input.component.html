@@ -1,4 +1,4 @@
-<div class="cps-input-container" [ngStyle]="{ width: cvtWidth }">
+<div class="cps-input-container" [style.width]="cvtWidth">
   @if (label) {
     <div
       class="cps-input-label"
@@ -25,82 +25,112 @@
     [class.clearable]="clearable"
     [class.persistent-clear]="persistentClear"
     [class.borderless]="appearance === 'borderless'"
-    [class.underlined]="appearance === 'underlined'">
+    [class.underlined]="appearance === 'underlined'"
+    [class.keyboard-focused]="isKeyboardFocused">
+    @if (prefixIcon || prefixText) {
+      <div class="cps-input-prefix">
+        @if (prefixIcon) {
+          <span
+            class="cps-input-prefix-icon"
+            [attr.role]="prefixIconClickable ? 'button' : null"
+            [attr.tabindex]="
+              prefixIconClickable && !disabled && !readonly ? 0 : null
+            "
+            [attr.aria-label]="
+              prefixIconClickable ? prefixIconAriaLabel || null : null
+            "
+            (click)="onClickPrefixIcon()"
+            (keydown.enter)="onClickPrefixIcon()"
+            (keydown.space)="$event.preventDefault(); onClickPrefixIcon()">
+            <cps-icon
+              [icon]="prefixIcon"
+              [size]="prefixIconSize"
+              [style.color]="disabled ? 'var(--cps-text-muted)' : null"
+              [style.cursor]="
+                prefixIconClickable && !disabled && !readonly
+                  ? 'pointer'
+                  : 'default'
+              ">
+            </cps-icon>
+          </span>
+        }
+
+        @if (prefixText) {
+          <span class="cps-input-prefix-text">
+            {{ prefixText }}
+          </span>
+        }
+      </div>
+    }
+
     @if (!valueToDisplay) {
       <input
-        spellcheck="false"
+        [attr.aria-label]="ariaLabel || label || null"
+        [attr.aria-describedby]="describedBy"
+        [attr.aria-invalid]="error ? 'true' : null"
+        [attr.aria-required]="isRequired || null"
+        [attr.aria-busy]="loading ? true : null"
+        [attr.autocomplete]="autocomplete"
+        [attr.spellcheck]="spellcheck"
         [type]="currentType"
-        autocomplete="off"
         [value]="value"
         (input)="updateValueEvent($event)"
         [placeholder]="placeholder"
         [disabled]="disabled"
         [readonly]="readonly"
         (keydown.enter)="onInputEnterKeyDown()"
-        [ngStyle]="{
-          width: cvtWidth,
-          'padding-left': prefixWidth || 'none'
-        }"
+        [style.width]="cvtWidth"
+        (mousedown)="onInputMousedown()"
         (blur)="onBlur()"
         (focus)="onFocus()" />
     }
 
     @if (valueToDisplay) {
       <input
+        [attr.aria-label]="ariaLabel || label || null"
+        [attr.aria-describedby]="describedBy"
+        [attr.aria-busy]="loading ? true : null"
         [value]="valueToDisplay"
         [disabled]="true"
         [readonly]="true"
-        [ngStyle]="{
-          width: cvtWidth,
-          'padding-left': prefixWidth || 'none'
-        }" />
+        [style.width]="cvtWidth" />
     }
-
-    <div class="cps-input-prefix">
-      @if (prefixIcon) {
-        <span class="cps-input-prefix-icon">
-          <cps-icon
-            [icon]="prefixIcon"
-            [size]="prefixIconSize"
-            [style.color]="disabled ? 'var(--cps-text-muted)' : null"
-            [style.cursor]="
-              prefixIconClickable && !disabled && !readonly
-                ? 'pointer'
-                : 'default'
-            "
-            (click)="onClickPrefixIcon()">
-          </cps-icon>
-        </span>
-      }
-
-      @if (prefixText) {
-        <span class="cps-input-prefix-text" #prefixTextSpan>
-          {{ prefixText }}
-        </span>
-      }
-    </div>
 
     @if (!disabled && !readonly) {
       <div class="cps-input-action-btns">
         @if (clearable) {
           <span
+            class="clear-btn"
+            role="button"
+            tabindex="0"
+            aria-label="Clear"
             [style.visibility]="
               persistentClear || (!persistentClear && value)
                 ? 'visible'
                 : 'hidden'
             "
-            class="clear-btn">
-            <cps-icon icon="delete" size="small" (click)="onClear()"></cps-icon>
+            (mousedown)="$event.preventDefault()"
+            (click)="onClear()"
+            (keydown.enter)="onClear()"
+            (keydown.space)="$event.preventDefault(); onClear()">
+            <cps-icon icon="delete" size="small"></cps-icon>
           </span>
         }
         @if (type === 'password') {
           <span
             class="password-show-btn"
-            [class.password-show-btn-active]="currentType === 'text'">
-            <cps-icon
-              icon="eye"
-              size="18px"
-              (click)="togglePassword()"></cps-icon>
+            [class.password-show-btn-active]="currentType === 'text'"
+            role="button"
+            tabindex="0"
+            [attr.aria-label]="
+              currentType === 'password' ? 'Show password' : 'Hide password'
+            "
+            [attr.aria-pressed]="currentType !== 'password'"
+            (mousedown)="$event.preventDefault()"
+            (click)="togglePassword()"
+            (keydown.enter)="togglePassword()"
+            (keydown.space)="$event.preventDefault(); togglePassword()">
+            <cps-icon icon="eye" size="1.125rem"></cps-icon>
           </span>
         }
       </div>
@@ -116,12 +146,16 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-input-hint">
+    <div [id]="hintId" class="cps-input-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-input-error">
+    <div
+      [id]="errorId"
+      class="cps-input-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

@@ -1,12 +1,7 @@
 <div
   [ngStyle]="{ width: cvtWidth }"
   class="cps-select"
-  tabindex="0"
-  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
-  #selectContainer
-  (keydown)="onKeyDown($event)"
-  (focus)="onFocus()"
-  (blur)="onBlur()">
+  [ngClass]="{ disabled: disabled, error: error }">
   @if (label) {
     <div class="cps-select-label">
       <label>{{ label }}</label>
@@ -25,30 +20,45 @@
   }
   <div
     class="cps-select-container"
-    [class.focused]="isOpened"
+    [tabindex]="disabled ? -1 : 0"
+    role="combobox"
+    aria-haspopup="listbox"
+    [attr.aria-expanded]="isOpened"
+    [attr.aria-busy]="loading ? true : null"
+    [attr.aria-controls]="optionsListId"
+    [attr.aria-activedescendant]="activeDescendantId"
+    [attr.aria-required]="isRequired || null"
+    [attr.aria-invalid]="error ? 'true' : null"
+    [attr.aria-label]="ariaLabel || label || null"
+    [attr.aria-describedby]="describedBy"
+    [attr.aria-disabled]="disabled || null"
     [ngClass]="{
       'persistent-clear': persistentClear,
       borderless: appearance === 'borderless',
-      underlined: appearance === 'underlined'
-    }">
-    <div class="cps-select-box" #selectBox (click)="onBoxClick()">
+      underlined: appearance === 'underlined',
+      active: isOpened,
+      focused: isActive
+    }"
+    #selectContainer
+    (keydown)="onContainerKeyDown($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()">
+    <div class="cps-select-box" #selectBox (mousedown)="onBoxClick()">
       <div class="cps-select-box-left">
         @if (prefixIcon) {
           <cps-icon
+            aria-hidden="true"
             [icon]="prefixIcon"
             [style.color]="disabled ? '#9a9595' : null"
             [size]="prefixIconSize"
             class="prefix-icon">
           </cps-icon>
         }
-        @if ((!multiple && isEmptyValue()) || (value?.length < 1 && multiple)) {
+        @if (!hasSelectedValue()) {
           <div class="cps-select-box-placeholder">
             {{ placeholder }}
           </div>
-        }
-        @if (
-          (!multiple && !isEmptyValue()) || (value?.length > 0 && multiple)
-        ) {
+        } @else {
           <div class="cps-select-box-items">
             @if (!multiple) {
               <span class="single-item">
@@ -61,8 +71,8 @@
               >
             }
             @if (multiple && !chips) {
-              <div class="text-group">
-                <span class="text-group-item">
+              <div class="text-group" role="list" aria-label="Selected options">
+                <span class="text-group-item" role="listitem">
                   {{
                     value
                       | combineLabels
@@ -75,9 +85,14 @@
               </div>
             }
             @if (multiple && chips) {
-              <div class="chips-group">
+              <div
+                class="chips-group"
+                role="list"
+                aria-label="Selected options">
                 @for (val of value; track val) {
                   <cps-chip
+                    role="listitem"
+                    closeButtonAriaLabel="Remove"
                     [disabled]="disabled"
                     [closable]="closableChips"
                     (closed)="select(val, true)"
@@ -97,23 +112,33 @@
       <span class="cps-select-box-icons">
         @if (clearable && !disabled) {
           <span
+            role="button"
+            aria-label="Clear selection"
+            [tabindex]="disabled ? -1 : 0"
+            (click)="clear($event)"
+            (mousedown)="$event.preventDefault()"
+            (keydown.enter)="clear($event)"
+            (keydown.space)="clear($event)"
             [style.visibility]="
-              persistentClear ||
-              (!persistentClear &&
-                ((multiple && value?.length) || (!multiple && !isEmptyValue())))
+              persistentClear || (!persistentClear && hasSelectedValue())
                 ? 'visible'
                 : 'hidden'
             "
             class="cps-select-box-clear-icon">
-            <cps-icon
-              icon="delete"
-              size="small"
-              (click)="clear($event)"></cps-icon>
+            <cps-icon icon="delete" size="small" aria-hidden="true"></cps-icon>
           </span>
         }
         @if (showChevron) {
-          <span class="cps-select-box-chevron">
+          <span
+            class="cps-select-box-chevron"
+            role="button"
+            [attr.aria-label]="isOpened ? 'Collapse options' : 'Expand options'"
+            [tabindex]="disabled ? -1 : 0"
+            (mousedown)="onChevronClick($event)"
+            (keydown.enter)="onChevronClick($event)"
+            (keydown.space)="onChevronClick($event)">
             <cps-icon
+              aria-hidden="true"
               icon="chevron-down"
               size="small"
               [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
@@ -125,20 +150,36 @@
     <cps-menu
       #optionsMenu
       [withArrow]="false"
-      (beforeMenuHidden)="onBeforeOptionsHidden()"
+      (beforeMenuHidden)="onBeforeOptionsHidden($event)"
       hideTransitionOptions="0s linear"
       [containerClass]="'cps-select-options-menu ' + optionsClass">
       <div
         #optionsList
+        [id]="optionsListId"
+        role="listbox"
+        tabindex="-1"
+        aria-readonly="false"
+        aria-disabled="false"
+        aria-orientation="vertical"
+        [attr.aria-multiselectable]="!!multiple"
         class="cps-select-options"
-        [ngStyle]="{
-          width: selectBoxWidth + 'px'
-        }">
+        [style.width.px]="selectBoxWidthPx">
         @if (!virtualScroll) {
           @if (multiple && selectAll && options.length > 1) {
             <div
               class="cps-select-options-option select-all-option"
+              [id]="selectAllOptionId"
+              role="option"
+              tabindex="-1"
+              aria-disabled="false"
+              [attr.aria-setsize]="optionsAriaSetSize"
+              [attr.aria-posinset]="1"
+              [attr.aria-selected]="value?.length === options.length"
               [class.allselected]="value?.length === options.length"
+              [class.highlighten]="
+                isArrowNavigating && optionHighlightedIndex === 0
+              "
+              (mousedown)="$event.preventDefault()"
               (click)="toggleAll()">
               <span class="cps-select-options-option-left">
                 @if (multiple) {
@@ -148,12 +189,13 @@
               </span>
             </div>
           }
-          @for (item of options; track item) {
+          @for (item of options; track item; let itemIdx = $index) {
             <ng-container
               *ngTemplateOutlet="
                 itemTemplate;
                 context: {
-                  item: item
+                  item: item,
+                  itemIdx: itemIdx
                 }
               "></ng-container>
           }
@@ -161,17 +203,19 @@
         @if (virtualScroll) {
           <p-virtualscroller
             #virtualList
+            [tabindex]="-1"
             [items]="options"
             [delay]="0"
-            [scrollHeight]="virtualListHeight + 'px'"
+            [scrollHeight]="virtualListHeightRem + 'rem'"
             [options]="{ numToleratedItems: numToleratedItems }"
-            [itemSize]="virtualScrollItemSize">
-            <ng-template pTemplate="item" let-item>
+            [itemSize]="virtualScrollItemSizePx()">
+            <ng-template pTemplate="item" let-item let-options="options">
               <ng-container
                 *ngTemplateOutlet="
                   itemTemplate;
                   context: {
-                    item: item
+                    item: item,
+                    itemIdx: options.index
                   }
                 "></ng-container>
             </ng-template>
@@ -191,17 +235,37 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-select-hint">{{ hint }}</div>
+    <div [id]="hintId" class="cps-select-hint">{{ hint }}</div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-select-error">{{ error }}</div>
+    <div
+      [id]="errorId"
+      class="cps-select-error"
+      aria-live="polite"
+      aria-atomic="true">
+      {{ error }}
+    </div>
   }
 </div>
 
-<ng-template #itemTemplate let-item="item">
+<ng-template #itemTemplate let-item="item" let-itemIdx="itemIdx">
   <div
     class="cps-select-options-option"
+    [id]="getOptionId(item, itemIdx)"
+    role="option"
+    tabindex="-1"
+    aria-disabled="false"
+    [attr.aria-setsize]="optionsAriaSetSize"
+    [attr.aria-posinset]="getOptionAriaPosInSet(itemIdx)"
+    [attr.aria-selected]="
+      item | checkOptionSelected: value : multiple : returnObject : optionValue
+    "
+    (mousedown)="$event.preventDefault()"
     (click)="onOptionClick(item)"
+    [class.highlighten]="
+      isArrowNavigating &&
+      itemIdx === optionHighlightedIndex - (isSelectAllVisible ? 1 : 0)
+    "
     [class.selected]="
       item | checkOptionSelected: value : multiple : returnObject : optionValue
     ">
@@ -222,6 +286,7 @@
       {{ item[optionInfo] }}
       @if (item[optionIcon]) {
         <cps-icon
+          aria-hidden="true"
           [icon]="item[optionIcon]"
           [color]="item[optionIconColor] || 'text-light'"
           class="cps-select-options-option-right-icon">

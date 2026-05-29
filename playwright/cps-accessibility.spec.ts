@@ -1,6 +1,11 @@
 import { test, expect } from './fixtures/axe-test';
-import type { Page } from '@playwright/test';
+import type { Page, TestInfo } from '@playwright/test';
 import type AxeBuilder from '@axe-core/playwright';
+
+interface ComponentState {
+  label: string;
+  setup: (page: Page) => Promise<void>;
+}
 
 interface ComponentEntry {
   route: string;
@@ -8,6 +13,8 @@ interface ComponentEntry {
   selector: string | string[];
   /** For overlay components: trigger them before scanning */
   setup?: (page: Page) => Promise<void>;
+  /** For components that need multiple scans (e.g., different states/tabs) */
+  states?: ComponentState[];
 }
 
 const components: ComponentEntry[] = [
@@ -106,7 +113,7 @@ const components: ComponentEntry[] = [
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
   // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
-  // { route: '/input', name: 'Input', selector: 'cps-input' },
+  { route: '/input', name: 'Input', selector: '.example-content cps-input' },
   // { route: '/loader', name: 'Loader', selector: 'cps-loader' },
   {
     route: '/menu',
@@ -147,16 +154,35 @@ const components: ComponentEntry[] = [
   //   selector: 'cps-progress-linear'
   // },
   { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
-  // { route: '/scheduler', name: 'Scheduler', selector: 'cps-scheduler' },
-  // {
-  //   route: '/select',
-  //   name: 'Select',
-  //   selector: ['cps-select', '.cps-select-options-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-select');
-  //     await page.locator('cps-select').first().click();
-  //   }
-  // },
+  {
+    route: '/scheduler',
+    name: 'Scheduler',
+    selector: 'cps-scheduler',
+    states: [
+      'Minutes',
+      'Hourly',
+      'Daily',
+      'Weekly',
+      'Monthly',
+      'Yearly',
+      'Advanced'
+    ].map((tab) => ({
+      label: tab,
+      setup: async (page: Page) => {
+        await page.getByTestId('schedule-type-toggle').getByText(tab).click();
+        await page.waitForSelector('cps-scheduler');
+      }
+    }))
+  },
+  {
+    route: '/select',
+    name: 'Select',
+    selector: ['cps-select', '.cps-select-options-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-select');
+      await page.locator('cps-select').first().click();
+    }
+  },
   {
     route: '/sidebar-menu',
     name: 'Sidebar menu',
@@ -170,16 +196,16 @@ const components: ComponentEntry[] = [
   },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
   // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
-  // { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
-  // {
-  //   route: '/timepicker',
-  //   name: 'Timepicker',
-  //   selector: ['cps-timepicker', '.cps-autocomplete-options-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-timepicker');
-  //     await page.locator('cps-timepicker cps-autocomplete').first().click();
-  //   }
-  // },
+  { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
+  {
+    route: '/timepicker',
+    name: 'Timepicker',
+    selector: ['cps-timepicker', '.cps-autocomplete-options-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-timepicker');
+      await page.locator('cps-timepicker cps-autocomplete').first().click();
+    }
+  },
   {
     route: '/tooltip',
     name: 'Tooltip',
@@ -249,31 +275,53 @@ async function waitForSelectors(page: Page, selector: string | string[]) {
 // axe-core WCAG AA — all component pages
 // ============================================================================
 
+async function runScan(
+  page: Page,
+  makeAxeBuilder: () => AxeBuilder,
+  selector: string | string[],
+  label: string,
+  testInfo: TestInfo
+) {
+  await waitForSelectors(page, selector);
+  // Wait for all animations/transitions to complete before scanning.
+  // Without this, axe may capture intermediate states (e.g. mid-transition
+  // background color) and report false-positive color contrast violations.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => {}))
+    )
+  );
+  const results = await buildAxeWithSelectors(
+    makeAxeBuilder,
+    selector
+  ).analyze();
+  await testInfo.attach(`${label}-accessibility-scan`, {
+    body: JSON.stringify(results, null, 2),
+    contentType: 'application/json'
+  });
+  expectNoViolations(results.violations);
+}
+
 test.describe('Accessibility - axe scan', () => {
-  for (const { route, name, selector, setup } of components) {
+  for (const { route, name, selector, setup, states } of components) {
     test(`${name} should have no violations`, async ({
       page,
       makeAxeBuilder
     }, testInfo) => {
       await page.goto(route);
 
-      if (setup) {
-        await setup(page);
+      if (states) {
+        for (const state of states) {
+          if (state.setup) await state.setup(page);
+          await runScan(page, makeAxeBuilder, selector, state.label, testInfo);
+        }
+      } else {
+        if (setup) await setup(page);
+        await runScan(page, makeAxeBuilder, selector, 'default', testInfo);
       }
-
-      await waitForSelectors(page, selector);
-
-      const results = await buildAxeWithSelectors(
-        makeAxeBuilder,
-        selector
-      ).analyze();
-
-      await testInfo.attach('accessibility-scan-results', {
-        body: JSON.stringify(results, null, 2),
-        contentType: 'application/json'
-      });
-
-      expectNoViolations(results.violations);
     });
   }
 });
@@ -283,7 +331,7 @@ test.describe('Accessibility - axe scan', () => {
 // ============================================================================
 
 test.describe('Accessibility - responsive axe scan', () => {
-  for (const { route, name, selector, setup } of components) {
+  for (const { route, name, selector, setup, states } of components) {
     test(`${name} should have no violations at mobile width`, async ({
       page,
       makeAxeBuilder
@@ -291,23 +339,15 @@ test.describe('Accessibility - responsive axe scan', () => {
       await page.setViewportSize({ width: 375, height: 812 });
       await page.goto(route);
 
-      if (setup) {
-        await setup(page);
+      if (states) {
+        for (const state of states) {
+          if (state.setup) await state.setup(page);
+          await runScan(page, makeAxeBuilder, selector, state.label, testInfo);
+        }
+      } else {
+        if (setup) await setup(page);
+        await runScan(page, makeAxeBuilder, selector, 'default', testInfo);
       }
-
-      await waitForSelectors(page, selector);
-
-      const results = await buildAxeWithSelectors(
-        makeAxeBuilder,
-        selector
-      ).analyze();
-
-      await testInfo.attach('accessibility-scan-results', {
-        body: JSON.stringify(results, null, 2),
-        contentType: 'application/json'
-      });
-
-      expectNoViolations(results.violations);
     });
   }
 });
