@@ -9,6 +9,7 @@ import {
   Optional,
   Output,
   Self,
+  type SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
@@ -222,7 +223,11 @@ export class CpsDatepickerComponent
     );
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+
     logMissingAriaLabelError(
       'CpsDatepickerComponent',
       this.label,

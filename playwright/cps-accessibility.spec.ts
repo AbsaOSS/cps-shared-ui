@@ -35,15 +35,15 @@ const components: ComponentEntry[] = [
   },
   { route: '/checkbox', name: 'Checkbox', selector: 'cps-checkbox' },
   { route: '/chip', name: 'Chip', selector: 'cps-chip' },
-  // {
-  //   route: '/datepicker',
-  //   name: 'Datepicker',
-  //   selector: ['cps-datepicker', '.cps-datepicker-calendar-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-datepicker');
-  //     await page.locator('cps-datepicker .cps-icon').first().click();
-  //   }
-  // },
+  {
+    route: '/datepicker',
+    name: 'Datepicker',
+    selector: ['cps-datepicker', '.cps-datepicker-calendar-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-datepicker');
+      await page.locator('cps-datepicker .cps-icon').first().click();
+    }
+  },
   {
     route: '/dialog',
     name: 'Confirmation dialog',
