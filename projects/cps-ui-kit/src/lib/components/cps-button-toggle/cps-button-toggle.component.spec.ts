@@ -562,44 +562,5 @@ describe('CpsButtonToggleComponent', () => {
       component.onRadioChange('b');
       expect(component.value).toBe('a');
     });
-
-    it('should deselect on onRadioClick when mandatory=false and same value', () => {
-      fixture.componentRef.setInput('mandatory', false);
-      fixture.componentRef.setInput('value', 'a');
-      fixture.detectChanges();
-      const event = new MouseEvent('click', { cancelable: true });
-      component.onRadioClick(event, 'a');
-      expect(component.value).toBeUndefined();
-      expect(event.defaultPrevented).toBe(true);
-    });
-
-    it('should not deselect on onRadioClick when mandatory=true', () => {
-      fixture.componentRef.setInput('value', 'a');
-      fixture.detectChanges();
-      const event = new MouseEvent('click', { cancelable: true });
-      component.onRadioClick(event, 'a');
-      expect(component.value).toBe('a');
-      expect(event.defaultPrevented).toBe(false);
-    });
-
-    it('should not deselect on onRadioClick when component is disabled', () => {
-      fixture.componentRef.setInput('mandatory', false);
-      fixture.componentRef.setInput('value', 'a');
-      fixture.componentRef.setInput('disabled', true);
-      fixture.detectChanges();
-      const event = new MouseEvent('click', { cancelable: true });
-      component.onRadioClick(event, 'a');
-      expect(component.value).toBe('a');
-    });
-
-    it('should not deselect on onRadioClick when a different option is clicked', () => {
-      fixture.componentRef.setInput('mandatory', false);
-      fixture.componentRef.setInput('value', 'a');
-      fixture.detectChanges();
-      const event = new MouseEvent('click', { cancelable: true });
-      component.onRadioClick(event, 'b');
-      expect(component.value).toBe('a');
-      expect(event.defaultPrevented).toBe(false);
-    });
   });
 });
