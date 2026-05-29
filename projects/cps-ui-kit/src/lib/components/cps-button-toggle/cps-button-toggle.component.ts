@@ -1,5 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   effect,
   EventEmitter,
@@ -24,7 +25,10 @@ import {
   CpsTooltipDirective,
   CpsTooltipPosition
 } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent.
@@ -96,6 +100,13 @@ export class CpsButtonToggleComponent
   @Input() mandatory = true;
 
   /**
+   * When multiple is false, and mandatory is true, uses native radio group behavior:
+   * arrow-key navigation between options. Has no effect when multiple is true or mandatory is false.
+   * @group Props
+   */
+  @Input() radioNavigation = true;
+
+  /**
    * Determines whether all buttons should have equal widths.
    * @group Props
    */
@@ -160,13 +171,15 @@ export class CpsButtonToggleComponent
   @Output() valueChanged = new EventEmitter<any>();
 
   largestButtonWidthRem = 0;
+  readonly groupName = generateUniqueId('cps-btn-toggle');
 
   private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
 
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private _cdr: ChangeDetectorRef
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -177,6 +190,7 @@ export class CpsButtonToggleComponent
       if (this.document?.fonts?.ready) {
         this.document.fonts.ready.then(() => {
           this._setEqualWidths(this._cpsRootFontSizeService?.fontSize() || 16);
+          this._cdr.markForCheck();
         });
       } else {
         this._setEqualWidths(rootFontSizePx);
@@ -263,6 +277,11 @@ export class CpsButtonToggleComponent
 
     const isSame = isEqual(this.value, val);
     this._updateValue(isSame ? undefined : val);
+  }
+
+  onRadioChange(val: any): void {
+    if (this.disabled) return;
+    this._updateValue(val);
   }
 
   private _updateValue(value: any) {

@@ -99,6 +99,12 @@ export class CpsSchedulerComponent implements OnInit, OnChanges {
   @Input() label = '';
 
   /**
+   * Aria label for the component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
+
+  /**
    * Cron expression value.
    * @group Props
    */
