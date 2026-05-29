@@ -9,7 +9,7 @@ jobs:
   check-pr-title:
     runs-on: ubuntu-latest
     steps:
-      - uses: amannn/action-semantic-pull-request@v48f256284bd46cdaab1048c3721360e808335d50
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
