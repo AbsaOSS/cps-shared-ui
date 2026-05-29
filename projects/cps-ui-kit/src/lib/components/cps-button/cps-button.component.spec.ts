@@ -25,6 +25,7 @@ describe('CpsButtonComponent', () => {
     expect(component.contentColor).toBe('white');
     expect(component.borderRadius).toBe('0.25rem');
     expect(component.type).toBe('solid');
+    expect(component.nativeType).toBe('button');
     expect(component.label).toBe('');
     expect(component.icon).toBe('');
     expect(component.iconPosition).toBe('before');
@@ -249,6 +250,73 @@ describe('CpsButtonComponent', () => {
     const button = fixture.nativeElement.querySelector('button');
     button.dispatchEvent(new Event('blur'));
     expect(component.enterActive).toBe(false);
+  });
+
+  describe('nativeType', () => {
+    it('should default native type attribute to "button"', () => {
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+    });
+
+    it('should set native type attribute to "submit"', () => {
+      fixture.componentRef.setInput('nativeType', 'submit');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('submit');
+    });
+
+    it('should set native type attribute to "reset"', () => {
+      fixture.componentRef.setInput('nativeType', 'reset');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('reset');
+    });
+
+    it('should not affect styling type when nativeType changes', () => {
+      fixture.componentRef.setInput('type', 'outlined');
+      fixture.componentRef.setInput('nativeType', 'submit');
+      fixture.detectChanges();
+      expect(component.classesList).toContain('cps-button--outlined');
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('submit');
+    });
+
+    it('should fall back to "button" native type if nativeType set to null', () => {
+      fixture.componentRef.setInput('nativeType', null);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+    });
+
+    it('should fall back to "button" native type if nativeType set to undefined', () => {
+      fixture.componentRef.setInput('nativeType', undefined);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+    });
+
+    it('should fall back to "button" and warn if nativeType is an invalid string', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput('nativeType', 'invalid-type');
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+      expect(component.nativeType).toBe('button');
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid nativeType value')
+      );
+      warnSpy.mockRestore();
+    });
+
+    it('should not warn for valid nativeType values', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput('nativeType', 'submit');
+      fixture.detectChanges();
+      fixture.componentRef.setInput('nativeType', 'reset');
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    });
   });
 
   describe('aria-label', () => {

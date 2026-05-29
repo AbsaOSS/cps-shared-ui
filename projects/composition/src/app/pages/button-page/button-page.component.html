@@ -322,6 +322,38 @@
   </app-code-example>
 
   <app-code-example
+    label="Native types"
+    [htmlCode]="examples.nativeTypes.html"
+    [tsCode]="examples.nativeTypes.ts">
+    <form
+      class="native-types-form"
+      [formGroup]="nativeForm"
+      (ngSubmit)="onNativeSubmit($event)"
+      (reset)="onNativeReset()">
+      <cps-input label="Name" formControlName="name"></cps-input>
+      <div class="buttons-group-row">
+        <cps-button
+          label="Plain button"
+          nativeType="button"
+          type="outlined"
+          (clicked)="onNativePlainClick()"></cps-button>
+        <cps-button
+          label="Submit"
+          nativeType="submit"
+          color="luxury"></cps-button>
+        <cps-button
+          label="Reset"
+          nativeType="reset"
+          type="borderless"
+          color="surprise"></cps-button>
+      </div>
+      <div class="native-types-form__message" aria-live="polite">
+        {{ nativeSubmitMessage }}
+      </div>
+    </form>
+  </app-code-example>
+
+  <app-code-example
     label="Miscellaneous"
     [htmlCode]="examples.misc.html"
     [tsCode]="examples.misc.ts">
