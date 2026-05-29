@@ -1,0 +1,36 @@
+name: Check PR Title (Conventional Commits)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
+    branches: [master]
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v48f256284bd46cdaab1048c3721360e808335d50
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Allowed types (CC spec)
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+          # Validate the subject (part after type/scope) is not empty
+          subjectPattern: ^.+$
+          subjectPatternError: |
+            The PR title must include a non-empty subject after the type.
+            Example: "feat: add chip component" or "fix: resolve a11y issue in tabs"
+          ignoreLabels: |
+            ignore-cc-check
