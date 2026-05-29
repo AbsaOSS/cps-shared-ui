@@ -280,6 +280,20 @@ describe('CpsButtonComponent', () => {
       const button = fixture.nativeElement.querySelector('button');
       expect(button.getAttribute('type')).toBe('submit');
     });
+
+    it('should fall back to "button" native type if nativeType set to null', () => {
+      fixture.componentRef.setInput('nativeType', null);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+    });
+
+    it('should fall back to "button" native type if nativeType set to undefined', () => {
+      fixture.componentRef.setInput('nativeType', undefined);
+      fixture.detectChanges();
+      const button = fixture.nativeElement.querySelector('button');
+      expect(button.getAttribute('type')).toBe('button');
+    });
   });
 
   describe('aria-label', () => {

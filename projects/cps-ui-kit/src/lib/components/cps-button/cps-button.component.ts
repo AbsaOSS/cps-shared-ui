@@ -152,7 +152,7 @@ export class CpsButtonComponent implements OnInit, OnChanges {
     logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
 
     if (
-      changes['nativeType]'] &&
+      changes.nativeType &&
       !['button', 'submit', 'reset'].includes(this.nativeType)
     ) {
       console.warn(
