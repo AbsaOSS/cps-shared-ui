@@ -1,6 +1,6 @@
 <div>
   <button
-    type="button"
+    [attr.type]="nativeType"
     [ngClass]="classesList"
     [disabled]="disabled"
     (click)="onClick($event)"

@@ -92,6 +92,65 @@ export const buttonExamples: Record<string, { html: string; ts?: string }> = {
 <cps-button [loading]="true" size="xsmall" type="borderless" ariaLabel="Loading button"></cps-button>`
   },
 
+  nativeTypes: {
+    html: `
+<form
+  class="native-types-form"
+  [formGroup]="nativeForm"
+  (ngSubmit)="onNativeSubmit($event)"
+  (reset)="onNativeReset()">
+  <cps-input label="Name" formControlName="name"></cps-input>
+  <div class="buttons-group-row">
+    <cps-button
+      label="Plain button"
+      nativeType="button"
+      type="outlined"
+      (clicked)="onNativePlainClick()"></cps-button>
+    <cps-button
+      label="Submit"
+      nativeType="submit"
+      color="luxury"></cps-button>
+    <cps-button
+      label="Reset"
+      nativeType="reset"
+      type="borderless"
+      color="surprise"></cps-button>
+  </div>
+  @if (nativeSubmitMessage) {
+    <div class="native-types-form__message">{{ nativeSubmitMessage }}</div>
+  }
+</form>`,
+    ts: `
+private readonly fb = inject(FormBuilder);
+
+componentData = ComponentData;
+isLoading = false;
+
+nativeForm = this.fb.nonNullable.group({
+  name: ['', Validators.required]
+});
+
+nativeSubmitMessage = '';
+
+onNativePlainClick() {
+  this.nativeSubmitMessage = 'Plain button clicked (no form action).';
+}
+
+onNativeSubmit(event: Event) {
+  event.preventDefault();
+  if (this.nativeForm.invalid) {
+    this.nativeSubmitMessage = 'Form is invalid.';
+    return;
+  }
+  this.nativeSubmitMessage = "Form submitted with name: " + this.nativeForm.value.name;
+}
+
+onNativeReset() {
+  this.nativeForm.reset();
+  this.nativeSubmitMessage = '';
+}`
+  },
+
   misc: {
     html: `
 <!-- Interactive loading state -->
