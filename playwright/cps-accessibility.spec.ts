@@ -41,7 +41,10 @@ const components: ComponentEntry[] = [
     selector: ['cps-datepicker', '.cps-datepicker-calendar-menu'],
     setup: async (page) => {
       await page.waitForSelector('cps-datepicker');
-      await page.locator('cps-datepicker .cps-icon').first().click();
+      await page
+        .locator('cps-datepicker .cps-input-prefix-icon')
+        .first()
+        .click();
     }
   },
   {

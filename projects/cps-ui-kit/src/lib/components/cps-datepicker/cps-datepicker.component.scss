@@ -1,10 +1,10 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
-$color-prepared: var(--cps-color-prepared);
 $color-highlight: var(--cps-color-highlight-hover);
 $color-selected-background: var(--cps-color-highlight-selected);
-$other-month-color: var(--cps-color-text-light);
 $text-color: var(--cps-color-text-darkest);
-$disabled-day-color: var(--cps-color-text-lightest);
+$disabled-day-color: var(--cps-color-text-light);
 
 :host {
   display: flex;
@@ -41,7 +41,11 @@ $disabled-day-color: var(--cps-color-text-lightest);
       padding: 0.5rem;
       background: #ffffff;
       color: $text-color;
-      border: 1px solid #ced4da;
+      border: 0.0625rem solid #ced4da;
+    }
+
+    .p-datepicker .p-datepicker-panel-inline {
+      vertical-align: top;
     }
 
     .p-datepicker .p-datepicker-header {
@@ -50,9 +54,9 @@ $disabled-day-color: var(--cps-color-text-lightest);
       background: #ffffff;
       font-weight: 600;
       margin: 0;
-      border-bottom: 1px solid #dee2e6;
-      border-top-right-radius: 6px;
-      border-top-left-radius: 6px;
+      border-bottom: 0.0625rem solid #dee2e6;
+      border-top-right-radius: 0.375rem;
+      border-top-left-radius: 0.375rem;
     }
     .p-datepicker .p-datepicker-header .p-datepicker-prev-button,
     .p-datepicker .p-datepicker-header .p-datepicker-next-button {
@@ -75,9 +79,13 @@ $disabled-day-color: var(--cps-color-text-lightest);
     }
     .p-datepicker .p-datepicker-header .p-datepicker-prev-button:focus,
     .p-datepicker .p-datepicker-header .p-datepicker-next-button:focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: unset;
+      overflow: visible;
+      @include focus-ring(0.125rem, 0.25rem, 50%);
+    }
+    .p-datepicker .p-datepicker-header .p-datepicker-prev-button svg,
+    .p-datepicker .p-datepicker-header .p-datepicker-next-button svg {
+      width: 0.875rem;
+      height: 0.875rem;
     }
     .p-datepicker .p-datepicker-header .p-datepicker-title {
       line-height: 2rem;
@@ -111,6 +119,18 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker
       .p-datepicker-header
       .p-datepicker-title
+      .p-datepicker-select-year:focus,
+    .p-datepicker
+      .p-datepicker-header
+      .p-datepicker-title
+      .p-datepicker-select-month:focus {
+      overflow: visible;
+      color: $color-calm;
+      @include focus-ring(0.125rem, 0.25rem, 0.375rem);
+    }
+    .p-datepicker
+      .p-datepicker-header
+      .p-datepicker-title
       .p-datepicker-select-month {
       margin-right: 0.5rem;
     }
@@ -133,7 +153,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       height: 2.5rem;
       border-radius: 50%;
       transition: box-shadow 0.2s;
-      border: 1px solid transparent;
+      border: 0.0625rem solid transparent;
       &.p-disabled {
         color: $disabled-day-color;
         cursor: default;
@@ -145,9 +165,8 @@ $disabled-day-color: var(--cps-color-text-lightest);
       font-weight: bold;
     }
     .p-datepicker table td > span:focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: unset;
+      overflow: visible;
+      @include focus-ring(0.0625rem, 0.125rem, 50%);
     }
     .p-datepicker table td.p-datepicker-today > span {
       border-color: $color-calm;
@@ -161,16 +180,20 @@ $disabled-day-color: var(--cps-color-text-lightest);
     }
     .p-datepicker .p-datepicker-buttonbar {
       padding: 0.5rem 0 0;
-      border-top: 1px solid #dee2e6;
+      border-top: 0.0625rem solid #dee2e6;
     }
     .p-datepicker .p-datepicker-buttonbar .p-button {
       width: auto;
-      color: $color-prepared;
-      border-width: 2px;
+      color: $color-calm;
+      border-width: 0.125rem;
       border-style: solid;
     }
+    .p-datepicker .p-datepicker-buttonbar .p-button:focus {
+      overflow: visible;
+      @include focus-ring();
+    }
     .p-datepicker .p-timepicker {
-      border-top: 1px solid #dee2e6;
+      border-top: 0.0625rem solid #dee2e6;
       padding: 0.5rem;
     }
     .p-datepicker .p-timepicker button {
@@ -213,7 +236,8 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker .p-datepicker-month-view .p-datepicker-month {
       padding: 0.5rem;
       transition: box-shadow 0.2s;
-      border-radius: 6px;
+      border-radius: 0.375rem;
+      position: relative;
     }
     .p-datepicker
       .p-datepicker-month-view
@@ -222,13 +246,22 @@ $disabled-day-color: var(--cps-color-text-lightest);
       background: $color-selected-background;
       font-weight: bold;
     }
+    .p-datepicker .p-datepicker-month-view .p-datepicker-month.p-disabled {
+      color: $disabled-day-color;
+      cursor: default;
+    }
     .p-datepicker .p-datepicker-year-view {
       margin: 0.5rem 0;
     }
     .p-datepicker .p-datepicker-year-view .p-datepicker-year {
       padding: 0.5rem;
       transition: box-shadow 0.2s;
-      border-radius: 6px;
+      border-radius: 0.375rem;
+      position: relative;
+    }
+    .p-datepicker .p-datepicker-year-view .p-datepicker-year.p-disabled {
+      color: $disabled-day-color;
+      cursor: default;
     }
     .p-datepicker
       .p-datepicker-year-view
@@ -238,7 +271,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       font-weight: bold;
     }
     .p-datepicker.p-datepicker-multiple-month .p-datepicker-group {
-      border-left: 1px solid #dee2e6;
+      border-left: 0.0625rem solid #dee2e6;
       padding-right: 0.5rem;
       padding-left: 0.5rem;
       padding-top: 0;
@@ -254,7 +287,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-datepicker:not(.p-disabled)
       table
       td
-      span:not(.p-datepicker-day-selected):not(.p-disabled):hover {
+      span:not(.p-datepicker-day-selected):not(.p-disabled):is(:hover, :focus) {
       background: $color-highlight;
     }
     .p-datepicker:not(.p-disabled)
@@ -267,31 +300,37 @@ $disabled-day-color: var(--cps-color-text-lightest);
     }
     .p-datepicker:not(.p-disabled)
       .p-datepicker-month-view
-      .p-datepicker-month:not(.p-disabled):not(
-        .p-datepicker-day-selected
-      ):hover {
+      .p-datepicker-month:not(.p-disabled):not(.p-datepicker-day-selected):is(
+        :hover,
+        :focus
+      ) {
       background: $color-highlight;
     }
     .p-datepicker:not(.p-disabled)
       .p-datepicker-month-view
-      .p-datepicker-month:not(.p-disabled):focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: unset;
+      .p-datepicker-month:not(.p-disabled):not(
+        .p-datepicker-day-selected
+      ):focus {
+      overflow: visible;
+      z-index: 1;
+      @include focus-ring(0.125rem, 0.25rem, 0.375rem);
     }
     .p-datepicker:not(.p-disabled)
-      .p-yearpicker
-      .p-datepicker-year:not(.p-disabled):not(
-        .p-datepicker-day-selected
-      ):hover {
+      .p-datepicker-year-view
+      .p-datepicker-year:not(.p-disabled):not(.p-datepicker-day-selected):is(
+        :hover,
+        :focus
+      ) {
       background: $color-highlight;
     }
     .p-datepicker:not(.p-disabled)
-      .p-yearpicker
-      .p-datepicker-year:not(.p-disabled):focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: unset;
+      .p-datepicker-year-view
+      .p-datepicker-year:not(.p-disabled):not(
+        .p-datepicker-day-selected
+      ):focus {
+      overflow: visible;
+      z-index: 1;
+      @include focus-ring(0.125rem, 0.25rem, 0.375rem);
     }
 
     p-calendar.p-calendar-clearable .p-inputtext {
@@ -313,7 +352,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
     }
 
     .p-datepicker-other-month {
-      color: $other-month-color;
+      visibility: hidden;
     }
 
     .p-ripple:focus {
@@ -333,7 +372,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
       user-select: none;
       font-size: 1rem;
       font-family: 'Source Sans Pro', sans-serif;
-      border-radius: 6px;
+      border-radius: 0.375rem;
     }
 
     .p-datepicker-buttonbar {
@@ -359,7 +398,7 @@ $disabled-day-color: var(--cps-color-text-lightest);
           color 0.2s,
           border-color 0.2s,
           box-shadow 0.2s;
-        border-radius: 6px;
+        border-radius: 0.375rem;
         &:focus {
           box-shadow: unset;
         }
@@ -379,12 +418,12 @@ $disabled-day-color: var(--cps-color-text-lightest);
     .p-hidden-accessible {
       border: 0;
       clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
+      height: 0.0625rem;
+      margin: -0.0625rem;
       overflow: hidden;
       padding: 0;
       position: absolute;
-      width: 1px;
+      width: 0.0625rem;
     }
   }
 }

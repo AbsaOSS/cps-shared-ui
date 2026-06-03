@@ -38,12 +38,20 @@
                         "description": "Width of the datepicker of type number denoting pixels or string."
                     },
                     {
+                        "name": "dateFormat",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "CpsDatepickerDateFormat",
+                        "default": "DD/MM/YYYY",
+                        "description": "Date format for displaying and parsing the date string."
+                    },
+                    {
                         "name": "placeholder",
                         "optional": false,
                         "readonly": false,
                         "type": "string",
-                        "default": "MM/DD/YYYY",
-                        "description": "Placeholder text."
+                        "default": "",
+                        "description": "Placeholder text. Defaults to the configured dateFormat."
                     },
                     {
                         "name": "hint",
@@ -189,6 +197,11 @@
                 "name": "CpsDatepickerAppearanceType",
                 "value": "\"outlined\" | \"underlined\" | \"borderless\"",
                 "description": "CpsDatepickerAppearanceType is used to define the border of the datepicker input."
+            },
+            {
+                "name": "CpsDatepickerDateFormat",
+                "value": "\"DD/MM/YYYY\" | \"MM/DD/YYYY\" | \"YYYY/MM/DD\"",
+                "description": "CpsDatepickerDateFormat defines the display and input format of the date string."
             }
         ]
     }
