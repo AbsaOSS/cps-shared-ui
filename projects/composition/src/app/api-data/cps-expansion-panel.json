@@ -59,7 +59,7 @@
                         "readonly": false,
                         "type": "number | string",
                         "default": "0",
-                        "description": "The border radius of the component."
+                        "description": "The border radius of the component of type number denoting pixels or string."
                     },
                     {
                         "name": "borderColor",

@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
-import { CpsExpansionPanelComponent } from 'cps-ui-kit';
+import { CpsButtonComponent, CpsExpansionPanelComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-expansion-panel.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
 @Component({
-  imports: [CpsExpansionPanelComponent, ComponentDocsViewerComponent],
+  imports: [
+    CpsExpansionPanelComponent,
+    ComponentDocsViewerComponent,
+    CpsButtonComponent
+  ],
   selector: 'app-expansion-panel-page',
   templateUrl: './expansion-panel-page.component.html',
   styleUrls: ['./expansion-panel-page.component.scss'],

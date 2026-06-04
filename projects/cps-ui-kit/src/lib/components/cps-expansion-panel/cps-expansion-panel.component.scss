@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $transition-duration: 0.2s;
 $header-text-color: var(--cps-color-text-dark);
 $disabled-header-text-color: var(--cps-color-text-mild);
@@ -9,15 +11,16 @@ $header-active-background: var(--cps-color-highlight-active);
   .cps-expansion-panel {
     overflow: hidden;
     font-family: 'Source Sans Pro', sans-serif;
-    line-height: 20px;
+    line-height: 1.25rem;
     color: $header-text-color;
 
     &-header {
+      border-radius: inherit;
       border-bottom-color: transparent;
       display: flex;
       align-items: center;
-      padding: 10px 16px 10px 24px;
-      font-size: 16px;
+      padding: 0.625rem 1rem 0.625rem 1.5rem;
+      font-size: 1rem;
       justify-content: space-between;
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -33,17 +36,24 @@ $header-active-background: var(--cps-color-highlight-active);
         pointer-events: none;
         color: $disabled-header-text-color;
       }
+      &:focus-visible {
+        background-color: $header-hover-background;
+        @include focus-ring(0, -0.0625rem, inherit);
+      }
+      &.keyboard-active {
+        background-color: $header-active-background;
+      }
     }
 
     &-prefix-icon {
       display: flex;
       align-items: center;
-      margin-right: 12px;
-      margin-bottom: 2px;
+      margin-right: 0.75rem;
+      margin-bottom: 0.125rem;
       cps-icon {
         ::ng-deep .cps-icon {
-          width: 18px;
-          height: 18px;
+          width: 1.125rem;
+          height: 1.125rem;
         }
       }
     }
@@ -55,25 +65,25 @@ $header-active-background: var(--cps-color-highlight-active);
     }
 
     &-chevron {
-      width: 16px;
+      width: 1rem;
       display: flex;
       align-items: center;
       transition-duration: $transition-duration;
-      margin-left: 6px;
+      margin-left: 0.375rem;
     }
 
     &-content {
       overflow: auto;
       color: $header-text-color;
-      font-size: 16px;
+      font-size: 1rem;
       &-inner {
-        padding: 16px 24px;
+        padding: 1rem 1.5rem;
       }
     }
 
     &.expanded {
       .cps-expansion-panel-content {
-        max-height: 500px;
+        max-height: 31.25rem;
       }
       .cps-expansion-panel-chevron {
         transform: rotate(180deg);
