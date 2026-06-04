@@ -9,7 +9,8 @@ import {
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -114,10 +115,12 @@ export class CpsCheckboxComponent
 
   private _value = false;
 
+  @ViewChild('checkboxInput')
+  checkboxInput!: ElementRef;
+
   constructor(
     @Self() @Optional() private _control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
-    private _elementRef: ElementRef<HTMLElement>
+    @Inject(DOCUMENT) private document: Document
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -175,6 +178,6 @@ export class CpsCheckboxComponent
   setDisabledState(_disabled: boolean) {}
 
   focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
+    this.checkboxInput?.nativeElement?.focus();
   }
 }

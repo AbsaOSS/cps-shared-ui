@@ -4,13 +4,17 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
+  OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsSwitchComponent is a component used to toggle a boolean value.
@@ -22,12 +26,20 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.dir
   templateUrl: './cps-switch.component.html',
   styleUrls: ['./cps-switch.component.scss']
 })
-export class CpsSwitchComponent implements ControlValueAccessor {
+export class CpsSwitchComponent
+  implements OnInit, OnChanges, ControlValueAccessor
+{
   /**
    * Label of the component.
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for the component, used for accessibility, it takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Determines whether the component is disabled.
@@ -88,13 +100,21 @@ export class CpsSwitchComponent implements ControlValueAccessor {
 
   private _value = false;
 
-  constructor(
-    @Self() @Optional() private _control: NgControl,
-    private _elementRef: ElementRef<HTMLElement>
-  ) {
+  @ViewChild('switchInput')
+  switchInput!: ElementRef;
+
+  constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
+  }
+
+  ngOnInit(): void {
+    logMissingAriaLabelError('CpsSwitchComponent', this.label, this.ariaLabel);
+  }
+
+  ngOnChanges(): void {
+    logMissingAriaLabelError('CpsSwitchComponent', this.label, this.ariaLabel);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -131,6 +151,6 @@ export class CpsSwitchComponent implements ControlValueAccessor {
   setDisabledState(_disabled: boolean) {}
 
   focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
+    this.switchInput?.nativeElement?.focus();
   }
 }
