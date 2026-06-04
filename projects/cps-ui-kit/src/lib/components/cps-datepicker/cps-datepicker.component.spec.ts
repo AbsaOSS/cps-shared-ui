@@ -8,6 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CpsDatepickerComponent } from './cps-datepicker.component';
+import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
 
 function keyEvent(key: string, target: HTMLElement): KeyboardEvent {
   const event = new KeyboardEvent('keydown', {
@@ -380,7 +381,7 @@ describe('CpsDatepickerComponent', () => {
       (component as any)._calendarContainer = container;
       const removeSpy = jest.spyOn(container, 'removeEventListener');
       component.isOpened = false;
-      component.onBeforeCalendarHidden();
+      component.onBeforeCalendarHidden(CpsMenuHideReason.FORCED);
       expect(removeSpy).toHaveBeenCalledWith(
         'keydown',
         expect.any(Function),
@@ -392,8 +393,40 @@ describe('CpsDatepickerComponent', () => {
       const container = document.createElement('div');
       (component as any)._calendarContainer = container;
       component.isOpened = false;
-      component.onBeforeCalendarHidden();
+      component.onBeforeCalendarHidden(CpsMenuHideReason.FORCED);
       expect((component as any)._calendarContainer).toBeNull();
+    });
+
+    it('should restore focus to input when closed for non-outside reason (e.g. TOGGLE)', () => {
+      const focusSpy = jest.fn();
+      const inputWrap = document.createElement('div');
+      (component as any).datepickerInput = {
+        focus: focusSpy,
+        elementRef: { nativeElement: { querySelector: () => inputWrap } }
+      };
+      (component as any).calendarMenu = {
+        hide: jest.fn(),
+        isVisible: jest.fn().mockReturnValue(false)
+      };
+      component.isOpened = true;
+      component.onBeforeCalendarHidden(CpsMenuHideReason.TOGGLE);
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should NOT restore focus to input when closed by CLICK_OUTSIDE', () => {
+      const focusSpy = jest.fn();
+      const inputWrap = document.createElement('div');
+      (component as any).datepickerInput = {
+        focus: focusSpy,
+        elementRef: { nativeElement: { querySelector: () => inputWrap } }
+      };
+      (component as any).calendarMenu = {
+        hide: jest.fn(),
+        isVisible: jest.fn().mockReturnValue(false)
+      };
+      component.isOpened = true;
+      component.onBeforeCalendarHidden(CpsMenuHideReason.CLICK_OUTSIDE);
+      expect(focusSpy).not.toHaveBeenCalled();
     });
 
     it('should remove the keydown listener on destroy', () => {

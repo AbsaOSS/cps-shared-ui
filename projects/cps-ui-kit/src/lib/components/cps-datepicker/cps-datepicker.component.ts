@@ -17,7 +17,10 @@ import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
+import {
+  CpsMenuComponent,
+  CpsMenuHideReason
+} from '../cps-menu/cps-menu.component';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
 import {
   logMissingAriaLabelError,
@@ -173,15 +176,13 @@ export class CpsDatepickerComponent
    * Minimal date availalbe for selection.
    * @group Props
    */
-  @Input()
-  minDate!: Date;
+  @Input() minDate: Date | undefined;
 
   /**
    * Maximal date availalbe for selection.
    * @group Props
    */
-  @Input()
-  maxDate!: Date;
+  @Input() maxDate: Date | undefined;
 
   /**
    * Value of the datepicker.
@@ -442,7 +443,11 @@ export class CpsDatepickerComponent
     );
   }
 
-  private _checkDateInRange(date: Date, minDate: Date, maxDate: Date): boolean {
+  private _checkDateInRange(
+    date: Date,
+    minDate?: Date,
+    maxDate?: Date
+  ): boolean {
     if (minDate && date.getTime() < minDate.getTime()) return false;
     if (maxDate && date.getTime() > maxDate.getTime()) return false;
     return true;
@@ -668,12 +673,12 @@ export class CpsDatepickerComponent
     });
   }
 
-  onBeforeCalendarHidden() {
+  onBeforeCalendarHidden(reason: CpsMenuHideReason) {
     this._removeCalendarListeners();
     this._calendarContainer = null;
     if (this.disabled || !this.isOpened) return;
     this._updateValueFromInputString();
-    this.toggleCalendar(false);
+    this.toggleCalendar(false, reason !== CpsMenuHideReason.CLICK_OUTSIDE);
   }
 
   onInputClear() {
@@ -692,7 +697,7 @@ export class CpsDatepickerComponent
     this.datepickerInput.focus();
   }
 
-  toggleCalendar(show?: boolean) {
+  toggleCalendar(show?: boolean, needFocusInput = true) {
     if (this.disabled || this.isOpened === show) return;
 
     const target =
@@ -719,7 +724,7 @@ export class CpsDatepickerComponent
     if (!this.isOpened) {
       this._control?.control?.markAsTouched();
       this._checkErrors();
-      this.focusInput();
+      if (needFocusInput) this.focusInput();
     }
   }
 }

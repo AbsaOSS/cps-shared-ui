@@ -153,14 +153,14 @@
                         "name": "minDate",
                         "optional": false,
                         "readonly": false,
-                        "type": "Date",
+                        "type": "Date | undefined",
                         "description": "Minimal date availalbe for selection."
                     },
                     {
                         "name": "maxDate",
                         "optional": false,
                         "readonly": false,
-                        "type": "Date",
+                        "type": "Date | undefined",
                         "description": "Maximal date availalbe for selection."
                     },
                     {

@@ -35,7 +35,7 @@
     #calendarMenu
     [withArrow]="false"
     (menuShown)="onCalendarMenuShown()"
-    (beforeMenuHidden)="onBeforeCalendarHidden()"
+    (beforeMenuHidden)="onBeforeCalendarHidden($event)"
     (contentClicked)="onCalendarContentClick()"
     [focusOnShow]="false"
     hideTransitionOptions="0s linear"
