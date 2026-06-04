@@ -16,8 +16,8 @@
     .cps-switch {
       position: relative;
       display: inline-block;
-      width: 48px;
-      height: 24px;
+      width: 3rem;
+      height: 1.5rem;
     }
 
     .cps-switch input {
@@ -35,16 +35,16 @@
       bottom: 0;
       background-color: white;
       transition: $transition-time;
-      border: 1px solid $color-calm;
-      border-radius: 30px;
+      border: 0.0625rem solid $color-calm;
+      border-radius: 1.875rem;
     }
 
     .cps-switch-label {
-      font-size: 16px;
+      font-size: 1rem;
       font-family: 'Source Sans Pro', sans-serif;
       font-style: normal;
       color: $label-color;
-      margin-left: 10px;
+      margin-left: 0.625rem;
       cursor: default;
     }
     .cps-switch-label-disabled {
@@ -54,11 +54,11 @@
     .cps-switch-slider:before {
       position: absolute;
       content: '';
-      height: 14px;
-      width: 14px;
-      border-radius: 20px;
-      left: 4px;
-      bottom: 4px;
+      height: 0.875rem;
+      width: 0.875rem;
+      border-radius: 1.25rem;
+      left: 0.25rem;
+      bottom: 0.25rem;
       background-color: $color-calm;
       transition: $transition-time;
     }
@@ -68,11 +68,11 @@
     }
 
     input:focus + .cps-switch-slider {
-      box-shadow: 0 0 1px $color-calm;
+      box-shadow: 0 0 0.0625rem $color-calm;
     }
 
     input:checked + .cps-switch-slider:before {
-      transform: translateX(24px);
+      transform: translateX(1.5rem);
       background-color: white;
     }
 
@@ -90,11 +90,11 @@
     }
 
     .cps-switch-info-circle {
-      margin-left: 8px;
+      margin-left: 0.5rem;
       ::ng-deep cps-icon {
         i {
-          width: 14px;
-          height: 14px;
+          width: 0.875rem;
+          height: 0.875rem;
         }
       }
     }
