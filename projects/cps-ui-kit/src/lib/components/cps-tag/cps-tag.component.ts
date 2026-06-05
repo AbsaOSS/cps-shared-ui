@@ -7,7 +7,8 @@ import {
   OnChanges,
   Optional,
   Output,
-  Self
+  Self,
+  type SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
@@ -69,6 +70,8 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
   @Output() valueChanged = new EventEmitter<boolean>();
 
   classesList: string[] = [];
+  pressing = false;
+  cvtColor = '';
 
   private _value = false;
 
@@ -81,20 +84,32 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
     }
   }
 
-  ngOnChanges(): void {
-    this.color = getCSSColor(this.color, this.document);
+  ngOnInit(): void {
+    this.cvtColor = getCSSColor(this.color, this.document);
     this.setClasses();
+    this._logMissingLabelError();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.color) {
+      this.cvtColor = getCSSColor(this.color, this.document);
+    }
+    if (changes.selectable || changes.disabled) {
+      this.setClasses();
+    }
+
+    this._logMissingLabelError();
   }
 
   setClasses(): void {
-    this.classesList = ['cps-tag'];
-
+    const classes = ['cps-tag'];
     if (this.selectable) {
-      this.classesList.push('cps-tag--selectable');
+      classes.push('cps-tag--selectable');
     }
     if (this.disabled) {
-      this.classesList.push('cps-tag--disabled');
+      classes.push('cps-tag--disabled');
     }
+    this.classesList = classes;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -115,7 +130,19 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
     this.value = value;
   }
 
+  handleEnterKeydown(event: Event) {
+    if ((event as KeyboardEvent).repeat) return;
+    event.preventDefault();
+    this.toggleSelected();
+  }
+
+  handleSpaceKeydown(event: Event) {
+    event.preventDefault();
+    this.pressing = true;
+  }
+
   toggleSelected() {
+    this.pressing = false;
     if (this.disabled || !this.selectable) return;
     this._updateValue(!this.value);
   }
@@ -124,5 +151,11 @@ export class CpsTagComponent implements ControlValueAccessor, OnChanges {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
+  }
+
+  private _logMissingLabelError() {
+    if (!this.label?.trim()) {
+      console.error('CpsTagComponent: the tag must have a label.');
+    }
   }
 }
