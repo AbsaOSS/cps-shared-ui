@@ -1,8 +1,10 @@
+@use '../../../../styles/mixins' as *;
+
 :host {
   $color-calm: var(--cps-color-calm);
   $label-color: var(--cps-color-text-dark);
-  $disabled-label-color: var(--cps-color-text-light);
-  $disabled-slider-color: var(--cps-color-text-lightest);
+  $disabled-label-color: var(--cps-color-text-mild);
+  $disabled-slider-color: var(--cps-color-text-light);
   $transition-time: 0.2s;
 
   min-width: max-content;
@@ -22,8 +24,12 @@
 
     .cps-switch input {
       opacity: 0;
-      width: 0;
-      height: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
     }
 
     .cps-switch-slider {
@@ -67,8 +73,8 @@
       background-color: $color-calm;
     }
 
-    input:focus + .cps-switch-slider {
-      box-shadow: 0 0 0.0625rem $color-calm;
+    .cps-switch:has(input:focus-visible) {
+      @include focus-ring(0.1875rem, 0.25rem, 1.875rem);
     }
 
     input:checked + .cps-switch-slider:before {

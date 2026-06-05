@@ -30,19 +30,19 @@ export class CpsSwitchComponent
   implements OnInit, OnChanges, ControlValueAccessor
 {
   /**
-   * Label of the component.
+   * Label of the switch component.
    * @group Props
    */
   @Input() label = '';
 
   /**
-   * Aria label for the component, used for accessibility, it takes precedence over label.
+   * Aria label for the switch component, used for accessibility, it takes precedence over label.
    * @group Props
    */
   @Input() ariaLabel = '';
 
   /**
-   * Determines whether the component is disabled.
+   * Determines whether the switch component is disabled.
    * @group Props
    */
   @Input() disabled = false;
