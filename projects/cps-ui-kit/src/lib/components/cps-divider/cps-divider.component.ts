@@ -23,10 +23,11 @@ export type CpsDividerType = 'solid' | 'dashed' | 'dotted';
   selector: 'cps-divider',
   host: {
     class: 'cps-divider',
+    role: 'separator',
+    '[attr.aria-orientation]': 'vertical() ? "vertical" : "horizontal"',
     '[style.border-top]': 'borderTop()',
     '[style.border-right]': 'borderRight()'
   },
-  standalone: true,
   template: '',
   styleUrl: './cps-divider.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -56,9 +57,9 @@ export class CpsDividerComponent {
   /**
    * Thickness of the divider, a number denoting pixels or a string.
    * @group Props
-   * @default 1px
+   * @default 0.0625rem
    */
-  thickness = input<number | string>('1px');
+  thickness = input<number | string>('0.0625rem');
 
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
