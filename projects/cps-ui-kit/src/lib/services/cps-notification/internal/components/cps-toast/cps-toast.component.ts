@@ -33,6 +33,11 @@ import {
   selector: 'cps-toast',
   templateUrl: './cps-toast.component.html',
   styleUrls: ['./cps-toast.component.scss'],
+  host: {
+    '[attr.role]': 'notificationRole',
+    '[attr.aria-live]': 'ariaLive',
+    'aria-atomic': 'true'
+  },
   animations: [
     trigger('toastState', [
       state(
@@ -74,6 +79,27 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   maxWidth: string | undefined;
   filled = true;
   color = '';
+  srAnnouncement = '';
+
+  get notificationRole(): string | null {
+    return this.isPolite ? null : 'alert';
+  }
+
+  get ariaLive(): string | null {
+    return this.isPolite ? null : 'assertive';
+  }
+
+  get isPolite(): boolean {
+    if (this.data?.type === CpsNotificationType.ERROR)
+      return !!this.config?.politeError;
+    if (this.data?.type === CpsNotificationType.WARNING)
+      return !!this.config?.politeWarning;
+    return true;
+  }
+
+  get closeAriaLabel(): string {
+    return `Close ${this.data?.type || ''} notification`;
+  }
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private zone: NgZone) {}
@@ -89,6 +115,13 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initiateTimeout();
+    if (this.isPolite) {
+      setTimeout(() => {
+        this.srAnnouncement = `${this.data.type}: ${this.data.message || ''}${
+          this.data.details ? '. ' + this.data.details : ''
+        }`;
+      });
+    }
   }
 
   ngOnDestroy() {

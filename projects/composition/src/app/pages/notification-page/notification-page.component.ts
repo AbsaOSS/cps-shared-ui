@@ -79,7 +79,7 @@ export class NotificationPageComponent {
       'Http failure response for https://my-long-url/epic/fail: 404 Not Found Error',
       {
         position: CpsNotificationPosition.RIGHT,
-        maxWidth: '450px',
+        maxWidth: '28rem',
         maxAmount: 3
       }
     );

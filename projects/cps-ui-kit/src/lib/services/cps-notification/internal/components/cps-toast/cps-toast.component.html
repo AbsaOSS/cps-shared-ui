@@ -1,13 +1,20 @@
+@if (isPolite) {
+  <span role="status" aria-atomic="true" class="cps-sr-only">{{
+    srAnnouncement
+  }}</span>
+}
 <div
   (mouseenter)="clearTimeout()"
   (mouseleave)="initiateTimeout()"
+  (focusin)="clearTimeout()"
+  (focusout)="initiateTimeout()"
   [class]="data.type"
   [@toastState]="{
     value: 'visible'
   }"
-  [ngStyle]="{ 'max-width': maxWidth }"
+  [style.max-width]="maxWidth"
   class="cps-toast-content">
-  <div class="cps-toast-icon" [ngClass]="{ filled: filled }">
+  <div class="cps-toast-icon" [class.filled]="filled" aria-hidden="true">
     <cps-icon
       [icon]="'toast-' + data.type"
       [color]="filled ? '#fff' : color"
@@ -25,10 +32,10 @@
     <cps-button
       (clicked)="close()"
       [color]="color"
-      ariaLabel="Close notification"
+      [ariaLabel]="closeAriaLabel"
       icon="close-x"
       class="cps-toast-close-button"
-      width="40"
+      width="2.5rem"
       type="borderless"></cps-button>
   </div>
 </div>
