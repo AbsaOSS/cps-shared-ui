@@ -1,19 +1,20 @@
 $loaders-label-color: var(--cps-color-text-darkest);
 
 .loaders-group {
-  gap: 30px;
+  gap: 1.875rem;
+  margin-left: 0.5rem;
   display: flex;
   flex-direction: column;
 
   &-label {
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     line-height: 2;
     color: $loaders-label-color;
   }
 
   .loader-container {
-    width: 450px;
-    height: 200px;
-    border: 1px solid lightgrey;
+    width: 28.125rem;
+    height: 12.5rem;
+    border: 0.0625rem solid lightgrey;
   }
 }
