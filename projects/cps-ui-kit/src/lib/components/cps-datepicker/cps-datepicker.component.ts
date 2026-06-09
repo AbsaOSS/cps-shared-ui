@@ -92,7 +92,7 @@ export class CpsDatepickerComponent
    * Date format for displaying and parsing the date string.
    * @group Props
    */
-  @Input() dateFormat: CpsDatepickerDateFormat = 'DD/MM/YYYY';
+  @Input() dateFormat: CpsDatepickerDateFormat = 'MM/DD/YYYY';
 
   /**
    * Placeholder text. Defaults to the configured dateFormat.
@@ -415,7 +415,12 @@ export class CpsDatepickerComponent
     dateString: string
   ): { day: number; month: number; year: number } | null {
     const parts = dateString.split('/').map((p) => parseInt(p, 10));
-    if (parts.some(isNaN)) return null;
+    if (parts.some(isNaN)) {
+      console.warn(
+        `CpsDatepickerComponent: could not parse date string "${dateString}" using dateFormat "${this.dateFormat}". Supported formats: DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD.`
+      );
+      return null;
+    }
     switch (this.dateFormat) {
       case 'DD/MM/YYYY':
         return { day: parts[0], month: parts[1], year: parts[2] };

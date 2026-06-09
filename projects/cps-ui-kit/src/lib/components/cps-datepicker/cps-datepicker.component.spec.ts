@@ -277,6 +277,26 @@ describe('CpsDatepickerComponent', () => {
     });
   });
 
+  describe('_parseFormatParts', () => {
+    it('should warn and return null when date parts cannot be parsed as numbers', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput('dateFormat', 'MM/DD/YYYY');
+      const result = (component as any)._parseFormatParts('aa/bb/cccc');
+      expect(result).toBeNull();
+      expect(warnSpy).toHaveBeenCalledWith(
+        'CpsDatepickerComponent: could not parse date string "aa/bb/cccc" using dateFormat "MM/DD/YYYY". Supported formats: DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD.'
+      );
+    });
+
+    it('should not warn for a valid date string', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput('dateFormat', 'MM/DD/YYYY');
+      const result = (component as any)._parseFormatParts('06/15/2026');
+      expect(result).toEqual({ day: 15, month: 6, year: 2026 });
+      expect(warnSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('_checkErrors', () => {
     it('should set error when stringDate is invalid', () => {
       component.stringDate = '99/99/9999';
