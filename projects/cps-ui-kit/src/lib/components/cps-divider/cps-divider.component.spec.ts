@@ -17,7 +17,7 @@ class TestHostComponent {
   vertical = false;
   color = 'line-mid';
   type: 'solid' | 'dashed' | 'dotted' = 'solid';
-  thickness: number | string = '1px';
+  thickness: number | string = '0.0625rem';
 }
 
 describe('CpsDividerComponent', () => {
@@ -46,7 +46,7 @@ describe('CpsDividerComponent', () => {
     expect(component.vertical()).toBe(false);
     expect(component.color()).toBe('line-mid');
     expect(component.type()).toBe('solid');
-    expect(component.thickness()).toBe('1px');
+    expect(component.thickness()).toBe('0.0625rem');
   });
 
   it('should be horizontal by default', () => {
@@ -98,5 +98,31 @@ describe('CpsDividerComponent', () => {
   it('should have cps-divider class', () => {
     const divider = fixture.nativeElement;
     expect(divider.classList.contains('cps-divider')).toBe(true);
+  });
+
+  it('should have role="separator"', () => {
+    const divider = fixture.nativeElement;
+    expect(divider.getAttribute('role')).toBe('separator');
+  });
+
+  it('should have aria-orientation="horizontal" by default', () => {
+    const divider = fixture.nativeElement;
+    expect(divider.getAttribute('aria-orientation')).toBe('horizontal');
+  });
+
+  it('should have aria-orientation="vertical" when vertical is true', () => {
+    fixture.componentRef.setInput('vertical', true);
+    fixture.detectChanges();
+    const divider = fixture.nativeElement;
+    expect(divider.getAttribute('aria-orientation')).toBe('vertical');
+  });
+
+  it('should revert aria-orientation to "horizontal" when vertical is set back to false', () => {
+    fixture.componentRef.setInput('vertical', true);
+    fixture.detectChanges();
+    fixture.componentRef.setInput('vertical', false);
+    fixture.detectChanges();
+    const divider = fixture.nativeElement;
+    expect(divider.getAttribute('aria-orientation')).toBe('horizontal');
   });
 });

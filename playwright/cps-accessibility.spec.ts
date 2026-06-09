@@ -104,7 +104,11 @@ const components: ComponentEntry[] = [
         .click();
     }
   },
-  // { route: '/divider', name: 'Divider', selector: 'cps-divider' },
+  {
+    route: '/divider',
+    name: 'Divider',
+    selector: '.example-content cps-divider'
+  },
   // {
   //   route: '/expansion-panel',
   //   name: 'Expansion panel',
