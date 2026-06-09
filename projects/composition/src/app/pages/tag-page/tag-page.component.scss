@@ -1,11 +1,12 @@
 .tags-group {
-  gap: 32px;
+  margin-left: 0.5rem;
+  gap: 2rem;
   display: flex;
   flex-direction: column;
 }
 
 .sync-val-example {
   .sync-val {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 }

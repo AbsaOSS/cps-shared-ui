@@ -104,11 +104,15 @@ const components: ComponentEntry[] = [
         .click();
     }
   },
-  // { route: '/divider', name: 'Divider', selector: 'cps-divider' },
+  {
+    route: '/divider',
+    name: 'Divider',
+    selector: '.example-content cps-divider'
+  },
   {
     route: '/expansion-panel',
     name: 'Expansion panel',
-    selector: 'cps-expansion-panel'
+    selector: '.example-content cps-expansion-panel'
   },
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
   // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
@@ -195,7 +199,7 @@ const components: ComponentEntry[] = [
     selector: '.example-content cps-tab-group'
   },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
-  // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
+  { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
     route: '/timepicker',
