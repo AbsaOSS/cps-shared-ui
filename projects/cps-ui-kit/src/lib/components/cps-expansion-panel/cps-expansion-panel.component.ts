@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -6,11 +6,12 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
   Renderer2,
-  type SimpleChanges,
-  ViewChild
+  ViewChild,
+  type SimpleChanges
 } from '@angular/core';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -34,7 +35,7 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsIconComponent],
+  imports: [CpsIconComponent],
   selector: 'cps-expansion-panel',
   templateUrl: './cps-expansion-panel.component.html',
   styleUrls: ['./cps-expansion-panel.component.scss'],
@@ -58,7 +59,9 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
     ])
   ]
 })
-export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
+export class CpsExpansionPanelComponent
+  implements OnInit, OnChanges, AfterViewInit
+{
   /**
    * Title of the expansionPanel element.
    * @group Props
@@ -202,8 +205,9 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
     if (changes.width) {
       this.cvtWidth = convertSize(this.width);
     }
-
-    this._logHeaderTitleError();
+    if (changes.headerTitle) {
+      this._logHeaderTitleError();
+    }
   }
 
   ngAfterViewInit(): void {

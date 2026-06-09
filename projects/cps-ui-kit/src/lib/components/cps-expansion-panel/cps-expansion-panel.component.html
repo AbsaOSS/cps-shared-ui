@@ -1,16 +1,14 @@
 <div
   class="cps-expansion-panel"
   [class.expanded]="isExpanded"
-  [ngStyle]="{
-    'background-color': cvtBackgroundColor,
-    'border-radius': cvtBorderRadius,
-    width: cvtWidth,
-    border: bordered ? '1px solid ' + cvtBorderColor : ''
-  }">
+  [style.background-color]="cvtBackgroundColor"
+  [style.border-radius]="cvtBorderRadius"
+  [style.width]="cvtWidth"
+  [style.border]="bordered ? '1px solid ' + cvtBorderColor : ''">
   <div
     class="cps-expansion-panel-header"
     role="button"
-    tabindex="0"
+    [attr.tabindex]="disabled ? -1 : 0"
     [attr.aria-expanded]="isExpanded"
     [attr.aria-disabled]="disabled ? true : null"
     [attr.aria-controls]="contentPanelId"
@@ -24,7 +22,8 @@
           }
         : 'hidden'
     "
-    [ngClass]="{ disabled: disabled, 'keyboard-active': isKeyboardActive }"
+    [class.disabled]="disabled"
+    [class.keyboard-active]="isKeyboardActive"
     [style.cursor]="disabled ? 'default' : 'pointer'"
     (click)="toggleExpansion()"
     (keydown)="onHeaderKeydown($event)"
