@@ -199,7 +199,7 @@ const components: ComponentEntry[] = [
     selector: '.example-content cps-tab-group'
   },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
-  // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
+  { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
     route: '/timepicker',
