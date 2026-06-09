@@ -95,20 +95,6 @@ describe('CpsToastComponent', () => {
     });
   });
 
-  describe('ariaLive', () => {
-    beforeEach(() => setup());
-
-    it('should return null for polite notifications', () => {
-      component.data = { type: CpsNotificationType.INFO };
-      expect(component.ariaLive).toBeNull();
-    });
-
-    it('should return "assertive" for non-polite notifications', () => {
-      component.data = { type: CpsNotificationType.ERROR };
-      expect(component.ariaLive).toBe('assertive');
-    });
-  });
-
   describe('closeAriaLabel', () => {
     beforeEach(() => setup());
 
@@ -316,16 +302,6 @@ describe('CpsToastComponent', () => {
       expect(fixture.nativeElement.getAttribute('role')).toBe('alert');
     });
 
-    it('should set aria-live="assertive" for non-polite notifications', () => {
-      setup(defaultConfig, { type: CpsNotificationType.ERROR, message: 'err' });
-      fixture.detectChanges();
-      expect(fixture.nativeElement.getAttribute('aria-live')).toBe('assertive');
-    });
-
-    it('should always set aria-atomic="true"', () => {
-      setup();
-      expect(fixture.nativeElement.getAttribute('aria-atomic')).toBe('true');
-    });
   });
 
   describe('DOM interactions', () => {

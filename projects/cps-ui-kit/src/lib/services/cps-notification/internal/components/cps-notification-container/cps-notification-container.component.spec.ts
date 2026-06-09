@@ -69,6 +69,31 @@ describe('CpsNotificationContainerComponent', () => {
     it('should start with an empty notifications array', () => {
       expect(component.notifications).toHaveLength(0);
     });
+
+    it('should have role="region" on the mask element', () => {
+      const mask = fixture.nativeElement.querySelector(
+        '.cps-notification-container-mask'
+      );
+      expect(mask.getAttribute('role')).toBe('region');
+    });
+
+    it('should set aria-label to "Notifications: top-right" by default', () => {
+      const mask = fixture.nativeElement.querySelector(
+        '.cps-notification-container-mask'
+      );
+      expect(mask.getAttribute('aria-label')).toBe('Notifications: top-right');
+    });
+
+    it('should update aria-label when position changes', () => {
+      component.position = CpsNotificationPosition.BOTTOMLEFT;
+      fixture.detectChanges();
+      const mask = fixture.nativeElement.querySelector(
+        '.cps-notification-container-mask'
+      );
+      expect(mask.getAttribute('aria-label')).toBe(
+        'Notifications: bottom-left'
+      );
+    });
   });
 
   describe('ngAfterViewInit()', () => {

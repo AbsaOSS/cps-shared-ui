@@ -34,9 +34,7 @@ import {
   templateUrl: './cps-toast.component.html',
   styleUrls: ['./cps-toast.component.scss'],
   host: {
-    '[attr.role]': 'notificationRole',
-    '[attr.aria-live]': 'ariaLive',
-    'aria-atomic': 'true'
+    '[attr.role]': 'notificationRole'
   },
   animations: [
     trigger('toastState', [
@@ -83,10 +81,6 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get notificationRole(): string | null {
     return this.isPolite ? null : 'alert';
-  }
-
-  get ariaLive(): string | null {
-    return this.isPolite ? null : 'assertive';
   }
 
   get isPolite(): boolean {
