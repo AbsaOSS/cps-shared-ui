@@ -1,8 +1,9 @@
-@if (isPolite) {
-  <span role="status" aria-atomic="true" class="cps-sr-only">{{
-    srAnnouncement
-  }}</span>
-}
+<span
+  [attr.role]="isPolite ? 'status' : 'alert'"
+  aria-atomic="true"
+  class="cps-sr-only">
+  {{ srAnnouncement }}
+</span>
 <div
   (mouseenter)="clearTimeout()"
   (mouseleave)="initiateTimeout()"

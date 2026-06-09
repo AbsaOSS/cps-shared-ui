@@ -81,20 +81,6 @@ describe('CpsToastComponent', () => {
     });
   });
 
-  describe('notificationRole', () => {
-    beforeEach(() => setup());
-
-    it('should return null for polite notifications', () => {
-      component.data = { type: CpsNotificationType.INFO };
-      expect(component.notificationRole).toBeNull();
-    });
-
-    it('should return "alert" for non-polite notifications', () => {
-      component.data = { type: CpsNotificationType.ERROR };
-      expect(component.notificationRole).toBe('alert');
-    });
-  });
-
   describe('closeAriaLabel', () => {
     beforeEach(() => setup());
 
@@ -192,13 +178,30 @@ describe('CpsToastComponent', () => {
       expect(component.srAnnouncement).toContain('Extra details');
     }));
 
-    it('should not set srAnnouncement for non-polite notifications', fakeAsync(() => {
+    it('should set srAnnouncement for non-polite notifications', fakeAsync(() => {
       setup(defaultConfig, {
         type: CpsNotificationType.ERROR,
         message: 'Error'
       });
       tick(0);
-      expect(component.srAnnouncement).toBe('');
+      expect(component.srAnnouncement).toContain('Error');
+      expect(component.srAnnouncement).toContain('error');
+    }));
+
+    it('should render role="status" span for polite notifications', fakeAsync(() => {
+      setup(defaultConfig, { type: CpsNotificationType.INFO, message: 'hi' });
+      tick(0);
+      const span = fixture.nativeElement.querySelector('[role="status"]');
+      expect(span).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('[role="alert"]')).toBeNull();
+    }));
+
+    it('should render role="alert" span for non-polite notifications', fakeAsync(() => {
+      setup(defaultConfig, { type: CpsNotificationType.ERROR, message: 'err' });
+      tick(0);
+      const span = fixture.nativeElement.querySelector('[role="alert"]');
+      expect(span).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('[role="status"]')).toBeNull();
     }));
   });
 
@@ -287,21 +290,6 @@ describe('CpsToastComponent', () => {
       setup();
       expect(() => fixture.destroy()).not.toThrow();
     });
-  });
-
-  describe('host bindings', () => {
-    it('should not set role attribute for polite notifications', () => {
-      setup(defaultConfig, { type: CpsNotificationType.INFO, message: 'hi' });
-      fixture.detectChanges();
-      expect(fixture.nativeElement.getAttribute('role')).toBeNull();
-    });
-
-    it('should set role="alert" for non-polite notifications', () => {
-      setup(defaultConfig, { type: CpsNotificationType.ERROR, message: 'err' });
-      fixture.detectChanges();
-      expect(fixture.nativeElement.getAttribute('role')).toBe('alert');
-    });
-
   });
 
   describe('DOM interactions', () => {

@@ -33,9 +33,6 @@ import {
   selector: 'cps-toast',
   templateUrl: './cps-toast.component.html',
   styleUrls: ['./cps-toast.component.scss'],
-  host: {
-    '[attr.role]': 'notificationRole'
-  },
   animations: [
     trigger('toastState', [
       state(
@@ -79,10 +76,6 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   color = '';
   srAnnouncement = '';
 
-  get notificationRole(): string | null {
-    return this.isPolite ? null : 'alert';
-  }
-
   get isPolite(): boolean {
     if (this.data?.type === CpsNotificationType.ERROR)
       return !!this.config?.politeError;
@@ -109,13 +102,11 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initiateTimeout();
-    if (this.isPolite) {
-      setTimeout(() => {
-        this.srAnnouncement = `${this.data.type}: ${this.data.message || ''}${
-          this.data.details ? '. ' + this.data.details : ''
-        }`;
-      });
-    }
+    setTimeout(() => {
+      this.srAnnouncement = `${this.data.type}: ${this.data.message || ''}${
+        this.data.details ? '. ' + this.data.details : ''
+      }`;
+    });
   }
 
   ngOnDestroy() {
