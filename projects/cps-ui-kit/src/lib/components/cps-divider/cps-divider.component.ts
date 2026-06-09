@@ -1,8 +1,8 @@
 import {
   Component,
-  Inject,
   ViewEncapsulation,
   computed,
+  inject,
   input
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -61,8 +61,7 @@ export class CpsDividerComponent {
    */
   thickness = input<number | string>('0.0625rem');
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  private document = inject(DOCUMENT);
 
   public borderTop = computed(() => {
     return this._constructBorder(!this.vertical());
