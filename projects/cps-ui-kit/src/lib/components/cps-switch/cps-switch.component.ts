@@ -101,7 +101,7 @@ export class CpsSwitchComponent
   private _value = false;
 
   @ViewChild('switchInput')
-  switchInput!: ElementRef;
+  switchInput?: ElementRef<HTMLInputElement>;
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {

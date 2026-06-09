@@ -116,7 +116,7 @@ export class CpsCheckboxComponent
   private _value = false;
 
   @ViewChild('checkboxInput')
-  checkboxInput!: ElementRef;
+  checkboxInput?: ElementRef<HTMLInputElement>;
 
   constructor(
     @Self() @Optional() private _control: NgControl,
