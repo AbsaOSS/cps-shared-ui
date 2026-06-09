@@ -1,7 +1,15 @@
 <div
   [ngClass]="classesList"
   [class.unselected]="!value && selectable"
-  [ngStyle]="{ borderColor: color }"
-  (click)="toggleSelected()">
-  <p>{{ label }}</p>
+  [style.borderColor]="cvtColor"
+  [attr.role]="selectable ? 'checkbox' : null"
+  [attr.aria-checked]="selectable ? value : null"
+  [attr.aria-disabled]="selectable && disabled ? true : null"
+  [attr.tabindex]="selectable ? (disabled ? -1 : 0) : null"
+  (click)="toggleSelected()"
+  (keydown.enter)="handleEnterKeydown($event)"
+  [class.cps-tag--pressing]="pressing"
+  (keydown.space)="handleSpaceKeydown($event)"
+  (keyup.space)="toggleSelected()">
+  <span>{{ label }}</span>
 </div>
