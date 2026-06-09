@@ -104,7 +104,11 @@ const components: ComponentEntry[] = [
         .click();
     }
   },
-  // { route: '/divider', name: 'Divider', selector: 'cps-divider' },
+  {
+    route: '/divider',
+    name: 'Divider',
+    selector: '.example-content cps-divider'
+  },
   // {
   //   route: '/expansion-panel',
   //   name: 'Expansion panel',
@@ -201,7 +205,7 @@ const components: ComponentEntry[] = [
     selector: '.example-content cps-tab-group'
   },
   // { route: '/table', name: 'Table', selector: 'cps-table' },
-  // { route: '/tag', name: 'Tag', selector: 'cps-tag' },
+  { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
     route: '/timepicker',
