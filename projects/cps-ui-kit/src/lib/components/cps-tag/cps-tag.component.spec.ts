@@ -153,7 +153,6 @@ describe('CpsTagComponent', () => {
     it('should set aria-checked to true when selectable and selected', () => {
       fixture.componentRef.setInput('selectable', true);
       fixture.detectChanges();
-      component.selectable = true;
       component.toggleSelected();
       fixture.detectChanges();
       const div = fixture.nativeElement.querySelector('div');

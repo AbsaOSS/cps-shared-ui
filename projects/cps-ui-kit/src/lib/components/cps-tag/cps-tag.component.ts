@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnInit,
   OnChanges,
   Optional,
   Output,
@@ -23,7 +24,9 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   templateUrl: './cps-tag.component.html',
   styleUrls: ['./cps-tag.component.scss']
 })
-export class CpsTagComponent implements ControlValueAccessor, OnChanges {
+export class CpsTagComponent
+  implements ControlValueAccessor, OnInit, OnChanges
+{
   /**
    * Label of the tag.
    * @group Props
