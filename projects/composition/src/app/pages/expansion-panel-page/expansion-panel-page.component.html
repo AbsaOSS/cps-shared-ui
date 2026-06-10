@@ -3,7 +3,9 @@
   <div class="expans-panels-group">
     <cps-expansion-panel
       headerTitle="Bordered panel with transparent background">
-      <div>Some content</div>
+      <div>
+        <cps-button label="Sample button"></cps-button>
+      </div>
     </cps-expansion-panel>
 
     <cps-expansion-panel headerTitle="Disabled panel" [disabled]="true">
@@ -25,18 +27,18 @@
     </cps-expansion-panel>
 
     <cps-expansion-panel
-      headerTitle="Bordered panel with 4px border radius without chevron"
+      headerTitle="Bordered panel with 0.25rem border radius without chevron"
       [showChevron]="false"
       backgroundColor="white"
-      borderRadius="4px">
+      borderRadius="0.25rem">
       <div>Some content</div>
     </cps-expansion-panel>
 
     <cps-expansion-panel
-      headerTitle="Bordered panel with 4px border radius and 500px width"
+      headerTitle="Bordered panel with 0.25rem border radius and 32rem width"
       backgroundColor="white"
-      borderRadius="4"
-      width="500">
+      borderRadius="0.25rem"
+      width="32rem">
       <div>Some content</div>
     </cps-expansion-panel>
   </div>

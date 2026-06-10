@@ -112,11 +112,11 @@ const components: ComponentEntry[] = [
     name: 'Divider',
     selector: '.example-content cps-divider'
   },
-  // {
-  //   route: '/expansion-panel',
-  //   name: 'Expansion panel',
-  //   selector: 'cps-expansion-panel'
-  // },
+  {
+    route: '/expansion-panel',
+    name: 'Expansion panel',
+    selector: '.example-content cps-expansion-panel'
+  },
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
   // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
