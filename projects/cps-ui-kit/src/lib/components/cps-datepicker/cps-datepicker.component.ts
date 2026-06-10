@@ -9,6 +9,7 @@ import {
   Optional,
   Output,
   Self,
+  type SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
@@ -16,9 +17,15 @@ import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
-import { DatePickerModule } from 'primeng/datepicker';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import {
+  CpsMenuComponent,
+  CpsMenuHideReason
+} from '../cps-menu/cps-menu.component';
+import { DatePicker, DatePickerModule } from 'primeng/datepicker';
+import {
+  logMissingAriaLabelError,
+  generateUniqueId
+} from '../../utils/internal/accessibility-utils';
 
 /**
  * CpsDatepickerAppearanceType is used to define the border of the datepicker input.
@@ -28,6 +35,15 @@ export type CpsDatepickerAppearanceType =
   | 'outlined'
   | 'underlined'
   | 'borderless';
+
+/**
+ * CpsDatepickerDateFormat defines the display and input format of the date string.
+ * @group Types
+ */
+export type CpsDatepickerDateFormat =
+  | 'DD/MM/YYYY'
+  | 'MM/DD/YYYY'
+  | 'YYYY/MM/DD';
 
 /**
  * CpsDatepickerComponent is an input component to provide date input.
@@ -73,10 +89,16 @@ export class CpsDatepickerComponent
   @Input() width: number | string = '100%';
 
   /**
-   * Placeholder text.
+   * Date format for displaying and parsing the date string.
    * @group Props
    */
-  @Input() placeholder = 'MM/DD/YYYY';
+  @Input() dateFormat: CpsDatepickerDateFormat = 'MM/DD/YYYY';
+
+  /**
+   * Placeholder text. Defaults to the configured dateFormat.
+   * @group Props
+   */
+  @Input() placeholder = '';
 
   /**
    * Bottom hint text for the input field.
@@ -154,15 +176,13 @@ export class CpsDatepickerComponent
    * Minimal date availalbe for selection.
    * @group Props
    */
-  @Input()
-  minDate!: Date;
+  @Input() minDate: Date | undefined;
 
   /**
    * Maximal date availalbe for selection.
    * @group Props
    */
-  @Input()
-  maxDate!: Date;
+  @Input() maxDate: Date | undefined;
 
   /**
    * Value of the datepicker.
@@ -192,6 +212,11 @@ export class CpsDatepickerComponent
   @ViewChild('calendarMenu')
   calendarMenu!: CpsMenuComponent;
 
+  @ViewChild(DatePicker)
+  private _datepicker!: DatePicker;
+
+  readonly calendarId = generateUniqueId('cps-datepicker-calendar');
+
   stringDate = '';
   isOpened = false;
   error = '';
@@ -199,6 +224,10 @@ export class CpsDatepickerComponent
 
   private _statusChangesSubscription?: Subscription;
   private _value: Date | null = null;
+  private _focusCalendarOnOpen = false;
+  private _suppressNextContentClick = false;
+  private _captureKeydown = (e: KeyboardEvent) => this._onCaptureKeydown(e);
+  private _calendarContainer: HTMLElement | null = null;
 
   constructor(@Self() @Optional() private _control: NgControl) {
     if (this._control) {
@@ -222,7 +251,15 @@ export class CpsDatepickerComponent
     );
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+
+    if (changes.dateFormat && !changes.dateFormat.isFirstChange()) {
+      this.stringDate = this._dateToString(this._value);
+    }
+
     logMissingAriaLabelError(
       'CpsDatepickerComponent',
       this.label,
@@ -232,6 +269,103 @@ export class CpsDatepickerComponent
 
   ngOnDestroy() {
     this._statusChangesSubscription?.unsubscribe();
+    this._removeCalendarListeners();
+  }
+
+  private _removeCalendarListeners(): void {
+    this._calendarContainer?.removeEventListener(
+      'keydown',
+      this._captureKeydown,
+      true
+    );
+  }
+
+  // PrimeNG's own keyboard handler does not check whether the destination cell
+  // is disabled before moving focus. This capture-phase listener intercepts
+  // arrow keys and swallows them when:
+  //   - the target cell in the month/year grid is disabled, or
+  //   - the keypress would cross a page boundary (next/prev decade, year, or
+  //     month) where every cell on the adjacent page is also disabled.
+  private _onCaptureKeydown(event: KeyboardEvent): void {
+    const { key } = event;
+    const isLeft = key === 'ArrowLeft';
+    const isUp = key === 'ArrowUp';
+    const isHorizontal = isLeft || key === 'ArrowRight';
+    const isVertical = isUp || key === 'ArrowDown';
+    if (!isHorizontal && !isVertical) return;
+
+    const view = this._datepicker?.currentView;
+    const target = event.target as HTMLElement;
+    const dp = this._datepicker;
+    const isBackward = isLeft || isUp;
+    let blocked = false;
+
+    if (view === 'month' || view === 'year') {
+      const cellClass =
+        view === 'year' ? 'p-datepicker-year' : 'p-datepicker-month';
+      if (!target.classList.contains(cellClass)) return;
+
+      if (isVertical) {
+        const cells = Array.from(target.parentElement?.children ?? []);
+        const step = view === 'year' ? 2 : 3;
+        const dest = cells[cells.indexOf(target) + (isUp ? -step : step)] as
+          | HTMLElement
+          | undefined;
+        blocked = !!dest?.classList.contains('p-disabled');
+      } else {
+        const sibling = (
+          isLeft ? target.previousElementSibling : target.nextElementSibling
+        ) as HTMLElement | null;
+        if (sibling) {
+          blocked = sibling.classList.contains('p-disabled');
+        } else if (view === 'year') {
+          const base = dp.currentYear - (dp.currentYear % 10);
+          const start = isBackward ? base - 10 : base + 10;
+          blocked = Array.from({ length: 10 }, (_, i) => start + i).every(
+            (y): boolean => dp.isYearDisabled(y)
+          );
+        } else {
+          blocked = dp.isYearDisabled(
+            isBackward ? dp.currentYear - 1 : dp.currentYear + 1
+          );
+        }
+      }
+    } else if (view === 'date') {
+      if (!target.hasAttribute('data-date')) return;
+      const cell = target.parentElement;
+      let crossMonth: boolean;
+      if (isHorizontal) {
+        const sibling = isLeft
+          ? cell?.previousElementSibling
+          : cell?.nextElementSibling;
+        crossMonth =
+          !sibling || !!sibling.children[0]?.classList.contains('p-disabled');
+      } else {
+        const cellIndex = Array.from(
+          cell?.parentElement?.children ?? []
+        ).indexOf(cell as Element);
+        const adjRow = isUp
+          ? cell?.parentElement?.previousElementSibling
+          : cell?.parentElement?.nextElementSibling;
+        crossMonth =
+          !adjRow ||
+          !!adjRow.children[cellIndex]?.children[0]?.classList.contains(
+            'p-disabled'
+          );
+      }
+      if (!crossMonth) return;
+      const adj = new Date(
+        dp.currentYear,
+        (dp.currentMonth as number) + (isBackward ? -1 : 1),
+        1
+      );
+      blocked = dp.isMonthDisabled(adj.getMonth(), adj.getFullYear());
+    }
+
+    if (blocked) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -277,50 +411,75 @@ export class CpsDatepickerComponent
     }
   }
 
-  private _checkDateFormat(dateString: string): boolean {
-    if (!/^\d\d\/\d\d\/\d\d\d\d$/.test(dateString)) {
-      return false;
-    }
+  private _parseFormatParts(
+    dateString: string
+  ): { day: number; month: number; year: number } | null {
     const parts = dateString.split('/').map((p) => parseInt(p, 10));
-    parts[0] -= 1;
-    const d = new Date(parts[2], parts[0], parts[1]);
+    if (parts.some(isNaN)) {
+      console.warn(
+        `CpsDatepickerComponent: could not parse date string "${dateString}" using dateFormat "${this.dateFormat}". Supported formats: DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD.`
+      );
+      return null;
+    }
+    switch (this.dateFormat) {
+      case 'DD/MM/YYYY':
+        return { day: parts[0], month: parts[1], year: parts[2] };
+      case 'MM/DD/YYYY':
+        return { day: parts[1], month: parts[0], year: parts[2] };
+      case 'YYYY/MM/DD':
+        return { day: parts[2], month: parts[1], year: parts[0] };
+    }
+  }
+
+  private _checkDateFormat(dateString: string): boolean {
+    const regex =
+      this.dateFormat === 'YYYY/MM/DD'
+        ? /^\d{4}\/\d{2}\/\d{2}$/
+        : /^\d{2}\/\d{2}\/\d{4}$/;
+    if (!regex.test(dateString)) return false;
+    const parsed = this._parseFormatParts(dateString);
+    if (!parsed) return false;
+    const { day, month, year } = parsed;
+    const d = new Date(year, month - 1, day);
     return (
-      d.getMonth() === parts[0] &&
-      d.getDate() === parts[1] &&
-      d.getFullYear() === parts[2]
+      d.getMonth() === month - 1 &&
+      d.getDate() === day &&
+      d.getFullYear() === year
     );
   }
 
-  private _checkDateInRange(date: Date, minDate: Date, maxDate: Date): boolean {
-    if (!minDate && !maxDate) return true;
-    if (minDate && maxDate) {
-      return (
-        date.getTime() >= minDate.getTime() &&
-        date.getTime() <= maxDate.getTime()
-      );
-    }
-    if (minDate) {
-      return date.getTime() >= minDate.getTime();
-    }
-    return date.getTime() <= maxDate.getTime();
+  private _checkDateInRange(
+    date: Date,
+    minDate?: Date,
+    maxDate?: Date
+  ): boolean {
+    if (minDate && date.getTime() < minDate.getTime()) return false;
+    if (maxDate && date.getTime() > maxDate.getTime()) return false;
+    return true;
   }
 
   private _dateToString(dateVal: Date | null): string {
     if (!dateVal) return '';
-    let month = '' + (dateVal.getMonth() + 1);
-    if (month.length < 2) month = '0' + month;
-    let day = '' + dateVal.getDate();
-    if (day.length < 2) day = '0' + day;
-    const year = dateVal.getFullYear();
-    return `${month}/${day}/${year}`;
+    const mm = String(dateVal.getMonth() + 1).padStart(2, '0');
+    const dd = String(dateVal.getDate()).padStart(2, '0');
+    const yyyy = String(dateVal.getFullYear());
+    switch (this.dateFormat) {
+      case 'DD/MM/YYYY':
+        return `${dd}/${mm}/${yyyy}`;
+      case 'MM/DD/YYYY':
+        return `${mm}/${dd}/${yyyy}`;
+      case 'YYYY/MM/DD':
+        return `${yyyy}/${mm}/${dd}`;
+    }
   }
 
   private _stringToDate(dateString: string): Date | null {
     if (!this._checkDateFormat(dateString)) return null;
-    const [month, day, year] = dateString.split('/');
-    const dt = new Date(`${year}-${month}-${day}`);
-    const inRange = this._checkDateInRange(dt, this.minDate, this.maxDate);
-    return inRange ? dt : null;
+    const parsed = this._parseFormatParts(dateString);
+    if (!parsed) return null;
+    const { day, month, year } = parsed;
+    const dt = new Date(year, month - 1, day);
+    return this._checkDateInRange(dt, this.minDate, this.maxDate) ? dt : null;
   }
 
   private _checkErrors() {
@@ -350,10 +509,6 @@ export class CpsDatepickerComponent
     this.error = message || 'Unknown error';
   }
 
-  onClearCalendarDate() {
-    this.onSelectCalendarDate(null);
-  }
-
   onSelectCalendarDate(dateVal: Date | null) {
     this.toggleCalendar(false);
     this.writeValue(dateVal);
@@ -372,6 +527,16 @@ export class CpsDatepickerComponent
     if (this.openOnInputFocus) this.toggleCalendar(true);
   }
 
+  onInputKeydown(event: KeyboardEvent) {
+    if (!this.isOpened) return;
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this._focusActiveCalendarCell();
+    } else if (event.key === 'Tab') {
+      this.toggleCalendar(false);
+    }
+  }
+
   onInputEnterClicked() {
     if (!this.isOpened) return;
     this._control?.control?.markAsTouched();
@@ -383,13 +548,142 @@ export class CpsDatepickerComponent
   onClickCalendarIcon() {
     if (this.disabled) return;
     if (this.isOpened) this._updateValueFromInputString();
+    else this._focusCalendarOnOpen = true;
     this.toggleCalendar();
   }
 
-  onBeforeCalendarHidden() {
+  onCalendarClick(_event: MouseEvent): void {
+    // Handles view switches triggered by the Month/Year title buttons in the
+    // header (PrimeNG does not call initFocusableCell() after setCurrentView()).
+    // Year-cell clicks are also covered by onYearSelected(), but calling
+    // _initFocusableViewCell twice is harmless since it is idempotent.
+    setTimeout(() => {
+      const view = this._datepicker?.currentView;
+      if (view !== 'month' && view !== 'year') return;
+      this._suppressNextContentClick = true;
+      this._initFocusableViewCell(true);
+    });
+  }
+
+  onYearSelected(): void {
+    // Fired by PrimeNG when a year cell is clicked and the view switches to
+    // 'month'. At this point currentView is already 'month' but Zone's tick()
+    // may not have run yet. Use setTimeout so we run after Angular re-renders.
+    this._suppressNextContentClick = true;
+    setTimeout(() => this._initFocusableViewCell(true));
+  }
+
+  private _initFocusableViewCell(focus = false): void {
+    const view = this._datepicker?.currentView;
+    if (view !== 'year' && view !== 'month') return;
+    // Delegate to PrimeNG's own initFocusableCell which uses contentViewChild
+    // (the correct root element). Suppress its built-in focus unless requested;
+    // PrimeNG resets preventFocus = false at the end of that method.
+    if (!focus) this._datepicker.preventFocus = true;
+    this._datepicker.initFocusableCell();
+  }
+
+  onCalendarMenuShown() {
+    this._calendarContainer = this.calendarMenu.container ?? null;
+    this._calendarContainer?.addEventListener(
+      'keydown',
+      this._captureKeydown,
+      true
+    );
+    if (!this._focusCalendarOnOpen) return;
+    this._focusCalendarOnOpen = false;
+    // setTimeout fires after requestAnimationFrame, ensuring p-motion has
+    // already removed its initial display:none from the calendar panel.
+    setTimeout(() => this._focusActiveCalendarCell());
+  }
+
+  private _focusActiveCalendarCell(): void {
+    const container = this.calendarMenu.container;
+    if (!container) return;
+
+    const view = this._datepicker?.currentView;
+    if (view === 'month' || view === 'year') {
+      this._initFocusableViewCell(true);
+      return;
+    }
+
+    // Build a [data-date] key for the selected date using PrimeNG's format
+    // (YYYY-M-D, no zero-padding) to query directly rather than relying on the
+    // p-datepicker-day-selected class, which may not be rendered yet due to
+    // PrimeNG's OnPush change detection cycle.
+    let cell: HTMLElement | null = null;
+    if (this.value) {
+      const key = `${this.value.getFullYear()}-${this.value.getMonth()}-${this.value.getDate()}`;
+      cell = container.querySelector<HTMLElement>(
+        `span[data-date="${key}"]:not(.p-disabled)`
+      );
+    }
+
+    // Fallback: today's cell, then first available cell
+    cell ??=
+      container.querySelector<HTMLElement>(
+        'td.p-datepicker-today span:not(.p-disabled):not(.p-ink)'
+      ) ??
+      container.querySelector<HTMLElement>(
+        '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)'
+      );
+
+    if (cell) {
+      cell.tabIndex = 0;
+      cell.focus({ preventScroll: true });
+    }
+  }
+
+  onDatepickerMonthChange(): void {
+    const navState = this._datepicker?.navigationState;
+    const focusKey = this._datepicker?._focusKey ?? null;
+
+    // Wait for Angular to re-render the new month's *ngFor cells, then focus.
+    setTimeout(() => {
+      const container = this.calendarMenu.container;
+      if (!container) return;
+
+      // Prevent PrimeNG from double-handling focus since we do it here.
+      if (this._datepicker) {
+        this._datepicker.navigationState = null;
+        this._datepicker._focusKey = null;
+      }
+
+      if (navState?.button) {
+        // Nav button was activated - return focus to prev/next month button.
+        const btnClass = navState.backward
+          ? '.p-datepicker-prev-button'
+          : '.p-datepicker-next-button';
+        container.querySelector<HTMLElement>(btnClass)?.focus();
+      } else {
+        // Keyboard boundary navigation — focus the appropriate day cell.
+        let cell: HTMLElement | null = null;
+        if (focusKey) {
+          cell = container.querySelector<HTMLElement>(focusKey);
+        } else if (navState?.backward) {
+          const cells = container.querySelectorAll<HTMLElement>(
+            '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)'
+          );
+          cell = cells[cells.length - 1] ?? null;
+        } else {
+          cell = container.querySelector<HTMLElement>(
+            '.p-datepicker-calendar td span:not(.p-disabled):not(.p-ink)'
+          );
+        }
+        if (cell) {
+          cell.tabIndex = 0;
+          cell.focus({ preventScroll: true });
+        }
+      }
+    });
+  }
+
+  onBeforeCalendarHidden(reason: CpsMenuHideReason) {
+    this._removeCalendarListeners();
+    this._calendarContainer = null;
     if (this.disabled || !this.isOpened) return;
     this._updateValueFromInputString();
-    this.toggleCalendar(false);
+    this.toggleCalendar(false, reason !== CpsMenuHideReason.CLICK_OUTSIDE);
   }
 
   onInputClear() {
@@ -397,6 +691,10 @@ export class CpsDatepickerComponent
   }
 
   onCalendarContentClick() {
+    if (this._suppressNextContentClick) {
+      this._suppressNextContentClick = false;
+      return;
+    }
     if (this.isOpened) this.focusInput();
   }
 
@@ -404,7 +702,7 @@ export class CpsDatepickerComponent
     this.datepickerInput.focus();
   }
 
-  toggleCalendar(show?: boolean) {
+  toggleCalendar(show?: boolean, needFocusInput = true) {
     if (this.disabled || this.isOpened === show) return;
 
     const target =
@@ -431,8 +729,7 @@ export class CpsDatepickerComponent
     if (!this.isOpened) {
       this._control?.control?.markAsTouched();
       this._checkErrors();
-    } else {
-      this.focusInput();
+      if (needFocusInput) this.focusInput();
     }
   }
 }

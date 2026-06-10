@@ -80,7 +80,7 @@ function flattenSuites(suites) {
         test: spec.title,
         status: result?.status ?? 'unknown',
         error: result?.error?.message ?? '',
-        axeResults: parseAxeAttachment(result)
+        axeResults: parseAxeAttachments(result)
       });
     }
     for (const sub of suite.suites || []) {
@@ -91,7 +91,7 @@ function flattenSuites(suites) {
           test: `${sub.title} - ${spec.title}`,
           status: result?.status ?? 'unknown',
           error: result?.error?.message ?? '',
-          axeResults: parseAxeAttachment(result)
+          axeResults: parseAxeAttachments(result)
         });
       }
     }
@@ -99,18 +99,19 @@ function flattenSuites(suites) {
   return out;
 }
 
-/** Extract the axe-core results object from the test attachment */
-function parseAxeAttachment(result) {
-  if (!result?.attachments) return null;
-  const att = result.attachments.find(
-    (a) => a.name === 'accessibility-scan-results' && a.body
-  );
-  if (!att) return null;
-  try {
-    return JSON.parse(Buffer.from(att.body, 'base64').toString());
-  } catch {
-    return null;
-  }
+/** Extract all axe-core results objects from the test attachments (one per state) */
+function parseAxeAttachments(result) {
+  if (!result?.attachments) return [];
+  return result.attachments
+    .filter((a) => a.name.endsWith('-accessibility-scan') && a.body)
+    .map((a) => {
+      try {
+        return JSON.parse(Buffer.from(a.body, 'base64').toString());
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 const tests = flattenSuites(data.suites?.[0]?.suites ?? []);
@@ -132,23 +133,24 @@ function extractViolationIds(errorMsg) {
   ];
 }
 
-function addResults(comp, status, errorMsg, axeResults) {
+function addResults(comp, status, errorMsg, axeResultsArr) {
   allComponents.add(comp);
 
-  // Use axe attachment for accurate applicability data
-  if (axeResults) {
-    for (const v of axeResults.violations || []) {
-      failedRules[`${comp}|||${v.id}`] = true;
-      applicableRules[`${comp}|||${v.id}`] = true;
-      allRules.add(v.id);
+  // Use axe attachments for accurate applicability data (one per state scan)
+  if (axeResultsArr.length > 0) {
+    for (const axeResults of axeResultsArr) {
+      for (const v of axeResults.violations || []) {
+        failedRules[`${comp}|||${v.id}`] = true;
+        applicableRules[`${comp}|||${v.id}`] = true;
+        allRules.add(v.id);
+      }
+      for (const p of axeResults.passes || []) {
+        applicableRules[`${comp}|||${p.id}`] = true;
+      }
+      for (const inc of axeResults.incomplete || []) {
+        applicableRules[`${comp}|||${inc.id}`] = true;
+      }
     }
-    for (const p of axeResults.passes || []) {
-      applicableRules[`${comp}|||${p.id}`] = true;
-    }
-    for (const inc of axeResults.incomplete || []) {
-      applicableRules[`${comp}|||${inc.id}`] = true;
-    }
-    // inapplicable rules are NOT added to applicableRules
     return;
   }
 

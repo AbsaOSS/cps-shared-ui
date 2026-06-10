@@ -1,30 +1,37 @@
 <div
   class="cps-expansion-panel"
   [class.expanded]="isExpanded"
-  [ngStyle]="{
-    'background-color': backgroundColor,
-    'border-radius': borderRadius,
-    width: width,
-    border: bordered ? '1px solid ' + borderColor : ''
-  }">
+  [style.background-color]="cvtBackgroundColor"
+  [style.border-radius]="cvtBorderRadius"
+  [style.width]="cvtWidth"
+  [style.border]="bordered ? '1px solid ' + cvtBorderColor : ''">
   <div
     class="cps-expansion-panel-header"
+    role="button"
+    [attr.tabindex]="disabled ? -1 : 0"
+    [attr.aria-expanded]="isExpanded"
+    [attr.aria-disabled]="disabled ? true : null"
+    [attr.aria-controls]="contentPanelId"
     [@panelHeader]="
       isExpanded
         ? {
             value: 'visible',
             params: {
-              borderStyle: bordered ? '1px solid ' + borderColor : ''
+              borderStyle: bordered ? '1px solid ' + cvtBorderColor : ''
             }
           }
         : 'hidden'
     "
-    [ngClass]="{ disabled: disabled }"
+    [class.disabled]="disabled"
+    [class.keyboard-active]="isKeyboardActive"
     [style.cursor]="disabled ? 'default' : 'pointer'"
-    (click)="toggleExpansion()">
+    (click)="toggleExpansion()"
+    (keydown)="onHeaderKeydown($event)"
+    (keyup)="onHeaderKeyup($event)">
     @if (prefixIcon) {
       <span class="cps-expansion-panel-prefix-icon">
         <cps-icon
+          aria-hidden="true"
           [icon]="prefixIcon"
           size="small"
           [color]="disabled ? 'text-mild' : 'text-dark'">
@@ -34,12 +41,20 @@
     <div class="cps-expansion-panel-title">{{ headerTitle }}</div>
     @if (showChevron && !disabled) {
       <span class="cps-expansion-panel-chevron">
-        <cps-icon icon="chevron-down" size="small" color="text-dark">
+        <cps-icon
+          aria-hidden="true"
+          icon="chevron-down"
+          size="small"
+          color="text-dark">
         </cps-icon>
       </span>
     }
   </div>
-  <div class="cps-expansion-panel-content" #panelContentElem>
+  <div
+    class="cps-expansion-panel-content"
+    #panelContentElem
+    [id]="contentPanelId"
+    [attr.aria-hidden]="!isExpanded">
     <div class="cps-expansion-panel-content-inner">
       <ng-content></ng-content>
     </div>

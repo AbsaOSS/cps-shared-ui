@@ -65,7 +65,11 @@
 
     @if (!valueToDisplay) {
       <input
+        [attr.role]="inputRole"
         [attr.aria-label]="ariaLabel || label || null"
+        [attr.aria-expanded]="ariaExpanded"
+        [attr.aria-haspopup]="ariaHasPopup"
+        [attr.aria-controls]="ariaControls"
         [attr.aria-describedby]="describedBy"
         [attr.aria-invalid]="error ? 'true' : null"
         [attr.aria-required]="isRequired || null"
