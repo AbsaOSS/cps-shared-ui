@@ -2,10 +2,11 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   inject,
-  Inject,
   InjectionToken,
   Input,
-  OnChanges
+  OnChanges,
+  OnInit,
+  type SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
@@ -171,9 +172,14 @@ export type iconSizeType =
   imports: [CommonModule],
   selector: 'cps-icon',
   templateUrl: './cps-icon.component.html',
-  styleUrls: ['./cps-icon.component.scss']
+  styleUrls: ['./cps-icon.component.scss'],
+  host: {
+    '[attr.role]': 'ariaLabel ? "img" : null',
+    '[attr.aria-label]': 'ariaLabel || null',
+    '[attr.aria-hidden]': 'ariaLabel ? null : "true"'
+  }
 })
-export class CpsIconComponent implements OnChanges {
+export class CpsIconComponent implements OnInit, OnChanges {
   /**
    * Name of the icon.
    * @group Props
@@ -192,45 +198,65 @@ export class CpsIconComponent implements OnChanges {
    */
   @Input() color = 'currentColor';
 
+  /**
+   * Accessible label for the icon.
+   * When provided the icon is treated as informative (role="img" + aria-label).
+   * When omitted the icon is treated as decorative (aria-hidden="true").
+   * @group Props
+   */
+  @Input() ariaLabel = '';
+
   iconColor = 'currentColor';
   url = inject(ICONS_PATH, { optional: true }) ?? 'assets/';
   cvtSize = '';
 
   classesList: string[] = ['cps-icon'];
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  private _document = inject(DOCUMENT);
 
-  ngOnChanges(): void {
-    this.iconColor = getCSSColor(this.color, this.document);
+  ngOnInit(): void {
+    this.iconColor = getCSSColor(this.color, this._document);
     this.setClasses();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.color) {
+      this.iconColor = getCSSColor(this.color, this._document);
+    }
+    if (changes.size) {
+      this.setClasses();
+    }
+  }
+
   setClasses(): void {
+    const classes = ['cps-icon'];
+    let size = '';
     switch (this.size) {
       case 'fill': {
-        this.classesList.push('cps-icon--fill');
+        classes.push('cps-icon--fill');
         break;
       }
       case 'xsmall': {
-        this.classesList.push('cps-icon--xsmall');
+        classes.push('cps-icon--xsmall');
         break;
       }
       case 'small': {
-        this.classesList.push('cps-icon--small');
+        classes.push('cps-icon--small');
         break;
       }
       case 'normal': {
-        this.classesList.push('cps-icon--normal');
+        classes.push('cps-icon--normal');
         break;
       }
       case 'large': {
-        this.classesList.push('cps-icon--large');
+        classes.push('cps-icon--large');
         break;
       }
       default:
-        this.cvtSize = convertSize(this.size);
+        size = convertSize(this.size);
         break;
     }
+    this.cvtSize = size;
+    this.classesList = classes;
   }
 }

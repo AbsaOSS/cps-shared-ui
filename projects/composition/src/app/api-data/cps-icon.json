@@ -28,6 +28,14 @@
                         "type": "string",
                         "default": "currentColor",
                         "description": "Color of the icon."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Accessible label for the icon.\nWhen provided the icon is treated as informative (role=\"img\" + aria-label).\nWhen omitted the icon is treated as decorative (aria-hidden=\"true\")."
                     }
                 ]
             }
