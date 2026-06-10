@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -6,14 +6,17 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
   Renderer2,
-  ViewChild
+  ViewChild,
+  type SimpleChanges
 } from '@angular/core';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
+import { generateUniqueId } from '../../utils/internal/accessibility-utils';
 import {
   AnimationBuilder,
   AnimationFactory,
@@ -32,7 +35,7 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsIconComponent],
+  imports: [CpsIconComponent],
   selector: 'cps-expansion-panel',
   templateUrl: './cps-expansion-panel.component.html',
   styleUrls: ['./cps-expansion-panel.component.scss'],
@@ -56,7 +59,9 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
     ])
   ]
 })
-export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
+export class CpsExpansionPanelComponent
+  implements OnInit, OnChanges, AfterViewInit
+{
   /**
    * Title of the expansionPanel element.
    * @group Props
@@ -94,7 +99,7 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
   @Input() bordered = true;
 
   /**
-   * The border radius of the component.
+   * The border radius of the component of type number denoting pixels or string.
    * @group Props
    */
   @Input() borderRadius: number | string = 0;
@@ -137,6 +142,14 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
   private _contentCollapseAnimation: AnimationFactory;
   private _contentAnimationPlayer: AnimationPlayer | undefined;
 
+  readonly contentPanelId = generateUniqueId('cps-expansion-panel-content');
+
+  isKeyboardActive = false;
+  cvtWidth = '';
+  cvtBorderColor = '';
+  cvtBackgroundColor = '';
+  cvtBorderRadius = '';
+
   constructor(
     private _animationBuilder: AnimationBuilder,
     @Inject(DOCUMENT) private document: Document,
@@ -168,15 +181,53 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.borderColor = getCSSColor(this.borderColor, this.document);
-    this.backgroundColor = getCSSColor(this.backgroundColor, this.document);
-    this.borderRadius = convertSize(this.borderRadius);
-    this.width = convertSize(this.width);
+    this.cvtBorderColor = getCSSColor(this.borderColor, this.document);
+    this.cvtBackgroundColor = getCSSColor(this.backgroundColor, this.document);
+    this.cvtBorderRadius = convertSize(this.borderRadius);
+    this.cvtWidth = convertSize(this.width);
+
+    this._logHeaderTitleError();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.borderColor) {
+      this.cvtBorderColor = getCSSColor(this.borderColor, this.document);
+    }
+    if (changes.backgroundColor) {
+      this.cvtBackgroundColor = getCSSColor(
+        this.backgroundColor,
+        this.document
+      );
+    }
+    if (changes.borderRadius) {
+      this.cvtBorderRadius = convertSize(this.borderRadius);
+    }
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
+    if (changes.headerTitle) {
+      this._logHeaderTitleError();
+    }
   }
 
   ngAfterViewInit(): void {
     if (!this.isExpanded) {
       this._updateContentVisibilityStyles(false);
+    }
+  }
+
+  onHeaderKeydown(event: KeyboardEvent): void {
+    if (this.disabled || event.repeat) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.isKeyboardActive = true;
+      this.toggleExpansion();
+    }
+  }
+
+  onHeaderKeyup(event: KeyboardEvent): void {
+    if (event.key === 'Enter' || event.key === ' ') {
+      this.isKeyboardActive = false;
     }
   }
 
@@ -226,6 +277,14 @@ export class CpsExpansionPanelComponent implements OnInit, AfterViewInit {
     } else {
       this._renderer.setStyle(el, 'height', '0');
       this._renderer.setStyle(el, 'visibility', 'hidden');
+    }
+  }
+
+  private _logHeaderTitleError() {
+    if (!this.headerTitle?.trim()) {
+      console.error(
+        'CpsExpansionPanelComponent: the expansion panel must have headerTitle.'
+      );
     }
   }
 }
