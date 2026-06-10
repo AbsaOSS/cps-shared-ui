@@ -1,16 +1,20 @@
 <div class="cps-switch-container">
   <label class="cps-switch">
     <input
+      #switchInput
       type="checkbox"
+      role="switch"
       [disabled]="disabled"
       [checked]="value"
-      (change)="updateValueEvent($event)" />
-    <span class="cps-switch-slider"></span>
+      (change)="updateValueEvent($event)"
+      [attr.aria-label]="ariaLabel || label || null" />
+    <span class="cps-switch-slider" aria-hidden="true"></span>
   </label>
   @if (label) {
     <span
       class="cps-switch-label"
       [ngClass]="{ 'cps-switch-label-disabled': disabled }"
+      aria-hidden="true"
       >{{ label }}</span
     >
   }

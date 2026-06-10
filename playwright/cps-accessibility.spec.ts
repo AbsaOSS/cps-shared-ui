@@ -35,15 +35,18 @@ const components: ComponentEntry[] = [
   },
   { route: '/checkbox', name: 'Checkbox', selector: 'cps-checkbox' },
   { route: '/chip', name: 'Chip', selector: 'cps-chip' },
-  // {
-  //   route: '/datepicker',
-  //   name: 'Datepicker',
-  //   selector: ['cps-datepicker', '.cps-datepicker-calendar-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-datepicker');
-  //     await page.locator('cps-datepicker .cps-icon').first().click();
-  //   }
-  // },
+  {
+    route: '/datepicker',
+    name: 'Datepicker',
+    selector: ['cps-datepicker', '.cps-datepicker-calendar-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-datepicker');
+      await page
+        .locator('cps-datepicker .cps-input-prefix-icon')
+        .first()
+        .click();
+    }
+  },
   {
     route: '/dialog',
     name: 'Confirmation dialog',
@@ -109,11 +112,11 @@ const components: ComponentEntry[] = [
     name: 'Divider',
     selector: '.example-content cps-divider'
   },
-  // {
-  //   route: '/expansion-panel',
-  //   name: 'Expansion panel',
-  //   selector: 'cps-expansion-panel'
-  // },
+  {
+    route: '/expansion-panel',
+    name: 'Expansion panel',
+    selector: '.example-content cps-expansion-panel'
+  },
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
   // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
@@ -207,7 +210,7 @@ const components: ComponentEntry[] = [
     name: 'Sidebar menu',
     selector: 'cps-sidebar-menu'
   },
-  // { route: '/switch', name: 'Switch', selector: 'cps-switch' },
+  { route: '/switch', name: 'Switch', selector: 'cps-switch' },
   {
     route: '/tab-group',
     name: 'Tabs',

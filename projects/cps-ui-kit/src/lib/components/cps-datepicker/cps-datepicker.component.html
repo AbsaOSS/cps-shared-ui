@@ -1,19 +1,21 @@
-<div
-  class="cps-datepicker"
-  [ngStyle]="{ width: cvtWidth }"
-  [class.focused]="isOpened">
+<div class="cps-datepicker" [style.width]="cvtWidth" [class.focused]="isOpened">
   <cps-input
     #datepickerInput
     [disabled]="disabled"
     [value]="stringDate"
     [label]="label"
     [ariaLabel]="ariaLabel"
+    inputRole="combobox"
+    ariaHasPopup="dialog"
+    [ariaExpanded]="isOpened"
+    [ariaControls]="calendarId"
     prefixIcon="datepicker"
     prefixIconAriaLabel="Open calendar"
-    [placeholder]="placeholder"
+    [placeholder]="placeholder || dateFormat"
     (prefixIconClicked)="onClickCalendarIcon()"
     [prefixIconClickable]="true"
     (focused)="onInputFocus()"
+    (keydown)="onInputKeydown($event)"
     (valueChanged)="onInputValueChanged($event)"
     [clearable]="clearable"
     (blurred)="onInputBlur()"
@@ -32,20 +34,27 @@
   <cps-menu
     #calendarMenu
     [withArrow]="false"
-    (beforeMenuHidden)="onBeforeCalendarHidden()"
+    (menuShown)="onCalendarMenuShown()"
+    (beforeMenuHidden)="onBeforeCalendarHidden($event)"
     (contentClicked)="onCalendarContentClick()"
     [focusOnShow]="false"
     hideTransitionOptions="0s linear"
     containerClass="cps-datepicker-calendar-menu">
-    <div class="cps-datepicker-calendar">
+    <div
+      class="cps-datepicker-calendar"
+      role="dialog"
+      aria-label="Date picker"
+      [attr.id]="calendarId"
+      (click)="onCalendarClick($event)">
       <p-datepicker
         [(ngModel)]="value"
         [inline]="true"
         [showIcon]="true"
         [showButtonBar]="showTodayButton"
         (onSelect)="onSelectCalendarDate($event)"
-        (onClearClick)="onClearCalendarDate()"
-        [showOtherMonths]="false"
+        (onClearClick)="onSelectCalendarDate(null)"
+        (onMonthChange)="onDatepickerMonthChange()"
+        (onYearChange)="onYearSelected()"
         [minDate]="minDate"
         [maxDate]="maxDate" />
     </div>

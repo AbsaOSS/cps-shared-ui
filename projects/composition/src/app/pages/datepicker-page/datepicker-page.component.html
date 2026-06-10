@@ -36,13 +36,18 @@
         [clearable]="true"
         [showTodayButton]="false">
       </cps-datepicker>
+      <cps-datepicker
+        label="Datepicker with DD/MM/YYYY date format"
+        [clearable]="true"
+        dateFormat="DD/MM/YYYY">
+      </cps-datepicker>
       <div class="sync-val-example">
         <cps-datepicker
           [clearable]="true"
           label="Datepicker with two-way binding, select a date"
           [(ngModel)]="syncVal"
-          width="350"
-          hint="This datepicker has a fixed width of 350px"
+          width="25rem"
+          hint="This datepicker has a fixed width of 25rem"
           placeholder="Select a date"
           [ngModelOptions]="{ standalone: true }">
         </cps-datepicker>

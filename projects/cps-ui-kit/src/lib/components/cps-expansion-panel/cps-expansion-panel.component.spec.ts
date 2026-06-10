@@ -18,6 +18,7 @@ describe('CpsExpansionPanelComponent', () => {
 
     fixture = TestBed.createComponent(CpsExpansionPanelComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('headerTitle', 'Test Panel');
     fixture.detectChanges();
   });
 
@@ -26,26 +27,35 @@ describe('CpsExpansionPanelComponent', () => {
   });
 
   it('should have default values', () => {
-    expect(component.headerTitle).toBe('');
+    expect(component.headerTitle).toBe('Test Panel');
     expect(component.backgroundColor).toBe('transparent');
     expect(component.showChevron).toBe(true);
     expect(component.isExpanded).toBe(false);
     expect(component.disabled).toBe(false);
     expect(component.bordered).toBe(true);
-    // borderRadius is converted to string on init
-    expect(component.borderRadius).toBeDefined();
+    expect(component.isKeyboardActive).toBe(false);
+    expect(component.contentPanelId).toBeTruthy();
+    expect(component.cvtBorderRadius).toBe('0px');
+    expect(component.cvtWidth).toBe('100%');
+  });
+
+  it('should generate unique contentPanelIds across instances', () => {
+    const fixture2 = TestBed.createComponent(CpsExpansionPanelComponent);
+    fixture2.componentRef.setInput('headerTitle', 'Another Panel');
+    fixture2.detectChanges();
+    expect(component.contentPanelId).not.toBe(
+      fixture2.componentInstance.contentPanelId
+    );
   });
 
   it('should render header title', () => {
-    fixture.componentRef.setInput('headerTitle', 'Expandable Section');
-    fixture.detectChanges();
     const header = fixture.nativeElement.querySelector(
       '.cps-expansion-panel-header'
     );
-    expect(header.textContent).toContain('Expandable Section');
+    expect(header.textContent).toContain('Test Panel');
   });
 
-  it('should toggle expansion when header is clicked', () => {
+  it('should toggle expansion when toggleExpansion is called', () => {
     expect(component.isExpanded).toBe(false);
     component.toggleExpansion();
     expect(component.isExpanded).toBe(true);
@@ -54,9 +64,17 @@ describe('CpsExpansionPanelComponent', () => {
   it('should emit afterExpand when toggled to expanded', fakeAsync(() => {
     jest.spyOn(component.afterExpand, 'emit');
     component.toggleExpansion();
-    // Wait for animation to complete
     tick(300);
     expect(component.afterExpand.emit).toHaveBeenCalled();
+  }));
+
+  it('should emit afterCollapse when toggled to collapsed', fakeAsync(() => {
+    component.toggleExpansion();
+    tick(300);
+    jest.spyOn(component.afterCollapse, 'emit');
+    component.toggleExpansion();
+    tick(300);
+    expect(component.afterCollapse.emit).toHaveBeenCalled();
   }));
 
   it('should show chevron icon by default', () => {
@@ -77,58 +95,212 @@ describe('CpsExpansionPanelComponent', () => {
 
   it('should not toggle when disabled', () => {
     component.disabled = true;
-    const initialState = component.isExpanded;
     component.toggleExpansion();
-    expect(component.isExpanded).toBe(initialState);
+    expect(component.isExpanded).toBe(false);
   });
 
   it('should apply bordered styling when bordered is true', () => {
     fixture.componentRef.setInput('bordered', true);
     fixture.detectChanges();
-    const panel = fixture.nativeElement.querySelector('.cps-expansion-panel');
-    expect(panel).toBeTruthy();
     expect(component.bordered).toBe(true);
   });
 
-  it('should apply disabled styling when disabled', () => {
+  it('should apply disabled class on header when disabled', () => {
     fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
-    const panel = fixture.nativeElement.querySelector('.cps-expansion-panel');
-    expect(panel).toBeTruthy();
-    expect(component.disabled).toBe(true);
+    const header = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-header'
+    );
+    expect(header.classList).toContain('disabled');
   });
 
-  it('should set custom border radius', () => {
+  it('should update cvtBorderRadius on init', () => {
     fixture.componentRef.setInput('borderRadius', 8);
     component.ngOnInit();
-    fixture.detectChanges();
-    expect(component.borderRadius).toBe('8px');
+    expect(component.cvtBorderRadius).toBe('8px');
   });
 
-  it('should set background color on init', () => {
+  it('should update cvtBorderRadius via ngOnChanges', () => {
+    fixture.componentRef.setInput('borderRadius', '1rem');
+    fixture.detectChanges();
+    expect(component.cvtBorderRadius).toBe('1rem');
+  });
+
+  it('should update cvtWidth via ngOnChanges', () => {
+    fixture.componentRef.setInput('width', 400);
+    fixture.detectChanges();
+    expect(component.cvtWidth).toBe('400px');
+  });
+
+  it('should set cvtBackgroundColor on init', () => {
     component.backgroundColor = 'white';
     component.ngOnInit();
-    expect(component.backgroundColor).toBeTruthy();
+    expect(component.cvtBackgroundColor).toBeTruthy();
   });
 
-  it('should expand content when isExpanded is true', () => {
-    fixture.componentRef.setInput('isExpanded', true);
-    fixture.detectChanges();
+  it('should render content element', () => {
     const content = fixture.nativeElement.querySelector(
       '.cps-expansion-panel-content'
     );
     expect(content).toBeTruthy();
   });
 
+  it('should add expanded class when isExpanded is toggled', () => {
+    component.toggleExpansion();
+    fixture.detectChanges();
+    const panel = fixture.nativeElement.querySelector('.cps-expansion-panel');
+    expect(panel.classList).toContain('expanded');
+  });
+
   it('should rotate chevron when expanded', () => {
-    fixture.componentRef.setInput('isExpanded', false);
+    component.toggleExpansion();
     fixture.detectChanges();
-    fixture.componentRef.setInput('isExpanded', true);
-    fixture.detectChanges();
-    // Chevron rotation is handled by CSS/animation
     const chevron = fixture.nativeElement.querySelector(
       '.cps-expansion-panel-chevron'
     );
     expect(chevron).toBeTruthy();
+  });
+
+  describe('accessibility', () => {
+    it('should have role="button" on header', () => {
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.getAttribute('role')).toBe('button');
+    });
+
+    it('should have tabindex="0" on header', () => {
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should set aria-expanded to false when collapsed', () => {
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('should set aria-expanded to true when expanded', () => {
+      component.toggleExpansion();
+      fixture.detectChanges();
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('should set aria-disabled on header when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should not set aria-disabled on header when enabled', () => {
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.getAttribute('aria-disabled')).toBeNull();
+    });
+
+    it('should have aria-controls on header matching content id', () => {
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      const content = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-content'
+      );
+      expect(header.getAttribute('aria-controls')).toBe(
+        content.getAttribute('id')
+      );
+    });
+
+    it('should set aria-hidden on content when collapsed', () => {
+      const content = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-content'
+      );
+      expect(content.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('should set aria-hidden to false on content when expanded', () => {
+      component.toggleExpansion();
+      fixture.detectChanges();
+      const content = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-content'
+      );
+      expect(content.getAttribute('aria-hidden')).toBe('false');
+    });
+  });
+
+  describe('keyboard interaction', () => {
+    it('should toggle expansion on Enter key', () => {
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(component.isExpanded).toBe(true);
+    });
+
+    it('should toggle expansion on Space key', () => {
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: ' ' }));
+      expect(component.isExpanded).toBe(true);
+    });
+
+    it('should not toggle on other keys', () => {
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: 'Tab' }));
+      expect(component.isExpanded).toBe(false);
+    });
+
+    it('should ignore repeated keydown events', () => {
+      component.onHeaderKeydown(
+        new KeyboardEvent('keydown', { key: 'Enter', repeat: true })
+      );
+      expect(component.isExpanded).toBe(false);
+    });
+
+    it('should not toggle when disabled via keyboard', () => {
+      component.disabled = true;
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(component.isExpanded).toBe(false);
+    });
+
+    it('should set isKeyboardActive to true on Enter keydown', () => {
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(component.isKeyboardActive).toBe(true);
+    });
+
+    it('should set isKeyboardActive to true on Space keydown', () => {
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: ' ' }));
+      expect(component.isKeyboardActive).toBe(true);
+    });
+
+    it('should clear isKeyboardActive on Enter keyup', () => {
+      component.isKeyboardActive = true;
+      component.onHeaderKeyup(new KeyboardEvent('keyup', { key: 'Enter' }));
+      expect(component.isKeyboardActive).toBe(false);
+    });
+
+    it('should clear isKeyboardActive on Space keyup', () => {
+      component.isKeyboardActive = true;
+      component.onHeaderKeyup(new KeyboardEvent('keyup', { key: ' ' }));
+      expect(component.isKeyboardActive).toBe(false);
+    });
+
+    it('should not clear isKeyboardActive on other keyup', () => {
+      component.isKeyboardActive = true;
+      component.onHeaderKeyup(new KeyboardEvent('keyup', { key: 'Tab' }));
+      expect(component.isKeyboardActive).toBe(true);
+    });
+
+    it('should apply keyboard-active class when isKeyboardActive is true', () => {
+      component.onHeaderKeydown(new KeyboardEvent('keydown', { key: 'Enter' }));
+      fixture.detectChanges();
+      const header = fixture.nativeElement.querySelector(
+        '.cps-expansion-panel-header'
+      );
+      expect(header.classList).toContain('keyboard-active');
+    });
   });
 });
