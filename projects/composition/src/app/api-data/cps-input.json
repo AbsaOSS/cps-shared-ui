@@ -22,6 +22,38 @@
                         "description": "Aria label for the input component, used for accessibility, it takes precedence over label."
                     },
                     {
+                        "name": "inputRole",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "WAI-ARIA role for the native input element."
+                    },
+                    {
+                        "name": "ariaExpanded",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean | null",
+                        "default": "null",
+                        "description": "Whether the element controlled by this input is expanded."
+                    },
+                    {
+                        "name": "ariaHasPopup",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "Type of popup element the input controls."
+                    },
+                    {
+                        "name": "ariaControls",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "ID of the element controlled by this input."
+                    },
+                    {
                         "name": "hint",
                         "optional": false,
                         "readonly": false,

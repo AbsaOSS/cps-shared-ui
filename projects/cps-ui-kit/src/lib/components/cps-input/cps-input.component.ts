@@ -65,6 +65,30 @@ export class CpsInputComponent
   @Input() ariaLabel = '';
 
   /**
+   * WAI-ARIA role for the native input element.
+   * @group Props
+   */
+  @Input() inputRole: string | null = null;
+
+  /**
+   * Whether the element controlled by this input is expanded.
+   * @group Props
+   */
+  @Input() ariaExpanded: boolean | null = null;
+
+  /**
+   * Type of popup element the input controls.
+   * @group Props
+   */
+  @Input() ariaHasPopup: string | null = null;
+
+  /**
+   * ID of the element controlled by this input.
+   * @group Props
+   */
+  @Input() ariaControls: string | null = null;
+
+  /**
    * Bottom hint text for the input field.
    * @group Props
    */
