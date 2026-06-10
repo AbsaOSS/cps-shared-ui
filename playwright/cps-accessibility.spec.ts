@@ -195,7 +195,7 @@ const components: ComponentEntry[] = [
     name: 'Sidebar menu',
     selector: 'cps-sidebar-menu'
   },
-  // { route: '/switch', name: 'Switch', selector: 'cps-switch' },
+  { route: '/switch', name: 'Switch', selector: 'cps-switch' },
   {
     route: '/tab-group',
     name: 'Tabs',

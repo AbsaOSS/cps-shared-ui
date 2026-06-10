@@ -11,7 +11,15 @@
                         "readonly": false,
                         "type": "string",
                         "default": "",
-                        "description": "Label of the component."
+                        "description": "Label of the switch component."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the switch component, used for accessibility, it takes precedence over label."
                     },
                     {
                         "name": "disabled",
@@ -19,7 +27,7 @@
                         "readonly": false,
                         "type": "boolean",
                         "default": "false",
-                        "description": "Determines whether the component is disabled."
+                        "description": "Determines whether the switch component is disabled."
                     },
                     {
                         "name": "infoTooltip",
