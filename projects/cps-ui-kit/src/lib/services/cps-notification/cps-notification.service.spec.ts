@@ -3,54 +3,39 @@ import { TestBed } from '@angular/core/testing';
 import { CpsNotificationService } from './cps-notification.service';
 import {
   CpsNotificationAppearance,
-  CpsNotificationConfig,
-  CpsNotificationPosition
+  CpsNotificationPosition,
+  type CpsNotificationConfig
 } from './utils/cps-notification-config';
-import { CpsNotificationType } from './utils/internal/cps-notification-data';
+import {
+  CpsNotificationType,
+  type CpsNotificationData
+} from './utils/internal/cps-notification-data';
+
+function makeHostNode() {
+  const el = document.createElement('div');
+  el.setAttribute('data-cps-notification-test-host', '');
+  return el;
+}
 
 function makeMockContainerRef() {
   return {
     instance: {
       addNotification: jest.fn(),
-      notifications: [] as { data: any; config: any }[],
+      notifications: [] as {
+        data: CpsNotificationData;
+        config: CpsNotificationConfig;
+      }[],
       closed: new EventEmitter<void>()
     },
-    hostView: { rootNodes: [document.createElement('div')] },
+    hostView: { rootNodes: [makeHostNode()] },
     setInput: jest.fn(),
     destroy: jest.fn()
   };
 }
 
-type MockContainerRef = ReturnType<typeof makeMockContainerRef>;
-
 describe('CpsNotificationService', () => {
   let service: CpsNotificationService;
   let appRef: ApplicationRef;
-
-  function setupAppendSpy() {
-    jest
-      .spyOn(service as any, '_appendNotificationToContainer')
-      .mockImplementation((data: any, config: any) => {
-        const position: CpsNotificationPosition =
-          config.position || CpsNotificationPosition.TOPRIGHT;
-        const map: Map<CpsNotificationPosition, MockContainerRef> = (
-          service as any
-        )._containersMap;
-
-        let ref = map.get(position);
-        if (!ref) {
-          ref = makeMockContainerRef();
-          map.set(position, ref as any);
-          appRef.attachView(ref.hostView as any);
-          document.body.appendChild(ref.hostView.rootNodes[0]);
-          ref.instance.closed.subscribe(() =>
-            (service as any)._tryRemoveContainer(position)
-          );
-        }
-
-        ref.instance.addNotification(config, data);
-      });
-  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [CpsNotificationService] });
@@ -58,23 +43,20 @@ describe('CpsNotificationService', () => {
     appRef = TestBed.inject(ApplicationRef);
     jest.spyOn(appRef, 'attachView').mockImplementation(jest.fn());
     jest.spyOn(appRef, 'detachView').mockImplementation(jest.fn());
+    jest
+      .spyOn(service as any, '_createContainerComponent')
+      .mockImplementation(() => makeMockContainerRef());
   });
 
   afterEach(() => {
     (service as any)._containersMap.clear();
     jest.restoreAllMocks();
     document.body
-      .querySelectorAll('div')
+      .querySelectorAll('[data-cps-notification-test-host]')
       .forEach((el) => el.parentNode?.removeChild(el));
   });
 
   describe('info()', () => {
-    beforeEach(() =>
-      jest
-        .spyOn(service as any, '_appendNotificationToContainer')
-        .mockImplementation(jest.fn())
-    );
-
     it('should call _createNotification with INFO type', () => {
       const spy = jest.spyOn(service as any, '_createNotification');
       service.info('Test message');
@@ -111,12 +93,6 @@ describe('CpsNotificationService', () => {
   });
 
   describe('warning()', () => {
-    beforeEach(() =>
-      jest
-        .spyOn(service as any, '_appendNotificationToContainer')
-        .mockImplementation(jest.fn())
-    );
-
     it('should call _createNotification with WARNING type', () => {
       const spy = jest.spyOn(service as any, '_createNotification');
       service.warning('msg');
@@ -130,12 +106,6 @@ describe('CpsNotificationService', () => {
   });
 
   describe('success()', () => {
-    beforeEach(() =>
-      jest
-        .spyOn(service as any, '_appendNotificationToContainer')
-        .mockImplementation(jest.fn())
-    );
-
     it('should call _createNotification with SUCCESS type', () => {
       const spy = jest.spyOn(service as any, '_createNotification');
       service.success('msg');
@@ -149,12 +119,6 @@ describe('CpsNotificationService', () => {
   });
 
   describe('error()', () => {
-    beforeEach(() =>
-      jest
-        .spyOn(service as any, '_appendNotificationToContainer')
-        .mockImplementation(jest.fn())
-    );
-
     it('should call _createNotification with ERROR type', () => {
       const spy = jest.spyOn(service as any, '_createNotification');
       service.error('msg');
@@ -220,8 +184,6 @@ describe('CpsNotificationService', () => {
   });
 
   describe('container management', () => {
-    beforeEach(() => setupAppendSpy());
-
     it('should create a new container for the first notification', () => {
       service.info('msg');
       expect((service as any)._containersMap.size).toBe(1);

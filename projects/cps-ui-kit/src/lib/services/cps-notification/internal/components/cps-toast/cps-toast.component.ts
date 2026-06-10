@@ -85,7 +85,8 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get closeAriaLabel(): string {
-    return `Close ${this.data?.type || ''} notification`;
+    const type = this.data?.type;
+    return `Close ${type ? type + ' ' : ''}notification`;
   }
 
   // eslint-disable-next-line no-useless-constructor
@@ -103,9 +104,9 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.initiateTimeout();
     setTimeout(() => {
-      this.srAnnouncement = `${this.data.type}: ${this.data.message || ''}${
-        this.data.details ? '. ' + this.data.details : ''
-      }`;
+      const type = this.data?.type;
+      const details = this.data?.details;
+      this.srAnnouncement = `${type ? type + ': ' : ''}${this.data?.message ?? ''}${details ? '. ' + details : ''}`;
     });
   }
 

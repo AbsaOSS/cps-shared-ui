@@ -99,9 +99,9 @@ describe('CpsToastComponent', () => {
       expect(component.closeAriaLabel).toBe('Close warning notification');
     });
 
-    it('should include an empty string for type when data has no type', () => {
+    it('should return a generic label when data has no type', () => {
       component.data = {};
-      expect(component.closeAriaLabel).toBe('Close  notification');
+      expect(component.closeAriaLabel).toBe('Close notification');
     });
   });
 
