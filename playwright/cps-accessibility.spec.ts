@@ -155,11 +155,11 @@ const components: ComponentEntry[] = [
   //   name: 'Progress circular',
   //   selector: 'cps-progress-circular'
   // },
-  // {
-  //   route: '/progress-linear',
-  //   name: 'Progress linear',
-  //   selector: 'cps-progress-linear'
-  // },
+  {
+    route: '/progress-linear',
+    name: 'Progress linear',
+    selector: 'cps-progress-linear'
+  },
   { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
   {
     route: '/scheduler',

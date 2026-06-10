@@ -95,4 +95,25 @@ describe('CpsProgressLinearComponent', () => {
     );
     expect(indicator).toBeTruthy();
   });
+
+  it('should have role="progressbar" on the host element', () => {
+    expect(fixture.nativeElement.getAttribute('role')).toBe('progressbar');
+  });
+
+  it('should have default aria-label "Loading" on the host element', () => {
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe('Loading');
+  });
+
+  it('should reflect a custom ariaLabel on the host element', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Uploading file');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe(
+      'Uploading file'
+    );
+  });
+
+  it('should mark the inner wrapper div as aria-hidden', () => {
+    const wrapper = fixture.nativeElement.querySelector('.cps-progress-linear');
+    expect(wrapper.getAttribute('aria-hidden')).toBe('true');
+  });
 });

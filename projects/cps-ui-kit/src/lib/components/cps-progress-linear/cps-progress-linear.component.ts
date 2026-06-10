@@ -10,7 +10,11 @@ import { convertSize } from '../../utils/internal/size-utils';
 @Component({
   selector: 'cps-progress-linear',
   templateUrl: './cps-progress-linear.component.html',
-  styleUrls: ['./cps-progress-linear.component.scss']
+  styleUrls: ['./cps-progress-linear.component.scss'],
+  host: {
+    role: 'progressbar',
+    '[attr.aria-label]': 'ariaLabel()'
+  }
 })
 export class CpsProgressLinearComponent {
   /**
@@ -55,11 +59,18 @@ export class CpsProgressLinearComponent {
    */
   radius = input<number | string>(0);
 
-  private readonly document = inject(DOCUMENT);
+  /**
+   * Accessible label announced by screen readers to describe what is loading.
+   * @group Props
+   * @default Loading
+   */
+  ariaLabel = input('Loading');
+
+  private readonly _document = inject(DOCUMENT);
 
   cvtWidth = computed(() => convertSize(this.width()));
   cvtHeight = computed(() => convertSize(this.height()));
   cvtRadius = computed(() => convertSize(this.radius()));
-  cssColor = computed(() => getCSSColor(this.color(), this.document));
-  cssBgColor = computed(() => getCSSColor(this.bgColor(), this.document));
+  cssColor = computed(() => getCSSColor(this.color(), this._document));
+  cssBgColor = computed(() => getCSSColor(this.bgColor(), this._document));
 }

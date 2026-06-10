@@ -52,6 +52,14 @@
                         "type": "string | number",
                         "default": "0",
                         "description": "Border radius of the progress bar, of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading",
+                        "description": "Accessible label announced by screen readers to describe what is loading."
                     }
                 ]
             }
