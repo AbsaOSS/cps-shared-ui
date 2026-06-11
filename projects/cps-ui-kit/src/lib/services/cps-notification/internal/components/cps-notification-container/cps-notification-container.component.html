@@ -1,4 +1,6 @@
 <div
+  role="region"
+  [attr.aria-label]="'Notifications: ' + position"
   [ngClass]="{
     'cps-notification-container-mask': true,
     'cps-notification-container-left':
@@ -17,7 +19,7 @@
     'cps-notification-container-bottom-right':
       position === CpsNotificationPosition.BOTTOMRIGHT
   }">
-  <div #container class="cps-notification-container" role="notification">
+  <div #container class="cps-notification-container">
     <div
       #content
       class="cps-notification-container-content"
