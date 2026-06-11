@@ -157,10 +157,7 @@ export class CpsNotificationService {
 
     let containerComponentRef = this._containersMap.get(position);
     if (!containerComponentRef) {
-      containerComponentRef = createComponent(
-        CpsNotificationContainerComponent,
-        { environmentInjector: this._appRef.injector }
-      );
+      containerComponentRef = this._createContainerComponent();
       containerComponentRef.setInput('position', position);
 
       this._appRef.attachView(containerComponentRef.hostView);
@@ -177,6 +174,12 @@ export class CpsNotificationService {
     }
 
     containerComponentRef.instance.addNotification(config, data);
+  }
+
+  private _createContainerComponent(): ComponentRef<CpsNotificationContainerComponent> {
+    return createComponent(CpsNotificationContainerComponent, {
+      environmentInjector: this._appRef.injector
+    });
   }
 
   private _tryRemoveContainer(position: CpsNotificationPosition) {

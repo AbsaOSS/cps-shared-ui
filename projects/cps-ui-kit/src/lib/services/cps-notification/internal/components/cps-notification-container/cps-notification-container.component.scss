@@ -20,7 +20,7 @@ $animation-duration: 150ms;
   pointer-events: auto;
   transform: scale(1);
   position: relative;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   border: 0 none;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 1rem;
@@ -30,7 +30,7 @@ $animation-duration: 150ms;
 .cps-notification-container .cps-notification-container-content {
   background: transparent;
   flex-grow: 1;
-  gap: 12px;
+  gap: 0.75rem;
   display: flex;
   flex-direction: column-reverse;
 }
@@ -44,7 +44,7 @@ $animation-duration: 150ms;
 .cps-notification-container-bottom-left .cps-notification-container,
 .cps-notification-container-bottom-right .cps-notification-container {
   margin: 0.75rem;
-  transform: translate3d(0px, 0px, 0px);
+  transform: translate3d(0, 0, 0);
 }
 
 .cps-notification-container-left {
