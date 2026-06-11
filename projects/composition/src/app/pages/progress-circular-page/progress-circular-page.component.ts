@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CpsProgressCircularComponent } from 'cps-ui-kit';
+import { CpsIconComponent, CpsProgressCircularComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import ComponentData from '../../api-data/cps-progress-circular.json';
 
 @Component({
   imports: [
+    CpsIconComponent,
     CpsProgressCircularComponent,
     ComponentDocsViewerComponent,
     RouterModule
