@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, ElementRef, inject, input } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
 
@@ -13,7 +13,7 @@ import { convertSize } from '../../utils/internal/size-utils';
   styleUrls: ['./cps-progress-linear.component.scss'],
   host: {
     role: 'progressbar',
-    '[attr.aria-label]': 'ariaLabel()'
+    '[attr.aria-label]': 'resolveAriaLabel()'
   }
 })
 export class CpsProgressLinearComponent {
@@ -61,11 +61,13 @@ export class CpsProgressLinearComponent {
 
   /**
    * Accessible label announced by screen readers to describe what is loading.
+   * Falls back to "Loading" when empty value is provided.
    * @group Props
    * @default Loading
    */
-  ariaLabel = input('Loading');
+  ariaLabel = input('');
 
+  private _elementRef = inject(ElementRef);
   private readonly _document = inject(DOCUMENT);
 
   cvtWidth = computed(() => convertSize(this.width()));
@@ -73,4 +75,12 @@ export class CpsProgressLinearComponent {
   cvtRadius = computed(() => convertSize(this.radius()));
   cssColor = computed(() => getCSSColor(this.color(), this._document));
   cssBgColor = computed(() => getCSSColor(this.bgColor(), this._document));
+
+  resolveAriaLabel(): string {
+    return (
+      this.ariaLabel() ||
+      this._elementRef.nativeElement.getAttribute('aria-label') ||
+      'Loading'
+    );
+  }
 }

@@ -112,6 +112,13 @@ describe('CpsProgressLinearComponent', () => {
     );
   });
 
+  it('should use a native aria-label attribute as the accessible label', () => {
+    const host: HTMLElement = fixture.nativeElement;
+    host.setAttribute('aria-label', 'Saving changes');
+    fixture.detectChanges();
+    expect(host.getAttribute('aria-label')).toBe('Saving changes');
+  });
+
   it('should mark the inner wrapper div as aria-hidden', () => {
     const wrapper = fixture.nativeElement.querySelector('.cps-progress-linear');
     expect(wrapper.getAttribute('aria-hidden')).toBe('true');

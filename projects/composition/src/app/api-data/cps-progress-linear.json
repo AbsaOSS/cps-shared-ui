@@ -59,7 +59,7 @@
                         "readonly": false,
                         "type": "string",
                         "default": "Loading",
-                        "description": "Accessible label announced by screen readers to describe what is loading."
+                        "description": "Accessible label announced by screen readers to describe what is loading.\nFalls back to \"Loading\" when empty value is provided."
                     }
                 ]
             }
