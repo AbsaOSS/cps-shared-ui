@@ -74,6 +74,20 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   maxWidth: string | undefined;
   filled = true;
   color = '';
+  srAnnouncement = '';
+
+  get isPolite(): boolean {
+    if (this.data?.type === CpsNotificationType.ERROR)
+      return !!this.config?.politeError;
+    if (this.data?.type === CpsNotificationType.WARNING)
+      return !!this.config?.politeWarning;
+    return true;
+  }
+
+  get closeAriaLabel(): string {
+    const type = this.data?.type;
+    return `Close ${type ? type + ' ' : ''}notification`;
+  }
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private zone: NgZone) {}
@@ -89,6 +103,11 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initiateTimeout();
+    setTimeout(() => {
+      const type = this.data?.type;
+      const details = this.data?.details;
+      this.srAnnouncement = `${type ? type + ': ' : ''}${this.data?.message ?? ''}${details ? '. ' + details : ''}`;
+    });
   }
 
   ngOnDestroy() {

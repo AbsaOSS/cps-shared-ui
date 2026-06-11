@@ -140,15 +140,21 @@ const components: ComponentEntry[] = [
       await page.locator('.example-content cps-button').nth(2).click();
     }
   },
-  // {
-  //   route: '/notification',
-  //   name: 'Notification',
-  //   selector: '.cps-notification-container-mask',
-  //   setup: async (page) => {
-  //     await page.waitForSelector('.example-content');
-  //     await page.locator('.example-content cps-button').first().click();
-  //   }
-  // },
+  {
+    route: '/notification',
+    name: 'Notification',
+    selector: '.cps-notification-container-mask',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      const buttons = page
+        .locator('.example-content cps-button')
+        .filter({ hasNotText: /clear all/i });
+      const count = await buttons.count();
+      for (let i = 0; i < count; i++) {
+        await buttons.nth(i).click();
+      }
+    }
+  },
   // { route: '/paginator', name: 'Paginator', selector: 'cps-paginator' },
   // {
   //   route: '/progress-circular',
