@@ -1,26 +1,23 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="progr-circ-page-info-card">
-    <cps-icon icon="info-circle" color="info" size="normal"></cps-icon>
-    <div>
-      <b>This is not a page loader!</b><br />
-      For a loading spinner, check out the
-      <a routerLink="/loader">Loader component</a>
-    </div>
+  <div class="progr-circ-page-warning">
+    <b>This is not a page loader!</b> <br />
+    If you need to show a spinner while page content is loading, use
+    <a routerLink="/loader">Loader component</a>
   </div>
   <div class="progr-circ-group">
     <cps-progress-circular
       color="luxury"
-      diameter="7.5rem"
-      strokeWidth="0.5rem"></cps-progress-circular>
-    <cps-progress-circular diameter="3.75rem"></cps-progress-circular>
+      diameter="120"
+      strokeWidth="8"></cps-progress-circular>
+    <cps-progress-circular diameter="60"></cps-progress-circular>
     <cps-progress-circular
       color="surprise"
-      diameter="1.875rem"
-      strokeWidth="0.1875rem"></cps-progress-circular>
+      diameter="30"
+      strokeWidth="3"></cps-progress-circular>
     <cps-progress-circular
       color="prepared"
-      diameter="0.9375rem"
-      strokeWidth="0.125rem"></cps-progress-circular>
+      diameter="15"
+      strokeWidth="2"></cps-progress-circular>
   </div>
 </app-component-docs-viewer>

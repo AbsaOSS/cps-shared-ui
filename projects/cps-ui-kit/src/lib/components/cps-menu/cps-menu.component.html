@@ -132,9 +132,9 @@
   } @else {
     <span class="cps-menu-item-spinner" role="status" aria-label="Loading">
       <cps-progress-circular
-        strokeWidth="0.125rem"
+        [strokeWidth]="2"
         [color]="compressed ? 'prepared-darken2' : 'calm'"
-        diameter="1rem">
+        [diameter]="16">
       </cps-progress-circular>
     </span>
   }
