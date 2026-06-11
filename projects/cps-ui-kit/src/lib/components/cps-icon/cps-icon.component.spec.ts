@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SimpleChange } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsIconComponent, ICONS_PATH } from './cps-icon.component';
 import { CommonModule } from '@angular/common';
 
@@ -61,6 +61,25 @@ describe('CpsIconComponent', () => {
       const svg = fixture.nativeElement.querySelector('svg');
       expect(svg).not.toBeNull();
       expect(svg.getAttribute('aria-hidden')).toBe('true');
+    });
+
+    it('should treat icon as informative when aria-label is set as a native DOM attribute', () => {
+      createComponent();
+      const host: HTMLElement = fixture.nativeElement;
+
+      host.setAttribute('aria-label', 'Search');
+      fixture.detectChanges();
+      expect(host.getAttribute('role')).toBe('img');
+      expect(host.getAttribute('aria-hidden')).toBeNull();
+
+      host.setAttribute('aria-label', 'Updated label');
+      fixture.detectChanges();
+      expect(host.getAttribute('aria-label')).toBe('Updated label');
+
+      host.removeAttribute('aria-label');
+      fixture.detectChanges();
+      expect(host.getAttribute('aria-hidden')).toBe('true');
+      expect(host.getAttribute('role')).toBeNull();
     });
   });
 

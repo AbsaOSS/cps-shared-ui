@@ -1,6 +1,7 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
+  ElementRef,
   inject,
   InjectionToken,
   Input,
@@ -174,9 +175,8 @@ export type iconSizeType =
   templateUrl: './cps-icon.component.html',
   styleUrls: ['./cps-icon.component.scss'],
   host: {
-    '[attr.role]': 'ariaLabel ? "img" : null',
-    '[attr.aria-label]': 'ariaLabel || null',
-    '[attr.aria-hidden]': 'ariaLabel ? null : "true"'
+    '[attr.role]': 'hasAriaLabel() ? "img" : null',
+    '[attr.aria-hidden]': 'hasAriaLabel() ? null : "true"'
   }
 })
 export class CpsIconComponent implements OnInit, OnChanges {
@@ -200,11 +200,29 @@ export class CpsIconComponent implements OnInit, OnChanges {
 
   /**
    * Accessible label for the icon.
-   * When provided the icon is treated as informative (role="img" + aria-label).
-   * When omitted the icon is treated as decorative (aria-hidden="true").
+   * When provided the icon is treated as informative (role="img", aria-hidden removed).
+   * When omitted the icon is treated as decorative (aria-hidden="true", role removed).
    * @group Props
+   * @default ''
    */
-  @Input() ariaLabel = '';
+  @Input()
+  set ariaLabel(v: string) {
+    this._ariaLabel = v;
+    this._syncAriaLabel();
+  }
+
+  get ariaLabel(): string {
+    return this._ariaLabel;
+  }
+
+  private _ariaLabel = '';
+
+  hasAriaLabel(): boolean {
+    return !!(
+      this._ariaLabel ||
+      this._elementRef.nativeElement.getAttribute('aria-label')
+    );
+  }
 
   iconColor = 'currentColor';
   url = inject(ICONS_PATH, { optional: true }) ?? 'assets/';
@@ -213,6 +231,7 @@ export class CpsIconComponent implements OnInit, OnChanges {
   classesList: string[] = ['cps-icon'];
 
   private _document = inject(DOCUMENT);
+  private _elementRef = inject(ElementRef);
 
   ngOnInit(): void {
     this.iconColor = getCSSColor(this.color, this._document);
@@ -225,6 +244,15 @@ export class CpsIconComponent implements OnInit, OnChanges {
     }
     if (changes.size) {
       this.setClasses();
+    }
+  }
+
+  private _syncAriaLabel(): void {
+    const el: HTMLElement = this._elementRef.nativeElement;
+    if (this._ariaLabel) {
+      el.setAttribute('aria-label', this._ariaLabel);
+    } else {
+      el.removeAttribute('aria-label');
     }
   }
 
