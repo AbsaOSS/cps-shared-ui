@@ -156,11 +156,11 @@ const components: ComponentEntry[] = [
     }
   },
   // { route: '/paginator', name: 'Paginator', selector: 'cps-paginator' },
-  // {
-  //   route: '/progress-circular',
-  //   name: 'Progress circular',
-  //   selector: 'cps-progress-circular'
-  // },
+  {
+    route: '/progress-circular',
+    name: 'Progress circular',
+    selector: 'cps-progress-circular'
+  },
   // {
   //   route: '/progress-linear',
   //   name: 'Progress linear',
