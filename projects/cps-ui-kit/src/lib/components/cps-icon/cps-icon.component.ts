@@ -2,11 +2,13 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
   ElementRef,
+  HostAttributeToken,
   inject,
   InjectionToken,
   Input,
   OnChanges,
   OnInit,
+  Renderer2,
   type SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
@@ -232,6 +234,10 @@ export class CpsIconComponent implements OnInit, OnChanges {
 
   private _document = inject(DOCUMENT);
   private _elementRef = inject(ElementRef);
+  private _renderer = inject(Renderer2);
+  private _staticAriaLabel = inject(new HostAttributeToken('aria-label'), {
+    optional: true
+  });
 
   ngOnInit(): void {
     this.iconColor = getCSSColor(this.color, this._document);
@@ -248,11 +254,18 @@ export class CpsIconComponent implements OnInit, OnChanges {
   }
 
   private _syncAriaLabel(): void {
-    const el: HTMLElement = this._elementRef.nativeElement;
-    if (this._ariaLabel) {
-      el.setAttribute('aria-label', this._ariaLabel);
+    const label = this._ariaLabel || this._staticAriaLabel;
+    if (label) {
+      this._renderer.setAttribute(
+        this._elementRef.nativeElement,
+        'aria-label',
+        label
+      );
     } else {
-      el.removeAttribute('aria-label');
+      this._renderer.removeAttribute(
+        this._elementRef.nativeElement,
+        'aria-label'
+      );
     }
   }
 
