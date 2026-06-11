@@ -1,5 +1,15 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, computed, ElementRef, inject, input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostAttributeToken,
+  Renderer2,
+  afterNextRender,
+  computed,
+  effect,
+  inject,
+  input
+} from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
 
@@ -12,8 +22,7 @@ import { convertSize } from '../../utils/internal/size-utils';
   templateUrl: './cps-progress-linear.component.html',
   styleUrls: ['./cps-progress-linear.component.scss'],
   host: {
-    role: 'progressbar',
-    '[attr.aria-label]': 'resolveAriaLabel()'
+    role: 'progressbar'
   }
 })
 export class CpsProgressLinearComponent {
@@ -67,8 +76,13 @@ export class CpsProgressLinearComponent {
    */
   ariaLabel = input('');
 
-  private _elementRef = inject(ElementRef);
+  private readonly _elementRef = inject(ElementRef);
   private readonly _document = inject(DOCUMENT);
+  private readonly _renderer = inject(Renderer2);
+  private readonly _staticAriaLabel = inject(
+    new HostAttributeToken('aria-label'),
+    { optional: true }
+  );
 
   cvtWidth = computed(() => convertSize(this.width()));
   cvtHeight = computed(() => convertSize(this.height()));
@@ -76,11 +90,26 @@ export class CpsProgressLinearComponent {
   cssColor = computed(() => getCSSColor(this.color(), this._document));
   cssBgColor = computed(() => getCSSColor(this.bgColor(), this._document));
 
-  resolveAriaLabel(): string {
-    return (
-      this.ariaLabel() ||
-      this._elementRef.nativeElement.getAttribute('aria-label') ||
-      'Loading'
-    );
+  constructor() {
+    effect(() => {
+      const label = this.ariaLabel() || this._staticAriaLabel;
+      if (label) {
+        this._renderer.setAttribute(
+          this._elementRef.nativeElement,
+          'aria-label',
+          label
+        );
+      }
+    });
+
+    afterNextRender(() => {
+      if (!this._elementRef.nativeElement.getAttribute('aria-label')) {
+        this._renderer.setAttribute(
+          this._elementRef.nativeElement,
+          'aria-label',
+          'Loading'
+        );
+      }
+    });
   }
 }
