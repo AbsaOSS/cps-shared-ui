@@ -3,6 +3,12 @@ import { DOCUMENT } from '@angular/common';
 
 export type CpsLiveAnnouncerPoliteness = 'polite' | 'assertive';
 
+type RegionState = {
+  el: HTMLElement;
+  writeTimer: ReturnType<typeof setTimeout> | undefined;
+  clearTimer: ReturnType<typeof setTimeout> | undefined;
+};
+
 /**
  * Service for making accessible live-region announcements without relying on a
  * specific component's live region. Creates two persistent hidden elements in
@@ -11,16 +17,19 @@ export type CpsLiveAnnouncerPoliteness = 'polite' | 'assertive';
  */
 @Injectable({ providedIn: 'root' })
 export class CpsLiveAnnouncerService implements OnDestroy {
-  private _politeEl: HTMLElement;
-  private _assertiveEl: HTMLElement;
   private _document = inject(DOCUMENT);
-  private _politeTimer: ReturnType<typeof setTimeout> | undefined;
-  private _assertiveTimer: ReturnType<typeof setTimeout> | undefined;
-
-  constructor() {
-    this._politeEl = this._createElement('polite');
-    this._assertiveEl = this._createElement('assertive');
-  }
+  private _regions: Record<CpsLiveAnnouncerPoliteness, RegionState> = {
+    polite: {
+      el: this._createElement('polite'),
+      writeTimer: undefined,
+      clearTimer: undefined
+    },
+    assertive: {
+      el: this._createElement('assertive'),
+      writeTimer: undefined,
+      clearTimer: undefined
+    }
+  };
 
   /**
    * Announces a message through the appropriate live region. Clears any
@@ -34,16 +43,16 @@ export class CpsLiveAnnouncerService implements OnDestroy {
     politeness: CpsLiveAnnouncerPoliteness = 'polite',
     durationMs = 5000
   ): void {
-    const isAssertive = politeness === 'assertive';
-    const el = isAssertive ? this._assertiveEl : this._politeEl;
-    clearTimeout(isAssertive ? this._assertiveTimer : this._politeTimer);
-    el.textContent = '';
-    setTimeout(() => {
-      el.textContent = message;
+    this.clear(politeness);
+    const region = this._regions[politeness];
+    region.writeTimer = setTimeout(() => {
+      region.writeTimer = undefined;
+      region.el.textContent = message;
       if (durationMs > 0) {
-        const timer = setTimeout(() => (el.textContent = ''), durationMs);
-        if (isAssertive) this._assertiveTimer = timer;
-        else this._politeTimer = timer;
+        region.clearTimer = setTimeout(() => {
+          region.clearTimer = undefined;
+          region.el.textContent = '';
+        }, durationMs);
       }
     });
   }
@@ -52,16 +61,20 @@ export class CpsLiveAnnouncerService implements OnDestroy {
    * Clears the live region without making a new announcement.
    */
   clear(politeness: CpsLiveAnnouncerPoliteness = 'polite'): void {
-    const isAssertive = politeness === 'assertive';
-    clearTimeout(isAssertive ? this._assertiveTimer : this._politeTimer);
-    (isAssertive ? this._assertiveEl : this._politeEl).textContent = '';
+    const region = this._regions[politeness];
+    clearTimeout(region.writeTimer);
+    clearTimeout(region.clearTimer);
+    region.writeTimer = undefined;
+    region.clearTimer = undefined;
+    region.el.textContent = '';
   }
 
   ngOnDestroy(): void {
-    clearTimeout(this._politeTimer);
-    clearTimeout(this._assertiveTimer);
-    this._politeEl.remove();
-    this._assertiveEl.remove();
+    for (const region of Object.values(this._regions)) {
+      clearTimeout(region.writeTimer);
+      clearTimeout(region.clearTimer);
+      region.el.remove();
+    }
   }
 
   private _createElement(politeness: CpsLiveAnnouncerPoliteness): HTMLElement {
