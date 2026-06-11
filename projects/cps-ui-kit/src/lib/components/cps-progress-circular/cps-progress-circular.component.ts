@@ -5,6 +5,7 @@ import {
   HostAttributeToken,
   Input,
   OnInit,
+  OnChanges,
   ElementRef,
   Renderer2,
   inject,
@@ -26,7 +27,9 @@ import { getCSSColor } from '../../utils/colors-utils';
     role: 'progressbar'
   }
 })
-export class CpsProgressCircularComponent implements OnInit, AfterViewInit {
+export class CpsProgressCircularComponent
+  implements OnInit, OnChanges, AfterViewInit
+{
   /**
    * Diameter of the progress bar, of type number denoting pixels or string.
    * @group Props
