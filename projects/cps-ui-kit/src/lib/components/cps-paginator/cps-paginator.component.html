@@ -2,24 +2,27 @@
   #paginator
   (onPageChange)="onPageChange($event)"
   [first]="first"
-  [rows]="rows"
-  [style]="{ background: backgroundColor }"
+  [rows]="currentRows"
+  [style.background]="cvtBackgroundColor"
   [totalRecords]="totalRecords"
   [showFirstLastIcon]="true"
   [showCurrentPageReport]="true"
   [alwaysShow]="alwaysShow"
   [templateLeft]="itemsPerPageTemplate"
+  [pt]="paginatorPt"
   currentPageReportTemplate="{first} - {last} of {totalRecords}">
 </p-paginator>
 
 <ng-template #itemsPerPageTemplate>
   <div class="cps-paginator-itms-per-page">
-    <span class="cps-paginator-items-per-page-title">Items per page: </span>
+    <span class="cps-paginator-items-per-page-title" aria-hidden="true"
+      >Items per page:
+    </span>
     <cps-select
       ariaLabel="Set items per page"
       [options]="rowOptions"
       [hideDetails]="true"
-      [(ngModel)]="rows"
+      [(ngModel)]="currentRows"
       (valueChanged)="onRowsPerPageChange($event)"
       [returnObject]="false"
       optionsClass="cps-paginator-page-options"></cps-select>
