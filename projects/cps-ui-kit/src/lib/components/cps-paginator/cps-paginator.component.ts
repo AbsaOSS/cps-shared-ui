@@ -99,7 +99,6 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
   cvtBackgroundColor = '';
 
   rowOptions: { label: string; value: number }[] = [];
-  currentRows = 0;
   private _currentRowsPerPageOptions: number[] = [];
 
   private readonly _document = inject(DOCUMENT);
@@ -153,7 +152,7 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     if (this.rows && !opts.includes(this.rows)) {
       throw new Error('rowsPerPageOptions must include rows');
     }
-    this.currentRows = this.rows || opts[0];
+    this.rows = this.rows || opts[0];
 
     if (!isEqual(opts, this._currentRowsPerPageOptions)) {
       this._currentRowsPerPageOptions = opts;
@@ -173,7 +172,7 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
 
   onPageChange(event: any) {
     this.first = event.first;
-    this.currentRows = event.rows;
+    this.rows = event.rows;
     this.pageChanged.emit(event);
 
     const activeEl = this._document.activeElement as HTMLElement | null;

@@ -118,50 +118,50 @@ describe('CpsPaginatorComponent', () => {
     const firstPageEvent = { first: 0, rows: 10, page: 0, pageCount: 10 };
     const lastPageEvent = { first: 90, rows: 10, page: 9, pageCount: 10 };
 
-    it('should redirect focus when first-page button becomes disabled', (done) => {
+    it('should redirect focus when first-page button becomes disabled', async () => {
+      const navBtn = mockActiveEl('.p-paginator-first');
       const selectedPage = getSelectedPageBtn();
-      if (!mockActiveEl('.p-paginator-first') || !selectedPage) return done();
-      jest.spyOn(selectedPage, 'focus');
+      expect(navBtn).not.toBeNull();
+      expect(selectedPage).not.toBeNull();
+      jest.spyOn(selectedPage!, 'focus');
       component.onPageChange(firstPageEvent);
-      setTimeout(() => {
-        expect(selectedPage.focus).toHaveBeenCalled();
-        done();
-      }, 0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(selectedPage!.focus).toHaveBeenCalled();
     });
 
-    it('should redirect focus when prev button lands on first page', (done) => {
+    it('should redirect focus when prev button lands on first page', async () => {
+      const navBtn = mockActiveEl('.p-paginator-prev');
       const selectedPage = getSelectedPageBtn();
-      if (!mockActiveEl('.p-paginator-prev') || !selectedPage) return done();
-      jest.spyOn(selectedPage, 'focus');
+      expect(navBtn).not.toBeNull();
+      expect(selectedPage).not.toBeNull();
+      jest.spyOn(selectedPage!, 'focus');
       component.onPageChange(firstPageEvent);
-      setTimeout(() => {
-        expect(selectedPage.focus).toHaveBeenCalled();
-        done();
-      }, 0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(selectedPage!.focus).toHaveBeenCalled();
     });
 
-    it('should redirect focus when last-page button becomes disabled', (done) => {
+    it('should redirect focus when last-page button becomes disabled', async () => {
+      const navBtn = mockActiveEl('.p-paginator-last');
       const selectedPage = getSelectedPageBtn();
-      if (!mockActiveEl('.p-paginator-last') || !selectedPage) return done();
+      expect(navBtn).not.toBeNull();
+      expect(selectedPage).not.toBeNull();
       jest.spyOn(component.paginator, 'isLastPage').mockReturnValue(true);
-      jest.spyOn(selectedPage, 'focus');
+      jest.spyOn(selectedPage!, 'focus');
       component.onPageChange(lastPageEvent);
-      setTimeout(() => {
-        expect(selectedPage.focus).toHaveBeenCalled();
-        done();
-      }, 0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(selectedPage!.focus).toHaveBeenCalled();
     });
 
-    it('should redirect focus when next button lands on last page', (done) => {
+    it('should redirect focus when next button lands on last page', async () => {
+      const navBtn = mockActiveEl('.p-paginator-next');
       const selectedPage = getSelectedPageBtn();
-      if (!mockActiveEl('.p-paginator-next') || !selectedPage) return done();
+      expect(navBtn).not.toBeNull();
+      expect(selectedPage).not.toBeNull();
       jest.spyOn(component.paginator, 'isLastPage').mockReturnValue(true);
-      jest.spyOn(selectedPage, 'focus');
+      jest.spyOn(selectedPage!, 'focus');
       component.onPageChange(lastPageEvent);
-      setTimeout(() => {
-        expect(selectedPage.focus).toHaveBeenCalled();
-        done();
-      }, 0);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(selectedPage!.focus).toHaveBeenCalled();
     });
   });
 
@@ -225,7 +225,7 @@ describe('CpsPaginatorComponent', () => {
       fixture.detectChanges();
       const buttons =
         fixture.nativeElement.querySelectorAll('.p-paginator-page');
-      if (buttons.length < 2) return;
+      expect(buttons.length).toBeGreaterThanOrEqual(2);
       const first = buttons[0] as HTMLButtonElement;
       const second = buttons[1] as HTMLButtonElement;
       jest.spyOn(second, 'click');
@@ -239,7 +239,7 @@ describe('CpsPaginatorComponent', () => {
       fixture.detectChanges();
       const buttons =
         fixture.nativeElement.querySelectorAll('.p-paginator-page');
-      if (buttons.length < 2) return;
+      expect(buttons.length).toBeGreaterThanOrEqual(2);
       const first = buttons[0] as HTMLButtonElement;
       const second = buttons[1] as HTMLButtonElement;
       jest.spyOn(first, 'click');
@@ -254,7 +254,7 @@ describe('CpsPaginatorComponent', () => {
       component.first = 0;
       fixture.detectChanges();
       const btn = getPageButton(0);
-      if (!btn) return;
+      expect(btn).not.toBeUndefined();
       dispatchArrow('ArrowLeft', btn);
       expect(component.pageChanged.emit).not.toHaveBeenCalled();
     });
@@ -262,7 +262,7 @@ describe('CpsPaginatorComponent', () => {
     it('should ignore arrow keys on non-page-button elements', () => {
       jest.spyOn(component.pageChanged, 'emit');
       const navBtn = fixture.nativeElement.querySelector('.p-paginator-first');
-      if (!navBtn) return;
+      expect(navBtn).not.toBeNull();
       dispatchArrow('ArrowRight', navBtn);
       expect(component.pageChanged.emit).not.toHaveBeenCalled();
     });

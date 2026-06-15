@@ -19,7 +19,7 @@ describe('CpsPaginatePipe', () => {
     expect(pipe.transform(undefined as any, { first: 0, rows: 5 })).toEqual([]);
   });
 
-  it('should return the same empty array when items is empty', () => {
+  it('should return an empty array when items is empty', () => {
     const result = pipe.transform([], { first: 0, rows: 5 });
     expect(result).toEqual([]);
   });
