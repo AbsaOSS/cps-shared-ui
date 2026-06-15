@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   HostAttributeToken,
   Input,
@@ -27,9 +26,7 @@ import { getCSSColor } from '../../utils/colors-utils';
     role: 'progressbar'
   }
 })
-export class CpsProgressCircularComponent
-  implements OnInit, OnChanges, AfterViewInit
-{
+export class CpsProgressCircularComponent implements OnInit, OnChanges {
   /**
    * Diameter of the progress bar, of type number denoting pixels or string.
    * @group Props
@@ -90,24 +87,13 @@ export class CpsProgressCircularComponent
     }
   }
 
-  ngAfterViewInit(): void {
-    if (!this._elementRef.nativeElement.getAttribute('aria-label')) {
-      this._renderer.setAttribute(
-        this._elementRef.nativeElement,
-        'aria-label',
-        'Loading'
-      );
-    }
-  }
-
   private _applyAriaLabel(): void {
-    const label = this.ariaLabel || this._staticAriaLabel;
-    if (label) {
-      this._renderer.setAttribute(
-        this._elementRef.nativeElement,
-        'aria-label',
-        label
-      );
-    }
+    const label =
+      this.ariaLabel?.trim() || this._staticAriaLabel?.trim() || 'Loading';
+    this._renderer.setAttribute(
+      this._elementRef.nativeElement,
+      'aria-label',
+      label
+    );
   }
 }

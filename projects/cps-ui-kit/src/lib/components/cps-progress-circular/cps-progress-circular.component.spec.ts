@@ -84,6 +84,15 @@ describe('CpsProgressCircularComponent', () => {
       expect(host.getAttribute('aria-label')).toBe('Uploading file');
     });
 
+    it('should fall back to "Loading" when ariaLabel is cleared', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Saving changes');
+      fixture.detectChanges();
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.detectChanges();
+      const host: HTMLElement = fixture.nativeElement;
+      expect(host.getAttribute('aria-label')).toBe('Loading');
+    });
+
     it('should have role="progressbar" on the host', () => {
       const host: HTMLElement = fixture.nativeElement;
       expect(host.getAttribute('role')).toBe('progressbar');
