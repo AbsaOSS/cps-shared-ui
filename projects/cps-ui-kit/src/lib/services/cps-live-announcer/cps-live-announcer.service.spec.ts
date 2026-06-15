@@ -1,4 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Injector } from '@angular/core';
 import {
   CpsLiveAnnouncerPoliteness,
   CpsLiveAnnouncerService
@@ -29,7 +30,11 @@ describe('CpsLiveAnnouncerService', () => {
   });
 
   it('should reuse existing live region elements instead of creating duplicates', () => {
-    TestBed.inject(CpsLiveAnnouncerService);
+    const child = Injector.create({
+      providers: [CpsLiveAnnouncerService],
+      parent: TestBed.inject(Injector)
+    });
+    child.get(CpsLiveAnnouncerService);
     expect(
       document.body.querySelectorAll('.cps-polite-live-announcer-element')
         .length
