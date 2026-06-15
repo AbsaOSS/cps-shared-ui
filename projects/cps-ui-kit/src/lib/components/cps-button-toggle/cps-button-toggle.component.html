@@ -72,10 +72,7 @@
       [attr.aria-label]="option.ariaLabel || option.label || null" />
     <span class="cps-btn-toggle-content-option-inner">
       @if (option.icon) {
-        <cps-icon
-          [class.me-2]="!!option.label"
-          [icon]="option.icon"
-          aria-hidden="true">
+        <cps-icon [class.me-2]="!!option.label" [icon]="option.icon">
         </cps-icon>
       }
       @if (option.label) {
@@ -100,10 +97,7 @@
     [style.min-width.rem]="equalWidths ? largestButtonWidthRem : null">
     <span class="cps-btn-toggle-content-option-inner">
       @if (option.icon) {
-        <cps-icon
-          [class.me-2]="!!option.label"
-          [icon]="option.icon"
-          aria-hidden="true">
+        <cps-icon [class.me-2]="!!option.label" [icon]="option.icon">
         </cps-icon>
       }
       @if (option.label) {
