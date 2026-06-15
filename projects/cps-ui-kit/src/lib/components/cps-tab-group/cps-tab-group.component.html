@@ -17,10 +17,7 @@
       tabindex="-1"
       #backBtn
       (click)="navBackward()">
-      <cps-icon
-        icon="chevron-down"
-        color="text-dark"
-        aria-hidden="true"></cps-icon>
+      <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
     </button>
   }
   <ul #tabsList class="cps-tabs-list" role="tablist" tabindex="-1">
@@ -90,10 +87,7 @@
       tabindex="-1"
       #forwardBtn
       (click)="navForward()">
-      <cps-icon
-        icon="chevron-down"
-        color="text-dark"
-        aria-hidden="true"></cps-icon>
+      <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
     </button>
   }
 </div>
@@ -131,8 +125,7 @@
 
 <ng-template #tabHeaderTemplate let-tab="tab">
   @if (tab.icon) {
-    <cps-icon class="cps-tab-icon" [icon]="tab.icon" aria-hidden="true">
-    </cps-icon>
+    <cps-icon class="cps-tab-icon" [icon]="tab.icon"> </cps-icon>
   }
   <span class="cps-tab-link">{{ tab.label }}</span>
   @if (tab.badgeValue) {

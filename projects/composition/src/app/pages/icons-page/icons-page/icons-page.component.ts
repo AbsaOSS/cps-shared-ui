@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsIconComponent,
@@ -27,8 +27,7 @@ export class IconsPageComponent implements OnInit {
   filteredIconsList: string[] = [];
   componentData = ComponentData;
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _notificationService: CpsNotificationService) {}
+  private _notificationService = inject(CpsNotificationService);
 
   ngOnInit() {
     this.filteredIconsList = iconNames;
@@ -49,7 +48,7 @@ export class IconsPageComponent implements OnInit {
     navigator.clipboard.writeText(name).then(
       () => {
         this._notificationService.success(
-          `Icon ${name} copied to clipboard`,
+          `Icon "${name}" copied to clipboard`,
           undefined,
           { position: CpsNotificationPosition.BOTTOM, timeout: 1000 }
         );
