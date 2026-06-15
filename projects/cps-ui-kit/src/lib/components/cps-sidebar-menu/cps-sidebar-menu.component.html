@@ -18,8 +18,7 @@
           [class.disabled]="item.disabled"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
-          <cps-icon [icon]="item.icon" size="normal" aria-hidden="true">
-          </cps-icon>
+          <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
             [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
@@ -56,8 +55,7 @@
           [attr.aria-current]="isActive(item) ? 'page' : null"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
-          <cps-icon [icon]="item.icon" size="normal" aria-hidden="true">
-          </cps-icon>
+          <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
             [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
@@ -73,6 +71,6 @@
     (click)="toggleSidebar()"
     [attr.aria-label]="isExpanded ? 'Collapse sidebar' : 'Expand sidebar'"
     [attr.aria-expanded]="isExpanded">
-    <cps-icon icon="menu-shrink" size="normal" aria-hidden="true"> </cps-icon>
+    <cps-icon icon="menu-shrink" size="normal"> </cps-icon>
   </button>
 </div>

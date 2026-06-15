@@ -1,11 +1,15 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   Component,
+  ElementRef,
+  HostAttributeToken,
   inject,
-  Inject,
   InjectionToken,
   Input,
-  OnChanges
+  OnChanges,
+  OnInit,
+  Renderer2,
+  type SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
@@ -171,9 +175,13 @@ export type iconSizeType =
   imports: [CommonModule],
   selector: 'cps-icon',
   templateUrl: './cps-icon.component.html',
-  styleUrls: ['./cps-icon.component.scss']
+  styleUrls: ['./cps-icon.component.scss'],
+  host: {
+    '[attr.role]': 'hasAriaLabel() ? "img" : null',
+    '[attr.aria-hidden]': 'hasAriaLabel() ? null : "true"'
+  }
 })
-export class CpsIconComponent implements OnChanges {
+export class CpsIconComponent implements OnInit, OnChanges {
   /**
    * Name of the icon.
    * @group Props
@@ -192,45 +200,104 @@ export class CpsIconComponent implements OnChanges {
    */
   @Input() color = 'currentColor';
 
+  /**
+   * Accessible label for the icon.
+   * When provided the icon is treated as informative (role="img", aria-hidden removed).
+   * When omitted the icon is treated as decorative (aria-hidden="true", role removed).
+   * @group Props
+   * @default ''
+   */
+  @Input()
+  set ariaLabel(v: string) {
+    this._ariaLabel = v;
+    this._syncAriaLabel();
+  }
+
+  get ariaLabel(): string {
+    return this._ariaLabel;
+  }
+
+  private _ariaLabel = '';
+
+  hasAriaLabel(): boolean {
+    return !!(
+      this._ariaLabel ||
+      this._elementRef.nativeElement.getAttribute('aria-label')
+    );
+  }
+
   iconColor = 'currentColor';
   url = inject(ICONS_PATH, { optional: true }) ?? 'assets/';
   cvtSize = '';
 
   classesList: string[] = ['cps-icon'];
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  private _document = inject(DOCUMENT);
+  private _elementRef = inject(ElementRef);
+  private _renderer = inject(Renderer2);
+  private _staticAriaLabel = inject(new HostAttributeToken('aria-label'), {
+    optional: true
+  });
 
-  ngOnChanges(): void {
-    this.iconColor = getCSSColor(this.color, this.document);
+  ngOnInit(): void {
+    this.iconColor = getCSSColor(this.color, this._document);
     this.setClasses();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.color) {
+      this.iconColor = getCSSColor(this.color, this._document);
+    }
+    if (changes.size) {
+      this.setClasses();
+    }
+  }
+
+  private _syncAriaLabel(): void {
+    const label = this._ariaLabel || this._staticAriaLabel;
+    if (label) {
+      this._renderer.setAttribute(
+        this._elementRef.nativeElement,
+        'aria-label',
+        label
+      );
+    } else {
+      this._renderer.removeAttribute(
+        this._elementRef.nativeElement,
+        'aria-label'
+      );
+    }
+  }
+
   setClasses(): void {
+    const classes = ['cps-icon'];
+    let size = '';
     switch (this.size) {
       case 'fill': {
-        this.classesList.push('cps-icon--fill');
+        classes.push('cps-icon--fill');
         break;
       }
       case 'xsmall': {
-        this.classesList.push('cps-icon--xsmall');
+        classes.push('cps-icon--xsmall');
         break;
       }
       case 'small': {
-        this.classesList.push('cps-icon--small');
+        classes.push('cps-icon--small');
         break;
       }
       case 'normal': {
-        this.classesList.push('cps-icon--normal');
+        classes.push('cps-icon--normal');
         break;
       }
       case 'large': {
-        this.classesList.push('cps-icon--large');
+        classes.push('cps-icon--large');
         break;
       }
       default:
-        this.cvtSize = convertSize(this.size);
+        size = convertSize(this.size);
         break;
     }
+    this.cvtSize = size;
+    this.classesList = classes;
   }
 }
