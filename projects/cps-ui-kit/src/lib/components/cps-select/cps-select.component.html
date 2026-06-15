@@ -47,7 +47,6 @@
       <div class="cps-select-box-left">
         @if (prefixIcon) {
           <cps-icon
-            aria-hidden="true"
             [icon]="prefixIcon"
             [style.color]="disabled ? '#9a9595' : null"
             [size]="prefixIconSize"
@@ -125,7 +124,7 @@
                 : 'hidden'
             "
             class="cps-select-box-clear-icon">
-            <cps-icon icon="delete" size="small" aria-hidden="true"></cps-icon>
+            <cps-icon icon="delete" size="small"></cps-icon>
           </span>
         }
         @if (showChevron) {
@@ -138,7 +137,6 @@
             (keydown.enter)="onChevronClick($event)"
             (keydown.space)="onChevronClick($event)">
             <cps-icon
-              aria-hidden="true"
               icon="chevron-down"
               size="small"
               [color]="disabled ? 'text-light' : 'text-dark'"></cps-icon>
@@ -286,7 +284,6 @@
       {{ item[optionInfo] }}
       @if (item[optionIcon]) {
         <cps-icon
-          aria-hidden="true"
           [icon]="item[optionIcon]"
           [color]="item[optionIconColor] || 'text-light'"
           class="cps-select-options-option-right-icon">

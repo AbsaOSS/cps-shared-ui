@@ -7,18 +7,14 @@
   }
   <span class="cps-chip-label">{{ label }}</span>
   @if (closable) {
-    <cps-icon
-      role="button"
-      [tabindex]="disabled ? -1 : 0"
+    <button
+      type="button"
+      class="cps-chip-close-btn"
+      [disabled]="disabled"
       [attr.aria-label]="closeButtonAriaLabel"
-      [attr.aria-disabled]="disabled || null"
-      class="cps-chip-close-icon"
-      icon="close-x"
-      size="xsmall"
-      color="text-darkest"
       (click)="onCloseClick($event)"
-      (keydown.enter)="onCloseClick($event)"
-      (keydown.space)="onCloseClick($event)">
-    </cps-icon>
+      (keydown.enter)="$event.stopPropagation()">
+      <cps-icon icon="close-x" size="xsmall" color="text-darkest"></cps-icon>
+    </button>
   }
 </div>

@@ -118,7 +118,7 @@ const components: ComponentEntry[] = [
     selector: '.example-content cps-expansion-panel'
   },
   { route: '/file-upload', name: 'File upload', selector: 'cps-file-upload' },
-  // { route: '/icon', name: 'Icon', selector: 'cps-icon' },
+  { route: '/icon', name: 'Icon', selector: '.example-content cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
   { route: '/input', name: 'Input', selector: '.example-content cps-input' },
   { route: '/loader', name: 'Loader', selector: '.example-content cps-loader' },

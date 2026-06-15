@@ -12,13 +12,17 @@
 
   <div class="icon-grid">
     @for (name of filteredIconsList; track name) {
-      <div class="icon-row" (click)="onCopyIconName(name)">
+      <button
+        type="button"
+        class="icon-row"
+        [attr.aria-label]="'Copy ' + name + ' icon name'"
+        (click)="onCopyIconName(name)">
         <cps-icon
           [icon]="name"
           size="normal"
           color="var(--cps-text-primary)"></cps-icon>
         <span>{{ name }}</span>
-      </div>
+      </button>
     }
   </div>
 </app-component-docs-viewer>
