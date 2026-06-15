@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -36,7 +35,7 @@ const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
     '(keydown)': 'onKeydown($event)'
   }
 })
-export class CpsPaginatorComponent implements OnInit, OnChanges, AfterViewInit {
+export class CpsPaginatorComponent implements OnInit, OnChanges {
   /**
    * Zero-relative number of the first row to be displayed.
    * @group Props
@@ -145,16 +144,6 @@ export class CpsPaginatorComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
-    if (!this._elementRef.nativeElement.getAttribute('aria-label')) {
-      this._renderer.setAttribute(
-        this._elementRef.nativeElement,
-        'aria-label',
-        'Pagination'
-      );
-    }
-  }
-
   private _syncRows(): void {
     const opts =
       this.rowsPerPageOptions.length > 0
@@ -173,14 +162,13 @@ export class CpsPaginatorComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   private _applyAriaLabel(): void {
-    const label = this.ariaLabel || this._staticAriaLabel;
-    if (label) {
-      this._renderer.setAttribute(
-        this._elementRef.nativeElement,
-        'aria-label',
-        label
-      );
-    }
+    const label =
+      this.ariaLabel?.trim() || this._staticAriaLabel?.trim() || 'Pagination';
+    this._renderer.setAttribute(
+      this._elementRef.nativeElement,
+      'aria-label',
+      label
+    );
   }
 
   onPageChange(event: any) {

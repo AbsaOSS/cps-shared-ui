@@ -46,6 +46,18 @@ describe('CpsPaginatorComponent', () => {
     );
   });
 
+  it('should update aria-label when ariaLabel input changes', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Search results pagination');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe(
+      'Search results pagination'
+    );
+
+    fixture.componentRef.setInput('ariaLabel', '');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe('Pagination');
+  });
+
   it('should mark first button as aria-disabled when on first page', () => {
     component.first = 0;
     const pt = component.paginatorPt;
