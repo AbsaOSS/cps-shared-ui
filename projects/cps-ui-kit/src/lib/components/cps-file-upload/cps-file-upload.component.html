@@ -101,29 +101,21 @@
         </div>
         @if (!disabled) {
           @if (isProcessingFile) {
-            <cps-icon
-              role="button"
-              tabindex="0"
-              [attr.aria-label]="'Cancel file processing'"
-              class="cps-file-upload-uploaded-file-cancel-process-icon"
-              icon="close-x"
-              color="error"
-              (click)="onCancelFileProcessing($event)"
-              (keydown.enter)="onCancelFileProcessing($event)"
-              (keydown.space)="onCancelFileProcessing($event)">
-            </cps-icon>
+            <button
+              type="button"
+              class="cps-file-upload-uploaded-file-cancel-process-btn"
+              aria-label="Cancel file processing"
+              (click)="onCancelFileProcessing($event)">
+              <cps-icon icon="close-x" color="error"></cps-icon>
+            </button>
           } @else {
-            <cps-icon
-              role="button"
-              tabindex="0"
-              [attr.aria-label]="'Remove uploaded file'"
-              class="cps-file-upload-uploaded-file-remove-icon"
-              icon="remove"
-              color="error"
-              (click)="onRemoveUploadedFile($event)"
-              (keydown.enter)="onRemoveUploadedFile($event)"
-              (keydown.space)="onRemoveUploadedFile($event)">
-            </cps-icon>
+            <button
+              type="button"
+              class="cps-file-upload-uploaded-file-remove-btn"
+              aria-label="Remove uploaded file"
+              (click)="onRemoveUploadedFile($event)">
+              <cps-icon icon="remove" color="error"></cps-icon>
+            </button>
           }
         }
       </div>
