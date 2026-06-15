@@ -4,7 +4,6 @@ import {
   ElementRef,
   HostAttributeToken,
   Renderer2,
-  afterNextRender,
   computed,
   effect,
   inject,
@@ -92,24 +91,13 @@ export class CpsProgressLinearComponent {
 
   constructor() {
     effect(() => {
-      const label = this.ariaLabel() || this._staticAriaLabel;
-      if (label) {
-        this._renderer.setAttribute(
-          this._elementRef.nativeElement,
-          'aria-label',
-          label
-        );
-      }
-    });
-
-    afterNextRender(() => {
-      if (!this._elementRef.nativeElement.getAttribute('aria-label')) {
-        this._renderer.setAttribute(
-          this._elementRef.nativeElement,
-          'aria-label',
-          'Loading'
-        );
-      }
+      const label =
+        this.ariaLabel()?.trim() || this._staticAriaLabel?.trim() || 'Loading';
+      this._renderer.setAttribute(
+        this._elementRef.nativeElement,
+        'aria-label',
+        label
+      );
     });
   }
 }

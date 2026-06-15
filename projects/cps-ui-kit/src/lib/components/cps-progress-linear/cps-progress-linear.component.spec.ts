@@ -112,6 +112,18 @@ describe('CpsProgressLinearComponent', () => {
     );
   });
 
+  it('should update aria-label when ariaLabel input changes', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Uploading file');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe(
+      'Uploading file'
+    );
+
+    fixture.componentRef.setInput('ariaLabel', '');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe('Loading');
+  });
+
   it('should use a native aria-label attribute as the accessible label', () => {
     const host: HTMLElement = fixture.nativeElement;
     host.setAttribute('aria-label', 'Saving changes');
