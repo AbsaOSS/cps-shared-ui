@@ -66,7 +66,8 @@ describe('CpsPaginatorComponent', () => {
   });
 
   it('should not mark first button as aria-disabled when not on first page', () => {
-    component.first = 10;
+    fixture.componentRef.setInput('first', 10);
+    fixture.detectChanges();
     const pt = component.paginatorPt;
     expect(pt.first['aria-disabled']).toBeNull();
     expect(pt.first.tabindex).toBe(0);
