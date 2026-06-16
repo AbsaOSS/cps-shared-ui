@@ -1,11 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import {
   Component,
-  ElementRef,
   HostAttributeToken,
-  Renderer2,
   computed,
-  effect,
   inject,
   input
 } from '@angular/core';
@@ -21,7 +18,8 @@ import { convertSize } from '../../utils/internal/size-utils';
   templateUrl: './cps-progress-linear.component.html',
   styleUrls: ['./cps-progress-linear.component.scss'],
   host: {
-    role: 'progressbar'
+    role: 'progressbar',
+    '[attr.aria-label]': 'computedAriaLabel()'
   }
 })
 export class CpsProgressLinearComponent {
@@ -75,9 +73,7 @@ export class CpsProgressLinearComponent {
    */
   ariaLabel = input('');
 
-  private readonly _elementRef = inject(ElementRef);
   private readonly _document = inject(DOCUMENT);
-  private readonly _renderer = inject(Renderer2);
   private readonly _staticAriaLabel = inject(
     new HostAttributeToken('aria-label'),
     { optional: true }
@@ -89,15 +85,7 @@ export class CpsProgressLinearComponent {
   cssColor = computed(() => getCSSColor(this.color(), this._document));
   cssBgColor = computed(() => getCSSColor(this.bgColor(), this._document));
 
-  constructor() {
-    effect(() => {
-      const label =
-        this.ariaLabel()?.trim() || this._staticAriaLabel?.trim() || 'Loading';
-      this._renderer.setAttribute(
-        this._elementRef.nativeElement,
-        'aria-label',
-        label
-      );
-    });
-  }
+  computedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this._staticAriaLabel?.trim() || 'Loading'
+  );
 }
