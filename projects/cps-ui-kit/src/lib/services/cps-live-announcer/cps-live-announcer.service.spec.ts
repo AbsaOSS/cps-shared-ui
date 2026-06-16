@@ -1,5 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { Injector } from '@angular/core';
+import { Injector, PLATFORM_ID } from '@angular/core';
 import {
   CpsLiveAnnouncerPoliteness,
   CpsLiveAnnouncerService
@@ -192,5 +192,44 @@ describe('CpsLiveAnnouncerService', () => {
         ).toBe('Test');
       })
     );
+  });
+});
+
+describe('CpsLiveAnnouncerService (server platform)', () => {
+  let service: CpsLiveAnnouncerService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+    });
+    service = TestBed.inject(CpsLiveAnnouncerService);
+  });
+
+  afterEach(() => {
+    service.ngOnDestroy();
+  });
+
+  it('should not append any live region to document.body on creation', () => {
+    expect(document.body.querySelector('[aria-live="polite"]')).toBeNull();
+    expect(document.body.querySelector('[aria-live="assertive"]')).toBeNull();
+  });
+
+  it('should not throw when announce is called', () => {
+    expect(() => service.announce('Loading...')).not.toThrow();
+  });
+
+  it('should not write text or append elements when announce is called', fakeAsync(() => {
+    service.announce('Loading...');
+    tick(10000);
+    expect(document.body.querySelector('[aria-live="polite"]')).toBeNull();
+  }));
+
+  it('should not throw when clear is called', () => {
+    expect(() => service.clear()).not.toThrow();
+    expect(() => service.clear('assertive')).not.toThrow();
+  });
+
+  it('should not throw on ngOnDestroy', () => {
+    expect(() => service.ngOnDestroy()).not.toThrow();
   });
 });

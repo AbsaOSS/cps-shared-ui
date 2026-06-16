@@ -1,5 +1,12 @@
-import { inject, Injectable, InjectionToken, OnDestroy } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import {
+  inject,
+  Injectable,
+  InjectionToken,
+  NgZone,
+  OnDestroy,
+  PLATFORM_ID
+} from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 
 export type CpsLiveAnnouncerPoliteness = 'polite' | 'assertive';
 
@@ -18,6 +25,9 @@ type RegionState = {
 @Injectable({ providedIn: 'root' })
 export class CpsLiveAnnouncerService implements OnDestroy {
   private _document = inject(DOCUMENT);
+  private _ngZone = inject(NgZone);
+  private _platformId = inject(PLATFORM_ID);
+  private _isBrowser = isPlatformBrowser(this._platformId);
   private _regions: Record<CpsLiveAnnouncerPoliteness, RegionState> = {
     polite: {
       el: this._createElement('polite'),
@@ -43,17 +53,20 @@ export class CpsLiveAnnouncerService implements OnDestroy {
     politeness: CpsLiveAnnouncerPoliteness = 'polite',
     durationMs = 5000
   ): void {
+    if (!this._isBrowser) return;
     this.clear(politeness);
     const region = this._regions[politeness];
-    region.writeTimer = setTimeout(() => {
-      region.writeTimer = undefined;
-      region.el.textContent = message;
-      if (durationMs > 0) {
-        region.clearTimer = setTimeout(() => {
-          region.clearTimer = undefined;
-          region.el.textContent = '';
-        }, durationMs);
-      }
+    this._ngZone.runOutsideAngular(() => {
+      region.writeTimer = setTimeout(() => {
+        region.writeTimer = undefined;
+        region.el.textContent = message;
+        if (durationMs > 0) {
+          region.clearTimer = setTimeout(() => {
+            region.clearTimer = undefined;
+            region.el.textContent = '';
+          }, durationMs);
+        }
+      });
     });
   }
 
@@ -61,6 +74,7 @@ export class CpsLiveAnnouncerService implements OnDestroy {
    * Clears the live region without making a new announcement.
    */
   clear(politeness: CpsLiveAnnouncerPoliteness = 'polite'): void {
+    if (!this._isBrowser) return;
     const region = this._regions[politeness];
     clearTimeout(region.writeTimer);
     clearTimeout(region.clearTimer);
@@ -79,9 +93,16 @@ export class CpsLiveAnnouncerService implements OnDestroy {
 
   private _createElement(politeness: CpsLiveAnnouncerPoliteness): HTMLElement {
     const cls = `cps-${politeness}-live-announcer-element`;
-    const existing = this._document.body.querySelector<HTMLElement>(`.${cls}`);
-    if (existing) return existing;
+    if (this._isBrowser) {
+      const existing = this._document.body.querySelector<HTMLElement>(
+        `.${cls}`
+      );
+      if (existing) return existing;
+    }
+
     const el = this._document.createElement('div');
+    if (!this._isBrowser) return el;
+
     el.setAttribute('aria-live', politeness);
     el.setAttribute('aria-atomic', 'true');
     el.className = `cps-sr-only ${cls}`;
