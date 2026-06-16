@@ -8,7 +8,6 @@ import {
   OnChanges,
   OnInit,
   Output,
-  Renderer2,
   ViewChild,
   type SimpleChanges
 } from '@angular/core';
@@ -32,6 +31,7 @@ const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
   styleUrls: ['./cps-paginator.component.scss'],
   host: {
     role: 'navigation',
+    '[attr.aria-label]': 'computedAriaLabel',
     '(keydown)': 'onKeydown($event)'
   }
 })
@@ -97,32 +97,26 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
   paginator!: Paginator;
 
   cvtBackgroundColor = '';
+  computedAriaLabel = '';
+  paginatorPt = {
+    first: { 'aria-disabled': null as string | null, tabindex: 0 }
+  };
 
   rowOptions: { label: string; value: number }[] = [];
   private _currentRowsPerPageOptions: number[] = [];
 
   private readonly _document = inject(DOCUMENT);
   private readonly _elementRef = inject(ElementRef);
-  private readonly _renderer = inject(Renderer2);
   private readonly _staticAriaLabel: string | null = inject(
     new HostAttributeToken('aria-label'),
     { optional: true }
   );
 
-  get paginatorPt() {
-    const firstDisabled = this.first === 0 || this.totalRecords === 0;
-    return {
-      first: {
-        'aria-disabled': firstDisabled ? 'true' : null,
-        tabindex: firstDisabled ? -1 : 0
-      }
-    };
-  }
-
   ngOnInit(): void {
     this.cvtBackgroundColor = getCSSColor(this.backgroundColor, this._document);
+    this.paginatorPt = this._buildPaginatorPt();
     this._syncRows();
-    this._applyAriaLabel();
+    this._updateAriaLabel();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -132,6 +126,9 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
         this._document
       );
     }
+    if (changes.first || changes.totalRecords) {
+      this.paginatorPt = this._buildPaginatorPt();
+    }
     if (
       (changes.rows && !changes.rows.firstChange) ||
       (changes.rowsPerPageOptions && !changes.rowsPerPageOptions.firstChange)
@@ -139,7 +136,7 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
       this._syncRows();
     }
     if (changes.ariaLabel && !changes.ariaLabel.firstChange) {
-      this._applyAriaLabel();
+      this._updateAriaLabel();
     }
   }
 
@@ -160,19 +157,25 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     }
   }
 
-  private _applyAriaLabel(): void {
-    const label =
+  private _updateAriaLabel(): void {
+    this.computedAriaLabel =
       this.ariaLabel?.trim() || this._staticAriaLabel?.trim() || 'Pagination';
-    this._renderer.setAttribute(
-      this._elementRef.nativeElement,
-      'aria-label',
-      label
-    );
+  }
+
+  private _buildPaginatorPt() {
+    const firstDisabled = this.first === 0 || this.totalRecords === 0;
+    return {
+      first: {
+        'aria-disabled': firstDisabled ? 'true' : null,
+        tabindex: firstDisabled ? -1 : 0
+      }
+    };
   }
 
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
+    this.paginatorPt = this._buildPaginatorPt();
     this.pageChanged.emit(event);
 
     const activeEl = this._document.activeElement as HTMLElement | null;
@@ -236,6 +239,7 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     if (this.resetPageOnRowsChange) {
       this.first = 0;
       this.paginator.first = 0;
+      this.paginatorPt = this._buildPaginatorPt();
     }
     this.paginator.rows = rows;
     this.paginator.changePage(this.paginator.getPage());
