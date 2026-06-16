@@ -5,8 +5,6 @@ import {
   Input,
   OnInit,
   OnChanges,
-  ElementRef,
-  Renderer2,
   inject,
   type SimpleChanges
 } from '@angular/core';
@@ -23,7 +21,8 @@ import { getCSSColor } from '../../utils/colors-utils';
   templateUrl: './cps-progress-circular.component.html',
   styleUrls: ['./cps-progress-circular.component.scss'],
   host: {
-    role: 'progressbar'
+    role: 'progressbar',
+    '[attr.aria-label]': 'computedAriaLabel'
   }
 })
 export class CpsProgressCircularComponent implements OnInit, OnChanges {
@@ -53,9 +52,7 @@ export class CpsProgressCircularComponent implements OnInit, OnChanges {
    */
   @Input() ariaLabel = '';
 
-  private readonly _elementRef = inject(ElementRef);
   private readonly _document = inject(DOCUMENT);
-  private readonly _renderer = inject(Renderer2);
   private readonly _staticAriaLabel = inject(
     new HostAttributeToken('aria-label'),
     { optional: true }
@@ -64,17 +61,18 @@ export class CpsProgressCircularComponent implements OnInit, OnChanges {
   cvtDiameter = '';
   cvtStrokeWidth = '';
   cvtColor = '';
+  computedAriaLabel = '';
 
   ngOnInit(): void {
     this.cvtDiameter = convertSize(this.diameter);
     this.cvtStrokeWidth = convertSize(this.strokeWidth);
     this.cvtColor = getCSSColor(this.color, this._document);
-    this._applyAriaLabel();
+    this._updateAriaLabel();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.ariaLabel) {
-      this._applyAriaLabel();
+      this._updateAriaLabel();
     }
     if (changes.diameter) {
       this.cvtDiameter = convertSize(this.diameter);
@@ -87,13 +85,8 @@ export class CpsProgressCircularComponent implements OnInit, OnChanges {
     }
   }
 
-  private _applyAriaLabel(): void {
-    const label =
+  private _updateAriaLabel(): void {
+    this.computedAriaLabel =
       this.ariaLabel?.trim() || this._staticAriaLabel?.trim() || 'Loading';
-    this._renderer.setAttribute(
-      this._elementRef.nativeElement,
-      'aria-label',
-      label
-    );
   }
 }
