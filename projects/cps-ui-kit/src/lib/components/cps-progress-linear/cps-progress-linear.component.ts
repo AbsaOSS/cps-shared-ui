@@ -1,5 +1,11 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  HostAttributeToken,
+  computed,
+  inject,
+  input
+} from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils';
 
@@ -10,7 +16,11 @@ import { convertSize } from '../../utils/internal/size-utils';
 @Component({
   selector: 'cps-progress-linear',
   templateUrl: './cps-progress-linear.component.html',
-  styleUrls: ['./cps-progress-linear.component.scss']
+  styleUrls: ['./cps-progress-linear.component.scss'],
+  host: {
+    role: 'progressbar',
+    '[attr.aria-label]': 'computedAriaLabel()'
+  }
 })
 export class CpsProgressLinearComponent {
   /**
@@ -55,11 +65,27 @@ export class CpsProgressLinearComponent {
    */
   radius = input<number | string>(0);
 
-  private readonly document = inject(DOCUMENT);
+  /**
+   * Accessible label announced by screen readers to describe what is loading.
+   * Falls back to "Loading" when empty value is provided.
+   * @group Props
+   * @default Loading
+   */
+  ariaLabel = input('');
+
+  private readonly _document = inject(DOCUMENT);
+  private readonly _staticAriaLabel = inject(
+    new HostAttributeToken('aria-label'),
+    { optional: true }
+  );
 
   cvtWidth = computed(() => convertSize(this.width()));
   cvtHeight = computed(() => convertSize(this.height()));
   cvtRadius = computed(() => convertSize(this.radius()));
-  cssColor = computed(() => getCSSColor(this.color(), this.document));
-  cssBgColor = computed(() => getCSSColor(this.bgColor(), this.document));
+  cssColor = computed(() => getCSSColor(this.color(), this._document));
+  cssBgColor = computed(() => getCSSColor(this.bgColor(), this._document));
+
+  computedAriaLabel = computed(
+    () => this.ariaLabel()?.trim() || this._staticAriaLabel?.trim() || 'Loading'
+  );
 }
