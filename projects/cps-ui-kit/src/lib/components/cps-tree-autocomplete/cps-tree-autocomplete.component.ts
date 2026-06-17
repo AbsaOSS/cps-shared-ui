@@ -1,13 +1,9 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Inject,
   Input,
-  OnDestroy,
-  OnInit,
   Optional,
   ViewChild
 } from '@angular/core';
@@ -40,7 +36,7 @@ export type CpsTreeAutocompleteAppearanceType =
  */
 @Component({
   imports: [
-    CommonModule,
+    NgTemplateOutlet,
     FormsModule,
     TreeModule,
     CpsIconComponent,
@@ -53,10 +49,7 @@ export type CpsTreeAutocompleteAppearanceType =
   templateUrl: './cps-tree-autocomplete.component.html',
   styleUrls: ['./cps-tree-autocomplete.component.scss']
 })
-export class CpsTreeAutocompleteComponent
-  extends CpsBaseTreeDropdownComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
   /**
    * Message if array of items is empty.
    * @group Props
@@ -84,23 +77,10 @@ export class CpsTreeAutocompleteComponent
 
   constructor(
     @Optional() public override control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
     public override cdRef: ChangeDetectorRef
   ) {
     super(control, cdRef);
-  }
-
-  override ngOnInit() {
-    super.ngOnInit();
-  }
-
-  override ngAfterViewInit() {
     this.isAutocomplete = true;
-    super.ngAfterViewInit();
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
   }
 
   override onSelectNode() {
@@ -175,7 +155,7 @@ export class CpsTreeAutocompleteComponent
   isActive() {
     return (
       this.isOpened ||
-      this.document.activeElement === this.treeAutocompleteInput?.nativeElement
+      this._document.activeElement === this.treeAutocompleteInput?.nativeElement
     );
   }
 

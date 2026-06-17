@@ -1,8 +1,10 @@
 <div
-  [ngStyle]="{ width: cvtWidth }"
+  [style.width]="cvtWidth"
   class="cps-treeautocomplete"
   tabindex="1"
-  [ngClass]="{ disabled: disabled, error: error, active: isActive() }"
+  [class.disabled]="disabled"
+  [class.error]="error"
+  [class.active]="isActive()"
   #componentContainer>
   @if (label) {
     <div class="cps-treeautocomplete-label">
@@ -24,11 +26,9 @@
     (keydown)="onContainerKeyDown($event)"
     class="cps-treeautocomplete-container"
     [class.focused]="isActive()"
-    [ngClass]="{
-      'persistent-clear': persistentClear,
-      borderless: appearance === 'borderless',
-      underlined: appearance === 'underlined'
-    }">
+    [class.persistent-clear]="persistentClear"
+    [class.borderless]="appearance === 'borderless'"
+    [class.underlined]="appearance === 'underlined'">
     <div class="cps-treeautocomplete-box" #boxEl (mousedown)="onBoxClick()">
       <div class="cps-treeautocomplete-box-area">
         @if (prefixIcon) {
@@ -67,9 +67,7 @@
                 @for (val of treeSelection; track val; let last = $last) {
                   <div
                     class="text-group-item"
-                    [ngClass]="{
-                      'about-to-remove': last && backspaceClickedOnce
-                    }">
+                    [class.about-to-remove]="last && backspaceClickedOnce">
                     {{ val.label }}{{ !last ? ',' : '' }}
                   </div>
                 }
@@ -89,9 +87,7 @@
                     [disabled]="disabled"
                     [closable]="closableChips"
                     (closed)="remove(val)"
-                    [ngClass]="{
-                      'about-to-remove': last && backspaceClickedOnce
-                    }"
+                    [class.about-to-remove]="last && backspaceClickedOnce"
                     [label]="val.label">
                   </cps-chip>
                 }
@@ -160,18 +156,14 @@
       (beforeMenuHidden)="onBeforeOptionsHidden($event)"
       hideTransitionOptions="0s linear"
       containerClass="cps-treeautocomplete-options-menu">
-      <div
-        class="cps-treeautocomplete-options"
-        [ngStyle]="{
-          width: boxWidth + 'px'
-        }">
+      <div class="cps-treeautocomplete-options" [style.width.px]="boxWidthPx">
         <p-tree
           #treeList
           [emptyMessage]="emptyMessage"
           [virtualScroll]="virtualScroll"
-          [virtualScrollItemSize]="virtualScrollItemSize"
+          [virtualScrollItemSize]="virtualScrollItemSizePx()"
           [virtualScrollOptions]="{ numToleratedItems: numToleratedItems }"
-          [scrollHeight]="virtualListHeight + 'px'"
+          [scrollHeight]="virtualListHeightRem + 'rem'"
           (onNodeSelect)="onSelectNode()"
           (onNodeExpand)="onNodeExpand($event)"
           (onNodeCollapse)="onNodeCollapse($event)"

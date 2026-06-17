@@ -423,6 +423,11 @@ $hover-transition-duration: 0.2s;
         background-color 0.2s,
         color 0.2s,
         box-shadow 0.2s;
+
+      .p-tree-node-toggle-icon {
+        width: 0.875rem;
+        height: 0.875rem;
+      }
     }
 
     .p-tree
