@@ -5,12 +5,15 @@
     position: fullScreen ? 'fixed' : 'relative'
   }">
   <div class="cps-loader-overlay-content">
-    @if (showLabel) {
-      <label class="cps-loader-overlay-content-text" [style.color]="labelColor"
-        >Loading...
-      </label>
+    @if (showLabel && label.trim()) {
+      <span
+        class="cps-loader-overlay-content-text"
+        [style.color]="cvtLabelColor"
+        aria-hidden="true">
+        {{ label }}
+      </span>
     }
-    <div class="cps-loader-overlay-content-circles">
+    <div class="cps-loader-overlay-content-circles" aria-hidden="true">
       <div class="cps-loader-overlay-content-circles-circle cps-sp1">
         <div class="cps-loader-overlay-content-circles-circle cps-sp2">
           <div class="cps-loader-overlay-content-circles-circle cps-sp3"></div>

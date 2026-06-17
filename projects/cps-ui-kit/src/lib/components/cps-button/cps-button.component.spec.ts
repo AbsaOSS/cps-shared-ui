@@ -281,18 +281,28 @@ describe('CpsButtonComponent', () => {
       expect(button.getAttribute('type')).toBe('submit');
     });
 
-    it('should fall back to "button" native type if nativeType set to null', () => {
+    it('should fall back to "button" and warn if nativeType set to null', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       fixture.componentRef.setInput('nativeType', null);
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button');
       expect(button.getAttribute('type')).toBe('button');
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid nativeType value')
+      );
+      warnSpy.mockRestore();
     });
 
-    it('should fall back to "button" native type if nativeType set to undefined', () => {
+    it('should fall back to "button" and warn if nativeType set to undefined', () => {
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       fixture.componentRef.setInput('nativeType', undefined);
       fixture.detectChanges();
       const button = fixture.nativeElement.querySelector('button');
       expect(button.getAttribute('type')).toBe('button');
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('Invalid nativeType value')
+      );
+      warnSpy.mockRestore();
     });
 
     it('should fall back to "button" and warn if nativeType is an invalid string', () => {
