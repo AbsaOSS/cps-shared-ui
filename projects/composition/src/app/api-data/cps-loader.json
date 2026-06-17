@@ -36,6 +36,30 @@
                         "type": "boolean",
                         "default": "true",
                         "description": "Determines whether to show 'Loading...' label."
+                    },
+                    {
+                        "name": "label",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading...",
+                        "description": "Text shown visually when showLabel is true."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading",
+                        "description": "Text announced by screen readers. Used when showLabel is false or label\nis empty."
+                    },
+                    {
+                        "name": "doneAriaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading complete",
+                        "description": "Text announced by screen readers when the loader is destroyed."
                     }
                 ]
             }
