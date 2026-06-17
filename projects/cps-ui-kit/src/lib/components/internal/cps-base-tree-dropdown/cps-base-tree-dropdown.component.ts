@@ -13,8 +13,8 @@ import {
   Optional,
   Output,
   Self,
-  SimpleChanges,
-  ViewChild
+  ViewChild,
+  type SimpleChanges
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
