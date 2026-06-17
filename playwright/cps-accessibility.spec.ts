@@ -121,7 +121,22 @@ const components: ComponentEntry[] = [
   { route: '/icon', name: 'Icon', selector: '.example-content cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
   { route: '/input', name: 'Input', selector: '.example-content cps-input' },
-  // { route: '/loader', name: 'Loader', selector: 'cps-loader' },
+  { route: '/loader', name: 'Loader', selector: '.example-content cps-loader' },
+  {
+    route: '/loader',
+    name: 'Loader fullscreen',
+    selector: '.example-content cps-loader',
+    setup: async (page) => {
+      await page.waitForSelector('.example-content');
+      await page
+        .locator('.example-content cps-button')
+        .filter({ hasText: /Toggle fullscreen loader/i })
+        .click();
+      await page.waitForSelector(
+        '.cps-loader-overlay[style*="position: fixed"]'
+      );
+    }
+  },
   {
     route: '/menu',
     name: 'Menu standard',
@@ -156,16 +171,16 @@ const components: ComponentEntry[] = [
     }
   },
   // { route: '/paginator', name: 'Paginator', selector: 'cps-paginator' },
-  // {
-  //   route: '/progress-circular',
-  //   name: 'Progress circular',
-  //   selector: 'cps-progress-circular'
-  // },
-  // {
-  //   route: '/progress-linear',
-  //   name: 'Progress linear',
-  //   selector: 'cps-progress-linear'
-  // },
+  {
+    route: '/progress-circular',
+    name: 'Progress circular',
+    selector: 'cps-progress-circular'
+  },
+  {
+    route: '/progress-linear',
+    name: 'Progress linear',
+    selector: 'cps-progress-linear'
+  },
   { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
   {
     route: '/scheduler',

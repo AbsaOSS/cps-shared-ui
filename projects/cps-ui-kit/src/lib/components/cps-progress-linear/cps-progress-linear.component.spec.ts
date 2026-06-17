@@ -95,4 +95,44 @@ describe('CpsProgressLinearComponent', () => {
     );
     expect(indicator).toBeTruthy();
   });
+
+  it('should have role="progressbar" on the host element', () => {
+    expect(fixture.nativeElement.getAttribute('role')).toBe('progressbar');
+  });
+
+  it('should have default aria-label "Loading" on the host element', () => {
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe('Loading');
+  });
+
+  it('should reflect a custom ariaLabel on the host element', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Uploading file');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe(
+      'Uploading file'
+    );
+  });
+
+  it('should update aria-label when ariaLabel input changes', () => {
+    fixture.componentRef.setInput('ariaLabel', 'Uploading file');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe(
+      'Uploading file'
+    );
+
+    fixture.componentRef.setInput('ariaLabel', '');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.getAttribute('aria-label')).toBe('Loading');
+  });
+
+  it('should use a native aria-label attribute as the accessible label', () => {
+    const host: HTMLElement = fixture.nativeElement;
+    host.setAttribute('aria-label', 'Saving changes');
+    fixture.detectChanges();
+    expect(host.getAttribute('aria-label')).toBe('Saving changes');
+  });
+
+  it('should mark the inner wrapper div as aria-hidden', () => {
+    const wrapper = fixture.nativeElement.querySelector('.cps-progress-linear');
+    expect(wrapper.getAttribute('aria-hidden')).toBe('true');
+  });
 });
