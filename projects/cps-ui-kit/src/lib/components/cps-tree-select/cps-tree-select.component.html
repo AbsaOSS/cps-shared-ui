@@ -153,6 +153,7 @@
         <p-tree
           #treeList
           [trackBy]="treeTrackBy"
+          [pt]="treeNodeToggleButtonPt"
           [virtualScroll]="virtualScroll"
           [virtualScrollItemSize]="virtualScrollItemSizePx()"
           [virtualScrollOptions]="{ numToleratedItems: numToleratedItems }"
@@ -164,8 +165,7 @@
           [(selection)]="treeSelection"
           (selectionChange)="treeSelectionChanged($event)"
           [metaKeySelection]="multiple ? false : true"
-          [selectionMode]="multiple ? 'multiple' : 'single'"
-          [pt]="{ nodeToggleButton: { 'aria-label': 'Toggle' } }">
+          [selectionMode]="multiple ? 'multiple' : 'single'">
           <ng-template let-node pTemplate="directory">
             <span class="cps-treeselect-directory-elem">{{ node.label }}</span>
           </ng-template>

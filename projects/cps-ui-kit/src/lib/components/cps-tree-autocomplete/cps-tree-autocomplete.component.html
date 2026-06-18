@@ -76,7 +76,9 @@
                     {{ val.label }}{{ !last ? ',' : '' }}
                   </div>
                 }
-                <span role="listitem" class="cps-treeautocomplete-input-listitem">
+                <span
+                  role="listitem"
+                  class="cps-treeautocomplete-input-listitem">
                   <ng-container
                     *ngTemplateOutlet="
                       treeAutocompleteInputTemplate;
@@ -103,7 +105,9 @@
                     [label]="val.label">
                   </cps-chip>
                 }
-                <span role="listitem" class="cps-treeautocomplete-input-listitem">
+                <span
+                  role="listitem"
+                  class="cps-treeautocomplete-input-listitem">
                   <ng-container
                     *ngTemplateOutlet="
                       treeAutocompleteInputTemplate;
@@ -116,8 +120,7 @@
             }
           </div>
         } @else {
-          <ng-container
-            *ngTemplateOutlet="treeAutocompleteInputTemplate">
+          <ng-container *ngTemplateOutlet="treeAutocompleteInputTemplate">
           </ng-container>
         }
         <span class="cps-treeautocomplete-box-icons">
@@ -179,6 +182,7 @@
         <p-tree
           #treeList
           [trackBy]="treeTrackBy"
+          [pt]="treeNodeToggleButtonPt"
           [emptyMessage]="emptyMessage"
           [virtualScroll]="virtualScroll"
           [virtualScrollItemSize]="virtualScrollItemSizePx()"
@@ -255,6 +259,7 @@
     class="cps-treeautocomplete-box-input"
     spellcheck="false"
     role="combobox"
+    [disabled]="disabled"
     aria-haspopup="tree"
     aria-autocomplete="list"
     [attr.aria-expanded]="isOpened"
@@ -263,7 +268,6 @@
     [attr.aria-invalid]="error ? 'true' : null"
     [attr.aria-label]="ariaLabel || label || null"
     [attr.aria-describedby]="describedBy"
-    [attr.aria-disabled]="disabled || null"
     [attr.aria-busy]="loading ? true : null"
     [class]="inputClass"
     [style]="inputStyle"

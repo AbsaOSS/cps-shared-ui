@@ -268,6 +268,10 @@ export class CpsBaseTreeDropdownComponent
 
   private _treeRefreshKey = 0;
 
+  readonly treeNodeToggleButtonPt = {
+    nodeToggleButton: { 'aria-label': 'Toggle node' }
+  };
+
   readonly treeTrackBy = (
     _index: number,
     item: TreeNode & { node?: TreeNode }
