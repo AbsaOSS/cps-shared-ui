@@ -195,12 +195,21 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
   }
 
   onChevronClick(event: any) {
-    event.stopPropagation();
+    event.preventDefault();
 
     if (this.isOpened) {
       this._closeAndClear();
     } else {
       this.onBoxClick();
+    }
+  }
+
+  onContainerMouseDown(event: MouseEvent) {
+    const input = this.treeAutocompleteInput?.nativeElement;
+    if (event.target !== input) event.preventDefault();
+    if (input && input !== this._document.activeElement) {
+      this._mouseClicked = true;
+      this.focusInput();
     }
   }
 
@@ -230,7 +239,7 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
   }
 
   focusInput() {
-    this.componentContainer?.nativeElement?.querySelector('input')?.focus();
+    this.treeAutocompleteInput?.nativeElement?.focus();
   }
 
   override focus() {

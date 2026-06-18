@@ -25,6 +25,7 @@
     </div>
   }
   <div
+    (mousedown)="onContainerMouseDown($event)"
     (keydown)="onContainerKeyDown($event)"
     class="cps-treeautocomplete-container"
     [class.focused]="isActive()"
