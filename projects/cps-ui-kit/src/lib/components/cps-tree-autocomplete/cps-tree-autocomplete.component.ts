@@ -299,9 +299,6 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
     this.inputText = '';
     this.activeSingle = false;
     this.updateOptions();
-    setTimeout(() => {
-      this.recalcVirtualListHeight();
-    });
   }
 
   private _closeAndClear() {
