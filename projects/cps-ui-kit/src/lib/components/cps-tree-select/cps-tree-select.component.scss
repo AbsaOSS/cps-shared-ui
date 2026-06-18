@@ -261,9 +261,6 @@ $hover-transition-duration: 0.2s;
   max-height: 15.125rem;
   overflow-y: auto;
 
-  // Default: a focused+selected node looks the same as a plain selected node
-  // (mouse click focuses the node too) - overridden below only while the
-  // focus came from real keyboard arrow navigation.
   --focused-selected-option-background: #{$selected-option-background};
 
   &.arrow-navigating {
@@ -498,11 +495,10 @@ $hover-transition-duration: 0.2s;
       font-size: 1rem;
     }
 
-    [role='treeitem']:focus-visible,
-    [data-pc-section='nodetogglebutton']:focus-visible {
+    *:focus-visible {
       &::before,
       &::after {
-        display: none;
+        display: none !important;
       }
     }
   }

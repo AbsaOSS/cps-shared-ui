@@ -74,6 +74,9 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
   inputText = '';
   backspaceClickedOnce = false;
   activeSingle = false;
+  isKeyboardFocused = false;
+
+  private _mouseClicked = false;
 
   constructor(
     @Optional() public override control: NgControl,
@@ -87,9 +90,25 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
     this.backspaceClickedOnce = false;
     this._clearInput();
     super.onSelectNode();
+    if (!this.multiple) {
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
+  }
+
+  override onFocus() {
+    if (!this.multiple) {
+      this.activeSingle = true;
+      if (!this.inputText) this.inputText = this._getValueLabel();
+    }
+    this.isKeyboardFocused = !this._mouseClicked;
+    this._mouseClicked = false;
+    super.onFocus();
   }
 
   override onBlur() {
+    this.isKeyboardFocused = false;
     if (!this.isOpened) {
       this._closeAndClear();
     }
@@ -105,6 +124,7 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
   }
 
   onBoxClick() {
+    this._mouseClicked = true;
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
@@ -114,29 +134,55 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
     this.optionFocused = false;
   }
 
-  onContainerKeyDown(event: any) {
-    const code = event.keyCode;
-    // escape
-    if (code === 27) {
+  onContainerKeyDown(event: KeyboardEvent) {
+    const code = event.code;
+    if (code === 'Tab') {
+      if (this.isOpened) this._closeAndClear();
+    } else if (code === 'Escape') {
       this._closeAndClear();
-    }
-    // click down arrow
-    else if (code === 40) {
-      this.initArrowsNavigaton();
+    } else if (code === 'ArrowDown' || code === 'ArrowUp') {
+      event.preventDefault();
+      this.isKeyboardFocused = true;
+      const up = code === 'ArrowUp';
+      if (!this.isOpened) {
+        this.toggleOptions(true);
+        setTimeout(() => {
+          const current = this.treeList?.el?.nativeElement?.querySelector(
+            '.p-tree-root-children'
+          ) as HTMLElement | null;
+          if (current) this.treeContainerElement = current;
+          this.initArrowsNavigaton(up);
+        });
+      } else {
+        const current = this.treeList?.el?.nativeElement?.querySelector(
+          '.p-tree-root-children'
+        ) as HTMLElement | null;
+        if (current) this.treeContainerElement = current;
+        this.optionFocused = false;
+        this.navigateIntoOptions(up);
+      }
     }
   }
 
-  onInputKeyDown(event: any) {
-    const code = event.keyCode;
-    // backspace
-    if (code === 8) {
+  protected override _onOptionsClose(): void {
+    this._closeAndClear();
+    this.focusInput();
+  }
+
+  onInputKeyDown(event: KeyboardEvent) {
+    const code = event.code;
+    if (code === 'Backspace') {
       this._removeLastValue();
       event.stopPropagation();
-    }
-    // enter
-    else if (code === 13) {
+    } else if (code === 'Enter' || code === 'NumpadEnter') {
+      if (!this.isOpened) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.toggleOptions(true);
+        return;
+      }
       if (!this.optionFocused) {
-        this._confirmInput(event?.target?.value || '');
+        this._confirmInput((event.target as HTMLInputElement)?.value || '');
         event.stopPropagation();
       }
     }
@@ -195,6 +241,7 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
       this.toggleOptions(true);
     }
     this.backspaceClickedOnce = false;
+    this.optionFocused = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
 
     if (!searchVal) this.treeList.resetFilter();
@@ -233,6 +280,7 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
 
   private _clearInput() {
     this.treeList.resetFilter();
+    this.treeList?.cd?.markForCheck();
     this.inputText = '';
     this.activeSingle = false;
     this.updateOptions();

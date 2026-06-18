@@ -69,7 +69,6 @@ export class CpsTreeSelectComponent extends CpsBaseTreeDropdownComponent {
 
   onKeyDown(event: KeyboardEvent) {
     const code = event.code;
-    // Tab — close dropdown if open, let browser move focus naturally
     if (code === 'Tab') {
       if (this.isOpened) this.toggleOptions(false);
       return;
@@ -77,79 +76,18 @@ export class CpsTreeSelectComponent extends CpsBaseTreeDropdownComponent {
 
     event.preventDefault();
 
-    // Escape — close and return focus to trigger
     if (code === 'Escape') {
       this.toggleOptions(false);
       this.componentContainer?.nativeElement?.focus();
-    }
-    // Enter or Space — toggle dropdown
-    else if (code === 'Enter' || code === 'NumpadEnter' || code === 'Space') {
+    } else if (code === 'Enter' || code === 'NumpadEnter' || code === 'Space') {
       this.toggleOptions(!this.isOpened);
-    }
-    // Arrow Up or Down — open if closed and focus the selected node;
-    // if already open, move one step away from the selected node
-    else if (code === 'ArrowUp' || code === 'ArrowDown') {
+    } else if (code === 'ArrowUp' || code === 'ArrowDown') {
       const up = code === 'ArrowUp';
       if (!this.isOpened) {
         this.toggleOptions(true);
         setTimeout(() => this.initArrowsNavigaton(up));
       } else {
         this.navigateIntoOptions(up);
-      }
-    }
-  }
-
-  onOptionsKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case 'Escape':
-        event.preventDefault();
-        this.toggleOptions(false);
-        this.componentContainer?.nativeElement?.focus();
-        break;
-
-      case 'Tab':
-        event.preventDefault();
-        this.toggleOptions(false);
-        this.componentContainer?.nativeElement?.focus();
-        break;
-
-      case 'ArrowUp':
-      case 'ArrowDown': {
-        this.isArrowNavigating = true;
-
-        // PrimeNG's handler already ran (bubble phase) and moved focus synchronously.
-        // If focus is still on the original element, PrimeNG hit a boundary — wrap around.
-        const target = event.target as HTMLElement;
-        if (this._document.activeElement === target) {
-          event.preventDefault();
-          if (event.code === 'ArrowUp') {
-            this._focusTreeNode(this._getLastVisibleTreeNodeLi());
-          } else {
-            this._focusTreeNode(
-              this.treeContainerElement?.querySelector<HTMLElement>(
-                '[role="treeitem"]'
-              ) ?? null
-            );
-          }
-        }
-        break;
-      }
-
-      case 'Enter':
-      case 'Space':
-      case 'NumpadEnter': {
-        // Mouse click on a fully-expandable directory row both selects and
-        // toggles expand (PrimeNG's onNodeClick + our container click listener).
-        // PrimeNG's own Enter/Space handling only replicates the selection half,
-        // so trigger the expand toggle here to match.
-        const target = event.target as HTMLElement;
-        if (target?.classList?.contains('cps-tree-node-fully-expandable')) {
-          const contentElem = target.querySelector<HTMLElement>(
-            '.p-tree-node-content'
-          );
-          if (contentElem) this.onClickFullyExpandable(contentElem);
-        }
-        break;
       }
     }
   }

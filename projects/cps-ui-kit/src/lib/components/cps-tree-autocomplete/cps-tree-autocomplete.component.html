@@ -1,10 +1,11 @@
 <div
   [style.width]="cvtWidth"
   class="cps-treeautocomplete"
-  tabindex="1"
+  tabindex="-1"
   [class.disabled]="disabled"
   [class.error]="error"
   [class.active]="isActive()"
+  [class.opened]="isOpened"
   #componentContainer>
   @if (label) {
     <div class="cps-treeautocomplete-label">
@@ -26,6 +27,7 @@
     (keydown)="onContainerKeyDown($event)"
     class="cps-treeautocomplete-container"
     [class.focused]="isActive()"
+    [class.keyboard-focused]="isKeyboardFocused"
     [class.persistent-clear]="persistentClear"
     [class.borderless]="appearance === 'borderless'"
     [class.underlined]="appearance === 'underlined'">
@@ -63,27 +65,35 @@
               </span>
             }
             @if (multiple && !chips) {
-              <div class="text-group">
+              <div class="text-group" role="list" aria-label="Selected options">
                 @for (val of treeSelection; track val; let last = $last) {
                   <div
+                    role="listitem"
                     class="text-group-item"
                     [class.about-to-remove]="last && backspaceClickedOnce">
                     {{ val.label }}{{ !last ? ',' : '' }}
                   </div>
                 }
-                <ng-container
-                  *ngTemplateOutlet="
-                    treeAutocompleteInputTemplate;
-                    context: {
-                      inputClass: 'multi-item-input'
-                    }
-                  "></ng-container>
+                <span role="listitem">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      treeAutocompleteInputTemplate;
+                      context: {
+                        inputClass: 'multi-item-input'
+                      }
+                    "></ng-container>
+                </span>
               </div>
             }
             @if (multiple && chips) {
-              <div class="chips-group">
+              <div
+                class="chips-group"
+                role="list"
+                aria-label="Selected options">
                 @for (val of treeSelection; track val; let last = $last) {
                   <cps-chip
+                    role="listitem"
+                    closeButtonAriaLabel="Remove"
                     [disabled]="disabled"
                     [closable]="closableChips"
                     (closed)="remove(val)"
@@ -91,13 +101,15 @@
                     [label]="val.label">
                   </cps-chip>
                 }
-                <ng-container
-                  *ngTemplateOutlet="
-                    treeAutocompleteInputTemplate;
-                    context: {
-                      inputClass: 'multi-chip-input'
-                    }
-                  "></ng-container>
+                <span role="listitem">
+                  <ng-container
+                    *ngTemplateOutlet="
+                      treeAutocompleteInputTemplate;
+                      context: {
+                        inputClass: 'multi-chip-input'
+                      }
+                    "></ng-container>
+                </span>
               </div>
             }
           </div>
@@ -106,6 +118,17 @@
             #treeAutocompleteInput
             class="cps-treeautocomplete-box-input"
             spellcheck="false"
+            role="combobox"
+            aria-haspopup="tree"
+            aria-autocomplete="list"
+            [attr.aria-expanded]="isOpened"
+            [attr.aria-controls]="optionsTreeId"
+            [attr.aria-required]="isRequired || null"
+            [attr.aria-invalid]="error ? 'true' : null"
+            [attr.aria-label]="ariaLabel || label || null"
+            [attr.aria-describedby]="describedBy"
+            [attr.aria-disabled]="disabled || null"
+            [attr.aria-busy]="loading ? true : null"
             [placeholder]="
               (!treeSelection && !multiple) ||
               (treeSelection?.length < 1 && multiple)
@@ -121,6 +144,13 @@
         <span class="cps-treeautocomplete-box-icons">
           @if (clearable && !disabled) {
             <span
+              role="button"
+              aria-label="Clear selection"
+              [tabindex]="disabled ? -1 : 0"
+              (click)="clear($event)"
+              (mousedown)="$event.preventDefault()"
+              (keydown.enter)="clear($event)"
+              (keydown.space)="clear($event)"
               [style.visibility]="
                 persistentClear ||
                 (!persistentClear &&
@@ -130,16 +160,20 @@
                   : 'hidden'
               "
               class="cps-treeautocomplete-box-clear-icon">
-              <cps-icon
-                icon="delete"
-                size="small"
-                (click)="clear($event)"></cps-icon>
+              <cps-icon icon="delete" size="small"></cps-icon>
             </span>
           }
           @if (showChevron) {
             <span
               class="cps-treeautocomplete-box-chevron"
-              (mousedown)="onChevronClick($event)">
+              role="button"
+              [attr.aria-label]="
+                isOpened ? 'Collapse options' : 'Expand options'
+              "
+              [tabindex]="disabled ? -1 : 0"
+              (mousedown)="onChevronClick($event)"
+              (keydown.enter)="onChevronClick($event)"
+              (keydown.space)="onChevronClick($event)">
               <cps-icon
                 icon="chevron-down"
                 size="small"
@@ -153,12 +187,19 @@
     <cps-menu
       #optionsMenu
       [withArrow]="false"
+      [focusOnShow]="false"
       (beforeMenuHidden)="onBeforeOptionsHidden($event)"
       hideTransitionOptions="0s linear"
       containerClass="cps-treeautocomplete-options-menu">
-      <div class="cps-treeautocomplete-options" [style.width.px]="boxWidthPx">
+      <div
+        [id]="optionsTreeId"
+        class="cps-treeautocomplete-options"
+        [class.arrow-navigating]="isArrowNavigating"
+        [style.width.px]="boxWidthPx"
+        (keydown)="onOptionsKeyDown($event)">
         <p-tree
           #treeList
+          [trackBy]="treeTrackBy"
           [emptyMessage]="emptyMessage"
           [virtualScroll]="virtualScroll"
           [virtualScrollItemSize]="virtualScrollItemSizePx()"
@@ -211,12 +252,16 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-treeautocomplete-hint">
+    <div [id]="hintId" class="cps-treeautocomplete-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-treeautocomplete-error">
+    <div
+      [id]="errorId"
+      class="cps-treeautocomplete-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }
@@ -230,6 +275,17 @@
     #treeAutocompleteInput
     class="cps-treeautocomplete-box-input"
     spellcheck="false"
+    role="combobox"
+    aria-haspopup="tree"
+    aria-autocomplete="list"
+    [attr.aria-expanded]="isOpened"
+    [attr.aria-controls]="optionsTreeId"
+    [attr.aria-required]="isRequired || null"
+    [attr.aria-invalid]="error ? 'true' : null"
+    [attr.aria-label]="ariaLabel || label || null"
+    [attr.aria-describedby]="describedBy"
+    [attr.aria-disabled]="disabled || null"
+    [attr.aria-busy]="loading ? true : null"
     [class]="inputClass"
     [style]="inputStyle"
     [placeholder]="

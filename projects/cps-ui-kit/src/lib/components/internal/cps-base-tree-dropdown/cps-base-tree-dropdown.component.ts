@@ -633,6 +633,70 @@ export class CpsBaseTreeDropdownComponent
     if (next) this._focusTreeNode(next);
   }
 
+  protected _onOptionsClose(): void {
+    this.toggleOptions(false);
+    this.componentContainer?.nativeElement?.focus();
+  }
+
+  onOptionsKeyDown(event: KeyboardEvent): void {
+    switch (event.code) {
+      case 'Escape':
+      case 'Tab':
+        event.preventDefault();
+        this._onOptionsClose();
+        break;
+
+      case 'ArrowUp':
+      case 'ArrowDown': {
+        this.isArrowNavigating = true;
+        const target = event.target as HTMLElement;
+        if (this._document.activeElement === target) {
+          event.preventDefault();
+          if (event.code === 'ArrowUp') {
+            this._focusTreeNode(this._getLastVisibleTreeNodeLi());
+          } else {
+            this._focusTreeNode(
+              this.treeContainerElement?.querySelector<HTMLElement>(
+                '[role="treeitem"]'
+              ) ?? null
+            );
+          }
+        }
+        break;
+      }
+
+      case 'Enter':
+      case 'Space':
+      case 'NumpadEnter': {
+        const target = event.target as HTMLElement;
+        const ariaExpanded = target.getAttribute('aria-expanded');
+        if (ariaExpanded === null) break;
+
+        const isCollapsed = ariaExpanded !== 'true';
+        const isFullyExpandable = target.classList.contains(
+          'cps-tree-node-fully-expandable'
+        );
+
+        if (isCollapsed || isFullyExpandable) {
+          const toggleBtn = target.querySelector<HTMLElement>(
+            '.p-tree-node-toggle-button'
+          );
+          if (toggleBtn) {
+            toggleBtn.click();
+            if (isCollapsed) {
+              setTimeout(() => {
+                const firstChild =
+                  target.querySelector<HTMLElement>('[role="treeitem"]');
+                if (firstChild) this._focusTreeNode(firstChild);
+              });
+            }
+          }
+        }
+        break;
+      }
+    }
+  }
+
   private _findLastVisibleDescendantLi(pTreeNode: Element): HTMLElement | null {
     const li = Array.from(pTreeNode.children).find(
       (el) => el.getAttribute('data-pc-section') === 'node'
