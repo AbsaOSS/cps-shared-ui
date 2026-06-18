@@ -239,9 +239,8 @@ $hover-transition-duration: 0.2s;
 
         .cps-treeautocomplete-box-clear-icon {
           display: flex;
-          padding: 0.25rem;
           color: $color-error;
-          margin-left: 0.25rem;
+          margin-left: 0.5rem;
           cursor: pointer;
           &:focus {
             outline: none;
@@ -262,8 +261,7 @@ $hover-transition-duration: 0.2s;
         }
         .cps-treeautocomplete-box-chevron {
           display: flex;
-          padding: 0.25rem;
-          margin-left: 0.25rem;
+          margin-left: 0.5rem;
           transition-duration: $hover-transition-duration;
           cursor: pointer;
           cps-icon {
