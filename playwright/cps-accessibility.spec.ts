@@ -170,7 +170,7 @@ const components: ComponentEntry[] = [
       }
     }
   },
-  // { route: '/paginator', name: 'Paginator', selector: 'cps-paginator' },
+  { route: '/paginator', name: 'Paginator', selector: 'cps-paginator' },
   {
     route: '/progress-circular',
     name: 'Progress circular',
