@@ -134,6 +134,12 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
     this.optionFocused = false;
   }
 
+  onOuterDivKeyDown(event: KeyboardEvent) {
+    if (event.target !== this.componentContainer?.nativeElement) return;
+    this.focusInput();
+    this.onContainerKeyDown(event);
+  }
+
   onContainerKeyDown(event: KeyboardEvent) {
     const code = event.code;
     if (code === 'Tab') {

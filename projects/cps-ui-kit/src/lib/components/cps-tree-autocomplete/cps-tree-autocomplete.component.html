@@ -2,6 +2,7 @@
   [style.width]="cvtWidth"
   class="cps-treeautocomplete"
   tabindex="-1"
+  (keydown)="onOuterDivKeyDown($event)"
   [class.disabled]="disabled"
   [class.error]="error"
   [class.active]="isActive()"
