@@ -75,7 +75,7 @@
                     {{ val.label }}{{ !last ? ',' : '' }}
                   </div>
                 }
-                <span role="listitem">
+                <span role="listitem" class="cps-treeautocomplete-input-listitem">
                   <ng-container
                     *ngTemplateOutlet="
                       treeAutocompleteInputTemplate;
@@ -102,7 +102,7 @@
                     [label]="val.label">
                   </cps-chip>
                 }
-                <span role="listitem">
+                <span role="listitem" class="cps-treeautocomplete-input-listitem">
                   <ng-container
                     *ngTemplateOutlet="
                       treeAutocompleteInputTemplate;
@@ -115,32 +115,9 @@
             }
           </div>
         } @else {
-          <input
-            #treeAutocompleteInput
-            class="cps-treeautocomplete-box-input"
-            spellcheck="false"
-            role="combobox"
-            aria-haspopup="tree"
-            aria-autocomplete="list"
-            [attr.aria-expanded]="isOpened"
-            [attr.aria-controls]="optionsTreeId"
-            [attr.aria-required]="isRequired || null"
-            [attr.aria-invalid]="error ? 'true' : null"
-            [attr.aria-label]="ariaLabel || label || null"
-            [attr.aria-describedby]="describedBy"
-            [attr.aria-disabled]="disabled || null"
-            [attr.aria-busy]="loading ? true : null"
-            [placeholder]="
-              (!treeSelection && !multiple) ||
-              (treeSelection?.length < 1 && multiple)
-                ? placeholder
-                : ''
-            "
-            (input)="filterOptions($event)"
-            (keydown)="onInputKeyDown($event)"
-            [(ngModel)]="inputText"
-            (focus)="onFocus()"
-            (blur)="onBlur()" />
+          <ng-container
+            *ngTemplateOutlet="treeAutocompleteInputTemplate">
+          </ng-container>
         }
         <span class="cps-treeautocomplete-box-icons">
           @if (clearable && !disabled) {

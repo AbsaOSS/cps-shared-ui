@@ -202,6 +202,13 @@ $hover-transition-duration: 0.2s;
           min-height: 1.75rem;
         }
 
+        .cps-treeautocomplete-input-listitem {
+          flex-grow: 1;
+          min-width: 1.875rem;
+          display: flex;
+          align-items: center;
+        }
+
         .chips-group {
           display: inline-flex;
           flex-wrap: wrap;
