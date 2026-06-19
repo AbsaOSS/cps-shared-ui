@@ -15,13 +15,13 @@ $operator-bg-color: var(--cps-color-bg-light);
       text-decoration: none;
       overflow: hidden;
       position: relative;
-      padding-left: 8px;
-      padding-right: 4px;
+      padding-left: 0.5rem;
+      padding-right: 0.25rem;
     }
 
     .cps-table-col-filter-menu-button:not(
-        .cps-table-col-filter-menu-button-active
-      ) {
+      .cps-table-col-filter-menu-button-active
+    ) {
       &:hover {
         color: $dark-text-color;
       }
@@ -34,14 +34,14 @@ $operator-bg-color: var(--cps-color-bg-light);
 }
 
 .cps-table-col-filter-menu-content {
-  padding-bottom: 12px;
-  min-width: 200px;
-  max-height: 500px;
+  padding-bottom: 0.75rem;
+  min-width: 12.5rem;
+  max-height: 31.25rem;
   overflow: auto;
   & &-header {
-    min-height: 32px;
-    padding: 8px;
-    border-bottom: 1px solid $line-color;
+    min-height: 2rem;
+    padding: 0.5rem;
+    border-bottom: 0.0625rem solid $line-color;
     background: $operator-bg-color;
     display: flex;
     justify-content: space-between;
@@ -49,11 +49,11 @@ $operator-bg-color: var(--cps-color-bg-light);
     &-title {
       font-family: 'Source Sans Pro', sans-serif;
       color: $darkest-text-color;
-      max-width: 390px;
+      max-width: 24.375rem;
       cursor: default;
     }
     cps-icon {
-      margin-left: 8px;
+      margin-left: 0.5rem;
       cursor: pointer;
       &:hover {
         color: var(--cps-color-calm);
@@ -61,16 +61,16 @@ $operator-bg-color: var(--cps-color-bg-light);
     }
   }
   & &-operator {
-    padding: 12px;
-    border-bottom: 1px solid $line-color;
+    padding: 0.75rem;
+    border-bottom: 0.0625rem solid $line-color;
     background: $operator-bg-color;
   }
   & &-constraints {
     .cps-table-col-filter-menu-content-constraint {
-      border-bottom: 1px solid $line-color;
-      padding: 12px;
+      border-bottom: 0.0625rem solid $line-color;
+      padding: 0.75rem;
       .cps-table-col-filter-match-mode-select {
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
       }
     }
     .cps-table-col-filter-menu-content-constraint:last-child {
@@ -78,17 +78,17 @@ $operator-bg-color: var(--cps-color-bg-light);
     }
 
     .cps-table-col-filter-remove-rule-btn {
-      padding-top: 8px;
+      padding-top: 0.5rem;
     }
   }
   .cps-table-col-filter-add-rule-btn {
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem;
   }
   .cps-table-col-filter-buttonbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
-    padding-top: 12px;
+    padding: 0 0.75rem;
+    padding-top: 0.75rem;
   }
 }

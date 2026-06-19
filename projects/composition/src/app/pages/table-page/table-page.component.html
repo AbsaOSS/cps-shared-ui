@@ -46,7 +46,7 @@
           [sortable]="true"
           [virtualScroll]="true"
           [showColumnsToggleBtn]="true"
-          scrollHeight="500px"
+          scrollHeight="31.25rem"
           toolbarTitle="Sortable table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled"
           [filterableByColumns]="true"
           [resizableColumns]="true">
@@ -158,7 +158,7 @@
         [selectable]="true"
         toolbarSize="small"
         (rowsToRemove)="onRowsToRemove($event)"
-        scrollHeight="calc(100vh - 310px)"
+        scrollHeight="calc(100vh - 19.375rem)"
         toolbarTitle="Table with nested header and small toolbar">
         <ng-template #nestedHeader>
           <tr>
@@ -252,7 +252,7 @@
       </cps-table>
     </cps-tab>
     <cps-tab label="Table 8">
-      <cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="400px">
+      <cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="25rem">
         <ng-template #header>
           <th cpsTColSortable="a">A</th>
           <th cpsTColSortable="b">B</th>
@@ -266,7 +266,7 @@
       <cps-table
         [data]="data"
         [loading]="true"
-        scrollHeight="400px"
+        scrollHeight="25rem"
         [columns]="cols"
         toolbarTitle="Table in data loading state">
       </cps-table>
@@ -274,7 +274,7 @@
     <cps-tab label="Table 10">
       <cps-table
         [data]="dataWithHTML"
-        scrollHeight="400px"
+        scrollHeight="25rem"
         [columns]="colsHTML"
         [renderDataAsHTML]="renderAsHTML"
         [showActionBtn]="true"
