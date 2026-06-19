@@ -672,6 +672,7 @@ export class CpsBaseTreeDropdownComponent
       case 'Enter':
       case 'Space':
       case 'NumpadEnter': {
+        event.preventDefault();
         const target = event.target as HTMLElement;
         const ariaExpanded = target.getAttribute('aria-expanded');
         if (ariaExpanded === null) break;

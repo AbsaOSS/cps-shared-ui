@@ -106,7 +106,7 @@
             (click)="clear($event)"
             (mousedown)="$event.preventDefault()"
             (keydown.enter)="clear($event)"
-            (keydown.space)="clear($event)"
+            (keydown.space)="$event.preventDefault(); clear($event)"
             [style.visibility]="
               persistentClear ||
               (!persistentClear &&
@@ -127,7 +127,7 @@
             [tabindex]="disabled ? -1 : 0"
             (mousedown)="$event.preventDefault()"
             (keydown.enter)="onBoxClick($event)"
-            (keydown.space)="onBoxClick($event)">
+            (keydown.space)="$event.preventDefault(); onBoxClick($event)">
             <cps-icon
               icon="chevron-down"
               size="small"
