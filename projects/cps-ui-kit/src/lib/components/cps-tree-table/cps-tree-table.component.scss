@@ -616,6 +616,17 @@ $tbar-normal-height: 72px;
       width: 1px;
     }
 
+    .p-column-resizer {
+      &:focus {
+        outline: none;
+      }
+
+      &.cps-col-resizer-focused {
+        background: $color-calm !important;
+        opacity: 1 !important;
+      }
+    }
+
     .p-treetable .p-treetable-mask.p-overlay-mask {
       position: absolute;
       display: flex;

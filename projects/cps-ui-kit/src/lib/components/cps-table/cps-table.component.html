@@ -2,6 +2,7 @@
   #primengTable
   #tUnsortDirective="tWithUnsort"
   tWithUnsort
+  [pt]="tablePassthrough"
   [ngClass]="{ 'cps-table-loading': loading }"
   [styleClass]="styleClass"
   [tableStyle]="tableStyle"
@@ -120,80 +121,59 @@
             </div>
           }
           @if (showColumnsToggleBtn && columns.length > 0) {
-            <div
-              class="cps-table-tbar-coltoggle-btn"
-              [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">
-              <cps-icon
-                icon="columns"
-                size="normal"
-                [color]="
-                  columnsToggleBtnDisabled
-                    ? 'text-lightest'
-                    : 'prepared-lighten1'
-                "
-                (click)="onColumnsToggle($event)"></cps-icon>
-              <cps-menu #colToggleMenu [withArrow]="false">
-                <div class="cps-table-coltoggle-menu">
-                  <div
-                    class="cps-table-coltoggle-menu-item select-all-option"
-                    [class.allselected]="
-                      selectedColumns.length === columns.length
-                    "
-                    (click)="toggleAllColumns()">
-                    <span class="cps-table-coltoggle-menu-item-left">
-                      <span class="cps-table-coltoggle-menu-item-check"> </span>
-                      <span class="cps-table-coltoggle-menu-item-label"
-                        >Show all columns</span
-                      >
-                    </span>
-                  </div>
-                  @for (col of columns; track col) {
-                    <div
-                      class="cps-table-coltoggle-menu-item"
-                      (click)="onSelectColumn(col)"
-                      [class.selected]="isColumnSelected(col)">
-                      <span class="cps-table-coltoggle-menu-item-left">
-                        <span
-                          class="cps-table-coltoggle-menu-item-check"></span>
-                        <span class="cps-table-coltoggle-menu-item-label">{{
-                          col[colHeaderName]
-                        }}</span>
-                      </span>
-                    </div>
-                  }
-                </div>
-              </cps-menu>
-            </div>
+            <table-column-visibility-toggle
+              [columns]="columns"
+              [selectedColumns]="selectedColumns"
+              [disabled]="columnsToggleBtnDisabled"
+              [colHeaderName]="colHeaderName"
+              (selectedColumnsChange)="onColumnsSelectedChange($event)">
+            </table-column-visibility-toggle>
           }
           @if (showExportBtn) {
-            <div
-              class="cps-table-tbar-export-btn"
-              [ngClass]="{ 'btn-disabled': exportBtnDisabled }">
-              <cps-icon
-                icon="export"
-                size="1.25rem"
-                [color]="exportBtnDisabled ? 'text-light' : 'prepared-lighten1'"
-                (click)="onExportData($event)"></cps-icon>
+            <div class="cps-table-tbar-export-btn">
+              <button
+                type="button"
+                class="cps-table-tbar-icon-btn"
+                aria-label="Export data"
+                aria-haspopup="menu"
+                [attr.aria-expanded]="isExportMenuOpen"
+                [disabled]="exportBtnDisabled"
+                (click)="onExportData($event)">
+                <cps-icon
+                  icon="export"
+                  size="1.25rem"
+                  [color]="
+                    exportBtnDisabled ? 'text-light' : 'prepared-lighten1'
+                  "
+                  aria-hidden="true"></cps-icon>
+              </button>
               <cps-menu
                 #exportMenu
                 [items]="exportMenuItems"
                 [compressed]="true"
-                [withArrow]="false">
+                [withArrow]="false"
+                (menuShown)="isExportMenuOpen = true"
+                (menuHidden)="isExportMenuOpen = false">
               </cps-menu>
             </div>
           }
           @if (showDataReloadBtn) {
-            <div
-              class="cps-table-tbar-reload-btn"
-              [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
-              <cps-icon
-                icon="refresh"
-                size="1.125rem"
-                [color]="
-                  dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'
-                "
+            <div class="cps-table-tbar-reload-btn">
+              <button
+                type="button"
+                class="cps-table-tbar-icon-btn"
+                aria-label="Reload data"
+                [disabled]="dataReloadBtnDisabled"
                 (click)="onReloadData()">
-              </cps-icon>
+                <cps-icon
+                  icon="refresh"
+                  size="1.125rem"
+                  [color]="
+                    dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'
+                  "
+                  aria-hidden="true">
+                </cps-icon>
+              </button>
             </div>
           }
         </div>
@@ -218,18 +198,24 @@
       <tr>
         @if (rowExpansionTemplate) {
           <th
+            scope="col"
+            aria-label="Row expansion"
             style="width: 3rem"
             cpsTColResizable
             [cpsTColResizableDisabled]="!resizableColumns"></th>
         }
         @if (reorderableRows) {
           <th
+            scope="col"
+            aria-label="Row order"
             style="width: 3rem"
             cpsTColResizable
             [cpsTColResizableDisabled]="!resizableColumns"></th>
         }
         @if (selectable) {
           <th
+            scope="col"
+            aria-label="Select row"
             style="width: 4rem"
             cpsTColResizable
             [cpsTColResizableDisabled]="!resizableColumns">
@@ -250,6 +236,7 @@
             @if (filterableByColumns) {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   [cpsTColSortable]="col[colFieldName]"
                   [cpsTColFilter]="col[colFieldName]"
                   [filterType]="
@@ -266,6 +253,7 @@
             } @else {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   [cpsTColSortable]="col[colFieldName]"
                   cpsTColResizable
                   [cpsTColResizableDisabled]="!resizableColumns">
@@ -278,6 +266,7 @@
             @if (filterableByColumns) {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   [cpsTColFilter]="col[colFieldName]"
                   [filterType]="
                     col[colFilterTypeName] ??
@@ -293,6 +282,7 @@
             } @else {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   cpsTColResizable
                   [cpsTColResizableDisabled]="!resizableColumns">
                   {{ col[colHeaderName] }}
@@ -303,6 +293,8 @@
         }
         @if (showRowMenu && (showRowRemoveButton || showRowEditButton)) {
           <th
+            scope="col"
+            aria-label="Row actions"
             style="width: 2rem"
             class="cps-table-row-menu-cell"
             cpsTColResizable
@@ -322,25 +314,40 @@
     <tr
       [pReorderableRow]="rowIndex"
       [ngClass]="{
-        'cps-table-row-selected': selectable && primengTable.isSelected(item)
+        'cps-table-row-selected': selectable && primengTable.isSelected(item),
+        'cps-table-row-keyboard-reordering': reorderableRows && _keyboardDragRowIndex === rowIndex
       }">
       @if (rowExpansionTemplate) {
         <td class="cps-table-row-chevron-cell">
-          <div
+          <button
+            type="button"
             class="cps-table-row-chevron"
-            [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }">
+            [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }"
+            [attr.aria-expanded]="expanded"
+            [attr.aria-label]="expanded ? 'Collapse row' : 'Expand row'"
+            [pRowToggler]="item">
             <cps-icon
               icon="chevron-down"
               size="small"
               color="text-dark"
-              [pRowToggler]="item">
+              aria-hidden="true">
             </cps-icon>
-          </div>
+          </button>
         </td>
       }
       @if (reorderableRows) {
         <td class="cps-table-row-drag-handle-cell">
-          <span class="cps-table-row-drag-handle" pReorderableRowHandle
+          <span
+            class="cps-table-row-drag-handle"
+            pReorderableRowHandle
+            role="button"
+            tabindex="0"
+            [attr.data-row-index]="rowIndex"
+            [attr.aria-label]="_keyboardDragRowIndex === rowIndex
+              ? 'Moving row. Use arrow keys to reposition, Enter or Space to confirm, Escape to cancel'
+              : 'Drag or press Enter to reorder row'"
+            (keydown)="_onDragHandleKeydown($event, rowIndex)"
+            (blur)="_onDragHandleBlur()"
             >☰</span
           >
         </td>
@@ -367,7 +374,9 @@
         @if (columns.length > 0) {
           @if (renderDataAsHTML) {
             @for (col of columns; track col) {
-              <td [innerHTML]="rowData[col[colFieldName]]"></td>
+              <td
+                class="cps-table-html-cell"
+                [innerHTML]="rowData[col[colFieldName]]"></td>
             }
           } @else {
             @for (col of columns; track col) {
@@ -397,7 +406,7 @@
     </tr>
   </ng-template>
   @if (rowExpansionTemplate; as item) {
-    <ng-template pTemplate="rowexpansion" let-item>
+    <ng-template pTemplate="expandedrow" let-item>
       <tr class="cps-table-row-expanded-content">
         <td colspan="100">
           <ng-container
@@ -426,11 +435,12 @@
   </ng-template>
   <ng-template pTemplate="paginatorleft">
     <div class="cps-table-paginator-itms-per-page">
-      <span class="cps-table-paginator-items-per-page-title"
+      <span class="cps-table-paginator-items-per-page-title" aria-hidden="true"
         >Rows per page:
       </span>
       <cps-select
         ariaLabel="Set rows per page"
+        width="4rem"
         [options]="rowOptions"
         [hideDetails]="true"
         [(ngModel)]="rows"
@@ -441,3 +451,7 @@
     </div>
   </ng-template>
 </p-table>
+<div
+  class="cps-sr-only"
+  aria-live="polite"
+  aria-atomic="true">{{ _reorderAnnouncement }}</div>

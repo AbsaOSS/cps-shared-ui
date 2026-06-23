@@ -2,12 +2,14 @@ import {
   ComponentRef,
   Directive,
   ElementRef,
+  HostListener,
   Input,
   OnDestroy,
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { SortableColumn, Table } from 'primeng/table';
+import { Table } from 'primeng/table';
+import { Subscription } from 'rxjs';
 import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-sort-icon.component';
 
 /**
@@ -16,40 +18,61 @@ import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-s
  */
 @Directive({
   standalone: true,
-  selector: '[cpsTColSortable]'
+  selector: '[cpsTColSortable]',
+  host: {
+    class: 'p-sortable-column'
+  }
 })
-export class CpsTableColumnSortableDirective
-  extends SortableColumn
-  implements OnInit, OnDestroy
-{
+export class CpsTableColumnSortableDirective implements OnInit, OnDestroy {
   /**
    * Name of the column to be sorted.
    * @group Props
    */
-  @Input('cpsTColSortable') override field = '';
+  @Input('cpsTColSortable') field = '';
 
   sortIconRef: ComponentRef<CpsSortIconComponent>;
+  private _sortSub: Subscription | undefined;
 
   constructor(
     private elementRef: ElementRef,
     private viewContainerRef: ViewContainerRef,
-    public override dataTable: Table
+    private dataTable: Table
   ) {
-    super(dataTable);
     this.sortIconRef =
       this.viewContainerRef.createComponent(CpsSortIconComponent);
   }
 
-  override ngOnInit(): void {
-    super.ngOnInit();
+  ngOnInit(): void {
     this.sortIconRef.setInput('field', this.field);
     this.elementRef.nativeElement.appendChild(
       this.sortIconRef.location.nativeElement
     );
+    this._updateAriaSort();
+    this._sortSub = this.dataTable.tableService.sortSource$.subscribe(() => {
+      this._updateAriaSort();
+    });
   }
 
-  override ngOnDestroy(): void {
-    super.ngOnDestroy();
+  @HostListener('click')
+  onClick(): void {
+    this.dataTable.sort({ field: this.field });
+  }
+
+  private _updateAriaSort(): void {
+    let value: 'ascending' | 'descending' | 'none' = 'none';
+    if (this.dataTable.sortMode === 'single') {
+      if (this.dataTable.isSorted(this.field)) {
+        value = this.dataTable.sortOrder === 1 ? 'ascending' : 'descending';
+      }
+    } else {
+      const meta = this.dataTable.getSortMeta(this.field);
+      if (meta) value = meta.order === 1 ? 'ascending' : 'descending';
+    }
+    this.elementRef.nativeElement.setAttribute('aria-sort', value);
+  }
+
+  ngOnDestroy(): void {
+    this._sortSub?.unsubscribe();
     this.sortIconRef.destroy();
     this.viewContainerRef.clear();
   }

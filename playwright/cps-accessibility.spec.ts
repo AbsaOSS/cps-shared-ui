@@ -222,7 +222,29 @@ const components: ComponentEntry[] = [
     name: 'Tabs',
     selector: '.example-content cps-tab-group'
   },
-  { route: '/table', name: 'Table', selector: 'cps-table' }, // TODO test all tabs
+  {
+    route: '/table',
+    name: 'Table',
+    selector: 'cps-table',
+    states: [
+      'Table 1',
+      'Table 2',
+      'Table 3',
+      'Table 4',
+      'Table 5',
+      'Table 6',
+      'Table 7',
+      'Table 8',
+      'Table 9',
+      'Table 10'
+    ].map((tab) => ({
+      label: tab,
+      setup: async (page: Page) => {
+        await page.getByRole('tab', { name: tab, exact: true }).click();
+        await page.waitForSelector('cps-table');
+      }
+    }))
+  },
   { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {

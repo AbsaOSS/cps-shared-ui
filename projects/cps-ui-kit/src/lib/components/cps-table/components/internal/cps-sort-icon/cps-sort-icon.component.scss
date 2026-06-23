@@ -1,4 +1,37 @@
+@use '../../../../../../../styles/mixins' as *;
+
 :host {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: bottom;
+  cursor: pointer;
+
+  // 24×24px touch target (WCAG 2.5.8). height: 24px (px, not rem) ensures exactly 24px at any
+  // font-size. border-box means padding is included; arrows overflow the 8px content area but
+  // are visible and centered. Negative margins cancel layout impact at desktop.
+  height: 24px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.5rem;
+  margin-top: -0.1875rem;
+  margin-bottom: -0.25rem;
+  margin-right: -0.5rem;
+
+  // At narrow widths the th wraps sort/filter onto separate lines; negative margins would cause
+  // them to overlap. Reset to zero so they stack without overlapping.
+  @media (max-width: 600px) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+  }
+
   .cps-sortable-column-icon {
     display: inline-flex;
     margin-left: 0.5rem;
@@ -6,12 +39,10 @@
   .sort-desc {
     border: 0.25rem solid transparent;
     border-bottom-color: var(--cps-color-calm);
-    margin-bottom: 0.25rem;
   }
   .sort-asc {
     border: 0.25rem solid transparent;
     border-top-color: var(--cps-color-calm);
-    margin-top: 0.25rem;
   }
   .sort-unsorted {
     flex-direction: column;

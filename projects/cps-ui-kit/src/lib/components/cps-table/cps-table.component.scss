@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $color-prepared: var(--cps-color-prepared);
 $color-surprise: var(--cps-color-surprise);
@@ -21,14 +23,14 @@ $colitem-highlight-background: var(--cps-color-highlight-active);
 $colitem-highlight-selected-background: var(
   --cps-color-highlight-selected-dark
 );
-$tbar-small-height: 43px;
-$tbar-normal-height: 72px;
+$tbar-small-height: 2.6875rem;
+$tbar-normal-height: 4.5rem;
 
 :host {
   ::ng-deep {
     .p-component {
       font-family: 'Source Sans Pro', sans-serif;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: normal;
     }
 
@@ -40,14 +42,25 @@ $tbar-normal-height: 72px;
     .p-datatable {
       position: relative;
 
-      .p-column-resizer-helper {
+      .p-datatable-column-resize-indicator {
         background: $color-calm;
-        width: 1px;
+        width: 0.0625rem;
+      }
+
+      .p-datatable-column-resizer {
+        &:focus {
+          outline: none;
+        }
+
+        &.cps-col-resizer-focused {
+          background: $color-calm !important;
+          opacity: 1 !important;
+        }
       }
     }
 
     .p-datatable.p-datatable-gridlines .p-datatable-header {
-      border-width: 1px 1px 0 1px;
+      border-width: 0.0625rem 0.0625rem 0 0.0625rem;
     }
 
     .p-datatable .p-datatable-header {
@@ -55,14 +68,14 @@ $tbar-normal-height: 72px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 10px !important;
+      padding: 0 0.625rem !important;
       border: unset;
       background: unset;
-      border-top: 1px solid $table-borders-color;
-      border-right: 1px solid $table-borders-color;
-      border-left: 4px solid $color-surprise !important;
-      border-radius: 4px 4px 0 0;
-      font-size: 16px;
+      border-top: 0.0625rem solid $table-borders-color;
+      border-right: 0.0625rem solid $table-borders-color;
+      border-left: 0.25rem solid $color-surprise !important;
+      border-radius: 0.25rem 0.25rem 0 0;
+      font-size: 1rem;
       line-height: 150%;
       background-color: white;
       color: $toolbar-text-color;
@@ -71,11 +84,11 @@ $tbar-normal-height: 72px;
         display: flex;
         align-items: center;
         .cps-table-tbar-global-filter {
-          margin-left: 12px;
+          margin-left: 0.75rem;
         }
         .cps-table-tbar-icon {
           display: flex;
-          margin-right: 8px;
+          margin-right: 0.5rem;
         }
         .cps-table-tbar-title {
           cursor: default;
@@ -85,28 +98,45 @@ $tbar-normal-height: 72px;
         display: flex;
         align-items: center;
         .cps-table-tbar-btn-on-select {
-          margin-right: 4px;
+          margin-right: 0.25rem;
         }
         .cps-table-tbar-action-btn {
-          margin-right: 4px;
-          margin-left: 8px;
+          margin-right: 0.25rem;
+          margin-left: 0.5rem;
         }
         .cps-table-tbar-coltoggle-btn,
         .cps-table-tbar-export-btn,
         .cps-table-tbar-reload-btn {
           display: contents;
-          cps-icon {
-            margin-left: 12px;
-            margin-right: 4px;
-          }
-          &:not(.btn-disabled) {
-            cps-icon {
-              cursor: pointer;
+          .cps-table-tbar-icon-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            color: inherit;
+            font: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 0.75rem;
+            margin-right: 0.25rem;
+
+            &:focus {
+              outline: none;
             }
-            cps-icon:hover {
-              .cps-icon {
-                color: $color-prepared !important;
-              }
+
+            &:focus-visible {
+              @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+            }
+
+            &:hover .cps-icon,
+            &:focus-visible .cps-icon {
+              color: $color-prepared !important;
+            }
+
+            &:disabled {
+              cursor: default;
+              pointer-events: none;
             }
           }
         }
@@ -136,8 +166,41 @@ $tbar-normal-height: 72px;
       overflow: auto;
     }
 
+    .p-datatable-table-container:focus,
+    [data-pc-name='virtualscroller']:focus {
+      outline: none;
+    }
+
+    .p-datatable {
+      &:has([data-pc-name='virtualscroller']:focus-visible)::before,
+      &:has(.p-datatable-table-container:focus-visible)::before {
+        content: '';
+        position: absolute;
+        bottom: 0.0625rem;
+        left: 0.0625rem;
+        right: 0.0625rem;
+        height: calc(var(--cps-scroll-height) - 0.125rem);
+        border: 0.0625rem solid var(--cps-color-calm-highlighten);
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      &:has([data-pc-name='virtualscroller']:focus-visible)::after,
+      &:has(.p-datatable-table-container:focus-visible)::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: var(--cps-scroll-height);
+        border: 0.0625rem solid var(--cps-color-calm);
+        pointer-events: none;
+        z-index: 9998;
+      }
+    }
+
     .p-datatable-table {
-      border-spacing: 0px;
+      border-spacing: 0;
       width: 100%;
     }
 
@@ -181,8 +244,8 @@ $tbar-normal-height: 72px;
     .p-datatable .p-datatable-thead > tr > th {
       text-align: left;
       padding: 1rem 1rem;
-      border: 1px solid $table-borders-color;
-      border-width: 0 0 1px 1px;
+      border: 0.0625rem solid $table-borders-color;
+      border-width: 0 0 0.0625rem 0.0625rem;
       font-weight: normal;
       color: $header-text-color;
       background: white;
@@ -190,11 +253,11 @@ $tbar-normal-height: 72px;
     }
 
     .p-datatable .p-datatable-thead > tr > th:last-child {
-      border-width: 1px;
+      border-width: 0.0625rem;
     }
 
     .p-datatable .p-datatable-thead > tr > th {
-      border-width: 1px 0 1px 1px;
+      border-width: 0.0625rem 0 0.0625rem 0.0625rem;
     }
 
     .p-datatable .p-datatable-thead {
@@ -204,7 +267,11 @@ $tbar-normal-height: 72px;
     }
 
     .p-datatable
-      .p-datatable-sortable-column:not(.p-paginator-page-selected):hover
+      .p-sortable-column:not(.p-paginator-page-selected):hover
+      .cps-sortable-column-icon.sort-unsorted,
+    .p-datatable
+      .p-sortable-column
+      cps-sort-icon:focus-visible
       .cps-sortable-column-icon.sort-unsorted {
       .sort-unsorted-arrow-up {
         border-bottom-color: $sorticon-hover-color;
@@ -228,7 +295,7 @@ $tbar-normal-height: 72px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 0.75rem;
       vertical-align: top;
       color: $color-calm;
       margin-left: 0.25rem;
@@ -249,11 +316,15 @@ $tbar-normal-height: 72px;
       cursor: pointer;
       -webkit-user-select: none;
       user-select: none;
-    }
 
-    .p-datatable .p-sortable-column:focus {
-      box-shadow: none;
-      outline: 0 none;
+      &:focus {
+        outline: none;
+      }
+
+      &:focus-visible {
+        outline: 0.125rem solid var(--cps-color-calm);
+        outline-offset: -0.125rem;
+      }
     }
 
     .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
@@ -272,7 +343,7 @@ $tbar-normal-height: 72px;
 
     .p-datatable .p-datatable-tbody .cps-table-row-expanded-content {
       td {
-        border-left: 4px solid $color-surprise !important;
+        border-left: 0.25rem solid $color-surprise !important;
       }
     }
 
@@ -291,7 +362,7 @@ $tbar-normal-height: 72px;
       .p-datatable-tbody
       > tr
       > td:last-child {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
 
     .p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(
@@ -300,33 +371,33 @@ $tbar-normal-height: 72px;
       .p-datatable-tbody
       > tr
       > td {
-      border-width: 0 0 1px 1px;
+      border-width: 0 0 0.0625rem 0.0625rem;
     }
 
     .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td:last-child {
-      border-width: 1px 1px 0 1px;
+      border-width: 0.0625rem 0.0625rem 0 0.0625rem;
     }
 
     .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
-      border-width: 1px 0 0 1px;
+      border-width: 0.0625rem 0 0 0.0625rem;
     }
 
     .p-datatable .p-datatable-tbody > tr > td {
       text-align: left;
-      border: 1px solid $table-borders-color;
-      border-width: 0 0 1px 0;
+      border: 0.0625rem solid $table-borders-color;
+      border-width: 0 0 0.0625rem 0;
       padding: 1rem 1rem;
     }
 
     .p-datatable .p-datatable-tbody > tr > td:first-child {
-      border-width: 0 0 1px 1px;
+      border-width: 0 0 0.0625rem 0.0625rem;
     }
     .p-datatable .p-datatable-tbody > tr > td:last-child {
-      border-width: 0 1px 1px 0;
+      border-width: 0 0.0625rem 0.0625rem 0;
     }
 
     .p-datatable .p-datatable-tbody > tr > td:only-child {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
 
     .p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
@@ -353,19 +424,19 @@ $tbar-normal-height: 72px;
       user-select: none;
       vertical-align: bottom;
       position: relative;
-      width: 18px;
-      height: 18px;
+      width: 1.125rem;
+      height: 1.125rem;
     }
 
     .p-hidden-accessible {
       border: 0;
       clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
+      height: 0.0625rem;
+      margin: -0.0625rem;
       overflow: hidden;
       padding: 0;
       position: absolute;
-      width: 1px;
+      width: 0.0625rem;
     }
 
     .p-hidden-accessible input,
@@ -375,11 +446,11 @@ $tbar-normal-height: 72px;
 
     .p-checkbox .p-checkbox-box {
       background: #ffffff;
-      width: 18px;
-      height: 18px;
+      width: 1.125rem;
+      height: 1.125rem;
       color: $body-text-color;
-      border: 2px solid $checkbox-border-color;
-      border-radius: 2px;
+      border: 0.125rem solid $checkbox-border-color;
+      border-radius: 0.125rem;
       transition:
         background-color 0.2s,
         color 0.2s,
@@ -397,7 +468,8 @@ $tbar-normal-height: 72px;
       border-color: $color-calm;
       background: $color-calm;
     }
-    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
+      .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
@@ -407,20 +479,28 @@ $tbar-normal-height: 72px;
     }
 
     .p-checkbox .p-checkbox-box .p-icon {
-      width: 14px;
-      height: 14px;
+      width: 0.875rem;
+      height: 0.875rem;
     }
 
     .p-checkbox .p-checkbox-box .p-checkbox-icon {
       transition-duration: 0.2s;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 0.875rem;
+    }
+
+    .p-checkbox-input:focus-visible {
+      outline: none;
+    }
+
+    .p-checkbox:has(.p-checkbox-input:focus-visible) {
+      @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
     }
 
     .p-datatable-reorderable-row-handle,
     [pReorderableColumn] {
       cursor: move;
-      font-size: 20px;
+      font-size: 1.25rem;
       line-height: 1;
       &:hover {
         color: $color-calm;
@@ -428,14 +508,14 @@ $tbar-normal-height: 72px;
     }
 
     .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-top > td {
-      box-shadow: inset 0 2px 0 0 $color-calm;
+      box-shadow: inset 0 0.125rem 0 0 $color-calm;
     }
     .p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-bottom > td {
-      box-shadow: inset 0 -2px 0 0 $color-calm;
+      box-shadow: inset 0 -0.125rem 0 0 $color-calm;
     }
 
     .p-datatable .p-paginator {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
       border-radius: 0;
     }
 
@@ -447,7 +527,7 @@ $tbar-normal-height: 72px;
       flex-wrap: wrap;
       color: $paginator-text-color;
       padding: 1rem;
-      border: 1px solid $table-borders-color;
+      border: 0.0625rem solid $table-borders-color;
     }
 
     .p-paginator-content-start {
@@ -457,21 +537,22 @@ $tbar-normal-height: 72px;
         align-items: center;
         .cps-table-paginator-items-per-page-title {
           font-family: 'Source Sans Pro', sans-serif;
-          font-size: 14px;
-          margin-right: 12px;
+          font-size: 0.875rem;
+          margin-right: 0.75rem;
           cursor: default;
         }
 
         .cps-select-box {
-          min-height: 32px !important;
+          min-height: 2rem !important;
           background: transparent !important;
           .cps-select-box-items {
-            font-size: 14px !important;
+            font-size: 0.875rem !important;
           }
           .cps-select-box-chevron {
+            padding: 0.3125rem !important;
             .cps-icon {
-              width: 14px;
-              height: 14px;
+              width: 0.875rem;
+              height: 0.875rem;
             }
           }
         }
@@ -486,7 +567,7 @@ $tbar-normal-height: 72px;
       margin: 0.143rem;
       padding: 0 0.5rem;
       font-family: 'Source Sans Pro', sans-serif;
-      font-size: 14px;
+      font-size: 0.875rem;
       height: unset;
     }
 
@@ -503,7 +584,6 @@ $tbar-normal-height: 72px;
       line-height: 1;
       -webkit-user-select: none;
       user-select: none;
-      overflow: hidden;
       position: relative;
     }
 
@@ -511,17 +591,29 @@ $tbar-normal-height: 72px;
       cursor: default;
     }
 
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
       background: $paginator-elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):active {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active {
       background: $paginator-elem-active-background;
     }
 
@@ -530,11 +622,11 @@ $tbar-normal-height: 72px;
     .p-paginator .p-paginator-next,
     .p-paginator .p-paginator-last {
       background-color: transparent;
-      border: 1px solid $paginator-border-color;
-      border-radius: 4px;
+      border: 0.0625rem solid $paginator-border-color;
+      border-radius: 0.25rem;
       color: $paginator-text-color;
-      min-width: 32px;
-      height: 32px;
+      min-width: 2rem;
+      height: 2rem;
       margin: 0.143rem;
       transition: box-shadow 0.2s;
     }
@@ -543,46 +635,76 @@ $tbar-normal-height: 72px;
       display: inline-flex;
     }
 
+    .p-paginator-first-icon,
+    .p-paginator-prev-icon,
+    .p-paginator-next-icon,
+    .p-paginator-last-icon {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+
     .p-disabled,
     .p-disabled * {
       cursor: default !important;
       pointer-events: none;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page.p-paginator-page-selected {
       background: $color-calm;
       border-color: $color-calm;
       color: white;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):hover {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):hover {
       background: $paginator-elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):active {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):active {
       background: $paginator-elem-active-background;
     }
 
     .p-paginator .p-paginator-pages .p-paginator-page {
       background-color: transparent;
-      border: 1px solid $paginator-border-color;
-      border-radius: 4px;
+      border: 0.0625rem solid $paginator-border-color;
+      border-radius: 0.25rem;
       color: $paginator-text-color;
-      min-width: 32px;
-      height: 32px;
+      min-width: 2rem;
+      height: 2rem;
       margin: 0.143rem;
       transition: box-shadow 0.2s;
     }
 
-    .p-paginator-element:focus {
+    .p-paginator-first:focus,
+    .p-paginator-prev:focus,
+    .p-paginator-next:focus,
+    .p-paginator-last:focus,
+    .p-paginator-page:focus {
       z-index: 1;
-      position: relative;
+      outline: 0 none;
+      box-shadow: unset;
     }
 
-    .p-paginator-page:focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: unset;
+    .p-paginator-first:not(.p-disabled):focus-visible,
+    .p-paginator-prev:not(.p-disabled):focus-visible,
+    .p-paginator-next:not(.p-disabled):focus-visible,
+    .p-paginator-last:not(.p-disabled):focus-visible,
+    .p-paginator-page:focus-visible {
+      overflow: visible;
+      @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+    }
+
+    .p-paginator-first:not(.p-disabled):focus-visible,
+    .p-paginator-prev:not(.p-disabled):focus-visible,
+    .p-paginator-next:not(.p-disabled):focus-visible,
+    .p-paginator-last:not(.p-disabled):focus-visible,
+    .p-paginator-page:not(.p-paginator-page-selected):focus-visible {
+      background: $paginator-elem-hover-background;
     }
 
     .p-paginator-page {
@@ -594,7 +716,7 @@ $tbar-normal-height: 72px;
       cursor: pointer;
       -webkit-user-select: none;
       user-select: none;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-family: 'Source Sans Pro', sans-serif;
     }
 
@@ -616,6 +738,15 @@ $tbar-normal-height: 72px;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        position: relative;
+
+        &:focus {
+          outline: none;
+        }
+
+        &:focus-visible {
+          @include focus-ring();
+        }
       }
     }
 
@@ -625,6 +756,19 @@ $tbar-normal-height: 72px;
         transition-duration: 0.2s;
         cursor: pointer;
         display: inline-flex;
+        background: none;
+        border: none;
+        padding: 0;
+        color: inherit;
+        position: relative;
+
+        &:focus {
+          outline: none;
+        }
+
+        &:focus-visible {
+          @include focus-ring();
+        }
       }
       .cps-table-row-chevron:hover {
         cps-icon .cps-icon {
@@ -633,6 +777,19 @@ $tbar-normal-height: 72px;
       }
       .cps-table-row-chevron-expanded {
         transform: rotate(180deg);
+      }
+    }
+
+    .cps-table-html-cell {
+      * {
+        &:focus {
+          outline: none;
+        }
+
+        &:focus-visible {
+          position: relative;
+          @include focus-ring();
+        }
       }
     }
 
@@ -652,7 +809,7 @@ $tbar-normal-height: 72px;
       height: 100%;
       background-color: white;
       transition-duration: 0.2s;
-      border: 1px solid $table-borders-color;
+      border: 0.0625rem solid $table-borders-color;
     }
     .p-datatable.cps-tbar-small .p-datatable-mask.p-overlay-mask {
       top: $tbar-small-height;
@@ -666,13 +823,13 @@ $tbar-normal-height: 72px;
 
     .cps-table-loading {
       .p-datatable {
-        min-height: 200px;
+        min-height: 12.5rem;
       }
       .p-datatable.cps-tbar-normal {
-        min-height: 272px;
+        min-height: 17rem;
       }
       .p-datatable.cps-tbar-small {
-        min-height: 243px;
+        min-height: 15.1875rem;
       }
     }
 
@@ -681,96 +838,28 @@ $tbar-normal-height: 72px;
         color: $body-text-color;
       }
     }
+
+    .p-datatable .p-datatable-tbody > tr.cps-table-row-keyboard-reordering > td {
+      box-shadow:
+        inset 0 0.125rem 0 0 $color-calm,
+        inset 0 -0.125rem 0 0 $color-calm;
+    }
   }
 }
 
-.cps-table-coltoggle-menu {
-  display: block;
-  max-height: 242px;
-  overflow-x: hidden;
-  background: white;
-
-  .cps-table-coltoggle-menu-item {
-    padding: 12px;
-    justify-content: space-between;
-    display: flex;
-    cursor: pointer;
-
-    &:hover {
-      background: $colitem-hover-background;
-    }
-
-    &-label {
-      color: $colitem-value-color;
-    }
-
-    &-left {
-      display: flex;
-      align-items: center;
-      margin-right: 8px;
-    }
-
-    &-check {
-      background-color: transparent;
-      border: 0;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      display: inline-block;
-      vertical-align: middle;
-      box-sizing: border-box;
-      position: relative;
-      flex-shrink: 0;
-      transition:
-        border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
-        background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-      margin-right: 8px;
-      opacity: 0;
-      &::after {
-        color: $color-calm;
-        top: 4px;
-        left: 1px;
-        width: 8px;
-        height: 3px;
-        border-left: 2px solid currentColor;
-        transform: rotate(-45deg);
-        opacity: 1;
-        box-sizing: content-box;
-        position: absolute;
-        content: '';
-        border-bottom: 2px solid currentColor;
-        transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
-      }
-    }
-    &.selected,
-    &.allselected {
-      font-weight: 600;
-      .cps-table-coltoggle-menu-item-label {
-        color: $color-calm;
-      }
-      .cps-table-coltoggle-menu-item-check {
-        opacity: 1;
-      }
-    }
-    &.selected {
-      background: $selected-colitem-background;
-    }
-    &.highlighten {
-      background: $colitem-highlight-background;
-    }
-    &.selected.highlighten {
-      background: $colitem-highlight-selected-background;
-    }
-  }
-
-  .select-all-option {
-    border-bottom: 1px solid lightgrey;
-    font-weight: 600;
-  }
+.cps-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 ::ng-deep .cps-select-options-menu.cps-paginator-page-options {
   .cps-select-options-option {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }
