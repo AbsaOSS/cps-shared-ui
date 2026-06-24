@@ -1,9 +1,11 @@
 <div class="cps-input-container" [style.width]="cvtWidth">
-  @if (label) {
+  @if (label || infoTooltip) {
     <div
       class="cps-input-label"
       [class.cps-input-label-disabled]="disabled && !readonly">
-      <label>{{ label }}</label>
+      @if (label) {
+        <label>{{ label }}</label>
+      }
       @if (infoTooltip) {
         <cps-info-circle
           class="cps-input-label-info-circle"
