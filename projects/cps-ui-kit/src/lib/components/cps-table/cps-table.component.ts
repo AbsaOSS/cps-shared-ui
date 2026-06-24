@@ -29,12 +29,12 @@ import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './components/internal/table-row-menu/table-row-menu.component';
 import { TableColumnVisibilityToggleComponent } from './components/internal/table-column-visibility-toggle/table-column-visibility-toggle.component';
-import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable.directive';
+import { CpsTableColumnSortableDirective } from './directives/cps-table-column-sortable/cps-table-column-sortable.directive';
 import { TableUnsortDirective } from './directives/internal/table-unsort.directive';
 import { convertSize } from '../../utils/internal/size-utils';
-import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
-import { CpsTableDetectFilterTypePipe } from './pipes/cps-table-detect-filter-type.pipe';
-import { CpsTableColumnResizableDirective } from './directives/cps-table-column-resizable.directive';
+import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter/cps-table-column-filter.directive';
+import { CpsTableDetectFilterTypePipe } from './pipes/cps-table-detect-filter-type/cps-table-detect-filter-type.pipe';
+import { CpsTableColumnResizableDirective } from './directives/cps-table-column-resizable/cps-table-column-resizable.directive';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 // import jsPDF from 'jspdf';

@@ -10,7 +10,7 @@ import {
 import { DomHandler } from 'primeng/dom';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
-import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-sort-icon.component';
+import { CpsSortIconComponent } from '../../components/internal/cps-sort-icon/cps-sort-icon.component';
 
 /**
  * CpsTableColumnSortableDirective is a sorting directive used to sort single or multiple columns in table.

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CpsColumnFilterType } from '../cps-column-filter-types';
+import { CpsColumnFilterType } from '../../cps-column-filter-types';
 
 @Pipe({
   name: 'cpsTableDetectFilterType',

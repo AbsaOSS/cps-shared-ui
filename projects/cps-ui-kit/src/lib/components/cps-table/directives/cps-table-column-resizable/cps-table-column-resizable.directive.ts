@@ -1,6 +1,6 @@
 import { Directive, Input, inject } from '@angular/core';
 import { ResizableColumn } from 'primeng/table';
-import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**
  * CpsTableColumnResizableDirective is a directive to enable column resizing in a table.

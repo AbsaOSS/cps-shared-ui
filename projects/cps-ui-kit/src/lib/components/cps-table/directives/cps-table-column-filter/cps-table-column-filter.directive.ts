@@ -13,8 +13,8 @@ import {
   CpsColumnFilterCategoryOption,
   CpsColumnFilterMatchMode,
   CpsColumnFilterType
-} from '../cps-column-filter-types';
-import { TableColumnFilterComponent } from '../components/internal/table-column-filter/table-column-filter.component';
+} from '../../cps-column-filter-types';
+import { TableColumnFilterComponent } from '../../components/internal/table-column-filter/table-column-filter.component';
 
 /**
  * CpsTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in table.
