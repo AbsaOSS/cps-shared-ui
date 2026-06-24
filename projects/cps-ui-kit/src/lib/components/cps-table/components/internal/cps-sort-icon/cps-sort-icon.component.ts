@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
@@ -21,7 +20,9 @@ import { Subscription } from 'rxjs';
   host: {
     tabindex: '0',
     role: 'button',
-    '[attr.aria-label]': 'sortAriaLabel'
+    '[attr.aria-label]': 'sortAriaLabel',
+    '(keydown.enter)': 'onKeydown($event)',
+    '(keydown.space)': 'onKeydown($event)'
   }
 })
 export class CpsSortIconComponent implements OnInit, OnDestroy {
@@ -50,8 +51,6 @@ export class CpsSortIconComponent implements OnInit, OnDestroy {
     this.updateSortState();
   }
 
-  @HostListener('keydown.enter', ['$event'])
-  @HostListener('keydown.space', ['$event'])
   onKeydown(event: Event): void {
     event.preventDefault();
     event.stopPropagation();

@@ -39,7 +39,7 @@
       <div class="cps-table-col-filter-menu-content-constraints">
         @for (
           fieldConstraint of fieldConstraints;
-          track fieldConstraint;
+          track $index;
           let i = $index
         ) {
           <div class="cps-table-col-filter-menu-content-constraint">
@@ -121,9 +121,7 @@
       'cps-table-col-filter-menu-button-active': isFilterApplied
     }"
     [attr.aria-label]="
-      isFilterApplied
-        ? 'Filter applied, click to open filter menu'
-        : 'Open filter menu'
+      isFilterApplied ? 'Filter applied, open filter menu' : 'Open filter menu'
     "
     aria-haspopup="dialog"
     [attr.aria-expanded]="isMenuOpen"
@@ -136,8 +134,7 @@
     ">
     <cps-icon
       [icon]="isFilterApplied ? 'filter-funnel-filled' : 'filter-funnel'"
-      size="0.8125rem"
-      aria-hidden="true">
+      size="0.8125rem">
     </cps-icon>
   </button>
 </div>

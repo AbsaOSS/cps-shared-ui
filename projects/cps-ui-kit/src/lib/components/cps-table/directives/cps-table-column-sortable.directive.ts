@@ -2,12 +2,12 @@ import {
   ComponentRef,
   Directive,
   ElementRef,
-  HostListener,
   Input,
   OnDestroy,
   OnInit,
   ViewContainerRef
 } from '@angular/core';
+import { DomHandler } from 'primeng/dom';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-sort-icon.component';
@@ -20,7 +20,8 @@ import { CpsSortIconComponent } from '../components/internal/cps-sort-icon/cps-s
   standalone: true,
   selector: '[cpsTColSortable]',
   host: {
-    class: 'p-sortable-column'
+    class: 'p-sortable-column',
+    '(click)': 'onClick($event)'
   }
 })
 export class CpsTableColumnSortableDirective implements OnInit, OnDestroy {
@@ -53,9 +54,10 @@ export class CpsTableColumnSortableDirective implements OnInit, OnDestroy {
     });
   }
 
-  @HostListener('click')
-  onClick(): void {
+  onClick(event: MouseEvent): void {
+    if ((event.target as Element)?.closest('.cps-table-col-filter')) return;
     this.dataTable.sort({ field: this.field });
+    DomHandler.clearSelection();
   }
 
   private _updateAriaSort(): void {

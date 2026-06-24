@@ -6,9 +6,6 @@
   vertical-align: bottom;
   cursor: pointer;
 
-  // 24×24 touch target (WCAG 2.5.8). height: 1.5rem scales with root font size.
-  // border-box means padding is included; arrows overflow the 0.5rem content area but
-  // are visible and centered. Negative margins cancel layout impact at desktop.
   height: 1.5rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -17,11 +14,10 @@
   margin-bottom: -0.25rem;
   margin-right: -0.5rem;
 
-  // At narrow widths the th wraps sort/filter onto separate lines; negative margins would cause
-  // them to overlap. Reset to zero so they stack without overlapping.
   @media (max-width: 37.5rem) {
     margin-top: 0;
     margin-bottom: 0;
+    margin-right: 0;
   }
 
   &:focus {

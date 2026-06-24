@@ -3,7 +3,7 @@
 :host {
   height: 1.375rem;
   display: block;
-  .cps-table-row-menu-icon {
+  .cps-table-row-menu-btn {
     cursor: pointer;
     background: none;
     border: none;
@@ -25,7 +25,7 @@
       @include focus-ring();
     }
   }
-  .cps-table-row-menu-icon:hover {
+  .cps-table-row-menu-btn:hover {
     color: var(--cps-color-calm);
   }
 }

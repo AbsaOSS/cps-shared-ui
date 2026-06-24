@@ -38,8 +38,6 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
       this.renderer.setAttribute(this.resizer, 'aria-orientation', 'vertical');
       this.renderer.setAttribute(this.resizer, 'aria-label', 'Column resizer');
       this.renderer.setAttribute(this.resizer, 'aria-valuenow', '0');
-      this.renderer.setAttribute(this.resizer, 'aria-valuemin', '0');
-      this.renderer.setAttribute(this.resizer, 'aria-valuemax', '1');
       this.renderer.setAttribute(
         this.resizer,
         'aria-valuetext',
@@ -57,13 +55,6 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
         this._blurListener = this.renderer.listen(this.resizer, 'blur', () =>
           this.renderer.removeClass(this.resizer, 'cps-col-resizer-focused')
         );
-        // When the resizer gets focus the browser's scroll-into-view shifts the <th>
-        // content (scrollLeft > 0), making the handle appear misaligned. We use focusin
-        // (which bubbles from any child) to identify exactly WHICH child triggered the
-        // scroll. focusin fires before scroll-into-view runs, so we schedule a rAF:
-        // the scroll completes synchronously within the same focus task, and the rAF
-        // fires after the task ends (before the next paint) — no visible flash, no
-        // interference with PrimeNG's drag setup. Sort/filter buttons are left alone.
         this._thScrollListener = this.renderer.listen(
           this.el.nativeElement,
           'focusin',
@@ -78,11 +69,6 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
       });
     }
 
-    // Fix for PrimeNG fit-mode resize: browsers ignore max-width on <td> in auto table
-    // layout, so CSS injection only resizes header cells but not body cells. Patch
-    // resizeTableCells once per table to set th.style.width directly and switch to
-    // table-layout:fixed so body cells automatically inherit column widths from headers.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const table = this.dataTable as any;
     if (!table._cpsResizeCellsPatched) {
       table._cpsResizeCellsPatched = true;
@@ -112,16 +98,9 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
         ) as HTMLElement[];
         const resizeEl = table.resizeColumnElement as HTMLElement | null;
         if (!resizeEl) return;
-        // Count previous element siblings to get 0-based column index (mirrors DomHandler.index)
-        let colIndex = 0;
-        let prev = resizeEl.previousElementSibling;
-        while (prev) {
-          colIndex++;
-          prev = prev.previousElementSibling;
-        }
-        // Snapshot current widths before applying changes
+        const colIndex = headers.indexOf(resizeEl);
+        if (colIndex === -1) return;
         const widths = headers.map((h) => h.offsetWidth);
-        // Apply widths directly on <th> elements
         headers.forEach((h, i) => {
           let w = widths[i];
           if (i === colIndex) w = newColumnWidth;
@@ -129,10 +108,7 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
             w = nextColumnWidth;
           h.style.width = w / this._rootFontSizePx + 'rem';
         });
-        // Switch to fixed layout so body <td> cells match header widths automatically
         tableEl.style.tableLayout = 'fixed';
-        // Remove any leftover CSS injection from a prior expand-mode resize
-        table.destroyStyleElement?.();
       };
     }
   }
@@ -159,7 +135,6 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     const newColumnWidth = th.offsetWidth + delta;
     if (newColumnWidth < 15) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const table = this.dataTable as any;
     table.resizeColumnElement = th;
 

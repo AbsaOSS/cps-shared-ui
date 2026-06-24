@@ -6,20 +6,20 @@ import {
   ContentChild,
   ElementRef,
   EventEmitter,
-  HostBinding,
-  HostListener,
-  Inject,
   Input,
   OnChanges,
   OnInit,
   Output,
   SimpleChanges,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  inject
 } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Table, TableService, TableModule } from 'primeng/table';
+import type { TablePassThrough } from 'primeng/types/table';
+import type { PaginatorPassThrough } from 'primeng/types/paginator';
 import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
@@ -35,6 +35,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 import { CpsTableColumnFilterDirective } from './directives/cps-table-column-filter.directive';
 import { CpsTableDetectFilterTypePipe } from './pipes/cps-table-detect-filter-type.pipe';
 import { CpsTableColumnResizableDirective } from './directives/cps-table-column-resizable.directive';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 // import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
@@ -74,6 +75,10 @@ export type CpsTableSortMode = 'single' | 'multiple';
 @Component({
   selector: 'cps-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[style.--cps-scroll-height]': 'scrollHeight || ""',
+    '(keydown)': 'onPaginatorKeydown($event)'
+  },
   imports: [
     FormsModule,
     CommonModule,
@@ -694,12 +699,9 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   selectedColumns: { [key: string]: any }[] = [];
 
-  _keyboardDragRowIndex: number | null = null;
-  _reorderAnnouncement = '';
+  keyboardDragRowIndex: number | null = null;
 
-  private _keyboardDragOriginalIndex: number | null = null;
-  private _keyboardDragSnapshot: any[] | null = null;
-  private _movingFocus = false;
+  tablePassthrough: TablePassThrough = {};
 
   exportMenuItems: CpsMenuItem[] = [
     {
@@ -725,12 +727,14 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     // }
   ];
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(
-    private cdRef: ChangeDetectorRef,
-    @Inject(DOCUMENT) private document: Document,
-    private elementRef: ElementRef
-  ) {}
+  private _keyboardDragOriginalIndex: number | null = null;
+  private _keyboardDragSnapshot: any[] | null = null;
+  private _movingFocus = false;
+
+  private readonly _cdRef = inject(ChangeDetectorRef);
+  private readonly _document = inject(DOCUMENT);
+  private readonly _elementRef = inject(ElementRef);
+  private readonly _liveAnnouncer = inject(CPS_LIVE_ANNOUNCER_SERVICE);
 
   ngOnInit(): void {
     this.emptyBodyHeight = convertSize(this.emptyBodyHeight);
@@ -765,31 +769,27 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
     this.selectedColumns =
       this.initialColumns.length > 0 ? this.initialColumns : this.columns;
+
+    this.tablePassthrough = this._buildTablePassthrough();
   }
 
-  @HostBinding('style.--cps-scroll-height')
-  get scrollHeightCssVar(): string {
-    return this.scrollHeight || '';
-  }
-
-  get paginatorPt() {
-    if (!this.paginator) return {};
-    const firstDisabled = this.first === 0 || this.totalRecords === 0;
-    return {
-      first: {
-        'aria-disabled': firstDisabled ? 'true' : null,
-        tabindex: firstDisabled ? -1 : 0
-      }
-    };
-  }
-
-  get tablePassthrough() {
-    const pt: any = {};
+  private _buildTablePassthrough(): TablePassThrough {
+    const pt: TablePassThrough = {};
     if (!this.virtualScroll && this.scrollHeight) {
       pt.tableContainer = { tabindex: 0 };
     }
     if (this.paginator) {
-      pt.paginator = this.paginatorPt;
+      const effectiveTotalRecords = this.lazy
+        ? this.totalRecords
+        : (this.data?.length ?? 0);
+      const firstDisabled = this.first === 0 || effectiveTotalRecords === 0;
+      const paginatorPt: PaginatorPassThrough = {
+        first: {
+          'aria-disabled': firstDisabled ? 'true' : null,
+          tabindex: firstDisabled ? -1 : 0
+        }
+      };
+      pt.pcPaginator = paginatorPt;
     }
     return pt;
   }
@@ -816,7 +816,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       this.primengTable?.el?.nativeElement
         ?.querySelector('.p-datatable-tbody')
         ?.querySelector('tr')?.clientHeight || 0;
-    this.cdRef.detectChanges();
+    this._cdRef.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -825,11 +825,22 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       if (this.clearGlobalFilterOnLoading) this.clearGlobalFilter();
     }
 
-    if (changes?.data) {
+    if (changes.data) {
       this.resetSortingState();
       this.selectedRows = this.selectedRows.filter((sr) =>
         this.data.includes(sr)
       );
+    }
+
+    if (
+      changes.data ||
+      changes.virtualScroll ||
+      changes.scrollHeight ||
+      changes.paginator ||
+      changes.first ||
+      changes.totalRecords
+    ) {
+      this.tablePassthrough = this._buildTablePassthrough();
     }
   }
 
@@ -905,7 +916,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
       event.stopPropagation();
-      if (this._keyboardDragRowIndex === null) {
+      if (this.keyboardDragRowIndex === null) {
         this._activateKeyboardDrag(rowIndex);
       } else {
         this._confirmKeyboardDrag();
@@ -915,28 +926,27 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
     if (event.key === 'Escape') {
       event.preventDefault();
-      if (this._keyboardDragRowIndex !== null) {
+      if (this.keyboardDragRowIndex !== null) {
         this._cancelKeyboardDrag();
       }
       return;
     }
 
-    if (this._keyboardDragRowIndex === null) return;
+    if (this.keyboardDragRowIndex === null) return;
 
     const maxIndex = this._data.length - 1;
-    if (event.key === 'ArrowUp' && this._keyboardDragRowIndex > 0) {
+    if (event.key === 'ArrowUp' && this.keyboardDragRowIndex > 0) {
       event.preventDefault();
       this._moveKeyboardRow(-1);
     } else if (
       event.key === 'ArrowDown' &&
-      this._keyboardDragRowIndex < maxIndex
+      this.keyboardDragRowIndex < maxIndex
     ) {
       event.preventDefault();
       this._moveKeyboardRow(1);
     }
   }
 
-  @HostListener('keydown', ['$event'])
   onPaginatorKeydown(event: KeyboardEvent): void {
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     const target = event.target as HTMLElement;
@@ -968,6 +978,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
+    this.tablePassthrough = this._buildTablePassthrough();
 
     const state = {
       page: this.getPage(),
@@ -978,9 +989,9 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
     this.pageChanged.emit(state);
 
-    const activeEl = this.document.activeElement as HTMLElement | null;
+    const activeEl = this._document.activeElement as HTMLElement | null;
     const atFirst = this.first === 0;
-    const atLast = this.first + this.rows >= this.totalRecords;
+    const atLast = this.first + this.rows >= this.primengTable.totalRecords;
     if (
       (atFirst &&
         (activeEl?.classList.contains('p-paginator-first') ||
@@ -995,45 +1006,47 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   private _getPaginatorPageButtons(): HTMLButtonElement[] {
     return Array.from(
-      this.elementRef.nativeElement.querySelectorAll('.p-paginator-page')
+      this._elementRef.nativeElement.querySelectorAll('.p-paginator-page')
     ) as HTMLButtonElement[];
   }
 
   private _focusPaginatorSelectedPage(): void {
-    const selected = this.elementRef.nativeElement.querySelector(
+    const selected = this._elementRef.nativeElement.querySelector(
       '.p-paginator-page[aria-current="page"]'
     ) as HTMLButtonElement | null;
     selected?.focus();
   }
 
   private _activateKeyboardDrag(rowIndex: number): void {
-    this._keyboardDragRowIndex = rowIndex;
+    this.keyboardDragRowIndex = rowIndex;
     this._keyboardDragOriginalIndex = rowIndex;
     this._keyboardDragSnapshot = [...this._data];
-    this.cdRef.markForCheck();
-    this._announce(
+    this._cdRef.markForCheck();
+    this._liveAnnouncer?.announce(
       `Row ${rowIndex + 1} picked up. Press arrow keys to move, Enter to confirm, Escape to cancel.`
     );
   }
 
   _onDragHandleBlur(): void {
     if (this._movingFocus) return;
-    if (this._keyboardDragRowIndex !== null) {
+    if (this.keyboardDragRowIndex !== null) {
       this._releaseKeyboardDrag();
     }
   }
 
   private _moveKeyboardRow(direction: -1 | 1): void {
-    const from = this._keyboardDragRowIndex!;
+    const from = this.keyboardDragRowIndex!;
     const to = from + direction;
     const arr = [...this._data];
     const [item] = arr.splice(from, 1);
     arr.splice(to, 0, item);
     this._data = arr;
-    this._keyboardDragRowIndex = to;
+    this.keyboardDragRowIndex = to;
     this._movingFocus = true;
-    this.cdRef.markForCheck();
-    this._announce(`Row moved to position ${to + 1} of ${arr.length}.`);
+    this._cdRef.markForCheck();
+    this._liveAnnouncer?.announce(
+      `Row moved to position ${to + 1} of ${arr.length}.`
+    );
     setTimeout(() => {
       this._movingFocus = false;
       this._focusDragHandle(to);
@@ -1041,51 +1054,44 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   private _releaseKeyboardDrag(): void {
-    this._keyboardDragRowIndex = null;
+    this.keyboardDragRowIndex = null;
     this._keyboardDragOriginalIndex = null;
     this._keyboardDragSnapshot = null;
-    this.cdRef.markForCheck();
+    this._cdRef.markForCheck();
   }
 
   private _confirmKeyboardDrag(): void {
     const dragIndex = this._keyboardDragOriginalIndex!;
-    const dropIndex = this._keyboardDragRowIndex!;
-    this._keyboardDragRowIndex = null;
+    const dropIndex = this.keyboardDragRowIndex!;
+    this.keyboardDragRowIndex = null;
     this._keyboardDragOriginalIndex = null;
     this._keyboardDragSnapshot = null;
     this.rowsReordered.emit({ dragIndex, dropIndex });
-    this.cdRef.markForCheck();
-    this._announce(`Row dropped at position ${dropIndex + 1}.`);
+    this._cdRef.markForCheck();
+    this._liveAnnouncer?.announce(`Row dropped at position ${dropIndex + 1}.`);
     setTimeout(() => this._focusDragHandle(dropIndex));
   }
 
   private _cancelKeyboardDrag(): void {
     const originalIdx = this._keyboardDragOriginalIndex!;
     this._data = [...this._keyboardDragSnapshot!];
-    this._keyboardDragRowIndex = null;
+    this.keyboardDragRowIndex = null;
     this._keyboardDragOriginalIndex = null;
     this._keyboardDragSnapshot = null;
-    this.cdRef.markForCheck();
-    this._announce('Reorder cancelled. Row returned to original position.');
+    this._cdRef.markForCheck();
+    this._liveAnnouncer?.announce(
+      'Reorder cancelled. Row returned to original position.'
+    );
     setTimeout(() => this._focusDragHandle(originalIdx));
   }
 
   private _focusDragHandle(rowIndex: number): void {
     const handle = (
-      this.elementRef.nativeElement as HTMLElement
+      this._elementRef.nativeElement as HTMLElement
     ).querySelector<HTMLElement>(
       `.cps-table-row-drag-handle[data-row-index="${rowIndex}"]`
     );
     handle?.focus();
-  }
-
-  private _announce(message: string): void {
-    this._reorderAnnouncement = '';
-    this.cdRef.markForCheck();
-    setTimeout(() => {
-      this._reorderAnnouncement = message;
-      this.cdRef.markForCheck();
-    });
   }
 
   onColumnsSelectedChange(cols: { [key: string]: any }[]): void {
@@ -1194,7 +1200,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
         type: EXCEL_TYPE
       });
 
-      const downloadLink = this.document.createElement('a');
+      const downloadLink = this._document.createElement('a');
       downloadLink.href = URL.createObjectURL(blob);
       downloadLink.download = `${this.exportFilename}.xlsx`;
       downloadLink.click();

@@ -850,17 +850,6 @@ $tbar-normal-height: 4.5rem;
   }
 }
 
-.cps-sr-only {
-  position: absolute;
-  width: 0.0625rem;
-  height: 0.0625rem;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
 ::ng-deep .cps-select-options-menu.cps-paginator-page-options {
   .cps-select-options-option {
     font-size: 0.875rem;

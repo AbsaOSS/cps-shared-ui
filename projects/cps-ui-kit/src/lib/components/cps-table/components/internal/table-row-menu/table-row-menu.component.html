@@ -3,15 +3,15 @@
   [items]="items"
   [compressed]="true"
   [withArrow]="false"
-  (menuShown)="isMenuOpen = true"
-  (menuHidden)="isMenuOpen = false">
+  (menuShown)="onMenuShown()"
+  (menuHidden)="onMenuHidden()">
 </cps-menu>
 <button
   type="button"
-  class="cps-table-row-menu-icon"
+  class="cps-table-row-menu-btn"
   aria-label="Row actions"
   aria-haspopup="menu"
   [attr.aria-expanded]="isMenuOpen"
   (click)="rowMenu.toggle($event)">
-  <cps-icon icon="dropdown-menu" size="1.375rem" aria-hidden="true"></cps-icon>
+  <cps-icon icon="dropdown-menu" size="1.375rem"></cps-icon>
 </button>
