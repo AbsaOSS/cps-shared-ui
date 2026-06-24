@@ -1,5 +1,6 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, Input, inject } from '@angular/core';
 import { ResizableColumn } from 'primeng/table';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**
  * CpsTableColumnResizableDirective is a directive to enable column resizing in a table.
@@ -18,9 +19,16 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     | boolean
     | undefined;
 
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() || 16;
+  }
+
   private _keydownListener?: () => void;
   private _focusListener?: () => void;
   private _blurListener?: () => void;
+  private _thScrollListener?: () => void;
 
   override onAfterViewInit(): void {
     super.onAfterViewInit();
@@ -45,7 +53,83 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
         this._blurListener = this.renderer.listen(this.resizer, 'blur', () =>
           this.renderer.removeClass(this.resizer, 'cps-col-resizer-focused')
         );
+        // When the resizer gets focus the browser's scroll-into-view shifts the <th>
+        // content (scrollLeft > 0), making the handle appear misaligned. We use focusin
+        // (which bubbles from any child) to identify exactly WHICH child triggered the
+        // scroll. focusin fires before scroll-into-view runs, so we schedule a rAF:
+        // the scroll completes synchronously within the same focus task, and the rAF
+        // fires after the task ends (before the next paint) — no visible flash, no
+        // interference with PrimeNG's drag setup. Sort/filter buttons are left alone.
+        this._thScrollListener = this.renderer.listen(
+          this.el.nativeElement,
+          'focusin',
+          (event: FocusEvent) => {
+            if (event.target !== this.resizer) return;
+            const th = this.el.nativeElement as HTMLElement;
+            requestAnimationFrame(() => {
+              if (th.scrollLeft !== 0) th.scrollLeft = 0;
+            });
+          }
+        );
       });
+    }
+
+    // Fix for PrimeNG fit-mode resize: browsers ignore max-width on <td> in auto table
+    // layout, so CSS injection only resizes header cells but not body cells. Patch
+    // resizeTableCells once per table to set th.style.width directly and switch to
+    // table-layout:fixed so body cells automatically inherit column widths from headers.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const table = this.dataTable as any;
+    if (!table._cpsResizeCellsPatched) {
+      table._cpsResizeCellsPatched = true;
+      const original = table.resizeTableCells.bind(table) as (
+        newColumnWidth: number,
+        nextColumnWidth: number | null
+      ) => void;
+      table.resizeTableCells = (
+        newColumnWidth: number,
+        nextColumnWidth: number | null
+      ) => {
+        if (table.columnResizeMode !== 'fit') {
+          original(newColumnWidth, nextColumnWidth);
+          return;
+        }
+        const tableEl = table.tableViewChild
+          ?.nativeElement as HTMLElement | null;
+        const thead = (table.el.nativeElement as HTMLElement).querySelector(
+          '[data-pc-section="thead"]'
+        ) as HTMLElement | null;
+        if (!tableEl || !thead) {
+          original(newColumnWidth, nextColumnWidth);
+          return;
+        }
+        const headers = Array.from(
+          thead.querySelectorAll('tr > th')
+        ) as HTMLElement[];
+        const resizeEl = table.resizeColumnElement as HTMLElement | null;
+        if (!resizeEl) return;
+        // Count previous element siblings to get 0-based column index (mirrors DomHandler.index)
+        let colIndex = 0;
+        let prev = resizeEl.previousElementSibling;
+        while (prev) {
+          colIndex++;
+          prev = prev.previousElementSibling;
+        }
+        // Snapshot current widths before applying changes
+        const widths = headers.map((h) => h.offsetWidth);
+        // Apply widths directly on <th> elements
+        headers.forEach((h, i) => {
+          let w = widths[i];
+          if (i === colIndex) w = newColumnWidth;
+          else if (nextColumnWidth !== null && i === colIndex + 1)
+            w = nextColumnWidth;
+          h.style.width = w / this._rootFontSizePx + 'rem';
+        });
+        // Switch to fixed layout so body <td> cells match header widths automatically
+        tableEl.style.tableLayout = 'fixed';
+        // Remove any leftover CSS injection from a prior expand-mode resize
+        table.destroyStyleElement?.();
+      };
     }
   }
 
@@ -53,9 +137,11 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     this._keydownListener?.();
     this._focusListener?.();
     this._blurListener?.();
+    this._thScrollListener?.();
     this._keydownListener = undefined;
     this._focusListener = undefined;
     this._blurListener = undefined;
+    this._thScrollListener = undefined;
     super.onDestroy();
   }
 
@@ -75,7 +161,7 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
 
     if (table.columnResizeMode === 'expand') {
       const tableWidth = table.tableViewChild.nativeElement.offsetWidth + delta;
-      table.setResizeTableWidth(tableWidth + 'px');
+      table.setResizeTableWidth(tableWidth / this._rootFontSizePx + 'rem');
       table.resizeTableCells(newColumnWidth, null);
     } else {
       const nextColumn = th.nextElementSibling as HTMLElement | null;

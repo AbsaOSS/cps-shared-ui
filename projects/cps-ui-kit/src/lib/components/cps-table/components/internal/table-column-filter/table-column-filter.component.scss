@@ -18,15 +18,15 @@ $operator-bg-color: var(--cps-color-bg-light);
       cursor: pointer;
       text-decoration: none;
       position: relative;
-      // 24×24px touch target (WCAG 2.5.8). px values ensure exactly 24×24 at any font-size.
+      // 24×24 touch target (WCAG 2.5.8). 1.5rem scales with root font size.
       // Symmetric horizontal padding (0.5rem each side) centers the icon within the element and
-      // therefore within the focus ring. margin-right: 1px keeps the layout contribution at 25px
-      // so the sort icon and column width stay at their original positions.
+      // therefore within the focus ring. margin-right: 0.0625rem keeps the layout contribution at
+      // 1.5625rem so the sort icon and column width stay at their original positions.
       // Vertical negative margins cancel layout impact at desktop so th height is unchanged.
-      // At narrow widths (<600px) the th wraps sort/filter onto separate lines; negative margins
+      // At narrow widths (<37.5rem) the th wraps sort/filter onto separate lines; negative margins
       // would cause them to overlap, so they are reset to zero there.
-      height: 24px;
-      width: 24px;
+      height: 1.5rem;
+      width: 1.5rem;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
       margin-right: 0.0625rem;
@@ -35,7 +35,7 @@ $operator-bg-color: var(--cps-color-bg-light);
       margin-top: -0.375rem;
       margin-bottom: -0.375rem;
 
-      @media (max-width: 600px) {
+      @media (max-width: 37.5rem) {
         margin-top: 0;
         margin-bottom: 0;
       }

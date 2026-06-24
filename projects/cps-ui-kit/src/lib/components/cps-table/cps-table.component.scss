@@ -839,7 +839,10 @@ $tbar-normal-height: 4.5rem;
       }
     }
 
-    .p-datatable .p-datatable-tbody > tr.cps-table-row-keyboard-reordering > td {
+    .p-datatable
+      .p-datatable-tbody
+      > tr.cps-table-row-keyboard-reordering
+      > td {
       box-shadow:
         inset 0 0.125rem 0 0 $color-calm,
         inset 0 -0.125rem 0 0 $color-calm;
@@ -849,8 +852,8 @@ $tbar-normal-height: 4.5rem;
 
 .cps-sr-only {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: 0.0625rem;
+  height: 0.0625rem;
   padding: 0;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
