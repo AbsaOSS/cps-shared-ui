@@ -469,12 +469,15 @@ $tbar-normal-height: 4.5rem;
       background: $color-calm;
     }
     .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
+      .p-checkbox-box,
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:focus)
       .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
     }
-    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box,
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:focus) .p-checkbox-box {
       border-color: $color-calm;
     }
 
@@ -738,10 +741,26 @@ $tbar-normal-height: 4.5rem;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        position: relative;
+        cursor: grab;
+        display: inline-block;
+        vertical-align: middle;
+        box-sizing: content-box;
+        padding: 0.25rem;
+        width: 0.875rem;
+        height: 0.75rem;
+        background-origin: content-box;
+        background-clip: content-box;
+        background-image: repeating-linear-gradient(
+          to bottom,
+          currentColor 0,
+          currentColor 2px,
+          transparent 2px,
+          transparent 5px
+        );
 
         &:focus {
           outline: none;
+          color: $color-calm;
         }
 
         &:focus-visible {
@@ -764,6 +783,9 @@ $tbar-normal-height: 4.5rem;
 
         &:focus {
           outline: none;
+          cps-icon .cps-icon {
+            color: $color-calm !important;
+          }
         }
 
         &:focus-visible {
