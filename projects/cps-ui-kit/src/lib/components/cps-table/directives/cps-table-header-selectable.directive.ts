@@ -28,6 +28,7 @@ export class CpsTableHeaderSelectableDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.checkboxCompRef.setInput('ariaLabel', 'Select all rows');
     this.elementRef.nativeElement.appendChild(
       this.checkboxCompRef.location.nativeElement
     );

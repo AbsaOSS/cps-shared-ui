@@ -200,23 +200,24 @@
         @if (rowExpansionTemplate) {
           <th
             scope="col"
-            aria-label="Row expansion"
             style="width: 3rem"
             cpsTColResizable
-            [cpsTColResizableDisabled]="!resizableColumns"></th>
+            [cpsTColResizableDisabled]="!resizableColumns">
+            <span class="cps-sr-only">Row expansion</span>
+          </th>
         }
         @if (reorderableRows) {
           <th
             scope="col"
-            aria-label="Row order"
             style="width: 3rem"
             cpsTColResizable
-            [cpsTColResizableDisabled]="!resizableColumns"></th>
+            [cpsTColResizableDisabled]="!resizableColumns">
+            <span class="cps-sr-only">Row order</span>
+          </th>
         }
         @if (selectable) {
           <th
             scope="col"
-            aria-label="Select row"
             style="width: 4rem"
             cpsTColResizable
             [cpsTColResizableDisabled]="!resizableColumns">
@@ -296,11 +297,12 @@
         @if (showRowMenu && (showRowRemoveButton || showRowEditButton)) {
           <th
             scope="col"
-            aria-label="Row actions"
             style="width: 2rem"
             class="cps-table-row-menu-cell"
             cpsTColResizable
-            [cpsTColResizableDisabled]="!resizableColumns"></th>
+            [cpsTColResizableDisabled]="!resizableColumns">
+            <span class="cps-sr-only">Row actions</span>
+          </th>
         }
       </tr>
     </ng-template>
