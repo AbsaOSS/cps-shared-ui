@@ -10,10 +10,10 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
-  inject
+  inject,
+  type SimpleChanges
 } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
