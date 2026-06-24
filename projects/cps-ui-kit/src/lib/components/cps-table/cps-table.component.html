@@ -3,6 +3,7 @@
   #tUnsortDirective="tWithUnsort"
   tWithUnsort
   [pt]="tablePassthrough"
+  [attr.aria-busy]="loading || null"
   [ngClass]="{ 'cps-table-loading': loading }"
   [styleClass]="styleClass"
   [tableStyle]="tableStyle"
