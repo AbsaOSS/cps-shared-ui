@@ -15,7 +15,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { TreeNode } from 'primeng/api';
+import { ScrollerOptions, TreeNode } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
@@ -249,6 +249,10 @@ export class CpsBaseTreeDropdownComponent
   innerOptions: TreeNode[] = [];
   optionsMap = new Map<string, TreeNode>();
   originalOptionsMap = new Map<string, any>();
+  originalOptionsKeyMap = new Map<unknown, string>();
+  virtualScrollOptions: ScrollerOptions = {
+    numToleratedItems: this.numToleratedItems
+  };
 
   virtualListHeight = 240;
   virtualScrollItemSize = 40;
@@ -300,6 +304,12 @@ export class CpsBaseTreeDropdownComponent
   ngOnChanges(changes: SimpleChanges) {
     if (changes.options) {
       this.innerOptions = this._toInnerOptions(this.options);
+    }
+    if (changes.numToleratedItems) {
+      this.virtualScrollOptions = {
+        ...this.virtualScrollOptions,
+        numToleratedItems: this.numToleratedItems
+      };
     }
   }
 
@@ -489,9 +499,23 @@ export class CpsBaseTreeDropdownComponent
     if (!this.multiple) return;
 
     this.treeSelection = this.treeSelection.filter(
-      (v: TreeNode) => !isEqual(v, option)
+      (v: TreeNode) => !this.isSameTreeNode(v, option)
     );
     this.updateValue(this.treeSelectionToValue(this.treeSelection));
+  }
+
+  trackByNodeKey(
+    _index: number,
+    item: TreeNode | { node?: TreeNode }
+  ): string | TreeNode | { node?: TreeNode } {
+    const node = (item as { node?: TreeNode }).node || (item as TreeNode);
+    return node?.key || item;
+  }
+
+  protected isSameTreeNode(first?: TreeNode, second?: TreeNode): boolean {
+    if (first?.key && second?.key) return first.key === second.key;
+
+    return isEqual(first, second);
   }
 
   initArrowsNavigaton() {
@@ -647,6 +671,9 @@ export class CpsBaseTreeDropdownComponent
   }
 
   private _toInnerOptions(_options: any[]): TreeNode[] {
+    this.originalOptionsMap.clear();
+    this.originalOptionsKeyMap.clear();
+
     const mapOption = (
       o: any,
       optionLabel: string,
@@ -682,6 +709,7 @@ export class CpsBaseTreeDropdownComponent
         });
       }
       originalOptionsMap.set(key, o);
+      this.originalOptionsKeyMap.set(o, key);
       return inner;
     };
 
@@ -713,14 +741,17 @@ export class CpsBaseTreeDropdownComponent
   }
 
   private _valueToTreeSelection(value: any) {
-    function getKey(v: any, map: Map<string, any>): string {
+    const getKey = (v: any, map: Map<string, any>): string => {
+      const mappedKey = this.originalOptionsKeyMap.get(v);
+      if (mappedKey) return mappedKey;
+
       for (const [key, val] of map.entries()) {
         if (isEqual(v, val)) {
           return key;
         }
       }
       return '';
-    }
+    };
 
     if (!value) return this.multiple ? [] : undefined;
 
