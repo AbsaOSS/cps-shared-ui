@@ -10,7 +10,7 @@ on:
       - 'angular.json'
       - 'tsconfig.generator.json'
       - 'api-generator/**'
-      - 'projects/cps-ui-kit/src/**'
+      - 'projects/cps-ui-kit/**'
       - 'projects/composition/**'
       - '.github/**'
   workflow_dispatch:
