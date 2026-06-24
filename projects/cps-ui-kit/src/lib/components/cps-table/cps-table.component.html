@@ -220,7 +220,8 @@
             style="width: 4rem"
             cpsTColResizable
             [cpsTColResizableDisabled]="!resizableColumns">
-            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            <p-tableHeaderCheckbox
+              ariaLabel="Select all rows"></p-tableHeaderCheckbox>
           </th>
         }
         @if (headerTemplate) {
@@ -358,7 +359,9 @@
       }
       @if (selectable) {
         <td>
-          <p-tableCheckbox [value]="item"></p-tableCheckbox>
+          <p-tableCheckbox
+            [value]="item"
+            ariaLabel="Select row"></p-tableCheckbox>
         </td>
       }
       @if (bodyTemplate) {
