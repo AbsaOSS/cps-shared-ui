@@ -16,7 +16,6 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import {
@@ -222,16 +221,16 @@ export class CpsTreeAutocompleteComponent
   }
 
   private _select(option: TreeNode): void {
-    function includes(array: any[], val: any): boolean {
-      return array?.some((item) => isEqual(item, val)) || false;
-    }
-
     this.backspaceClickedOnce = false;
 
     if (this.multiple) {
-      if (includes(this.treeSelection, option)) {
+      if (
+        this.treeSelection?.some((item: TreeNode) =>
+          this.isSameTreeNode(item, option)
+        )
+      ) {
         this.treeSelection = this.treeSelection.filter(
-          (v: TreeNode) => !isEqual(v, option)
+          (v: TreeNode) => !this.isSameTreeNode(v, option)
         );
       } else {
         this.treeSelection.push(option);

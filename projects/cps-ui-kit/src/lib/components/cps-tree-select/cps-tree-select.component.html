@@ -126,8 +126,9 @@
           #treeList
           [virtualScroll]="virtualScroll"
           [virtualScrollItemSize]="virtualScrollItemSize"
-          [virtualScrollOptions]="{ numToleratedItems: numToleratedItems }"
+          [virtualScrollOptions]="virtualScrollOptions"
           [scrollHeight]="virtualListHeight + 'px'"
+          [trackBy]="trackByNodeKey"
           (onNodeSelect)="onSelectNode()"
           (onNodeExpand)="onNodeExpand($event)"
           (onNodeCollapse)="onNodeCollapse($event)"
