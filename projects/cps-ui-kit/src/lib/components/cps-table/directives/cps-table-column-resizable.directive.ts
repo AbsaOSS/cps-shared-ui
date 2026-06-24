@@ -36,10 +36,14 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
       this.renderer.setAttribute(this.resizer, 'tabindex', '0');
       this.renderer.setAttribute(this.resizer, 'role', 'separator');
       this.renderer.setAttribute(this.resizer, 'aria-orientation', 'vertical');
+      this.renderer.setAttribute(this.resizer, 'aria-label', 'Column resizer');
+      this.renderer.setAttribute(this.resizer, 'aria-valuenow', '0');
+      this.renderer.setAttribute(this.resizer, 'aria-valuemin', '0');
+      this.renderer.setAttribute(this.resizer, 'aria-valuemax', '1');
       this.renderer.setAttribute(
         this.resizer,
-        'aria-label',
-        'Column resizer. Use left/right arrow keys to resize. Hold Shift for larger steps.'
+        'aria-valuetext',
+        'Use left or right arrow keys to resize the column. Hold Shift for larger steps.'
       );
       this.zone.runOutsideAngular(() => {
         this._keydownListener = this.renderer.listen(

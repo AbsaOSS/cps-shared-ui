@@ -315,7 +315,8 @@
       [pReorderableRow]="rowIndex"
       [ngClass]="{
         'cps-table-row-selected': selectable && primengTable.isSelected(item),
-        'cps-table-row-keyboard-reordering': reorderableRows && _keyboardDragRowIndex === rowIndex
+        'cps-table-row-keyboard-reordering':
+          reorderableRows && _keyboardDragRowIndex === rowIndex
       }">
       @if (rowExpansionTemplate) {
         <td class="cps-table-row-chevron-cell">
@@ -343,9 +344,11 @@
             role="button"
             tabindex="0"
             [attr.data-row-index]="rowIndex"
-            [attr.aria-label]="_keyboardDragRowIndex === rowIndex
-              ? 'Moving row. Use arrow keys to reposition, Enter or Space to confirm, Escape to cancel'
-              : 'Drag or press Enter to reorder row'"
+            [attr.aria-label]="
+              _keyboardDragRowIndex === rowIndex
+                ? 'Moving row. Use arrow keys to reposition, Enter or Space to confirm, Escape to cancel'
+                : 'Press Enter or Space to start reordering row'
+            "
             (keydown)="_onDragHandleKeydown($event, rowIndex)"
             (blur)="_onDragHandleBlur()"
             >☰</span
@@ -451,7 +454,6 @@
     </div>
   </ng-template>
 </p-table>
-<div
-  class="cps-sr-only"
-  aria-live="polite"
-  aria-atomic="true">{{ _reorderAnnouncement }}</div>
+<div class="cps-sr-only" aria-live="polite" aria-atomic="true">
+  {{ _reorderAnnouncement }}
+</div>
