@@ -1017,6 +1017,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     selected?.focus();
   }
 
+  private _cleanupDrag(): void {
+    this.keyboardDragRowIndex = null;
+    this._keyboardDragOriginalIndex = null;
+    this._keyboardDragSnapshot = null;
+    this._cdRef.markForCheck();
+  }
+
   private _activateKeyboardDrag(rowIndex: number): void {
     this.keyboardDragRowIndex = rowIndex;
     this._keyboardDragOriginalIndex = rowIndex;
@@ -1030,7 +1037,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   _onDragHandleBlur(): void {
     if (this._movingFocus) return;
     if (this.keyboardDragRowIndex !== null) {
-      this._releaseKeyboardDrag();
+      this._cleanupDrag();
     }
   }
 
@@ -1053,36 +1060,23 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     });
   }
 
-  private _releaseKeyboardDrag(): void {
-    this.keyboardDragRowIndex = null;
-    this._keyboardDragOriginalIndex = null;
-    this._keyboardDragSnapshot = null;
-    this._cdRef.markForCheck();
-  }
-
   private _confirmKeyboardDrag(): void {
     const dragIndex = this._keyboardDragOriginalIndex!;
     const dropIndex = this.keyboardDragRowIndex!;
-    this.keyboardDragRowIndex = null;
-    this._keyboardDragOriginalIndex = null;
-    this._keyboardDragSnapshot = null;
+    this._cleanupDrag();
     this.rowsReordered.emit({ dragIndex, dropIndex });
-    this._cdRef.markForCheck();
     this._liveAnnouncer?.announce(`Row dropped at position ${dropIndex + 1}.`);
-    setTimeout(() => this._focusDragHandle(dropIndex));
+    this._focusDragHandle(dropIndex);
   }
 
   private _cancelKeyboardDrag(): void {
     const originalIdx = this._keyboardDragOriginalIndex!;
     this._data = [...this._keyboardDragSnapshot!];
-    this.keyboardDragRowIndex = null;
-    this._keyboardDragOriginalIndex = null;
-    this._keyboardDragSnapshot = null;
-    this._cdRef.markForCheck();
+    this._cleanupDrag();
     this._liveAnnouncer?.announce(
       'Reorder cancelled. Row returned to original position.'
     );
-    setTimeout(() => this._focusDragHandle(originalIdx));
+    this._focusDragHandle(originalIdx);
   }
 
   private _focusDragHandle(rowIndex: number): void {
@@ -1091,7 +1085,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     ).querySelector<HTMLElement>(
       `.cps-table-row-drag-handle[data-row-index="${rowIndex}"]`
     );
-    handle?.focus();
+    if (handle) {
+      handle.focus();
+      handle.scrollIntoView({ block: 'center' });
+    }
   }
 
   onColumnsSelectedChange(cols: { [key: string]: any }[]): void {
