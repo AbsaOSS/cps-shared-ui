@@ -161,6 +161,7 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
 
     if (table.columnResizeMode === 'expand') {
       const tableWidth = table.tableViewChild.nativeElement.offsetWidth + delta;
+      table._initialColWidths = table._totalTableWidth();
       table.setResizeTableWidth(tableWidth / this._rootFontSizePx + 'rem');
       table.resizeTableCells(newColumnWidth, null);
     } else {
