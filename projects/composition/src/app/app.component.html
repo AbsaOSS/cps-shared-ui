@@ -15,6 +15,7 @@
   class="composition-container"
   [class.sidebar-open-mobile]="sidebarExpanded && isMobile">
   <app-navigation-sidebar
+    #sidebar
     [isExpanded]="sidebarExpanded"
     (linkClicked)="focusMainContent()"></app-navigation-sidebar>
   @if (sidebarExpanded && isMobile) {

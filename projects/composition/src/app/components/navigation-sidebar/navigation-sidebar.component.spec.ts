@@ -107,6 +107,29 @@ describe('NavigationSidebarComponent', () => {
     });
   });
 
+  describe('focusActiveLink', () => {
+    it('focuses the link that has aria-current="page"', () => {
+      const links = fixture.debugElement.queryAll(By.css('.list-item'));
+      const target = links[0].nativeElement as HTMLElement;
+      target.setAttribute('aria-current', 'page');
+      jest.spyOn(target, 'focus');
+
+      component.focusActiveLink();
+
+      expect(target.focus).toHaveBeenCalled();
+    });
+
+    it('does nothing when no link has aria-current="page"', () => {
+      const spies = fixture.debugElement
+        .queryAll(By.css('.list-item'))
+        .map((el) => jest.spyOn(el.nativeElement, 'focus'));
+
+      component.focusActiveLink();
+
+      spies.forEach((spy) => expect(spy).not.toHaveBeenCalled());
+    });
+  });
+
   describe('template', () => {
     it('renders nav with Main navigation aria-label', () => {
       const nav = fixture.debugElement.query(By.css('nav'));

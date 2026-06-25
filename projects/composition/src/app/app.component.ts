@@ -1,7 +1,15 @@
-import { Component, effect, inject, NgZone, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  NgZone,
+  PLATFORM_ID,
+  ViewChild
+} from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import packageJson from 'projects/cps-ui-kit/package.json';
+import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { CpsThemeService } from 'cps-ui-kit';
 
@@ -24,6 +32,8 @@ export class AppComponent {
   showThemeToggle = false;
 
   version = packageJson?.version;
+
+  @ViewChild('sidebar') private _sidebar?: NavigationSidebarComponent;
 
   private readonly _ngZone = inject(NgZone);
   private _mobileQuery?: MediaQueryList;
@@ -72,11 +82,7 @@ export class AppComponent {
       .subscribe((data: any) => {
         if (this.isMobile) this.sidebarExpanded = false;
         this.componentTitle = data?.title?.toUpperCase() || '';
-        setTimeout(() => {
-          (
-            this._document.getElementById('main-content') as HTMLElement
-          )?.focus();
-        });
+        this.focusMainContent();
       });
   }
 
@@ -91,11 +97,24 @@ export class AppComponent {
   }
 
   focusActiveNavItem(event: Event) {
-    const activeItem =
-      this._document.querySelector<HTMLElement>('.list-item._active');
-    if (activeItem) {
-      event.preventDefault();
-      activeItem.focus();
+    const mainEl = this._document.getElementById('main-content');
+    if (!mainEl) return;
+    const target = event.target as HTMLElement;
+    if (target !== mainEl && target !== this._getFirstTabbable(mainEl)) return;
+    event.preventDefault();
+    this._sidebar?.focusActiveLink();
+  }
+
+  private _getFirstTabbable(container: HTMLElement): HTMLElement | null {
+    const walker = this._document.createTreeWalker(
+      container,
+      NodeFilter.SHOW_ELEMENT
+    );
+    let node: Node | null;
+    while ((node = walker.nextNode())) {
+      const el = node as HTMLElement & { disabled?: boolean };
+      if (el.tabIndex >= 0 && !el.disabled) return el;
     }
+    return null;
   }
 }

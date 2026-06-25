@@ -190,31 +190,53 @@ describe('AppComponent', () => {
   });
 
   describe('focusActiveNavItem', () => {
-    beforeEach(async () => setup(false));
+    let mainEl: HTMLElement;
+    let firstTabbable: HTMLButtonElement;
+    let focusActiveLink: jest.Mock;
 
-    it('prevents default and focuses the active nav item when found', () => {
-      const activeEl = doc.createElement('a');
-      jest.spyOn(activeEl, 'focus');
-      jest.spyOn(doc, 'querySelector').mockReturnValue(activeEl);
+    beforeEach(async () => {
+      await setup(false);
+      mainEl = doc.getElementById('main-content') as HTMLElement;
+      firstTabbable = doc.createElement('button');
+      mainEl.prepend(firstTabbable);
+      focusActiveLink = jest.fn();
+      (
+        component as unknown as { _sidebar: { focusActiveLink: jest.Mock } }
+      )._sidebar = { focusActiveLink };
+    });
 
-      const event = new Event('keydown');
+    function makeEvent(target: Element): Event & { preventDefault: jest.Mock } {
+      const event = new Event('keydown', { cancelable: true });
+      Object.defineProperty(event, 'target', { value: target });
       jest.spyOn(event, 'preventDefault');
+      return event as Event & { preventDefault: jest.Mock };
+    }
 
+    it('intercepts and delegates when main itself is focused', () => {
+      const event = makeEvent(mainEl);
       component.focusActiveNavItem(event);
 
       expect(event.preventDefault).toHaveBeenCalled();
-      expect(activeEl.focus).toHaveBeenCalled();
+      expect(focusActiveLink).toHaveBeenCalled();
     });
 
-    it('does not prevent default when no active nav item exists', () => {
-      jest.spyOn(doc, 'querySelector').mockReturnValue(null);
+    it('intercepts and delegates when the first tabbable element is focused', () => {
+      const event = makeEvent(firstTabbable);
+      component.focusActiveNavItem(event);
 
-      const event = new Event('keydown');
-      jest.spyOn(event, 'preventDefault');
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(focusActiveLink).toHaveBeenCalled();
+    });
 
+    it('does not intercept when a non-first element in main is focused', () => {
+      const laterEl = doc.createElement('button');
+      mainEl.append(laterEl);
+
+      const event = makeEvent(laterEl);
       component.focusActiveNavItem(event);
 
       expect(event.preventDefault).not.toHaveBeenCalled();
+      expect(focusActiveLink).not.toHaveBeenCalled();
     });
   });
 });
