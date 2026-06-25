@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CpsInputComponent } from 'cps-ui-kit';
@@ -12,6 +12,7 @@ import { CpsInputComponent } from 'cps-ui-kit';
 })
 export class NavigationSidebarComponent implements OnInit {
   @Input() isExpanded = true;
+  @Output() linkClicked = new EventEmitter<void>();
 
   styles = [
     {
@@ -184,8 +185,11 @@ export class NavigationSidebarComponent implements OnInit {
     );
   }
 
-  onComponentSelect() {
-    this.searchVal = '';
-    this.filteredComponents = [...this._components];
+  onLinkClick() {
+    if (this.searchVal) {
+      this.searchVal = '';
+      this.filteredComponents = [...this._components];
+    }
+    this.linkClicked.emit();
   }
 }

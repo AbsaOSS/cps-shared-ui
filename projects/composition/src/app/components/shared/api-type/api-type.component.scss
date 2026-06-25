@@ -1,3 +1,5 @@
+@use '../../../../../../cps-ui-kit/styles/mixins' as *;
+
 :host {
   display: inline-flex;
   flex-wrap: wrap;
@@ -12,5 +14,13 @@
 
   .type-part {
     white-space: nowrap;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
   }
 }

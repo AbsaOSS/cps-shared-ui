@@ -1,8 +1,8 @@
-import { Component, effect, inject, PLATFORM_ID } from '@angular/core';
+import { Component, effect, inject, NgZone, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import packageJson from 'projects/cps-ui-kit/package.json';
-import { filter, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { CpsThemeService } from 'cps-ui-kit';
 
 @Component({
@@ -19,17 +19,29 @@ export class AppComponent {
   componentTitle = '';
 
   sidebarExpanded = false;
+  isMobile = false;
 
   showThemeToggle = false;
 
   version = packageJson?.version;
+
+  private readonly _ngZone = inject(NgZone);
+  private _mobileQuery?: MediaQueryList;
 
   constructor(
     private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {
     if (isPlatformBrowser(this._platformId)) {
-      this.sidebarExpanded = window.innerWidth >= 600;
+      this._mobileQuery = window.matchMedia('(max-width: 37.5rem)');
+      this.isMobile = this._mobileQuery.matches;
+      this.sidebarExpanded = !this.isMobile;
+      this._mobileQuery.addEventListener('change', (e) => {
+        this._ngZone.run(() => {
+          this.isMobile = e.matches;
+          this.sidebarExpanded = !e.matches;
+        });
+      });
       this.showThemeToggle =
         new URLSearchParams(window.location.search).get('experimental') ===
         'true';
@@ -54,16 +66,36 @@ export class AppComponent {
     this._router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        map(() => this._activatedRoute),
-        map((route) => route?.firstChild),
-        map((route) => route?.snapshot?.routeConfig)
+        map(() => this._activatedRoute?.firstChild?.snapshot?.routeConfig),
+        distinctUntilChanged()
       )
       .subscribe((data: any) => {
+        if (this.isMobile) this.sidebarExpanded = false;
         this.componentTitle = data?.title?.toUpperCase() || '';
+        setTimeout(() => {
+          (
+            this._document.getElementById('main-content') as HTMLElement
+          )?.focus();
+        });
       });
   }
 
   toggleSidebar() {
     this.sidebarExpanded = !this.sidebarExpanded;
+  }
+
+  focusMainContent() {
+    setTimeout(() => {
+      (this._document.getElementById('main-content') as HTMLElement)?.focus();
+    });
+  }
+
+  focusActiveNavItem(event: Event) {
+    const activeItem =
+      this._document.querySelector<HTMLElement>('.list-item._active');
+    if (activeItem) {
+      event.preventDefault();
+      activeItem.focus();
+    }
   }
 }

@@ -10,24 +10,24 @@
   }
 
   &__card {
-    border: 1px solid var(--cps-color-line);
-    border-radius: 8px;
+    border: 0.0625rem solid var(--cps-color-line);
+    border-radius: 0.5rem;
   }
 
   // We might want to replace with cps-tab-group
   &__tabbar {
     display: flex;
-    border-bottom: 1px solid var(--cps-color-line);
+    border-bottom: 0.0625rem solid var(--cps-color-line);
     background-color: var(--cps-surface-elevated);
-    border-radius: 7px 7px 0 0;
+    border-radius: 0.4375rem 0.4375rem 0 0;
     padding-left: 0.25rem; // prevent focus ring from being clipped on the left
   }
 
   &__tab {
     padding: 0.5rem 1rem;
     border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    border-bottom: 0.125rem solid transparent;
+    margin-bottom: -0.0625rem;
     background: none;
     cursor: pointer;
     font-size: 0.8125rem;
@@ -55,7 +55,7 @@
   &__preview {
     padding: 1.5rem;
     background-color: var(--cps-background-color);
-    border-radius: 0 0 7px 7px;
+    border-radius: 0 0 0.4375rem 0.4375rem;
 
     &:focus-visible {
       @include focus-ring();
@@ -65,7 +65,7 @@
   &__code {
     position: relative;
     background-color: var(--cps-surface-muted);
-    border-radius: 0 0 7px 7px;
+    border-radius: 0 0 0.4375rem 0.4375rem;
 
     &:focus-visible {
       @include focus-ring();
