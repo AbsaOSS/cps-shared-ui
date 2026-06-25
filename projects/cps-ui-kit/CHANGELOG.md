@@ -1,5 +1,16 @@
 # Changelog
 
+## [21.27.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.26.0...v21.27.0) (2026-06-17)
+
+
+### Features
+
+* fix a11y issues in icon component ([#663](https://github.com/AbsaOSS/cps-shared-ui/issues/663)) ([fca7060](https://github.com/AbsaOSS/cps-shared-ui/commit/fca7060f43e29602f8218db8e3aceded6a42d4a6))
+* fix a11y issues in loader component ([#661](https://github.com/AbsaOSS/cps-shared-ui/issues/661)) ([a8165b4](https://github.com/AbsaOSS/cps-shared-ui/commit/a8165b49753c8254fead33b6cd461c6b3c4efb5a))
+* fix a11y issues in paginator component ([#668](https://github.com/AbsaOSS/cps-shared-ui/issues/668)) ([a7775d7](https://github.com/AbsaOSS/cps-shared-ui/commit/a7775d785ebe0c088ce2a8cfbc64db43ffb70a8e))
+* fix a11y issues in progress circular component ([#667](https://github.com/AbsaOSS/cps-shared-ui/issues/667)) ([e9d6438](https://github.com/AbsaOSS/cps-shared-ui/commit/e9d6438e8d6d3ec8eeaba08722d2853d38b91931))
+* fix a11y issues in progress linear component ([#665](https://github.com/AbsaOSS/cps-shared-ui/issues/665)) ([a65d7f9](https://github.com/AbsaOSS/cps-shared-ui/commit/a65d7f999a80833786fc2099cc97f70c7b2f5675))
+
 ## [21.26.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.25.0...v21.26.0) (2026-06-11)
 
 
