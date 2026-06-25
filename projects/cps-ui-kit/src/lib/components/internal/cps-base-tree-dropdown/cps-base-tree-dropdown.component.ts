@@ -2,8 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -11,11 +13,16 @@ import {
   Optional,
   Output,
   Self,
-  SimpleChanges,
-  ViewChild
+  ViewChild,
+  type SimpleChanges
 } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { DOCUMENT } from '@angular/common';
+import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { TreeNode } from 'primeng/api';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../../utils/internal/accessibility-utils';
 import { Subscription } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
@@ -23,6 +30,10 @@ import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
+
+const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.5;
+const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 6;
 
 /**
  * BaseTreeDropdownComponent is an internal base component to support hierarchical data dropdown.
@@ -40,6 +51,12 @@ export class CpsBaseTreeDropdownComponent
    * @group Props
    */
   @Input() label = '';
+
+  /**
+   * Aria label for accessibility, takes precedence over label.
+   * @group Props
+   */
+  @Input() ariaLabel = '';
 
   /**
    * Bottom hint text.
@@ -123,7 +140,7 @@ export class CpsBaseTreeDropdownComponent
    * Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '18px';
+  @Input() prefixIconSize: iconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.
@@ -248,21 +265,61 @@ export class CpsBaseTreeDropdownComponent
 
   innerOptions: TreeNode[] = [];
   optionsMap = new Map<string, TreeNode>();
+
+  private _treeRefreshKey = 0;
+
+  readonly treeNodeToggleButtonPt = {
+    nodeToggleButton: { 'aria-label': 'Toggle node' }
+  };
+
+  readonly treeTrackBy = (
+    _index: number,
+    item: TreeNode & { node?: TreeNode }
+  ) => {
+    if (this.virtualScroll) return item?.node?.key ?? item?.key ?? _index;
+    return `${item?.key}-${this._treeRefreshKey}`;
+  };
+
   originalOptionsMap = new Map<string, any>();
 
-  virtualListHeight = 240;
-  virtualScrollItemSize = 40;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  protected readonly _document = inject(DOCUMENT);
+
+  readonly virtualScrollItemSizePx = computed(
+    () =>
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
+      VIRTUAL_SCROLL_ITEM_SIZE_REM
+  );
+
+  virtualListHeightRem =
+    VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
+
+  hintId = '';
+  errorId = '';
+  optionsTreeId = '';
 
   error = '';
   cvtWidth = '';
   isOpened = false;
   optionFocused = false;
   isAutocomplete = false;
+  isArrowNavigating = false;
+
+  get isRequired(): boolean {
+    return this.control?.control?.hasValidator(Validators.required) ?? false;
+  }
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
 
   treeContainerElement!: HTMLElement;
   treeSelection: any;
 
-  boxWidth = 0;
+  boxWidthPx = 0;
   resizeObserver: ResizeObserver;
 
   constructor(
@@ -274,12 +331,18 @@ export class CpsBaseTreeDropdownComponent
     }
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
-        if (entry?.target) this.boxWidth = (entry.target as any).offsetWidth;
+        if (entry?.target) this.boxWidthPx = (entry.target as any).offsetWidth;
       });
     });
   }
 
   ngOnInit() {
+    const prefix = this.isAutocomplete
+      ? 'cps-treeautocomplete'
+      : 'cps-treeselect';
+    this.hintId = generateUniqueId(`${prefix}-hint`);
+    this.errorId = generateUniqueId(`${prefix}-error`);
+    this.optionsTreeId = generateUniqueId(`${prefix}-options`);
     this.cvtWidth = convertSize(this.width);
     if (!this._value) {
       if (this.multiple) {
@@ -295,11 +358,31 @@ export class CpsBaseTreeDropdownComponent
         this._checkErrors();
       }
     );
+
+    logMissingAriaLabelError(
+      this.isAutocomplete
+        ? 'CpsTreeAutocompleteComponent'
+        : 'CpsTreeSelectComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
     if (changes.options) {
       this.innerOptions = this._toInnerOptions(this.options);
+    }
+    if (changes.label || changes.ariaLabel) {
+      logMissingAriaLabelError(
+        this.isAutocomplete
+          ? 'CpsTreeAutocompleteComponent'
+          : 'CpsTreeSelectComponent',
+        this.label,
+        this.ariaLabel
+      );
     }
   }
 
@@ -398,6 +481,7 @@ export class CpsBaseTreeDropdownComponent
   onSelectNode() {
     if (!this.multiple) {
       this.toggleOptions(false);
+      this.componentContainer?.nativeElement?.focus();
     }
   }
 
@@ -411,8 +495,10 @@ export class CpsBaseTreeDropdownComponent
 
     treeNode.expanded = !treeNode.expanded;
     this.updateOptions();
+    this._treeRefreshKey++;
+    this.treeList?.cd?.markForCheck();
     setTimeout(() => {
-      this._nodeToggled(elem);
+      this._nodeToggled(elem, key);
     });
   }
 
@@ -423,11 +509,13 @@ export class CpsBaseTreeDropdownComponent
   recalcVirtualListHeight() {
     if (!this.virtualScroll) return;
     const currentLen = this.treeList?.serializedValue?.length || 0;
-    this.virtualListHeight = Math.min(
-      this.virtualScrollItemSize * currentLen,
-      240
-    );
-    this._setTreeListHeight(this.virtualListHeight + 'px');
+    this.virtualListHeightRem =
+      VIRTUAL_SCROLL_ITEM_SIZE_REM *
+      Math.min(currentLen, VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS);
+    this._setTreeListHeight(this.virtualListHeightRem + 'rem');
+
+    this.treeList?.scroller?.calculateOptions();
+    this.treeList?.scroller?.cd?.detectChanges();
   }
 
   toggleOptions(show?: boolean): void {
@@ -450,15 +538,19 @@ export class CpsBaseTreeDropdownComponent
     this.isOpened = this.optionsMenu.isVisible();
 
     this.optionFocused = false;
-    if (this.isOpened && this.treeSelection) {
-      this._expandToNodes(
-        this.multiple ? this.treeSelection : [this.treeSelection]
-      );
-      this._setTreeListHeight('');
-      this.updateOptions();
+    this.isArrowNavigating = false;
+    if (this.isOpened) {
+      if (this.treeSelection) {
+        this._expandToNodes(
+          this.multiple ? this.treeSelection : [this.treeSelection]
+        );
+        this._treeRefreshKey++;
+        this.treeList?.cd?.markForCheck();
+      }
       setTimeout(() => {
+        this.updateOptions();
         this.recalcVirtualListHeight();
-        const selected = this.treeContainerElement.querySelector(
+        const selected = this.treeContainerElement?.querySelector(
           '.p-highlight'
         ) as any;
         if (selected) {
@@ -494,28 +586,154 @@ export class CpsBaseTreeDropdownComponent
     this.updateValue(this.treeSelectionToValue(this.treeSelection));
   }
 
-  initArrowsNavigaton() {
+  initArrowsNavigaton(up = false) {
     if (!this.isOpened) return;
 
     if (!this.optionFocused) {
-      const firstElem =
-        this.treeContainerElement?.querySelector('.p-tree-node');
+      const elemToFocus =
+        this.treeContainerElement?.querySelector(
+          '[role="treeitem"][aria-selected="true"]'
+        ) ??
+        (up
+          ? this._getLastVisibleTreeNodeLi()
+          : this.treeContainerElement?.querySelector('.p-tree-node'));
 
-      if (firstElem) (firstElem as HTMLElement).focus();
+      this._focusTreeNode(elemToFocus as HTMLElement | null);
       this.optionFocused = true;
+      this.isArrowNavigating = true;
     }
+  }
+
+  protected _focusTreeNode(elem: HTMLElement | null) {
+    if (!elem) return;
+    this.treeContainerElement
+      ?.querySelectorAll<HTMLElement>('[role="treeitem"]')
+      .forEach((li) => {
+        li.tabIndex = -1;
+      });
+    elem.tabIndex = 0;
+    elem.focus();
+  }
+
+  navigateIntoOptions(up: boolean) {
+    if (!this.isOpened || this.optionFocused) return;
+    const hasSelected = !!this.treeContainerElement?.querySelector(
+      '[role="treeitem"][aria-selected="true"]'
+    );
+
+    this.initArrowsNavigaton(up);
+
+    if (!hasSelected) return;
+
+    const active = this._document.activeElement as HTMLElement | null;
+    if (!active || !this.treeContainerElement?.contains(active)) return;
+
+    const items = Array.from(
+      this.treeContainerElement.querySelectorAll<HTMLElement>(
+        '[role="treeitem"]'
+      )
+    );
+    const next = items[items.indexOf(active) + (up ? -1 : 1)];
+    if (next) this._focusTreeNode(next);
+  }
+
+  protected _onOptionsClose(): void {
+    this.toggleOptions(false);
+    this.componentContainer?.nativeElement?.focus();
+  }
+
+  onOptionsKeyDown(event: KeyboardEvent): void {
+    switch (event.code) {
+      case 'Escape':
+      case 'Tab':
+        event.preventDefault();
+        this._onOptionsClose();
+        break;
+
+      case 'ArrowUp':
+      case 'ArrowDown': {
+        this.isArrowNavigating = true;
+        const target = event.target as HTMLElement;
+        if (this._document.activeElement === target) {
+          event.preventDefault();
+          if (event.code === 'ArrowUp') {
+            this._focusTreeNode(this._getLastVisibleTreeNodeLi());
+          } else {
+            this._focusTreeNode(
+              this.treeContainerElement?.querySelector<HTMLElement>(
+                '[role="treeitem"]'
+              ) ?? null
+            );
+          }
+        }
+        break;
+      }
+
+      case 'Enter':
+      case 'Space':
+      case 'NumpadEnter': {
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+        const ariaExpanded = target.getAttribute('aria-expanded');
+        if (ariaExpanded === null) break;
+
+        const isCollapsed = ariaExpanded !== 'true';
+        const isFullyExpandable = target.classList.contains(
+          'cps-tree-node-fully-expandable'
+        );
+
+        if (isCollapsed || isFullyExpandable) {
+          const toggleBtn = target.querySelector<HTMLElement>(
+            '.p-tree-node-toggle-button'
+          );
+          if (toggleBtn) {
+            toggleBtn.click();
+            if (isCollapsed) {
+              setTimeout(() => {
+                const firstChild =
+                  target.querySelector<HTMLElement>('[role="treeitem"]');
+                if (firstChild) this._focusTreeNode(firstChild);
+              });
+            }
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  private _findLastVisibleDescendantLi(pTreeNode: Element): HTMLElement | null {
+    const li = Array.from(pTreeNode.children).find(
+      (el) => el.getAttribute('data-pc-section') === 'node'
+    ) as HTMLElement | undefined;
+    const childrenUl = li?.children[1];
+    if (childrenUl && childrenUl.children.length > 0) {
+      return this._findLastVisibleDescendantLi(
+        childrenUl.children[childrenUl.children.length - 1]
+      );
+    }
+    return li ?? null;
+  }
+
+  protected _getLastVisibleTreeNodeLi(): HTMLElement | null {
+    const lastPTreeNode = this.treeContainerElement?.lastElementChild;
+    return lastPTreeNode
+      ? this._findLastVisibleDescendantLi(lastPTreeNode)
+      : null;
   }
 
   onNodeExpand(event: any) {
     this._nodeToggledWithChevron(
       event?.originalEvent?.currentTarget?.parentElement
     );
+    if (this.virtualScroll) this._refocusVirtualNode(event?.node?.key);
   }
 
   onNodeCollapse(event: any) {
     this._nodeToggledWithChevron(
       event?.originalEvent?.currentTarget?.parentElement
     );
+    if (this.virtualScroll) this._refocusVirtualNode(event?.node?.key);
   }
 
   treeSelectionToValue(selection: any) {
@@ -561,10 +779,11 @@ export class CpsBaseTreeDropdownComponent
     }
 
     this.optionFocused = true;
+    this.isArrowNavigating = false;
 
-    const elem = event.target.classList.contains('p-treenode-content')
+    const elem = event.target.classList.contains('p-tree-node-content')
       ? event.target
-      : getParentWithClass(event.target, 'p-treenode-content');
+      : getParentWithClass(event.target, 'p-tree-node-content');
 
     if (
       elem?.parentElement?.classList?.contains('cps-tree-node-fully-expandable')
@@ -588,13 +807,30 @@ export class CpsBaseTreeDropdownComponent
       this.treeList.scroller.style.height = height;
   }
 
-  private _nodeToggled(elem: HTMLElement) {
+  private _nodeToggled(elem: HTMLElement, key?: string) {
     this.recalcVirtualListHeight();
     setTimeout(() => {
       this.optionsMenu.align();
     });
 
-    if (elem?.parentElement) (elem?.parentElement as HTMLElement).focus();
+    if (key) {
+      this._focusTreeNode(
+        this.treeContainerElement?.querySelector<HTMLElement>(`.key-${key}`) ??
+          null
+      );
+    } else if (elem?.parentElement) {
+      this._focusTreeNode(elem.parentElement as HTMLElement);
+    }
+  }
+
+  private _refocusVirtualNode(key: string | undefined) {
+    if (!key) return;
+    setTimeout(() => {
+      this._focusTreeNode(
+        this.treeContainerElement?.querySelector<HTMLElement>(`.key-${key}`) ??
+          null
+      );
+    });
   }
 
   private _nodeToggledWithChevron(elem: HTMLElement) {
@@ -666,10 +902,10 @@ export class CpsBaseTreeDropdownComponent
         inner.type = 'directory';
         inner.selectable = false;
         inner.styleClass += ' cps-tree-node-fully-expandable';
-        if (this.initialExpandDirectories) inner.expanded = true;
+        inner.expanded = this.initialExpandDirectories;
       }
       if (o.children) {
-        if (this.initialExpandAll) inner.expanded = true;
+        inner.expanded = this.initialExpandAll || !!inner.expanded;
 
         inner.children = o.children.map((c: any, index: number) => {
           return mapOption(
