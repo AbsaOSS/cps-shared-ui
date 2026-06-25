@@ -4,7 +4,6 @@ import { Table } from 'primeng/table';
 import { ObjectUtils } from 'primeng/utils';
 
 @Directive({
-  standalone: true,
   selector: '[tWithUnsort]',
   exportAs: 'tWithUnsort'
 })

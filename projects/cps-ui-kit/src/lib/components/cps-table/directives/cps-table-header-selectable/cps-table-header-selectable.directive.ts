@@ -13,7 +13,6 @@ import { TableHeaderCheckbox } from 'primeng/table';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTHdrSelectable]'
 })
 export class CpsTableHeaderSelectableDirective implements OnInit, OnDestroy {

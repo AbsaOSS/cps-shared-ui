@@ -21,7 +21,6 @@ import { TableColumnFilterComponent } from '../../components/internal/table-colu
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTColFilter]',
   exportAs: 'cpsTColFilter'
 })

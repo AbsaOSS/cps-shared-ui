@@ -7,7 +7,6 @@ import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-s
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTColResizable]'
 })
 export class CpsTableColumnResizableDirective extends ResizableColumn {

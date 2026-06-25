@@ -99,7 +99,7 @@ describe('CpsTableDetectFilterTypePipe', () => {
       expect(pipe.transform([], 'any')).toBe('boolean');
     });
 
-    it('should not treat a date column with 6+ unique dates as "date"', () => {
+    it('should return "date" for 6+ unique Date values', () => {
       const data = Array.from({ length: 6 }, (_, i) => ({
         ts: new Date(2024, i, 1)
       }));

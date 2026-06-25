@@ -4,7 +4,7 @@
   tWithUnsort
   [pt]="tablePassthrough"
   [attr.aria-busy]="loading || null"
-  [ngClass]="{ 'cps-table-loading': loading }"
+  [class.cps-table-loading]="loading"
   [styleClass]="styleClass"
   [tableStyle]="tableStyle"
   [tableStyleClass]="tableStyleClass"
@@ -315,17 +315,18 @@
     let-expanded="expanded">
     <tr
       [pReorderableRow]="rowIndex"
-      [ngClass]="{
-        'cps-table-row-selected': selectable && primengTable.isSelected(item),
-        'cps-table-row-keyboard-reordering':
-          reorderableRows && keyboardDragRowIndex === rowIndex
-      }">
+      [class.cps-table-row-selected]="
+        selectable && primengTable.isSelected(item)
+      "
+      [class.cps-table-row-keyboard-reordering]="
+        reorderableRows && keyboardDragRowIndex === rowIndex
+      ">
       @if (rowExpansionTemplate) {
         <td class="cps-table-row-chevron-cell">
           <button
             type="button"
             class="cps-table-row-chevron"
-            [ngClass]="{ 'cps-table-row-chevron-expanded': expanded }"
+            [class.cps-table-row-chevron-expanded]="expanded"
             [attr.aria-expanded]="expanded"
             [attr.aria-label]="expanded ? 'Collapse row' : 'Expand row'"
             [pRowToggler]="item">

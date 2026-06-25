@@ -117,21 +117,13 @@
   <button
     type="button"
     class="cps-table-col-filter-menu-button"
-    [ngClass]="{
-      'cps-table-col-filter-menu-button-active': isFilterApplied
-    }"
+    [class.cps-table-col-filter-menu-button-active]="isFilterApplied"
     [attr.aria-label]="
       isFilterApplied ? 'Filter applied, open filter menu' : 'Open filter menu'
     "
     aria-haspopup="dialog"
     [attr.aria-expanded]="isMenuOpen"
-    (click)="columnFilterMenu.toggle($event)"
-    (keydown.enter)="$event.stopPropagation(); columnFilterMenu.toggle($event)"
-    (keydown.space)="
-      $event.stopPropagation();
-      $event.preventDefault();
-      columnFilterMenu.toggle($event)
-    ">
+    (click)="columnFilterMenu.toggle($event)">
     <cps-icon
       [icon]="isFilterApplied ? 'filter-funnel-filled' : 'filter-funnel'"
       size="0.8125rem">

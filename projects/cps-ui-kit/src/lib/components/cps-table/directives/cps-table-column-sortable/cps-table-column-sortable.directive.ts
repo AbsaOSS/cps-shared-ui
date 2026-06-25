@@ -17,7 +17,6 @@ import { CpsSortIconComponent } from '../../components/internal/cps-sort-icon/cp
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTColSortable]',
   host: {
     class: 'p-sortable-column',
