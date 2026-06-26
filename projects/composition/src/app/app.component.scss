@@ -1,32 +1,6 @@
 @use '../variables.scss' as vars;
 @use '../../../cps-ui-kit/styles/mixins' as *;
 
-.skip-link {
-  position: fixed;
-  top: 0;
-  left: 0.5rem;
-  z-index: 9999;
-  padding: 0.5rem 1rem;
-  background: var(--cps-surface-control);
-  color: var(--cps-text-primary);
-  border: 0.0625rem solid var(--cps-border-focus);
-  border-radius: 0 0 0.25rem 0.25rem;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transform: translateY(-100%);
-
-  &:focus {
-    transform: translateY(0);
-    outline: none;
-  }
-
-  &:focus-visible {
-    @include focus-ring();
-    position: fixed;
-    top: 0;
-  }
-}
-
 .top-toolbar {
   height: vars.$top-tbar-height;
   background-color: var(--cps-surface-body);

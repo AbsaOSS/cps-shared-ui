@@ -35,6 +35,18 @@ describe('NavigationSidebarComponent', () => {
       const sidebar = fixture.debugElement.query(By.css('.sidebar'));
       expect(sidebar.classes['sidebar-collapsed']).toBe(true);
     });
+
+    it('removes nav from tab order via inert when collapsed', () => {
+      component.isExpanded = false;
+      fixture.detectChanges();
+      const nav = fixture.debugElement.query(By.css('nav'));
+      expect(nav.attributes.inert).toBe('');
+    });
+
+    it('does not set inert when expanded', () => {
+      const nav = fixture.debugElement.query(By.css('nav'));
+      expect(nav.attributes.inert).toBeUndefined();
+    });
   });
 
   describe('ngOnInit', () => {

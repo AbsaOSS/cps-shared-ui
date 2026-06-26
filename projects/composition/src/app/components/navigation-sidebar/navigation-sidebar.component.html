@@ -1,4 +1,4 @@
-<nav aria-label="Main navigation">
+<nav aria-label="Main navigation" [attr.inert]="!isExpanded ? '' : null">
   <div class="sidebar" [ngClass]="{ 'sidebar-collapsed': !isExpanded }">
     <div class="list">
       <h3 class="list-title">Styles</h3>
