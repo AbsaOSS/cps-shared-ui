@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  PLATFORM_ID,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -10,7 +11,7 @@ import {
   inject,
   input
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -110,6 +111,8 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
 
   private readonly _elementRef = inject(ElementRef<HTMLElement>);
   private readonly _router = inject(Router);
+  private readonly _platformId = inject(PLATFORM_ID);
+
   private _pendingTouch = false;
 
   onMenuItemTouchStart(): void {
@@ -190,6 +193,7 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
   }
 
   private _applyExpandButtonBackground(): void {
+    if (!isPlatformBrowser(this._platformId)) return;
     const bg = this._resolveBackground(this._elementRef.nativeElement);
     if (bg && this._expandAreaBtn) {
       this._expandAreaBtn.nativeElement.style.backgroundColor = bg;
@@ -200,7 +204,7 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
     let node: HTMLElement | null = el.parentElement;
     while (node) {
       const bg = getComputedStyle(node).backgroundColor;
-      if (bg !== 'rgba(0, 0, 0, 0)') return bg;
+      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') return bg;
       node = node.parentElement;
     }
     return null;

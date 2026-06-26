@@ -428,6 +428,33 @@ describe('CpsSidebarMenuComponent', () => {
       parent.remove();
     });
 
+    it('should skip ancestors returning "transparent" keyword and find the opaque one', () => {
+      const grandparent = document.createElement('div');
+      const parent = document.createElement('div');
+      document.body.appendChild(grandparent);
+      grandparent.appendChild(parent);
+      parent.appendChild(fixture.nativeElement);
+
+      jest.spyOn(window, 'getComputedStyle').mockImplementation(
+        (el) =>
+          ({
+            backgroundColor:
+              el === grandparent ? 'rgb(50, 50, 50)' : 'transparent'
+          }) as CSSStyleDeclaration
+      );
+
+      (
+        component as unknown as { _applyExpandButtonBackground(): void }
+      )._applyExpandButtonBackground();
+
+      const btn = fixture.nativeElement.querySelector(
+        '.expand-area'
+      ) as HTMLElement;
+      expect(btn?.style.backgroundColor).toBe('rgb(50, 50, 50)');
+
+      grandparent.remove();
+    });
+
     it('should not change expand button background when all ancestors are transparent', () => {
       jest.spyOn(window, 'getComputedStyle').mockReturnValue({
         backgroundColor: 'rgba(0, 0, 0, 0)'
@@ -441,6 +468,17 @@ describe('CpsSidebarMenuComponent', () => {
         '.expand-area'
       ) as HTMLElement;
       expect(btn?.style.backgroundColor).toBe('');
+    });
+
+    it('should not call getComputedStyle when running in SSR', () => {
+      type InternalSsr = {
+        _platformId: string;
+        _applyExpandButtonBackground(): void;
+      };
+      (component as unknown as InternalSsr)._platformId = 'server';
+      const spy = jest.spyOn(window, 'getComputedStyle');
+      (component as unknown as InternalSsr)._applyExpandButtonBackground();
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 
