@@ -150,6 +150,63 @@ describe('AppComponent', () => {
     }));
   });
 
+  describe('onNavLinkClicked', () => {
+    it('closes sidebar on mobile', async () => {
+      await setup(true);
+      component.sidebarExpanded = true;
+      component.onNavLinkClicked();
+      expect(component.sidebarExpanded).toBe(false);
+    });
+
+    it('does not close sidebar on desktop', async () => {
+      await setup(false);
+      component.sidebarExpanded = true;
+      component.onNavLinkClicked();
+      expect(component.sidebarExpanded).toBe(true);
+    });
+  });
+
+  describe('Escape key', () => {
+    function pressEscape(document: Document) {
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    }
+
+    it('closes sidebar and focuses toggle button on mobile when open', async () => {
+      await setup(true);
+      component.sidebarExpanded = true;
+      const toggleBtn = doc.createElement('button');
+      jest.spyOn(toggleBtn, 'focus');
+      (
+        component as unknown as {
+          _sidebarToggle: { nativeElement: HTMLButtonElement };
+        }
+      )._sidebarToggle = { nativeElement: toggleBtn };
+
+      pressEscape(doc);
+
+      expect(component.sidebarExpanded).toBe(false);
+      expect(toggleBtn.focus).toHaveBeenCalled();
+    });
+
+    it('does nothing on desktop', async () => {
+      await setup(false);
+      component.sidebarExpanded = true;
+
+      pressEscape(doc);
+
+      expect(component.sidebarExpanded).toBe(true);
+    });
+
+    it('does nothing when sidebar is already closed on mobile', async () => {
+      await setup(true);
+      component.sidebarExpanded = false;
+
+      pressEscape(doc);
+
+      expect(component.sidebarExpanded).toBe(false);
+    });
+  });
+
   describe('toggleSidebar', () => {
     beforeEach(async () => setup(false));
 
@@ -212,20 +269,31 @@ describe('AppComponent', () => {
       return event as Event & { preventDefault: jest.Mock };
     }
 
-    it('intercepts and delegates when main itself is focused', () => {
+    it('intercepts and delegates when main itself is focused and sidebar is expanded', () => {
+      focusActiveLink.mockReturnValue(true);
       const event = makeEvent(mainEl);
       component.focusActiveNavItem(event);
 
-      expect(event.preventDefault).toHaveBeenCalled();
       expect(focusActiveLink).toHaveBeenCalled();
+      expect(event.preventDefault).toHaveBeenCalled();
     });
 
-    it('intercepts and delegates when the first tabbable element is focused', () => {
+    it('intercepts and delegates when the first tabbable element is focused and sidebar is expanded', () => {
+      focusActiveLink.mockReturnValue(true);
       const event = makeEvent(firstTabbable);
       component.focusActiveNavItem(event);
 
-      expect(event.preventDefault).toHaveBeenCalled();
       expect(focusActiveLink).toHaveBeenCalled();
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('does not prevent default when sidebar is collapsed and focusActiveLink returns false', () => {
+      focusActiveLink.mockReturnValue(false);
+      const event = makeEvent(mainEl);
+      component.focusActiveNavItem(event);
+
+      expect(focusActiveLink).toHaveBeenCalled();
+      expect(event.preventDefault).not.toHaveBeenCalled();
     });
 
     it('does not intercept when a non-first element in main is focused', () => {

@@ -1,5 +1,6 @@
 import {
   Component,
+  ElementRef,
   effect,
   inject,
   NgZone,
@@ -17,7 +18,8 @@ import { CpsThemeService } from 'cps-ui-kit';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  standalone: false
+  standalone: false,
+  host: { '(document:keydown.escape)': 'onEscapeKey()' }
 })
 export class AppComponent {
   private readonly _platformId = inject(PLATFORM_ID);
@@ -34,6 +36,8 @@ export class AppComponent {
   version = packageJson?.version;
 
   @ViewChild('sidebar') private _sidebar?: NavigationSidebarComponent;
+  @ViewChild('sidebarToggle')
+  private _sidebarToggle?: ElementRef<HTMLButtonElement>;
 
   private readonly _ngZone = inject(NgZone);
   private _mobileQuery?: MediaQueryList;
@@ -86,8 +90,20 @@ export class AppComponent {
       });
   }
 
+  onEscapeKey() {
+    if (this.isMobile && this.sidebarExpanded) {
+      this.sidebarExpanded = false;
+      this._sidebarToggle?.nativeElement.focus();
+    }
+  }
+
   toggleSidebar() {
     this.sidebarExpanded = !this.sidebarExpanded;
+  }
+
+  onNavLinkClicked() {
+    if (this.isMobile) this.sidebarExpanded = false;
+    this.focusMainContent();
   }
 
   focusMainContent() {
@@ -101,8 +117,7 @@ export class AppComponent {
     if (!mainEl) return;
     const target = event.target as HTMLElement;
     if (target !== mainEl && target !== this._getFirstTabbable(mainEl)) return;
-    event.preventDefault();
-    this._sidebar?.focusActiveLink();
+    if (this._sidebar?.focusActiveLink()) event.preventDefault();
   }
 
   private _getFirstTabbable(container: HTMLElement): HTMLElement | null {

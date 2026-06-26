@@ -26,10 +26,13 @@ export class NavigationSidebarComponent implements OnInit {
   @ViewChildren(RouterLinkActive, { read: ElementRef })
   private _navLinks!: QueryList<ElementRef<HTMLAnchorElement>>;
 
-  focusActiveLink(): void {
-    this._navLinks
-      .find((ref) => ref.nativeElement.getAttribute('aria-current') === 'page')
-      ?.nativeElement.focus();
+  focusActiveLink(): boolean {
+    if (!this.isExpanded) return false;
+    const link = this._navLinks.find(
+      (ref) => ref.nativeElement.getAttribute('aria-current') === 'page'
+    );
+    link?.nativeElement.focus();
+    return !!link;
   }
 
   styles = [

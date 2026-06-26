@@ -120,25 +120,40 @@ describe('NavigationSidebarComponent', () => {
   });
 
   describe('focusActiveLink', () => {
-    it('focuses the link that has aria-current="page"', () => {
+    it('focuses the active link and returns true when sidebar is expanded', () => {
       const links = fixture.debugElement.queryAll(By.css('.list-item'));
       const target = links[0].nativeElement as HTMLElement;
       target.setAttribute('aria-current', 'page');
       jest.spyOn(target, 'focus');
 
-      component.focusActiveLink();
+      const result = component.focusActiveLink();
 
       expect(target.focus).toHaveBeenCalled();
+      expect(result).toBe(true);
     });
 
-    it('does nothing when no link has aria-current="page"', () => {
+    it('returns false and does not focus when no link has aria-current="page"', () => {
       const spies = fixture.debugElement
         .queryAll(By.css('.list-item'))
         .map((el) => jest.spyOn(el.nativeElement, 'focus'));
 
-      component.focusActiveLink();
+      const result = component.focusActiveLink();
 
       spies.forEach((spy) => expect(spy).not.toHaveBeenCalled());
+      expect(result).toBe(false);
+    });
+
+    it('returns false immediately when sidebar is collapsed', () => {
+      component.isExpanded = false;
+      const links = fixture.debugElement.queryAll(By.css('.list-item'));
+      const target = links[0].nativeElement as HTMLElement;
+      target.setAttribute('aria-current', 'page');
+      jest.spyOn(target, 'focus');
+
+      const result = component.focusActiveLink();
+
+      expect(target.focus).not.toHaveBeenCalled();
+      expect(result).toBe(false);
     });
   });
 

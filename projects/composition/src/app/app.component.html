@@ -13,10 +13,21 @@
 <div
   class="composition-container"
   [class.sidebar-open-mobile]="sidebarExpanded && isMobile">
+  <div class="sidebar-toggle-wrap" [class.sidebar-expanded]="sidebarExpanded">
+    <button
+      #sidebarToggle
+      type="button"
+      class="sidebar-toggle-btn"
+      [attr.aria-expanded]="sidebarExpanded"
+      aria-label="Toggle navigation sidebar"
+      (click)="toggleSidebar()">
+      <cps-icon icon="burger-arrow" class="sidebar-toggle-icon"></cps-icon>
+    </button>
+  </div>
   <app-navigation-sidebar
     #sidebar
     [isExpanded]="sidebarExpanded"
-    (linkClicked)="focusMainContent()"></app-navigation-sidebar>
+    (linkClicked)="onNavLinkClicked()"></app-navigation-sidebar>
   @if (sidebarExpanded && isMobile) {
     <div
       class="sidebar-backdrop"
@@ -30,16 +41,6 @@
     [ngClass]="{ 'composition-body-collapsed': !sidebarExpanded }"
     (keydown.shift.tab)="focusActiveNavItem($event)">
     <div class="composition-body-toolbar">
-      <div class="sidebar-toggle-wrap">
-        <button
-          type="button"
-          class="sidebar-toggle-btn"
-          [attr.aria-expanded]="sidebarExpanded"
-          aria-label="Toggle navigation sidebar"
-          (click)="toggleSidebar()">
-          <cps-icon icon="burger-arrow" class="sidebar-toggle-icon"></cps-icon>
-        </button>
-      </div>
       <div class="sidebar-toggle-placeholder" aria-hidden="true"></div>
       <span class="composition-body-toolbar-title">{{ componentTitle }}</span>
     </div>
