@@ -39,6 +39,7 @@
         </cps-menu>
         <button
           type="button"
+          (touchstart)="onMenuItemTouchStart()"
           (mouseenter)="showMenu($event, popupMenu)"
           (mouseleave)="leaveMenu($event, popupMenu)"
           (focusin)="showMenu($event, popupMenu, item)"
@@ -66,6 +67,7 @@
     }
   </nav>
   <button
+    #expandAreaBtn
     type="button"
     class="expand-area"
     (click)="toggleSidebar()"
