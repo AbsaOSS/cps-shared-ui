@@ -51,6 +51,7 @@ jobs:
       - name: Comment coverage on PR
         uses: ArtiomTr/jest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         with:
           custom-title: Coverage report for library
           coverage-file: ./coverage/report.json
