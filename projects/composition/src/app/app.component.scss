@@ -121,7 +121,7 @@
       height: 1.5rem;
       width: 1.5rem;
       justify-content: center;
-      background: white;
+      background: var(--cps-surface-highlight);
       border-radius: 0.25rem;
       opacity: 0;
       animation: sidebar-btn-appear 0s linear 0.2s forwards;

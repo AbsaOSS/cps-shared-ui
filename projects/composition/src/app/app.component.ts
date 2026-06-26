@@ -47,7 +47,9 @@ export class AppComponent {
     private _activatedRoute: ActivatedRoute
   ) {
     if (isPlatformBrowser(this._platformId)) {
-      this._mobileQuery = window.matchMedia('(max-width: 37.5rem)');
+      this._mobileQuery = this._document.defaultView!.matchMedia(
+        '(max-width: 37.5rem)'
+      );
       this.isMobile = this._mobileQuery.matches;
       this.sidebarExpanded = !this.isMobile;
       this._mobileQuery.addEventListener('change', (e) => {
@@ -57,8 +59,9 @@ export class AppComponent {
         });
       });
       this.showThemeToggle =
-        new URLSearchParams(window.location.search).get('experimental') ===
-        'true';
+        new URLSearchParams(this._document.location?.search).get(
+          'experimental'
+        ) === 'true';
     }
 
     effect(() => {

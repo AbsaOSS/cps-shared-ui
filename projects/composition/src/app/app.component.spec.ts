@@ -22,19 +22,11 @@ describe('AppComponent', () => {
   let matchMediaChangeCb: ((e: MediaQueryListEvent) => void) | null;
   let doc: Document;
 
-  beforeAll(() => {
-    if (!window.matchMedia) {
-      Object.defineProperty(window, 'matchMedia', {
-        writable: true,
-        configurable: true,
-        value: jest.fn()
-      });
-    }
-  });
+  const matchMediaFn = jest.fn();
 
-  function mockMatchMedia(mobile: boolean): void {
+  function buildMockDocument(mobile: boolean): Document {
     matchMediaChangeCb = null;
-    (window.matchMedia as jest.Mock).mockReturnValue({
+    matchMediaFn.mockReturnValue({
       matches: mobile,
       addEventListener: jest.fn(
         (_: string, cb: (e: MediaQueryListEvent) => void) => {
@@ -43,14 +35,28 @@ describe('AppComponent', () => {
       ),
       removeEventListener: jest.fn()
     } as Partial<MediaQueryList>);
+
+    return new Proxy(document, {
+      get(target, prop, receiver) {
+        if (prop === 'defaultView') {
+          return new Proxy(window, {
+            get(win, p, r) {
+              if (p === 'matchMedia') return matchMediaFn;
+              return Reflect.get(win, p, r);
+            }
+          });
+        }
+        return Reflect.get(target, prop, receiver);
+      }
+    });
   }
 
   async function setup(mobile = false): Promise<void> {
-    mockMatchMedia(mobile);
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
       schemas: [NO_ERRORS_SCHEMA],
       providers: [
+        { provide: DOCUMENT, useValue: buildMockDocument(mobile) },
         { provide: Router, useValue: { events: routerEvents$ } },
         {
           provide: ActivatedRoute,
