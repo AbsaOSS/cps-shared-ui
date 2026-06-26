@@ -40,7 +40,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 99;
+  z-index: 2001;
 }
 
 .sidebar-toggle-wrap {
@@ -115,6 +115,7 @@
   }
   &.sidebar-open-mobile {
     .sidebar-toggle-wrap {
+      z-index: 2003;
       top: calc(vars.$top-tbar-height + 0.375rem);
       left: calc(vars.$sidebar-width - 2.5rem);
       height: 1.5rem;

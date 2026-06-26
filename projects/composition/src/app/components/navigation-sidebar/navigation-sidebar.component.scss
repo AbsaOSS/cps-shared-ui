@@ -57,7 +57,7 @@
     top: vars.$top-tbar-height;
     left: 0;
     height: calc(100vh - vars.$top-tbar-height);
-    z-index: 100;
+    z-index: 2002;
     overflow-x: clip;
     border-right: none;
 

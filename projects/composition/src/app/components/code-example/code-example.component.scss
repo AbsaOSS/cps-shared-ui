@@ -54,6 +54,7 @@
 
   &__preview {
     padding: 1.5rem;
+    overflow-x: auto;
     background-color: var(--cps-background-color);
     border-radius: 0 0 0.4375rem 0.4375rem;
 
