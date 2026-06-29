@@ -1,12 +1,8 @@
 <div
-  [ngStyle]="{ width: cvtWidth }"
+  [style.width]="cvtWidth"
   class="cps-treeselect"
-  tabindex="0"
-  [ngClass]="{ disabled: disabled, error: error, active: isOpened }"
-  #componentContainer
-  (keydown)="onKeyDown($event)"
-  (focus)="onFocus()"
-  (blur)="onBlur()">
+  [class.disabled]="disabled"
+  [class.error]="error">
   @if (label) {
     <div class="cps-treeselect-label">
       <label>{{ label }}</label>
@@ -25,12 +21,26 @@
   }
   <div
     class="cps-treeselect-container"
+    [tabindex]="disabled ? -1 : 0"
     [class.focused]="isOpened"
-    [ngClass]="{
-      'persistent-clear': persistentClear,
-      borderless: appearance === 'borderless',
-      underlined: appearance === 'underlined'
-    }">
+    [class.persistent-clear]="persistentClear"
+    [class.borderless]="appearance === 'borderless'"
+    [class.underlined]="appearance === 'underlined'"
+    [class.active]="isOpened"
+    #componentContainer
+    role="combobox"
+    aria-haspopup="tree"
+    [attr.aria-expanded]="isOpened"
+    [attr.aria-busy]="loading ? true : null"
+    [attr.aria-controls]="optionsTreeId"
+    [attr.aria-required]="isRequired || null"
+    [attr.aria-invalid]="error ? 'true' : null"
+    [attr.aria-label]="ariaLabel || label || null"
+    [attr.aria-describedby]="describedBy"
+    [attr.aria-disabled]="disabled || null"
+    (keydown)="onKeyDown($event)"
+    (focus)="onFocus()"
+    (blur)="onBlur()">
     <div class="cps-treeselect-box" #boxEl (click)="onBoxClick()">
       <div class="cps-treeselect-box-left">
         @if (prefixIcon) {
@@ -58,8 +68,8 @@
               <span class="single-item"> {{ treeSelection.label }}</span>
             }
             @if (multiple && !chips) {
-              <div class="text-group">
-                <span class="text-group-item">
+              <div class="text-group" role="list" aria-label="Selected options">
+                <span class="text-group-item" role="listitem">
                   {{
                     treeSelection
                       | combineLabels: innerOptions : '' : 'label' : true
@@ -68,9 +78,14 @@
               </div>
             }
             @if (multiple && chips) {
-              <div class="chips-group">
+              <div
+                class="chips-group"
+                role="list"
+                aria-label="Selected options">
                 @for (val of treeSelection; track val) {
                   <cps-chip
+                    role="listitem"
+                    closeButtonAriaLabel="Remove"
                     [disabled]="disabled"
                     [closable]="closableChips"
                     (closed)="remove(val)"
@@ -85,6 +100,13 @@
       <span class="cps-treeselect-box-icons">
         @if (clearable && !disabled) {
           <span
+            role="button"
+            aria-label="Clear selection"
+            [tabindex]="disabled ? -1 : 0"
+            (click)="clear($event)"
+            (mousedown)="$event.preventDefault()"
+            (keydown.enter)="clear($event)"
+            (keydown.space)="$event.preventDefault(); clear($event)"
             [style.visibility]="
               persistentClear ||
               (!persistentClear &&
@@ -94,14 +116,18 @@
                 : 'hidden'
             "
             class="cps-treeselect-box-clear-icon">
-            <cps-icon
-              icon="delete"
-              size="small"
-              (click)="clear($event)"></cps-icon>
+            <cps-icon icon="delete" size="small"></cps-icon>
           </span>
         }
         @if (showChevron) {
-          <span class="cps-treeselect-box-chevron">
+          <span
+            class="cps-treeselect-box-chevron"
+            role="button"
+            [attr.aria-label]="isOpened ? 'Collapse options' : 'Expand options'"
+            [tabindex]="disabled ? -1 : 0"
+            (mousedown)="$event.preventDefault()"
+            (keydown.enter)="onBoxClick($event)"
+            (keydown.space)="$event.preventDefault(); onBoxClick($event)">
             <cps-icon
               icon="chevron-down"
               size="small"
@@ -114,20 +140,24 @@
     <cps-menu
       #optionsMenu
       [withArrow]="false"
+      [focusOnShow]="false"
       (beforeMenuHidden)="onBeforeOptionsHidden()"
       hideTransitionOptions="0s linear"
       containerClass="cps-treeselect-options-menu">
       <div
+        [id]="optionsTreeId"
         class="cps-treeselect-options"
-        [ngStyle]="{
-          width: boxWidth + 'px'
-        }">
+        [class.arrow-navigating]="isArrowNavigating"
+        [style.width.px]="boxWidthPx"
+        (keydown)="onOptionsKeyDown($event)">
         <p-tree
           #treeList
+          [trackBy]="treeTrackBy"
+          [pt]="treeNodeToggleButtonPt"
           [virtualScroll]="virtualScroll"
-          [virtualScrollItemSize]="virtualScrollItemSize"
+          [virtualScrollItemSize]="virtualScrollItemSizePx()"
           [virtualScrollOptions]="{ numToleratedItems: numToleratedItems }"
-          [scrollHeight]="virtualListHeight + 'px'"
+          [scrollHeight]="virtualListHeightRem + 'rem'"
           (onNodeSelect)="onSelectNode()"
           (onNodeExpand)="onNodeExpand($event)"
           (onNodeCollapse)="onNodeCollapse($event)"
@@ -172,12 +202,16 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div class="cps-treeselect-hint">
+    <div [id]="hintId" class="cps-treeselect-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
-    <div class="cps-treeselect-error">
+    <div
+      [id]="errorId"
+      class="cps-treeselect-error"
+      aria-live="polite"
+      aria-atomic="true">
       {{ error }}
     </div>
   }

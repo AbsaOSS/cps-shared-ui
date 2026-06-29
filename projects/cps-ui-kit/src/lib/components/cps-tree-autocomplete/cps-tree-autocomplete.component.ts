@@ -1,13 +1,9 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
-  Inject,
   Input,
-  OnDestroy,
-  OnInit,
   Optional,
   ViewChild
 } from '@angular/core';
@@ -40,7 +36,7 @@ export type CpsTreeAutocompleteAppearanceType =
  */
 @Component({
   imports: [
-    CommonModule,
+    NgTemplateOutlet,
     FormsModule,
     TreeModule,
     CpsIconComponent,
@@ -53,10 +49,7 @@ export type CpsTreeAutocompleteAppearanceType =
   templateUrl: './cps-tree-autocomplete.component.html',
   styleUrls: ['./cps-tree-autocomplete.component.scss']
 })
-export class CpsTreeAutocompleteComponent
-  extends CpsBaseTreeDropdownComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
   /**
    * Message if array of items is empty.
    * @group Props
@@ -81,35 +74,41 @@ export class CpsTreeAutocompleteComponent
   inputText = '';
   backspaceClickedOnce = false;
   activeSingle = false;
+  isKeyboardFocused = false;
+
+  private _mouseClicked = false;
 
   constructor(
     @Optional() public override control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
     public override cdRef: ChangeDetectorRef
   ) {
     super(control, cdRef);
-  }
-
-  override ngOnInit() {
-    super.ngOnInit();
-  }
-
-  override ngAfterViewInit() {
     this.isAutocomplete = true;
-    super.ngAfterViewInit();
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
   }
 
   override onSelectNode() {
     this.backspaceClickedOnce = false;
     this._clearInput();
     super.onSelectNode();
+    if (!this.multiple) {
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
+  }
+
+  override onFocus() {
+    if (!this.multiple) {
+      this.activeSingle = true;
+      if (!this.inputText) this.inputText = this._getValueLabel();
+    }
+    this.isKeyboardFocused = !this._mouseClicked;
+    this._mouseClicked = false;
+    super.onFocus();
   }
 
   override onBlur() {
+    this.isKeyboardFocused = false;
     if (!this.isOpened) {
       this._closeAndClear();
     }
@@ -125,6 +124,7 @@ export class CpsTreeAutocompleteComponent
   }
 
   onBoxClick() {
+    this._mouseClicked = true;
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
@@ -134,36 +134,68 @@ export class CpsTreeAutocompleteComponent
     this.optionFocused = false;
   }
 
-  onContainerKeyDown(event: any) {
-    const code = event.keyCode;
-    // escape
-    if (code === 27) {
+  onOuterDivKeyDown(event: KeyboardEvent) {
+    if (event.target !== this.componentContainer?.nativeElement) return;
+    this.focusInput();
+    this.onContainerKeyDown(event);
+  }
+
+  onContainerKeyDown(event: KeyboardEvent) {
+    const code = event.code;
+    if (code === 'Tab') {
+      if (this.isOpened) this._closeAndClear();
+    } else if (code === 'Escape') {
       this._closeAndClear();
-    }
-    // click down arrow
-    else if (code === 40) {
-      this.initArrowsNavigaton();
+    } else if (code === 'ArrowDown' || code === 'ArrowUp') {
+      event.preventDefault();
+      this.isKeyboardFocused = true;
+      const up = code === 'ArrowUp';
+      if (!this.isOpened) {
+        this.toggleOptions(true);
+        setTimeout(() => {
+          const current = this.treeList?.el?.nativeElement?.querySelector(
+            '.p-tree-root-children'
+          ) as HTMLElement | null;
+          if (current) this.treeContainerElement = current;
+          this.initArrowsNavigaton(up);
+        });
+      } else {
+        const current = this.treeList?.el?.nativeElement?.querySelector(
+          '.p-tree-root-children'
+        ) as HTMLElement | null;
+        if (current) this.treeContainerElement = current;
+        this.optionFocused = false;
+        this.navigateIntoOptions(up);
+      }
     }
   }
 
-  onInputKeyDown(event: any) {
-    const code = event.keyCode;
-    // backspace
-    if (code === 8) {
+  protected override _onOptionsClose(): void {
+    this._closeAndClear();
+    this.focusInput();
+  }
+
+  onInputKeyDown(event: KeyboardEvent) {
+    const code = event.code;
+    if (code === 'Backspace') {
       this._removeLastValue();
       event.stopPropagation();
-    }
-    // enter
-    else if (code === 13) {
+    } else if (code === 'Enter' || code === 'NumpadEnter') {
+      if (!this.isOpened) {
+        event.stopPropagation();
+        event.preventDefault();
+        this.toggleOptions(true);
+        return;
+      }
       if (!this.optionFocused) {
-        this._confirmInput(event?.target?.value || '');
+        this._confirmInput((event.target as HTMLInputElement)?.value || '');
         event.stopPropagation();
       }
     }
   }
 
   onChevronClick(event: any) {
-    event.stopPropagation();
+    event.preventDefault();
 
     if (this.isOpened) {
       this._closeAndClear();
@@ -172,10 +204,19 @@ export class CpsTreeAutocompleteComponent
     }
   }
 
+  onContainerMouseDown(event: MouseEvent) {
+    const input = this.treeAutocompleteInput?.nativeElement;
+    if (event.target !== input) event.preventDefault();
+    if (input && input !== this._document.activeElement) {
+      this._mouseClicked = true;
+      this.focusInput();
+    }
+  }
+
   isActive() {
     return (
       this.isOpened ||
-      this.document.activeElement === this.treeAutocompleteInput?.nativeElement
+      this._document.activeElement === this.treeAutocompleteInput?.nativeElement
     );
   }
 
@@ -198,7 +239,7 @@ export class CpsTreeAutocompleteComponent
   }
 
   focusInput() {
-    this.componentContainer?.nativeElement?.querySelector('input')?.focus();
+    this.treeAutocompleteInput?.nativeElement?.focus();
   }
 
   override focus() {
@@ -215,6 +256,7 @@ export class CpsTreeAutocompleteComponent
       this.toggleOptions(true);
     }
     this.backspaceClickedOnce = false;
+    this.optionFocused = false;
     const searchVal = (event?.target?.value || '').toLowerCase();
 
     if (!searchVal) this.treeList.resetFilter();
@@ -253,12 +295,10 @@ export class CpsTreeAutocompleteComponent
 
   private _clearInput() {
     this.treeList.resetFilter();
+    this.treeList?.cd?.markForCheck();
     this.inputText = '';
     this.activeSingle = false;
     this.updateOptions();
-    setTimeout(() => {
-      this.recalcVirtualListHeight();
-    });
   }
 
   private _closeAndClear() {

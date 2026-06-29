@@ -264,25 +264,25 @@ const components: ComponentEntry[] = [
       await page.waitForSelector('.example-content');
       await page.locator('.example-content cps-button').first().hover();
     }
+  },
+  {
+    route: '/tree-autocomplete',
+    name: 'Tree autocomplete',
+    selector: ['cps-tree-autocomplete', '.cps-treeautocomplete-options-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-tree-autocomplete');
+      await page.locator('cps-tree-autocomplete').first().click();
+    }
+  },
+  {
+    route: '/tree-select',
+    name: 'Tree select',
+    selector: ['cps-tree-select', '.cps-treeselect-options-menu'],
+    setup: async (page) => {
+      await page.waitForSelector('cps-tree-select');
+      await page.locator('cps-tree-select').first().click();
+    }
   }
-  // {
-  //   route: '/tree-autocomplete',
-  //   name: 'Tree autocomplete',
-  //   selector: ['cps-tree-autocomplete', '.cps-treeautocomplete-options-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-tree-autocomplete');
-  //     await page.locator('cps-tree-autocomplete').first().click();
-  //   }
-  // },
-  // {
-  //   route: '/tree-select',
-  //   name: 'Tree select',
-  //   selector: ['cps-tree-select', '.cps-treeselect-options-menu'],
-  //   setup: async (page) => {
-  //     await page.waitForSelector('cps-tree-select');
-  //     await page.locator('cps-tree-select').first().click();
-  //   }
-  // },
   // { route: '/tree-table', name: 'Tree table', selector: 'cps-tree-table' }
 ];
 

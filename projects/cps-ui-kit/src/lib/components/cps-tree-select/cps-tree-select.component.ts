@@ -1,13 +1,4 @@
-import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  Optional
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Input, Optional } from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
@@ -33,7 +24,6 @@ export type CpsTreeSelectAppearanceType =
  */
 @Component({
   imports: [
-    CommonModule,
     FormsModule,
     TreeModule,
     CpsIconComponent,
@@ -48,10 +38,7 @@ export type CpsTreeSelectAppearanceType =
   templateUrl: './cps-tree-select.component.html',
   styleUrls: ['./cps-tree-select.component.scss']
 })
-export class CpsTreeSelectComponent
-  extends CpsBaseTreeDropdownComponent
-  implements OnInit, AfterViewInit, OnDestroy
-{
+export class CpsTreeSelectComponent extends CpsBaseTreeDropdownComponent {
   /**
    * Styling appearance of tree select, it can be "outlined", "underlined" or "borderless".
    * @group Props
@@ -71,36 +58,37 @@ export class CpsTreeSelectComponent
     super(control, cdRef);
   }
 
-  override ngOnInit() {
-    super.ngOnInit();
-  }
-
-  override ngAfterViewInit() {
-    super.ngAfterViewInit();
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-  }
-
   onBeforeOptionsHidden() {
     this.toggleOptions(false);
   }
 
-  onBoxClick() {
+  onBoxClick(event?: Event) {
+    event?.stopPropagation();
     this.toggleOptions();
   }
 
-  onKeyDown(event: any) {
-    event.preventDefault();
-    const code = event.keyCode;
-    // escape
-    if (code === 27) {
-      this.toggleOptions(false);
+  onKeyDown(event: KeyboardEvent) {
+    const code = event.code;
+    if (code === 'Tab') {
+      if (this.isOpened) this.toggleOptions(false);
+      return;
     }
-    // click down arrow
-    else if (code === 40) {
-      this.initArrowsNavigaton();
+
+    event.preventDefault();
+
+    if (code === 'Escape') {
+      this.toggleOptions(false);
+      this.componentContainer?.nativeElement?.focus();
+    } else if (code === 'Enter' || code === 'NumpadEnter' || code === 'Space') {
+      this.toggleOptions(!this.isOpened);
+    } else if (code === 'ArrowUp' || code === 'ArrowDown') {
+      const up = code === 'ArrowUp';
+      if (!this.isOpened) {
+        this.toggleOptions(true);
+        setTimeout(() => this.initArrowsNavigaton(up));
+      } else {
+        this.navigateIntoOptions(up);
+      }
     }
   }
 }
