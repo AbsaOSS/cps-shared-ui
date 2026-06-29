@@ -76,6 +76,15 @@ export class TableRowMenuComponent implements OnInit {
   private _customRowMenuItems?: CpsMenuItem[];
 
   items: CpsMenuItem[] = [];
+  isMenuOpen = false;
+
+  onMenuShown(): void {
+    this.isMenuOpen = true;
+  }
+
+  onMenuHidden(): void {
+    this.isMenuOpen = false;
+  }
 
   ngOnInit(): void {
     this.initializeItems();

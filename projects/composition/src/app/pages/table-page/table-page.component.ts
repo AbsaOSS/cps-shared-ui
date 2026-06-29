@@ -69,7 +69,7 @@ export class TablePageComponent implements OnInit {
     },
     {
       a: 'this is sanitized <script>console.log("pwned")</script>',
-      b: '<img src="./assets/ui_logo.svg" width="100" />',
+      b: '<img src="./assets/ui_logo.svg" alt="CPS UI Kit logo" width="100" />',
       c: '<code>null === undefined</code>'
     }
   ];

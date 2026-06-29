@@ -14,7 +14,13 @@
             {{ headerTitle }}
           </span>
           @if (showCloseButton) {
-            <cps-icon icon="close-x" (click)="onCloseClick()"></cps-icon>
+            <button
+              type="button"
+              class="cps-table-col-filter-close-btn"
+              aria-label="Close filter"
+              (click)="onCloseClick()">
+              <cps-icon icon="close-x" aria-hidden="true"></cps-icon>
+            </button>
           }
         </div>
       }
@@ -33,7 +39,7 @@
       <div class="cps-table-col-filter-menu-content-constraints">
         @for (
           fieldConstraint of fieldConstraints;
-          track fieldConstraint;
+          track $index;
           let i = $index
         ) {
           <div class="cps-table-col-filter-menu-content-constraint">
@@ -66,7 +72,7 @@
                   type="borderless"
                   width="100%"
                   size="small"
-                  color="prepared"
+                  color="calm"
                   icon="delete"
                   (clicked)="removeConstraint(fieldConstraint)"
                   label="Remove condition">
@@ -94,28 +100,33 @@
           <cps-button
             (clicked)="clearFilter()"
             type="borderless"
-            color="prepared"
+            color="calm"
             size="small"
             label="Clear"></cps-button>
         }
         @if (showApplyButton) {
           <cps-button
             (clicked)="applyFilter()"
-            color="prepared"
+            color="calm"
             size="small"
             label="Apply"></cps-button>
         }
       </div>
     </div>
   </cps-menu>
-  <cps-icon
-    [icon]="isFilterApplied ? 'filter-funnel-filled' : 'filter-funnel'"
-    size="13"
-    (click)="columnFilterMenu.toggle($event)"
+  <button
+    type="button"
     class="cps-table-col-filter-menu-button"
-    [ngClass]="{
-      'cps-table-col-filter-menu-button-active': isFilterApplied
-    }"
-    >>
-  </cps-icon>
+    [class.cps-table-col-filter-menu-button-active]="isFilterApplied"
+    [attr.aria-label]="
+      isFilterApplied ? 'Filter applied, open filter menu' : 'Open filter menu'
+    "
+    aria-haspopup="dialog"
+    [attr.aria-expanded]="isMenuOpen"
+    (click)="columnFilterMenu.toggle($event)">
+    <cps-icon
+      [icon]="isFilterApplied ? 'filter-funnel-filled' : 'filter-funnel'"
+      size="0.8125rem">
+    </cps-icon>
+  </button>
 </div>

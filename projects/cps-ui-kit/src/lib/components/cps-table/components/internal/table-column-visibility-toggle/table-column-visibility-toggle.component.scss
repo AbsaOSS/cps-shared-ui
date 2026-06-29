@@ -1,0 +1,85 @@
+.cps-table-coltoggle-menu {
+  display: block;
+  max-height: 15.125rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: white;
+
+  .cps-table-coltoggle-menu-item {
+    padding: 0.75rem;
+    justify-content: space-between;
+    display: flex;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--cps-color-highlight-hover);
+    }
+
+    &-label {
+      color: var(--cps-color-text-dark);
+    }
+
+    &-left {
+      display: flex;
+      align-items: center;
+      margin-right: 0.5rem;
+    }
+
+    &-check {
+      background-color: transparent;
+      border: 0;
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: middle;
+      box-sizing: border-box;
+      position: relative;
+      flex-shrink: 0;
+      transition:
+        border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
+        background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      margin-right: 0.5rem;
+      opacity: 0;
+      &::after {
+        color: var(--cps-color-calm);
+        top: 0.25rem;
+        left: 0.0625rem;
+        width: 0.5rem;
+        height: 0.1875rem;
+        border-left: 0.125rem solid currentColor;
+        transform: rotate(-45deg);
+        opacity: 1;
+        box-sizing: content-box;
+        position: absolute;
+        content: '';
+        border-bottom: 0.125rem solid currentColor;
+        transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
+      }
+    }
+    &.selected,
+    &.allselected {
+      font-weight: 600;
+      .cps-table-coltoggle-menu-item-label {
+        color: var(--cps-color-calm);
+      }
+      .cps-table-coltoggle-menu-item-check {
+        opacity: 1;
+      }
+    }
+    &.selected {
+      background: var(--cps-color-highlight-selected);
+    }
+    &.highlighten {
+      background: var(--cps-color-highlight-active);
+    }
+    &.selected.highlighten {
+      background: var(--cps-color-highlight-selected-dark);
+    }
+  }
+
+  .select-all-option {
+    border-bottom: 0.0625rem solid lightgrey;
+    font-weight: 600;
+  }
+}
