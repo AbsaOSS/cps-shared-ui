@@ -14,7 +14,6 @@ import { TableCheckbox } from 'primeng/table';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTRowSelectable]'
 })
 export class CpsTableRowSelectableDirective implements OnInit, OnDestroy {

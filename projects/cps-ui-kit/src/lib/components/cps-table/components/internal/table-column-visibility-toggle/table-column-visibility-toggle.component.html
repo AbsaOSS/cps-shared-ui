@@ -1,0 +1,62 @@
+<button
+  type="button"
+  class="cps-table-tbar-icon-btn"
+  aria-label="Toggle column visibility"
+  aria-haspopup="listbox"
+  [attr.aria-expanded]="isMenuOpen()"
+  [disabled]="disabled()"
+  (click)="onToggle($event)">
+  <cps-icon
+    icon="columns"
+    size="normal"
+    [color]="disabled() ? 'text-lightest' : 'prepared-lighten1'"
+    aria-hidden="true"></cps-icon>
+</button>
+<cps-menu
+  #menu
+  [withArrow]="false"
+  (menuShown)="onMenuShown()"
+  (menuHidden)="onMenuHidden()">
+  <div
+    #listbox
+    class="cps-table-coltoggle-menu suppress-focus-visible"
+    role="listbox"
+    tabindex="0"
+    aria-multiselectable="true"
+    [id]="listboxId"
+    [attr.aria-activedescendant]="activeDescendantId()"
+    (keydown)="onKeydown($event)">
+    <div
+      class="cps-table-coltoggle-menu-item select-all-option"
+      role="option"
+      [id]="listboxId + '-opt-0'"
+      [attr.aria-selected]="selectedColumns().length === columns().length"
+      [class.allselected]="selectedColumns().length === columns().length"
+      [class.highlighten]="highlightedIndex() === 0"
+      (click)="toggleAllColumns()">
+      <span class="cps-table-coltoggle-menu-item-left">
+        <span class="cps-table-coltoggle-menu-item-check"> </span>
+        <span class="cps-table-coltoggle-menu-item-label"
+          >Show all columns</span
+        >
+      </span>
+    </div>
+    @for (col of columns(); track col; let i = $index) {
+      <div
+        class="cps-table-coltoggle-menu-item"
+        role="option"
+        [id]="listboxId + '-opt-' + (i + 1)"
+        [attr.aria-selected]="isColumnSelected(col)"
+        [class.selected]="isColumnSelected(col)"
+        [class.highlighten]="highlightedIndex() === i + 1"
+        (click)="onSelectColumn(col)">
+        <span class="cps-table-coltoggle-menu-item-left">
+          <span class="cps-table-coltoggle-menu-item-check"></span>
+          <span class="cps-table-coltoggle-menu-item-label">{{
+            col[colHeaderName()]
+          }}</span>
+        </span>
+      </div>
+    }
+  </div>
+</cps-menu>
