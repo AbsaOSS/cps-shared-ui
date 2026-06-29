@@ -16,7 +16,14 @@ import { Subscription } from 'rxjs';
   imports: [],
   templateUrl: './cps-sort-icon.component.html',
   styleUrls: ['./cps-sort-icon.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    tabindex: '0',
+    role: 'button',
+    '[attr.aria-label]': 'sortAriaLabel',
+    '(keydown.enter)': 'onKeydown($event)',
+    '(keydown.space)': 'onKeydown($event)'
+  }
 })
 export class CpsSortIconComponent implements OnInit, OnDestroy {
   @Input() field = '';
@@ -44,8 +51,16 @@ export class CpsSortIconComponent implements OnInit, OnDestroy {
     this.updateSortState();
   }
 
-  onClick(event: Event) {
+  onKeydown(event: Event): void {
     event.preventDefault();
+    event.stopPropagation();
+    this._tableInstance.sort({ field: this.field });
+  }
+
+  get sortAriaLabel(): string {
+    if (this.sortOrder === 1) return 'Sort descending';
+    if (this.sortOrder === -1) return 'Remove sort';
+    return 'Sort ascending';
   }
 
   updateSortState() {

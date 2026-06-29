@@ -1,3 +1,5 @@
+@use '../../../../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $dark-text-color: var(--cps-color-text-dark);
 $darkest-text-color: var(--cps-color-text-darkest);
@@ -5,6 +7,8 @@ $line-color: var(--cps-color-line-mid);
 $operator-bg-color: var(--cps-color-bg-light);
 
 :host {
+  margin-left: 0.15625rem;
+
   .cps-table-col-filter {
     display: inline-flex;
     .cps-table-col-filter-menu-button {
@@ -13,16 +17,42 @@ $operator-bg-color: var(--cps-color-bg-light);
       align-items: center;
       cursor: pointer;
       text-decoration: none;
-      overflow: hidden;
       position: relative;
-      padding-left: 8px;
-      padding-right: 4px;
+      height: 1.5rem;
+      width: 1.5rem;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+      margin-right: 0.0625rem;
+      padding-top: 0.375rem;
+      padding-bottom: 0.375rem;
+      margin-top: -0.375rem;
+      margin-bottom: -0.375rem;
+
+      @media (max-width: 37.5rem) {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      background: none;
+      border: none;
+      color: inherit;
+      font: inherit;
+      min-width: 1.5rem;
+
+      &:focus {
+        outline: none;
+      }
+
+      &:focus-visible {
+        @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+      }
     }
 
     .cps-table-col-filter-menu-button:not(
-        .cps-table-col-filter-menu-button-active
-      ) {
-      &:hover {
+      .cps-table-col-filter-menu-button-active
+    ) {
+      &:hover,
+      &:focus-visible {
         color: $dark-text-color;
       }
     }
@@ -34,14 +64,14 @@ $operator-bg-color: var(--cps-color-bg-light);
 }
 
 .cps-table-col-filter-menu-content {
-  padding-bottom: 12px;
-  min-width: 200px;
-  max-height: 500px;
+  padding-bottom: 0.75rem;
+  min-width: 12.5rem;
+  max-height: 31.25rem;
   overflow: auto;
   & &-header {
-    min-height: 32px;
-    padding: 8px;
-    border-bottom: 1px solid $line-color;
+    min-height: 2rem;
+    padding: 0.5rem;
+    border-bottom: 0.0625rem solid $line-color;
     background: $operator-bg-color;
     display: flex;
     justify-content: space-between;
@@ -49,28 +79,37 @@ $operator-bg-color: var(--cps-color-bg-light);
     &-title {
       font-family: 'Source Sans Pro', sans-serif;
       color: $darkest-text-color;
-      max-width: 390px;
+      max-width: 24.375rem;
       cursor: default;
     }
-    cps-icon {
-      margin-left: 8px;
+    .cps-table-col-filter-close-btn {
+      margin-left: 0.5rem;
       cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 1.5rem;
+      min-height: 1.5rem;
       &:hover {
         color: var(--cps-color-calm);
       }
     }
   }
   & &-operator {
-    padding: 12px;
-    border-bottom: 1px solid $line-color;
+    padding: 0.75rem;
+    border-bottom: 0.0625rem solid $line-color;
     background: $operator-bg-color;
   }
   & &-constraints {
     .cps-table-col-filter-menu-content-constraint {
-      border-bottom: 1px solid $line-color;
-      padding: 12px;
+      border-bottom: 0.0625rem solid $line-color;
+      padding: 0.75rem;
       .cps-table-col-filter-match-mode-select {
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
       }
     }
     .cps-table-col-filter-menu-content-constraint:last-child {
@@ -78,17 +117,17 @@ $operator-bg-color: var(--cps-color-bg-light);
     }
 
     .cps-table-col-filter-remove-rule-btn {
-      padding-top: 8px;
+      padding-top: 0.5rem;
     }
   }
   .cps-table-col-filter-add-rule-btn {
-    padding: 8px 12px;
+    padding: 0.5rem 0.75rem;
   }
   .cps-table-col-filter-buttonbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 12px;
-    padding-top: 12px;
+    padding: 0 0.75rem;
+    padding-top: 0.75rem;
   }
 }

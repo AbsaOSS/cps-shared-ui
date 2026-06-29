@@ -13,7 +13,6 @@ import { TableHeaderCheckbox } from 'primeng/table';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTHdrSelectable]'
 })
 export class CpsTableHeaderSelectableDirective implements OnInit, OnDestroy {
@@ -28,6 +27,7 @@ export class CpsTableHeaderSelectableDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.checkboxCompRef.setInput('ariaLabel', 'Select all rows');
     this.elementRef.nativeElement.appendChild(
       this.checkboxCompRef.location.nativeElement
     );
