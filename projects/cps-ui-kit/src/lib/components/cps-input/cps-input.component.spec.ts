@@ -131,6 +131,20 @@ describe('CpsInputComponent', () => {
       expect(hint?.textContent?.trim()).toBe('Helper text');
     });
 
+    it('should display info tooltip without label', () => {
+      fixture.componentRef.setInput('label', '');
+      fixture.componentRef.setInput('infoTooltip', 'More information');
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('label');
+      const infoTooltip = fixture.nativeElement.querySelector(
+        '.cps-input-label-info-circle'
+      );
+
+      expect(label).toBeNull();
+      expect(infoTooltip).toBeTruthy();
+    });
+
     it('should change input type', () => {
       component.type = 'password';
       component.ngOnInit();
