@@ -1,6 +1,7 @@
 <p-treeTable
   #primengTreeTable
   ttWithUnsort
+  [pt]="treeTablePassthrough"
   [ngClass]="{
     'cps-treetable-loading': loading,
     'cps-treetable-flex': defScrollHeight === 'flex',
@@ -19,6 +20,7 @@
   }"
   [columns]="selectedColumns"
   [loading]="loading"
+  [attr.aria-busy]="loading || null"
   [rowHover]="rowHover"
   [lazy]="lazy"
   [(selection)]="selectedRows"
@@ -95,7 +97,7 @@
               <cps-button
                 label="Remove"
                 [disabled]="removeBtnOnSelectDisabled"
-                color="prepared"
+                color="calm"
                 type="borderless"
                 icon="remove"
                 [size]="toolbarSize"
@@ -108,7 +110,7 @@
               <cps-button
                 [label]="additionalBtnOnSelectTitle"
                 [disabled]="additionalBtnOnSelectDisabled"
-                color="prepared"
+                color="calm"
                 type="borderless"
                 [icon]="additionalBtnOnSelectIcon"
                 [size]="toolbarSize"
@@ -121,7 +123,7 @@
               <cps-button
                 [label]="actionBtnTitle"
                 [disabled]="actionBtnDisabled"
-                color="prepared"
+                color="calm"
                 type="outlined"
                 [icon]="actionBtnIcon"
                 [size]="toolbarSize"
@@ -136,7 +138,7 @@
               <cps-button
                 label="Export"
                 [disabled]="exportBtnDisabled"
-                color="prepared"
+                color="calm"
                 type="solid"
                 icon="export"
                 [size]="toolbarSize"
@@ -145,64 +147,32 @@
             </div>
           }
           @if (showColumnsToggleBtn && columns.length > 0) {
-            <div
-              class="cps-treetable-tbar-coltoggle-btn"
-              [ngClass]="{ 'btn-disabled': columnsToggleBtnDisabled }">
-              <cps-icon
-                icon="columns"
-                size="normal"
-                [color]="
-                  columnsToggleBtnDisabled
-                    ? 'text-lightest'
-                    : 'prepared-lighten1'
-                "
-                (click)="onColumnsToggle($event)"></cps-icon>
-              <cps-menu #colToggleMenu [withArrow]="false">
-                <div class="cps-treetable-coltoggle-menu">
-                  <div
-                    class="cps-treetable-coltoggle-menu-item select-all-option"
-                    [class.allselected]="
-                      selectedColumns.length === columns.length
-                    "
-                    (click)="toggleAllColumns()">
-                    <span class="cps-treetable-coltoggle-menu-item-left">
-                      <span class="cps-treetable-coltoggle-menu-item-check">
-                      </span>
-                      <span class="cps-treetable-coltoggle-menu-item-label"
-                        >Show all columns</span
-                      >
-                    </span>
-                  </div>
-                  @for (col of columns; track col) {
-                    <div
-                      class="cps-treetable-coltoggle-menu-item"
-                      (click)="onSelectColumn(col)"
-                      [class.selected]="isColumnSelected(col)">
-                      <span class="cps-treetable-coltoggle-menu-item-left">
-                        <span
-                          class="cps-treetable-coltoggle-menu-item-check"></span>
-                        <span class="cps-treetable-coltoggle-menu-item-label">{{
-                          col[colHeaderName]
-                        }}</span>
-                      </span>
-                    </div>
-                  }
-                </div>
-              </cps-menu>
-            </div>
+            <table-column-visibility-toggle
+              [columns]="columns"
+              [selectedColumns]="selectedColumns"
+              [disabled]="columnsToggleBtnDisabled"
+              [colHeaderName]="colHeaderName"
+              (selectedColumnsChange)="onSelectedColumnsChange($event)">
+            </table-column-visibility-toggle>
           }
           @if (showDataReloadBtn) {
             <div
               class="cps-treetable-tbar-reload-btn"
               [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
-              <cps-icon
-                icon="refresh"
-                size="18"
-                [color]="
-                  dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'
-                "
+              <button
+                type="button"
+                class="cps-treetable-tbar-icon-btn"
+                aria-label="Reload data"
+                [disabled]="dataReloadBtnDisabled || null"
                 (click)="onReloadData()">
-              </cps-icon>
+                <cps-icon
+                  icon="refresh"
+                  size="18"
+                  [color]="
+                    dataReloadBtnDisabled ? 'text-light' : 'calm-lighten1'
+                  ">
+                </cps-icon>
+              </button>
             </div>
           }
         </div>
@@ -226,6 +196,7 @@
         <!-- <th style="width: 3rem" *ngIf="reorderableRows"></th> -->
         @if (selectable) {
           <th
+            scope="col"
             cpsTTHdrSelectable
             cpsTTColResizable
             [cpsTTColResizableDisabled]="!resizableColumns"></th>
@@ -242,6 +213,7 @@
             @if (filterableByColumns) {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   [cpsTTColSortable]="col[colFieldName]"
                   [cpsTTColFilter]="col[colFieldName]"
                   [filterType]="
@@ -258,6 +230,7 @@
             } @else {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   [cpsTTColSortable]="col[colFieldName]"
                   cpsTTColResizable
                   [cpsTTColResizableDisabled]="!resizableColumns">
@@ -270,6 +243,7 @@
             @if (filterableByColumns) {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   [cpsTTColFilter]="col[colFieldName]"
                   [filterType]="
                     col[colFilterTypeName] ??
@@ -285,6 +259,7 @@
             } @else {
               @for (col of columns; track col) {
                 <th
+                  scope="col"
                   cpsTTColResizable
                   [cpsTTColResizableDisabled]="!resizableColumns">
                   {{ col[colHeaderName] }}
@@ -295,9 +270,12 @@
         }
         @if (showRowMenu && (showRowRemoveButton || showRowEditButton)) {
           <th
+            scope="col"
             class="cps-treetable-row-menu-cell"
             cpsTTColResizable
-            [cpsTTColResizableDisabled]="!resizableColumns"></th>
+            [cpsTTColResizableDisabled]="!resizableColumns">
+            <span class="cps-sr-only">Row actions</span>
+          </th>
         }
       </tr>
     </ng-template>
@@ -340,11 +318,14 @@
             @for (col of columns; track col; let i = $index) {
               @if (i === 0) {
                 <td
+                  class="cps-treetable-html-cell"
                   [cpsTTRowToggler]="rowNode"
                   [innerHTML]="rowData[col[colFieldName]]"></td>
               }
               @if (i > 0) {
-                <td [innerHTML]="rowData[col[colFieldName]]"></td>
+                <td
+                  class="cps-treetable-html-cell"
+                  [innerHTML]="rowData[col[colFieldName]]"></td>
               }
             }
           } @else {
@@ -390,6 +371,7 @@
     <tr>
       <td
         colspan="100"
+        role="status"
         class="cps-treetable-empty-message-td"
         [ngStyle]="{ height: emptyBodyHeight }">
         {{ emptyMessage }}
@@ -406,6 +388,7 @@
       </span>
       <cps-select
         ariaLabel="Set rows per page"
+        width="4rem"
         [options]="rowOptions"
         [hideDetails]="true"
         [(ngModel)]="rows"
@@ -414,18 +397,5 @@
         optionsClass="cps-paginator-page-options">
       </cps-select>
     </div>
-  </ng-template>
-
-  <ng-template pTemplate="paginatorfirstpagelinkicon">
-    <cps-icon icon="menu-shrink" size="normal"></cps-icon>
-  </ng-template>
-  <ng-template pTemplate="paginatorpreviouspagelinkicon">
-    <cps-icon icon="angle-left"></cps-icon>
-  </ng-template>
-  <ng-template pTemplate="paginatornextpagelinkicon">
-    <cps-icon icon="angle-right"></cps-icon>
-  </ng-template>
-  <ng-template pTemplate="paginatorlastpagelinkicon">
-    <cps-icon icon="menu-expand" size="normal"></cps-icon>
   </ng-template>
 </p-treeTable>

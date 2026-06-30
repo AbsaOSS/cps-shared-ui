@@ -76,7 +76,6 @@ export type CpsTableSortMode = 'single' | 'multiple';
   selector: 'cps-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[style.--cps-scroll-height]': 'scrollHeight || ""',
     '(keydown)': 'onPaginatorKeydown($event)'
   },
   imports: [
@@ -773,6 +772,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     this.tablePassthrough = this._buildTablePassthrough();
   }
 
+  private _headerHeightSet = false;
+
   private _buildTablePassthrough(): TablePassThrough {
     const pt: TablePassThrough = {};
     if (!this.virtualScroll && this.scrollHeight) {
@@ -811,6 +812,18 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   ngAfterViewChecked() {
+    if (this.scrollHeight && !this._headerHeightSet) {
+      const ptEl = this.primengTable?.el?.nativeElement as HTMLElement | null;
+      const headerEl = ptEl?.querySelector(
+        '.p-datatable-header'
+      ) as HTMLElement | null;
+      const h = headerEl?.offsetHeight ?? 0;
+      if (h > 0) {
+        ptEl?.style.setProperty('--cps-header-height', h + 'px');
+        this._headerHeightSet = true;
+      }
+    }
+
     if (!this.virtualScroll || this.virtualScrollItemSize) return;
     this.virtualScrollItemSize =
       this.primengTable?.el?.nativeElement

@@ -1,5 +1,6 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
-$color-prepared: var(--cps-color-prepared);
 $color-surprise: var(--cps-color-surprise);
 $toolbar-text-color: var(--cps-color-text-darkest);
 $treetable-borders-color: var(--cps-color-line-mid);
@@ -8,13 +9,6 @@ $row-hover-background: var(--cps-color-highlight-hover);
 $row-selected-background: var(--cps-color-highlight-active);
 $header-text-color: var(--cps-color-text-mild);
 $body-text-color: var(--cps-color-text-dark);
-$colitem-hover-background: var(--cps-color-highlight-hover);
-$colitem-value-color: var(--cps-color-text-dark);
-$selected-colitem-background: var(--cps-color-highlight-selected);
-$colitem-highlight-background: var(--cps-color-highlight-active);
-$colitem-highlight-selected-background: var(
-  --cps-color-highlight-selected-dark
-);
 $paginator-text-color: var(--cps-color-text-dark);
 $paginator-border-color: var(--cps-color-text-dark);
 $paginator-elem-hover-background: var(--cps-color-highlight-hover);
@@ -22,8 +16,8 @@ $paginator-elem-active-background: var(--cps-color-highlight-active);
 $sorticon-hover-color: var(--cps-color-text-mild);
 $checkbox-border-color: var(--cps-color-text-mild);
 
-$tbar-small-height: 43px;
-$tbar-normal-height: 72px;
+$tbar-small-height: 2.6875rem;
+$tbar-normal-height: 4.5rem;
 
 :host {
   ::ng-deep {
@@ -36,7 +30,7 @@ $tbar-normal-height: 72px;
     }
     .p-component {
       font-family: 'Source Sans Pro', sans-serif;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-weight: normal;
     }
     .p-treetable-scrollable-wrapper {
@@ -83,8 +77,8 @@ $tbar-normal-height: 72px;
     .p-treetable .p-treetable-thead > tr > th {
       text-align: left;
       padding: 1rem 1rem;
-      border: 1px solid $treetable-borders-color;
-      border-width: 0 0 1px 1px;
+      border: 0.0625rem solid $treetable-borders-color;
+      border-width: 0 0 0.0625rem 0.0625rem;
       font-weight: 400;
       color: $header-text-color;
       background: white;
@@ -118,8 +112,8 @@ $tbar-normal-height: 72px;
 
     .p-treetable .p-treetable-tbody > tr > td {
       text-align: left;
-      border: 1px solid $treetable-borders-color;
-      border-width: 0 0 1px 0;
+      border: 0.0625rem solid $treetable-borders-color;
+      border-width: 0 0 0.0625rem 0;
       padding: 1rem 1rem;
     }
 
@@ -163,6 +157,22 @@ $tbar-normal-height: 72px;
             .cps-treetable-selectable-cell
           ):not(.cps-treetable-row-menu-cell):not(
             .cps-treetable-empty-message-td
+          ),
+        .p-treetable-scrollable-body
+          .p-treetable-tbody
+          > tr:focus-visible
+          > td:not(.cps-treetable-row-toggler-cell):not(
+            .cps-treetable-selectable-cell
+          ):not(.cps-treetable-row-menu-cell):not(
+            .cps-treetable-empty-message-td
+          ),
+        .p-treetable-scrollable-body
+          .p-treetable-tbody
+          > tr:has(*:focus-visible)
+          > td:not(.cps-treetable-row-toggler-cell):not(
+            .cps-treetable-selectable-cell
+          ):not(.cps-treetable-row-menu-cell):not(
+            .cps-treetable-empty-message-td
           ) {
           border-left-color: $row-hover-background;
         }
@@ -170,10 +180,10 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:first-child {
-      border-width: 0 0 1px 1px;
+      border-width: 0 0 0.0625rem 0.0625rem;
     }
     .p-treetable .p-treetable-tbody > tr > td:last-child {
-      border-width: 0 1px 1px 0;
+      border-width: 0 0.0625rem 0.0625rem 0;
     }
 
     .p-treetable-auto-layout table {
@@ -181,7 +191,7 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:only-child {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
 
     .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler {
@@ -225,9 +235,9 @@ $tbar-normal-height: 72px;
       cursor: pointer;
       -webkit-user-select: none;
       user-select: none;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-family: 'Source Sans Pro', sans-serif;
-      border-radius: 6px;
+      border-radius: 0.375rem;
     }
 
     input[type='button'],
@@ -247,8 +257,13 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable .p-treetable-tbody > tr:focus {
-      outline: 0 none;
-      outline-offset: -0.15rem;
+      outline: none;
+    }
+
+    .p-treetable .p-treetable-tbody > tr:focus-visible,
+    .p-treetable .p-treetable-tbody > tr:has(*:focus-visible) {
+      outline: 0.0625rem solid var(--cps-color-calm);
+      outline-offset: -0.0625rem;
     }
     .p-treetable
       .p-treetable-tbody
@@ -266,7 +281,7 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable .p-paginator {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
       border-radius: 0;
     }
 
@@ -278,7 +293,7 @@ $tbar-normal-height: 72px;
       flex-wrap: wrap;
       color: $paginator-text-color;
       padding: 1rem;
-      border: 1px solid $treetable-borders-color;
+      border: 0.0625rem solid $treetable-borders-color;
     }
 
     .p-paginator-content-start {
@@ -288,21 +303,22 @@ $tbar-normal-height: 72px;
         align-items: center;
         .cps-table-paginator-items-per-page-title {
           font-family: 'Source Sans Pro', sans-serif;
-          font-size: 14px;
-          margin-right: 12px;
+          font-size: 0.875rem;
+          margin-right: 0.75rem;
           cursor: default;
         }
 
         .cps-select-box {
-          min-height: 32px !important;
+          min-height: 2rem !important;
           background: transparent !important;
           .cps-select-box-items {
-            font-size: 14px !important;
+            font-size: 0.875rem !important;
           }
           .cps-select-box-chevron {
+            padding: 0.3125rem !important;
             .cps-icon {
-              width: 14px;
-              height: 14px;
+              width: 0.875rem;
+              height: 0.875rem;
             }
           }
         }
@@ -317,7 +333,7 @@ $tbar-normal-height: 72px;
       margin: 0.143rem;
       padding: 0 0.5rem;
       font-family: 'Source Sans Pro', sans-serif;
-      font-size: 14px;
+      font-size: 0.875rem;
       height: unset;
     }
 
@@ -334,12 +350,38 @@ $tbar-normal-height: 72px;
       line-height: 1;
       -webkit-user-select: none;
       user-select: none;
-      overflow: hidden;
       position: relative;
     }
 
     .p-paginator-current {
       cursor: default;
+    }
+
+    .p-paginator-first:focus,
+    .p-paginator-prev:focus,
+    .p-paginator-next:focus,
+    .p-paginator-last:focus,
+    .p-paginator-page:focus {
+      z-index: 1;
+      outline: 0 none;
+      box-shadow: unset;
+    }
+
+    .p-paginator-first:not(.p-disabled):focus-visible,
+    .p-paginator-prev:not(.p-disabled):focus-visible,
+    .p-paginator-next:not(.p-disabled):focus-visible,
+    .p-paginator-last:not(.p-disabled):focus-visible,
+    .p-paginator-page:focus-visible {
+      overflow: visible;
+      @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+    }
+
+    .p-paginator-first:not(.p-disabled):focus-visible,
+    .p-paginator-prev:not(.p-disabled):focus-visible,
+    .p-paginator-next:not(.p-disabled):focus-visible,
+    .p-paginator-last:not(.p-disabled):focus-visible,
+    .p-paginator-page:not(.p-paginator-page-selected):focus-visible {
+      background: $paginator-elem-hover-background;
     }
 
     .p-paginator
@@ -373,11 +415,11 @@ $tbar-normal-height: 72px;
     .p-paginator .p-paginator-next,
     .p-paginator .p-paginator-last {
       background-color: transparent;
-      border: 1px solid $paginator-border-color;
-      border-radius: 4px;
+      border: 0.0625rem solid $paginator-border-color;
+      border-radius: 0.25rem;
       color: $paginator-text-color;
-      min-width: 32px;
-      height: 32px;
+      min-width: 2rem;
+      height: 2rem;
       margin: 0.143rem;
       transition: box-shadow 0.2s;
     }
@@ -414,26 +456,13 @@ $tbar-normal-height: 72px;
 
     .p-paginator .p-paginator-pages .p-paginator-page {
       background-color: transparent;
-      border: 1px solid $paginator-border-color;
-      border-radius: 4px;
+      border: 0.0625rem solid $paginator-border-color;
+      border-radius: 0.25rem;
       color: $paginator-text-color;
-      min-width: 32px;
-      height: 32px;
+      min-width: 2rem;
+      height: 2rem;
       margin: 0.143rem;
       transition: box-shadow 0.2s;
-    }
-
-    .p-paginator-element:focus {
-      z-index: 1;
-      position: relative;
-    }
-
-    span.p-paginator-icon,
-    span.p-paginator-first-icon,
-    span.p-paginator-prev-icon,
-    span.p-paginator-last-icon,
-    span.p-paginator-next-icon {
-      display: contents;
     }
 
     .p-disabled,
@@ -448,7 +477,7 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable.p-treetable-gridlines .p-treetable-header {
-      border-width: 1px 1px 0 1px;
+      border-width: 0.0625rem 0.0625rem 0 0.0625rem;
     }
 
     .p-treetable .p-treetable-header {
@@ -456,14 +485,14 @@ $tbar-normal-height: 72px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 10px !important;
+      padding: 0 0.625rem !important;
       border: unset;
       background: unset;
-      border-top: 1px solid $treetable-borders-color;
-      border-right: 1px solid $treetable-borders-color;
-      border-left: 4px solid $color-surprise !important;
-      border-radius: 4px 4px 0 0;
-      font-size: 16px;
+      border-top: 0.0625rem solid $treetable-borders-color;
+      border-right: 0.0625rem solid $treetable-borders-color;
+      border-left: 0.25rem solid $color-surprise !important;
+      border-radius: 0.25rem 0.25rem 0 0;
+      font-size: 1rem;
       line-height: 150%;
       background-color: white;
       color: $toolbar-text-color;
@@ -472,11 +501,11 @@ $tbar-normal-height: 72px;
         display: flex;
         align-items: center;
         .cps-treetable-tbar-global-filter {
-          margin-left: 12px;
+          margin-left: 0.75rem;
         }
         .cps-treetable-tbar-icon {
           display: flex;
-          margin-right: 8px;
+          margin-right: 0.5rem;
         }
         .cps-treetable-tbar-title {
           cursor: default;
@@ -486,54 +515,70 @@ $tbar-normal-height: 72px;
         display: flex;
         align-items: center;
         .cps-treetable-tbar-btn-on-select {
-          margin-right: 4px;
+          margin-right: 0.25rem;
         }
         .cps-treetable-tbar-action-btn {
-          margin-right: 4px;
-          margin-left: 8px;
+          margin-right: 0.25rem;
+          margin-left: 0.5rem;
         }
-        .cps-treetable-tbar-coltoggle-btn,
+        .cps-table-tbar-coltoggle-btn,
         .cps-treetable-tbar-reload-btn {
           display: contents;
-          cps-icon {
-            margin-left: 12px;
-            margin-right: 4px;
+        }
+
+        .cps-table-tbar-coltoggle-btn .cps-table-tbar-icon-btn,
+        .cps-treetable-tbar-reload-btn .cps-treetable-tbar-icon-btn {
+          background: none;
+          border: none;
+          padding: 0;
+          color: inherit;
+          font: inherit;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          margin-left: 0.75rem;
+          margin-right: 0.25rem;
+          overflow: visible;
+          &:hover .cps-icon,
+          &:focus-visible .cps-icon {
+            color: $color-calm !important;
           }
-          &:not(.btn-disabled) {
-            cps-icon {
-              cursor: pointer;
-            }
-            cps-icon:hover {
-              .cps-icon {
-                color: $color-prepared !important;
-              }
-            }
+          &:disabled {
+            cursor: default;
+            pointer-events: none;
+          }
+          &:focus {
+            outline: none;
+          }
+          &:focus-visible {
+            @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
           }
         }
       }
     }
 
     .cps-tbar-small.p-treetable .p-treetable-header {
-      height: $tbar-small-height;
+      min-height: $tbar-small-height;
     }
 
     .cps-tbar-normal.p-treetable .p-treetable-header {
-      height: $tbar-normal-height;
+      min-height: $tbar-normal-height;
     }
 
     .p-treetable .p-treetable-footer {
       background: white;
       color: #343a40;
-      border: 1px solid $treetable-borders-color;
-      border-width: 0 0 1px 0;
+      border: 0.0625rem solid $treetable-borders-color;
+      border-width: 0 0 0.0625rem 0;
       padding: 1rem 1rem;
       font-weight: 700;
     }
     .p-treetable .p-treetable-tfoot > tr > td {
       text-align: left;
       padding: 1rem 1rem;
-      border: 1px solid $treetable-borders-color;
-      border-width: 0 0 1px 0;
+      border: 0.0625rem solid $treetable-borders-color;
+      border-width: 0 0 0.0625rem 0;
       font-weight: 700;
       color: #343a40;
       background: white;
@@ -541,6 +586,10 @@ $tbar-normal-height: 72px;
 
     .p-treetable
       .p-sortable-column:not(.p-highlight):hover
+      .cps-sortable-column-icon.sort-unsorted,
+    .p-treetable
+      .p-sortable-column
+      cps-sort-icon:focus-visible
       .cps-sortable-column-icon.sort-unsorted {
       .sort-unsorted-arrow-up {
         border-bottom-color: $sorticon-hover-color;
@@ -560,11 +609,19 @@ $tbar-normal-height: 72px;
       height: 1rem;
     }
 
+    .p-paginator .p-paginator-first-icon,
+    .p-paginator .p-paginator-prev-icon,
+    .p-paginator .p-paginator-next-icon,
+    .p-paginator .p-paginator-last-icon {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+
     .p-treetable .p-sortable-column .cps-sortable-column-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 0.75rem;
       vertical-align: top;
       color: $color-calm;
       margin-left: 0.25rem;
@@ -592,6 +649,11 @@ $tbar-normal-height: 72px;
       outline: 0 none;
     }
 
+    .p-treetable .p-sortable-column:focus-visible {
+      overflow: visible;
+      @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+    }
+
     .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler.p-icon {
       width: 2rem;
       height: 2rem;
@@ -604,7 +666,13 @@ $tbar-normal-height: 72px;
 
     .p-treetable.p-treetable-hoverable-rows
       .p-treetable-tbody
-      > tr:not(.p-highlight):hover {
+      > tr:not(.p-highlight):hover,
+    .p-treetable.p-treetable-hoverable-rows
+      .p-treetable-tbody
+      > tr:not(.p-highlight):focus-visible,
+    .p-treetable.p-treetable-hoverable-rows
+      .p-treetable-tbody
+      > tr:not(.p-highlight):has(*:focus-visible) {
       background: $row-hover-background;
     }
 
@@ -613,7 +681,18 @@ $tbar-normal-height: 72px;
     }
     .p-treetable .p-column-resizer-helper {
       background: $color-calm;
-      width: 1px;
+      width: 0.0625rem;
+    }
+
+    .p-treetable .p-column-resizer {
+      &:focus {
+        outline: none;
+      }
+
+      &.cps-col-resizer-focused {
+        background: $color-calm !important;
+        opacity: 1 !important;
+      }
     }
 
     .p-treetable .p-treetable-mask.p-overlay-mask {
@@ -628,7 +707,7 @@ $tbar-normal-height: 72px;
       height: 100%;
       background-color: white;
       transition-duration: 0.2s;
-      border: 1px solid $treetable-borders-color;
+      border: 0.0625rem solid $treetable-borders-color;
     }
     .p-treetable.cps-tbar-small .p-treetable-mask.p-overlay-mask {
       top: $tbar-small-height;
@@ -642,13 +721,13 @@ $tbar-normal-height: 72px;
 
     .cps-treetable-loading {
       .p-treetable {
-        min-height: 200px;
+        min-height: 12.5rem;
       }
       .p-treetable.cps-tbar-normal {
-        min-height: 272px;
+        min-height: 17rem;
       }
       .p-treetable.cps-tbar-small {
-        min-height: 243px;
+        min-height: 15.1875rem;
       }
     }
 
@@ -659,36 +738,36 @@ $tbar-normal-height: 72px;
     }
 
     .p-treetable.p-treetable-gridlines .p-treetable-footer {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
     .p-treetable.p-treetable-gridlines .p-treetable-top {
-      border-width: 0 1px 0 1px;
+      border-width: 0 0.0625rem 0 0.0625rem;
     }
     .p-treetable.p-treetable-gridlines .p-treetable-bottom {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
     .p-treetable .p-treetable-thead > tr > th,
     .p-treetable.p-treetable-gridlines .p-treetable-thead > tr > th {
-      border-width: 1px 0 1px 1px;
+      border-width: 0.0625rem 0 0.0625rem 0.0625rem;
     }
 
     .p-treetable .p-treetable-thead > tr > th:last-child {
-      border-width: 1px;
+      border-width: 0.0625rem;
     }
 
     .p-treetable.p-treetable-gridlines .p-treetable-tbody > tr > td {
-      border-width: 0 0 1px 1px;
+      border-width: 0 0 0.0625rem 0.0625rem;
     }
     .p-treetable.p-treetable-gridlines .p-treetable-tfoot > tr > td {
-      border-width: 1px;
+      border-width: 0.0625rem;
     }
 
     .p-treetable.p-treetable-gridlines .p-treetable-tbody > tr > td:last-child {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
 
     .p-treetable .p-treetable-tbody > tr > td:only-child {
-      border-width: 0 1px 1px 1px;
+      border-width: 0 0.0625rem 0.0625rem 0.0625rem;
     }
 
     .p-treetable.p-treetable-sm .p-treetable-thead > tr > th {
@@ -726,12 +805,12 @@ $tbar-normal-height: 72px;
     }
 
     .cps-treetable-row-menu-cell {
-      width: 55px;
+      width: 3.4375rem;
       border-left: none !important;
     }
 
     .cps-treetable-selectable-cell {
-      width: 55px;
+      width: 3.4375rem;
       text-align: center !important;
     }
 
@@ -742,19 +821,19 @@ $tbar-normal-height: 72px;
       user-select: none;
       vertical-align: bottom;
       position: relative;
-      width: 18px;
-      height: 18px;
+      width: 1.125rem;
+      height: 1.125rem;
     }
 
     .p-hidden-accessible {
       border: 0;
       clip: rect(0 0 0 0);
-      height: 1px;
-      margin: -1px;
+      height: 0.0625rem;
+      margin: -0.0625rem;
       overflow: hidden;
       padding: 0;
       position: absolute;
-      width: 1px;
+      width: 0.0625rem;
     }
 
     .p-hidden-accessible input,
@@ -764,11 +843,11 @@ $tbar-normal-height: 72px;
 
     .p-checkbox .p-checkbox-box {
       background: #ffffff;
-      width: 18px;
-      height: 18px;
+      width: 1.125rem;
+      height: 1.125rem;
       color: $body-text-color;
-      border: 2px solid $checkbox-border-color;
-      border-radius: 2px;
+      border: 0.125rem solid $checkbox-border-color;
+      border-radius: 0.125rem;
       transition:
         background-color 0.2s,
         color 0.2s,
@@ -787,132 +866,71 @@ $tbar-normal-height: 72px;
       background: $color-calm;
     }
     .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
+      .p-checkbox-box,
+    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:focus)
       .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
     }
-    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box {
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box,
+    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:focus) .p-checkbox-box {
       border-color: $color-calm;
     }
 
+    .p-checkbox-input:focus-visible {
+      outline: none;
+    }
+
+    .p-checkbox:has(.p-checkbox-input:focus-visible) {
+      @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+    }
+
     .p-checkbox .p-checkbox-box .p-icon {
-      width: 14px;
-      height: 14px;
+      width: 0.875rem;
+      height: 0.875rem;
     }
 
     .p-checkbox .p-checkbox-box .p-checkbox-icon {
       transition-duration: 0.2s;
       color: #ffffff;
-      font-size: 14px;
+      font-size: 0.875rem;
     }
 
     .p-checkbox .p-checkbox-box minusicon .p-checkbox-icon {
       color: $color-calm;
-      width: 12px;
+      width: 0.75rem;
     }
 
     .p-treetable .p-treetable-tbody > tr > td p-treetablecheckbox .p-checkbox {
       margin-right: 0;
     }
+
+    .cps-treetable-html-cell {
+      * {
+        &:focus {
+          outline: none;
+        }
+
+        &:focus-visible {
+          position: relative;
+          @include focus-ring();
+        }
+      }
+    }
   }
 }
 
 ::ng-deep .p-scrollbar-measure {
-  width: 100px;
-  height: 100px;
+  width: 6.25rem;
+  height: 6.25rem;
   overflow: scroll;
   position: absolute;
   top: -9999px;
 }
 
-.cps-treetable-coltoggle-menu {
-  display: block;
-  max-height: 242px;
-  overflow-x: hidden;
-  background: white;
-
-  .cps-treetable-coltoggle-menu-item {
-    padding: 12px;
-    justify-content: space-between;
-    display: flex;
-    cursor: pointer;
-
-    &:hover {
-      background: $colitem-hover-background;
-    }
-
-    &-label {
-      color: $colitem-value-color;
-    }
-
-    &-left {
-      display: flex;
-      align-items: center;
-      margin-right: 8px;
-    }
-
-    &-check {
-      background-color: transparent;
-      border: 0;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      display: inline-block;
-      vertical-align: middle;
-      box-sizing: border-box;
-      position: relative;
-      flex-shrink: 0;
-      transition:
-        border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
-        background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-      margin-right: 8px;
-      opacity: 0;
-      &::after {
-        color: $color-calm;
-        top: 4px;
-        left: 1px;
-        width: 8px;
-        height: 3px;
-        border-left: 2px solid currentColor;
-        transform: rotate(-45deg);
-        opacity: 1;
-        box-sizing: content-box;
-        position: absolute;
-        content: '';
-        border-bottom: 2px solid currentColor;
-        transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
-      }
-    }
-    &.selected,
-    &.allselected {
-      font-weight: 600;
-      .cps-treetable-coltoggle-menu-item-label {
-        color: $color-calm;
-      }
-      .cps-treetable-coltoggle-menu-item-check {
-        opacity: 1;
-      }
-    }
-    &.selected {
-      background: $selected-colitem-background;
-    }
-    &.highlighten {
-      background: $colitem-highlight-background;
-    }
-    &.selected.highlighten {
-      background: $colitem-highlight-selected-background;
-    }
-  }
-
-  .select-all-option {
-    border-bottom: 1px solid lightgrey;
-    font-weight: 600;
-  }
-}
-
 ::ng-deep .cps-select-options-menu.cps-paginator-page-options {
   .cps-select-options-option {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }

@@ -38,6 +38,9 @@ export class CpsTreeTableRowSelectableDirective implements OnInit, OnDestroy {
       'cps-treetable-selectable-cell'
     );
     this.checkboxCompRef.setInput('value', this.value);
+    this.checkboxCompRef.setInput('pt', {
+      pcRowCheckbox: { input: { 'aria-label': 'Select row', tabindex: '0' } }
+    });
 
     this.elementRef.nativeElement.appendChild(
       this.checkboxCompRef.location.nativeElement
