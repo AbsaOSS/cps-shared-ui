@@ -1,13 +1,12 @@
 import { Directive, Input, inject } from '@angular/core';
 import { TTResizableColumn } from 'primeng/treetable';
-import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**
  * CpsTreeTableColumnResizableDirective is a directive to enable column resizing in a treetable.
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTColResizable]'
 })
 export class CpsTreeTableColumnResizableDirective extends TTResizableColumn {

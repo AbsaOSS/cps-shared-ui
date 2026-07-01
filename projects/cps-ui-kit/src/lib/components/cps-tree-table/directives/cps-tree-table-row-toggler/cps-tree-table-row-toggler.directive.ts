@@ -16,7 +16,6 @@ import { TreeTableToggler } from 'primeng/treetable';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTRowToggler]'
 })
 export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {

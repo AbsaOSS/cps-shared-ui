@@ -1,9 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CpsColumnFilterType } from '../../cps-table/cps-column-filter-types';
+import { CpsColumnFilterType } from '../../../cps-table/cps-column-filter-types';
 
 @Pipe({
-  name: 'cpsTTDetectFilterType',
-  standalone: true
+  name: 'cpsTTDetectFilterType'
 })
 export class CpsTreeTableDetectFilterTypePipe implements PipeTransform {
   transform(

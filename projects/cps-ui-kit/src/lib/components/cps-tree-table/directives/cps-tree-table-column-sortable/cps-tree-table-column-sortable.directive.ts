@@ -10,14 +10,13 @@ import {
 import { DomHandler } from 'primeng/dom';
 import { TreeTable } from 'primeng/treetable';
 import { Subscription } from 'rxjs';
-import { CpsSortIconComponent } from '../../cps-table/components/internal/cps-sort-icon/cps-sort-icon.component';
+import { CpsSortIconComponent } from '../../../cps-table/components/internal/cps-sort-icon/cps-sort-icon.component';
 
 /**
  * CpsTreeTableColumnSortableDirective is a sorting directive used to sort single or multiple columns in treetable.
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTColSortable]',
   host: {
     class: 'p-sortable-column',

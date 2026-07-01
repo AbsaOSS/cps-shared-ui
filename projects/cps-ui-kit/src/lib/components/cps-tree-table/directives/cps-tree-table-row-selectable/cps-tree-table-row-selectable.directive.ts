@@ -14,7 +14,6 @@ import { TTCheckbox } from 'primeng/treetable';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTRowSelectable]'
 })
 export class CpsTreeTableRowSelectableDirective implements OnInit, OnDestroy {

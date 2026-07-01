@@ -13,7 +13,6 @@ import { TTHeaderCheckbox } from 'primeng/treetable';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTHdrSelectable]'
 })
 export class CpsTreeTableHeaderSelectableDirective

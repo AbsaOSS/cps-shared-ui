@@ -8,19 +8,18 @@ import {
   OnChanges,
   ViewContainerRef
 } from '@angular/core';
-import { TableColumnFilterComponent } from '../../cps-table/components/internal/table-column-filter/table-column-filter.component';
+import { TableColumnFilterComponent } from '../../../cps-table/components/internal/table-column-filter/table-column-filter.component';
 import {
   CpsColumnFilterType,
   CpsColumnFilterMatchMode,
   CpsColumnFilterCategoryOption
-} from '../../cps-table/cps-column-filter-types';
+} from '../../../cps-table/cps-column-filter-types';
 
 /**
  * CpsTreeTableColumnFilterDirective is a filtering directive used to filter single or multiple columns in treetable.
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTColFilter]',
   exportAs: 'cpsTTColFilter'
 })

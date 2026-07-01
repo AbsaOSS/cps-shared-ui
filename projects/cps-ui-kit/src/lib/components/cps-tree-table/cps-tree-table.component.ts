@@ -44,14 +44,14 @@ import { CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { TableColumnVisibilityToggleComponent } from '../cps-table/components/internal/table-column-visibility-toggle/table-column-visibility-toggle.component';
 import { TableRowMenuComponent } from '../cps-table/components/internal/table-row-menu/table-row-menu.component';
-import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter.directive';
-import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable.directive';
-import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
-import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
-import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
-import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler.directive';
+import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter/cps-tree-table-column-filter.directive';
+import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable/cps-tree-table-column-resizable.directive';
+import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable/cps-tree-table-column-sortable.directive';
+import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable/cps-tree-table-header-selectable.directive';
+import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable/cps-tree-table-row-selectable.directive';
+import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler/cps-tree-table-row-toggler.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
-import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type.pipe';
+import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type/cps-tree-table-detect-filter-type.pipe';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {

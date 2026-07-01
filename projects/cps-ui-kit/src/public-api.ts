@@ -42,13 +42,13 @@ export * from './lib/components/cps-timepicker/cps-timepicker.component';
 export * from './lib/components/cps-tree-autocomplete/cps-tree-autocomplete.component';
 export * from './lib/components/cps-tree-select/cps-tree-select.component';
 export * from './lib/components/cps-tree-table/cps-tree-table.component';
-export * from './lib/components/cps-tree-table/directives/cps-tree-table-column-filter.directive';
-export * from './lib/components/cps-tree-table/directives/cps-tree-table-column-resizable.directive';
-export * from './lib/components/cps-tree-table/directives/cps-tree-table-column-sortable.directive';
-export * from './lib/components/cps-tree-table/directives/cps-tree-table-header-selectable.directive';
-export * from './lib/components/cps-tree-table/directives/cps-tree-table-row-selectable.directive';
-export * from './lib/components/cps-tree-table/directives/cps-tree-table-row-toggler.directive';
-export * from './lib/components/cps-tree-table/pipes/cps-tree-table-detect-filter-type.pipe';
+export * from './lib/components/cps-tree-table/directives/cps-tree-table-column-filter/cps-tree-table-column-filter.directive';
+export * from './lib/components/cps-tree-table/directives/cps-tree-table-column-resizable/cps-tree-table-column-resizable.directive';
+export * from './lib/components/cps-tree-table/directives/cps-tree-table-column-sortable/cps-tree-table-column-sortable.directive';
+export * from './lib/components/cps-tree-table/directives/cps-tree-table-header-selectable/cps-tree-table-header-selectable.directive';
+export * from './lib/components/cps-tree-table/directives/cps-tree-table-row-selectable/cps-tree-table-row-selectable.directive';
+export * from './lib/components/cps-tree-table/directives/cps-tree-table-row-toggler/cps-tree-table-row-toggler.directive';
+export * from './lib/components/cps-tree-table/pipes/cps-tree-table-detect-filter-type/cps-tree-table-detect-filter-type.pipe';
 
 export * from './lib/directives/cps-tooltip/cps-tooltip.directive';
 
