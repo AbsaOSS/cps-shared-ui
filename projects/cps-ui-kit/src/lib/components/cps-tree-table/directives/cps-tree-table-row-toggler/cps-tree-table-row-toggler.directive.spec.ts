@@ -108,9 +108,10 @@ describe('CpsTreetableRowTogglerDirective', () => {
     });
 
     it('should set rowNode input on the toggler component', () => {
-      expect(mockTogglerRef.setInput).toHaveBeenCalledWith('rowNode', {
-        node: { data: 'row-1' }
-      });
+      expect(mockTogglerRef.setInput).toHaveBeenCalledWith(
+        'rowNode',
+        expect.objectContaining({ node: { data: 'row-1' } })
+      );
     });
 
     it('should create a wrapper span with display flex inside the host td', () => {
@@ -154,6 +155,70 @@ describe('CpsTreetableRowTogglerDirective', () => {
           el.tagName === 'SPAN' && (el as HTMLElement).style.display === 'flex'
       );
       expect(wrapperSpan).toBeTruthy();
+    });
+  });
+
+  describe('ngOnChanges', () => {
+    it('should call setInput again when rowNode changes', () => {
+      mockTogglerRef.setInput.mockClear();
+      host.rowNode = { node: { data: 'updated' } };
+      fixture.detectChanges();
+      expect(mockTogglerRef.setInput).toHaveBeenCalledWith(
+        'rowNode',
+        expect.objectContaining({ node: { data: 'updated' } })
+      );
+    });
+
+    it('should reflect the new node expanded state after change', () => {
+      host.rowNode = { node: { data: 'updated', expanded: true } };
+      fixture.detectChanges();
+      const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
+      expect(passedNode.expanded).toBe(false);
+    });
+  });
+
+  describe('_rowNodeWithExpanded', () => {
+    it('should return false for expanded when node.expanded is true', () => {
+      host.rowNode = { node: { data: 'row-1', expanded: true } };
+      fixture.detectChanges();
+      const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
+      expect(passedNode.expanded).toBe(false);
+    });
+
+    it('should return true for expanded when node.expanded is false', () => {
+      host.rowNode = { node: { data: 'row-1', expanded: false } };
+      fixture.detectChanges();
+      const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
+      expect(passedNode.expanded).toBe(true);
+    });
+
+    it('should return true for expanded when node has no expanded property', () => {
+      const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
+      expect(passedNode.expanded).toBe(true);
+    });
+
+    it('expanded getter should reflect live mutations to node.expanded', () => {
+      const node = { data: 'row-1', expanded: false };
+      host.rowNode = { node };
+      fixture.detectChanges();
+      const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
+      expect(passedNode.expanded).toBe(true);
+      node.expanded = true;
+      expect(passedNode.expanded).toBe(false);
+    });
+
+    it('should preserve all other rowNode properties', () => {
+      host.rowNode = {
+        node: { data: 'row-1' },
+        level: 2,
+        parent: null,
+        visible: true
+      };
+      fixture.detectChanges();
+      const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
+      expect(passedNode.level).toBe(2);
+      expect(passedNode.parent).toBeNull();
+      expect(passedNode.visible).toBe(true);
     });
   });
 
