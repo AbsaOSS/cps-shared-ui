@@ -13,6 +13,7 @@ $loaders-label-color: var(--cps-color-text-darkest);
   }
 
   .loader-container {
+    max-width: 100%;
     width: 28.125rem;
     height: 12.5rem;
     border: 0.0625rem solid lightgrey;

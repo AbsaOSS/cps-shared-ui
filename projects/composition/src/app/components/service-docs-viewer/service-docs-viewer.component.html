@@ -23,10 +23,12 @@
             <div>
               <table class="data-table">
                 <thead>
-                  <th>Name</th>
-                  <th>Parameters</th>
-                  <th>Return type</th>
-                  <th>Description</th>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Parameters</th>
+                    <th scope="col">Return type</th>
+                    <th scope="col">Description</th>
+                  </tr>
                 </thead>
                 <tbody>
                   @for (method of serviceData.methods.values; track method) {
@@ -79,9 +81,11 @@
             <div>
               <table class="data-table">
                 <thead>
-                  <th>Name</th>
-                  <th>Values</th>
-                  <th>Description</th>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Values</th>
+                    <th scope="col">Description</th>
+                  </tr>
                 </thead>
                 <tbody>
                   @for (type of serviceData.types.values; track type) {
@@ -120,12 +124,14 @@
               @let interfaceHasDefaults = hasDefaults(interface.props);
               <table class="data-table">
                 <thead>
-                  <th>Name</th>
-                  <th>Type</th>
-                  @if (interfaceHasDefaults) {
-                    <th>Default value</th>
-                  }
-                  <th>Description</th>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    @if (interfaceHasDefaults) {
+                      <th scope="col">Default value</th>
+                    }
+                    <th scope="col">Description</th>
+                  </tr>
                 </thead>
                 <tbody>
                   @for (prop of interface.props; track prop) {
@@ -168,12 +174,14 @@
                 @let clsHasDefaults = hasDefaults(cls.props);
                 <table class="data-table">
                   <thead>
-                    <th>Name</th>
-                    <th>Type</th>
-                    @if (clsHasDefaults) {
-                      <th>Default value</th>
-                    }
-                    <th>Description</th>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Type</th>
+                      @if (clsHasDefaults) {
+                        <th scope="col">Default value</th>
+                      }
+                      <th scope="col">Description</th>
+                    </tr>
                   </thead>
                   <tbody>
                     @for (prop of cls.props; track prop) {
@@ -199,10 +207,12 @@
                 <h4>Methods</h4>
                 <table class="data-table">
                   <thead>
-                    <th>Name</th>
-                    <th>Parameters</th>
-                    <th>Return type</th>
-                    <th>Description</th>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Parameters</th>
+                      <th scope="col">Return type</th>
+                      <th scope="col">Description</th>
+                    </tr>
                   </thead>
                   <tbody>
                     @for (method of cls.methods; track method) {
@@ -248,9 +258,11 @@
                 <h4>Events</h4>
                 <table class="data-table">
                   <thead>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
+                    <tr>
+                      <th scope="col">Name</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Description</th>
+                    </tr>
                   </thead>
                   <tbody>
                     @for (event of cls.events; track event) {

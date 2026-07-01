@@ -1,30 +1,32 @@
 @use '../../../variables.scss' as vars;
+@use '../../../../../cps-ui-kit/styles/mixins' as *;
 
 :host {
   $item-hover-background: var(--cps-highlight-hover);
   $item-active-background: var(--cps-highlight-active);
   $item-border-color: var(--cps-color-line);
 
-  border-right: 1px solid $item-border-color;
+  border-right: 0.0625rem solid $item-border-color;
   background-color: var(--cps-surface-highlight);
   .sidebar {
     transition: width 0.2s;
     background-color: var(--cps-surface-highlight);
     width: vars.$sidebar-width;
-    height: calc(100vh - vars.$top-tbar-height - 20px);
+    height: calc(100vh - vars.$top-tbar-height - 1.25rem);
     overflow: auto;
     .list {
       &-title {
         margin: 0;
-        padding: 12px 0 12px 12px;
+        padding: 0.75rem 0 0.75rem 0.75rem;
         color: var(--cps-text-primary);
       }
       &-item {
-        border-bottom: 1px solid $item-border-color;
-        height: 42px;
+        border-bottom: 0.0625rem solid $item-border-color;
+        border-radius: 0.25rem;
+        height: 2.625rem;
         display: flex;
         align-items: center;
-        padding-left: 30px;
+        padding-left: 1.875rem;
         text-decoration: none;
         color: var(--cps-text-primary);
         &:hover {
@@ -32,6 +34,10 @@
         }
         &:active {
           background: $item-active-background;
+        }
+        &:focus-visible {
+          @include focus-ring(0, -0.0625rem, 0.25rem);
+          background: $item-hover-background;
         }
       }
       ._active {
@@ -42,7 +48,21 @@
     }
 
     &.sidebar-collapsed {
-      width: 0px;
+      width: 0;
+    }
+  }
+
+  @media (max-width: 37.5rem) {
+    position: fixed;
+    top: vars.$top-tbar-height;
+    left: 0;
+    height: calc(100vh - vars.$top-tbar-height);
+    z-index: 2002;
+    overflow-x: clip;
+    border-right: none;
+
+    .sidebar {
+      height: calc(100vh - vars.$top-tbar-height);
     }
   }
 }
