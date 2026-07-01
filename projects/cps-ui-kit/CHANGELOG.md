@@ -1,5 +1,19 @@
 # Changelog
 
+## [21.28.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.27.0...v21.28.0) (2026-07-01)
+
+
+### Features
+
+* fix a11y issues in table component ([#680](https://github.com/AbsaOSS/cps-shared-ui/issues/680)) ([7483663](https://github.com/AbsaOSS/cps-shared-ui/commit/74836634f0ada219b9cc7853086fc86e992d59c9))
+* fix a11y issues in tree select and tree autocomplete components ([#675](https://github.com/AbsaOSS/cps-shared-ui/issues/675)) ([92c22dc](https://github.com/AbsaOSS/cps-shared-ui/commit/92c22dcbf627ba78a7c3eaf1f92c9a147c61c6bb))
+* improve getTextColor function ([7010448](https://github.com/AbsaOSS/cps-shared-ui/commit/701044880989f149589abd4990191d07750a6c23))
+
+
+### Bug Fixes
+
+* CpsSidebarMenuComponent scrolling and touch navigation ([#684](https://github.com/AbsaOSS/cps-shared-ui/issues/684)) ([2bedec5](https://github.com/AbsaOSS/cps-shared-ui/commit/2bedec56e71370aebf12f5adc261f140cdbd1590))
+
 ## [21.27.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.26.0...v21.27.0) (2026-06-17)
 
 
