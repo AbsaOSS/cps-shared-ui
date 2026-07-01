@@ -1,12 +1,17 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   Input,
+  PLATFORM_ID,
   QueryList,
+  ViewChild,
   ViewChildren,
   computed,
+  inject,
   input
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -65,7 +70,7 @@ export type CpsSidebarMenuItem = {
     ])
   ]
 })
-export class CpsSidebarMenuComponent {
+export class CpsSidebarMenuComponent implements AfterViewInit {
   /**
    * An array of menu items.
    * @group Props
@@ -97,12 +102,26 @@ export class CpsSidebarMenuComponent {
    */
   height = input<number | string>('100%');
 
+  @ViewChild('expandAreaBtn')
+  private _expandAreaBtn?: ElementRef<HTMLButtonElement>;
+
   @ViewChildren('popupMenu') allMenus?: QueryList<CpsMenuComponent>;
 
   focusedItemWithMenu: CpsSidebarMenuItem | null = null;
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _router: Router) {}
+  private readonly _elementRef = inject(ElementRef<HTMLElement>);
+  private readonly _router = inject(Router);
+  private readonly _platformId = inject(PLATFORM_ID);
+
+  private _pendingTouch = false;
+
+  onMenuItemTouchStart(): void {
+    this._pendingTouch = true;
+  }
+
+  ngAfterViewInit(): void {
+    this._applyExpandButtonBackground();
+  }
 
   cvtHeight = computed(() => convertSize(this.height()));
 
@@ -112,6 +131,11 @@ export class CpsSidebarMenuComponent {
     item?: CpsSidebarMenuItem
   ) {
     if ((event.currentTarget as HTMLElement)?.classList.contains('disabled'))
+      return;
+    if (
+      this._pendingTouch &&
+      (event.type === 'mouseenter' || event.type === 'focusin')
+    )
       return;
     if (event.type === 'focusin' && item) {
       this.focusedItemWithMenu = item;
@@ -129,6 +153,7 @@ export class CpsSidebarMenuComponent {
     menu: CpsMenuComponent,
     item: CpsSidebarMenuItem
   ) {
+    this._pendingTouch = false;
     if ((event.currentTarget as HTMLElement)?.classList.contains('disabled'))
       return;
 
@@ -142,6 +167,7 @@ export class CpsSidebarMenuComponent {
   }
 
   leaveMenu(event: MouseEvent | FocusEvent, menu: CpsMenuComponent) {
+    if (this._pendingTouch && event.type === 'mouseleave') return;
     const rel = event.relatedTarget as Node;
     if (
       !menu.container?.contains(rel) &&
@@ -164,5 +190,23 @@ export class CpsSidebarMenuComponent {
 
   toggleSidebar() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  private _applyExpandButtonBackground(): void {
+    if (!isPlatformBrowser(this._platformId)) return;
+    const bg = this._resolveBackground(this._elementRef.nativeElement);
+    if (bg && this._expandAreaBtn) {
+      this._expandAreaBtn.nativeElement.style.backgroundColor = bg;
+    }
+  }
+
+  private _resolveBackground(el: HTMLElement): string | null {
+    let node: HTMLElement | null = el.parentElement;
+    while (node) {
+      const bg = getComputedStyle(node).backgroundColor;
+      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') return bg;
+      node = node.parentElement;
+    }
+    return null;
   }
 }

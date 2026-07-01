@@ -37,19 +37,17 @@
         cpsTooltip="Triggered on hover"
         tooltipOpenOn="hover">
       </cps-button>
+      <cps-button
+        label="Open on click"
+        tooltipPosition="right"
+        cpsTooltip="Triggered on click"
+        tooltipOpenOn="click">
+      </cps-button>
     </div>
-
-    <cps-button
-      label="Open on click"
-      tooltipPosition="right"
-      cpsTooltip="Triggered on click"
-      tooltipOpenOn="click">
-    </cps-button>
   </div>
 
   <div class="tooltip-elems-group">
     <div class="tooltip-elems-group-title">Long open and close delays</div>
-
     <div class="tooltip-elems-group-elem-left">
       <cps-button
         cpsTooltip="1 second open delay"
@@ -57,14 +55,13 @@
         tooltipPosition="bottom"
         [tooltipOpenDelay]="1000">
       </cps-button>
+      <cps-button
+        cpsTooltip="1 second close delay"
+        label="Close delay"
+        tooltipPosition="right"
+        [tooltipCloseDelay]="1000">
+      </cps-button>
     </div>
-
-    <cps-button
-      cpsTooltip="1 second close delay"
-      label="Close delay"
-      tooltipPosition="right"
-      [tooltipCloseDelay]="1000">
-    </cps-button>
   </div>
 
   <div class="tooltip-elems-group">
@@ -89,9 +86,9 @@
         [tooltipDisabled]="!ttipEnabled"
         cpsTooltip="<span><strong>Some bold text</strong></span>">
       </cps-button>
+      <cps-checkbox
+        [(ngModel)]="ttipEnabled"
+        [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
     </div>
-    <cps-checkbox
-      [(ngModel)]="ttipEnabled"
-      [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
   </div>
 </app-component-docs-viewer>

@@ -15,31 +15,30 @@ const isValidCSSColor = (val: string, _document: Document): boolean => {
   return element && element.style.backgroundColor !== '';
 };
 
-const isDark = (color: string): boolean => {
+const toLinear = (c: number): number => {
+  const s = c / 255;
+  return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4;
+};
+
+const getRelativeLuminance = (color: string): number => {
   let r = 0;
   let g = 0;
   let b = 0;
   if (color.match(/^rgb/)) {
-    // Match both legacy rgba(r, g, b, a) and modern rgb(r g b / a) syntax
-    const colorMatched = color.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
-    if (!colorMatched) return false;
-    r = +colorMatched[1];
-    g = +colorMatched[2];
-    b = +colorMatched[3];
+    const m = color.match(/^rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    if (!m) return 0;
+    r = +m[1];
+    g = +m[2];
+    b = +m[3];
   } else {
-    const colorNum = +(
+    const num = +(
       '0x' + color.slice(1).replace(color.length < 5 && (/./g as any), '$&$&')
     );
-
-    r = colorNum >> 16;
-    g = (colorNum >> 8) & 255;
-    b = colorNum & 255;
+    r = num >> 16;
+    g = (num >> 8) & 255;
+    b = num & 255;
   }
-
-  const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
-
-  // Using the HSP value, determine whether the color is light or dark
-  return hsp <= 127.5;
+  return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
 };
 
 /**
@@ -79,9 +78,8 @@ export const getCSSColor = (val: string, _document: Document): string => {
 };
 
 export const getTextColor = (backgroundColor: string): string => {
-  if (isDark(backgroundColor)) {
-    return '#FFFFFF';
-  } else {
-    return '#000000';
-  }
+  const L = getRelativeLuminance(backgroundColor);
+  const contrastOnWhite = 1.05 / (L + 0.05);
+  const contrastOnBlack = (L + 0.05) / 0.05;
+  return contrastOnWhite >= contrastOnBlack ? '#FFFFFF' : '#000000';
 };

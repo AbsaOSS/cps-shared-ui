@@ -4,14 +4,24 @@
     height: 100%;
   }
   padding: 0 1.5rem 0 1.5rem;
-  .desc {
-    margin-top: 1.5rem;
-    color: var(--cps-color-text-dark);
-    margin-left: 1.5rem;
-    font-size: 1.125rem;
+
+  .sidebar-menu-page-info-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0 0 1.5rem;
+    border-radius: 0.5rem;
+    border-left: 0.25rem solid var(--cps-color-info);
+    background: var(--cps-color-info-highlighten);
+    color: var(--cps-color-text-darkest);
+    font-size: 1rem;
+    height: fit-content;
   }
+
   ::ng-deep {
     .example-content {
+      display: flex;
       padding: 0;
       height: 100%;
     }

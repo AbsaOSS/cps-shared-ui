@@ -1,4 +1,4 @@
-<div class="top-toolbar">
+<header class="top-toolbar">
   <img src="assets/ui_logo.svg" alt="CPS UI Kit logo" />
   <span>Consumer Products UI Kit</span>
   @if (version) {
@@ -9,20 +9,41 @@
   @if (showThemeToggle) {
     <app-theme-toggle />
   }
-</div>
-<div class="composition-container">
+</header>
+<div
+  class="composition-container"
+  [class.sidebar-open-mobile]="sidebarExpanded && isMobile">
+  <div class="sidebar-toggle-wrap" [class.sidebar-expanded]="sidebarExpanded">
+    <button
+      #sidebarToggle
+      type="button"
+      class="sidebar-toggle-btn"
+      [attr.aria-expanded]="sidebarExpanded"
+      aria-label="Toggle navigation sidebar"
+      (click)="toggleSidebar()">
+      <cps-icon icon="burger-arrow" class="sidebar-toggle-icon"></cps-icon>
+    </button>
+  </div>
   <app-navigation-sidebar
-    [isExpanded]="sidebarExpanded"></app-navigation-sidebar>
-  <div
+    #sidebar
+    [isExpanded]="sidebarExpanded"
+    (linkClicked)="onNavLinkClicked()"></app-navigation-sidebar>
+  @if (sidebarExpanded && isMobile) {
+    <div
+      class="sidebar-backdrop"
+      (click)="toggleSidebar()"
+      aria-hidden="true"></div>
+  }
+  <main
     class="composition-body"
-    [ngClass]="{ 'composition-body-collapsed': !sidebarExpanded }">
+    id="main-content"
+    tabindex="-1"
+    [ngClass]="{ 'composition-body-collapsed': !sidebarExpanded }"
+    (keydown.shift.tab)="focusActiveNavItem($event)">
     <div class="composition-body-toolbar">
-      <cps-icon
-        icon="burger-arrow"
-        class="sidebar-toggle-icon"
-        (click)="toggleSidebar()"></cps-icon>
+      <div class="sidebar-toggle-placeholder" aria-hidden="true"></div>
       <span class="composition-body-toolbar-title">{{ componentTitle }}</span>
     </div>
     <router-outlet></router-outlet>
-  </div>
+  </main>
 </div>

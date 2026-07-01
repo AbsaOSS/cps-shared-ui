@@ -25,6 +25,8 @@
 
     .cps-sidebar-menubar {
       width: 100%;
+      flex: 1;
+      overflow-y: auto;
     }
 
     .expand-area {
@@ -39,14 +41,14 @@
       padding: 0;
       font: inherit;
       color: inherit;
+      border-radius: 0.25rem;
 
       cps-icon {
         transition: transform $transition-duration cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       &:focus-visible {
-        @include focus-ring(0, -0.0625rem, 0);
-        position: absolute;
+        @include focus-ring(0, -0.0625rem, 0.25rem);
       }
 
       &:hover,
