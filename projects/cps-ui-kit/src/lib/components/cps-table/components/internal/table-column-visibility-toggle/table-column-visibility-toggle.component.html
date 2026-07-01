@@ -1,17 +1,15 @@
-<button
-  type="button"
-  class="cps-table-tbar-icon-btn"
-  aria-label="Toggle column visibility"
-  aria-haspopup="listbox"
-  [attr.aria-expanded]="isMenuOpen()"
-  [disabled]="disabled()"
-  (click)="onToggle($event)">
-  <cps-icon
+<div class="cps-table-tbar-coltoggle-btn">
+  <cps-button
+    ariaLabel="Toggle column visibility"
+    ariaHaspopup="listbox"
+    [ariaExpanded]="isMenuOpen()"
+    [disabled]="disabled()"
     icon="columns"
-    size="normal"
-    [color]="disabled() ? 'text-lightest' : 'calm-lighten1'"
-    aria-hidden="true"></cps-icon>
-</button>
+    type="borderless"
+    color="calm"
+    (clicked)="onToggle($event)">
+  </cps-button>
+</div>
 <cps-menu
   #menu
   [withArrow]="false"

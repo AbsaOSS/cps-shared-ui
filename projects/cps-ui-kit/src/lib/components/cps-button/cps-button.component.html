@@ -6,6 +6,8 @@
     (click)="onClick($event)"
     [attr.aria-busy]="loading ? true : null"
     [attr.aria-label]="ariaLabel || label || null"
+    [attr.aria-haspopup]="ariaHaspopup"
+    [attr.aria-expanded]="ariaExpanded"
     [class.loading]="loading"
     [class.cps-button--key-active]="enterActive"
     (keydown.enter)="onEnterKeydown()"

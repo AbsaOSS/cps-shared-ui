@@ -47,6 +47,8 @@ $tbar-normal-height: 4.5rem;
       }
 
       .p-datatable-column-resizer {
+        border-width: 0.0625rem;
+
         &:focus {
           outline: none;
         }
@@ -96,48 +98,16 @@ $tbar-normal-height: 4.5rem;
       .cps-table-tbar-right {
         display: flex;
         align-items: center;
-        .cps-table-tbar-btn-on-select {
+
+        .cps-table-tbar-action-btn,
+        .cps-table-tbar-export-btn {
           margin-right: 0.25rem;
+          margin-left: 0.25rem;
         }
-        .cps-table-tbar-action-btn {
-          margin-right: 0.25rem;
-          margin-left: 0.5rem;
-        }
-        .cps-table-tbar-coltoggle-btn,
-        .cps-table-tbar-export-btn,
+        .cps-table-tbar-btn-on-select,
         .cps-table-tbar-reload-btn {
-          display: contents;
-          .cps-table-tbar-icon-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            color: inherit;
-            font: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-left: 0.75rem;
-            margin-right: 0.25rem;
-
-            &:focus {
-              outline: none;
-            }
-
-            &:focus-visible {
-              @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
-            }
-
-            &:hover .cps-icon,
-            &:focus-visible .cps-icon {
-              color: $color-calm !important;
-            }
-
-            &:disabled {
-              cursor: default;
-              pointer-events: none;
-            }
-          }
+          margin-right: 0.125rem;
+          margin-left: 0.125rem;
         }
       }
     }

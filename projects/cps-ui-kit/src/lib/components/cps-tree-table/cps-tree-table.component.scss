@@ -514,46 +514,16 @@ $tbar-normal-height: 4.5rem;
       .cps-treetable-tbar-right {
         display: flex;
         align-items: center;
-        .cps-treetable-tbar-btn-on-select {
-          margin-right: 0.25rem;
-        }
-        .cps-treetable-tbar-action-btn {
-          margin-right: 0.25rem;
-          margin-left: 0.5rem;
-        }
-        .cps-table-tbar-coltoggle-btn,
-        .cps-treetable-tbar-reload-btn {
-          display: contents;
-        }
 
-        .cps-table-tbar-coltoggle-btn .cps-table-tbar-icon-btn,
-        .cps-treetable-tbar-reload-btn .cps-treetable-tbar-icon-btn {
-          background: none;
-          border: none;
-          padding: 0;
-          color: inherit;
-          font: inherit;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          margin-left: 0.75rem;
+        .cps-treetable-tbar-action-btn,
+        .cps-treetable-tbar-export-btn {
           margin-right: 0.25rem;
-          overflow: visible;
-          &:hover .cps-icon,
-          &:focus-visible .cps-icon {
-            color: $color-calm !important;
-          }
-          &:disabled {
-            cursor: default;
-            pointer-events: none;
-          }
-          &:focus {
-            outline: none;
-          }
-          &:focus-visible {
-            @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
-          }
+          margin-left: 0.25rem;
+        }
+        .cps-treetable-tbar-btn-on-select,
+        .cps-treetable-tbar-reload-btn {
+          margin-right: 0.125rem;
+          margin-left: 0.125rem;
         }
       }
     }
@@ -685,6 +655,8 @@ $tbar-normal-height: 4.5rem;
     }
 
     .p-treetable .p-column-resizer {
+      border-width: 0.0625rem;
+
       &:focus {
         outline: none;
       }

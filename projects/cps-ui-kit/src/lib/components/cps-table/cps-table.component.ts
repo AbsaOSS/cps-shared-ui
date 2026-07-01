@@ -1147,6 +1147,15 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     this.exportMenu?.toggle(event);
   }
 
+  onExportMenuShown() {
+    this.isExportMenuOpen = true;
+    const container = this.exportMenu?.container;
+    const target = this.exportMenu?.target as HTMLElement | null;
+    if (container && target) {
+      container.style.width = target.offsetWidth + 'px';
+    }
+  }
+
   private _getIndexes(rows: any[]) {
     let indexes: number[] = rows.map((row) =>
       this.primengTable.value.indexOf(row)

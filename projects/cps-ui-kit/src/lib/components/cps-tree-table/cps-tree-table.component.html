@@ -2,12 +2,10 @@
   #primengTreeTable
   ttWithUnsort
   [pt]="treeTablePassthrough"
-  [ngClass]="{
-    'cps-treetable-loading': loading,
-    'cps-treetable-flex': defScrollHeight === 'flex',
-    'cps-treetable-nonvirtual': !virtualScroll,
-    'cps-treetable-autolayout-calced': autoLayout && scrollable
-  }"
+  [class.cps-treetable-loading]="loading"
+  [class.cps-treetable-flex]="defScrollHeight === 'flex'"
+  [class.cps-treetable-nonvirtual]="!virtualScroll"
+  [class.cps-treetable-autolayout-calced]="autoLayout && scrollable"
   [value]="data"
   [autoLayout]="autoLayout && !scrollable"
   [scrollable]="scrollable"
@@ -132,9 +130,7 @@
             </div>
           }
           @if (showExportBtn) {
-            <div
-              class="cps-treetable-tbar-export-btn ml-2"
-              [ngClass]="{ 'btn-disabled': exportBtnDisabled }">
+            <div class="cps-treetable-tbar-export-btn">
               <cps-button
                 label="Export"
                 [disabled]="exportBtnDisabled"
@@ -156,23 +152,16 @@
             </table-column-visibility-toggle>
           }
           @if (showDataReloadBtn) {
-            <div
-              class="cps-treetable-tbar-reload-btn"
-              [ngClass]="{ 'btn-disabled': dataReloadBtnDisabled }">
-              <button
-                type="button"
-                class="cps-treetable-tbar-icon-btn"
-                aria-label="Reload data"
-                [disabled]="dataReloadBtnDisabled || null"
-                (click)="onReloadData()">
-                <cps-icon
-                  icon="refresh"
-                  size="18"
-                  [color]="
-                    dataReloadBtnDisabled ? 'text-light' : 'calm-lighten1'
-                  ">
-                </cps-icon>
-              </button>
+            <div class="cps-treetable-tbar-reload-btn">
+              <cps-button
+                ariaLabel="Reload data"
+                icon="refresh"
+                type="borderless"
+                color="calm"
+                [size]="toolbarSize"
+                [disabled]="dataReloadBtnDisabled"
+                (clicked)="onReloadData()">
+              </cps-button>
             </div>
           }
         </div>
@@ -289,10 +278,9 @@
     let-rowIndex="rowIndex">
     <tr
       [ttRow]="rowNode"
-      [ngClass]="{
-        'cps-treetable-row-selected':
-          selectable && primengTreeTable.isSelected(rowNode.node)
-      }">
+      [class.cps-treetable-row-selected]="
+        selectable && primengTreeTable.isSelected(rowNode.node)
+      ">
       <!-- <td *ngIf="reorderableRows" class="cps-table-row-drag-handle-cell">
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td> -->
@@ -373,7 +361,7 @@
         colspan="100"
         role="status"
         class="cps-treetable-empty-message-td"
-        [ngStyle]="{ height: emptyBodyHeight }">
+        [style.height]="emptyBodyHeight">
         {{ emptyMessage }}
       </td>
     </tr>

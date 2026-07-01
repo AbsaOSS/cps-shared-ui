@@ -1,3 +1,13 @@
+.cps-table-tbar-coltoggle-btn {
+  margin-right: 0.125rem;
+  margin-left: 0.125rem;
+
+  ::ng-deep .cps-button__icon {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+}
+
 .cps-table-coltoggle-menu {
   display: block;
   max-height: 15.125rem;
