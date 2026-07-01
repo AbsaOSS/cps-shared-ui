@@ -78,7 +78,7 @@
           [showColumnsToggleBtn]="true"
           [filterableByColumns]="true"
           [resizableColumns]="true"
-          scrollHeight="500px"
+          scrollHeight="31.25rem"
           toolbarTitle="Sortable tree table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled">
           <ng-template #colgroup>
             <colgroup>
@@ -190,7 +190,7 @@
         (rowsToRemove)="onRowsToRemove($event)"
         [selectable]="true"
         toolbarSize="small"
-        scrollHeight="calc(100vh - 370px)"
+        scrollHeight="calc(100vh - 23.125rem)"
         toolbarTitle="Tree table with nested header and small toolbar">
         <ng-template #nestedHeader>
           <tr>
@@ -326,7 +326,7 @@
       <cps-tree-table
         [data]="[]"
         toolbarTitle="Empty tree table"
-        emptyBodyHeight="400px">
+        emptyBodyHeight="25rem">
         <ng-template #header>
           <th cpsTTColSortable="name">Name</th>
           <th cpsTTColSortable="size">Size</th>
@@ -340,7 +340,7 @@
       <cps-tree-table
         [data]="data"
         [loading]="true"
-        scrollHeight="400px"
+        scrollHeight="25rem"
         [columns]="cols"
         toolbarTitle="Tree table in data loading state">
       </cps-tree-table>
@@ -348,7 +348,7 @@
     <cps-tab label="Tree table 10">
       <cps-tree-table
         [data]="treeDataWithHTML"
-        scrollHeight="400px"
+        scrollHeight="25rem"
         [columns]="colsHTML"
         [renderDataAsHTML]="true"
         toolbarTitle="Table containing HTML">

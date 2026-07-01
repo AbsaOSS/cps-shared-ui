@@ -11,7 +11,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { isEqual } from 'lodash-es';
 import { CpsMenuComponent } from '../../../../cps-menu/cps-menu.component';
-import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
+import { CpsButtonComponent } from '../../../../cps-button/cps-button.component';
 import { generateUniqueId } from '../../../../../utils/internal/accessibility-utils';
 
 /**
@@ -20,13 +20,10 @@ import { generateUniqueId } from '../../../../../utils/internal/accessibility-ut
  */
 @Component({
   selector: 'table-column-visibility-toggle',
-  imports: [CommonModule, CpsMenuComponent, CpsIconComponent],
+  imports: [CommonModule, CpsMenuComponent, CpsButtonComponent],
   templateUrl: './table-column-visibility-toggle.component.html',
   styleUrls: ['./table-column-visibility-toggle.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'cps-table-tbar-coltoggle-btn'
-  }
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableColumnVisibilityToggleComponent {
   columns = input<{ [key: string]: any }[]>([]);

@@ -100,7 +100,7 @@
               <cps-button
                 [label]="additionalBtnOnSelectTitle"
                 [disabled]="additionalBtnOnSelectDisabled"
-                color="prepared"
+                color="calm"
                 type="borderless"
                 [icon]="additionalBtnOnSelectIcon"
                 [size]="toolbarSize"
@@ -132,47 +132,38 @@
           }
           @if (showExportBtn) {
             <div class="cps-table-tbar-export-btn">
-              <button
-                type="button"
-                class="cps-table-tbar-icon-btn"
-                aria-label="Export data"
-                aria-haspopup="menu"
-                [attr.aria-expanded]="isExportMenuOpen"
+              <cps-button
+                label="Export"
                 [disabled]="exportBtnDisabled"
-                (click)="onExportData($event)">
-                <cps-icon
-                  icon="export"
-                  size="1.25rem"
-                  [color]="
-                    exportBtnDisabled ? 'text-light' : 'prepared-lighten1'
-                  "></cps-icon>
-              </button>
+                color="calm"
+                type="solid"
+                icon="export"
+                [size]="toolbarSize"
+                ariaHaspopup="menu"
+                [ariaExpanded]="isExportMenuOpen"
+                (clicked)="onExportData($event)">
+              </cps-button>
               <cps-menu
                 #exportMenu
                 [items]="exportMenuItems"
                 [compressed]="true"
                 [withArrow]="false"
-                (menuShown)="isExportMenuOpen = true"
+                (menuShown)="onExportMenuShown()"
                 (menuHidden)="isExportMenuOpen = false">
               </cps-menu>
             </div>
           }
           @if (showDataReloadBtn) {
             <div class="cps-table-tbar-reload-btn">
-              <button
-                type="button"
-                class="cps-table-tbar-icon-btn"
-                aria-label="Reload data"
+              <cps-button
+                ariaLabel="Reload data"
+                icon="refresh"
+                type="borderless"
+                color="calm"
+                [size]="toolbarSize"
                 [disabled]="dataReloadBtnDisabled"
-                (click)="onReloadData()">
-                <cps-icon
-                  icon="refresh"
-                  size="1.125rem"
-                  [color]="
-                    dataReloadBtnDisabled ? 'text-light' : 'prepared-lighten1'
-                  ">
-                </cps-icon>
-              </button>
+                (clicked)="onReloadData()">
+              </cps-button>
             </div>
           }
         </div>
@@ -427,7 +418,7 @@
       <td
         colspan="100"
         class="cps-table-empty-message-td"
-        [ngStyle]="{ height: emptyBodyHeight }">
+        [style.height]="emptyBodyHeight">
         {{ emptyMessage }}
       </td>
     </tr>

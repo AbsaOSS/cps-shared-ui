@@ -108,6 +108,14 @@ export class MenuPageComponent {
 
   componentData = ComponetnData;
 
+  isStandardMenuOpen = false;
+  isStandardMenuNoHeaderOpen = false;
+  isCompressedMenuOpen = false;
+  isCompressedMenuNoIconsOpen = false;
+  isArbitraryMenuOpen = false;
+  isFocusMenuOpen = false;
+  isHoverMenuOpen = false;
+
   doConsoleLog(event: any) {
     console.log(event.item.title + ' clicked');
   }

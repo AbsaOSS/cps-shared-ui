@@ -62,6 +62,22 @@
                         "description": "Aria label for the button, used for accessibility, it takes precedence over label."
                     },
                     {
+                        "name": "ariaHaspopup",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "Indicates that the button controls a popup element."
+                    },
+                    {
+                        "name": "ariaExpanded",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean | null",
+                        "default": "null",
+                        "description": "Indicates whether the controlled popup element is expanded or collapsed."
+                    },
+                    {
                         "name": "icon",
                         "optional": false,
                         "readonly": false,

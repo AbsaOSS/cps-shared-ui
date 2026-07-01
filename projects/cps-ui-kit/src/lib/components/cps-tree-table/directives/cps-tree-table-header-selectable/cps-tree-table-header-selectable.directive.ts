@@ -13,7 +13,6 @@ import { TTHeaderCheckbox } from 'primeng/treetable';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTHdrSelectable]'
 })
 export class CpsTreeTableHeaderSelectableDirective
@@ -33,6 +32,9 @@ export class CpsTreeTableHeaderSelectableDirective
     this.elementRef.nativeElement.classList.add(
       'cps-treetable-selectable-cell'
     );
+    this.checkboxCompRef.setInput('pt', {
+      pcHeaderCheckbox: { input: { 'aria-label': 'Select all rows' } }
+    });
     this.elementRef.nativeElement.appendChild(
       this.checkboxCompRef.location.nativeElement
     );

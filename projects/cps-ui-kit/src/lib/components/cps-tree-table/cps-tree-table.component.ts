@@ -1,4 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
+import type { PaginatorPassThrough } from 'primeng/types/paginator';
+import type { TreeTablePassThrough } from 'primeng/types/treetable';
 import {
   AfterViewChecked,
   AfterViewInit,
@@ -6,7 +8,9 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChild,
+  ElementRef,
   EventEmitter,
+  inject,
   Inject,
   Input,
   NgZone,
@@ -21,7 +25,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep } from 'lodash-es';
 import { DomHandler } from 'primeng/dom';
 import {
   TreeTable,
@@ -36,17 +40,19 @@ import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
-import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
+import { CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
+import { TableColumnVisibilityToggleComponent } from '../cps-table/components/internal/table-column-visibility-toggle/table-column-visibility-toggle.component';
 import { TableRowMenuComponent } from '../cps-table/components/internal/table-row-menu/table-row-menu.component';
-import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter.directive';
-import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable.directive';
-import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable.directive';
-import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable.directive';
-import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable.directive';
-import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler.directive';
+import { CpsTreeTableColumnFilterDirective } from './directives/cps-tree-table-column-filter/cps-tree-table-column-filter.directive';
+import { CpsTreeTableColumnResizableDirective } from './directives/cps-tree-table-column-resizable/cps-tree-table-column-resizable.directive';
+import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table-column-sortable/cps-tree-table-column-sortable.directive';
+import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable/cps-tree-table-header-selectable.directive';
+import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable/cps-tree-table-row-selectable.directive';
+import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler/cps-tree-table-row-toggler.directive';
 import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
-import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type.pipe';
+import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type/cps-tree-table-detect-filter-type.pipe';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
 export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
@@ -77,14 +83,17 @@ export type CpsTreeTableSortMode = 'single' | 'multiple';
 @Component({
   selector: 'cps-tree-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(keydown)': 'onPaginatorKeydown($event)'
+  },
   imports: [
     FormsModule,
     CommonModule,
     TreeTableModule,
     CpsInputComponent,
     CpsButtonComponent,
-    CpsMenuComponent,
     CpsIconComponent,
+    TableColumnVisibilityToggleComponent,
     CpsSelectComponent,
     CpsLoaderComponent,
     CpsTreeTableColumnSortableDirective,
@@ -711,9 +720,6 @@ export class CpsTreeTableComponent
   @ViewChild('globalFilterComp')
   globalFilterComp!: CpsInputComponent;
 
-  @ViewChild('colToggleMenu')
-  colToggleMenu!: CpsMenuComponent;
-
   selectedColumns: { [key: string]: any }[] = [];
 
   rowOptions: { label: string; value: number }[] = [];
@@ -722,6 +728,7 @@ export class CpsTreeTableComponent
 
   virtualScrollItemSize = 0;
   defScrollHeight = '';
+  treeTablePassthrough: TreeTablePassThrough = {};
 
   private _defScrollHeightPx = 0;
   private _defScrollHeightPxInitial = 0;
@@ -741,10 +748,17 @@ export class CpsTreeTableComponent
 
   private window: Window;
 
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() || 16;
+  }
+
   // eslint-disable-next-line no-useless-constructor
   constructor(
     private cdRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
+    private _elementRef: ElementRef,
     private renderer: Renderer2,
     private ngZone: NgZone
   ) {
@@ -773,7 +787,7 @@ export class CpsTreeTableComponent
         this.renderer.setStyle(
           this._headerBox,
           'border-right',
-          wScroll > 0 ? '1px solid #d7d5d5' : 'unset'
+          wScroll > 0 ? '0.0625rem solid #d7d5d5' : 'unset'
         );
 
         this._calcAutoLayoutHeaderWidths();
@@ -791,10 +805,6 @@ export class CpsTreeTableComponent
     this.defScrollHeight = this.scrollHeight;
     if (this.virtualScroll) {
       this.window.addEventListener('resize', this._onWindowResize.bind(this));
-
-      if (this.defScrollHeight && this.defScrollHeight !== 'flex') {
-        this._defScrollHeightPx = parseInt(this.scrollHeight, 10);
-      }
     }
 
     if (this.paginator) {
@@ -824,6 +834,8 @@ export class CpsTreeTableComponent
 
     this.selectedColumns =
       this.initialColumns.length > 0 ? this.initialColumns : this.columns;
+
+    this.treeTablePassthrough = this._buildTreeTablePassthrough();
   }
 
   ngAfterViewInit(): void {
@@ -839,6 +851,7 @@ export class CpsTreeTableComponent
       }
 
       if (this.virtualScroll) {
+        this._scrollableBody.tabIndex = -1;
         if (this.defScrollHeight === 'flex') {
           this._defScrollHeightPx = this._scrollableBody.clientHeight;
           this._defScrollHeightPxInitial = this._defScrollHeightPx;
@@ -928,6 +941,10 @@ export class CpsTreeTableComponent
 
     this._calcAutoLayoutHeaderWidths(true);
     this._recalcVirtualHeight();
+
+    if (changes.first || changes.totalRecords || changes.paginator) {
+      this.treeTablePassthrough = this._buildTreeTablePassthrough();
+    }
   }
 
   ngOnDestroy(): void {
@@ -1040,7 +1057,7 @@ export class CpsTreeTableComponent
           (hasSelectableCell && idx === 0) ||
           (hasRowMenuCell && idx === headerCells.length - 1)
         ) {
-          this.renderer.setStyle(th, 'width', '55px');
+          this.renderer.setStyle(th, 'width', '3.4375rem');
         } else
           this.renderer.setStyle(
             th,
@@ -1056,7 +1073,7 @@ export class CpsTreeTableComponent
             (hasSelectableCell && idx === 0) ||
             (hasRowMenuCell && idx === tds.length - 1)
           ) {
-            this.renderer.setStyle(td, 'width', '55px');
+            this.renderer.setStyle(td, 'width', '3.4375rem');
           } else {
             this.renderer.setStyle(
               td,
@@ -1203,10 +1220,12 @@ export class CpsTreeTableComponent
         const itemsLen = this.primengTreeTable.serializedValue?.length || 0;
         if (itemsLen < 1) {
           this.scrollHeight = this.emptyBodyHeight
-            ? (`calc(${this.emptyBodyHeight} + 1px)` as string)
-            : this.virtualScrollItemSize + 1 + 'px';
+            ? (`calc(${this.emptyBodyHeight} + ${0.0625 * this._rootFontSizePx}px)` as string)
+            : this.virtualScrollItemSize + 0.0625 * this._rootFontSizePx + 'px';
         } else {
-          const curHeight = this.virtualScrollItemSize * itemsLen + 2;
+          const curHeight =
+            this.virtualScrollItemSize * itemsLen +
+            0.125 * this._rootFontSizePx;
           if (this.defScrollHeight === 'flex') {
             if (curHeight >= this._defScrollHeightPxInitial) {
               this.scrollHeight = 'flex';
@@ -1214,9 +1233,11 @@ export class CpsTreeTableComponent
               this.cdRef.markForCheck();
               return;
             }
+            this.scrollHeight =
+              Math.min(this._defScrollHeightPx, curHeight) + 'px';
+          } else {
+            this.scrollHeight = `min(${this.defScrollHeight}, ${curHeight}px)`;
           }
-          this.scrollHeight =
-            Math.min(this._defScrollHeightPx, curHeight) + 'px';
         }
         this.cdRef.markForCheck();
       }
@@ -1248,11 +1269,6 @@ export class CpsTreeTableComponent
     this.dataReloadBtnClicked.emit();
   }
 
-  onColumnsToggle(event: any) {
-    if (this.columnsToggleBtnDisabled) return;
-    this.colToggleMenu?.toggle(event);
-  }
-
   removeSelected() {
     this.rowsToRemove.emit(this.selectedRows);
   }
@@ -1269,17 +1285,12 @@ export class CpsTreeTableComponent
     this.rowsToRemove.emit([node]);
   }
 
-  toggleAllColumns() {
-    this.selectedColumns =
-      this.selectedColumns.length < this.columns.length ? this.columns : [];
-    this.columnsSelected.emit(this.selectedColumns);
+  onSelectedColumnsChange(cols: { [key: string]: any }[]) {
+    this.selectedColumns = cols;
+    this.columnsSelected.emit(cols);
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
-  }
-
-  isColumnSelected(col: any) {
-    return this.selectedColumns.some((item) => isEqual(item, col));
   }
 
   onRowsPerPageChanged() {
@@ -1309,9 +1320,56 @@ export class CpsTreeTableComponent
     }
   }
 
+  private _buildTreeTablePassthrough(): TreeTablePassThrough {
+    const pt: TreeTablePassThrough = {};
+    if (this.paginator) {
+      const effectiveTotalRecords = this.lazy
+        ? this.totalRecords
+        : (this.data?.length ?? 0);
+      const firstDisabled = this.first === 0 || effectiveTotalRecords === 0;
+      const paginatorPt: PaginatorPassThrough = {
+        first: {
+          'aria-disabled': firstDisabled ? 'true' : null,
+          tabindex: firstDisabled ? -1 : 0
+        }
+      };
+      pt.pcPaginator = paginatorPt;
+    }
+    return pt;
+  }
+
+  onPaginatorKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    const target = event.target as HTMLElement;
+    if (!target.classList.contains('p-paginator-page')) return;
+
+    event.preventDefault();
+    const pageButtons = this._getPaginatorPageButtons();
+    const currentIndex = pageButtons.indexOf(target as HTMLButtonElement);
+    const delta = event.key === 'ArrowRight' ? 1 : -1;
+    const targetIndex = currentIndex + delta;
+
+    if (targetIndex >= 0 && targetIndex < pageButtons.length) {
+      pageButtons[targetIndex].focus();
+      pageButtons[targetIndex].click();
+    } else {
+      const focusedPageNum = parseInt(
+        (target as HTMLButtonElement).textContent?.trim() || '1',
+        10
+      );
+      const atBoundary =
+        delta > 0 ? focusedPageNum >= this.getPageCount() : focusedPageNum <= 1;
+      if (!atBoundary) {
+        this.changePage(focusedPageNum - 1 + delta);
+        setTimeout(() => this._focusPaginatorSelectedPage());
+      }
+    }
+  }
+
   onPageChange(event: any) {
     this.first = event.first;
     this.rows = event.rows;
+    this.treeTablePassthrough = this._buildTreeTablePassthrough();
 
     const state = {
       page: this.getPage(),
@@ -1321,9 +1379,37 @@ export class CpsTreeTableComponent
     };
 
     this.pageChanged.emit(state);
+
+    const activeEl = this.document.activeElement as HTMLElement | null;
+    const atFirst = this.first === 0;
+    const atLast = this.first + this.rows >= this.primengTreeTable.totalRecords;
+    if (
+      (atFirst &&
+        (activeEl?.classList.contains('p-paginator-first') ||
+          activeEl?.classList.contains('p-paginator-prev'))) ||
+      (atLast &&
+        (activeEl?.classList.contains('p-paginator-last') ||
+          activeEl?.classList.contains('p-paginator-next')))
+    ) {
+      setTimeout(() => this._focusPaginatorSelectedPage());
+    }
+
     setTimeout(() => {
       this._calcAutoLayoutHeaderWidths(true);
     });
+  }
+
+  private _getPaginatorPageButtons(): HTMLButtonElement[] {
+    return Array.from(
+      this._elementRef.nativeElement.querySelectorAll('.p-paginator-page')
+    ) as HTMLButtonElement[];
+  }
+
+  private _focusPaginatorSelectedPage(): void {
+    const selected = this._elementRef.nativeElement.querySelector(
+      '.p-paginator-page[aria-current="page"]'
+    ) as HTMLButtonElement | null;
+    selected?.focus();
   }
 
   onLazyLoaded(event: any) {
@@ -1368,27 +1454,6 @@ export class CpsTreeTableComponent
       this._calcAutoLayoutHeaderWidths(true);
     });
     this._recalcVirtualHeight();
-  }
-
-  onSelectColumn(col: any) {
-    let res = [] as any;
-    if (this.isColumnSelected(col)) {
-      res = this.selectedColumns.filter((v: any) => !isEqual(v, col));
-    } else {
-      this.columns.forEach((o) => {
-        if (
-          this.selectedColumns.some((v: any) => isEqual(v, o)) ||
-          isEqual(col, o)
-        ) {
-          res.push(o);
-        }
-      });
-    }
-    this.selectedColumns = res;
-    this.columnsSelected.emit(this.selectedColumns);
-    setTimeout(() => {
-      this._calcAutoLayoutHeaderWidths(true);
-    });
   }
 
   onSelectionChanged(selection: any) {

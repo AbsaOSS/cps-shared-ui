@@ -69,16 +69,14 @@ describe('TableColumnVisibilityToggleComponent', () => {
   describe('host class bindings', () => {
     it('should always have cps-table-tbar-coltoggle-btn class', () => {
       expect(
-        fixture.nativeElement.classList.contains('cps-table-tbar-coltoggle-btn')
-      ).toBe(true);
+        fixture.nativeElement.querySelector('.cps-table-tbar-coltoggle-btn')
+      ).toBeTruthy();
     });
   });
 
   describe('toggle button', () => {
     it('should render the toggle button', () => {
-      const btn = fixture.nativeElement.querySelector(
-        'button.cps-table-tbar-icon-btn'
-      );
+      const btn = fixture.nativeElement.querySelector('cps-button');
       expect(btn).toBeTruthy();
     });
 

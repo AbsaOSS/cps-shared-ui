@@ -79,10 +79,6 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
         newColumnWidth: number,
         nextColumnWidth: number | null
       ) => {
-        if (table.columnResizeMode !== 'fit') {
-          original(newColumnWidth, nextColumnWidth);
-          return;
-        }
         const tableEl = table.tableViewChild
           ?.nativeElement as HTMLElement | null;
         const thead = (table.el.nativeElement as HTMLElement).querySelector(
@@ -105,9 +101,39 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
           if (i === colIndex) w = newColumnWidth;
           else if (nextColumnWidth !== null && i === colIndex + 1)
             w = nextColumnWidth;
-          h.style.width = w / this._rootFontSizePx + 'rem';
+          h.style.width = w + 'px';
         });
         tableEl.style.tableLayout = 'fixed';
+        if (
+          nextColumnWidth !== null &&
+          headers[colIndex].offsetWidth !== newColumnWidth
+        ) {
+          headers[colIndex].style.width = widths[colIndex] + 'px';
+          if (colIndex + 1 < headers.length) {
+            headers[colIndex + 1].style.width = widths[colIndex + 1] + 'px';
+          }
+        }
+      };
+    }
+
+    if (!table._cpsResizeIndicatorPatched) {
+      table._cpsResizeIndicatorPatched = true;
+      const originalColumnResize = table.onColumnResize.bind(table);
+      table.onColumnResize = (event: Event) => {
+        originalColumnResize(event);
+        const indicator = table.resizeHelperViewChild
+          ?.nativeElement as HTMLElement | null;
+        if (!indicator) return;
+        const tableEl = table.tableViewChild
+          ?.nativeElement as HTMLElement | null;
+        if (!tableEl) return;
+        const positionedAncestor = indicator.offsetParent as HTMLElement | null;
+        if (!positionedAncestor) return;
+        const tableRect = tableEl.getBoundingClientRect();
+        const ancestorRect = positionedAncestor.getBoundingClientRect();
+        indicator.style.top =
+          Math.max(0, tableRect.top - ancestorRect.top) + 'px';
+        indicator.style.height = tableEl.offsetHeight + 'px';
       };
     }
   }
@@ -129,7 +155,9 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     event.preventDefault();
 
     const direction = event.key === 'ArrowRight' ? 1 : -1;
-    const delta = direction * (event.shiftKey ? 50 : 10);
+    const delta = Math.round(
+      direction * (event.shiftKey ? 3.125 : 0.625) * this._rootFontSizePx
+    );
     const th = this.el.nativeElement as HTMLElement;
     const newColumnWidth = th.offsetWidth + delta;
     if (newColumnWidth < 15) return;
@@ -140,7 +168,7 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     if (table.columnResizeMode === 'expand') {
       const tableWidth = table.tableViewChild.nativeElement.offsetWidth + delta;
       table._initialColWidths = table._totalTableWidth();
-      table.setResizeTableWidth(tableWidth / this._rootFontSizePx + 'rem');
+      table.setResizeTableWidth(tableWidth + 'px');
       table.resizeTableCells(newColumnWidth, null);
     } else {
       const nextColumn = th.nextElementSibling as HTMLElement | null;
