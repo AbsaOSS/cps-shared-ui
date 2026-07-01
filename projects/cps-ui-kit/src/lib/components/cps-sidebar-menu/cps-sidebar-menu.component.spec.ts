@@ -319,6 +319,169 @@ describe('CpsSidebarMenuComponent', () => {
     });
   });
 
+  describe('touch behavior', () => {
+    type InternalComponent = { _pendingTouch: boolean };
+    let mockMenu: Pick<CpsMenuComponent, 'isVisible' | 'show' | 'hide'>;
+
+    beforeEach(() => {
+      mockMenu = {
+        isVisible: jest.fn().mockReturnValue(false),
+        show: jest.fn(),
+        hide: jest.fn()
+      } as unknown as Pick<CpsMenuComponent, 'isVisible' | 'show' | 'hide'>;
+      component.allMenus = {
+        forEach: jest.fn()
+      } as unknown as typeof component.allMenus;
+    });
+
+    it('onMenuItemTouchStart should set _pendingTouch to true', () => {
+      component.onMenuItemTouchStart();
+      expect((component as unknown as InternalComponent)._pendingTouch).toBe(
+        true
+      );
+    });
+
+    it('showMenu on mouseenter should be skipped when _pendingTouch is true', () => {
+      (component as unknown as InternalComponent)._pendingTouch = true;
+      const el = document.createElement('button');
+      const event = {
+        type: 'mouseenter',
+        currentTarget: el
+      } as unknown as MouseEvent;
+      component.showMenu(event, mockMenu as CpsMenuComponent);
+      expect(mockMenu.show).not.toHaveBeenCalled();
+    });
+
+    it('showMenu on focusin should be skipped when _pendingTouch is true', () => {
+      (component as unknown as InternalComponent)._pendingTouch = true;
+      const el = document.createElement('button');
+      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
+      const event = {
+        type: 'focusin',
+        currentTarget: el
+      } as unknown as FocusEvent;
+      component.showMenu(event, mockMenu as CpsMenuComponent, item);
+      expect(mockMenu.show).not.toHaveBeenCalled();
+    });
+
+    it('showMenu on mouseenter should work normally when _pendingTouch is false', () => {
+      (component as unknown as InternalComponent)._pendingTouch = false;
+      const el = document.createElement('button');
+      const event = {
+        type: 'mouseenter',
+        currentTarget: el
+      } as unknown as MouseEvent;
+      component.showMenu(event, mockMenu as CpsMenuComponent);
+      expect(mockMenu.show).toHaveBeenCalledWith(null, el, 'tr');
+    });
+
+    it('leaveMenu on mouseleave should be skipped when _pendingTouch is true', () => {
+      (component as unknown as InternalComponent)._pendingTouch = true;
+      const externalEl = document.createElement('div');
+      const event = {
+        type: 'mouseleave',
+        relatedTarget: externalEl
+      } as unknown as MouseEvent;
+      component.leaveMenu(event, mockMenu as CpsMenuComponent);
+      expect(mockMenu.hide).not.toHaveBeenCalled();
+    });
+
+    it('toggleMenu should reset _pendingTouch and open the menu (simulates first tap)', () => {
+      (component as unknown as InternalComponent)._pendingTouch = true;
+      const el = document.createElement('button');
+      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
+      const event = { currentTarget: el } as unknown as MouseEvent;
+      (mockMenu.isVisible as jest.Mock).mockReturnValue(false);
+      component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
+      expect((component as unknown as InternalComponent)._pendingTouch).toBe(
+        false
+      );
+      expect(mockMenu.show).toHaveBeenCalledWith(null, el, 'tr');
+    });
+  });
+
+  describe('ngAfterViewInit', () => {
+    afterEach(() => jest.restoreAllMocks());
+
+    it('should set expand button background to the nearest opaque ancestor color', () => {
+      const parent = document.createElement('div');
+      document.body.appendChild(parent);
+      parent.appendChild(fixture.nativeElement);
+
+      jest.spyOn(window, 'getComputedStyle').mockImplementation(
+        (el) =>
+          ({
+            backgroundColor:
+              el === parent ? 'rgb(30, 30, 30)' : 'rgba(0, 0, 0, 0)'
+          }) as CSSStyleDeclaration
+      );
+
+      (
+        component as unknown as { _applyExpandButtonBackground(): void }
+      )._applyExpandButtonBackground();
+
+      const btn = fixture.nativeElement.querySelector(
+        '.expand-area'
+      ) as HTMLElement;
+      expect(btn?.style.backgroundColor).toBe('rgb(30, 30, 30)');
+
+      parent.remove();
+    });
+
+    it('should skip ancestors returning "transparent" keyword and find the opaque one', () => {
+      const grandparent = document.createElement('div');
+      const parent = document.createElement('div');
+      document.body.appendChild(grandparent);
+      grandparent.appendChild(parent);
+      parent.appendChild(fixture.nativeElement);
+
+      jest.spyOn(window, 'getComputedStyle').mockImplementation(
+        (el) =>
+          ({
+            backgroundColor:
+              el === grandparent ? 'rgb(50, 50, 50)' : 'transparent'
+          }) as CSSStyleDeclaration
+      );
+
+      (
+        component as unknown as { _applyExpandButtonBackground(): void }
+      )._applyExpandButtonBackground();
+
+      const btn = fixture.nativeElement.querySelector(
+        '.expand-area'
+      ) as HTMLElement;
+      expect(btn?.style.backgroundColor).toBe('rgb(50, 50, 50)');
+
+      grandparent.remove();
+    });
+
+    it('should not change expand button background when all ancestors are transparent', () => {
+      jest.spyOn(window, 'getComputedStyle').mockReturnValue({
+        backgroundColor: 'rgba(0, 0, 0, 0)'
+      } as CSSStyleDeclaration);
+
+      (
+        component as unknown as { _applyExpandButtonBackground(): void }
+      )._applyExpandButtonBackground();
+
+      const btn = fixture.nativeElement.querySelector(
+        '.expand-area'
+      ) as HTMLElement;
+      expect(btn?.style.backgroundColor).toBe('');
+    });
+
+    it('should not call getComputedStyle when running in SSR', () => {
+      type InternalSsr = {
+        _platformId: string;
+        _applyExpandButtonBackground(): void;
+      };
+      (component as unknown as InternalSsr)._platformId = 'server';
+      const spy = jest.spyOn(window, 'getComputedStyle');
+      (component as unknown as InternalSsr)._applyExpandButtonBackground();
+      expect(spy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('template', () => {
     it('should apply the given height style', () => {
       fixture.componentRef.setInput('height', '200px');
