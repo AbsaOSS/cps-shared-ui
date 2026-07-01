@@ -1,17 +1,31 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <div class="menu-group">
-    <cps-menu #standardMenu [items]="items" header="Menu header"> </cps-menu>
-    <cps-button label="Standard menu" (clicked)="standardMenu.toggle($event)">
+    <cps-menu
+      #standardMenu
+      [items]="items"
+      header="Menu header"
+      (menuShown)="isStandardMenuOpen = true"
+      (menuHidden)="isStandardMenuOpen = false">
+    </cps-menu>
+    <cps-button
+      label="Standard menu"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isStandardMenuOpen"
+      (clicked)="standardMenu.toggle($event)">
     </cps-button>
 
     <cps-menu
       #standardMenuNoHeader
       [items]="items"
-      ariaLabel="Menu with aria label">
+      ariaLabel="Menu with aria label"
+      (menuShown)="isStandardMenuNoHeaderOpen = true"
+      (menuHidden)="isStandardMenuNoHeaderOpen = false">
     </cps-menu>
     <cps-button
       label="Standard menu without header"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isStandardMenuNoHeaderOpen"
       (clicked)="standardMenuNoHeader.toggle($event)">
     </cps-button>
 
@@ -19,10 +33,14 @@
       #compressedMenu
       [items]="items"
       [compressed]="true"
-      [withArrow]="false">
+      [withArrow]="false"
+      (menuShown)="isCompressedMenuOpen = true"
+      (menuHidden)="isCompressedMenuOpen = false">
     </cps-menu>
     <cps-button
       label="Compressed menu"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isCompressedMenuOpen"
       (clicked)="compressedMenu.toggle($event)">
     </cps-button>
 
@@ -30,14 +48,21 @@
       #compressedMenuNoIcons
       [items]="itemsWithoutIcons"
       [compressed]="true"
-      [withArrow]="false">
+      [withArrow]="false"
+      (menuShown)="isCompressedMenuNoIconsOpen = true"
+      (menuHidden)="isCompressedMenuNoIconsOpen = false">
     </cps-menu>
     <cps-button
       label="Compressed menu without icons"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isCompressedMenuNoIconsOpen"
       (clicked)="compressedMenuNoIcons.toggle($event)">
     </cps-button>
 
-    <cps-menu #arbitraryMenu>
+    <cps-menu
+      #arbitraryMenu
+      (menuShown)="isArbitraryMenuOpen = true"
+      (menuHidden)="isArbitraryMenuOpen = false">
       <div class="my-menu-content">
         <span>Provide your own content here</span>
         <img
@@ -60,12 +85,22 @@
     </cps-menu>
     <cps-button
       label="Menu with arbitrary content"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isArbitraryMenuOpen"
       (clicked)="arbitraryMenu.toggle($event)">
     </cps-button>
 
-    <cps-menu #focusMenu [items]="items" [focusOnShow]="false"></cps-menu>
+    <cps-menu
+      #focusMenu
+      [items]="items"
+      [focusOnShow]="false"
+      (menuShown)="isFocusMenuOpen = true"
+      (menuHidden)="isFocusMenuOpen = false">
+    </cps-menu>
     <cps-button
       label="Menu that opens on focus"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isFocusMenuOpen"
       (focusin)="focusMenu.show(null, $event.target)"
       (focusout)="onFocusMenuFocusOut($event, focusMenu)">
     </cps-button>
@@ -74,10 +109,14 @@
       #hoverMenu
       [items]="items"
       [focusOnShow]="false"
+      (menuShown)="isHoverMenuOpen = true"
+      (menuHidden)="isHoverMenuOpen = false"
       (containerMouseLeave)="onMenuLeave($event, hoverMenu)">
     </cps-menu>
     <cps-button
       label="Menu that opens on hover"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isHoverMenuOpen"
       (mouseenter)="hoverMenu.show($event)"
       (mouseleave)="onMenuLeave($event, hoverMenu)"
       (focusin)="hoverMenu.show(null, $event.target)"
