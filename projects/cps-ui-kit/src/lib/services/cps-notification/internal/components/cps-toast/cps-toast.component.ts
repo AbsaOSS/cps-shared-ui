@@ -27,6 +27,10 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../../../../utils/internal/motion-utils';
 
 @Component({
   imports: [CommonModule, CpsButtonComponent, CpsIconComponent],
@@ -42,20 +46,28 @@ import {
           opacity: 1
         })
       ),
-      transition('void => *', [
-        style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate('200ms ease-out')
-      ]),
-      transition('* => void', [
-        animate(
-          '200ms ease-in',
-          style({
-            height: 0,
-            opacity: 0,
-            transform: 'translateY(-100%)'
-          })
-        )
-      ])
+      transition(
+        'void => *',
+        [
+          style({ transform: 'translateY(100%)', opacity: 0 }),
+          animate('{{showTiming}}')
+        ],
+        { params: { showTiming: '200ms ease-out' } }
+      ),
+      transition(
+        '* => void',
+        [
+          animate(
+            '{{hideTiming}}',
+            style({
+              height: 0,
+              opacity: 0,
+              transform: 'translateY(-100%)'
+            })
+          )
+        ],
+        { params: { hideTiming: '200ms ease-in' } }
+      )
     ])
   ]
 })
@@ -87,6 +99,14 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   get closeAriaLabel(): string {
     const type = this.data?.type;
     return `Close ${type ? type + ' ' : ''}notification`;
+  }
+
+  get resolvedShowTiming(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-out';
+  }
+
+  get resolvedHideTiming(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-in';
   }
 
   // eslint-disable-next-line no-useless-constructor
