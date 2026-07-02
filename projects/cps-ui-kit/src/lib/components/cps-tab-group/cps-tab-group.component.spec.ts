@@ -428,4 +428,28 @@ describe('CpsTabGroupComponent', () => {
     component.ngOnDestroy();
     expect(unsubSpy).toHaveBeenCalled();
   });
+
+  describe('reduced motion', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should use the default transition durations by default', () => {
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: false } as MediaQueryList);
+
+      expect(component.resolvedTransitionParams).toBe('200ms ease-in');
+      expect(component.resolvedFadeTransitionParams).toBe('100ms ease-in');
+    });
+
+    it('should use a near-instant transition when the OS prefers reduced motion', () => {
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: true } as MediaQueryList);
+
+      expect(component.resolvedTransitionParams).toBe('1ms');
+      expect(component.resolvedFadeTransitionParams).toBe('1ms');
+    });
+  });
 });

@@ -827,4 +827,39 @@ describe('CpsDialogComponent', () => {
       expect(() => fixture.destroy()).not.toThrow();
     });
   });
+
+  describe('reduced motion', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should use the configured transition options by default', () => {
+      setup({ headerTitle: 'Test', transitionOptions: '150ms ease' });
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: false } as MediaQueryList);
+
+      expect(component.resolvedTransitionOptions).toBe('150ms ease');
+    });
+
+    it('should fall back to the default transition options when unset', () => {
+      setup({ headerTitle: 'Test' });
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: false } as MediaQueryList);
+
+      expect(component.resolvedTransitionOptions).toBe(
+        '150ms cubic-bezier(0, 0, 0.2, 1)'
+      );
+    });
+
+    it('should use a near-instant transition when the OS prefers reduced motion', () => {
+      setup({ headerTitle: 'Test', transitionOptions: '150ms ease' });
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: true } as MediaQueryList);
+
+      expect(component.resolvedTransitionOptions).toBe('1ms');
+    });
+  });
 });

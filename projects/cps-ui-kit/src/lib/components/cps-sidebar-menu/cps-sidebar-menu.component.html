@@ -21,7 +21,10 @@
           <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
-            [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+            [@onExpand]="{
+              value: isExpanded ? 'expanded' : 'collapsed',
+              params: { transitionParams: resolvedTransitionParams }
+            }">
             {{ item.title }}
           </span>
         </a>
@@ -59,7 +62,10 @@
           <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
-            [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+            [@onExpand]="{
+              value: isExpanded ? 'expanded' : 'collapsed',
+              params: { transitionParams: resolvedTransitionParams }
+            }">
             {{ item.title }}
           </span>
         </button>

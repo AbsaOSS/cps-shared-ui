@@ -4,13 +4,13 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Inject,
   Input,
   OnChanges,
   OnInit,
   Output,
   Renderer2,
   ViewChild,
+  inject,
   type SimpleChanges
 } from '@angular/core';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
@@ -27,6 +27,10 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../utils/internal/motion-utils';
 
 const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
 
@@ -54,7 +58,9 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
         }),
         { params: { borderStyle: '' } }
       ),
-      transition('visible <=> hidden', [animate(transitionType)]),
+      transition('visible <=> hidden', [animate('{{transitionParams}}')], {
+        params: { transitionParams: transitionType }
+      }),
       transition('void => *', animate(0))
     ])
   ]
@@ -138,8 +144,6 @@ export class CpsExpansionPanelComponent
 
   @ViewChild('panelContentElem') panelContentElem!: ElementRef;
 
-  private _contentExpandAnimation: AnimationFactory;
-  private _contentCollapseAnimation: AnimationFactory;
   private _contentAnimationPlayer: AnimationPlayer | undefined;
 
   readonly contentPanelId = generateUniqueId('cps-expansion-panel-content');
@@ -150,29 +154,35 @@ export class CpsExpansionPanelComponent
   cvtBackgroundColor = '';
   cvtBorderRadius = '';
 
-  constructor(
-    private _animationBuilder: AnimationBuilder,
-    @Inject(DOCUMENT) private document: Document,
-    private _renderer: Renderer2
-  ) {
-    this._contentCollapseAnimation = this._animationBuilder.build([
+  private readonly _animationBuilder = inject(AnimationBuilder);
+  private readonly _document = inject(DOCUMENT);
+  private readonly _renderer = inject(Renderer2);
+
+  get resolvedTransitionType(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : transitionType;
+  }
+
+  private _buildContentCollapseAnimation(): AnimationFactory {
+    return this._animationBuilder.build([
       style({
         height: '*'
       }),
       animate(
-        transitionType,
+        this.resolvedTransitionType,
         style({
           height: 0
         })
       )
     ]);
+  }
 
-    this._contentExpandAnimation = this._animationBuilder.build([
+  private _buildContentExpandAnimation(): AnimationFactory {
+    return this._animationBuilder.build([
       style({
         height: 0
       }),
       animate(
-        transitionType,
+        this.resolvedTransitionType,
         style({
           height: '*'
         })
@@ -181,8 +191,8 @@ export class CpsExpansionPanelComponent
   }
 
   ngOnInit(): void {
-    this.cvtBorderColor = getCSSColor(this.borderColor, this.document);
-    this.cvtBackgroundColor = getCSSColor(this.backgroundColor, this.document);
+    this.cvtBorderColor = getCSSColor(this.borderColor, this._document);
+    this.cvtBackgroundColor = getCSSColor(this.backgroundColor, this._document);
     this.cvtBorderRadius = convertSize(this.borderRadius);
     this.cvtWidth = convertSize(this.width);
 
@@ -191,12 +201,12 @@ export class CpsExpansionPanelComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.borderColor) {
-      this.cvtBorderColor = getCSSColor(this.borderColor, this.document);
+      this.cvtBorderColor = getCSSColor(this.borderColor, this._document);
     }
     if (changes.backgroundColor) {
       this.cvtBackgroundColor = getCSSColor(
         this.backgroundColor,
-        this.document
+        this._document
       );
     }
     if (changes.borderRadius) {
@@ -236,13 +246,15 @@ export class CpsExpansionPanelComponent
 
     const el = this.panelContentElem?.nativeElement;
     if (this.isExpanded) {
-      this._contentAnimationPlayer = this._contentCollapseAnimation.create(el);
+      this._contentAnimationPlayer =
+        this._buildContentCollapseAnimation().create(el);
       this._contentAnimationPlayer.onDone(() => {
         this._updateContentVisibilityStyles(false, el);
       });
     } else {
       this._updateContentVisibilityStyles(true, el);
-      this._contentAnimationPlayer = this._contentExpandAnimation.create(el);
+      this._contentAnimationPlayer =
+        this._buildContentExpandAnimation().create(el);
     }
 
     this._contentAnimationPlayer.onStart(() => {

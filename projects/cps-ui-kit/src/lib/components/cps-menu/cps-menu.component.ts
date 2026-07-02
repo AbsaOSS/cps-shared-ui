@@ -37,6 +37,10 @@ import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { PrimeNG } from 'primeng/config';
 import { CPS_FOCUS_SERVICE } from '../../services/cps-focus/cps-focus.service';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../utils/internal/motion-utils';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;
@@ -218,6 +222,18 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
    * @group Emits
    */
   @Output() containerMouseLeave = new EventEmitter<MouseEvent>();
+
+  get resolvedShowTransitionOptions(): string {
+    return prefersReducedMotion()
+      ? REDUCED_MOTION_DURATION
+      : this.showTransitionOptions;
+  }
+
+  get resolvedHideTransitionOptions(): string {
+    return prefersReducedMotion()
+      ? REDUCED_MOTION_DURATION
+      : this.hideTransitionOptions;
+  }
 
   withIcons = true;
   autoZIndex = true;
