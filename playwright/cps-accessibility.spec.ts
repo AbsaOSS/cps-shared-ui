@@ -282,8 +282,30 @@ const components: ComponentEntry[] = [
       await page.waitForSelector('cps-tree-select');
       await page.locator('cps-tree-select').first().click();
     }
+  },
+  {
+    route: '/tree-table',
+    name: 'Tree table',
+    selector: 'cps-tree-table',
+    states: [
+      'Tree table 1',
+      'Tree table 2',
+      'Tree table 3',
+      'Tree table 4',
+      'Tree table 5',
+      'Tree table 6',
+      'Tree table 7',
+      'Tree table 8',
+      'Tree table 9',
+      'Tree table 10'
+    ].map((tab) => ({
+      label: tab,
+      setup: async (page: Page) => {
+        await page.getByRole('tab', { name: tab, exact: true }).click();
+        await page.waitForSelector('cps-tree-table');
+      }
+    }))
   }
-  // { route: '/tree-table', name: 'Tree table', selector: 'cps-tree-table' }
 ];
 
 type Violations = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'];

@@ -70,6 +70,18 @@ export class CpsButtonComponent implements OnInit, OnChanges {
   @Input() ariaLabel = '';
 
   /**
+   * Indicates that the button controls a popup element.
+   * @group Props
+   */
+  @Input() ariaHaspopup: string | null = null;
+
+  /**
+   * Indicates whether the controlled popup element is expanded or collapsed.
+   * @group Props
+   */
+  @Input() ariaExpanded: boolean | null = null;
+
+  /**
    * Name of the icon on the button.
    * @group Props
    */

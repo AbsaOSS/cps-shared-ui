@@ -5,9 +5,11 @@ import {
   ElementRef,
   Inject,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
-  ViewContainerRef
+  ViewContainerRef,
+  type SimpleChanges
 } from '@angular/core';
 import { TreeTableToggler } from 'primeng/treetable';
 
@@ -16,10 +18,11 @@ import { TreeTableToggler } from 'primeng/treetable';
  * @group Directives
  */
 @Directive({
-  standalone: true,
   selector: '[cpsTTRowToggler]'
 })
-export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
+export class CpsTreetableRowTogglerDirective
+  implements OnInit, OnChanges, OnDestroy
+{
   /**
    * Cell value.
    * @group Props
@@ -37,11 +40,17 @@ export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
       this.viewContainerRef.createComponent(TreeTableToggler);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.rowNode && this.togglerCompRef) {
+      this.togglerCompRef.setInput('rowNode', this._rowNodeWithExpanded());
+    }
+  }
+
   ngOnInit(): void {
     this.elementRef.nativeElement.classList.add(
       'cps-treetable-row-toggler-cell'
     );
-    this.togglerCompRef.setInput('rowNode', this.rowNode);
+    this.togglerCompRef.setInput('rowNode', this._rowNodeWithExpanded());
 
     const spanElement = this.document.createElement('span');
     spanElement.style.display = 'flex';
@@ -52,6 +61,16 @@ export class CpsTreetableRowTogglerDirective implements OnInit, OnDestroy {
     this.elementRef.nativeElement.appendChild(spanElement);
 
     spanElement.prepend(this.togglerCompRef.location.nativeElement);
+  }
+
+  private _rowNodeWithExpanded() {
+    const node = this.rowNode?.node;
+    return {
+      ...this.rowNode,
+      get expanded() {
+        return !node?.expanded;
+      }
+    };
   }
 
   ngOnDestroy(): void {

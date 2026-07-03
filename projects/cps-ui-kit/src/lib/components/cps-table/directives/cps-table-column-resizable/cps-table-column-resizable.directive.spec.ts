@@ -8,7 +8,6 @@ import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-s
 import { CpsTableColumnResizableDirective } from './cps-table-column-resizable.directive';
 
 @Component({
-  standalone: true,
   template: `<table>
     <thead>
       <tr>
@@ -30,11 +29,14 @@ class TestHostComponent {
 function buildMockTable() {
   return {
     _cpsResizeCellsPatched: false,
+    _cpsResizeIndicatorPatched: false,
     resizeTableCells: jest.fn(),
+    onColumnResize: jest.fn(),
     columnResizeMode: 'expand',
     tableViewChild: { nativeElement: document.createElement('table') },
     el: { nativeElement: document.createElement('div') },
     resizeColumnElement: null as HTMLElement | null,
+    resizeHelperViewChild: null as null | { nativeElement: HTMLElement },
     _initialColWidths: null as number | null,
     _totalTableWidth: jest.fn().mockReturnValue(1000),
     setResizeTableWidth: jest.fn(),
@@ -282,7 +284,7 @@ describe('CpsTableColumnResizableDirective', () => {
       expect(mockTable.resizeColumnElement).toBe(th);
     });
 
-    it('should call setResizeTableWidth with rem value in expand mode', () => {
+    it('should call setResizeTableWidth with px value in expand mode', () => {
       mockTable.columnResizeMode = 'expand';
       Object.defineProperty(
         mockTable.tableViewChild.nativeElement,
@@ -295,8 +297,8 @@ describe('CpsTableColumnResizableDirective', () => {
       (directive as any)._onResizerKeydown(
         new KeyboardEvent('keydown', { key: 'ArrowRight' })
       );
-      // tableWidth = 800 + 10 = 810; 810 / 16 = 50.625rem
-      expect(mockTable.setResizeTableWidth).toHaveBeenCalledWith('50.625rem');
+      // tableWidth = 800 + 10 = 810px
+      expect(mockTable.setResizeTableWidth).toHaveBeenCalledWith('810px');
     });
 
     it('should emit onColResize with element and delta', () => {

@@ -1,7 +1,6 @@
 @use '../../../../styles/mixins' as *;
 
 $color-calm: var(--cps-color-calm);
-$color-prepared: var(--cps-color-prepared);
 $color-surprise: var(--cps-color-surprise);
 $checkbox-border-color: var(--cps-color-text-mild);
 $stripe-color: var(--cps-color-bg-light);
@@ -48,6 +47,8 @@ $tbar-normal-height: 4.5rem;
       }
 
       .p-datatable-column-resizer {
+        border-width: 0.0625rem;
+
         &:focus {
           outline: none;
         }
@@ -97,58 +98,26 @@ $tbar-normal-height: 4.5rem;
       .cps-table-tbar-right {
         display: flex;
         align-items: center;
-        .cps-table-tbar-btn-on-select {
+
+        .cps-table-tbar-action-btn,
+        .cps-table-tbar-export-btn {
           margin-right: 0.25rem;
+          margin-left: 0.25rem;
         }
-        .cps-table-tbar-action-btn {
-          margin-right: 0.25rem;
-          margin-left: 0.5rem;
-        }
-        .cps-table-tbar-coltoggle-btn,
-        .cps-table-tbar-export-btn,
+        .cps-table-tbar-btn-on-select,
         .cps-table-tbar-reload-btn {
-          display: contents;
-          .cps-table-tbar-icon-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            color: inherit;
-            font: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-left: 0.75rem;
-            margin-right: 0.25rem;
-
-            &:focus {
-              outline: none;
-            }
-
-            &:focus-visible {
-              @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
-            }
-
-            &:hover .cps-icon,
-            &:focus-visible .cps-icon {
-              color: $color-prepared !important;
-            }
-
-            &:disabled {
-              cursor: default;
-              pointer-events: none;
-            }
-          }
+          margin-right: 0.125rem;
+          margin-left: 0.125rem;
         }
       }
     }
 
     .cps-tbar-small.p-datatable .p-datatable-header {
-      height: $tbar-small-height;
+      min-height: $tbar-small-height;
     }
 
     .cps-tbar-normal.p-datatable .p-datatable-header {
-      height: $tbar-normal-height;
+      min-height: $tbar-normal-height;
     }
 
     .p-datatable-flex-scrollable > .p-datatable-wrapper {
@@ -176,10 +145,10 @@ $tbar-normal-height: 4.5rem;
       &:has(.p-datatable-table-container:focus-visible)::before {
         content: '';
         position: absolute;
+        top: calc(var(--cps-header-height, 0px) + 0.0625rem);
         bottom: 0.0625rem;
         left: 0.0625rem;
         right: 0.0625rem;
-        height: calc(var(--cps-scroll-height) - 0.125rem);
         border: 0.0625rem solid var(--cps-color-calm-highlighten);
         pointer-events: none;
         z-index: 9999;
@@ -189,10 +158,10 @@ $tbar-normal-height: 4.5rem;
       &:has(.p-datatable-table-container:focus-visible)::after {
         content: '';
         position: absolute;
+        top: var(--cps-header-height, 0px);
         bottom: 0;
         left: 0;
         right: 0;
-        height: var(--cps-scroll-height);
         border: 0.0625rem solid var(--cps-color-calm);
         pointer-events: none;
         z-index: 9998;
