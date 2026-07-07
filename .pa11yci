@@ -6,7 +6,10 @@
     "runners": [
       "axe"
     ],
-    "hideElements": ".cps-loader, .cps-loader-overlay-content-text",
+    "rules": [
+      "target-size"
+    ],
+    "hideElements": ".cps-loader-overlay-content-text",
     "reporter": "cli",
     "level": "error"
   },
