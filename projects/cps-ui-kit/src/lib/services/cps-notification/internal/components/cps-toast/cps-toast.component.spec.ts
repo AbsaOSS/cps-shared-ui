@@ -330,4 +330,30 @@ describe('CpsToastComponent', () => {
       expect(spy).toHaveBeenCalled();
     }));
   });
+
+  describe('reduced motion', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should use the default timing by default', () => {
+      setup();
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: false } as MediaQueryList);
+
+      expect(component.resolvedShowTiming).toBe('200ms ease-out');
+      expect(component.resolvedHideTiming).toBe('200ms ease-in');
+    });
+
+    it('should use a near-instant timing when the OS prefers reduced motion', () => {
+      setup();
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: true } as MediaQueryList);
+
+      expect(component.resolvedShowTiming).toBe('1ms');
+      expect(component.resolvedHideTiming).toBe('1ms');
+    });
+  });
 });

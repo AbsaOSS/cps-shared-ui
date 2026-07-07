@@ -11,6 +11,14 @@
     animation: cps-progress-circular-animation 0.8s linear infinite;
   }
 
+  // Keep indicating progress under reduced motion, just slower, instead of freezing
+  @media (prefers-reduced-motion: reduce) {
+    .cps-progress-circular {
+      animation-duration: 2.4s !important;
+      animation-iteration-count: infinite !important;
+    }
+  }
+
   @keyframes cps-progress-circular-animation {
     to {
       transform: rotate(360deg);

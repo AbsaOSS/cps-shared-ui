@@ -35,6 +35,10 @@ import { getCSSColor } from '../../utils/colors-utils';
 import { generateUniqueId } from '../../utils/internal/accessibility-utils';
 import { CpsFocusService } from '../../services/cps-focus/cps-focus.service';
 import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../utils/internal/motion-utils';
+import {
   Subscription,
   debounceTime,
   distinctUntilChanged,
@@ -81,23 +85,32 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
     trigger('slideInOut', [
       state('slideLeft', style({ transform: 'translateX(0)' })),
       state('slideRight', style({ transform: 'translateX(0)' })),
-      transition('* => slideLeft', [
-        style({ transform: 'translateX(-100%)' }),
-        animate('200ms ease-in')
-      ]),
-      transition('* => slideRight', [
-        style({ transform: 'translateX(100%)' }),
-        animate('200ms ease-in')
-      ]),
+      transition(
+        '* => slideLeft',
+        [
+          style({ transform: 'translateX(-100%)' }),
+          animate('{{transitionParams}}')
+        ],
+        { params: { transitionParams: '200ms ease-in' } }
+      ),
+      transition(
+        '* => slideRight',
+        [
+          style({ transform: 'translateX(100%)' }),
+          animate('{{transitionParams}}')
+        ],
+        { params: { transitionParams: '200ms ease-in' } }
+      ),
       transition('void => *', animate(0))
     ]),
     trigger('fadeInOut', [
       state('fadeIn', style({ opacity: 1 })),
       state('fadeOut', style({ opacity: 0 })),
-      transition('fadeOut => fadeIn', [
-        style({ opacity: 0 }),
-        animate('100ms ease-in')
-      ]),
+      transition(
+        'fadeOut => fadeIn',
+        [style({ opacity: 0 }), animate('{{transitionParams}}')],
+        { params: { transitionParams: '100ms ease-in' } }
+      ),
       transition('fadeIn => fadeOut', [
         animate('0ms ease-out', style({ opacity: 0 }))
       ]),
@@ -200,6 +213,14 @@ export class CpsTabGroupComponent
   backBtnVisible = false;
   forwardBtnVisible = false;
   animationState: 'slideLeft' | 'slideRight' | 'fadeIn' | 'fadeOut' = 'fadeIn';
+
+  get resolvedTransitionParams(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-in';
+  }
+
+  get resolvedFadeTransitionParams(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '100ms ease-in';
+  }
 
   readonly tabGroupId = generateUniqueId('cps-tab-group');
 

@@ -12,16 +12,14 @@
     [attr.aria-expanded]="isExpanded"
     [attr.aria-disabled]="disabled ? true : null"
     [attr.aria-controls]="contentPanelId"
-    [@panelHeader]="
-      isExpanded
-        ? {
-            value: 'visible',
-            params: {
-              borderStyle: bordered ? '1px solid ' + cvtBorderColor : ''
-            }
-          }
-        : 'hidden'
-    "
+    [@panelHeader]="{
+      value: isExpanded ? 'visible' : 'hidden',
+      params: {
+        borderStyle:
+          isExpanded && bordered ? '1px solid ' + cvtBorderColor : '',
+        transitionParams: resolvedTransitionType
+      }
+    }"
     [class.disabled]="disabled"
     [class.keyboard-active]="isKeyboardActive"
     [style.cursor]="disabled ? 'default' : 'pointer'"
@@ -40,10 +38,7 @@
     <div class="cps-expansion-panel-title">{{ headerTitle }}</div>
     @if (showChevron && !disabled) {
       <span class="cps-expansion-panel-chevron">
-        <cps-icon
-          icon="chevron-down"
-          size="small"
-          color="text-dark">
+        <cps-icon icon="chevron-down" size="small" color="text-dark">
         </cps-icon>
       </span>
     }

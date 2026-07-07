@@ -23,6 +23,10 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../utils/internal/motion-utils';
 
 /**
  * CpsSidebarMenuItem is used to define the items of the CpsSidebarMenuComponent.
@@ -64,9 +68,9 @@ export type CpsSidebarMenuItem = {
           opacity: '1'
         })
       ),
-      transition('expanded <=> collapsed', [
-        animate('0.2s cubic-bezier(0.4, 0, 0.2, 1)')
-      ])
+      transition('expanded <=> collapsed', [animate('{{transitionParams}}')], {
+        params: { transitionParams: '0.2s cubic-bezier(0.4, 0, 0.2, 1)' }
+      })
     ])
   ]
 })
@@ -82,6 +86,12 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
    * @group Props
    */
   @Input() isExpanded = true;
+
+  get resolvedTransitionParams(): string {
+    return prefersReducedMotion()
+      ? REDUCED_MOTION_DURATION
+      : '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+  }
 
   /**
    * Determines whether the menu items should allow activating only exact links.

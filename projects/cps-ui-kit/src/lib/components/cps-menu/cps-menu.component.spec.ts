@@ -799,4 +799,32 @@ describe('CpsMenuComponent', () => {
       expect(component.scrollHandler).toBeNull();
     });
   });
+
+  describe('reduced motion', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should use the configured transition options by default', () => {
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: false } as MediaQueryList);
+
+      expect(component.resolvedShowTransitionOptions).toBe(
+        component.showTransitionOptions
+      );
+      expect(component.resolvedHideTransitionOptions).toBe(
+        component.hideTransitionOptions
+      );
+    });
+
+    it('should use a near-instant transition when the OS prefers reduced motion', () => {
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: true } as MediaQueryList);
+
+      expect(component.resolvedShowTransitionOptions).toBe('1ms');
+      expect(component.resolvedHideTransitionOptions).toBe('1ms');
+    });
+  });
 });
