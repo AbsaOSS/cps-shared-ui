@@ -104,13 +104,13 @@ Versioning and the changelog are driven by [Conventional Commits](https://www.co
 
 **Type** determines the version bump and changelog section:
 
-| Type                                                          | Bump      | Changelog                  |
-| ------------------------------------------------------------- | --------- | -------------------------- |
-| `feat`                                                        | **minor** | Features                   |
-| `fix`                                                         | **patch** | Bug Fixes                  |
-| `perf`                                                        | **patch** | Performance Improvements   |
-| `feat!` / `fix!` / `BREAKING CHANGE:` footer                  | **major** | Breaking section           |
-| `docs`, `style`, `refactor`, `test`, `build`, `ci`, `chore`   | none      | hidden                     |
+| Type                                                        | Bump      | Changelog                |
+| ----------------------------------------------------------- | --------- | ------------------------ |
+| `feat`                                                      | **minor** | Features                 |
+| `fix`                                                       | **patch** | Bug Fixes                |
+| `perf`                                                      | **patch** | Performance Improvements |
+| `feat!` / `fix!` / `BREAKING CHANGE:` footer                | **major** | Breaking section         |
+| `docs`, `style`, `refactor`, `test`, `build`, `ci`, `chore` | none      | hidden                   |
 
 **Scope** _(optional)_ is the component the change targets, written as the component name **without the `cps-` prefix**. It only affects how the entry is grouped/labelled in the changelog (this is a single package, so the scope does not change versioning). Use the component name from the list above:
 
@@ -140,9 +140,21 @@ The current released version is tracked in [`.release-please-manifest.json`](.re
 
 #### Run accessibility tests
 
-The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all components for WCAG 2.0 AA compliance.
+Accessibility is covered by two complementary tools, run separately and by different CI jobs:
 
-To run accessibility tests:
+**Playwright + axe-core** — scans individual `cps-ui-kit` components (in isolation) and the full `composition` app (pages, shell, interactive states) against WCAG 2.0/2.1/2.2 A/AA + best-practice rules.
+
+```bash
+npm run test:playwright:accessibility              # everything (cps-ui-kit + composition)
+npm run test:playwright:cps-ui-kit:accessibility    # cps-ui-kit components only
+npm run test:playwright:composition:accessibility   # composition app only
+```
+
+These run as part of the `playwright` CI job. See [playwright/README.md](playwright/README.md) for full details, including how component/page entries are structured.
+
+**pa11y-ci** — scans all 33 composition demo pages (one per component) against WCAG 2.0 AA, using axe-core as its underlying test engine. This is a separate, independent check from the Playwright one above and runs as its own `pa11y` CI job.
+
+To run it manually:
 
 1. Start the development server:
 
@@ -152,22 +164,20 @@ To run accessibility tests:
 
 2. In a separate terminal, run the accessibility tests:
    ```bash
-   npm run test:a11y
+   npm run test:pa11y
    ```
 
-Alternatively, use the combined script that starts the server and runs tests:
+Alternatively, use the combined script that starts the server and shows a colorful summary with statistics:
 
 ```bash
-npm run test:a11y:local
+npm run test:pa11y:local
 ```
 
-For a colorful summary with statistics:
+`npm run test:pa11y:summary` produces that same summary, but assumes the server is already running.
 
-```bash
-npm run test:a11y:summary
-```
+`npm run test:pa11y:ci` is the CI equivalent of `test:pa11y:local` — it starts the server and runs the plain `test:pa11y` reporter (full per-URL violation output) instead of the summary. This is what the `pa11y` CI job runs.
 
-This will display:
+The summary variants display:
 
 - Total URLs tested with pass/fail ratio
 - Total accessibility errors found
@@ -175,4 +185,4 @@ This will display:
 - Test engine (axe-core via pa11y-ci)
 - Top 10 components with the most issues
 
-The tests will check all 33 components for accessibility issues and report any violations found.
+Both `test:pa11y` and `test:pa11y:ci` fail (non-zero exit code) if any accessibility error is found on any page.
