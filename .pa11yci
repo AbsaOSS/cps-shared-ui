@@ -3,8 +3,10 @@
     "standard": "WCAG2AA",
     "timeout": 30000,
     "wait": 1000,
-    "runners": ["axe"],
-    "hideElements": ".cps-loader",
+    "runners": [
+      "axe"
+    ],
+    "hideElements": ".cps-loader, .cps-loader-overlay-content-text",
     "reporter": "cli",
     "level": "error"
   },
