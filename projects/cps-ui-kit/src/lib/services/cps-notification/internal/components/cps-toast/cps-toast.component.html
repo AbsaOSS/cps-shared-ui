@@ -11,7 +11,11 @@
   (focusout)="initiateTimeout()"
   [class]="data.type"
   [@toastState]="{
-    value: 'visible'
+    value: 'visible',
+    params: {
+      showTiming: resolvedShowTiming,
+      hideTiming: resolvedHideTiming
+    }
   }"
   [style.max-width]="maxWidth"
   class="cps-toast-content">

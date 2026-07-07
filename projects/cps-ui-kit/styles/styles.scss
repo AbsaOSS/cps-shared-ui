@@ -32,6 +32,23 @@
     box-shadow var(--cps-motion-base) var(--cps-motion-easing) !important;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --cps-motion-fast: 0ms;
+    --cps-motion-base: 0ms;
+    --cps-motion-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 // Visually hidden but accessible to screen readers
 .cps-sr-only {
   position: absolute;

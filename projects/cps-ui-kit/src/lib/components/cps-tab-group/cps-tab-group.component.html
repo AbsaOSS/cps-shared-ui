@@ -109,12 +109,22 @@
       (mousedown)="onMouseDown($event)">
       @if (tab.active) {
         @if (animationType === 'slide') {
-          <div [@slideInOut]="animationState" class="cps-tab-content-inner">
+          <div
+            [@slideInOut]="{
+              value: animationState,
+              params: { transitionParams: resolvedTransitionParams }
+            }"
+            class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
         @if (animationType === 'fade') {
-          <div [@fadeInOut]="animationState" class="cps-tab-content-inner">
+          <div
+            [@fadeInOut]="{
+              value: animationState,
+              params: { transitionParams: resolvedFadeTransitionParams }
+            }"
+            class="cps-tab-content-inner">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }

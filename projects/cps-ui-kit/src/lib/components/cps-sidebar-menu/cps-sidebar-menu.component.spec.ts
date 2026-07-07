@@ -662,4 +662,28 @@ describe('CpsSidebarMenuComponent', () => {
       expect(menuItems.length).toBe(sampleItems.length);
     });
   });
+
+  describe('reduced motion', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should use the default transition duration by default', () => {
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: false } as MediaQueryList);
+
+      expect(component.resolvedTransitionParams).toBe(
+        '0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+      );
+    });
+
+    it('should use a near-instant transition when the OS prefers reduced motion', () => {
+      jest
+        .spyOn(window, 'matchMedia')
+        .mockReturnValue({ matches: true } as MediaQueryList);
+
+      expect(component.resolvedTransitionParams).toBe('1ms');
+    });
+  });
 });

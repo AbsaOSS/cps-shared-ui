@@ -7,8 +7,8 @@
     [@animation]="{
       value: overlayVisible ? 'open' : 'close',
       params: {
-        showTransitionParams: showTransitionOptions,
-        hideTransitionParams: hideTransitionOptions
+        showTransitionParams: resolvedShowTransitionOptions,
+        hideTransitionParams: resolvedHideTransitionOptions
       }
     }"
     (@animation.start)="onAnimationStart($event)"

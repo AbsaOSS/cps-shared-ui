@@ -44,6 +44,10 @@ import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circl
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CPS_FOCUS_SERVICE } from '../../../../cps-focus/cps-focus.service';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../../../../utils/internal/motion-utils';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -175,6 +179,11 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get cvtMaxHeight(): string {
     return this.maximized ? '' : convertSize(this.config.maxHeight);
+  }
+
+  get resolvedTransitionOptions(): string {
+    if (prefersReducedMotion()) return REDUCED_MOTION_DURATION;
+    return this.config.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)';
   }
 
   get minX(): number {
