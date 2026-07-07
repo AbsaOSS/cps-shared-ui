@@ -896,6 +896,25 @@ export class CpsTreeTableComponent
         if (table) this.renderer.setStyle(table, 'min-width', this.minWidth);
       }
     }
+
+    this._removeEmptyFooter();
+  }
+
+  /**
+   * PrimeNG's non-scrollable p-treeTable view always renders a
+   * `<tfoot role="rowgroup">`, even with no footer template provided,
+   * leaving an empty rowgroup that violates aria-required-children.
+   * The scrollable view correctly omits it in that case, so this only
+   * needs to run here.
+   */
+  private _removeEmptyFooter(): void {
+    const tfoot =
+      this.primengTreeTable.el?.nativeElement?.querySelector(
+        '.p-treetable-tfoot'
+      );
+    if (tfoot && tfoot.childElementCount === 0) {
+      this.renderer.removeChild(tfoot.parentNode, tfoot);
+    }
   }
 
   ngAfterViewChecked() {
