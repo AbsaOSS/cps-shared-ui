@@ -1,23 +1,18 @@
-import { test, expect } from './fixtures/axe-test';
-import type { Page, TestInfo } from '@playwright/test';
-import type AxeBuilder from '@axe-core/playwright';
+import type { Page } from '@playwright/test';
 
-interface ComponentState {
-  label: string;
-  setup: (page: Page) => Promise<void>;
-}
-
-interface ComponentEntry {
+export interface ComponentEntry {
   route: string;
   name: string;
   selector: string | string[];
   /** For overlay components: trigger them before scanning */
   setup?: (page: Page) => Promise<void>;
-  /** For components that need multiple scans (e.g., different states/tabs) */
-  states?: ComponentState[];
+  /** Nests this entry's test under a shared test.describe(group) with other
+   * entries that share the same group.
+   */
+  group?: string;
 }
 
-const components: ComponentEntry[] = [
+export const components: ComponentEntry[] = [
   {
     route: '/autocomplete',
     name: 'Autocomplete',
@@ -51,6 +46,7 @@ const components: ComponentEntry[] = [
     route: '/dialog',
     name: 'Confirmation dialog',
     selector: '[role="dialog"]',
+    group: 'Dialog',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
@@ -63,6 +59,7 @@ const components: ComponentEntry[] = [
     route: '/dialog',
     name: 'Regular dialog',
     selector: '[role="dialog"]',
+    group: 'Dialog',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
@@ -75,6 +72,7 @@ const components: ComponentEntry[] = [
     route: '/dialog',
     name: 'Draggable dialog',
     selector: '[role="dialog"]',
+    group: 'Dialog',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
@@ -87,6 +85,7 @@ const components: ComponentEntry[] = [
     route: '/dialog',
     name: 'Resizable dialog',
     selector: '[role="dialog"]',
+    group: 'Dialog',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
@@ -99,6 +98,7 @@ const components: ComponentEntry[] = [
     route: '/dialog',
     name: 'Dialog with blurred background and container autofocus',
     selector: '[role="dialog"]',
+    group: 'Dialog',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
@@ -121,11 +121,17 @@ const components: ComponentEntry[] = [
   { route: '/icon', name: 'Icon', selector: '.example-content cps-icon' },
   { route: '/info-circle', name: 'Info circle', selector: 'cps-info-circle' },
   { route: '/input', name: 'Input', selector: '.example-content cps-input' },
-  { route: '/loader', name: 'Loader', selector: '.example-content cps-loader' },
+  {
+    route: '/loader',
+    name: 'Loader',
+    selector: '.example-content cps-loader',
+    group: 'Loader'
+  },
   {
     route: '/loader',
     name: 'Loader fullscreen',
     selector: '.example-content cps-loader',
+    group: 'Loader',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page
@@ -141,6 +147,7 @@ const components: ComponentEntry[] = [
     route: '/menu',
     name: 'Menu standard',
     selector: '.cps-menu-container',
+    group: 'Menu',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page.locator('.example-content cps-button').first().click();
@@ -150,6 +157,7 @@ const components: ComponentEntry[] = [
     route: '/menu',
     name: 'Menu compressed',
     selector: '.cps-menu-container',
+    group: 'Menu',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       await page.locator('.example-content cps-button').nth(2).click();
@@ -182,26 +190,26 @@ const components: ComponentEntry[] = [
     selector: 'cps-progress-linear'
   },
   { route: '/radio-group', name: 'Radio', selector: 'cps-radio-group' },
-  {
-    route: '/scheduler',
-    name: 'Scheduler',
-    selector: 'cps-scheduler',
-    states: [
-      'Minutes',
-      'Hourly',
-      'Daily',
-      'Weekly',
-      'Monthly',
-      'Yearly',
-      'Advanced'
-    ].map((tab) => ({
-      label: tab,
-      setup: async (page: Page) => {
+  ...[
+    'Minutes',
+    'Hourly',
+    'Daily',
+    'Weekly',
+    'Monthly',
+    'Yearly',
+    'Advanced'
+  ].map(
+    (tab): ComponentEntry => ({
+      route: '/scheduler',
+      name: tab,
+      selector: 'cps-scheduler',
+      group: 'Scheduler',
+      setup: async (page) => {
         await page.getByTestId('schedule-type-toggle').getByText(tab).click();
         await page.waitForSelector('cps-scheduler');
       }
-    }))
-  },
+    })
+  ),
   {
     route: '/select',
     name: 'Select',
@@ -222,29 +230,29 @@ const components: ComponentEntry[] = [
     name: 'Tabs',
     selector: '.example-content cps-tab-group'
   },
-  {
-    route: '/table',
-    name: 'Table',
-    selector: 'cps-table',
-    states: [
-      'Table 1',
-      'Table 2',
-      'Table 3',
-      'Table 4',
-      'Table 5',
-      'Table 6',
-      'Table 7',
-      'Table 8',
-      'Table 9',
-      'Table 10'
-    ].map((tab) => ({
-      label: tab,
-      setup: async (page: Page) => {
+  ...[
+    'Table 1',
+    'Table 2',
+    'Table 3',
+    'Table 4',
+    'Table 5',
+    'Table 6',
+    'Table 7',
+    'Table 8',
+    'Table 9',
+    'Table 10'
+  ].map(
+    (tab): ComponentEntry => ({
+      route: '/table',
+      name: tab,
+      selector: 'cps-table',
+      group: 'Table',
+      setup: async (page) => {
         await page.getByRole('tab', { name: tab, exact: true }).click();
         await page.waitForSelector('cps-table');
       }
-    }))
-  },
+    })
+  ),
   { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
@@ -283,143 +291,35 @@ const components: ComponentEntry[] = [
       await page.locator('cps-tree-select').first().click();
     }
   },
-  {
-    route: '/tree-table',
-    name: 'Tree table',
-    selector: 'cps-tree-table',
-    states: [
-      'Tree table 1',
-      'Tree table 2',
-      'Tree table 3',
-      'Tree table 4',
-      'Tree table 5',
-      'Tree table 6',
-      'Tree table 7',
-      'Tree table 8',
-      'Tree table 9',
-      'Tree table 10'
-    ].map((tab) => ({
-      label: tab,
-      setup: async (page: Page) => {
+  ...[
+    'Tree table 1',
+    'Tree table 2',
+    'Tree table 3',
+    'Tree table 4',
+    'Tree table 5',
+    'Tree table 6',
+    'Tree table 7',
+    'Tree table 8',
+    'Tree table 9',
+    'Tree table 10'
+  ].map(
+    (tab): ComponentEntry => ({
+      route: '/tree-table',
+      name: tab,
+      selector: 'cps-tree-table',
+      group: 'Tree table',
+      setup: async (page) => {
         await page.getByRole('tab', { name: tab, exact: true }).click();
         await page.waitForSelector('cps-tree-table');
       }
-    }))
-  }
+    })
+  )
 ];
 
-type Violations = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'];
+const EXTRA_PAGE_ROUTES = [
+  '/colors' // default `**` redirect target; has no entry in `components`
+];
 
-function formatViolations(violations: Violations): string {
-  if (violations.length === 0) return '';
-  return violations
-    .map((v) => {
-      const nodes = v.nodes
-        .map((n) => `    - ${n.html}\n      ${n.failureSummary}`)
-        .join('\n');
-      return `\n[${v.impact}] ${v.id}: ${v.description}\n  Help: ${v.helpUrl}\n${nodes}`;
-    })
-    .join('\n');
-}
-
-function expectNoViolations(violations: Violations) {
-  expect(violations, formatViolations(violations)).toHaveLength(0);
-}
-
-function buildAxeWithSelectors(
-  makeAxeBuilder: () => AxeBuilder,
-  selector: string | string[]
-) {
-  const selectors = Array.isArray(selector) ? selector : [selector];
-  let builder = makeAxeBuilder();
-  for (const s of selectors) {
-    builder = builder.include(s);
-  }
-  return builder;
-}
-
-async function waitForSelectors(page: Page, selector: string | string[]) {
-  const selectors = Array.isArray(selector) ? selector : [selector];
-  await Promise.all(selectors.map((s) => page.waitForSelector(s)));
-}
-
-// ============================================================================
-// axe-core WCAG AA — all component pages
-// ============================================================================
-
-async function runScan(
-  page: Page,
-  makeAxeBuilder: () => AxeBuilder,
-  selector: string | string[],
-  label: string,
-  testInfo: TestInfo
-) {
-  await waitForSelectors(page, selector);
-  // Wait for all animations/transitions to complete before scanning.
-  // Without this, axe may capture intermediate states (e.g. mid-transition
-  // background color) and report false-positive color contrast violations.
-  await page.evaluate(() =>
-    Promise.all(
-      document
-        .getAnimations()
-        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
-        .map((a) => a.finished.catch(() => {}))
-    )
-  );
-  const results = await buildAxeWithSelectors(
-    makeAxeBuilder,
-    selector
-  ).analyze();
-  await testInfo.attach(`${label}-accessibility-scan`, {
-    body: JSON.stringify(results, null, 2),
-    contentType: 'application/json'
-  });
-  expectNoViolations(results.violations);
-}
-
-test.describe('Accessibility - axe scan', () => {
-  for (const { route, name, selector, setup, states } of components) {
-    test(`${name} should have no violations`, async ({
-      page,
-      makeAxeBuilder
-    }, testInfo) => {
-      await page.goto(route);
-
-      if (states) {
-        for (const state of states) {
-          if (state.setup) await state.setup(page);
-          await runScan(page, makeAxeBuilder, selector, state.label, testInfo);
-        }
-      } else {
-        if (setup) await setup(page);
-        await runScan(page, makeAxeBuilder, selector, 'default', testInfo);
-      }
-    });
-  }
-});
-
-// ============================================================================
-// axe-core at mobile viewport
-// ============================================================================
-
-test.describe('Accessibility - responsive axe scan', () => {
-  for (const { route, name, selector, setup, states } of components) {
-    test(`${name} should have no violations at mobile width`, async ({
-      page,
-      makeAxeBuilder
-    }, testInfo) => {
-      await page.setViewportSize({ width: 375, height: 812 });
-      await page.goto(route);
-
-      if (states) {
-        for (const state of states) {
-          if (state.setup) await state.setup(page);
-          await runScan(page, makeAxeBuilder, selector, state.label, testInfo);
-        }
-      } else {
-        if (setup) await setup(page);
-        await runScan(page, makeAxeBuilder, selector, 'default', testInfo);
-      }
-    });
-  }
-});
+export const pageRoutes: string[] = [
+  ...new Set([...components.map((c) => c.route), ...EXTRA_PAGE_ROUTES])
+].sort();

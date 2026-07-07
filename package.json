@@ -27,8 +27,11 @@
     "test:playwright:webkit": "playwright test --project=webkit",
     "test:playwright:webkit:headed": "playwright test --project=webkit --headed",
     "test:playwright:accessibility": "playwright test --project=accessibility",
-    "test:playwright:accessibility:matrix": "node playwright/a11y-matrix-generator.js",
-    "test:playwright:accessibility:matrix:from-cache": "node playwright/a11y-matrix-generator.js --from-file playwright-report/a11y-report.json",
+    "test:playwright:composition:all": "playwright test playwright/composition --project=chromium --project=webkit --project=accessibility",
+    "test:playwright:composition:accessibility": "playwright test playwright/composition/accessibility-composition.spec.ts --project=accessibility",
+    "test:playwright:cps-ui-kit:all": "playwright test playwright/cps-ui-kit --project=chromium --project=webkit --project=accessibility",
+    "test:playwright:cps-ui-kit:accessibility": "playwright test playwright/cps-ui-kit/accessibility-cps-ui-kit.spec.ts --project=accessibility",
+    "test:playwright:cps-ui-kit:components": "playwright test playwright/cps-ui-kit/components --project=chromium --project=webkit",
     "format": "prettier --write \"**/*.{ts,html}\""
   },
   "private": true,
