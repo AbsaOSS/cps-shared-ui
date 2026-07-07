@@ -7,6 +7,10 @@ This repository consists of two projects:
 - `cps-ui-kit` - shared components library itself
 - `composition` - application for previewing compositions of components consumed from the library
 
+#### Accessibility
+
+This library's components and the composition app are tested for WCAG 2.2 AA compliance both with automated tooling ([axe-core](https://github.com/dequelabs/axe-core), via a Playwright test suite and pa11y-ci) and manual accessibility review. See [Run accessibility tests](#run-accessibility-tests) for how to run the automated checks yourself.
+
 #### Available components
 
 - Autocomplete
