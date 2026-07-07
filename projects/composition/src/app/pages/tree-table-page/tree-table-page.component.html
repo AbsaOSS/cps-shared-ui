@@ -60,8 +60,17 @@
           </td>
           <td>{{ rowData.size }}</td>
           <td>{{ rowData.modified | date }}</td>
-          <td [style.color]="rowData.encrypted ? 'green' : 'red'">
-            {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="rowData.encrypted ? 'checked' : 'close-x'"
+              [color]="
+                rowData.encrypted
+                  ? 'var(--cps-color-success)'
+                  : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="rowData.encrypted ? 'Encrypted' : 'Not encrypted'">
+            </cps-icon>
           </td>
           <td>{{ rowData.importance }}</td>
         </ng-template>
@@ -122,8 +131,17 @@
           </td>
           <td>{{ rowData.size }}</td>
           <td>{{ rowData.modified | date }}</td>
-          <td [style.color]="rowData.encrypted ? 'green' : 'red'">
-            {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="rowData.encrypted ? 'checked' : 'close-x'"
+              [color]="
+                rowData.encrypted
+                  ? 'var(--cps-color-success)'
+                  : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="rowData.encrypted ? 'Encrypted' : 'Not encrypted'">
+            </cps-icon>
           </td>
           <td>{{ rowData.importance }}</td>
         </ng-template>
@@ -171,8 +189,19 @@
                 <td>{{ rowData.modified | date }}</td>
               }
               @case ('encrypted') {
-                <td [style.color]="rowData.encrypted ? 'green' : 'red'">
-                  {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+                <td>
+                  <cps-icon
+                    [icon]="rowData.encrypted ? 'checked' : 'close-x'"
+                    [color]="
+                      rowData.encrypted
+                        ? 'var(--cps-color-success)'
+                        : 'var(--cps-color-error)'
+                    "
+                    size="small"
+                    [ariaLabel]="
+                      rowData.encrypted ? 'Encrypted' : 'Not encrypted'
+                    ">
+                  </cps-icon>
                 </td>
               }
               @case ('importance') {
@@ -234,8 +263,17 @@
           </td>
           <td>{{ rowData.size }}</td>
           <td>{{ rowData.modified | date }}</td>
-          <td [style.color]="rowData.encrypted ? 'green' : 'red'">
-            {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="rowData.encrypted ? 'checked' : 'close-x'"
+              [color]="
+                rowData.encrypted
+                  ? 'var(--cps-color-success)'
+                  : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="rowData.encrypted ? 'Encrypted' : 'Not encrypted'">
+            </cps-icon>
           </td>
           <td>{{ rowData.importance }}</td>
         </ng-template>
@@ -265,8 +303,17 @@
           </td>
           <td>{{ rowData.size }}</td>
           <td>{{ rowData.modified | date }}</td>
-          <td [style.color]="rowData.encrypted ? 'green' : 'red'">
-            {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="rowData.encrypted ? 'checked' : 'close-x'"
+              [color]="
+                rowData.encrypted
+                  ? 'var(--cps-color-success)'
+                  : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="rowData.encrypted ? 'Encrypted' : 'Not encrypted'">
+            </cps-icon>
           </td>
           <td>{{ rowData.importance }}</td>
         </ng-template>
@@ -315,8 +362,17 @@
           </td>
           <td>{{ rowData.size }}</td>
           <td>{{ rowData.modified | date }}</td>
-          <td [style.color]="rowData.encrypted ? 'green' : 'red'">
-            {{ rowData.encrypted ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="rowData.encrypted ? 'checked' : 'close-x'"
+              [color]="
+                rowData.encrypted
+                  ? 'var(--cps-color-success)'
+                  : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="rowData.encrypted ? 'Encrypted' : 'Not encrypted'">
+            </cps-icon>
           </td>
           <td>{{ rowData.importance }}</td>
         </ng-template>
