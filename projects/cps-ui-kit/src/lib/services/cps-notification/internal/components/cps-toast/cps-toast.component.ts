@@ -123,8 +123,14 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
       this.data.type === CpsNotificationType.WARNING
         ? 'warn'
         : this.data.type || CpsNotificationType.ERROR;
-    this.icon = ('toast-' +
-      (this.data.type || CpsNotificationType.ERROR)) as CpsIconType;
+    this.icon = (
+      {
+        [CpsNotificationType.ERROR]: 'toast-error',
+        [CpsNotificationType.WARNING]: 'toast-warning',
+        [CpsNotificationType.INFO]: 'toast-info',
+        [CpsNotificationType.SUCCESS]: 'toast-success'
+      } as const
+    )[this.data.type ?? CpsNotificationType.ERROR];
   }
 
   ngAfterViewInit(): void {
