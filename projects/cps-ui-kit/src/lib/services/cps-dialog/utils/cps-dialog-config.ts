@@ -1,4 +1,5 @@
-import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsIconType } from '../../../components/cps-icon/cps-icon.component';
 
 /**
  * Defines the auto-focus target when the dialog opens.
@@ -36,7 +37,7 @@ export class CpsDialogConfig<T = any> {
   /**
    * Header icon.
    */
-  headerIcon?: string;
+  headerIcon?: CpsIconType;
   /**
    * Header icon color.
    */

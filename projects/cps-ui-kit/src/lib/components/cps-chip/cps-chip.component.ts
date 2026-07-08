@@ -5,7 +5,10 @@ import {
   OnChanges,
   Output
 } from '@angular/core';
-import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -29,7 +32,7 @@ export class CpsChipComponent implements OnChanges {
    * Name of the icon.
    * @group Props
    */
-  @Input() icon: IconType = '';
+  @Input() icon: CpsIconType = '';
 
   /**
    * Color of the icon.

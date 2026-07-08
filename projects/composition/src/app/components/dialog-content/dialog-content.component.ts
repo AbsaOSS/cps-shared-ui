@@ -3,7 +3,8 @@ import {
   CpsButtonComponent,
   CpsDialogConfig,
   CpsDialogRef,
-  CpsIconComponent
+  CpsIconComponent,
+  type CpsIconType
 } from 'cps-ui-kit';
 
 @Component({
@@ -14,7 +15,7 @@ import {
 })
 export class DialogContentComponent implements OnInit {
   info = '';
-  icon = '';
+  icon: CpsIconType = '';
 
   closeDisabled = false;
 

@@ -5,7 +5,8 @@ import {
   CpsInputComponent,
   CpsNotificationPosition,
   CpsNotificationService,
-  iconNames
+  cpsIconNames,
+  type CpsIconType
 } from 'cps-ui-kit';
 
 import ComponentData from '../../../api-data/cps-icon.json';
@@ -24,13 +25,13 @@ import { ComponentDocsViewerComponent } from '../../../components/component-docs
   host: { class: 'composition-page' }
 })
 export class IconsPageComponent implements OnInit {
-  filteredIconsList: string[] = [];
+  filteredIconsList: CpsIconType[] = [];
   componentData = ComponentData;
 
   private _notificationService = inject(CpsNotificationService);
 
   ngOnInit() {
-    this.filteredIconsList = iconNames;
+    this.filteredIconsList = [...cpsIconNames];
   }
 
   onSearchChanged(value: string) {
@@ -39,7 +40,7 @@ export class IconsPageComponent implements OnInit {
 
   private _filterIcons(name: string) {
     name = name.toLowerCase();
-    this.filteredIconsList = iconNames.filter((n) =>
+    this.filteredIconsList = cpsIconNames.filter((n) =>
       n.toLowerCase().includes(name)
     );
   }

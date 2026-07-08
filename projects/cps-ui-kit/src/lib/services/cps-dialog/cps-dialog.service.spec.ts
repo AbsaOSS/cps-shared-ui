@@ -203,9 +203,9 @@ describe('CpsDialogService', () => {
 
     it('should not override headerIcon when already set', () => {
       const config = new CpsDialogConfig();
-      config.headerIcon = 'info';
+      config.headerIcon = 'info-circle';
       service.openConfirmationDialog(config);
-      expect(config.headerIcon).toBe('info');
+      expect(config.headerIcon).toBe('info-circle');
     });
 
     it('should set default headerIconColor to "calm"', () => {

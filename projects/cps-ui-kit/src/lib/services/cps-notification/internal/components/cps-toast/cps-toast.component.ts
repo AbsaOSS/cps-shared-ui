@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   EventEmitter,
+  inject,
   Input,
   NgZone,
   OnDestroy,
@@ -9,7 +10,10 @@ import {
   Output
 } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
-import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 import { convertSize } from '../../../../../utils/internal/size-utils';
 import {
@@ -82,22 +86,25 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @Output() closed = new EventEmitter();
 
-  timeout: any;
+  timeout: ReturnType<typeof setTimeout> | null = null;
   maxWidth: string | undefined;
   filled = true;
   color = '';
+  icon: CpsIconType = 'toast-error';
   srAnnouncement = '';
 
+  private _ngZone = inject(NgZone);
+
   get isPolite(): boolean {
-    if (this.data?.type === CpsNotificationType.ERROR)
-      return !!this.config?.politeError;
-    if (this.data?.type === CpsNotificationType.WARNING)
-      return !!this.config?.politeWarning;
+    if (this.data.type === CpsNotificationType.ERROR)
+      return !!this.config.politeError;
+    if (this.data.type === CpsNotificationType.WARNING)
+      return !!this.config.politeWarning;
     return true;
   }
 
   get closeAriaLabel(): string {
-    const type = this.data?.type;
+    const type = this.data.type;
     return `Close ${type ? type + ' ' : ''}notification`;
   }
 
@@ -109,24 +116,23 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
     return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-in';
   }
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private zone: NgZone) {}
-
   ngOnInit(): void {
-    this.maxWidth = convertSize(this.config?.maxWidth || '');
-    this.filled = this.config?.appearance === CpsNotificationAppearance.FILLED;
+    this.maxWidth = convertSize(this.config.maxWidth || '');
+    this.filled = this.config.appearance === CpsNotificationAppearance.FILLED;
     this.color =
-      this.data?.type === CpsNotificationType.WARNING
+      this.data.type === CpsNotificationType.WARNING
         ? 'warn'
-        : this.data?.type || CpsNotificationType.ERROR;
+        : this.data.type || CpsNotificationType.ERROR;
+    this.icon = ('toast-' +
+      (this.data.type || CpsNotificationType.ERROR)) as CpsIconType;
   }
 
   ngAfterViewInit(): void {
     this.initiateTimeout();
     setTimeout(() => {
-      const type = this.data?.type;
-      const details = this.data?.details;
-      this.srAnnouncement = `${type ? type + ': ' : ''}${this.data?.message ?? ''}${details ? '. ' + details : ''}`;
+      const type = this.data.type;
+      const details = this.data.details;
+      this.srAnnouncement = `${type ? type + ': ' : ''}${this.data.message ?? ''}${details ? '. ' + details : ''}`;
     });
   }
 
@@ -140,11 +146,11 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   initiateTimeout() {
-    if (this.config?.timeout === 0) return;
-    this.zone.runOutsideAngular(() => {
+    if (this.config.timeout === 0) return;
+    this._ngZone.runOutsideAngular(() => {
       this.timeout = setTimeout(() => {
         this.close();
-      }, this.config?.timeout || 5000);
+      }, this.config.timeout || 5000);
     });
   }
 

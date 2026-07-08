@@ -4,7 +4,8 @@ import {
   CpsTabGroupComponent,
   CpsTabComponent,
   CpsTabChangeEvent,
-  CpsCheckboxComponent
+  CpsCheckboxComponent,
+  type CpsIconType
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tab-group.json';
@@ -53,15 +54,16 @@ export class TabGroupPageComponent {
     tooltipText: `Tooltip of tab ${i + 1}`
   }));
 
-  rightAlignedTabs = [
-    { label: 'Tab 1', icon: 'survivorship', id: 'tab1' },
-    { label: 'Tab 2', icon: 'kris', id: null },
-    { label: 'Tab 3', icon: 'dq', id: null }
-  ];
+  rightAlignedTabs: { label: string; icon: CpsIconType; id: string | null }[] =
+    [
+      { label: 'Tab 1', icon: 'survivorship', id: 'tab1' },
+      { label: 'Tab 2', icon: 'kris', id: null },
+      { label: 'Tab 3', icon: 'dq', id: null }
+    ];
 
   stretchedTabs = [{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }];
 
-  subTabs = [
+  subTabs: { label: string; icon: CpsIconType; id: string | null }[] = [
     { label: 'Tab 1', icon: 'avatar', id: 'tab1' },
     { label: 'Tab 2', icon: '', id: null },
     { label: 'Tab 3', icon: '', id: null }

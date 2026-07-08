@@ -54,7 +54,7 @@
         "values": [
             {
                 "name": "CpsSidebarMenuItem",
-                "value": "{\n    \"title\": \"string\",\n    \"icon\": \"string\",\n    \"url?\": \"string\",\n    \"target?\": \"string\",\n    \"disabled?\": \"boolean\",\n    \"items?\": \"CpsMenuItem[]\"\n}",
+                "value": "{\n    \"title\": \"string\",\n    \"icon\": \"CpsIconType\",\n    \"url?\": \"string\",\n    \"target?\": \"string\",\n    \"disabled?\": \"boolean\",\n    \"items?\": \"CpsMenuItem[]\"\n}",
                 "description": "CpsSidebarMenuItem is used to define the items of the CpsSidebarMenuComponent."
             }
         ]
