@@ -895,9 +895,9 @@ export class CpsTreeTableComponent
         const table = tableWrapper.querySelector('table');
         if (table) this.renderer.setStyle(table, 'min-width', this.minWidth);
       }
-    }
 
-    this._removeEmptyFooter();
+      this._removeEmptyFooter();
+    }
   }
 
   /**
@@ -912,7 +912,7 @@ export class CpsTreeTableComponent
       this.primengTreeTable.el?.nativeElement?.querySelector(
         '.p-treetable-tfoot'
       );
-    if (tfoot && tfoot.childElementCount === 0) {
+    if (tfoot && tfoot.childElementCount === 0 && tfoot.parentNode) {
       this.renderer.removeChild(tfoot.parentNode, tfoot);
     }
   }

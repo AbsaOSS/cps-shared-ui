@@ -28,7 +28,7 @@ async function waitForSelectors(page: Page, selector: string | string[]) {
 }
 
 /**
- * Groups consecutive entries sharing the same `group` so their tests can be
+ * Groups entries sharing the same `group` so their tests can be
  * nested under a shared test.describe block.
  */
 function groupComponents(entries: ComponentEntry[]) {
