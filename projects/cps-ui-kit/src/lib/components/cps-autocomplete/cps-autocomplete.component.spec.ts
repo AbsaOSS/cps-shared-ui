@@ -10,8 +10,8 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
-import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
+import { LabelByValuePipe } from '../../pipes/internal/label-by-value/label-by-value.pipe';
 import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
 import { CpsAutocompleteComponent } from './cps-autocomplete.component';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';

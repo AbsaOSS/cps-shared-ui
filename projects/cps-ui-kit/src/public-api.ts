@@ -54,7 +54,7 @@ export * from './lib/directives/cps-tooltip/cps-tooltip.directive';
 
 export * from './lib/services/cps-dialog/cps-dialog.service';
 export * from './lib/services/cps-dialog/utils/cps-dialog-config';
-export * from './lib/services/cps-dialog/utils/cps-dialog-ref';
+export * from './lib/services/cps-dialog/utils/cps-dialog-ref/cps-dialog-ref';
 
 export * from './lib/services/cps-notification/cps-notification.service';
 export * from './lib/services/cps-notification/utils/cps-notification-config';
@@ -65,4 +65,4 @@ export * from './lib/services/cps-theme/cps-theme.service';
 export * from './lib/services/cps-cron-validation/cps-cron-validation.service';
 export * from './lib/services/cps-live-announcer/cps-live-announcer.service';
 
-export * from './lib/utils/colors-utils';
+export * from './lib/utils/colors-utils/colors-utils';

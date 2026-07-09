@@ -11,7 +11,7 @@ import {
   Self,
   type SimpleChanges
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 /**

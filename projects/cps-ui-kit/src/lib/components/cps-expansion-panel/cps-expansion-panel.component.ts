@@ -14,9 +14,9 @@ import {
   type SimpleChanges
 } from '@angular/core';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
-import { getCSSColor } from '../../utils/colors-utils';
-import { convertSize } from '../../utils/internal/size-utils';
-import { generateUniqueId } from '../../utils/internal/accessibility-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
+import { generateUniqueId } from '../../utils/internal/accessibility-utils/accessibility-utils';
 import {
   AnimationBuilder,
   AnimationFactory,
@@ -30,7 +30,7 @@ import {
 import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
-} from '../../utils/internal/motion-utils';
+} from '../../utils/internal/motion-utils/motion-utils';
 
 const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
 

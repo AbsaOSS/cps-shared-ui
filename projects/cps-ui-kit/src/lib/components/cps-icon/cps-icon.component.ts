@@ -11,8 +11,8 @@ import {
   Renderer2,
   type SimpleChanges
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
-import { convertSize } from '../../utils/internal/size-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
 
 /**
  * Injection token that is used to provide the path to the icons.

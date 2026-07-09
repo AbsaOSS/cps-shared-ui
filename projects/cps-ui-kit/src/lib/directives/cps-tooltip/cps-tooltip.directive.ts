@@ -8,7 +8,10 @@ import {
   SecurityContext,
   PLATFORM_ID
 } from '@angular/core';
-import { convertSize, parseSize } from '../../utils/internal/size-utils';
+import {
+  convertSize,
+  parseSize
+} from '../../utils/internal/size-utils/size-utils';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';

@@ -14,7 +14,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Paginator, PaginatorModule } from 'primeng/paginator';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
-import { getCSSColor } from '../../utils/colors-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { FormsModule } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 
