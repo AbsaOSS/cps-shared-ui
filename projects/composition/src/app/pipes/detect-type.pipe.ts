@@ -29,6 +29,38 @@ function splitTopLevelUnion(value: string): string[] {
   return parts;
 }
 
+// Finds known type names anywhere inside an arbitrarily nested type
+// expression (e.g. the `CpsDialogConfig` inside `InjectionToken<CpsDialogConfig<any>>`,
+// or the `CpsCronValidationService` inside `InjectionToken<CpsCronValidationService | null>`)
+// and links just those identifiers, leaving the rest as plain text.
+function linkifySegments(
+  text: string,
+  types: Record<string, string>
+): TypeSegment[] {
+  const identifierRe = /[A-Za-z_$][\w$]*/g;
+  const segments: TypeSegment[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = identifierRe.exec(text))) {
+    const identifier = match[0];
+    if (identifier in types) {
+      if (match.index > lastIndex) {
+        segments.push({ text: text.slice(lastIndex, match.index) });
+      }
+      segments.push({
+        text: identifier,
+        route: `/${types[identifier]}/api`,
+        fragment: identifier
+      });
+      lastIndex = identifierRe.lastIndex;
+    }
+  }
+  if (lastIndex < text.length) {
+    segments.push({ text: text.slice(lastIndex) });
+  }
+  return segments.length > 0 ? segments : [{ text }];
+}
+
 @Pipe({ name: 'detectType', pure: true })
 export class DetectTypePipe implements PipeTransform {
   public transform(value: string, types: Record<string, string>): TypeGroup[] {
@@ -39,35 +71,7 @@ export class DetectTypePipe implements PipeTransform {
     const groups: TypeGroup[] = splitTopLevelUnion(base).map((part, i) => {
       const typeName = part.trim();
       const hasSeparator = i > 0;
-      if (typeName in types) {
-        return {
-          hasSeparator,
-          segments: [
-            {
-              text: typeName,
-              route: `/${types[typeName]}/api`,
-              fragment: typeName
-            }
-          ]
-        };
-      }
-      const genericMatch = typeName.match(/^([^<]+<)([\w$]+)(>.*)$/);
-      if (genericMatch && genericMatch[2] in types) {
-        const innerType = genericMatch[2];
-        return {
-          hasSeparator,
-          segments: [
-            { text: genericMatch[1] },
-            {
-              text: innerType,
-              route: `/${types[innerType]}/api`,
-              fragment: innerType
-            },
-            { text: genericMatch[3] }
-          ]
-        };
-      }
-      return { hasSeparator, segments: [{ text: typeName }] };
+      return { hasSeparator, segments: linkifySegments(typeName, types) };
     });
 
     if (isArray && groups.length > 0) {

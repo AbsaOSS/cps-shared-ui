@@ -7,6 +7,27 @@ const outputPath = path.resolve(
   'projects/composition/src/app/api-data/'
 );
 
+// Services aren't always documented on their own dedicated page — some are
+// only ever embedded into a different component's page via the `[services]`
+// input (e.g. CpsCronValidationService is only ever shown on /scheduler/api).
+// Linking to `/<service-name>/api` in that case would 404, so only treat a
+// service name as linkable if a matching top-level route actually exists.
+const getKnownRoutes = () => {
+  const routingFile = path.resolve(
+    rootDir,
+    'projects/composition/src/app/app-routing.module.ts'
+  );
+  try {
+    const content = fs.readFileSync(routingFile, 'utf8');
+    return new Set(
+      [...content.matchAll(/pathMatcher\(\s*'([^']+)'\s*\)/g)].map((m) => m[1])
+    );
+  } catch (_) {
+    return new Set();
+  }
+};
+const knownRoutes = getKnownRoutes();
+
 const staticMessages = {
   methods: "Defines methods that can be accessed by the component's reference.",
   emits:
@@ -18,7 +39,8 @@ const staticMessages = {
   props: 'Defines the input properties of the component.',
   service: 'Defines the service used by the component.',
   enums: 'Defines enums used by the component or service.',
-  classes: 'Defines classes exposed by the component or service.'
+  classes: 'Defines classes exposed by the component or service.',
+  tokens: 'Injection tokens exposed by the component or service.'
 };
 
 async function main() {
@@ -191,6 +213,7 @@ async function main() {
                     comment &&
                     comment.summary.map((s) => s.text || '').join(' ')
                 };
+                typesMap[componentName] = name.replace('cps-', '');
 
                 const component_props_group = component.groups.find(
                   (g) => g.title === 'Props'
@@ -469,6 +492,10 @@ async function main() {
                     service.comment &&
                     service.comment.summary.map((s) => s.text || '').join(' ')
                 };
+                const serviceSlug = name.replace('cps-', '');
+                if (knownRoutes.has(serviceSlug)) {
+                  typesMap[service.name] = serviceSlug;
+                }
                 const service_methods_group = service.groups.find(
                   (g) => g.title === 'Method'
                 );
@@ -510,7 +537,7 @@ async function main() {
 
             if (isProcessable(module_tokens_group)) {
               const tokens = {
-                description: 'Injection tokens exposed by the service.',
+                description: staticMessages.tokens,
                 values: []
               };
 

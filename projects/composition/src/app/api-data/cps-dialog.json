@@ -49,6 +49,16 @@
             }
         ]
     },
+    "tokens": {
+        "description": "Injection tokens exposed by the component or service.",
+        "values": [
+            {
+                "name": "CPS_DIALOG_CONFIG",
+                "type": "InjectionToken<CpsDialogConfig<any>>",
+                "description": "Injection token used to provide/inject a  CpsDialogConfig  value.\n\nThere is no default — it is provided per-dialog-instance by\n `CpsDialogService` , so it should only be injected from within a\ndialog's component tree."
+            }
+        ]
+    },
     "interfaces": {
         "description": "Defines the custom interfaces used by the component or service.",
         "values": [

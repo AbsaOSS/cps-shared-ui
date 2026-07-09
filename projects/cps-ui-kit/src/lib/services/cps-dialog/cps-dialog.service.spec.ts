@@ -126,24 +126,24 @@ describe('CpsDialogService', () => {
 
   describe('open()', () => {
     it('should return a CpsDialogRef', () => {
-      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref = service.open(TestContentComponent, {});
       expect(ref).toBeInstanceOf(CpsDialogRef);
     });
 
     it('should add the ref to openDialogs', () => {
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       expect(service.openDialogs).toHaveLength(1);
     });
 
     it('should set childComponentType on the dialog instance', () => {
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       expect(lastCreatedMockRef.instance.childComponentType).toBe(
         TestContentComponent
       );
     });
 
     it('should call ApplicationRef.attachView with the component host view', () => {
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       expect(appRef.attachView).toHaveBeenCalledWith(
         lastCreatedMockRef.hostView
       );
@@ -151,18 +151,18 @@ describe('CpsDialogService', () => {
 
     it('should append a DOM element to document.body', () => {
       const beforeCount = document.body.children.length;
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       expect(document.body.children.length).toBe(beforeCount + 1);
     });
 
     it('should store the component ref in dialogComponentRefMap', () => {
-      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref = service.open(TestContentComponent, {});
       expect(service.dialogComponentRefMap.get(ref)).toBe(lastCreatedMockRef);
     });
 
     it('should open multiple dialogs independently', () => {
-      service.open(TestContentComponent, new CpsDialogConfig());
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
+      service.open(TestContentComponent, {});
       expect(service.openDialogs).toHaveLength(2);
     });
 
@@ -171,99 +171,99 @@ describe('CpsDialogService', () => {
         CpsDialogRef.prototype,
         '_setContainerInstance'
       );
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       expect(spySet).toHaveBeenCalledWith(lastCreatedMockRef.instance);
     });
   });
 
   describe('openConfirmationDialog()', () => {
     it('should return a CpsDialogRef', () => {
-      const ref = service.openConfirmationDialog(new CpsDialogConfig());
+      const ref = service.openConfirmationDialog({});
       expect(ref).toBeInstanceOf(CpsDialogRef);
     });
 
     it('should set default headerTitle when not provided', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       service.openConfirmationDialog(config);
       expect(config.headerTitle).toBe('Confirm the action');
     });
 
     it('should not override headerTitle when already set', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       config.headerTitle = 'Custom Title';
       service.openConfirmationDialog(config);
       expect(config.headerTitle).toBe('Custom Title');
     });
 
     it('should set default headerIcon to "warning"', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       service.openConfirmationDialog(config);
       expect(config.headerIcon).toBe('warning');
     });
 
     it('should not override headerIcon when already set', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       config.headerIcon = 'info';
       service.openConfirmationDialog(config);
       expect(config.headerIcon).toBe('info');
     });
 
     it('should set default headerIconColor to "calm"', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       service.openConfirmationDialog(config);
       expect(config.headerIconColor).toBe('calm');
     });
 
     it('should not override headerIconColor when already set', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       config.headerIconColor = 'warn';
       service.openConfirmationDialog(config);
       expect(config.headerIconColor).toBe('warn');
     });
 
     it('should set default minWidth to "25rem"', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       service.openConfirmationDialog(config);
       expect(config.minWidth).toBe('25rem');
     });
 
     it('should not override minWidth when already set', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       config.minWidth = '30rem';
       service.openConfirmationDialog(config);
       expect(config.minWidth).toBe('30rem');
     });
 
     it('should set default maxWidth to "37.5rem"', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       service.openConfirmationDialog(config);
       expect(config.maxWidth).toBe('37.5rem');
     });
 
     it('should not override maxWidth when already set', () => {
-      const config = new CpsDialogConfig();
+      const config: CpsDialogConfig = {};
       config.maxWidth = '50rem';
       service.openConfirmationDialog(config);
       expect(config.maxWidth).toBe('50rem');
     });
 
     it('should set childComponentType to CpsConfirmationComponent', () => {
-      service.openConfirmationDialog(new CpsDialogConfig());
+      service.openConfirmationDialog({});
       expect(lastCreatedMockRef.instance.childComponentType).toBe(
         CpsConfirmationComponent
       );
     });
 
     it('should add the ref to openDialogs', () => {
-      service.openConfirmationDialog(new CpsDialogConfig());
+      service.openConfirmationDialog({});
       expect(service.openDialogs).toHaveLength(1);
     });
   });
 
   describe('closeAll()', () => {
     it('should call close() on each open dialog', () => {
-      const ref1 = service.open(TestContentComponent, new CpsDialogConfig());
-      const ref2 = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref1 = service.open(TestContentComponent, {});
+      const ref2 = service.open(TestContentComponent, {});
       const closeSpy1 = jest.spyOn(ref1, 'close');
       const closeSpy2 = jest.spyOn(ref2, 'close');
       service.closeAll();
@@ -273,8 +273,8 @@ describe('CpsDialogService', () => {
 
     it('should call close() in reverse order', () => {
       const order: number[] = [];
-      const ref1 = service.open(TestContentComponent, new CpsDialogConfig());
-      const ref2 = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref1 = service.open(TestContentComponent, {});
+      const ref2 = service.open(TestContentComponent, {});
       jest.spyOn(ref1, 'close').mockImplementation(() => order.push(1));
       jest.spyOn(ref2, 'close').mockImplementation(() => order.push(2));
       service.closeAll();
@@ -282,8 +282,8 @@ describe('CpsDialogService', () => {
     });
 
     it('should call destroy() instead of close() when force is true', () => {
-      const ref1 = service.open(TestContentComponent, new CpsDialogConfig());
-      const ref2 = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref1 = service.open(TestContentComponent, {});
+      const ref2 = service.open(TestContentComponent, {});
       const destroySpy1 = jest
         .spyOn(ref1, 'destroy')
         .mockImplementation(jest.fn());
@@ -306,28 +306,28 @@ describe('CpsDialogService', () => {
 
   describe('dialog cleanup on destroy signal', () => {
     it('should remove ref from openDialogs when onDestroy fires', () => {
-      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref = service.open(TestContentComponent, {});
       expect(service.openDialogs).toHaveLength(1);
       ref.destroy();
       expect(service.openDialogs).toHaveLength(0);
     });
 
     it('should remove entry from dialogComponentRefMap when onDestroy fires', () => {
-      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref = service.open(TestContentComponent, {});
       expect(service.dialogComponentRefMap.has(ref)).toBe(true);
       ref.destroy();
       expect(service.dialogComponentRefMap.has(ref)).toBe(false);
     });
 
     it('should call detachView on ApplicationRef when onDestroy fires', () => {
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       const capturedRef = lastCreatedMockRef;
       service.openDialogs[0].destroy();
       expect(appRef.detachView).toHaveBeenCalledWith(capturedRef.hostView);
     });
 
     it('should call destroy on the component ref when onDestroy fires', () => {
-      service.open(TestContentComponent, new CpsDialogConfig());
+      service.open(TestContentComponent, {});
       const capturedRef = lastCreatedMockRef;
       service.openDialogs[0].destroy();
       expect(capturedRef.destroy).toHaveBeenCalled();
@@ -339,8 +339,8 @@ describe('CpsDialogService', () => {
     });
 
     it('should only remove the destroyed ref from openDialogs', () => {
-      const ref1 = service.open(TestContentComponent, new CpsDialogConfig());
-      service.open(TestContentComponent, new CpsDialogConfig());
+      const ref1 = service.open(TestContentComponent, {});
+      service.open(TestContentComponent, {});
       ref1.destroy();
       expect(service.openDialogs).toHaveLength(1);
     });
@@ -348,7 +348,7 @@ describe('CpsDialogService', () => {
 
   describe('onClose subscription', () => {
     it('should call close() on the dialog component instance when dialogRef.close() is called', () => {
-      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref = service.open(TestContentComponent, {});
       const capturedRef = lastCreatedMockRef;
       ref.close();
       expect(capturedRef.instance.close).toHaveBeenCalled();
@@ -357,8 +357,8 @@ describe('CpsDialogService', () => {
 
   describe('ngOnDestroy()', () => {
     it('should destroy all dialogs at this level', () => {
-      const ref1 = service.open(TestContentComponent, new CpsDialogConfig());
-      const ref2 = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref1 = service.open(TestContentComponent, {});
+      const ref2 = service.open(TestContentComponent, {});
       const destroySpy1 = jest
         .spyOn(ref1, 'destroy')
         .mockImplementation(jest.fn());
@@ -372,8 +372,8 @@ describe('CpsDialogService', () => {
 
     it('should destroy dialogs in reverse order', () => {
       const order: number[] = [];
-      const ref1 = service.open(TestContentComponent, new CpsDialogConfig());
-      const ref2 = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref1 = service.open(TestContentComponent, {});
+      const ref2 = service.open(TestContentComponent, {});
       jest.spyOn(ref1, 'destroy').mockImplementation(() => order.push(1));
       jest.spyOn(ref2, 'destroy').mockImplementation(() => order.push(2));
       service.ngOnDestroy();

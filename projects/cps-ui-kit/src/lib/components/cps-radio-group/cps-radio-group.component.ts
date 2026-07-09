@@ -34,6 +34,11 @@ export type CpsRadioOption = {
   tooltip?: string;
 };
 
+/**
+ * Injection token used by child radio buttons to look up their parent
+ * `CpsRadioGroupComponent`.
+ * @group Tokens
+ */
 export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   'CpsRadioGroupComponent'
 );

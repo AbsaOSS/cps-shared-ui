@@ -16,6 +16,7 @@ import { convertSize } from '../../utils/internal/size-utils';
 
 /**
  * Injection token that is used to provide the path to the icons.
+ * @group Tokens
  */
 export const ICONS_PATH = new InjectionToken<string>(
   'Icons path for CpsIconComponent'

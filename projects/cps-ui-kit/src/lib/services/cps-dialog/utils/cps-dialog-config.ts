@@ -1,3 +1,4 @@
+import { InjectionToken } from '@angular/core';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
@@ -12,7 +13,7 @@ export type CpsDialogAutoFocusTarget = 'dialog' | 'first-tabbable';
  * Configuration for the dialog service.
  * @group Interface
  */
-export class CpsDialogConfig<T = any> {
+export interface CpsDialogConfig<T = any> {
   /**
    * An object to pass to the component loaded inside the Dialog.
    */
@@ -190,3 +191,24 @@ export class CpsDialogConfig<T = any> {
     | 'bottom-left'
     | 'bottom-right';
 }
+
+/**
+ * Injection token used to provide/inject a {@link CpsDialogConfig} value.
+ *
+ * There is no default — it is provided per-dialog-instance by
+ * `CpsDialogService`, so it should only be injected from within a
+ * dialog's component tree.
+ *
+ * @example
+ * ```typescript
+ * providers: [{ provide: CPS_DIALOG_CONFIG, useValue: myConfig }]
+ * ```
+ * ```typescript
+ * constructor(@Inject(CPS_DIALOG_CONFIG) private config: CpsDialogConfig) {}
+ * ```
+ *
+ * @group Tokens
+ */
+export const CPS_DIALOG_CONFIG = new InjectionToken<CpsDialogConfig>(
+  'CPS_DIALOG_CONFIG'
+);
