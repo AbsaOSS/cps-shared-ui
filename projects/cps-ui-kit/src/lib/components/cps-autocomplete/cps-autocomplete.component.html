@@ -329,7 +329,7 @@
     aria-haspopup="listbox"
     [attr.aria-busy]="loading || validating ? true : null"
     [attr.aria-invalid]="error || externalError ? 'true' : null"
-    [attr.aria-controls]="optionsListId"
+    [attr.aria-controls]="isOpened ? optionsListId : null"
     [attr.aria-activedescendant]="activeDescendantId"
     [attr.aria-expanded]="isOpened"
     [attr.aria-required]="isRequired || null"

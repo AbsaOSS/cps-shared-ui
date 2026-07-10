@@ -4,6 +4,7 @@
   margin-bottom: 1.5rem;
 
   &__label {
+    font-size: 1.125rem;
     font-weight: 600;
     margin: 0 0 0.5rem;
     color: var(--cps-text-primary);
@@ -59,7 +60,11 @@
     border-radius: 0 0 0.4375rem 0.4375rem;
 
     &:focus-visible {
-      @include focus-ring();
+      outline: none;
+      box-shadow:
+        inset 0 0 0 0.0625rem var(--cps-color-calm),
+        inset 0 0 0 0.125rem var(--cps-background-color),
+        inset 0 0 0 0.1875rem var(--cps-color-calm-highlighten);
     }
   }
 

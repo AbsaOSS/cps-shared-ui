@@ -25,6 +25,8 @@ test.describe('cps-table page', () => {
       const downloadedContent = fs.readFileSync(downloadedPath!);
       const fixturePath = path.join(
         __dirname,
+        '..',
+        '..',
         'fixtures',
         'table_6_fixture.xlsx'
       );

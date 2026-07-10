@@ -13,7 +13,8 @@ import {
   CpsButtonToggleOption,
   CpsTreeTableSize,
   CpsMenuItem,
-  CpsTreeTableColumnResizableDirective
+  CpsTreeTableColumnResizableDirective,
+  CpsIconComponent
 } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-tree-table.json';
@@ -34,6 +35,7 @@ import { DatePipe } from '@angular/common';
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent,
+    CpsIconComponent,
     ComponentDocsViewerComponent
   ],
   templateUrl: './tree-table-page.component.html',
