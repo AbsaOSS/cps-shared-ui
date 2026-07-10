@@ -112,6 +112,7 @@ $animation-duration: 150ms;
 .cps-dialog {
   .cps-dialog-header {
     overflow: hidden;
+    box-sizing: border-box;
     border-bottom: 0 none;
     background: #ffffff;
     color: var(--cps-color-text-dark);
