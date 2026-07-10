@@ -92,7 +92,7 @@ export class CpsDatepickerComponent
    * Date format for displaying and parsing the date string.
    * @group Props
    */
-  @Input() dateFormat: CpsDatepickerDateFormat = 'MM/DD/YYYY';
+  @Input() dateFormat: CpsDatepickerDateFormat = 'DD/MM/YYYY';
 
   /**
    * Placeholder text. Defaults to the configured dateFormat.
