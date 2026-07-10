@@ -23,7 +23,7 @@ import {
   Output,
   PLATFORM_ID,
   Renderer2,
-  SimpleChanges,
+  type SimpleChanges,
   ViewChild,
   ViewEncapsulation,
   ViewRef,
@@ -40,7 +40,7 @@ import { CPS_FOCUS_SERVICE } from '../../services/cps-focus/cps-focus.service';
 import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
-} from '../../utils/internal/motion-utils';
+} from '../../utils/internal/motion-utils/motion-utils';
 
 type Nullable<T = void> = T | null | undefined;
 type VoidListener = () => void | null | undefined;

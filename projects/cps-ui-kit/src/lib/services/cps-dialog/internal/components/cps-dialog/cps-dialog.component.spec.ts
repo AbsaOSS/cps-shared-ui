@@ -10,7 +10,7 @@ import { PrimeNG } from 'primeng/config';
 import { DomHandler } from 'primeng/dom';
 import { CpsDialogComponent } from './cps-dialog.component';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
-import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
 @Component({ template: '' })

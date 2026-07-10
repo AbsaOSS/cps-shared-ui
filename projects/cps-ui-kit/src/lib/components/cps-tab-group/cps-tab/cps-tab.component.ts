@@ -8,7 +8,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { logMissingAriaLabelError } from '../../../utils/internal/accessibility-utils';
+import { logMissingAriaLabelError } from '../../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsTabComponent is a tab within a tab-group.

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CombineLabelsPipe } from '../../pipes/internal/combine-labels.pipe';
+import { CombineLabelsPipe } from '../../pipes/internal/combine-labels/combine-labels.pipe';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsTreeSelectComponent } from './cps-tree-select.component';
 

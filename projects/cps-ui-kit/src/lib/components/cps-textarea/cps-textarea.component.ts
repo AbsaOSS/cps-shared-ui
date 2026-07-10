@@ -20,7 +20,10 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { convertSize, parseSize } from '../../utils/internal/size-utils';
+import {
+  convertSize,
+  parseSize
+} from '../../utils/internal/size-utils/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
@@ -28,7 +31,7 @@ import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cp
 import {
   generateUniqueId,
   logMissingAriaLabelError
-} from '../../utils/internal/accessibility-utils';
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 const RESIZE_STEP_REM = 1.5;
 
