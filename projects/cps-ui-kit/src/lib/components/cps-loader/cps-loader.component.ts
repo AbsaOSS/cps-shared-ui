@@ -9,8 +9,8 @@ import {
   OnInit,
   type SimpleChanges
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 /**

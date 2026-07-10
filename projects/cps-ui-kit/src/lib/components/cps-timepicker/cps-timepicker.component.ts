@@ -24,7 +24,7 @@ import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.compo
 import {
   generateUniqueId,
   logMissingAriaLabelError
-} from '../../utils/internal/accessibility-utils';
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsTime is used to define the time format.

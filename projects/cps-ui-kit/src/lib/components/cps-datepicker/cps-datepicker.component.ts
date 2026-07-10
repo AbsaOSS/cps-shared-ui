@@ -15,7 +15,7 @@ import {
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
-import { convertSize } from '../../utils/internal/size-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import {
   CpsMenuComponent,
@@ -25,7 +25,7 @@ import { DatePicker, DatePickerModule } from 'primeng/datepicker';
 import {
   logMissingAriaLabelError,
   generateUniqueId
-} from '../../utils/internal/accessibility-utils';
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsDatepickerAppearanceType is used to define the border of the datepicker input.

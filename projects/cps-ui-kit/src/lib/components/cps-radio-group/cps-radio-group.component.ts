@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 import {
   generateUniqueId,
   logMissingAriaLabelError
-} from '../../utils/internal/accessibility-utils';
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsRadioOption is used to define the options of the CpsRadioGroupComponent.

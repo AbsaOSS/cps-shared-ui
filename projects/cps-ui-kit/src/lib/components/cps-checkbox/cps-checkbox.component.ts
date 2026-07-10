@@ -16,8 +16,8 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
-import { getCSSColor } from '../../utils/colors-utils';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsCheckboxComponent is a checkbox element.

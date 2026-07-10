@@ -8,7 +8,7 @@ import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { CpsDialogService } from './cps-dialog.service';
 import { CpsDialogConfig } from './utils/cps-dialog-config';
-import { CpsDialogRef } from './utils/cps-dialog-ref';
+import { CpsDialogRef } from './utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsConfirmationComponent } from './internal/components/cps-confirmation/cps-confirmation.component';
 
 @Component({ template: '' })
