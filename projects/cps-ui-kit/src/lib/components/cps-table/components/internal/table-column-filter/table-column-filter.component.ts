@@ -12,9 +12,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FilterMetadata, FilterOperator, SelectItem } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { TreeTable } from 'primeng/treetable';
+import {
+  FilterMetadata,
+  FilterOperator,
+  SelectItem
+} from '../../../../../primeng-temp/api/public_api';
+import { Table } from '../../../../../primeng-temp/table/public_api';
+import { TreeTable } from '../../../../../primeng-temp/treetable/public_api';
 import {
   CpsColumnFilterCategoryOption,
   CpsColumnFilterMatchMode,

@@ -27,7 +27,8 @@ module.exports = {
     '!projects/**/node_modules/**',
     '!projects/**/*.spec.ts',
     '!projects/**/testing/**',
-    '!projects/**/public-api.ts'
+    '!projects/**/public-api.ts',
+    '!projects/cps-ui-kit/src/lib/primeng-temp/**'
   ],
   coverageThreshold: {
     global: {

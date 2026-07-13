@@ -1,7 +1,7 @@
 import { Directive, Host, Self, Optional } from '@angular/core';
-import { SortMeta } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { ObjectUtils } from 'primeng/utils';
+import { SortMeta } from '../../../../../primeng-temp/api/public_api';
+import { Table } from '../../../../../primeng-temp/table/public_api';
+import { ObjectUtils } from '../../../../../primeng-temp/utils/public_api';
 
 @Directive({
   selector: '[tWithUnsort]',

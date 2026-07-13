@@ -1,0 +1,23 @@
+// @ts-nocheck -- vendored third-party source, see provenance note below.
+/**
+ * Vendored from PrimeNG 21.1.9 (https://github.com/primefaces/primeng, tag 21.1.9, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593).
+ * Original file: packages/primeng/src/icons/minus/minus.ts
+ * Modified: import paths rewritten to resolve locally; // @ts-nocheck added because this
+ * repository's TypeScript config is stricter than PrimeNG's own (strict, noImplicitOverride,
+ * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
+ * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
+ */
+import { Component } from '@angular/core';
+import { BaseIcon } from '../baseicon/public_api';
+
+@Component({
+    selector: '[data-p-icon="minus"]',
+    standalone: true,
+    template: `
+        <svg:path
+            d="M13.2222 7.77778H0.777778C0.571498 7.77778 0.373667 7.69584 0.227806 7.54998C0.0819442 7.40412 0 7.20629 0 7.00001C0 6.79373 0.0819442 6.5959 0.227806 6.45003C0.373667 6.30417 0.571498 6.22223 0.777778 6.22223H13.2222C13.4285 6.22223 13.6263 6.30417 13.7722 6.45003C13.9181 6.5959 14 6.79373 14 7.00001C14 7.20629 13.9181 7.40412 13.7722 7.54998C13.6263 7.69584 13.4285 7.77778 13.2222 7.77778Z"
+            fill="currentColor"
+        />
+    `
+})
+export class MinusIcon extends BaseIcon {}

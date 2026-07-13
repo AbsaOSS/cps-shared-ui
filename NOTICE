@@ -1,0 +1,7 @@
+This project includes vendored source code from PrimeNG
+(https://github.com/primefaces/primeng), version 21.1.9, licensed under the
+MIT License, Copyright (c) 2016-2026 PrimeTek.
+
+See projects/cps-ui-kit/src/lib/primeng-temp/NOTICE.md for the full license
+text, the list of modifications made to the vendored code, and per-file
+provenance.

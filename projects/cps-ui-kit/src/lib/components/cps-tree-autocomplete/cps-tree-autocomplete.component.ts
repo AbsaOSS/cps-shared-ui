@@ -13,8 +13,8 @@ import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { isEqual } from 'lodash-es';
-import { TreeModule } from 'primeng/tree';
-import { TreeNode } from 'primeng/api';
+import { TreeModule } from '../../primeng-temp/tree/public_api';
+import { TreeNode } from '../../primeng-temp/api/public_api';
 import {
   CpsMenuComponent,
   CpsMenuHideReason

@@ -12,7 +12,10 @@ import {
   type SimpleChanges
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Paginator, PaginatorModule } from 'primeng/paginator';
+import {
+  Paginator,
+  PaginatorModule
+} from '../../primeng-temp/paginator/public_api';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { FormsModule } from '@angular/forms';

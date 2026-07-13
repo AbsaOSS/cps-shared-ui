@@ -190,3 +190,7 @@ The summary variants display:
 - Top 10 components with the most issues
 
 Both `test:pa11y` and `test:pa11y:ci` fail (non-zero exit code) if any accessibility error is found on any page.
+
+#### Third-party notices
+
+`cps-ui-kit` vendors source code from [PrimeNG](https://github.com/primefaces/primeng) (MIT License) rather than depending on it as an npm package. See [NOTICE](./NOTICE) for details.

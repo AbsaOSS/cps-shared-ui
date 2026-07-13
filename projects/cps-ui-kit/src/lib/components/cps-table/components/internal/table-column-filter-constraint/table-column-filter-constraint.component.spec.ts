@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilterMetadata } from 'primeng/api';
-import { Table } from 'primeng/table';
+import { FilterMetadata } from '../../../../../primeng-temp/api/public_api';
+import { Table } from '../../../../../primeng-temp/table/public_api';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint.component';
 import { CpsColumnFilterCategoryOption } from '../../../cps-column-filter-types';
 
