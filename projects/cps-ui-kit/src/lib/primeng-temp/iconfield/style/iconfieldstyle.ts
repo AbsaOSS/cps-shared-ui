@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { Injectable } from '@angular/core';
-import { style } from '@primeuix/styles/iconfield';
+import { style } from '../../../primeuix-temp/styles/src/iconfield/index';
 import { BaseStyle } from '../../base/public_api';
 
 const classes = {

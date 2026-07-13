@@ -17,7 +17,7 @@ import type { InputTextPassThrough } from '../inputtext/public_api';
 import type { SelectPassThrough } from '../select/public_api';
 import type { InputNumberPassThrough } from '../inputnumber/public_api';
 import type { DatePickerPassThrough } from '../datepicker/public_api';
-import type { MotionOptions } from '@primeuix/motion';
+import type { MotionOptions } from '../../../primeuix-temp/motion/src/index';
 
 /**
  * Custom pass-through(pt) options for ColumnFilter.

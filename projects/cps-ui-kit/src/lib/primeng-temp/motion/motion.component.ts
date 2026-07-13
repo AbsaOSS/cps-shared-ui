@@ -9,8 +9,8 @@
  */
 import { CommonModule } from '@angular/common';
 import { afterRenderEffect, Component, computed, effect, inject, InjectionToken, input, output, signal, untracked } from '@angular/core';
-import { type ClassNameOptions, createMotion, resolveDuration, type MotionEvent, type MotionInstance, type MotionOptions, type MotionPhase } from '@primeuix/motion';
-import { nextFrame } from '@primeuix/utils';
+import { type ClassNameOptions, createMotion, resolveDuration, type MotionEvent, type MotionInstance, type MotionOptions, type MotionPhase } from '../../primeuix-temp/motion/src/index';
+import { nextFrame } from '../../primeuix-temp/utils/src/index';
 import { BaseComponent, PARENT_INSTANCE } from '../basecomponent/public_api';
 import { Bind, BindModule } from '../bind/public_api';
 import type { MotionPassThrough } from '../types/motion/public_api';

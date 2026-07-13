@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { Component } from '@angular/core';
-import { uuid } from '@primeuix/utils';
+import { uuid } from '../../../primeuix-temp/utils/src/index';
 import { BaseIcon } from '../baseicon/public_api';
 
 @Component({

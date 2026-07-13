@@ -9,7 +9,7 @@
  */
 import { DOCUMENT } from '@angular/common';
 import { effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { Theme, ThemeService } from '@primeuix/styled';
+import { Theme, ThemeService } from '../../primeuix-temp/styled/src/index';
 import { BaseStyle } from '../base/public_api';
 import type { ThemeConfigType } from './primeng.types';
 

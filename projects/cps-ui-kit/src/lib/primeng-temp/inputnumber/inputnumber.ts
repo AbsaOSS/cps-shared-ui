@@ -31,7 +31,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
-import { getSelection } from '@primeuix/utils';
+import { getSelection } from '../../primeuix-temp/utils/src/index';
 import { PrimeTemplate, SharedModule } from '../api/public_api';
 import { AutoFocus } from '../autofocus/public_api';
 import { PARENT_INSTANCE } from '../basecomponent/public_api';

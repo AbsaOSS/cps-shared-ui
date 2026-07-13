@@ -38,8 +38,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MotionEvent, MotionOptions } from '@primeuix/motion';
-import { absolutePosition, addStyle, appendChild, find, findSingle, getAttribute, isClickable, setAttribute } from '@primeuix/utils';
+import { MotionEvent, MotionOptions } from '../../primeuix-temp/motion/src/index';
+import { absolutePosition, addStyle, appendChild, find, findSingle, getAttribute, isClickable, setAttribute } from '../../primeuix-temp/utils/src/index';
 import { BlockableUI, FilterMatchMode, FilterMetadata, FilterOperator, FilterService, LazyLoadMeta, OverlayService, PrimeTemplate, ScrollerOptions, SelectItem, SharedModule, SortMeta, TableState, TranslationKeys } from '../api/public_api';
 import { BadgeModule } from '../badge/public_api';
 import { BaseComponent, PARENT_INSTANCE } from '../basecomponent/public_api';

@@ -7,7 +7,7 @@
  * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
-import { MotionOptions } from '@primeuix/motion';
+import { MotionOptions } from '../../primeuix-temp/motion/src/index';
 
 /**
  * Represents the type of overlay mode, which can be 'modal', 'overlay', or undefined.

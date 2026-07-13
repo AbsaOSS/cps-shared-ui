@@ -8,9 +8,9 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { inject, Injectable } from '@angular/core';
-import { css as Css, dt, Theme } from '@primeuix/styled';
-import { style as base_style } from '@primeuix/styles/base';
-import { minifyCSS, resolve } from '@primeuix/utils';
+import { css as Css, dt, Theme } from '../../../primeuix-temp/styled/src/index';
+import { style as base_style } from '../../../primeuix-temp/styles/src/base/index';
+import { minifyCSS, resolve } from '../../../primeuix-temp/utils/src/index';
 import { UseStyle } from '../../usestyle/public_api';
 
 const css = /*css*/ `

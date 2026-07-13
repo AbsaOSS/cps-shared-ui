@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { Injectable } from '@angular/core';
-import { style as datepicker_style } from '@primeuix/styles/datepicker';
+import { style as datepicker_style } from '../../../primeuix-temp/styles/src/datepicker/index';
 import { BaseStyle } from '../../base/public_api';
 
 const style = /*css*/ `

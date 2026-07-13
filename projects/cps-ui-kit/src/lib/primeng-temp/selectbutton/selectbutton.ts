@@ -30,7 +30,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { equals, resolveFieldData } from '@primeuix/utils';
+import { equals, resolveFieldData } from '../../primeuix-temp/utils/src/index';
 import { PrimeTemplate, SharedModule } from '../api/public_api';
 import { PARENT_INSTANCE } from '../basecomponent/public_api';
 import { BaseEditableHolder } from '../baseeditableholder/public_api';

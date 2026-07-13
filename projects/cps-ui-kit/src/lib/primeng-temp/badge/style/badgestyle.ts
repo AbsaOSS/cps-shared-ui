@@ -8,8 +8,8 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { Injectable } from '@angular/core';
-import { style as badge_style } from '@primeuix/styles/badge';
-import { isEmpty, isNotEmpty } from '@primeuix/utils';
+import { style as badge_style } from '../../../primeuix-temp/styles/src/badge/index';
+import { isEmpty, isNotEmpty } from '../../../primeuix-temp/utils/src/index';
 import { BaseStyle } from '../../base/public_api';
 
 const style = /*css*/ `

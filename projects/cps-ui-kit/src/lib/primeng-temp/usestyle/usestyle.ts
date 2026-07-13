@@ -9,7 +9,7 @@
  */
 import { DOCUMENT } from '@angular/common';
 import { Injectable, inject } from '@angular/core';
-import { setAttribute, setAttributes } from '@primeuix/utils';
+import { setAttribute, setAttributes } from '../../primeuix-temp/utils/src/index';
 
 let _id = 0;
 

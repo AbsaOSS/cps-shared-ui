@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { computed, Directive, signal } from '@angular/core';
-import { isNotEmpty } from '@primeuix/utils';
+import { isNotEmpty } from '../../primeuix-temp/utils/src/index';
 import { BaseComponent } from '../basecomponent/public_api';
 
 @Directive({ standalone: true })

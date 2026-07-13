@@ -7,7 +7,7 @@
  * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
-import { getCSSVariableByRegex } from '@primeuix/utils';
+import { getCSSVariableByRegex } from '../../primeuix-temp/utils/src/index';
 /**
  * @dynamic is for runtime initializing DomHandler.browser
  *
@@ -862,8 +862,8 @@ export class DomHandler {
     }
 }
 
-import { $dt } from '@primeuix/styled';
-import * as utils from '@primeuix/utils';
+import { $dt } from '../../primeuix-temp/styled/src/index';
+import * as utils from '../../primeuix-temp/utils/src/index';
 
 // @todo: update this when we remove the old domhandler
 export function blockBodyScroll() {

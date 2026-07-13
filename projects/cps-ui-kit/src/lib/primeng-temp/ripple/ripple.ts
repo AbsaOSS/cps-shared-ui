@@ -9,7 +9,7 @@
  */
 import { isPlatformBrowser } from '@angular/common';
 import { Directive, effect, inject, NgModule, NgZone } from '@angular/core';
-import { addClass, getHeight, getOffset, getOuterHeight, getOuterWidth, getWidth, removeClass, remove as utils_remove } from '@primeuix/utils';
+import { addClass, getHeight, getOffset, getOuterHeight, getOuterWidth, getWidth, removeClass, remove as utils_remove } from '../../primeuix-temp/utils/src/index';
 import { BaseComponent } from '../basecomponent/public_api';
 import { VoidListener } from '../ts-helpers/public_api';
 import { RippleStyle } from './style/ripplestyle';

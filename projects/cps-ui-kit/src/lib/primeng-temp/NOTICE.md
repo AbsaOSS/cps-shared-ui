@@ -110,3 +110,8 @@ unmodified from PrimeNG 21.1.9.
 
 Every vendored file also carries a short header comment identifying its original path
 and pointing back to this notice.
+
+This code in turn depends on `@primeuix/utils`, `@primeuix/styled`, and
+`@primeuix/motion` (design-token/styling and motion helpers from the same PrimeTek
+organization) — those are also vendored locally rather than kept as npm dependencies;
+see `../primeuix-temp/NOTICE.md`.

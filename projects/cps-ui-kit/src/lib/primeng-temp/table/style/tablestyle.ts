@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { Injectable } from '@angular/core';
-import { style as datatable_style } from '@primeuix/styles/datatable';
+import { style as datatable_style } from '../../../primeuix-temp/styles/src/datatable/index';
 import { BaseStyle } from '../../base/public_api';
 
 const style = /*css*/ `

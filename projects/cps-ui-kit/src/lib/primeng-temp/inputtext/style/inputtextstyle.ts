@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { Injectable } from '@angular/core';
-import { style as inputtext_style } from '@primeuix/styles/inputtext';
+import { style as inputtext_style } from '../../../primeuix-temp/styles/src/inputtext/index';
 import { BaseStyle } from '../../base/public_api';
 
 const style = /*css*/ `

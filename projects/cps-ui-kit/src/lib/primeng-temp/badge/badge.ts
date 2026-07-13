@@ -9,7 +9,7 @@
  */
 import { CommonModule } from '@angular/common';
 import { booleanAttribute, ChangeDetectionStrategy, Component, Directive, effect, inject, InjectionToken, Input, input, NgModule, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { addClass, createElement, hasClass, isNotEmpty, removeClass, uuid } from '@primeuix/utils';
+import { addClass, createElement, hasClass, isNotEmpty, removeClass, uuid } from '../../primeuix-temp/utils/src/index';
 import { SharedModule } from '../api/public_api';
 import { BaseComponent, PARENT_INSTANCE } from '../basecomponent/public_api';
 import { Bind, BindModule } from '../bind/public_api';

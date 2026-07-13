@@ -193,4 +193,4 @@ Both `test:pa11y` and `test:pa11y:ci` fail (non-zero exit code) if any accessibi
 
 #### Third-party notices
 
-`cps-ui-kit` vendors source code from [PrimeNG](https://github.com/primefaces/primeng) (MIT License) rather than depending on it as an npm package. See [NOTICE](./NOTICE) for details.
+`cps-ui-kit` vendors source code from [PrimeNG](https://github.com/primefaces/primeng) and [primeuix](https://github.com/primefaces/primeuix) (both MIT License) rather than depending on them as npm packages. See [NOTICE](./NOTICE) for details.

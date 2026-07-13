@@ -32,8 +32,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MotionEvent, MotionOptions } from '@primeuix/motion';
-import { absolutePosition, addClass, addStyle, appendChild, find, findSingle, getFocusableElements, getIndex, getOuterWidth, hasClass, isDate, isNotEmpty, isTouchDevice, relativePosition, setAttribute, uuid } from '@primeuix/utils';
+import { MotionEvent, MotionOptions } from '../../primeuix-temp/motion/src/index';
+import { absolutePosition, addClass, addStyle, appendChild, find, findSingle, getFocusableElements, getIndex, getOuterWidth, hasClass, isDate, isNotEmpty, isTouchDevice, relativePosition, setAttribute, uuid } from '../../primeuix-temp/utils/src/index';
 import { OverlayService, PrimeTemplate, SharedModule, TranslationKeys } from '../api/public_api';
 import { AutoFocus } from '../autofocus/public_api';
 import { PARENT_INSTANCE } from '../basecomponent/public_api';

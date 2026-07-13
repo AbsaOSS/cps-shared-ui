@@ -28,7 +28,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { findSingle, getHeight, getWidth, isTouchDevice, isVisible } from '@primeuix/utils';
+import { findSingle, getHeight, getWidth, isTouchDevice, isVisible } from '../../primeuix-temp/utils/src/index';
 import { PrimeTemplate, ScrollerOptions, SharedModule } from '../api/public_api';
 import { BaseComponent, PARENT_INSTANCE } from '../basecomponent/public_api';
 import { Bind } from '../bind/public_api';

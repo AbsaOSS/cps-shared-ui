@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { booleanAttribute, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
-import { cn } from '@primeuix/utils';
+import { cn } from '../../../primeuix-temp/utils/src/index';
 import { BaseComponent } from '../../basecomponent/public_api';
 import { BaseIconStyle } from './style/baseiconstyle';
 

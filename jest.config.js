@@ -28,7 +28,8 @@ module.exports = {
     '!projects/**/*.spec.ts',
     '!projects/**/testing/**',
     '!projects/**/public-api.ts',
-    '!projects/cps-ui-kit/src/lib/primeng-temp/**'
+    '!projects/cps-ui-kit/src/lib/primeng-temp/**',
+    '!projects/cps-ui-kit/src/lib/primeuix-temp/**'
   ],
   coverageThreshold: {
     global: {

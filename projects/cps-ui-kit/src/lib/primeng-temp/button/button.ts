@@ -30,7 +30,7 @@ import {
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
-import { addClass, createElement, findSingle, isEmpty } from '@primeuix/utils';
+import { addClass, createElement, findSingle, isEmpty } from '../../primeuix-temp/utils/src/index';
 import { PrimeTemplate, SharedModule } from '../api/public_api';
 import { AutoFocus } from '../autofocus/public_api';
 import { BadgeModule } from '../badge/public_api';

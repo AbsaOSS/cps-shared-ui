@@ -8,7 +8,7 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { TemplateRef } from '@angular/core';
-import type { MotionOptions } from '@primeuix/motion';
+import type { MotionOptions } from '../../../primeuix-temp/motion/src/index';
 import type { PassThrough, PassThroughOption } from '../../api/public_api';
 import type { ButtonPassThrough } from '../button/public_api';
 import type { InputTextPassThrough } from '../inputtext/public_api';
