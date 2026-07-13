@@ -400,13 +400,15 @@ describe('CpsBaseTreeDropdownComponent', () => {
       const elementViewChild = {
         nativeElement: { style: {} as Record<string, string> }
       };
+      const scrollerStyle = {} as Record<string, string>;
       (component as any).treeList = {
-        scroller: { style: {}, elementViewChild }
+        scroller: { style: scrollerStyle, elementViewChild }
       };
 
       (component as any)._setTreeListHeight('7.5rem');
 
       expect(elementViewChild.nativeElement.style.height).toBe('7.5rem');
+      expect(scrollerStyle.height).toBeUndefined();
     });
 
     it('recalcVirtualListHeight should apply the computed height to elementViewChild', () => {
@@ -428,7 +430,9 @@ describe('CpsBaseTreeDropdownComponent', () => {
 
       component.recalcVirtualListHeight();
 
-      expect(elementViewChild.nativeElement.style.height).toBe('7.5rem');
+      expect(elementViewChild.nativeElement.style.height).toBe(
+        `${component.virtualListHeightRem}rem`
+      );
     });
   });
 

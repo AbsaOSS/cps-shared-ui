@@ -804,7 +804,7 @@ export class CpsBaseTreeDropdownComponent
 
   private _setTreeListHeight(height: string) {
     const scrollerEl = this.treeList?.scroller?.elementViewChild?.nativeElement;
-    if (scrollerEl) {
+    if (scrollerEl?.style) {
       scrollerEl.style.height = height;
     }
   }
