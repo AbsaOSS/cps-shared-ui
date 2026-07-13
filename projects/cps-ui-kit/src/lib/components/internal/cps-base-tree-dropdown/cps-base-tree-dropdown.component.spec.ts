@@ -395,6 +395,47 @@ describe('CpsBaseTreeDropdownComponent', () => {
     });
   });
 
+  describe('Virtual scroll list height', () => {
+    it('should set the height on scroller.elementViewChild, not scroller.style', () => {
+      const elementViewChild = {
+        nativeElement: { style: {} as Record<string, string> }
+      };
+      const scrollerStyle = {} as Record<string, string>;
+      (component as any).treeList = {
+        scroller: { style: scrollerStyle, elementViewChild }
+      };
+
+      (component as any)._setTreeListHeight('7.5rem');
+
+      expect(elementViewChild.nativeElement.style.height).toBe('7.5rem');
+      expect(scrollerStyle.height).toBeUndefined();
+    });
+
+    it('recalcVirtualListHeight should apply the computed height to elementViewChild', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+
+      const elementViewChild = {
+        nativeElement: { style: {} as Record<string, string> }
+      };
+      (component as any).treeList = {
+        serializedValue: [{}, {}, {}],
+        scroller: {
+          style: {},
+          elementViewChild,
+          calculateOptions: jest.fn(),
+          cd: { detectChanges: jest.fn() }
+        }
+      };
+
+      component.recalcVirtualListHeight();
+
+      expect(elementViewChild.nativeElement.style.height).toBe(
+        `${component.virtualListHeightRem}rem`
+      );
+    });
+  });
+
   describe('Focus / Blur', () => {
     it('should emit focused on onFocus', () => {
       jest.spyOn(component.focused, 'emit');
