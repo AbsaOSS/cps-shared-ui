@@ -26,7 +26,7 @@
         ]
     },
     "tokens": {
-        "description": "Injection tokens exposed by the service.",
+        "description": "Injection tokens exposed by the component or service.",
         "values": [
             {
                 "name": "CPS_CRON_VALIDATION_SERVICE",

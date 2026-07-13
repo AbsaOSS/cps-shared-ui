@@ -9,7 +9,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PrimeNG } from 'primeng/config';
 import { DomHandler } from 'primeng/dom';
 import { CpsDialogComponent } from './cps-dialog.component';
-import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
+import {
+  CPS_DIALOG_CONFIG,
+  type CpsDialogConfig
+} from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
@@ -39,13 +42,13 @@ describe('CpsDialogComponent', () => {
       componentInstance: null
     };
 
-    config = Object.assign(new CpsDialogConfig(), configOverrides);
+    config = { ...configOverrides };
 
     TestBed.configureTestingModule({
       imports: [CpsDialogComponent, NoopAnimationsModule],
       providers: [
         { provide: CpsDialogRef, useValue: mockDialogRef },
-        { provide: CpsDialogConfig, useValue: config },
+        { provide: CPS_DIALOG_CONFIG, useValue: config },
         {
           provide: CPS_ROOT_FONT_SIZE_SERVICE,
           useValue: mockRootFontSizeService

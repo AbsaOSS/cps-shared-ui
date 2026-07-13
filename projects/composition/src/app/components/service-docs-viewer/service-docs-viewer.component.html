@@ -69,6 +69,43 @@
             </div>
           </div>
         }
+        <!-- Tokens -->
+        @if (
+          serviceData.tokens &&
+          serviceData.tokens.values &&
+          serviceData.tokens.values.length > 0
+        ) {
+          <div>
+            <h2>Tokens</h2>
+            <p>{{ serviceData.tokens.description }}</p>
+            <div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (token of serviceData.tokens.values; track token.name) {
+                    <tr>
+                      <td class="highlighted-bg">
+                        <span>{{ token.name }}</span>
+                      </td>
+                      <td class="highlighted-text">
+                        <app-api-type
+                          [type]="token.type"
+                          [typesMap]="TypesMap" />
+                      </td>
+                      <td>{{ token.description }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
         <!-- Types -->
         @if (
           serviceData.types &&

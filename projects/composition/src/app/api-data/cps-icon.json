@@ -41,6 +41,16 @@
             }
         }
     },
+    "tokens": {
+        "description": "Injection tokens exposed by the component or service.",
+        "values": [
+            {
+                "name": "CPS_ICONS_PATH",
+                "type": "InjectionToken<string>",
+                "description": "Injection token that is used to provide the path to the icons."
+            }
+        ]
+    },
     "types": {
         "description": "Defines the custom types used by the component or service.",
         "values": [
