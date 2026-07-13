@@ -18,7 +18,7 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
-import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
@@ -28,7 +28,7 @@ import {
 import {
   generateUniqueId,
   logMissingAriaLabelError
-} from '../../utils/internal/accessibility-utils';
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent.

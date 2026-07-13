@@ -13,7 +13,8 @@ import {
   CpsTableSize,
   CpsTabChangeEvent,
   CpsColumnFilterMatchMode,
-  CpsMenuItem
+  CpsMenuItem,
+  CpsIconComponent
 } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 
@@ -35,6 +36,7 @@ import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsButtonToggleComponent,
+    CpsIconComponent,
     ComponentDocsViewerComponent
   ],
   templateUrl: './table-page.component.html',

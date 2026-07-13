@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { isEqual } from 'lodash-es';
 import { CpsMenuComponent } from '../../../../cps-menu/cps-menu.component';
 import { CpsButtonComponent } from '../../../../cps-button/cps-button.component';
-import { generateUniqueId } from '../../../../../utils/internal/accessibility-utils';
+import { generateUniqueId } from '../../../../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * TableColumnVisibilityToggleComponent is an internal component that renders

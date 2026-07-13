@@ -14,7 +14,7 @@ import {
   OnDestroy
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { CpsDialogRef } from './utils/cps-dialog-ref';
+import { CpsDialogRef } from './utils/cps-dialog-ref/cps-dialog-ref';
 import {
   CPS_DIALOG_CONFIG,
   type CpsDialogConfig

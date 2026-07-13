@@ -21,7 +21,7 @@ import {
   OnInit,
   Output,
   QueryList,
-  SimpleChanges,
+  type SimpleChanges,
   ViewChild,
   afterRenderEffect,
   inject,
@@ -31,13 +31,13 @@ import {
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
 import { CpsTooltipDirective } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { getCSSColor } from '../../utils/colors-utils';
-import { generateUniqueId } from '../../utils/internal/accessibility-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { generateUniqueId } from '../../utils/internal/accessibility-utils/accessibility-utils';
 import { CpsFocusService } from '../../services/cps-focus/cps-focus.service';
 import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
-} from '../../utils/internal/motion-utils';
+} from '../../utils/internal/motion-utils/motion-utils';
 import {
   Subscription,
   debounceTime,

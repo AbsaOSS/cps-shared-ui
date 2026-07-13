@@ -24,12 +24,12 @@ import {
   Validators
 } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
-import { convertSize } from '../../utils/internal/size-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
   logMissingAriaLabelError
-} from '../../utils/internal/accessibility-utils';
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 import {
   CpsIconComponent,
   type CpsIconType,
@@ -38,8 +38,8 @@ import {
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
-import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
+import { LabelByValuePipe } from '../../pipes/internal/label-by-value/label-by-value.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import {

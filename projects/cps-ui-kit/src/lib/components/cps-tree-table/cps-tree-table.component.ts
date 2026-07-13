@@ -20,7 +20,7 @@ import {
   Output,
   Renderer2,
   RendererStyleFlags2,
-  SimpleChanges,
+  type SimpleChanges,
   TemplateRef,
   ViewChild
 } from '@angular/core';
@@ -35,7 +35,7 @@ import {
   TreeTableStyle
 } from 'primeng/treetable';
 import { Subscription, fromEvent } from 'rxjs';
-import { convertSize } from '../../utils/internal/size-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import {
   CpsIconComponent,
@@ -53,7 +53,7 @@ import { CpsTreeTableColumnSortableDirective } from './directives/cps-tree-table
 import { CpsTreeTableHeaderSelectableDirective } from './directives/cps-tree-table-header-selectable/cps-tree-table-header-selectable.directive';
 import { CpsTreeTableRowSelectableDirective } from './directives/cps-tree-table-row-selectable/cps-tree-table-row-selectable.directive';
 import { CpsTreetableRowTogglerDirective } from './directives/cps-tree-table-row-toggler/cps-tree-table-row-toggler.directive';
-import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort.directive';
+import { TreeTableUnsortDirective } from './directives/internal/tree-table-unsort/tree-table-unsort.directive';
 import { CpsTreeTableDetectFilterTypePipe } from './pipes/cps-tree-table-detect-filter-type/cps-tree-table-detect-filter-type.pipe';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
@@ -898,6 +898,25 @@ export class CpsTreeTableComponent
         const table = tableWrapper.querySelector('table');
         if (table) this.renderer.setStyle(table, 'min-width', this.minWidth);
       }
+
+      this._removeEmptyFooter();
+    }
+  }
+
+  /**
+   * PrimeNG's non-scrollable p-treeTable view always renders a
+   * `<tfoot role="rowgroup">`, even with no footer template provided,
+   * leaving an empty rowgroup that violates aria-required-children.
+   * The scrollable view correctly omits it in that case, so this only
+   * needs to run here.
+   */
+  private _removeEmptyFooter(): void {
+    const tfoot =
+      this.primengTreeTable.el?.nativeElement?.querySelector(
+        '.p-treetable-tfoot'
+      );
+    if (tfoot && tfoot.childElementCount === 0 && tfoot.parentNode) {
+      this.renderer.removeChild(tfoot.parentNode, tfoot);
     }
   }
 

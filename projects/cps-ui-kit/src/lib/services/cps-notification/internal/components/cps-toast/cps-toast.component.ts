@@ -15,7 +15,7 @@ import {
   type CpsIconType
 } from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
-import { convertSize } from '../../../../../utils/internal/size-utils';
+import { convertSize } from '../../../../../utils/internal/size-utils/size-utils';
 import {
   CpsNotificationAppearance,
   CpsNotificationConfig
@@ -34,7 +34,7 @@ import {
 import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
-} from '../../../../../utils/internal/motion-utils';
+} from '../../../../../utils/internal/motion-utils/motion-utils';
 
 @Component({
   imports: [CommonModule, CpsButtonComponent, CpsIconComponent],

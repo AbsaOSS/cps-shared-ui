@@ -8,7 +8,7 @@
     inputRole="combobox"
     ariaHasPopup="dialog"
     [ariaExpanded]="isOpened"
-    [ariaControls]="calendarId"
+    [ariaControls]="isOpened ? calendarId : null"
     prefixIcon="datepicker"
     prefixIconAriaLabel="Open calendar"
     [placeholder]="placeholder || dateFormat"

@@ -19,8 +19,8 @@ import {
   CpsIconComponent,
   type CpsIconType
 } from '../cps-icon/cps-icon.component';
-import { getCSSColor } from '../../utils/colors-utils';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsCheckboxComponent is a checkbox element.

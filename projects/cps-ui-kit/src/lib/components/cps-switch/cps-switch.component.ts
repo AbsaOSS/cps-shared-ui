@@ -14,7 +14,7 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsSwitchComponent is a component used to toggle a boolean value.

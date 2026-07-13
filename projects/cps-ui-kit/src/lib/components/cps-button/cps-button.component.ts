@@ -10,14 +10,17 @@ import {
   Output,
   type SimpleChanges
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import {
   CpsIconComponent,
   type CpsIconType
 } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
-import { convertSize, parseSize } from '../../utils/internal/size-utils';
-import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
+import {
+  convertSize,
+  parseSize
+} from '../../utils/internal/size-utils/size-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsButtonComponent is a button element.

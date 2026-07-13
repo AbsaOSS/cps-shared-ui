@@ -72,13 +72,12 @@ $color-inner: var(--cps-color-energy);
         }
       }
 
-      // Keep indicating progress under reduced motion, just slower, instead of freezing
       @media (prefers-reduced-motion: reduce) {
         &-text {
-          animation-duration: 8s !important;
-          animation-iteration-count: infinite !important;
+          animation: none;
         }
 
+        // Keep indicating progress under reduced motion, just slower, instead of freezing
         &-circles-circle {
           animation-duration: 3000ms !important;
           animation-iteration-count: infinite !important;

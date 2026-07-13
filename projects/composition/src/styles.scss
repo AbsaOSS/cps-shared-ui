@@ -29,6 +29,7 @@ body {
   display: flex;
   flex-direction: column;
   scroll-behavior: smooth;
+  background-color: var(--cps-background-color);
 }
 
 @media (max-width: 37.5rem) {

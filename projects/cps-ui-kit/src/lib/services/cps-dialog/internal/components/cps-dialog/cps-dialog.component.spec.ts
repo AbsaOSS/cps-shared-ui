@@ -13,7 +13,7 @@ import {
   CPS_DIALOG_CONFIG,
   type CpsDialogConfig
 } from '../../../utils/cps-dialog-config';
-import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
 @Component({ template: '' })

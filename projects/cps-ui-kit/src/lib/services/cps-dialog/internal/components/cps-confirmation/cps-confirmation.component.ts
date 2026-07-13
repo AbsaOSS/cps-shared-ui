@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
-import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import {
   CPS_DIALOG_CONFIG,
   type CpsDialogConfig

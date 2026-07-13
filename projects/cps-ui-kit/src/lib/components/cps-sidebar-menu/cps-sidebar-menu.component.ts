@@ -18,7 +18,7 @@ import {
   CpsIconComponent,
   type CpsIconType
 } from '../cps-icon/cps-icon.component';
-import { convertSize } from '../../utils/internal/size-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import {
   animate,
   state,
@@ -29,7 +29,7 @@ import {
 import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
-} from '../../utils/internal/motion-utils';
+} from '../../utils/internal/motion-utils/motion-utils';
 
 /**
  * CpsSidebarMenuItem is used to define the items of the CpsSidebarMenuComponent.

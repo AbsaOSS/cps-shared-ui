@@ -22,7 +22,7 @@ import { TreeNode } from 'primeng/api';
 import {
   generateUniqueId,
   logMissingAriaLabelError
-} from '../../../utils/internal/accessibility-utils';
+} from '../../../utils/internal/accessibility-utils/accessibility-utils';
 import { Subscription } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
@@ -30,7 +30,7 @@ import type {
   CpsIconType,
   CpsIconSizeType
 } from '../../cps-icon/cps-icon.component';
-import { convertSize } from '../../../utils/internal/size-utils';
+import { convertSize } from '../../../utils/internal/size-utils/size-utils';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';

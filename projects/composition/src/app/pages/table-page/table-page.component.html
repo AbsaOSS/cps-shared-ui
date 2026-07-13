@@ -30,8 +30,15 @@
           <td>{{ item.a | uppercase }}</td>
           <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
-          <td [style.color]="item.d ? 'green' : 'red'">
-            {{ item.d ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="item.d ? 'checked' : 'close-x'"
+              [color]="
+                item.d ? 'var(--cps-color-success)' : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="item.d ? 'True' : 'False'">
+            </cps-icon>
           </td>
           <td>{{ item.e }}</td>
         </ng-template>
@@ -85,8 +92,15 @@
           <td>{{ item.a | uppercase }}</td>
           <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
-          <td [style.color]="item.d ? 'green' : 'red'">
-            {{ item.d ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="item.d ? 'checked' : 'close-x'"
+              [color]="
+                item.d ? 'var(--cps-color-success)' : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="item.d ? 'True' : 'False'">
+            </cps-icon>
           </td>
           <td>{{ item.e }}</td>
         </ng-template>
@@ -133,8 +147,17 @@
                 <td>{{ item.c | percent }}</td>
               }
               @case ('d') {
-                <td [style.color]="item.d ? 'green' : 'red'">
-                  {{ item.d ? '&#10004;' : '&#10008;' }}
+                <td>
+                  <cps-icon
+                    [icon]="item.d ? 'checked' : 'close-x'"
+                    [color]="
+                      item.d
+                        ? 'var(--cps-color-success)'
+                        : 'var(--cps-color-error)'
+                    "
+                    size="small"
+                    [ariaLabel]="item.d ? 'True' : 'False'">
+                  </cps-icon>
                 </td>
               }
               @case ('e') {
@@ -184,8 +207,15 @@
           <td>{{ item.a | uppercase }}</td>
           <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
-          <td [style.color]="item.d ? 'green' : 'red'">
-            {{ item.d ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="item.d ? 'checked' : 'close-x'"
+              [color]="
+                item.d ? 'var(--cps-color-success)' : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="item.d ? 'True' : 'False'">
+            </cps-icon>
           </td>
           <td>{{ item.e }}</td>
         </ng-template>
@@ -215,8 +245,15 @@
           <td>{{ item.a | uppercase }}</td>
           <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
-          <td [style.color]="item.d ? 'green' : 'red'">
-            {{ item.d ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="item.d ? 'checked' : 'close-x'"
+              [color]="
+                item.d ? 'var(--cps-color-success)' : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="item.d ? 'True' : 'False'">
+            </cps-icon>
           </td>
           <td>{{ item.e }}</td>
         </ng-template>
@@ -244,8 +281,15 @@
           <td>{{ item.a | uppercase }}</td>
           <td>{{ item.b | date: 'MM/dd/yyyy' }}</td>
           <td>{{ item.c | percent }}</td>
-          <td [style.color]="item.d ? 'green' : 'red'">
-            {{ item.d ? '&#10004;' : '&#10008;' }}
+          <td>
+            <cps-icon
+              [icon]="item.d ? 'checked' : 'close-x'"
+              [color]="
+                item.d ? 'var(--cps-color-success)' : 'var(--cps-color-error)'
+              "
+              size="small"
+              [ariaLabel]="item.d ? 'True' : 'False'">
+            </cps-icon>
           </td>
           <td>{{ item.e }}</td>
         </ng-template>

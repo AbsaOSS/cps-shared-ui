@@ -35,13 +35,13 @@ import { PrimeNG } from 'primeng/config';
 import {
   convertSize,
   parseSize
-} from '../../../../../utils/internal/size-utils';
+} from '../../../../../utils/internal/size-utils/size-utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
 import {
   CPS_DIALOG_CONFIG,
   type CpsDialogConfig
 } from '../../../utils/cps-dialog-config';
-import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
@@ -50,7 +50,7 @@ import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-r
 import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
-} from '../../../../../utils/internal/motion-utils';
+} from '../../../../../utils/internal/motion-utils/motion-utils';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),

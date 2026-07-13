@@ -5,8 +5,8 @@ import {
   inject,
   input
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
-import { convertSize } from '../../utils/internal/size-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import { DOCUMENT } from '@angular/common';
 
 /**
