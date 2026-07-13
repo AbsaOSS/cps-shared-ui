@@ -81,7 +81,7 @@
                         "name": "icon",
                         "optional": false,
                         "readonly": false,
-                        "type": "IconType",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "Name of the icon on the button."
                     },

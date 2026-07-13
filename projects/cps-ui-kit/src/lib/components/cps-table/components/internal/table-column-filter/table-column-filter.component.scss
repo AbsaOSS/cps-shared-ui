@@ -20,6 +20,7 @@ $operator-bg-color: var(--cps-color-bg-light);
       position: relative;
       height: 1.5rem;
       width: 1.5rem;
+      box-sizing: border-box;
       padding-left: 0.5rem;
       padding-right: 0.5rem;
       margin-right: 0.0625rem;
@@ -70,6 +71,7 @@ $operator-bg-color: var(--cps-color-bg-light);
   overflow: auto;
   & &-header {
     min-height: 2rem;
+    box-sizing: border-box;
     padding: 0.5rem;
     border-bottom: 0.0625rem solid $line-color;
     background: $operator-bg-color;

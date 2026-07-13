@@ -18,11 +18,11 @@ import { convertSize } from '../../utils/internal/size-utils';
  * Injection token that is used to provide the path to the icons.
  * @group Tokens
  */
-export const ICONS_PATH = new InjectionToken<string>(
+export const CPS_ICONS_PATH = new InjectionToken<string>(
   'Icons path for CpsIconComponent'
 );
 
-export const iconNames = [
+export const cpsIconNames = [
   'access',
   'access-denied',
   'access-lock',
@@ -147,19 +147,19 @@ export const iconNames = [
   'warning',
   'widget-button-icon',
   'xls'
-];
+] as const;
 
 /**
- * IconType is used to define the type of the icon.
+ * CpsIconType is used to define the type of the icon.
  * @group Types
  */
-export type IconType = (typeof iconNames)[number];
+export type CpsIconType = (typeof cpsIconNames)[number] | '';
 
 /**
- * iconSizeType is used to define the size of the icon.
+ * CpsIconSizeType is used to define the size of the icon.
  * @group Types
  */
-export type iconSizeType =
+export type CpsIconSizeType =
   | number
   | string
   | 'fill'
@@ -187,13 +187,13 @@ export class CpsIconComponent implements OnInit, OnChanges {
    * Name of the icon.
    * @group Props
    */
-  @Input() icon: IconType = '';
+  @Input() icon: CpsIconType = '';
 
   /**
    * Size of the icon, it can be of type number denoting pixels, string or 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
-  @Input() size: iconSizeType = 'small';
+  @Input() size: CpsIconSizeType = 'small';
 
   /**
    * Color of the icon.
@@ -228,7 +228,7 @@ export class CpsIconComponent implements OnInit, OnChanges {
   }
 
   iconColor = 'currentColor';
-  url = inject(ICONS_PATH, { optional: true }) ?? 'assets/';
+  url = inject(CPS_ICONS_PATH, { optional: true }) ?? 'assets/';
   cvtSize = '';
 
   classesList: string[] = ['cps-icon'];

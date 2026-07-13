@@ -126,6 +126,7 @@ $hover-transition-duration: 0.2s;
       justify-content: space-between;
       min-height: 2.375rem;
       width: 100%;
+      box-sizing: border-box;
       cursor: pointer;
       background: white;
       font-size: 1rem;

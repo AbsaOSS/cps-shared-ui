@@ -8,10 +8,13 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  type SimpleChanges
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils';
-import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
 import { convertSize, parseSize } from '../../utils/internal/size-utils';
 import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils';
@@ -85,7 +88,7 @@ export class CpsButtonComponent implements OnInit, OnChanges {
    * Name of the icon on the button.
    * @group Props
    */
-  @Input() icon: IconType = '';
+  @Input() icon: CpsIconType = '';
 
   /**
    * Position of the icon on the button, it can be 'before' or 'after'.

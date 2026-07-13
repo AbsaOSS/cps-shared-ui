@@ -18,7 +18,7 @@ describe('CpsSidebarMenuComponent', () => {
     { title: 'Settings', icon: 'settings', url: '/settings', disabled: true },
     {
       title: 'Reports',
-      icon: 'reports',
+      icon: 'graph',
       items: [
         { title: 'Monthly', url: '/reports/monthly' },
         { title: 'Annual', url: '/reports/annual' }
@@ -92,7 +92,7 @@ describe('CpsSidebarMenuComponent', () => {
     it('should return false when sub-items have no URLs', () => {
       const item: CpsSidebarMenuItem = {
         title: 'Reports',
-        icon: 'reports',
+        icon: 'graph',
         items: [{ title: 'Monthly' }]
       };
       expect(component.isActive(item)).toBe(false);
@@ -101,7 +101,7 @@ describe('CpsSidebarMenuComponent', () => {
     it('should return true when current URL partially matches a sub-item URL', () => {
       const item: CpsSidebarMenuItem = {
         title: 'Reports',
-        icon: 'reports',
+        icon: 'graph',
         items: [{ title: 'Monthly', url: '/reports/monthly' }]
       };
       jest.spyOn(router, 'url', 'get').mockReturnValue('/reports/monthly');
@@ -111,7 +111,7 @@ describe('CpsSidebarMenuComponent', () => {
     it('should return false when current URL does not match any sub-item URL', () => {
       const item: CpsSidebarMenuItem = {
         title: 'Reports',
-        icon: 'reports',
+        icon: 'graph',
         items: [{ title: 'Monthly', url: '/reports/monthly' }]
       };
       jest.spyOn(router, 'url', 'get').mockReturnValue('/home');
@@ -122,7 +122,7 @@ describe('CpsSidebarMenuComponent', () => {
       component.exactRoutes = false;
       const item: CpsSidebarMenuItem = {
         title: 'Reports',
-        icon: 'reports',
+        icon: 'graph',
         items: [{ title: 'Reports', url: '/reports' }]
       };
       jest.spyOn(router, 'url', 'get').mockReturnValue('/reports/monthly');
@@ -133,7 +133,7 @@ describe('CpsSidebarMenuComponent', () => {
       component.exactRoutes = true;
       const item: CpsSidebarMenuItem = {
         title: 'Reports',
-        icon: 'reports',
+        icon: 'graph',
         items: [{ title: 'Reports', url: '/reports' }]
       };
       jest.spyOn(router, 'url', 'get').mockReturnValue('/reports/monthly');
@@ -144,7 +144,7 @@ describe('CpsSidebarMenuComponent', () => {
       component.exactRoutes = true;
       const item: CpsSidebarMenuItem = {
         title: 'Reports',
-        icon: 'reports',
+        icon: 'graph',
         items: [{ title: 'Reports', url: '/reports' }]
       };
       jest.spyOn(router, 'url', 'get').mockReturnValue('/reports');
@@ -174,7 +174,7 @@ describe('CpsSidebarMenuComponent', () => {
 
     it('should set focusedItemWithMenu on focusin event', () => {
       const el = document.createElement('button');
-      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
+      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'graph' };
       const event = { type: 'focusin', currentTarget: el } as any;
       component.showMenu(event, mockMenu as CpsMenuComponent, item);
       expect(component.focusedItemWithMenu).toBe(item);
@@ -198,7 +198,7 @@ describe('CpsSidebarMenuComponent', () => {
 
     it('should call show again on focusin when menu is already visible', () => {
       const el = document.createElement('button');
-      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
+      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'graph' };
       const event = { type: 'focusin', currentTarget: el } as any;
       (mockMenu.isVisible as jest.Mock).mockReturnValue(true);
       component.showMenu(event, mockMenu as CpsMenuComponent, item);
@@ -224,7 +224,7 @@ describe('CpsSidebarMenuComponent', () => {
         show: jest.fn(),
         hide: jest.fn()
       } as unknown as Pick<CpsMenuComponent, 'isVisible' | 'show' | 'hide'>;
-      item = { title: 'Reports', icon: 'reports' };
+      item = { title: 'Reports', icon: 'graph' };
       component.allMenus = { forEach: jest.fn() } as any;
     });
 
@@ -302,7 +302,7 @@ describe('CpsSidebarMenuComponent', () => {
     });
 
     it('should reset focusedItemWithMenu on focusout when hiding', () => {
-      component.focusedItemWithMenu = { title: 'Test', icon: 'icon' };
+      component.focusedItemWithMenu = { title: 'Test', icon: 'star' };
       const externalEl = document.createElement('div');
       const event = { type: 'focusout', relatedTarget: externalEl } as any;
       component.leaveMenu(event, mockMenu as any);
@@ -310,7 +310,7 @@ describe('CpsSidebarMenuComponent', () => {
     });
 
     it('should not reset focusedItemWithMenu on mouseleave', () => {
-      const focusedItem: CpsSidebarMenuItem = { title: 'Test', icon: 'icon' };
+      const focusedItem: CpsSidebarMenuItem = { title: 'Test', icon: 'star' };
       component.focusedItemWithMenu = focusedItem;
       const externalEl = document.createElement('div');
       const event = { type: 'mouseleave', relatedTarget: externalEl } as any;
@@ -355,7 +355,7 @@ describe('CpsSidebarMenuComponent', () => {
     it('showMenu on focusin should be skipped when _pendingTouch is true', () => {
       (component as unknown as InternalComponent)._pendingTouch = true;
       const el = document.createElement('button');
-      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
+      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'graph' };
       const event = {
         type: 'focusin',
         currentTarget: el
@@ -389,7 +389,7 @@ describe('CpsSidebarMenuComponent', () => {
     it('toggleMenu should reset _pendingTouch and open the menu (simulates first tap)', () => {
       (component as unknown as InternalComponent)._pendingTouch = true;
       const el = document.createElement('button');
-      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
+      const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'graph' };
       const event = { currentTarget: el } as unknown as MouseEvent;
       (mockMenu.isVisible as jest.Mock).mockReturnValue(false);
       component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
@@ -612,7 +612,7 @@ describe('CpsSidebarMenuComponent', () => {
       fixture.componentRef.setInput('items', [
         {
           title: 'Reports',
-          icon: 'reports',
+          icon: 'graph',
           items: [{ title: 'Monthly', url: '/reports/monthly' }]
         }
       ]);
@@ -627,7 +627,7 @@ describe('CpsSidebarMenuComponent', () => {
       fixture.componentRef.setInput('items', [
         {
           title: 'Reports',
-          icon: 'reports',
+          icon: 'graph',
           items: [{ title: 'Monthly', url: '/reports/monthly' }]
         }
       ]);
@@ -642,7 +642,7 @@ describe('CpsSidebarMenuComponent', () => {
       fixture.componentRef.setInput('items', [
         {
           title: 'Reports',
-          icon: 'reports',
+          icon: 'graph',
           items: [{ title: 'Monthly', url: '/reports/monthly' }]
         }
       ]);

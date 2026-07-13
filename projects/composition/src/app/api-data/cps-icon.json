@@ -9,7 +9,7 @@
                         "name": "icon",
                         "optional": false,
                         "readonly": false,
-                        "type": "IconType",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "Name of the icon."
                     },
@@ -17,7 +17,7 @@
                         "name": "size",
                         "optional": false,
                         "readonly": false,
-                        "type": "iconSizeType",
+                        "type": "CpsIconSizeType",
                         "default": "small",
                         "description": "Size of the icon, it can be of type number denoting pixels, string or 'fill', 'xsmall', 'small', 'normal' or 'large'."
                     },
@@ -45,7 +45,7 @@
         "description": "Injection tokens exposed by the component or service.",
         "values": [
             {
-                "name": "ICONS_PATH",
+                "name": "CPS_ICONS_PATH",
                 "type": "InjectionToken<string>",
                 "description": "Injection token that is used to provide the path to the icons."
             }
@@ -55,14 +55,14 @@
         "description": "Defines the custom types used by the component or service.",
         "values": [
             {
-                "name": "IconType",
-                "value": "'access' | 'access-denied' | 'access-lock' | 'access-unlock' | 'add' | 'add-domain' | 'angle-left' | 'angle-right' | 'attribute' | 'avatar' | 'avatar-top-menu' | 'bell' | 'book' | 'bookmark' | 'browse' | 'burger' | 'burger-arrow' | 'caret-down' | 'change' | 'checked' | 'chevron-down' | 'chevron-down-2' | 'circle' | 'cleansing' | 'close-x' | 'close-x-2' | 'columns' | 'construction' | 'controls' | 'copy' | 'csv' | 'cube' | 'database' | 'datafeed' | 'datepicker' | 'delete' | 'dislike' | 'domain' | 'dots' | 'download' | 'dq' | 'dropdown-menu' | 'edit' | 'expand' | 'export' | 'eye' | 'filter' | 'filter_2' | 'filter-funnel' | 'filter-funnel-filled' | 'follow' | 'graph' | 'grid' | 'grid-view' | 'health' | 'heart' | 'help-circle' | 'home' | 'info-circle' | 'insight' | 'issues' | 'jpeg' | 'json' | 'kafka' | 'kris' | 'last-seen-product' | 'left' | 'like' | 'line-vertical' | 'lock' | 'logout' | 'maximize' | 'measurement' | 'menu-expand' | 'menu-shrink' | 'minimize' | 'minus' | 'moon' | 'move-grabber' | 'open' | 'ownership' | 'path' | 'pdf' | 'pending' | 'plus' | 'projects' | 'question' | 'questions' | 'rectangle-rounded' | 'refresh' | 'remove' | 'right' | 'save' | 'schema' | 'schema_filter' | 'search' | 'settings' | 'smart' | 'sort-icon-asc' | 'sort-icon-desc' | 'star' | 'stepper-completed' | 'success' | 'suggestion' | 'sun' | 'survivorship' | 'table-row-error' | 'table-row-success' | 'table-row-warning' | 'toast-error' | 'toast-info' | 'toast-success' | 'toast-warning' | 'tools' | 'user' | 'users' | 'vector' | 'vector-down' | 'vector-right' | 'vector-up' | 'wallet' | 'warning' | 'widget-button-icon' | 'xls'",
-                "description": "IconType is used to define the type of the icon."
+                "name": "CpsIconType",
+                "value": "'access' | 'access-denied' | 'access-lock' | 'access-unlock' | 'add' | 'add-domain' | 'angle-left' | 'angle-right' | 'attribute' | 'avatar' | 'avatar-top-menu' | 'bell' | 'book' | 'bookmark' | 'browse' | 'burger' | 'burger-arrow' | 'caret-down' | 'change' | 'checked' | 'chevron-down' | 'chevron-down-2' | 'circle' | 'cleansing' | 'close-x' | 'close-x-2' | 'columns' | 'construction' | 'controls' | 'copy' | 'csv' | 'cube' | 'database' | 'datafeed' | 'datepicker' | 'delete' | 'dislike' | 'domain' | 'dots' | 'download' | 'dq' | 'dropdown-menu' | 'edit' | 'expand' | 'export' | 'eye' | 'filter' | 'filter_2' | 'filter-funnel' | 'filter-funnel-filled' | 'follow' | 'graph' | 'grid' | 'grid-view' | 'health' | 'heart' | 'help-circle' | 'home' | 'info-circle' | 'insight' | 'issues' | 'jpeg' | 'json' | 'kafka' | 'kris' | 'last-seen-product' | 'left' | 'like' | 'line-vertical' | 'lock' | 'logout' | 'maximize' | 'measurement' | 'menu-expand' | 'menu-shrink' | 'minimize' | 'minus' | 'moon' | 'move-grabber' | 'open' | 'ownership' | 'path' | 'pdf' | 'pending' | 'plus' | 'projects' | 'question' | 'questions' | 'rectangle-rounded' | 'refresh' | 'remove' | 'right' | 'save' | 'schema' | 'schema_filter' | 'search' | 'settings' | 'smart' | 'sort-icon-asc' | 'sort-icon-desc' | 'star' | 'stepper-completed' | 'success' | 'suggestion' | 'sun' | 'survivorship' | 'table-row-error' | 'table-row-success' | 'table-row-warning' | 'toast-error' | 'toast-info' | 'toast-success' | 'toast-warning' | 'tools' | 'user' | 'users' | 'vector' | 'vector-down' | 'vector-right' | 'vector-up' | 'wallet' | 'warning' | 'widget-button-icon' | 'xls' | \"\"",
+                "description": "CpsIconType is used to define the type of the icon."
             },
             {
-                "name": "iconSizeType",
+                "name": "CpsIconSizeType",
                 "value": "number | string | \"fill\" | \"xsmall\" | \"small\" | \"normal\" | \"large\"",
-                "description": "iconSizeType is used to define the size of the icon."
+                "description": "CpsIconSizeType is used to define the size of the icon."
             }
         ]
     }

@@ -33,6 +33,7 @@ $hover-transition-duration: 0.2s;
       display: flex;
       align-items: stretch;
       min-height: 2.375rem;
+      box-sizing: border-box;
       border: 0.0625rem solid $input-border-color;
       border-radius: 0.25rem;
       background: var(--cps-input-background);

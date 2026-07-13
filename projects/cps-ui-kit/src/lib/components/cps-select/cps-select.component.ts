@@ -30,8 +30,8 @@ import {
 } from '../../utils/internal/accessibility-utils';
 import {
   CpsIconComponent,
-  iconSizeType,
-  IconType
+  type CpsIconSizeType,
+  type CpsIconType
 } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
@@ -219,13 +219,13 @@ export class CpsSelectComponent
    * Icon before input value.
    * @group Props
    */
-  @Input() prefixIcon: IconType = '';
+  @Input() prefixIcon: CpsIconType = '';
 
   /**
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '1.125rem';
+  @Input() prefixIconSize: CpsIconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.
