@@ -10,7 +10,7 @@
     "@primeuix/utils": "^0.7.1",
     "@types/lodash-es": "^4.17.12",
     "lodash-es": "^4.17.21",
-    "primeng": "^21.1.3",
+    "primeng": "21.1.9",
     "rxjs": "^7.8.2",
     "zone.js": "^0.15.1 || ^0.16.0"
   },
