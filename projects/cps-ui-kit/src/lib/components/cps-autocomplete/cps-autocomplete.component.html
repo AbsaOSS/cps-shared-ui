@@ -79,7 +79,7 @@
                   aria-label="Selected options">
                   @for (
                     val of value;
-                    track returnObject ? val[optionValue] : val;
+                    track returnObject ? (val?.[optionValue] ?? val) : val;
                     let last = $last
                   ) {
                     <div
@@ -118,7 +118,7 @@
                   aria-label="Selected options">
                   @for (
                     val of value;
-                    track returnObject ? val[optionValue] : val;
+                    track returnObject ? (val?.[optionValue] ?? val) : val;
                     let last = $last
                   ) {
                     <cps-chip
@@ -284,7 +284,7 @@
           } @else {
             @for (
               item of filteredOptions;
-              track item[optionValue];
+              track item?.[optionValue] ?? item;
               let itemIndex = $index
             ) {
               <ng-container
