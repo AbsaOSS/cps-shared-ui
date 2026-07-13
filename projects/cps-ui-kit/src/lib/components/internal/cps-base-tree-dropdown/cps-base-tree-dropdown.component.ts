@@ -803,8 +803,10 @@ export class CpsBaseTreeDropdownComponent
   }
 
   private _setTreeListHeight(height: string) {
-    if (this.treeList?.scroller?.style)
-      this.treeList.scroller.style.height = height;
+    const scrollerEl = this.treeList?.scroller?.elementViewChild?.nativeElement;
+    if (scrollerEl) {
+      scrollerEl.style.height = height;
+    }
   }
 
   private _nodeToggled(elem: HTMLElement, key?: string) {
