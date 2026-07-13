@@ -64,6 +64,7 @@
       justify-content: center;
       width: 100%;
       height: $sidebar-item-height;
+      box-sizing: border-box;
       text-decoration: none;
       color: $sidebar-item-content-color;
       border-bottom: 0.0625rem solid $sidebar-border-color;
