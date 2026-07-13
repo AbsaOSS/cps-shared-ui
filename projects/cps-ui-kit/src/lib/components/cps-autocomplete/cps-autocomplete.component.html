@@ -77,7 +77,11 @@
                   role="list"
                   tabindex="-1"
                   aria-label="Selected options">
-                  @for (val of value; track val; let last = $last) {
+                  @for (
+                    val of value;
+                    track returnObject ? val[optionValue] : val;
+                    let last = $last
+                  ) {
                     <div
                       class="text-group-item"
                       role="listitem"
@@ -112,7 +116,11 @@
                   role="list"
                   tabindex="-1"
                   aria-label="Selected options">
-                  @for (val of value; track val; let last = $last) {
+                  @for (
+                    val of value;
+                    track returnObject ? val[optionValue] : val;
+                    let last = $last
+                  ) {
                     <cps-chip
                       role="listitem"
                       closeButtonAriaLabel="Remove"
@@ -274,7 +282,11 @@
               </ng-template>
             </p-virtualscroller>
           } @else {
-            @for (item of filteredOptions; track item; let itemIndex = $index) {
+            @for (
+              item of filteredOptions;
+              track item[optionValue];
+              let itemIndex = $index
+            ) {
               <ng-container
                 *ngTemplateOutlet="
                   itemTemplate;
