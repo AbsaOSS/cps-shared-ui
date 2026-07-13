@@ -857,40 +857,61 @@ const allowed = (name) => {
   );
 };
 
+// Handle `typeof SomeArray[number]` — parse the source file and expand string literals to a union.
+// Returns null if `t` isn't that shape, or the source array couldn't be resolved.
+const expandIndexedAccessArray = (t, project) => {
+  if (
+    t?.type !== 'indexedAccess' ||
+    t.objectType?.type !== 'query' ||
+    t.indexType?.type !== 'intrinsic' ||
+    t.indexType?.name !== 'number'
+  ) {
+    return null;
+  }
+
+  const refName = t.objectType.queryType?.name;
+  const variable = refName
+    ? project
+        ?.getReflectionsByKind(TypeDoc.ReflectionKind.Variable)
+        ?.find((r) => r.name === refName)
+    : null;
+  const sourceFile = variable?.sources?.[0]?.fullFileName;
+  if (!sourceFile) return null;
+
+  try {
+    const src = fs.readFileSync(sourceFile, 'utf-8');
+    const arrayMatch = src.match(
+      new RegExp(
+        `(?:export\\s+)?const\\s+${refName}\\s*=\\s*\\[([\\s\\S]*?)\\]`,
+        'm'
+      )
+    );
+    if (arrayMatch) {
+      const items = [...arrayMatch[1].matchAll(/'([^']+)'/g)].map(
+        (m) => `'${m[1]}'`
+      );
+      if (items.length) return items.join(' | ');
+    }
+  } catch (_) {}
+
+  return null;
+};
+
 const getTypesValue = (typeobj, project) => {
   const { type, children, indexSignature } = typeobj ?? {};
 
-  // 1) Handle `typeof SomeArray[number]` — parse the source file and expand string literals to a union.
-  if (
-    type?.type === 'indexedAccess' &&
-    type.objectType?.type === 'query' &&
-    type.indexType?.type === 'intrinsic' &&
-    type.indexType?.name === 'number'
+  // 1) Handle `typeof SomeArray[number]`, whether it's the whole type or a member of a
+  // top-level union (e.g. `typeof SomeArray[number] | ''`) — expand just that member.
+  if (type?.type === 'indexedAccess') {
+    const expanded = expandIndexedAccessArray(type, project);
+    if (expanded) return expanded;
+  } else if (
+    type?.type === 'union' &&
+    type.types?.some((member) => member.type === 'indexedAccess')
   ) {
-    const refName = type.objectType.queryType?.name;
-    const variable = refName
-      ? project
-          ?.getReflectionsByKind(TypeDoc.ReflectionKind.Variable)
-          ?.find((r) => r.name === refName)
-      : null;
-    const sourceFile = variable?.sources?.[0]?.fullFileName;
-    if (sourceFile) {
-      try {
-        const src = fs.readFileSync(sourceFile, 'utf-8');
-        const arrayMatch = src.match(
-          new RegExp(
-            `(?:export\\s+)?const\\s+${refName}\\s*=\\s*\\[([\\s\\S]*?)\\]`,
-            'm'
-          )
-        );
-        if (arrayMatch) {
-          const items = [...arrayMatch[1].matchAll(/'([^']+)'/g)].map(
-            (m) => `'${m[1]}'`
-          );
-          if (items.length) return items.join(' | ');
-        }
-      } catch (_) {}
-    }
+    return type.types
+      .map((member) => expandIndexedAccessArray(member, project) ?? `${member}`)
+      .join(' | ');
   }
 
   // 2) Handle index signatures (e.g., { [key: string]: number })

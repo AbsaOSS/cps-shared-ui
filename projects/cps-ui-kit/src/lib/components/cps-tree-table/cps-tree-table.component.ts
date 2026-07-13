@@ -37,7 +37,10 @@ import {
 import { Subscription, fromEvent } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { CpsMenuItem } from '../cps-menu/cps-menu.component';
@@ -285,7 +288,7 @@ export class CpsTreeTableComponent
    * Toolbar icon name.
    * @group Props
    */
-  @Input() toolbarIcon = '';
+  @Input() toolbarIcon: CpsIconType = '';
 
   /**
    * Toolbar icon color.
@@ -447,7 +450,7 @@ export class CpsTreeTableComponent
    * AdditionalBtnOnSelect icon.
    * @group Props
    */
-  @Input() additionalBtnOnSelectIcon = '';
+  @Input() additionalBtnOnSelectIcon: CpsIconType = '';
 
   /**
    * Determines whether additionalBtnOnSelect is disabled.
@@ -471,7 +474,7 @@ export class CpsTreeTableComponent
    * Action button icon.
    * @group Props
    */
-  @Input() actionBtnIcon = '';
+  @Input() actionBtnIcon: CpsIconType = '';
 
   /**
    * Determines whether actionBtn is disabled.

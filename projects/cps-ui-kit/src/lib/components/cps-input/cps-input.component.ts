@@ -10,7 +10,7 @@ import {
   Optional,
   Output,
   Self,
-  SimpleChanges
+  type SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -18,8 +18,8 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.dir
 import { convertSize } from '../../utils/internal/size-utils';
 import {
   CpsIconComponent,
-  IconType,
-  iconSizeType
+  type CpsIconType,
+  type CpsIconSizeType
 } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
@@ -152,7 +152,7 @@ export class CpsInputComponent
    * Icon before input value.
    * @group Props
    */
-  @Input() prefixIcon: IconType = '';
+  @Input() prefixIcon: CpsIconType = '';
 
   /**
    * When enabled, prefixIcon is clickable.
@@ -164,7 +164,7 @@ export class CpsInputComponent
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '1.125rem';
+  @Input() prefixIconSize: CpsIconSizeType = '1.125rem';
 
   /**
    * Aria label for the clickable prefix icon, required when prefixIconClickable is true.

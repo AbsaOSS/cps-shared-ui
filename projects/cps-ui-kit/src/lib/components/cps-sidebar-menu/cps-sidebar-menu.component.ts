@@ -14,7 +14,10 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { convertSize } from '../../utils/internal/size-utils';
 import {
   animate,
@@ -34,7 +37,7 @@ import {
  */
 export type CpsSidebarMenuItem = {
   title: string;
-  icon: string;
+  icon: CpsIconType;
   url?: string;
   target?: string;
   disabled?: boolean;

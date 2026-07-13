@@ -139,6 +139,31 @@ describe('CpsToastComponent', () => {
       expect(component.color).toBe(CpsNotificationType.ERROR);
     });
 
+    it('should set icon to "toast-info" for INFO type', () => {
+      setup(defaultConfig, { type: CpsNotificationType.INFO });
+      expect(component.icon).toBe('toast-info');
+    });
+
+    it('should set icon to "toast-success" for SUCCESS type', () => {
+      setup(defaultConfig, { type: CpsNotificationType.SUCCESS });
+      expect(component.icon).toBe('toast-success');
+    });
+
+    it('should set icon to "toast-warning" for WARNING type', () => {
+      setup(defaultConfig, { type: CpsNotificationType.WARNING });
+      expect(component.icon).toBe('toast-warning');
+    });
+
+    it('should set icon to "toast-error" for ERROR type', () => {
+      setup(defaultConfig, { type: CpsNotificationType.ERROR });
+      expect(component.icon).toBe('toast-error');
+    });
+
+    it('should default icon to "toast-error" when data has no type', () => {
+      setup(defaultConfig, {});
+      expect(component.icon).toBe('toast-error');
+    });
+
     it('should set maxWidth when config.maxWidth is provided', () => {
       setup({ ...defaultConfig, maxWidth: '400px' });
       expect(component.maxWidth).toBeTruthy();

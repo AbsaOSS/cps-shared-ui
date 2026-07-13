@@ -95,7 +95,7 @@
                         "name": "headerIcon",
                         "optional": true,
                         "readonly": false,
-                        "type": "string",
+                        "type": "CpsIconType",
                         "description": "Header icon."
                     },
                     {

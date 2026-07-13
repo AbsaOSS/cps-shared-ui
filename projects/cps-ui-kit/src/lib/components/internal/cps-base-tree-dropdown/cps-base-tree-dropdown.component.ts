@@ -26,7 +26,10 @@ import {
 import { Subscription } from 'rxjs';
 import { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import type {
+  CpsIconType,
+  CpsIconSizeType
+} from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils';
 import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
@@ -134,13 +137,13 @@ export class CpsBaseTreeDropdownComponent
    * Icon before input value.
    * @group Props
    */
-  @Input() prefixIcon: IconType = '';
+  @Input() prefixIcon: CpsIconType = '';
 
   /**
    * Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '1.125rem';
+  @Input() prefixIconSize: CpsIconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.

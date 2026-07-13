@@ -24,7 +24,10 @@ import { SortEvent } from 'primeng/api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './components/internal/table-row-menu/table-row-menu.component';
@@ -279,7 +282,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * Toolbar icon name.
    * @group Props
    */
-  @Input() toolbarIcon = '';
+  @Input() toolbarIcon: CpsIconType = '';
 
   /**
    * Toolbar icon color.
@@ -435,7 +438,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * AdditionalBtnOnSelect icon.
    * @group Props
    */
-  @Input() additionalBtnOnSelectIcon = '';
+  @Input() additionalBtnOnSelectIcon: CpsIconType = '';
 
   /**
    * Determines whether additionalBtnOnSelect is disabled.
@@ -459,7 +462,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * Action button icon.
    * @group Props
    */
-  @Input() actionBtnIcon = '';
+  @Input() actionBtnIcon: CpsIconType = '';
 
   /**
    * Determines whether actionBtn is disabled.
