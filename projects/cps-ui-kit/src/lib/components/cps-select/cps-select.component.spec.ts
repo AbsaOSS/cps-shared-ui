@@ -455,6 +455,40 @@ describe('CpsSelectComponent', () => {
     });
   });
 
+  describe('Chip Removal', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('multiple', true);
+      component.writeValue([OPTIONS[0], OPTIONS[1]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+    });
+
+    it('should prevent default on chip close button mousedown so the box does not lose focus', () => {
+      const closeBtn = fixture.debugElement.query(
+        By.css('.cps-chip-close-btn')
+      );
+      const event = new MouseEvent('mousedown', { cancelable: true });
+      closeBtn.nativeElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should keep the dropdown open and remove the value when a chip close button is clicked', () => {
+      component.onBoxClick();
+      fixture.detectChanges();
+      expect(component.isOpened).toBe(true);
+
+      const closeBtn = fixture.debugElement.query(
+        By.css('.cps-chip-close-btn')
+      );
+      closeBtn.nativeElement.click();
+      fixture.detectChanges();
+
+      expect(component.isOpened).toBe(true);
+      expect(component.value).not.toContainEqual(OPTIONS[0]);
+      expect(component.value).toContainEqual(OPTIONS[1]);
+    });
+  });
+
   describe('onBeforeOptionsHidden', () => {
     it('should close dropdown on SCROLL', () => {
       component.onBoxClick();
