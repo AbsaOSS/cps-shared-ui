@@ -19,9 +19,13 @@ const getKnownRoutes = () => {
   );
   try {
     const content = fs.readFileSync(routingFile, 'utf8');
-    return new Set(
-      [...content.matchAll(/pathMatcher\(\s*'([^']+)'\s*\)/g)].map((m) => m[1])
-    );
+    const matcherRoutes = [
+      ...content.matchAll(/pathMatcher\(\s*'([^']+)'\s*\)/g)
+    ].map((m) => m[1]);
+    const plainRoutes = [...content.matchAll(/path:\s*'([^']+)'/g)]
+      .map((m) => m[1])
+      .filter((p) => p !== '**');
+    return new Set([...matcherRoutes, ...plainRoutes]);
   } catch (_) {
     return new Set();
   }

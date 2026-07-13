@@ -201,10 +201,10 @@ export interface CpsDialogConfig<T = any> {
  * dialog's component tree.
  *
  * @example
- * ```typescript
+ * ```ts
  * providers: [{ provide: CPS_DIALOG_CONFIG, useValue: myConfig }]
  * ```
- * ```typescript
+ * ```ts
  * constructor(@Inject(CPS_DIALOG_CONFIG) private config: CpsDialogConfig) {}
  * ```
  *
