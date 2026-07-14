@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.29.1](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.0...v21.29.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* tree select/tree autocomplete virtual scroll rendering and scroll-to-selection on open ([#714](https://github.com/AbsaOSS/cps-shared-ui/issues/714)) ([8150c19](https://github.com/AbsaOSS/cps-shared-ui/commit/8150c19155054b2695ef1be516b875f4ba943b9d))
+
 ## [21.29.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.28.0...v21.29.0) (2026-07-13)
 
 
