@@ -12,6 +12,27 @@ code in `../primeng-temp/` depends on.
 - **Vendored from**: `packages/<utils|styled|motion|styles>/src/` (and `packages/motion/types/`)
   in the upstream repository
 
+Initially vendored as 183 files: `utils` and `styled` were copied in full (their own
+top-level `index.ts` re-exports every submodule, so a first-pass module-level check
+couldn't distinguish "reachable through the barrel" from "actually called"), `motion`
+in full (only 4 files), and `styles` already hand-scoped to just the 17 component
+subdirectories actually referenced. A subsequent precise call-graph trace (2026-07-14) —
+starting from every symbol actually imported by name anywhere in `cps-ui-kit/src`,
+followed through the real re-export chains to each symbol's true declaring file, then
+through that file's own real imports — found 70 files in `utils`/`styled` that were
+never actually reachable this way (0 in `motion`, 0 in `styles`), including the whole
+public theme-customization API (`styled/src/actions/*` — `definePreset`, `usePreset`,
+etc. — never re-exported through `cps-ui-kit`'s own public API, so unreachable by any
+consumer either) and roughly 55 individual one-function-per-file DOM/object utilities
+never called by any of the ~64 `utils` functions PrimeNG's vendored components use.
+These were removed, then the removal was verified by rebuilding (not just trusting the
+static analysis) — which caught 3 files the analysis had incorrectly flagged, because
+`primeng-temp/dom/domhandler.ts` consumes them via `import * as utils from '...'` +
+property access (`utils.blockBodyScroll(...)`) rather than a named import, which the
+first-pass symbol scan didn't account for. Those 3 (`blockBodyScroll.ts`,
+`unblockBodyScroll.ts`, `calculateBodyScrollbarWidth.ts`, the last being a transitive
+dependency of the first two) were restored, leaving 116 files.
+
 Unlike PrimeNG, `primeuix` doesn't tag releases matching the currently-installed npm
 package versions (its git tags stop at `0.6.0`, and npm does not record a `gitHead` for
 these packages), so this is vendored from the repository's current default-branch HEAD

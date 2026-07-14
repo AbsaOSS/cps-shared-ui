@@ -10,6 +10,16 @@ of that project.
 - **Fetched**: 2026-07-13
 - **Vendored from**: `packages/primeng/src/<module>/` in the upstream repository
 
+Initially vendored as 437 files (the full contents of each of the 37 PrimeNG modules
+cps-ui-kit's components transitively depend on). A subsequent call-graph analysis
+(2026-07-14) found 20 files that were never actually imported by anything — whole
+`types/<component>/` directories for components that were never vendored at all
+(`chart`, `contextmenu`, `dataview`, `multiselect`, `password`, `picklist`, `textarea`),
+plus a handful of orphaned `index.ts` stubs shadowed by the `public_api.ts` that every
+real consumer actually resolves through. These were removed, leaving 417 files. Verified
+by rebuilding after deletion (not just by trusting the static analysis), which is the
+only way this kind of check is trustworthy.
+
 PrimeNG dropped MIT licensing starting with major version 22 (see
 https://primeui.dev/nextchapter). Version 21.1.9 is the final MIT release, and remains
 MIT "forever" per PrimeTek's own announcement — this vendored copy is legitimately

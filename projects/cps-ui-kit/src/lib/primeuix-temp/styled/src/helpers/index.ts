@@ -4,8 +4,6 @@
  * Modified: import paths rewritten to resolve locally. See ../../../NOTICE.md.
  * Original license: MIT, Copyright (c) 2025 PrimeTek.
  */
-export * from './color/index';
 export * from './css';
 export * from './dt';
-export * from './t';
 export { default as toVariables } from './toVariables';

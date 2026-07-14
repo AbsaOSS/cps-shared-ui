@@ -10,4 +10,3 @@ export * from './eventbus/index';
 export * from './mergeprops/index';
 export * from './object/index';
 export * from './uuid/index';
-export * from './zindex/index';

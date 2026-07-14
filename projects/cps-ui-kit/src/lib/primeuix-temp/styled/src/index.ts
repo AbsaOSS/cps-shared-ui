@@ -4,12 +4,9 @@
  * Modified: import paths rewritten to resolve locally. See ../../NOTICE.md.
  * Original license: MIT, Copyright (c) 2025 PrimeTek.
  */
-export * from './actions/index';
 export { default as Theme } from './config/index';
 export * from './helpers/index';
 export { default as ThemeService } from './service/index';
-export * from './stylesheet/index';
-export { default as StyleSheet } from './stylesheet/index';
 export * from './utils/index';
 
 export interface ThemeOptions {
