@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.29.2](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.1...v21.29.2) (2026-07-14)
+
+
+### Bug Fixes
+
+* correct horizontal scroll alignment in dropdowns on open and during arrow-key navigation ([#717](https://github.com/AbsaOSS/cps-shared-ui/issues/717)) ([6f906a7](https://github.com/AbsaOSS/cps-shared-ui/commit/6f906a70682cff614fccac977e79a50654857b97))
+
 ## [21.29.1](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.0...v21.29.1) (2026-07-14)
 
 
