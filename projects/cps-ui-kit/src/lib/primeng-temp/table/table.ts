@@ -52,7 +52,6 @@ import { ArrowDownIcon } from '../icons/arrowdown/public_api';
 import { ArrowUpIcon } from '../icons/arrowup/public_api';
 import { FilterIcon } from '../icons/filter/public_api';
 import { FilterFillIcon } from '../icons/filterfill/public_api';
-import { FilterSlashIcon } from '../icons/filterslash/public_api';
 import { PlusIcon } from '../icons/plus/public_api';
 import { SortAltIcon } from '../icons/sortalt/public_api';
 import { SortAmountDownIcon } from '../icons/sortamountdown/public_api';
@@ -6554,7 +6553,6 @@ export class ColumnFilterFormElement extends BaseComponent<ColumnFilterPassThrou
         SortAmountDownIcon,
         FilterIcon,
         FilterFillIcon,
-        FilterSlashIcon,
         PlusIcon,
         TrashIcon,
         RadioButtonModule,

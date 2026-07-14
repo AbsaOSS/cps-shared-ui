@@ -17,12 +17,15 @@ licensed. This directory exists so `cps-ui-kit` no longer depends on the `primen
 package at all, avoiding any future dependency on PrimeNG's post-v21 commercial/community
 license terms.
 
-This directory contains the 417 files of the 37 PrimeNG modules that `cps-ui-kit`'s
+This directory contains the 360 files of the 37 PrimeNG modules that `cps-ui-kit`'s
 components transitively depend on. It excludes files that are never actually referenced:
 whole `types/<component>/` directories for components that aren't vendored (`chart`,
-`contextmenu`, `dataview`, `multiselect`, `password`, `picklist`, `textarea`), and a few
+`contextmenu`, `dataview`, `multiselect`, `password`, `picklist`, `textarea`), a few
 orphaned `index.ts` stubs shadowed by the `public_api.ts` that every real consumer
-resolves through instead.
+resolves through instead, 27 icon components never rendered by any exposed feature,
+one vestigial icon import (`FilterSlashIcon`) never actually rendered despite being
+imported, and `ContextMenuService` (for wiring a `<p-contextMenu>` overlay that isn't
+used anywhere).
 
 This code in turn depends on `@primeuix/utils`, `@primeuix/styled`, and
 `@primeuix/motion` (design-token/styling and motion helpers from the same PrimeTek

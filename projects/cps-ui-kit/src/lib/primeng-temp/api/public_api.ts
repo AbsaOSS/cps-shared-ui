@@ -11,7 +11,6 @@ export * from './blockableui';
 export * from './confirmaeventtype';
 export * from './confirmation';
 export * from './confirmationservice';
-export * from './contextmenuservice';
 export * from './filtermatchmode';
 export * from './filtermetadata';
 export * from './filteroperator';
