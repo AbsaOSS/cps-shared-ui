@@ -1,5 +1,34 @@
 # Changelog
 
+## [21.29.2](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.1...v21.29.2) (2026-07-14)
+
+
+### Bug Fixes
+
+* correct horizontal scroll alignment in dropdowns on open and during arrow-key navigation ([#717](https://github.com/AbsaOSS/cps-shared-ui/issues/717)) ([6f906a7](https://github.com/AbsaOSS/cps-shared-ui/commit/6f906a70682cff614fccac977e79a50654857b97))
+
+## [21.29.1](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.0...v21.29.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* tree select/tree autocomplete virtual scroll rendering and scroll-to-selection on open ([#714](https://github.com/AbsaOSS/cps-shared-ui/issues/714)) ([8150c19](https://github.com/AbsaOSS/cps-shared-ui/commit/8150c19155054b2695ef1be516b875f4ba943b9d))
+
+## [21.29.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.28.0...v21.29.0) (2026-07-13)
+
+
+### Features
+
+* add remaining unit tests for cps-ui-kit ([#702](https://github.com/AbsaOSS/cps-shared-ui/issues/702)) ([b31c16e](https://github.com/AbsaOSS/cps-shared-ui/commit/b31c16ed163889a00c45d688a1d3c932cd6424ee))
+* resolve remaining accessibility issues ([3ba1602](https://github.com/AbsaOSS/cps-shared-ui/commit/3ba160298c2161b29261a9ec4962511c60b02231))
+
+
+### Bug Fixes
+
+* prevent chip removal from closing autocomplete/select dropdown ([#712](https://github.com/AbsaOSS/cps-shared-ui/issues/712)) ([4a661d6](https://github.com/AbsaOSS/cps-shared-ui/commit/4a661d6c5ced2a0500931de45070710fb27a1c28))
+* resolve NG0956 track-by-identity warning in cps-autocomplete ([#710](https://github.com/AbsaOSS/cps-shared-ui/issues/710)) ([b3dd68d](https://github.com/AbsaOSS/cps-shared-ui/commit/b3dd68d94a0d4acd4991f93c2d84854139a73458))
+* tree autocomplete and tree select with virtual scroll fails to reopen dropdown when no value is selected ([#708](https://github.com/AbsaOSS/cps-shared-ui/issues/708)) ([7ed3b94](https://github.com/AbsaOSS/cps-shared-ui/commit/7ed3b949a3ced59545c09a999f62cadfe1c96c24))
+
 ## [21.28.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.27.0...v21.28.0) (2026-07-07)
 
 

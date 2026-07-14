@@ -553,28 +553,30 @@ export class CpsBaseTreeDropdownComponent
       setTimeout(() => {
         this.updateOptions();
         this.recalcVirtualListHeight();
-        const selected = this.treeContainerElement?.querySelector(
-          '.p-highlight'
-        ) as any;
+
+        let key = '';
+        if (this.treeSelection) {
+          if (this.multiple) {
+            if (this.treeSelection.length > 0) key = this.treeSelection[0].key;
+          } else key = this.treeSelection.key;
+        }
+
+        const selected = key
+          ? (this.treeContainerElement?.querySelector(`.key-${key}`) as any)
+          : null;
         if (selected) {
           selected.scrollIntoView({
             behavior: 'instant',
             block: 'nearest',
-            inline: 'center'
+            inline: 'start'
           });
-        } else if (this.virtualScroll && this.treeSelection) {
-          let key = '';
-          if (this.multiple) {
-            if (this.treeSelection.length > 0) key = this.treeSelection[0].key;
-          } else key = this.treeSelection.key;
-          if (key) {
-            const idx =
-              this.treeList?.serializedValue?.findIndex(
-                // https://github.com/primefaces/primeng/blob/v16.4.3/src/app/components/tree/tree.ts#L1125
-                (v: any) => v.node.key === key
-              ) || -1;
-            if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);
-          }
+        } else if (this.virtualScroll && key) {
+          const idx =
+            this.treeList?.serializedValue?.findIndex(
+              // https://github.com/primefaces/primeng/blob/v16.4.3/src/app/components/tree/tree.ts#L1125
+              (v: any) => v.node.key === key
+            ) ?? -1;
+          if (idx >= 0) this.treeList.scrollToVirtualIndex(idx);
         }
       });
     }
@@ -752,6 +754,10 @@ export class CpsBaseTreeDropdownComponent
   updateOptions() {
     if (!this.virtualScroll) return;
     this.treeList?.updateSerializedValue();
+    // treeList is OnPush and serializedValue is a plain field, so its new
+    // value won't reach the scroller's items input until treeList's own
+    // view is force-checked
+    this.treeList?.cd?.detectChanges();
   }
 
   private _initContainerClickListener() {
@@ -806,8 +812,10 @@ export class CpsBaseTreeDropdownComponent
   }
 
   private _setTreeListHeight(height: string) {
-    if (this.treeList?.scroller?.style)
-      this.treeList.scroller.style.height = height;
+    const scrollerEl = this.treeList?.scroller?.elementViewChild?.nativeElement;
+    if (scrollerEl?.style) {
+      scrollerEl.style.height = height;
+    }
   }
 
   private _nodeToggled(elem: HTMLElement, key?: string) {
