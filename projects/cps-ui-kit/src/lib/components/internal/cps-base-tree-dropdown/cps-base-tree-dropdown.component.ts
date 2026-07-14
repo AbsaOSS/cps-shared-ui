@@ -565,7 +565,7 @@ export class CpsBaseTreeDropdownComponent
           selected.scrollIntoView({
             behavior: 'instant',
             block: 'nearest',
-            inline: 'center'
+            inline: 'start'
           });
         } else if (this.virtualScroll && key) {
           const idx =
