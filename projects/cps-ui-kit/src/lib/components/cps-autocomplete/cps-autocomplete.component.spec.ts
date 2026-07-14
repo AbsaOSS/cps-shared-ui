@@ -464,6 +464,67 @@ describe('CpsAutocompleteComponent', () => {
     expect(component.filteredOptions.length).toBe(3);
   });
 
+  describe('Scroll alignment', () => {
+    let scrollIntoView: jest.Mock;
+
+    beforeEach(() => {
+      scrollIntoView = jest.fn();
+      window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+    });
+
+    it('should scroll the selected option into view with inline: start when the dropdown opens', fakeAsync(() => {
+      component.writeValue(component.options[0]);
+      fixture.detectChanges();
+
+      component.onBoxClick();
+      flush();
+      fixture.detectChanges();
+
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'instant',
+        block: 'nearest',
+        inline: 'start'
+      });
+    }));
+
+    it('should highlight an out-of-view option with inline: nearest so horizontal scroll position is preserved', () => {
+      const parent = document.createElement('div');
+      jest
+        .spyOn(parent, 'getBoundingClientRect')
+        .mockReturnValue({ top: 0, bottom: 200 } as DOMRect);
+
+      const el = document.createElement('div');
+      parent.appendChild(el);
+      jest
+        .spyOn(el, 'getBoundingClientRect')
+        .mockReturnValue({ top: -10, bottom: 20 } as DOMRect);
+
+      (component as any)._highlightOption(el);
+
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        block: 'nearest',
+        inline: 'nearest'
+      });
+    });
+
+    it('should not scroll an already fully visible highlighted option', () => {
+      const parent = document.createElement('div');
+      jest
+        .spyOn(parent, 'getBoundingClientRect')
+        .mockReturnValue({ top: 0, bottom: 200 } as DOMRect);
+
+      const el = document.createElement('div');
+      parent.appendChild(el);
+      jest
+        .spyOn(el, 'getBoundingClientRect')
+        .mockReturnValue({ top: 10, bottom: 40 } as DOMRect);
+
+      (component as any)._highlightOption(el);
+
+      expect(scrollIntoView).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Chip Removal', () => {
     beforeEach(() => {
       window.HTMLElement.prototype.scrollIntoView = jest.fn();
