@@ -563,7 +563,7 @@ export class CpsSelectComponent
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
       el.scrollIntoView({
         block: 'nearest',
-        inline: 'start'
+        inline: 'nearest'
       });
     }
   }
