@@ -304,7 +304,7 @@ export class ButtonDirective extends BaseComponent {
 
     private _severity: ButtonSeverity;
 
-    _buttonProps!: ButtonProps;
+    _buttonProps: ButtonProps | undefined;
 
     public initialized: boolean | undefined;
 
@@ -377,11 +377,11 @@ export class ButtonDirective extends BaseComponent {
      * @deprecated assign props directly to the button element.
      * @group Props
      */
-    @Input() get buttonProps(): ButtonProps {
+    @Input() get buttonProps(): ButtonProps | undefined {
         return this._buttonProps;
     }
 
-    set buttonProps(val: ButtonProps) {
+    set buttonProps(val: ButtonProps | undefined) {
         this._buttonProps = val;
 
         if (val && typeof val === 'object') {
@@ -804,7 +804,7 @@ export class Button extends BaseComponent<ButtonPassThrough> {
      * Used to pass all properties of the ButtonProps to the Button component.
      * @group Props
      */
-    @Input() buttonProps: ButtonProps;
+    @Input() buttonProps: ButtonProps | undefined;
 
     /**
      * Spans 100% width of the container when enabled.

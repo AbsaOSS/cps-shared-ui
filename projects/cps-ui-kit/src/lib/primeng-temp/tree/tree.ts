@@ -770,7 +770,7 @@ export class UITreeNode extends BaseComponent<TreePassThrough> {
                     [class]="cx('pcFilterInput')"
                     [attr.placeholder]="filterPlaceholder"
                     (keydown.enter)="$event.preventDefault()"
-                    (input)="_filter($any($event.target?.value))"
+                    (input)="_filter($any($event.target.value))"
                     [pt]="ptm('pcFilterInput')"
                     [unstyled]="unstyled()"
                 />

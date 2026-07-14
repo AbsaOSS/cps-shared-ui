@@ -5418,7 +5418,7 @@ export class ReorderableRow extends BaseComponent {
                 [attr.aria-expanded]="overlayVisible ?? false"
                 (click)="toggleMenu($event)"
                 (keydown)="onToggleButtonKeyDown($event)"
-                [buttonProps]="$any(filterButtonProps?.filter)"
+                [buttonProps]="$any(filterButtonProps.filter)"
                 #menuButton
                 [unstyled]="unstyled()"
             >
@@ -5512,7 +5512,7 @@ export class ReorderableRow extends BaseComponent {
                                         (onClick)="removeConstraint(fieldConstraint)"
                                         [ariaLabel]="removeRuleButtonLabel"
                                         [label]="removeRuleButtonLabel"
-                                        [buttonProps]="$any(filterButtonProps?.popover?.removeRule)"
+                                        [buttonProps]="$any(filterButtonProps.popover?.removeRule)"
                                         [unstyled]="unstyled()"
                                     >
                                         <ng-template #icon>
@@ -5533,7 +5533,7 @@ export class ReorderableRow extends BaseComponent {
                                 [text]="true"
                                 size="small"
                                 (onClick)="addConstraint()"
-                                [buttonProps]="$any(filterButtonProps?.popover?.addRule)"
+                                [buttonProps]="$any(filterButtonProps.popover?.addRule)"
                                 [unstyled]="unstyled()"
                             >
                                 <ng-template #icon>
@@ -5550,7 +5550,7 @@ export class ReorderableRow extends BaseComponent {
                                 (onClick)="clearFilter()"
                                 [attr.aria-label]="clearButtonLabel"
                                 [label]="clearButtonLabel"
-                                [buttonProps]="$any(filterButtonProps?.popover?.clear)"
+                                [buttonProps]="$any(filterButtonProps.popover?.clear)"
                                 [pt]="ptm('pcFilterClearButton')"
                                 [unstyled]="unstyled()"
                             />
@@ -5560,7 +5560,7 @@ export class ReorderableRow extends BaseComponent {
                                 size="small"
                                 [label]="applyButtonLabel"
                                 [attr.aria-label]="applyButtonLabel"
-                                [buttonProps]="$any(filterButtonProps?.popover?.apply)"
+                                [buttonProps]="$any(filterButtonProps.popover?.apply)"
                                 [pt]="ptm('pcFilterApplyButton')"
                                 [unstyled]="unstyled()"
                             />

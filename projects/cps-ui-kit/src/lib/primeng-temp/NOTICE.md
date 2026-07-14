@@ -114,6 +114,27 @@ repository's tooling:
    configuration. Rewritten using equivalent `@if (cond) { … } @else { … }` block
    syntax with the exact same two branches and condition — behaviorally identical,
    confirmed against upstream.
+7. **Widened `buttonProps`'s type to `ButtonProps | undefined`** (`button.ts`) on both
+   `Button` (`<p-button>`, line ~807 — this is the one whose own inline template
+   actually produced 23 `NG8107` "unnecessary optional chain" warnings on
+   `buttonProps?.x` expressions during `ng serve`) and, for consistency, on
+   `ButtonDirective` (the unrelated `pButton` attribute directive, which has no inline
+   template of its own so wasn't the source of any warning, but has the identical
+   no-default-value `@Input()` pattern). Both types previously claimed `buttonProps` is
+   always defined; neither `<p-button>` nor `pButton` is ever actually bound with
+   `[buttonProps]` anywhere in this codebase, so it's genuinely `undefined` unless a
+   future consumer explicitly sets it — the type was simply wrong. Same category as
+   item 3 above (widen a type to match actual usage, never narrow or change logic); the
+   templates' existing `buttonProps?.x` defensive checks were left untouched, since they
+   were already correct — widening the type is what makes the compiler agree with them.
+8. **Removed a handful of genuinely-unnecessary `?.` operators** where the operand is
+   provably always defined at runtime: 5 occurrences of `filterButtonProps?.` in
+   `table.ts` (`filterButtonProps` has a full default object value, so it can never be
+   `undefined`; the deeper `popover?.x` chains were left as-is since `popover`'s own
+   type genuinely allows `undefined`), and one `$event.target?.value` in `tree.ts`
+   (a native DOM event bound directly on a static element — the browser guarantees
+   `target` is non-null whenever the event fires). Confirmed each case individually via
+   the Angular compiler's own reported diagnostic location before touching it.
 
 No other changes were made. Component logic, styles, and public APIs are otherwise
 unmodified from PrimeNG 21.1.9.
