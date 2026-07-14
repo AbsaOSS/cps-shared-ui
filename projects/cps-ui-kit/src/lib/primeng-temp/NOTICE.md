@@ -10,22 +10,24 @@ of that project.
 - **Fetched**: 2026-07-13
 - **Vendored from**: `packages/primeng/src/<module>/` in the upstream repository
 
-Initially vendored as 437 files (the full contents of each of the 37 PrimeNG modules
-cps-ui-kit's components transitively depend on). A subsequent call-graph analysis
-(2026-07-14) found 20 files that were never actually imported by anything — whole
-`types/<component>/` directories for components that were never vendored at all
-(`chart`, `contextmenu`, `dataview`, `multiselect`, `password`, `picklist`, `textarea`),
-plus a handful of orphaned `index.ts` stubs shadowed by the `public_api.ts` that every
-real consumer actually resolves through. These were removed, leaving 417 files. Verified
-by rebuilding after deletion (not just by trusting the static analysis), which is the
-only way this kind of check is trustworthy.
-
 PrimeNG dropped MIT licensing starting with major version 22 (see
 https://primeui.dev/nextchapter). Version 21.1.9 is the final MIT release, and remains
 MIT "forever" per PrimeTek's own announcement — this vendored copy is legitimately
 licensed. This directory exists so `cps-ui-kit` no longer depends on the `primeng` npm
 package at all, avoiding any future dependency on PrimeNG's post-v21 commercial/community
 license terms.
+
+This directory contains the 417 files of the 37 PrimeNG modules that `cps-ui-kit`'s
+components transitively depend on. It excludes files that are never actually referenced:
+whole `types/<component>/` directories for components that aren't vendored (`chart`,
+`contextmenu`, `dataview`, `multiselect`, `password`, `picklist`, `textarea`), and a few
+orphaned `index.ts` stubs shadowed by the `public_api.ts` that every real consumer
+resolves through instead.
+
+This code in turn depends on `@primeuix/utils`, `@primeuix/styled`, and
+`@primeuix/motion` (design-token/styling and motion helpers from the same PrimeTek
+organization) — those are also vendored locally rather than kept as npm dependencies;
+see `../primeuix-temp/NOTICE.md`.
 
 ## License
 
@@ -63,86 +65,55 @@ THE SOFTWARE.
 
 Per the MIT license's own terms and Apache-2.0 §4(b) of this repository's own license
 (this repository is Apache-2.0 licensed; see the root [LICENSE](../../../../../LICENSE)),
-the following modifications were made to every file in this directory relative to
-upstream. No modification changes runtime behavior; all are type-checking or
-module-resolution adjustments needed to compile unmodified upstream logic under this
-repository's tooling:
+every file in this directory carries a header comment identifying its original upstream
+path and noting it was modified. None of the modifications below change runtime
+behavior — all are type-checking or module-resolution adjustments needed to compile
+unmodified upstream logic under this repository's stricter tooling:
 
-1. **Import paths rewritten.** Every `primeng/<module>` import specifier was mechanically
-   rewritten to a relative path pointing at the corresponding vendored file (there is no
-   `primeng` npm package installed in this repository anymore). Applied via
-   `scripts/rewrite-primeng-imports.mjs`.
-2. **`// @ts-nocheck` added to every file.** This repository's `tsconfig.json` is
-   considerably stricter than PrimeNG's own (`strict`, `noImplicitOverride`,
-   `noUnusedLocals`/`noUnusedParameters`, etc.). Rather than editing hundreds of
-   upstream files to satisfy diagnostics PrimeNG's own build never enforced,
-   `@ts-nocheck` suppresses ordinary TypeScript checking for this vendored, frozen code.
-3. **A small number of shared-helper type signatures were widened** (e.g.
-   `BaseComponent.cx()` in `basecomponent/basecomponent.ts` now always returns `string`
-   instead of `string | undefined`; a few `@Input()`/`input()` types in `autofocus.ts`,
-   `togglebutton.ts`, and `badge.ts` were widened to match how they're actually used
-   elsewhere in the vendored tree) — done only where a single root-cause type was
-   responsible for many downstream Angular template type errors, and only ever by
-   *widening* a type (adding `| undefined` or missing union members), never narrowing
-   or changing logic.
-4. **`$any(...)` casts added at ~130 specific template expressions and `@HostListener`
-   argument strings** (across `table.ts`, `treetable.ts`, `tree.ts`, `datepicker.ts`,
-   `overlay.ts`, `select.ts`, `scroller.ts`, `paginator.ts`, `inputnumber.ts`) where
-   Angular's `strictTemplates` (enabled in this repo, not enabled upstream) flagged a
-   type mismatch that plain `@ts-nocheck` cannot suppress (Angular's template
-   type-checker generates a separate synthetic check that ignores the source file's
-   `@ts-nocheck` pragma). `$any()` is Angular's own documented escape hatch for this
-   exact situation — it affects type-checking only and compiles away with zero runtime
-   effect. Each of these was left otherwise untouched, including a couple of cases
-   confirmed to reproduce pre-existing upstream quirks verbatim (e.g.
-   `treetable.ts`'s non-virtual-scroll branch references a `serializedValue` property
-   that doesn't exist on that component either in this vendored copy or in upstream
-   21.1.9 — both resolve it to `undefined` at runtime the same way; wrapped as
-   `$any(this).serializedValue` here purely to satisfy the compiler, not to change
-   what it evaluates to).
-5. **One dead template binding removed**, in `table.ts`'s
-   `ColumnFilterFormElement`: `[showButtons]="showButtons"` was bound to a property
-   that only exists as a read-only getter (not an `@Input()`) on that component in
-   both upstream and here, so the binding was already an inert no-op at runtime
-   (Angular's strict "unknown property" check flags this structurally; it isn't a
-   type mismatch `$any()` can suppress). Removing the binding changes nothing at
-   runtime — the getter still independently derives its value via DI from `colFilter`.
+1. **Import paths rewritten.** Every `primeng/<module>` import specifier is a relative
+   path pointing at the corresponding vendored file (there is no `primeng` npm package
+   installed in this repository).
+2. **`// @ts-nocheck` on every file.** This repository's `tsconfig.json` is considerably
+   stricter than PrimeNG's own (`strict`, `noImplicitOverride`, `noUnusedLocals`/
+   `noUnusedParameters`, etc.), which PrimeNG's own code wasn't written against.
+3. **A small number of shared-helper types widened** (never narrowed) to match how
+   they're actually used at runtime, where a single root-cause type was responsible for
+   many downstream Angular template type errors:
+   - `BaseComponent.cx()` (`basecomponent/basecomponent.ts`) always returns `string`
+     instead of `string | undefined`.
+   - A few `@Input()`/`input()` types in `autofocus.ts`, `togglebutton.ts`, and
+     `badge.ts` widened to include `| undefined`.
+   - `button.ts`: `Button.buttonProps` and `ButtonDirective.buttonProps` widened to
+     `ButtonProps | undefined` — neither `<p-button>` nor `pButton` is ever bound with
+     `[buttonProps]` anywhere in this codebase, so the property is genuinely `undefined`
+     unless a future consumer sets it explicitly.
+4. **`$any(...)` casts at template expressions and `@HostListener` argument strings**
+   (across `table.ts`, `treetable.ts`, `tree.ts`, `datepicker.ts`, `overlay.ts`,
+   `select.ts`, `scroller.ts`, `paginator.ts`, `inputnumber.ts`) where Angular's
+   `strictTemplates` (enabled here, not upstream) flags a type mismatch that
+   `@ts-nocheck` can't suppress (Angular's template type-checker runs a separate
+   synthetic check that ignores the source file's `@ts-nocheck` pragma). `$any()` is
+   Angular's own documented escape hatch for this — type-checking only, zero runtime
+   effect. A couple of these reproduce pre-existing upstream quirks verbatim rather than
+   "fixing" them — e.g. `treetable.ts`'s non-virtual-scroll branch references a
+   `serializedValue` property that doesn't exist on that component either here or
+   upstream; both resolve it to `undefined` at runtime the same way.
+5. **One dead template binding removed**, in `table.ts`'s `ColumnFilterFormElement`:
+   `[showButtons]="showButtons"` was bound to a property that only exists as a
+   read-only getter (not an `@Input()`) on that component in both upstream and here, so
+   it was already an inert no-op — the getter still independently derives its value via
+   DI from `colFilter`.
 6. **One structural template rewrite**, in `tree.ts`'s empty-state block: upstream's
    `*ngIf="cond; else emptyFilter"` paired with a separately-referenced
-   `<ng-template #emptyFilter>` doesn't resolve correctly when combined with a
-   structural directive on the `#emptyFilter`-referenced template in this compiler
+   `<ng-template #emptyFilter>` doesn't resolve correctly in this compiler
    configuration. Rewritten using equivalent `@if (cond) { … } @else { … }` block
-   syntax with the exact same two branches and condition — behaviorally identical,
-   confirmed against upstream.
-7. **Widened `buttonProps`'s type to `ButtonProps | undefined`** (`button.ts`) on both
-   `Button` (`<p-button>`, line ~807 — this is the one whose own inline template
-   actually produced 23 `NG8107` "unnecessary optional chain" warnings on
-   `buttonProps?.x` expressions during `ng serve`) and, for consistency, on
-   `ButtonDirective` (the unrelated `pButton` attribute directive, which has no inline
-   template of its own so wasn't the source of any warning, but has the identical
-   no-default-value `@Input()` pattern). Both types previously claimed `buttonProps` is
-   always defined; neither `<p-button>` nor `pButton` is ever actually bound with
-   `[buttonProps]` anywhere in this codebase, so it's genuinely `undefined` unless a
-   future consumer explicitly sets it — the type was simply wrong. Same category as
-   item 3 above (widen a type to match actual usage, never narrow or change logic); the
-   templates' existing `buttonProps?.x` defensive checks were left untouched, since they
-   were already correct — widening the type is what makes the compiler agree with them.
-8. **Removed a handful of genuinely-unnecessary `?.` operators** where the operand is
-   provably always defined at runtime: 5 occurrences of `filterButtonProps?.` in
-   `table.ts` (`filterButtonProps` has a full default object value, so it can never be
-   `undefined`; the deeper `popover?.x` chains were left as-is since `popover`'s own
-   type genuinely allows `undefined`), and one `$event.target?.value` in `tree.ts`
-   (a native DOM event bound directly on a static element — the browser guarantees
-   `target` is non-null whenever the event fires). Confirmed each case individually via
-   the Angular compiler's own reported diagnostic location before touching it.
+   syntax with the same two branches and condition — behaviorally identical.
+7. **A few genuinely-unnecessary `?.` operators removed**, where the operand is
+   provably always defined at runtime: `table.ts`'s `filterButtonProps?.` (5 sites —
+   `filterButtonProps` has a full default object value so is never `undefined`; the
+   deeper `popover?.x` chains were kept, since `popover`'s own type legitimately allows
+   `undefined`), and `tree.ts`'s `$event.target?.value` (a native DOM event bound
+   directly on a static element guarantees a non-null `target`).
 
 No other changes were made. Component logic, styles, and public APIs are otherwise
 unmodified from PrimeNG 21.1.9.
-
-Every vendored file also carries a short header comment identifying its original path
-and pointing back to this notice.
-
-This code in turn depends on `@primeuix/utils`, `@primeuix/styled`, and
-`@primeuix/motion` (design-token/styling and motion helpers from the same PrimeTek
-organization) — those are also vendored locally rather than kept as npm dependencies;
-see `../primeuix-temp/NOTICE.md`.
