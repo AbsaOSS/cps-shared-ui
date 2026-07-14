@@ -464,6 +464,105 @@ describe('CpsAutocompleteComponent', () => {
     expect(component.filteredOptions.length).toBe(3);
   });
 
+  describe('Scroll alignment', () => {
+    let scrollIntoView: jest.Mock;
+
+    beforeEach(() => {
+      scrollIntoView = jest.fn();
+      window.HTMLElement.prototype.scrollIntoView = scrollIntoView;
+    });
+
+    it('should scroll the selected option into view with inline: start when the dropdown opens', fakeAsync(() => {
+      component.writeValue(component.options[0]);
+      fixture.detectChanges();
+
+      component.onBoxClick();
+      flush();
+      fixture.detectChanges();
+
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        behavior: 'instant',
+        block: 'nearest',
+        inline: 'start'
+      });
+    }));
+
+    it('should highlight an out-of-view option with inline: nearest so horizontal scroll position is preserved', () => {
+      const parent = document.createElement('div');
+      jest
+        .spyOn(parent, 'getBoundingClientRect')
+        .mockReturnValue({ top: 0, bottom: 200 } as DOMRect);
+
+      const el = document.createElement('div');
+      parent.appendChild(el);
+      jest
+        .spyOn(el, 'getBoundingClientRect')
+        .mockReturnValue({ top: -10, bottom: 20 } as DOMRect);
+
+      (component as any)._highlightOption(el);
+
+      expect(scrollIntoView).toHaveBeenCalledWith({
+        block: 'nearest',
+        inline: 'nearest'
+      });
+    });
+
+    it('should not scroll an already fully visible highlighted option', () => {
+      const parent = document.createElement('div');
+      jest
+        .spyOn(parent, 'getBoundingClientRect')
+        .mockReturnValue({ top: 0, bottom: 200 } as DOMRect);
+
+      const el = document.createElement('div');
+      parent.appendChild(el);
+      jest
+        .spyOn(el, 'getBoundingClientRect')
+        .mockReturnValue({ top: 10, bottom: 40 } as DOMRect);
+
+      (component as any)._highlightOption(el);
+
+      expect(scrollIntoView).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Chip Removal', () => {
+    beforeEach(() => {
+      window.HTMLElement.prototype.scrollIntoView = jest.fn();
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [component.options[0], component.options[1]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+    });
+
+    it('should prevent default on chip close button mousedown so the box does not lose focus', () => {
+      const closeBtn = fixture.debugElement.query(
+        By.css('.cps-chip-close-btn')
+      );
+      const event = new MouseEvent('mousedown', { cancelable: true });
+      closeBtn.nativeElement.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should keep the dropdown open and remove the value when a chip close button is clicked', fakeAsync(() => {
+      component.onBoxClick();
+      tick();
+      fixture.detectChanges();
+      expect(component.isOpened).toBe(true);
+
+      const closeBtn = fixture.debugElement.query(
+        By.css('.cps-chip-close-btn')
+      );
+      closeBtn.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(component.isOpened).toBe(true);
+      expect(component.value).not.toContainEqual(component.options[0]);
+      expect(component.value).toContainEqual(component.options[1]);
+      discardPeriodicTasks();
+    }));
+  });
+
   describe('aria-label', () => {
     it('should set aria-label from ariaLabel input', () => {
       fixture.componentRef.setInput('ariaLabel', 'Search options');

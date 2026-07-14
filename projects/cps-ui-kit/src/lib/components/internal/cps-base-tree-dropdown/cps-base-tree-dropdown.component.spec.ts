@@ -1,5 +1,10 @@
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -392,6 +397,171 @@ describe('CpsBaseTreeDropdownComponent', () => {
       component.toggleOptions(true);
       expect(component.optionFocused).toBe(false);
       expect(component.isArrowNavigating).toBe(false);
+    });
+  });
+
+  describe('Scroll to selection on open', () => {
+    // must run after any fixture.detectChanges() call in a test, since that
+    // re-resolves @ViewChild('treeList') and would overwrite this stub
+    const stubTreeList = () => {
+      (component as any).treeList = {
+        cd: { markForCheck: jest.fn(), detectChanges: jest.fn() },
+        updateSerializedValue: jest.fn(),
+        serializedValue: [{ node: { key: '0' } }, { node: { key: '1' } }],
+        scroller: {
+          calculateOptions: jest.fn(),
+          cd: { detectChanges: jest.fn() }
+        },
+        scrollToVirtualIndex: jest.fn()
+      };
+    };
+
+    beforeEach(() => {
+      component.writeValue(OPTIONS[0]);
+      stubTreeList();
+    });
+
+    it('should scroll the selected node into view when its element is found by key', fakeAsync(() => {
+      const scrollIntoView = jest.fn();
+      const querySelector = jest.fn().mockReturnValue({ scrollIntoView });
+      (component as any).treeContainerElement = {
+        querySelector,
+        removeEventListener: jest.fn()
+      };
+
+      component.toggleOptions(true);
+      tick();
+
+      expect(querySelector).toHaveBeenCalledWith('.key-0');
+      expect(scrollIntoView).toHaveBeenCalled();
+      expect(
+        (component as any).treeList.scrollToVirtualIndex
+      ).not.toHaveBeenCalled();
+    }));
+
+    it('should fall back to scrollToVirtualIndex when the node is not rendered and virtualScroll is on', fakeAsync(() => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+      stubTreeList();
+      const querySelector = jest.fn().mockReturnValue(null);
+      (component as any).treeContainerElement = {
+        querySelector,
+        removeEventListener: jest.fn()
+      };
+
+      component.toggleOptions(true);
+      tick();
+
+      // OPTIONS[0] resolves to key '0', which is at index 0 in serializedValue -
+      // this locks in the `??` fix (findIndex returning 0 must not be discarded as "not found")
+      expect(
+        (component as any).treeList.scrollToVirtualIndex
+      ).toHaveBeenCalledWith(0);
+    }));
+
+    it('should not scroll when the node is not rendered and virtualScroll is off', fakeAsync(() => {
+      const querySelector = jest.fn().mockReturnValue(null);
+      (component as any).treeContainerElement = {
+        querySelector,
+        removeEventListener: jest.fn()
+      };
+
+      component.toggleOptions(true);
+      tick();
+
+      expect(
+        (component as any).treeList.scrollToVirtualIndex
+      ).not.toHaveBeenCalled();
+    }));
+
+    it('should use the first selected key for scrolling when multiple is enabled', fakeAsync(() => {
+      fixture.componentRef.setInput('multiple', true);
+      component.writeValue([OPTIONS[0], OPTIONS[1]]);
+      stubTreeList();
+      const scrollIntoView = jest.fn();
+      const querySelector = jest.fn().mockReturnValue({ scrollIntoView });
+      (component as any).treeContainerElement = {
+        querySelector,
+        removeEventListener: jest.fn()
+      };
+
+      component.toggleOptions(true);
+      tick();
+
+      expect(querySelector).toHaveBeenCalledWith('.key-0');
+      expect(scrollIntoView).toHaveBeenCalled();
+    }));
+  });
+
+  describe('Virtual scroll list height', () => {
+    it('should set the height on scroller.elementViewChild, not scroller.style', () => {
+      const elementViewChild = {
+        nativeElement: { style: {} as Record<string, string> }
+      };
+      const scrollerStyle = {} as Record<string, string>;
+      (component as any).treeList = {
+        scroller: { style: scrollerStyle, elementViewChild }
+      };
+
+      (component as any)._setTreeListHeight('7.5rem');
+
+      expect(elementViewChild.nativeElement.style.height).toBe('7.5rem');
+      expect(scrollerStyle.height).toBeUndefined();
+    });
+
+    it('recalcVirtualListHeight should apply the computed height to elementViewChild', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+
+      const elementViewChild = {
+        nativeElement: { style: {} as Record<string, string> }
+      };
+      (component as any).treeList = {
+        serializedValue: [{}, {}, {}],
+        scroller: {
+          style: {},
+          elementViewChild,
+          calculateOptions: jest.fn(),
+          cd: { detectChanges: jest.fn() }
+        }
+      };
+
+      component.recalcVirtualListHeight();
+
+      expect(elementViewChild.nativeElement.style.height).toBe(
+        `${component.virtualListHeightRem}rem`
+      );
+    });
+
+    it('updateOptions should refresh serializedValue and force treeList to re-check so the scroller sees fresh items', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+
+      const updateSerializedValue = jest.fn();
+      const detectChanges = jest.fn();
+      (component as any).treeList = {
+        updateSerializedValue,
+        cd: { detectChanges }
+      };
+
+      component.updateOptions();
+
+      expect(updateSerializedValue).toHaveBeenCalled();
+      expect(detectChanges).toHaveBeenCalled();
+    });
+
+    it('updateOptions should be a no-op when virtualScroll is disabled', () => {
+      const updateSerializedValue = jest.fn();
+      const detectChanges = jest.fn();
+      (component as any).treeList = {
+        updateSerializedValue,
+        cd: { detectChanges }
+      };
+
+      component.updateOptions();
+
+      expect(updateSerializedValue).not.toHaveBeenCalled();
+      expect(detectChanges).not.toHaveBeenCalled();
     });
   });
 

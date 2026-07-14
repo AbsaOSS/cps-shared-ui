@@ -470,7 +470,7 @@ export class CpsSelectComponent
           selected.scrollIntoView({
             behavior: 'instant',
             block: 'nearest',
-            inline: 'center'
+            inline: 'start'
           });
         } else if (this.virtualScroll && this.optionHighlightedIndex >= 0) {
           this._scrollVirtualListToIndex(this.optionHighlightedIndex);
@@ -566,7 +566,7 @@ export class CpsSelectComponent
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
       el.scrollIntoView({
         block: 'nearest',
-        inline: 'center'
+        inline: 'nearest'
       });
     }
   }

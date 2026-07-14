@@ -12,6 +12,7 @@
       class="cps-chip-close-btn"
       [disabled]="disabled"
       [attr.aria-label]="closeButtonAriaLabel"
+      (mousedown)="$event.preventDefault()"
       (click)="onCloseClick($event)"
       (keydown.enter)="$event.stopPropagation()">
       <cps-icon icon="close-x" size="xsmall" color="text-darkest"></cps-icon>
