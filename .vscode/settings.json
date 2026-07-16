@@ -26,7 +26,7 @@
   "files.associations": {
     "**/src/**/*.spec.ts": "typescriptreact"
   },
-  "git.enableCommitSigning": true,
+  "git.enableCommitSigning": false,
   "editor.codeLens": true,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
