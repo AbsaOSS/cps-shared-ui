@@ -1,5 +1,13 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
+  <app-code-example label="Basic usage" [htmlCode]="examples.basicUsage.html">
+    <cps-icon
+      icon="like"
+      size="normal"
+      color="var(--cps-text-primary)"></cps-icon>
+  </app-code-example>
+
+  <h2 class="section-title">Browse all icons</h2>
   <div class="search-input">
     <cps-input
       ariaLabel="Search an icon"

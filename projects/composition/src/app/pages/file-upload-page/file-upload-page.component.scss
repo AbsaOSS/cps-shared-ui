@@ -1,15 +1,8 @@
 :host {
-  .section-title {
-    color: var(--cps-color-depth);
-  }
-  .section-title:first-child {
-    margin-top: 0;
-  }
-  .section-title,
-  .section-body {
-    margin-left: 0.5rem;
-  }
-  .section-body:last-child {
-    margin-bottom: 0.5rem;
+  .file-upload-with-selector,
+  .file-upload-with-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 }

@@ -10,13 +10,16 @@ import {
 
 import ComponentData from '../../../api-data/cps-icon.json';
 import { ComponentDocsViewerComponent } from '../../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../../components/code-example/code-example.component';
+import { iconsExamples } from './icons-page.examples';
 
 @Component({
   imports: [
     CpsIconComponent,
     CpsInputComponent,
     FormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',
@@ -26,6 +29,7 @@ import { ComponentDocsViewerComponent } from '../../../components/component-docs
 export class IconsPageComponent implements OnInit {
   filteredIconsList: string[] = [];
   componentData = ComponentData;
+  readonly examples = iconsExamples;
 
   private _notificationService = inject(CpsNotificationService);
 
