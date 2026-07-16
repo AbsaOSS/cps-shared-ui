@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-import { DomHandler } from 'primeng/dom';
-import { TreeTable } from 'primeng/treetable';
+import { DomHandler } from '../../../../primeng-temp/dom/public_api';
+import { TreeTable } from '../../../../primeng-temp/treetable/public_api';
 import { CpsTreeTableColumnSortableDirective } from './cps-tree-table-column-sortable.directive';
 
 @Component({

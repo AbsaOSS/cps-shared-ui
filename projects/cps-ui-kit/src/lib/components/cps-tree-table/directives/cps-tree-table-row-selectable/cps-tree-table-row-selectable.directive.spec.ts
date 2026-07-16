@@ -8,7 +8,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TTCheckbox } from 'primeng/treetable';
+import { TTCheckbox } from '../../../../primeng-temp/treetable/public_api';
 import { CpsTreeTableRowSelectableDirective } from './cps-tree-table-row-selectable.directive';
 
 @Component({

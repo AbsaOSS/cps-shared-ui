@@ -3,8 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-import { DomHandler } from 'primeng/dom';
-import { Table } from 'primeng/table';
+import { DomHandler } from '../../../../primeng-temp/dom/public_api';
+import { Table } from '../../../../primeng-temp/table/public_api';
 import { CpsTableColumnSortableDirective } from './cps-table-column-sortable.directive';
 
 @Component({

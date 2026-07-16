@@ -6,8 +6,8 @@ import {
   TTResizableColumn,
   TreeTable,
   TreeTableStyle
-} from 'primeng/treetable';
-import { BaseComponent } from 'primeng/basecomponent';
+} from '../../../../primeng-temp/treetable/public_api';
+import { BaseComponent } from '../../../../primeng-temp/basecomponent/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsTreeTableColumnResizableDirective } from './cps-tree-table-column-resizable.directive';
 

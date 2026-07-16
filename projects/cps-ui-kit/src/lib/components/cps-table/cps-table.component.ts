@@ -17,10 +17,14 @@ import {
 } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Table, TableService, TableModule } from 'primeng/table';
-import type { TablePassThrough } from 'primeng/types/table';
-import type { PaginatorPassThrough } from 'primeng/types/paginator';
-import { SortEvent } from 'primeng/api';
+import {
+  Table,
+  TableService,
+  TableModule
+} from '../../primeng-temp/table/public_api';
+import type { TablePassThrough } from '../../primeng-temp/types/table/public_api';
+import type { PaginatorPassThrough } from '../../primeng-temp/types/paginator/public_api';
+import { SortEvent } from '../../primeng-temp/api/public_api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';

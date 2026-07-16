@@ -1,7 +1,7 @@
 import { SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BaseComponent } from 'primeng/basecomponent';
+import { BaseComponent } from '../../primeng-temp/basecomponent/public_api';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 import { CpsTableComponent } from './cps-table.component';
 

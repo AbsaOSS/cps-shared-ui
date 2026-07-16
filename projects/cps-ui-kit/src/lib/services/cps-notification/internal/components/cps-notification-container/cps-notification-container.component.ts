@@ -13,8 +13,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { SharedModule } from 'primeng/api';
-import { ZIndexUtils } from 'primeng/utils';
+import { SharedModule } from '../../../../../primeng-temp/api/public_api';
+import { ZIndexUtils } from '../../../../../primeng-temp/utils/public_api';
 import {
   CpsNotificationConfig,
   CpsNotificationPosition
@@ -22,7 +22,7 @@ import {
 import { CpsNotificationData } from '../../../utils/internal/cps-notification-data';
 import { CpsToastComponent } from '../cps-toast/cps-toast.component';
 import { animateChild, query, transition, trigger } from '@angular/animations';
-import { PrimeNG } from 'primeng/config';
+import { PrimeNG } from '../../../../../primeng-temp/config/public_api';
 
 type Nullable<T = void> = T | null | undefined;
 

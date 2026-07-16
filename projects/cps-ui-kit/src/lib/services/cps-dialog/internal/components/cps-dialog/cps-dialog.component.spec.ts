@@ -6,8 +6,8 @@ import {
   tick
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { PrimeNG } from 'primeng/config';
-import { DomHandler } from 'primeng/dom';
+import { PrimeNG } from '../../../../../primeng-temp/config/public_api';
+import { DomHandler } from '../../../../../primeng-temp/dom/public_api';
 import { CpsDialogComponent } from './cps-dialog.component';
 import {
   CPS_DIALOG_CONFIG,
