@@ -1,0 +1,24 @@
+export const dividerExamples: Record<string, { html: string; ts?: string }> = {
+  horizontalDivider: {
+    html: `
+<p>First row</p>
+<cps-divider></cps-divider>
+<p>Second row</p>`
+  },
+
+  verticalDivider: {
+    html: `
+<p>First column</p>
+<cps-divider [vertical]="true"></cps-divider>
+<p>Second column</p>
+<cps-divider [vertical]="true"></cps-divider>
+<p>Third column</p>`
+  },
+
+  dashedThickRedDivider: {
+    html: `
+<p>First row</p>
+<cps-divider thickness="0.25rem" color="red" type="dashed"></cps-divider>
+<p>Second row</p>`
+  }
+};
