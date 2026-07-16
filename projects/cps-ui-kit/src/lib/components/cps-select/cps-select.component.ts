@@ -46,7 +46,10 @@ import {
   CpsMenuComponent,
   CpsMenuHideReason
 } from '../cps-menu/cps-menu.component';
-import { Scroller, ScrollerModule } from 'primeng/scroller';
+import {
+  Scroller,
+  ScrollerModule
+} from '../../primeng-temp/scroller/public_api';
 
 /**
  * CpsSelectAppearanceType is used to define the border of the select input.

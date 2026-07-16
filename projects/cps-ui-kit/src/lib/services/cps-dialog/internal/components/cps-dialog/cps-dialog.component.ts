@@ -28,10 +28,10 @@ import {
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
-import { SharedModule } from 'primeng/api';
-import { DomHandler } from 'primeng/dom';
-import { ZIndexUtils } from 'primeng/utils';
-import { PrimeNG } from 'primeng/config';
+import { SharedModule } from '../../../../../primeng-temp/api/public_api';
+import { DomHandler } from '../../../../../primeng-temp/dom/public_api';
+import { ZIndexUtils } from '../../../../../primeng-temp/utils/public_api';
+import { PrimeNG } from '../../../../../primeng-temp/config/public_api';
 import {
   convertSize,
   parseSize

@@ -1,0 +1,239 @@
+// @ts-nocheck -- vendored third-party source, see provenance note below.
+/**
+ * Vendored from PrimeNG 21.1.9 (https://github.com/primefaces/primeng, tag 21.1.9, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593).
+ * Original file: packages/primeng/src/types/scroller/scroller.types.ts
+ * Modified: import paths rewritten to resolve locally; // @ts-nocheck added because this
+ * repository's TypeScript config is stricter than PrimeNG's own (strict, noImplicitOverride,
+ * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
+ * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
+ */
+import { TemplateRef } from '@angular/core';
+import type { PassThrough, PassThroughOption } from '../../api/public_api';
+
+/**
+ * Custom pass-through(pt) options.
+ * @template I Type of instance.
+ *
+ * @see {@link Scroller.pt}
+ * @group Interface
+ */
+export interface VirtualScrollerPassThroughOptions<I = unknown> {
+    /**
+     * Used to pass attributes to the host's DOM element.
+     */
+    host?: PassThroughOption<HTMLElement, I>;
+    /**
+     * Used to pass attributes to the root's DOM element.
+     */
+    root?: PassThroughOption<HTMLDivElement, I>;
+    /**
+     * Used to pass attributes to the content's DOM element.
+     */
+    content?: PassThroughOption<HTMLDivElement, I>;
+    /**
+     * Used to pass attributes to the spacer's DOM element.
+     */
+    spacer?: PassThroughOption<HTMLDivElement, I>;
+    /**
+     * Used to pass attributes to the loader's DOM element.
+     */
+    loader?: PassThroughOption<HTMLDivElement, I>;
+    /**
+     * Used to pass attributes to the loading icon's DOM element.
+     */
+    loadingIcon?: PassThroughOption<HTMLElement, I>;
+}
+
+/**
+ * Defines valid pass-through options in VirtualScroller.
+ * @see {@link VirtualScrollerPassThroughOptions}
+ *
+ * @template I Type of instance.
+ */
+export type VirtualScrollerPassThrough<I = unknown> = PassThrough<I, VirtualScrollerPassThroughOptions<I>>;
+
+/**
+ * Options of the scroll direction.
+ * @group Types
+ */
+export type ScrollerToType = 'to-start' | 'to-end' | undefined;
+/**
+ * Options of the scroller orientation.
+ * @group Types
+ */
+export type VirtualScrollerOrientationType = 'vertical' | 'horizontal' | 'both';
+/**
+ * Loader icon options.
+ * @group Types
+ */
+export interface ScrollerLoaderIconOptions {
+    [klass: string]: any;
+}
+/**
+ * Scroller content options.
+ * @group Interface
+ */
+export interface ScrollerContentOptions {
+    contentStyleClass?: string;
+    items?: any[];
+    loading?: boolean;
+    itemSize?: number;
+    rows?: any[];
+    columns?: any[];
+    spacerStyle?: { [klass: string]: any } | null | undefined;
+    contentStyle?: { [klass: string]: any } | null | undefined;
+    vertical?: boolean;
+    horizontal?: boolean;
+    both?: boolean;
+    getItemOptions?: (index: number) => ScrollerItemOptions;
+    getLoaderOptions?: (index: number, options?: any) => ScrollerLoaderOptions;
+}
+/**
+ * Scroller item options.
+ * @group Interface
+ */
+export interface ScrollerItemOptions {
+    /**
+     * Index of the item.
+     */
+    index?: number;
+    /**
+     * Item count.
+     */
+    count?: number;
+    /**
+     * Index of the first element in viewport.
+     */
+    first?: boolean;
+    /**
+     * Index of the last element in viewport.
+     */
+    last?: boolean;
+    /**
+     * Defines if index is even number.
+     */
+    even?: boolean;
+    /**
+     * Defines if index is odd number.
+     */
+    odd?: boolean;
+}
+/**
+ * Loader settings.
+ * @extends {ScrollerItemOptions}
+ * @group Interface
+ */
+export interface ScrollerLoaderOptions extends ScrollerItemOptions {
+    [klass: string]: any;
+}
+/**
+ * Custom lazy load event.
+ * @see {@link Scroller.onLazyLoad}
+ * @group Events
+ */
+export interface ScrollerLazyLoadEvent {
+    /**
+     * First element index in viewport.
+     */
+    first: number;
+    /**
+     * Last element index in viewport.
+     */
+    last: number;
+}
+/**
+ * Custom scroll index change event.
+ * @see {@link Scroller.onScrollIndexChange}
+ * @extends {ScrollerLazyLoadEvent}
+ * @group Events
+ */
+export interface ScrollerScrollIndexChangeEvent extends ScrollerLazyLoadEvent {}
+/**
+ * Custom scroll event.
+ * @see {@link Scroller.onScroll}
+ * @group Events
+ */
+export interface ScrollerScrollEvent {
+    /**
+     * Browser event.
+     */
+    originalEvent?: Event;
+}
+/**
+ * Custom content template context.
+ * @group Interface
+ */
+export interface ScrollerContentTemplateContext {
+    /**
+     * Loaded items.
+     */
+    $implicit: any[] | any | null | undefined;
+    /**
+     * Content options.
+     */
+    options: ScrollerContentOptions;
+}
+
+/**
+ * Custom item template context.
+ * @group Interface
+ */
+export interface ScrollerItemTemplateContext {
+    /**
+     * Item instance.
+     */
+    $implicit: any;
+    /**
+     * Scroller item options.
+     */
+    options: ScrollerItemOptions;
+}
+
+/**
+ * Custom loader template context.
+ * @group Interface
+ */
+export interface ScrollerLoaderTemplateContext {
+    /**
+     * Loader options.
+     */
+    options: ScrollerLoaderOptions;
+}
+
+/**
+ * Custom loader icon template context.
+ * @group Interface
+ */
+export interface ScrollerLoaderIconTemplateContext {
+    /**
+     * Loader icon options.
+     */
+    options: ScrollerLoaderIconOptions;
+}
+
+/**
+ * Defines valid templates in Scroller.
+ * @group Templates
+ */
+export interface ScrollerTemplates {
+    /**
+     * Custom content template.
+     * @param {ScrollerContentTemplateContext} context - content context.
+     */
+    content(context: ScrollerContentTemplateContext): TemplateRef<ScrollerContentTemplateContext>;
+    /**
+     * Custom item template.
+     * @param {ScrollerItemTemplateContext} context - item context.
+     */
+    item(context: ScrollerItemTemplateContext): TemplateRef<ScrollerItemTemplateContext>;
+    /**
+     * Custom loader template.
+     * @param {ScrollerLoaderTemplateContext} context - loader context.
+     */
+    loader(context: ScrollerLoaderTemplateContext): TemplateRef<ScrollerLoaderTemplateContext>;
+    /**
+     * Custom loader icon template.
+     * @param {ScrollerLoaderIconTemplateContext} context - loader icon context.
+     */
+    loadericon(context: ScrollerLoaderIconTemplateContext): TemplateRef<ScrollerLoaderIconTemplateContext>;
+}

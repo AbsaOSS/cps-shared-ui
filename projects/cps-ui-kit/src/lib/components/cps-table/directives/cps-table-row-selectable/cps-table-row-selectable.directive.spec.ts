@@ -8,7 +8,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TableCheckbox } from 'primeng/table';
+import { TableCheckbox } from '../../../../primeng-temp/table/public_api';
 import { CpsTableRowSelectableDirective } from './cps-table-row-selectable.directive';
 
 @Component({

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { PrimeNG } from 'primeng/config';
-import { ZIndexUtils } from 'primeng/utils';
+import { PrimeNG } from '../../../../../primeng-temp/config/public_api';
+import { ZIndexUtils } from '../../../../../primeng-temp/utils/public_api';
 import { CpsNotificationContainerComponent } from './cps-notification-container.component';
 import {
   CpsNotificationAppearance,

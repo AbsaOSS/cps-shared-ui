@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TableHeaderCheckbox } from 'primeng/table';
+import { TableHeaderCheckbox } from '../../../../primeng-temp/table/public_api';
 
 /**
  * CpsTableHeaderSelectableDirective is a directive used to apply a checkbox to a header cell.

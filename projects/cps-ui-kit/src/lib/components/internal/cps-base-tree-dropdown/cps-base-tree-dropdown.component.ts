@@ -18,13 +18,13 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { TreeNode } from 'primeng/api';
+import { TreeNode } from '../../../primeng-temp/api/public_api';
 import {
   generateUniqueId,
   logMissingAriaLabelError
 } from '../../../utils/internal/accessibility-utils/accessibility-utils';
 import { Subscription } from 'rxjs';
-import { Tree } from 'primeng/tree';
+import { Tree } from '../../../primeng-temp/tree/public_api';
 import { isEqual } from 'lodash-es';
 import type {
   CpsIconType,

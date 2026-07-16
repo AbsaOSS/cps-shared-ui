@@ -29,13 +29,19 @@ import {
   ViewRef,
   inject
 } from '@angular/core';
-import { OverlayService, SharedModule } from 'primeng/api';
-import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
-import { ZIndexUtils } from 'primeng/utils';
+import {
+  OverlayService,
+  SharedModule
+} from '../../primeng-temp/api/public_api';
+import {
+  ConnectedOverlayScrollHandler,
+  DomHandler
+} from '../../primeng-temp/dom/public_api';
+import { ZIndexUtils } from '../../primeng-temp/utils/public_api';
 import { Subscription } from 'rxjs';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
-import { PrimeNG } from 'primeng/config';
+import { PrimeNG } from '../../primeng-temp/config/public_api';
 import { CPS_FOCUS_SERVICE } from '../../services/cps-focus/cps-focus.service';
 import {
   prefersReducedMotion,

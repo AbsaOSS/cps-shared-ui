@@ -1,4 +1,4 @@
-import { TreeTable } from 'primeng/treetable';
+import { TreeTable } from '../../../../../primeng-temp/treetable/public_api';
 import { TreeTableUnsortDirective } from './tree-table-unsort.directive';
 
 type Node = {

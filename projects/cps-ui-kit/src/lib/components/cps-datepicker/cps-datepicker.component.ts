@@ -21,7 +21,10 @@ import {
   CpsMenuComponent,
   CpsMenuHideReason
 } from '../cps-menu/cps-menu.component';
-import { DatePicker, DatePickerModule } from 'primeng/datepicker';
+import {
+  DatePicker,
+  DatePickerModule
+} from '../../primeng-temp/datepicker/public_api';
 import {
   logMissingAriaLabelError,
   generateUniqueId

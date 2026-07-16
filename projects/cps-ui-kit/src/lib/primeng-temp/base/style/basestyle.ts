@@ -1,0 +1,125 @@
+// @ts-nocheck -- vendored third-party source, see provenance note below.
+/**
+ * Vendored from PrimeNG 21.1.9 (https://github.com/primefaces/primeng, tag 21.1.9, commit c493b1c6d9f7cdffbe1c4dc195493dd73d733593).
+ * Original file: packages/primeng/src/base/style/basestyle.ts
+ * Modified: import paths rewritten to resolve locally; // @ts-nocheck added because this
+ * repository's TypeScript config is stricter than PrimeNG's own (strict, noImplicitOverride,
+ * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
+ * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
+ */
+import { inject, Injectable } from '@angular/core';
+import { css as Css, dt, Theme } from '../../../primeuix-temp/styled/src/index';
+import { style as base_style } from '../../../primeuix-temp/styles/src/base/index';
+import { minifyCSS, resolve } from '../../../primeuix-temp/utils/src/index';
+import { UseStyle } from '../../usestyle/public_api';
+
+const css = /*css*/ `
+.p-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.p-hidden-accessible input,
+.p-hidden-accessible select {
+    transform: scale(0);
+}
+
+.p-overflow-hidden {
+    overflow: hidden;
+    padding-right: dt('scrollbar.width');
+}
+`;
+
+@Injectable({ providedIn: 'root' })
+export class BaseStyle {
+    name = 'base';
+
+    useStyle: UseStyle = inject(UseStyle);
+
+    css: string | undefined = undefined;
+
+    style: any = undefined;
+
+    classes = {};
+
+    inlineStyles = {};
+
+    load = (style, options = {}, transform = (cs) => cs) => {
+        const computedStyle = transform(Css`${resolve(style, { dt })}`);
+
+        return computedStyle ? this.useStyle.use(minifyCSS(computedStyle), { name: this.name, ...options }) : {};
+    };
+
+    loadCSS = (options = {}) => {
+        return this.load(this.css, options);
+    };
+
+    loadStyle = (options: any = {}, style: string = '') => {
+        return this.load(this.style, options, (computedStyle = '') => Theme.transformCSS(options.name || this.name, `${computedStyle}${Css`${style}`}`));
+    };
+
+    loadBaseCSS = (options = {}) => {
+        return this.load(css, options);
+    };
+
+    loadBaseStyle = (options: any = {}, style: string = '') => {
+        return this.load(base_style, options, (computedStyle = '') => Theme.transformCSS(options.name || this.name, `${computedStyle}${Css`${style}`}`));
+    };
+
+    getCommonTheme = (params?) => {
+        return Theme.getCommon(this.name, params);
+    };
+
+    getComponentTheme = (params) => {
+        return Theme.getComponent(this.name, params);
+    };
+
+    getPresetTheme = (preset, selector, params) => {
+        return Theme.getCustomPreset(this.name, preset, selector, params);
+    };
+
+    getLayerOrderThemeCSS = () => {
+        return Theme.getLayerOrderCSS(this.name);
+    };
+
+    getStyleSheet = (extendedCSS = '', props = {}) => {
+        if (this.css) {
+            const _css = resolve(this.css, { dt });
+            const _style = minifyCSS(Css`${_css}${extendedCSS}`);
+            const _props = Object.entries(props)
+                .reduce<any>((acc, [k, v]) => acc.push(`${k}="${v}"`) && acc, [])
+                .join(' ');
+
+            return `<style type="text/css" data-primeng-style-id="${this.name}" ${_props}>${_style}</style>`;
+        }
+
+        return '';
+    };
+
+    getCommonThemeStyleSheet = (params, props = {}) => {
+        return Theme.getCommonStyleSheet(this.name, params, props);
+    };
+
+    getThemeStyleSheet = (params, props = {}) => {
+        let css = [Theme.getStyleSheet(this.name, params, props)];
+
+        if (this.style) {
+            const name = this.name === 'base' ? 'global-style' : `${this.name}-style`;
+            const _css = Css`${resolve(this.style, { dt })}`;
+            const _style = minifyCSS(Theme.transformCSS(name, _css as string));
+            const _props = Object.entries(props)
+                .reduce<any>((acc, [k, v]) => acc.push(`${k}="${v}"`) && acc, [])
+                .join(' ');
+
+            css.push(`<style type="text/css" data-primeng-style-id="${name}" ${_props}>${_style}</style>`);
+        }
+
+        return css.join('');
+    };
+}

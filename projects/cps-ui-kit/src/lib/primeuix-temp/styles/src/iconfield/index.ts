@@ -1,0 +1,52 @@
+/**
+ * Vendored from primeuix (https://github.com/primefaces/primeuix, commit b9467bc448d35738d4f651dbc3caa4d4cb9a6a96).
+ * Original file: packages/styles/src/iconfield/index.ts
+ * Modified: import paths rewritten to resolve locally. See ../../../NOTICE.md.
+ * Original license: MIT, Copyright (c) 2025 PrimeTek.
+ */
+export const style = /*css*/ `
+    .p-iconfield {
+        position: relative;
+        display: block;
+    }
+
+    .p-inputicon {
+        position: absolute;
+        top: 50%;
+        margin-top: calc(-1 * (dt('icon.size') / 2));
+        color: dt('iconfield.icon.color');
+        line-height: 1;
+        z-index: 1;
+    }
+
+    .p-iconfield .p-inputicon:first-child {
+        inset-inline-start: dt('form.field.padding.x');
+    }
+
+    .p-iconfield .p-inputicon:last-child {
+        inset-inline-end: dt('form.field.padding.x');
+    }
+
+    .p-iconfield .p-inputtext:not(:first-child),
+    .p-iconfield .p-inputwrapper:not(:first-child) .p-inputtext {
+        padding-inline-start: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));
+    }
+
+    .p-iconfield .p-inputtext:not(:last-child) {
+        padding-inline-end: calc((dt('form.field.padding.x') * 2) + dt('icon.size'));
+    }
+
+    .p-iconfield:has(.p-inputfield-sm) .p-inputicon {
+        font-size: dt('form.field.sm.font.size');
+        width: dt('form.field.sm.font.size');
+        height: dt('form.field.sm.font.size');
+        margin-top: calc(-1 * (dt('form.field.sm.font.size') / 2));
+    }
+
+    .p-iconfield:has(.p-inputfield-lg) .p-inputicon {
+        font-size: dt('form.field.lg.font.size');
+        width: dt('form.field.lg.font.size');
+        height: dt('form.field.lg.font.size');
+        margin-top: calc(-1 * (dt('form.field.lg.font.size') / 2));
+    }
+`;

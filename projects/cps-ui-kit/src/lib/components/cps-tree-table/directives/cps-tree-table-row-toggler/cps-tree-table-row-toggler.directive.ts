@@ -11,7 +11,7 @@ import {
   ViewContainerRef,
   type SimpleChanges
 } from '@angular/core';
-import { TreeTableToggler } from 'primeng/treetable';
+import { TreeTableToggler } from '../../../../primeng-temp/treetable/public_api';
 
 /**
  * CpsTreetableRowTogglerDirective is a directive used to apply a chevron toggler icon to a body cell.

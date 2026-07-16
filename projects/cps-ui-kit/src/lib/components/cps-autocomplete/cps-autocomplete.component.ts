@@ -46,7 +46,10 @@ import {
   CpsMenuComponent,
   CpsMenuHideReason
 } from '../cps-menu/cps-menu.component';
-import { Scroller, ScrollerModule } from 'primeng/scroller';
+import {
+  Scroller,
+  ScrollerModule
+} from '../../primeng-temp/scroller/public_api';
 
 const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.75;
 const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
