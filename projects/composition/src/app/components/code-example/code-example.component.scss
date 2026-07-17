@@ -83,6 +83,7 @@
       overflow-x: auto;
       font-size: 0.8125rem;
       line-height: 1.6;
+      border-radius: inherit;
     }
 
     code {
@@ -97,10 +98,8 @@
     top: 0.625rem;
     right: 0.75rem;
     z-index: 1;
-
-    ::ng-deep button {
-      background-color: var(--cps-surface-elevated) !important;
-    }
+    background-color: var(--cps-surface-elevated);
+    border-radius: 0.25rem;
   }
 
   &__panel--hidden {
@@ -121,6 +120,10 @@
       margin-bottom: 1.5rem;
       background-color: transparent;
       border-radius: 0;
+
+      &:empty {
+        margin-bottom: 0;
+      }
     }
 
     .code-example__tabbar {

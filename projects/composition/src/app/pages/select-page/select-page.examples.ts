@@ -183,7 +183,7 @@ syncOptions = [
   { title: 'Netflix', val: 'NFLX', ticker: 'NFLX' },
   { title: 'Tesla', val: 'TSLA', ticker: 'TSLA' }
 ];
-syncVal: any = [];`
+syncVal: string[] = [];`
   },
 
   underlinedSelect: {

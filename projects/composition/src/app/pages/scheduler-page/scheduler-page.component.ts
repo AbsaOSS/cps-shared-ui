@@ -14,7 +14,6 @@ import { schedulerExamples } from './scheduler-page.examples';
     CodeExampleComponent
   ],
   templateUrl: './scheduler-page.component.html',
-  styleUrl: './scheduler-page.component.scss',
   host: { class: 'composition-page' }
 })
 export class SchedulerPageComponent {

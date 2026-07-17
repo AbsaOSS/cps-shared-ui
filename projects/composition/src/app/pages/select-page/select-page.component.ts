@@ -59,7 +59,7 @@ export class SelectPageComponent implements OnInit {
   ];
 
   form!: UntypedFormGroup;
-  syncVal: any = [];
+  syncVal: string[] = [];
   componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
