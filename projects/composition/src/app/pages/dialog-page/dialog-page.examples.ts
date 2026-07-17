@@ -216,18 +216,20 @@ openDialogFromRootInstance() {
 
   closeAllDialogs: {
     html: `
-<cps-button
-  label="Close all dialogs"
-  icon="close-x"
-  type="outlined"
-  (clicked)="closeAllDialogs()">
-</cps-button>
-<cps-button
-  label="Close all dialogs (forced)"
-  icon="close-x"
-  type="outlined"
-  (clicked)="closeAllDialogs(true)">
-</cps-button>`,
+<div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+  <cps-button
+    label="Close all dialogs"
+    icon="close-x"
+    type="outlined"
+    (clicked)="closeAllDialogs()">
+  </cps-button>
+  <cps-button
+    label="Close all dialogs (forced)"
+    icon="close-x"
+    type="outlined"
+    (clicked)="closeAllDialogs(true)">
+  </cps-button>
+</div>`,
     ts: `
 closeAllDialogs(force = false): void {
   this._dialogService.closeAll(force);

@@ -8,11 +8,13 @@ export const dividerExamples: Record<string, { html: string; ts?: string }> = {
 
   verticalDivider: {
     html: `
-<p>First column</p>
-<cps-divider [vertical]="true"></cps-divider>
-<p>Second column</p>
-<cps-divider [vertical]="true"></cps-divider>
-<p>Third column</p>`
+<div style="display: flex; column-gap: 0.75rem;">
+  <p>First column</p>
+  <cps-divider [vertical]="true"></cps-divider>
+  <p>Second column</p>
+  <cps-divider [vertical]="true"></cps-divider>
+  <p>Third column</p>
+</div>`
   },
 
   dashedThickRedDivider: {
