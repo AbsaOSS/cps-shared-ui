@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { CpsButtonComponent, CpsLoaderComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 
 import ComponentData from '../../api-data/cps-loader.json';
+import { loaderExamples } from './loader-page.examples';
 
 @Component({
   imports: [
     CpsLoaderComponent,
     CpsButtonComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-loader-page',
   templateUrl: './loader-page.component.html',
@@ -18,6 +21,7 @@ import ComponentData from '../../api-data/cps-loader.json';
 export class LoaderPageComponent {
   fullScreenOpened = false;
   componentData = ComponentData;
+  readonly examples = loaderExamples;
 
   onFullScreenClick() {
     this.fullScreenOpened = true;
