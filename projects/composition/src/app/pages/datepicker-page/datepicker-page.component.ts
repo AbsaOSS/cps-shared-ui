@@ -8,15 +8,17 @@ import {
 } from '@angular/forms';
 import { CpsDatepickerComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
-
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ComponentData from '../../api-data/cps-datepicker.json';
+import { datepickerExamples } from './datepicker-page.examples';
 
 @Component({
   imports: [
     CpsDatepickerComponent,
     FormsModule,
     ReactiveFormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-datepicker-page',
   templateUrl: './datepicker-page.component.html',
@@ -33,6 +35,7 @@ export class DatepickerPageComponent implements OnInit {
   maxDate = new Date(2025, 11, 31);
 
   componentData = ComponentData;
+  readonly examples = datepickerExamples;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
