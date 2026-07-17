@@ -1,6 +1,11 @@
 @use '../../../../variables.scss' as vars;
 @use '../../../../../../cps-ui-kit/styles/mixins' as *;
 
+.section-title {
+  color: var(--cps-color-depth);
+  margin-top: 0;
+}
+
 .search-input {
   margin-bottom: 1.5rem;
 }
