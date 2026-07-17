@@ -1,33 +1,18 @@
 :host {
-  .tooltip-elems-group {
-    margin-bottom: 2rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
+  .tooltip-elems-group-elem-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2.5rem;
+    align-items: center;
+  }
 
-    &-title {
-      font-size: 1.5rem;
-      color: var(--cps-color-depth);
-      border-bottom: 0.0625rem solid lightgrey;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      font-weight: 600;
-    }
-    &-elem-left {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem 2.5rem;
-      align-items: center;
-    }
-
-    &-row {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-bottom: 1.125rem;
-      align-items: center;
-    }
+  .tooltip-elems-group-row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    align-items: center;
   }
 }
 
