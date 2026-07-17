@@ -10,7 +10,7 @@ export const inputExamples: Record<string, { html: string; ts?: string }> = {
     type="number"></cps-input>
 </form>`,
     ts: `
-// inject(UntypedFormBuilder) used here
+private readonly _formBuilder = inject(UntypedFormBuilder);
 
 form!: UntypedFormGroup;
 
@@ -126,7 +126,7 @@ syncVal = '';`
   placeholder="Search something"
   [clearable]="true"></cps-input>`,
     ts: `
-// inject(CpsNotificationService) used here
+private readonly _notifService = inject(CpsNotificationService);
 
 onClickPrefixIcon() {
   this._notifService.info(\`Prefix icon clicked\`, undefined, {
