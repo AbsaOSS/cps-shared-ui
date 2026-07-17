@@ -84,12 +84,65 @@
       font-size: 0.8125rem;
       line-height: 1.6;
       border-radius: inherit;
+
+      &:focus-visible {
+        outline: none;
+        box-shadow:
+          inset 0 0 0 0.0625rem var(--cps-color-calm),
+          inset 0 0 0 0.125rem var(--cps-background-color),
+          inset 0 0 0 0.1875rem var(--cps-color-calm-highlighten);
+      }
     }
 
     code {
       font-family:
         ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
         'Liberation Mono', monospace;
+    }
+
+    // The atom-one-light/dark hljs themes (loaded globally at runtime) fail
+    // WCAG AA contrast for several syntax classes against our background.
+    // Darkened/lightened variants of the same hues restore compliance.
+    ::ng-deep {
+      .hljs-comment,
+      .hljs-quote {
+        color: #71727a;
+      }
+
+      .hljs-section,
+      .hljs-name,
+      .hljs-selector-tag,
+      .hljs-deletion,
+      .hljs-subst {
+        color: #da3020;
+      }
+
+      .hljs-literal {
+        color: #017bae;
+      }
+
+      .hljs-string,
+      .hljs-regexp,
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string {
+        color: #40803f;
+      }
+
+      .hljs-symbol,
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-title {
+        color: #2d6af1;
+      }
+
+      .hljs-built_in,
+      .hljs-title.class_,
+      .hljs-class .hljs-title {
+        color: #9b6a01;
+      }
     }
   }
 

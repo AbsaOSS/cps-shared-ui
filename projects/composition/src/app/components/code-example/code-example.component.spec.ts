@@ -342,34 +342,16 @@ describe('CodeExampleComponent', () => {
       expect(previewPanel.nativeElement.tabIndex).toBe(-1);
     });
 
-    it('preview tabpanel has tabindex 0 when isPreviewNonInteractive is true', () => {
+    it('code tabpanel pre elements default to tabindex -1 when not scrollable', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
       fixture.componentRef.setInput('htmlCode', '<div></div>');
-      fixture.componentRef.setInput('isPreviewNonInteractive', true);
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
 
-      const previewPanel = fixture.debugElement.query(
-        By.css('[id*="-panel-preview"]')
-      );
-      expect(previewPanel.nativeElement.tabIndex).toBe(0);
-    });
-
-    it('preview tabpanel tabindex updates reactively when input changes', () => {
-      fixture = TestBed.createComponent(CodeExampleComponent);
-      component = fixture.componentInstance;
-      fixture.componentRef.setInput('htmlCode', '<div></div>');
-      fixture.componentRef.setInput('isPreviewNonInteractive', false);
-      fixture.detectChanges();
-
-      const previewPanel = fixture.debugElement.query(
-        By.css('[id*="-panel-preview"]')
-      );
-      expect(previewPanel.nativeElement.tabIndex).toBe(-1);
-
-      fixture.componentRef.setInput('isPreviewNonInteractive', true);
-      fixture.detectChanges();
-      expect(previewPanel.nativeElement.tabIndex).toBe(0);
+      const pres = fixture.debugElement.queryAll(By.css('pre.hljs'));
+      expect(pres[0].nativeElement.tabIndex).toBe(-1);
+      expect(pres[1].nativeElement.tabIndex).toBe(-1);
     });
   });
 });

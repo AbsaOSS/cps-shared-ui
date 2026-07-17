@@ -5,7 +5,11 @@ import {
   inject,
   signal,
   ChangeDetectionStrategy,
-  computed
+  computed,
+  viewChild,
+  ElementRef,
+  type Signal,
+  type WritableSignal
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CpsButtonComponent } from 'cps-ui-kit';
@@ -31,7 +35,6 @@ export class CodeExampleComponent {
   htmlCode = input<string | undefined>();
   tsCode = input<string | undefined>();
   label = input('');
-  isPreviewNonInteractive = input(false);
   previewOutside = input(false);
 
   private sanitizer = inject(DomSanitizer);
@@ -43,9 +46,23 @@ export class CodeExampleComponent {
   highlightedCode = signal<SafeHtml>('');
   highlightedTsCode = signal<SafeHtml>('');
   tabs = signal<TabId[]>(['preview']);
-  previewTabIndex = computed(() => (this.isPreviewNonInteractive() ? 0 : -1));
+
+  private previewEl = viewChild<ElementRef<HTMLElement>>('previewPanel');
+  private htmlPreEl = viewChild<ElementRef<HTMLElement>>('htmlPre');
+  private tsPreEl = viewChild<ElementRef<HTMLElement>>('tsPre');
+  private previewScrollable = signal(false);
+  private htmlCodeScrollable = signal(false);
+  private tsCodeScrollable = signal(false);
+  // Only focusable when its content actually overflows and needs scrolling.
+  previewTabIndex = computed(() => (this.previewScrollable() ? 0 : -1));
+  htmlCodeTabIndex = computed(() => (this.htmlCodeScrollable() ? 0 : -1));
+  tsCodeTabIndex = computed(() => (this.tsCodeScrollable() ? 0 : -1));
 
   constructor() {
+    this._observeScrollable(this.previewEl, this.previewScrollable);
+    this._observeScrollable(this.htmlPreEl, this.htmlCodeScrollable);
+    this._observeScrollable(this.tsPreEl, this.tsCodeScrollable);
+
     effect(() => {
       const htmlCode = this.htmlCode();
       const tsCode = this.tsCode();
@@ -81,6 +98,29 @@ export class CodeExampleComponent {
       if (!this.tabs().includes(this.activeTab())) {
         this.activeTab.set(availableTabs[0] ?? 'preview');
       }
+    });
+  }
+
+  private _observeScrollable(
+    elRef: Signal<ElementRef<HTMLElement> | undefined>,
+    scrollable: WritableSignal<boolean>
+  ): void {
+    effect((onCleanup) => {
+      const el = elRef()?.nativeElement;
+      if (!el) {
+        scrollable.set(false);
+        return;
+      }
+
+      const update = () =>
+        scrollable.set(
+          el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight
+        );
+      update();
+
+      const observer = new ResizeObserver(update);
+      observer.observe(el);
+      onCleanup(() => observer.disconnect());
     });
   }
 

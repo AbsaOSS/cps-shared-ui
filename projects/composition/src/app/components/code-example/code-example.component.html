@@ -58,6 +58,7 @@
     </div>
 
     <div
+      #previewPanel
       [attr.role]="previewOutside() ? null : 'tabpanel'"
       class="code-example__preview"
       [attr.id]="previewOutside() ? null : instanceId + '-panel-preview'"
@@ -97,7 +98,10 @@
               : ''
         }}</span>
         <pre
+          #htmlPre
           class="hljs"
+          role="group"
+          [attr.tabindex]="htmlCodeTabIndex()"
           [attr.aria-label]="
             (label() || 'Code') + ' HTML snippet'
           "><code [innerHTML]="highlightedCode()"></code></pre>
@@ -129,7 +133,10 @@
               : ''
         }}</span>
         <pre
+          #tsPre
           class="hljs"
+          role="group"
+          [attr.tabindex]="tsCodeTabIndex()"
           [attr.aria-label]="
             (label() || 'Code') + ' TypeScript snippet'
           "><code [innerHTML]="highlightedTsCode()"></code></pre>
