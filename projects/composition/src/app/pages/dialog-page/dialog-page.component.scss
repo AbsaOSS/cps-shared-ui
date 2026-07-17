@@ -13,3 +13,9 @@
   margin-bottom: 1.875rem;
   border-bottom: 0.0625rem solid lightgrey;
 }
+
+.close-dlg-btns-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}

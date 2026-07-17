@@ -2,12 +2,17 @@ import { Component, SkipSelf } from '@angular/core';
 import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
 import { DialogContentComponent } from '../../components/dialog-content/dialog-content.component';
 import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
-
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ServiceData from '../../api-data/cps-dialog.json';
+import { dialogExamples } from './dialog-page.examples';
 
 @Component({
   selector: 'app-dialog-page',
-  imports: [CpsButtonComponent, ServiceDocsViewerComponent],
+  imports: [
+    CpsButtonComponent,
+    ServiceDocsViewerComponent,
+    CodeExampleComponent
+  ],
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],
   host: { class: 'composition-page' },
@@ -15,6 +20,7 @@ import ServiceData from '../../api-data/cps-dialog.json';
 })
 export class DialogPageComponent {
   serviceData = ServiceData;
+  readonly examples = dialogExamples;
   // eslint-disable-next-line no-useless-constructor
   constructor(
     public _dialogService: CpsDialogService,

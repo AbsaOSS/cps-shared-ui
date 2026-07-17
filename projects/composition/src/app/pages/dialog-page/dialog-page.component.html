@@ -1,44 +1,96 @@
 <app-service-docs-viewer [serviceData]="serviceData">
   <!-- Examples of service usage -->
   <div class="open-dlg-btns-group">
-    <cps-button
+    <app-code-example
       label="Confirmation dialog"
-      (clicked)="openConfirmationDialog()"></cps-button>
-    <cps-button label="Regular dialog" (clicked)="openDialog()"></cps-button>
-    <cps-button
-      label="Dialog with blurred background and container autofocus"
-      (clicked)="openBlurredBgDialog()"></cps-button>
-    <cps-button
+      [htmlCode]="examples.confirmationDialog.html"
+      [tsCode]="examples.confirmationDialog.ts">
+      <cps-button
+        label="Confirmation dialog"
+        (clicked)="openConfirmationDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
+      label="Regular dialog"
+      [htmlCode]="examples.regularDialog.html"
+      [tsCode]="examples.regularDialog.ts">
+      <cps-button label="Regular dialog" (clicked)="openDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
+      label="Blurred background dialog"
+      [htmlCode]="examples.blurredBackgroundDialog.html"
+      [tsCode]="examples.blurredBackgroundDialog.ts">
+      <cps-button
+        label="Dialog with blurred background and container autofocus"
+        (clicked)="openBlurredBgDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Draggable dialog"
-      (clicked)="openDraggableDialog()"></cps-button>
-    <cps-button
+      [htmlCode]="examples.draggableDialog.html"
+      [tsCode]="examples.draggableDialog.ts">
+      <cps-button
+        label="Draggable dialog"
+        (clicked)="openDraggableDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Maximizable dialog"
-      (clicked)="openMaximizableDialog()"></cps-button>
-    <cps-button
+      [htmlCode]="examples.maximizableDialog.html"
+      [tsCode]="examples.maximizableDialog.ts">
+      <cps-button
+        label="Maximizable dialog"
+        (clicked)="openMaximizableDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Resizable dialog"
-      (clicked)="openResizableDialog()"></cps-button>
-    <cps-button
+      [htmlCode]="examples.resizableDialog.html"
+      [tsCode]="examples.resizableDialog.ts">
+      <cps-button
+        label="Resizable dialog"
+        (clicked)="openResizableDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Non-modal dialog"
-      (clicked)="openNonModalDialog()"></cps-button>
-    <cps-button
+      [htmlCode]="examples.nonModalDialog.html"
+      [tsCode]="examples.nonModalDialog.ts">
+      <cps-button
+        label="Non-modal dialog"
+        (clicked)="openNonModalDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Bottom-right positioned dialog"
-      (clicked)="openBottomRightPositionedDialog()"></cps-button>
-    <cps-button
+      [htmlCode]="examples.bottomRightPositionedDialog.html"
+      [tsCode]="examples.bottomRightPositionedDialog.ts">
+      <cps-button
+        label="Bottom-right positioned dialog"
+        (clicked)="openBottomRightPositionedDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Top-left positioned dialog opened from the root instance"
-      (clicked)="openDialogFromRootInstance()"></cps-button>
+      [htmlCode]="examples.topLeftPositionedFromRootInstance.html"
+      [tsCode]="examples.topLeftPositionedFromRootInstance.ts">
+      <cps-button
+        label="Top-left positioned dialog opened from the root instance"
+        (clicked)="openDialogFromRootInstance()"></cps-button>
+    </app-code-example>
   </div>
   <div class="close-dlg-btns-group">
-    <cps-button
+    <app-code-example
       label="Close all dialogs"
-      icon="close-x"
-      type="outlined"
-      (clicked)="closeAllDialogs()">
-    </cps-button>
-    <cps-button
-      label="Close all dialogs (forced)"
-      icon="close-x"
-      type="outlined"
-      (clicked)="closeAllDialogs(true)">
-    </cps-button>
+      [htmlCode]="examples.closeAllDialogs.html"
+      [tsCode]="examples.closeAllDialogs.ts">
+      <div class="close-dlg-btns-row">
+        <cps-button
+          label="Close all dialogs"
+          icon="close-x"
+          type="outlined"
+          (clicked)="closeAllDialogs()">
+        </cps-button>
+        <cps-button
+          label="Close all dialogs (forced)"
+          icon="close-x"
+          type="outlined"
+          (clicked)="closeAllDialogs(true)">
+        </cps-button>
+      </div>
+    </app-code-example>
   </div>
 </app-service-docs-viewer>
