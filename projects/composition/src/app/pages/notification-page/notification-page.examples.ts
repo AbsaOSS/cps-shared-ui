@@ -161,7 +161,7 @@ counter = 0;
 showOutlinedBottomRight2sTimeoutWarningNotification() {
   this._notifService.warning(
     \`Notification message \${this.counter}\`,
-    'Notifications details',
+    'Notification details',
     {
       timeout: 2000,
       position: CpsNotificationPosition.BOTTOMRIGHT,

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
-import ComponetnData from '../../api-data/cps-menu.json';
+import ComponentData from '../../api-data/cps-menu.json';
 import { menuExamples } from './menu-page.examples';
 @Component({
   selector: 'app-menu-page',
@@ -113,7 +113,7 @@ export class MenuPageComponent {
     }
   ];
 
-  componentData = ComponetnData;
+  componentData = ComponentData;
 
   isStandardMenuOpen = false;
   isStandardMenuNoHeaderOpen = false;

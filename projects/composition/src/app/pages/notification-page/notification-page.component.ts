@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   CpsButtonComponent,
   CpsNotificationAppearance,
@@ -22,10 +22,10 @@ import { notificationExamples } from './notification-page.examples';
   host: { class: 'composition-page' }
 })
 export class NotificationPageComponent {
+  private readonly _notifService = inject(CpsNotificationService);
+
   serviceData = ServiceData;
   readonly examples = notificationExamples;
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _notifService: CpsNotificationService) {}
 
   counter = 0;
   showSuccessNotification() {
@@ -69,7 +69,7 @@ export class NotificationPageComponent {
   showOutlinedBottomRight2sTimeoutWarningNotification() {
     this._notifService.warning(
       `Notification message ${this.counter}`,
-      'Notifications details',
+      'Notification details',
       {
         timeout: 2000,
         position: CpsNotificationPosition.BOTTOMRIGHT,
