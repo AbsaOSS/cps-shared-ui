@@ -35,12 +35,12 @@ ngOnInit() {
   });
 }
 
-private _checkThirdSelected(control: AbstractControl) {
+private _checkThirdSelected(control: AbstractControl): ValidationErrors | null {
   const val = control.value;
   if (!val) return null;
 
   if (val !== 'third') {
-    return { mustMatch8Dig: 'Only third option must be selected' };
+    return { mustSelectThird: 'Only third option must be selected' };
   }
   return null;
 }`

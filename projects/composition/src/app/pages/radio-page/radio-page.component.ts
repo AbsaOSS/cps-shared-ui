@@ -109,7 +109,7 @@ export class RadioPageComponent implements OnInit {
     if (!val) return null;
 
     if (val !== 'third') {
-      return { mustMatch8Dig: 'Only third option must be selected' };
+      return { mustSelectThird: 'Only third option must be selected' };
     }
     return null;
   }
