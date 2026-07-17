@@ -1,72 +1,125 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <form [formGroup]="form">
-    <div class="inputs-group">
+  <app-code-example
+    label="Required numeric input with a tooltip"
+    [htmlCode]="examples.requiredNumericInput.html"
+    [tsCode]="examples.requiredNumericInput.ts">
+    <form [formGroup]="form">
       <cps-input
         label="Required numeric input with a tooltip"
         formControlName="requiredInput"
         placeholder="Enter 8 digit value"
         infoTooltip="Provide any information here"
         type="number"></cps-input>
+    </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Loading input"
+    [htmlCode]="examples.loadingInput.html">
+    <cps-input
+      label="Loading input"
+      hint="This input is currently in a loading state"
+      [loading]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Password input"
+    [htmlCode]="examples.passwordInput.html">
+    <cps-input
+      label="Password input"
+      placeholder="Enter password"
+      [clearable]="true"
+      type="password"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled input"
+    [htmlCode]="examples.disabledInput.html">
+    <cps-input
+      label="Disabled input"
+      hint="This input is disabled"
+      [disabled]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Readonly input"
+    [htmlCode]="examples.readonlyInput.html">
+    <cps-input
+      label="Readonly input"
+      hint="This input is readonly"
+      value="Value to show"
+      [readonly]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Clearable input with persistent clear icon"
+    [htmlCode]="examples.clearableWithPersistentIcon.html">
+    <cps-input
+      label="Clearable input with persistent clear icon"
+      hint="This input is clearable"
+      value="Clear me"
+      [clearable]="true"
+      [persistentClear]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Input with prefix icon"
+    [htmlCode]="examples.prefixIconInput.html">
+    <cps-input
+      label="Input with prefix icon"
+      prefixIcon="search"
+      placeholder="Search something"
+      [clearable]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Input with prefix text"
+    [htmlCode]="examples.prefixTextInput.html">
+    <cps-input
+      label="Input with prefix text"
+      prefixText="USD"
+      placeholder="Enter amount"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBinding.html"
+    [tsCode]="examples.twoWayBinding.ts">
+    <div class="sync-val-example">
       <cps-input
-        label="Loading input"
-        hint="This input is currently in a loading state"
-        [loading]="true"></cps-input>
-      <cps-input
-        label="Password input"
-        placeholder="Enter password"
-        [clearable]="true"
-        type="password"></cps-input>
-      <cps-input
-        label="Disabled input"
-        hint="This input is disabled"
-        [disabled]="true"></cps-input>
-      <cps-input
-        label="Readonly input"
-        hint="This input is readonly"
-        value="Value to show"
-        [readonly]="true"></cps-input>
-      <cps-input
-        label="Clearable input with persistent clear icon"
-        hint="This input is clearable"
-        value="Clear me"
-        [clearable]="true"
-        [persistentClear]="true"></cps-input>
-      <cps-input
-        label="Input with prefix icon"
-        prefixIcon="search"
-        placeholder="Search something"
-        [clearable]="true"></cps-input>
-      <cps-input
-        label="Input with prefix text"
-        prefixText="USD"
-        placeholder="Enter amount"></cps-input>
-      <div class="sync-val-example">
-        <cps-input
-          width="25rem"
-          label="Input with two-way binding, type something in"
-          [(ngModel)]="syncVal"
-          hint="This input has a fixed width of 25rem"
-          [ngModelOptions]="{ standalone: true }">
-          ></cps-input
-        >
-        <span class="sync-val">{{ syncVal }}</span>
-      </div>
-      <cps-input
-        label="Underlined input with clickable prefix icon"
-        [prefixIconClickable]="true"
-        prefixIconAriaLabel="Search"
-        (prefixIconClicked)="onClickPrefixIcon()"
-        prefixIcon="search"
-        appearance="underlined"
-        placeholder="Search something"
-        [clearable]="true"></cps-input>
-      <cps-input
-        label="Borderless input"
-        prefixIcon="search"
-        appearance="borderless"
-        placeholder="Search something"
-        [clearable]="true"></cps-input>
+        width="25rem"
+        label="Input with two-way binding, type something in"
+        [(ngModel)]="syncVal"
+        hint="This input has a fixed width of 25rem"
+        [ngModelOptions]="{ standalone: true }"></cps-input>
+      <span class="sync-val">{{ syncVal }}</span>
     </div>
-  </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Underlined input with clickable prefix icon"
+    [htmlCode]="examples.clickablePrefixIconUnderlined.html"
+    [tsCode]="examples.clickablePrefixIconUnderlined.ts">
+    <cps-input
+      label="Underlined input with clickable prefix icon"
+      [prefixIconClickable]="true"
+      prefixIconAriaLabel="Search"
+      (prefixIconClicked)="onClickPrefixIcon()"
+      prefixIcon="search"
+      appearance="underlined"
+      placeholder="Search something"
+      [clearable]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Borderless input"
+    [htmlCode]="examples.borderlessInput.html">
+    <cps-input
+      label="Borderless input"
+      prefixIcon="search"
+      appearance="borderless"
+      placeholder="Search something"
+      [clearable]="true"></cps-input>
+  </app-code-example>
 </app-component-docs-viewer>

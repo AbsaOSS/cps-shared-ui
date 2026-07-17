@@ -1,42 +1,38 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="ttip-circles-elems-group">
-    <div class="ttip-circles-elems-group-title">
-      XSmall info circle with a tooltip at the top
-    </div>
+  <app-code-example
+    label="XSmall info circle with a tooltip at the top"
+    [htmlCode]="examples.xsmallTopTooltip.html">
     <cps-info-circle
       size="xsmall"
       tooltipPosition="top"
       tooltipText="Provide any information here"></cps-info-circle>
-  </div>
+  </app-code-example>
 
-  <div class="ttip-circles-elems-group">
-    <div class="ttip-circles-elems-group-title">
-      Small info circle with a tooltip at the right
-    </div>
+  <app-code-example
+    label="Small info circle with a tooltip at the right"
+    [htmlCode]="examples.smallRightTooltip.html">
     <cps-info-circle
       size="small"
       tooltipPosition="right"
       tooltipText="Provide any information here"></cps-info-circle>
-  </div>
+  </app-code-example>
 
-  <div class="ttip-circles-elems-group">
-    <div class="ttip-circles-elems-group-title">
-      Normal info circle with a tooltip at the left
-    </div>
+  <app-code-example
+    label="Normal info circle with a tooltip at the left"
+    [htmlCode]="examples.normalLeftTooltip.html">
     <cps-info-circle
       size="normal"
       tooltipPosition="left"
       tooltipText="Provide any information here"></cps-info-circle>
-  </div>
+  </app-code-example>
 
-  <div class="ttip-circles-elems-group">
-    <div class="ttip-circles-elems-group-title">
-      Large info circle with a tooltip at the bottom
-    </div>
+  <app-code-example
+    label="Large info circle with a tooltip at the bottom"
+    [htmlCode]="examples.largeBottomTooltip.html">
     <cps-info-circle
       size="large"
       tooltipPosition="bottom"
       tooltipText="Provide any information here"></cps-info-circle>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

@@ -12,13 +12,16 @@ import { CpsInputComponent, CpsNotificationService } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-input.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { inputExamples } from './input-page.examples';
 
 @Component({
   imports: [
     CpsInputComponent,
     ReactiveFormsModule,
     FormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-input-page',
   templateUrl: './input-page.component.html',
@@ -29,6 +32,7 @@ export class InputPageComponent implements OnInit {
   form!: UntypedFormGroup;
   syncVal = '';
   componentData = ComponentData;
+  readonly examples = inputExamples;
 
   // eslint-disable-next-line no-useless-constructor
   constructor(
