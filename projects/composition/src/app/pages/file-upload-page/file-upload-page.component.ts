@@ -3,13 +3,14 @@ import {
   CpsFileUploadComponent,
   CpsButtonToggleComponent,
   CpsButtonToggleOption,
-  CpsDividerComponent,
   CpsButtonComponent
 } from 'cps-ui-kit';
 import { Observable, catchError, delay, from, map, of } from 'rxjs';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { fileUploadExamples } from './file-upload-page.examples';
 
 @Component({
   selector: 'app-file-upload-page',
@@ -18,7 +19,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
     CpsButtonComponent,
     CpsFileUploadComponent,
     ComponentDocsViewerComponent,
-    CpsDividerComponent
+    CodeExampleComponent
   ],
   templateUrl: './file-upload-page.component.html',
   styleUrls: ['./file-upload-page.component.scss'],
@@ -28,6 +29,7 @@ export class FileUploadPageComponent {
   @ViewChild('fileUpload') fileUpload?: CpsFileUploadComponent;
 
   componentData = ComponentData;
+  readonly examples = fileUploadExamples;
 
   fileUploadOptions: CpsButtonToggleOption[] = [
     { label: 'JPG image', value: '.jpg' },
