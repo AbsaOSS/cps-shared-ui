@@ -15,9 +15,10 @@ import {
   CpsSelectComponent,
   CpsRadioOption
 } from 'cps-ui-kit';
-
 import ComponentData from '../../api-data/cps-radio-group.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { radioExamples } from './radio-page.examples';
 
 @Component({
   imports: [
@@ -27,7 +28,8 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
     CpsRadioComponent,
     CpsSelectComponent,
     CpsCheckboxComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-radio-page',
   templateUrl: './radio-page.component.html',
@@ -35,6 +37,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class RadioPageComponent implements OnInit {
+  readonly examples = radioExamples;
   form!: UntypedFormGroup;
 
   options: CpsRadioOption[] = [
