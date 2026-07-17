@@ -1,22 +1,31 @@
 <app-component-docs-viewer [componentData]="componentData">
-  <h2 class="section-title">Horizontal divider</h2>
-  <div>
-    <p>First row</p>
-    <cps-divider></cps-divider>
-    <p>Second row</p>
-  </div>
-  <h2 class="section-title">Vertical divider</h2>
-  <div class="vertical-section">
-    <p>First column</p>
-    <cps-divider [vertical]="true"></cps-divider>
-    <p>Second column</p>
-    <cps-divider [vertical]="true"></cps-divider>
-    <p>Third column</p>
-  </div>
-  <h2 class="section-title">Dashed, thick and red divider</h2>
-  <div>
-    <p>First row</p>
-    <cps-divider thickness="0.25rem" color="red" type="dashed"></cps-divider>
-    <p>Second row</p>
-  </div>
+  <app-code-example
+    label="Horizontal divider"
+    [htmlCode]="examples.horizontalDivider.html">
+    <div>
+      <p>First row</p>
+      <cps-divider></cps-divider>
+      <p>Second row</p>
+    </div>
+  </app-code-example>
+  <app-code-example
+    label="Vertical divider"
+    [htmlCode]="examples.verticalDivider.html">
+    <div class="vertical-section">
+      <p>First column</p>
+      <cps-divider [vertical]="true"></cps-divider>
+      <p>Second column</p>
+      <cps-divider [vertical]="true"></cps-divider>
+      <p>Third column</p>
+    </div>
+  </app-code-example>
+  <app-code-example
+    label="Dashed, thick and red divider"
+    [htmlCode]="examples.dashedThickRedDivider.html">
+    <div>
+      <p>First row</p>
+      <cps-divider thickness="0.25rem" color="red" type="dashed"></cps-divider>
+      <p>Second row</p>
+    </div>
+  </app-code-example>
 </app-component-docs-viewer>
