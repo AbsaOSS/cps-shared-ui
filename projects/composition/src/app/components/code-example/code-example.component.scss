@@ -97,9 +97,43 @@
     top: 0.625rem;
     right: 0.75rem;
     z-index: 1;
+
+    ::ng-deep button {
+      background-color: var(--cps-surface-elevated) !important;
+    }
   }
 
   &__panel--hidden {
     display: none;
+  }
+
+  &--preview-outside {
+    display: flex;
+    flex-direction: column;
+
+    .code-example__card {
+      display: contents;
+    }
+
+    .code-example__preview {
+      order: 1;
+      padding: 0;
+      margin-bottom: 1.5rem;
+      background-color: transparent;
+      border-radius: 0;
+    }
+
+    .code-example__tabbar {
+      order: 2;
+      border: 0.0625rem solid var(--cps-color-line);
+      border-radius: 0.4375rem 0.4375rem 0 0;
+    }
+
+    .code-example__code {
+      order: 3;
+      border: 0.0625rem solid var(--cps-color-line);
+      border-top: none;
+      border-radius: 0 0 0.4375rem 0.4375rem;
+    }
   }
 }

@@ -3,10 +3,16 @@ import { CpsSchedulerComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-scheduler.json';
 import ServiceData from '../../api-data/cps-cron-validation.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { schedulerExamples } from './scheduler-page.examples';
 
 @Component({
   selector: 'app-scheduler-page',
-  imports: [CpsSchedulerComponent, ComponentDocsViewerComponent],
+  imports: [
+    CpsSchedulerComponent,
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
+  ],
   templateUrl: './scheduler-page.component.html',
   styleUrl: './scheduler-page.component.scss',
   host: { class: 'composition-page' }
@@ -14,6 +20,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 export class SchedulerPageComponent {
   componentData = ComponentData;
   serviceData = [ServiceData];
+  readonly examples = schedulerExamples;
 
   cronExpression = '30 9 ? 7/4 WED#5 *';
   timeZone = 'UTC';

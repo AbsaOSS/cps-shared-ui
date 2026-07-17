@@ -32,6 +32,7 @@ export class CodeExampleComponent {
   tsCode = input<string | undefined>();
   label = input('');
   isPreviewNonInteractive = input(false);
+  previewOutside = input(false);
 
   private sanitizer = inject(DomSanitizer);
 
@@ -55,7 +56,7 @@ export class CodeExampleComponent {
         );
       }
 
-      const availableTabs: TabId[] = ['preview'];
+      const availableTabs: TabId[] = this.previewOutside() ? [] : ['preview'];
 
       if (htmlCode) {
         const htmlResult = hljs.highlight(htmlCode.trim(), { language: 'xml' });
@@ -78,7 +79,7 @@ export class CodeExampleComponent {
       this.tabs.set(availableTabs);
 
       if (!this.tabs().includes(this.activeTab())) {
-        this.activeTab.set('preview');
+        this.activeTab.set(availableTabs[0] ?? 'preview');
       }
     });
   }

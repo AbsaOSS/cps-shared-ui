@@ -1,4 +1,6 @@
-<div class="code-example">
+<div
+  class="code-example"
+  [class.code-example--preview-outside]="previewOutside()">
   @if (label()) {
     <h2 class="code-example__label" [id]="instanceId + '-label'">
       {{ label() }}
@@ -11,18 +13,20 @@
       [attr.aria-labelledby]="label() ? instanceId + '-label' : null"
       [attr.aria-label]="label() ? null : 'Code example'"
       (keydown)="navigateTabs($event)">
-      <button
-        type="button"
-        role="tab"
-        class="code-example__tab"
-        [id]="instanceId + '-tab-preview'"
-        [attr.aria-selected]="activeTab() === 'preview'"
-        [attr.aria-controls]="instanceId + '-panel-preview'"
-        [tabindex]="activeTab() === 'preview' ? 0 : -1"
-        [class.code-example__tab--active]="activeTab() === 'preview'"
-        (click)="activeTab.set('preview')">
-        Preview
-      </button>
+      @if (!previewOutside()) {
+        <button
+          type="button"
+          role="tab"
+          class="code-example__tab"
+          [id]="instanceId + '-tab-preview'"
+          [attr.aria-selected]="activeTab() === 'preview'"
+          [attr.aria-controls]="instanceId + '-panel-preview'"
+          [tabindex]="activeTab() === 'preview' ? 0 : -1"
+          [class.code-example__tab--active]="activeTab() === 'preview'"
+          (click)="activeTab.set('preview')">
+          Preview
+        </button>
+      }
       @if (htmlCode()) {
         <button
           type="button"
@@ -54,13 +58,17 @@
     </div>
 
     <div
-      role="tabpanel"
+      [attr.role]="previewOutside() ? null : 'tabpanel'"
       class="code-example__preview"
-      [id]="instanceId + '-panel-preview'"
-      [attr.aria-labelledby]="instanceId + '-tab-preview'"
-      [attr.aria-hidden]="activeTab() !== 'preview'"
-      [tabindex]="previewTabIndex()"
-      [class.code-example__panel--hidden]="activeTab() !== 'preview'">
+      [attr.id]="previewOutside() ? null : instanceId + '-panel-preview'"
+      [attr.aria-labelledby]="
+        previewOutside() ? null : instanceId + '-tab-preview'
+      "
+      [attr.aria-hidden]="previewOutside() ? null : activeTab() !== 'preview'"
+      [attr.tabindex]="previewOutside() ? null : previewTabIndex()"
+      [class.code-example__panel--hidden]="
+        !previewOutside() && activeTab() !== 'preview'
+      ">
       <ng-content></ng-content>
     </div>
 
