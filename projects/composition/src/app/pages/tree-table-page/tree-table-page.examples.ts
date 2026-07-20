@@ -158,7 +158,7 @@ export const treeTableExamples: Record<string, { html: string; ts?: string }> =
   [showColumnsToggleBtn]="true"
   [filterableByColumns]="true"
   [resizableColumns]="true"
-  scrollHeight="31.25rem"
+  scrollHeight="22rem"
   toolbarTitle="Sortable tree table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled">
   <ng-template #colgroup>
     <colgroup>
@@ -398,7 +398,7 @@ onRowsSelectionChanged(rows: any) {
   (rowsToRemove)="onRowsToRemove($event)"
   [selectable]="true"
   toolbarSize="small"
-  scrollHeight="calc(100vh - 23.125rem)"
+  scrollHeight="calc(100vh - 27.125rem)"
   toolbarTitle="Tree table with nested header and small toolbar">
   <ng-template #nestedHeader>
     <tr>
@@ -473,7 +473,7 @@ ${removeElementsByNameTs.trim()}`
   [sortable]="true"
   [showRowMenu]="true"
   [rowMenuItems]="customRowMenuItems"
-  toolbarTitle="Borderless tree table without highlightning on rows hover. Row menu is shown and has custom items.">
+  toolbarTitle="Borderless tree table without highlighting on rows hover. Row menu is shown and has custom items.">
   <ng-template #header>
     <th cpsTTColSortable="name">Name</th>
     <th cpsTTColSortable="size">Size</th>
@@ -612,7 +612,7 @@ selSize: CpsTreeTableSize = 'small';`
 <cps-tree-table
   [data]="[]"
   toolbarTitle="Empty tree table"
-  emptyBodyHeight="25rem">
+  emptyBodyHeight="23rem">
   <ng-template #header>
     <th cpsTTColSortable="name">Name</th>
     <th cpsTTColSortable="size">Size</th>
@@ -628,7 +628,7 @@ selSize: CpsTreeTableSize = 'small';`
 <cps-tree-table
   [data]="data"
   [loading]="true"
-  scrollHeight="25rem"
+  scrollHeight="23rem"
   [columns]="cols"
   toolbarTitle="Tree table in data loading state">
 </cps-tree-table>`,
@@ -648,7 +648,7 @@ cols = [
       html: `
 <cps-tree-table
   [data]="treeDataWithHTML"
-  scrollHeight="25rem"
+  scrollHeight="23rem"
   [columns]="colsHTML"
   [renderDataAsHTML]="true"
   toolbarTitle="Table containing HTML">
@@ -659,13 +659,13 @@ treeDataWithHTML = [
     data: {
       a: '<strong>hello</strong>',
       b: '<h2>world</h2>',
-      c: '<a href="https://www.github.com">link to github</a>'
+      c: '<a href="https://www.github.com">link to GitHub</a>'
     },
     children: [
       {
         data: {
           a: 'this is sanitized <script>console.log("pwned")</script>',
-          b: '<img src="./assets/ui_logo.svg" width="100" />',
+          b: '<img src="./assets/ui_logo.svg" alt="CPS UI Kit logo" width="100" />',
           c: '<code>null === undefined</code>'
         }
       }

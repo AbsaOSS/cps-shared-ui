@@ -141,7 +141,7 @@ dateMatchModes = [
   [sortable]="true"
   [virtualScroll]="true"
   [showColumnsToggleBtn]="true"
-  scrollHeight="31.25rem"
+  scrollHeight="26rem"
   toolbarTitle="Sortable table with resizable columns, virtual scroller, global filter, internal columns toggle and with column filtering enabled"
   [filterableByColumns]="true"
   [resizableColumns]="true">
@@ -367,7 +367,7 @@ onRowsSelectionChanged(rows: any) {
   [selectable]="true"
   toolbarSize="small"
   (rowsToRemove)="onRowsToRemove($event)"
-  scrollHeight="calc(100vh - 19.375rem)"
+  scrollHeight="calc(100vh - 24.625rem)"
   toolbarTitle="Table with nested header and small toolbar">
   <ng-template #nestedHeader>
     <tr>
@@ -426,7 +426,7 @@ onRowsToRemove(rows: any[]) {
   [showRowMenu]="true"
   [rowMenuItems]="customRowMenuItems"
   exportFilename="table_6"
-  toolbarTitle="Borderless table with export button, without highlightning on rows hover. Row menu is shown and has custom items.">
+  toolbarTitle="Borderless table with export button, without highlighting on rows hover. Row menu is shown and has custom items.">
   <ng-template #header>
     <th cpsTColSortable="a">A</th>
     <th cpsTColSortable="b">B</th>
@@ -571,7 +571,7 @@ cols = [
     html: `
 <cps-table
   [data]="dataWithHTML"
-  scrollHeight="25rem"
+  scrollHeight="22rem"
   [columns]="colsHTML"
   [renderDataAsHTML]="renderAsHTML"
   [showActionBtn]="true"
@@ -586,7 +586,7 @@ dataWithHTML = [
   {
     a: '<h1>hello</h1>',
     b: '<h2>world</h2>',
-    c: '<a href="https://www.github.com">link to github</a>'
+    c: '<a href="https://www.github.com">link to GitHub</a>'
   },
   {
     a: 'this is sanitized <script>console.log("pwned")</script>',

@@ -72,7 +72,7 @@ export class TablePageComponent implements OnInit {
     {
       a: '<h1>hello</h1>',
       b: '<h2>world</h2>',
-      c: '<a href="https://www.github.com">link to github</a>'
+      c: '<a href="https://www.github.com">link to GitHub</a>'
     },
     {
       a: 'this is sanitized <script>console.log("pwned")</script>',
