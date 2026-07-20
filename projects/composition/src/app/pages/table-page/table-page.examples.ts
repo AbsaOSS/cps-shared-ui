@@ -535,7 +535,7 @@ selSize: CpsTableSize = 'small';`
 
   table8: {
     html: `
-<cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="25rem">
+<cps-table [data]="[]" toolbarTitle="Empty table" emptyBodyHeight="22rem">
   <ng-template #header>
     <th cpsTColSortable="a">A</th>
     <th cpsTColSortable="b">B</th>
