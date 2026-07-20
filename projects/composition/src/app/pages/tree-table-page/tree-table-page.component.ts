@@ -16,9 +16,10 @@ import {
   CpsTreeTableColumnResizableDirective,
   CpsIconComponent
 } from 'cps-ui-kit';
-
 import ComponentData from '../../api-data/cps-tree-table.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { treeTableExamples } from './tree-table-page.examples';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -36,13 +37,16 @@ import { DatePipe } from '@angular/common';
     CpsTabComponent,
     CpsButtonToggleComponent,
     CpsIconComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class TreeTablePageComponent implements OnInit {
+  readonly examples = treeTableExamples;
+
   selectedTabIndex = 0;
 
   sizesOptions: CpsButtonToggleOption[] = [

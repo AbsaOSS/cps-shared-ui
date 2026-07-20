@@ -17,6 +17,8 @@ import {
   CpsIconComponent
 } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { tableExamples } from './table-page.examples';
 
 import ComponentData from '../../api-data/cps-table.json';
 import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
@@ -37,13 +39,16 @@ import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
     CpsTabComponent,
     CpsButtonToggleComponent,
     CpsIconComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class TablePageComponent implements OnInit {
+  readonly examples = tableExamples;
+
   selectedTabIndex = 0;
 
   dateMatchModes = [
