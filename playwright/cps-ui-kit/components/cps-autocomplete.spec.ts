@@ -1,5 +1,11 @@
 import { test, expect, type Page, type Locator } from '@playwright/test';
 
+/**
+ * The async demo examples wait on a 500ms input debounce plus a 1000ms
+ * fake network delay (`_getOptionsFromServer` in
+ * autocomplete-page.component.ts) - 1500ms total. This is a 4x margin
+ * over that for CI/slower-browser headroom.
+ */
 const ASYNC_FETCH_TIMEOUT_MS = 6000;
 
 /**
