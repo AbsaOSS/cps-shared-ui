@@ -355,7 +355,7 @@ test.describe('cps-autocomplete', () => {
       const wrapper = example(page, 'open-on-clear-false-autocomplete');
 
       await wrapper.getByTestId('cps-autocomplete-clear-icon').click();
-      await page.waitForTimeout(200);
+      await expect(wrapper.getByTestId('cps-autocomplete-input')).toBeFocused();
       await expect(page.getByTestId('cps-autocomplete-listbox')).toBeHidden();
     });
   });
