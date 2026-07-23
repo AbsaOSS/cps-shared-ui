@@ -58,6 +58,8 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
 }
 
+const DEFAULT_CELL_WIDTH_REM = 3.4375;
+
 /**
  * CpsTreeTableSize is used to define the size of the tree table.
  * @group Types
@@ -993,12 +995,18 @@ export class CpsTreeTableComponent
       let hasSelectableCell = false;
       let hasRowMenuCell = false;
 
+      const defaultCellWidthPx = DEFAULT_CELL_WIDTH_REM * this._rootFontSizePx;
+
       const ths = Array.from(headerCells);
       if (ths.every((th: any) => th.offsetWidth === 0)) return;
 
-      const thWidths = ths.map((th: any) => {
-        const wprev = th.style.width;
+      const hiddenDiv = this.renderer.createElement('div');
+      this.renderer.setStyle(hiddenDiv, 'visibility', 'hidden');
+      this.renderer.setStyle(hiddenDiv, 'position', 'absolute');
+      this.renderer.setStyle(hiddenDiv, 'white-space', 'nowrap');
+      this.renderer.appendChild(this.document.body, hiddenDiv);
 
+      const thWidths = ths.map((th: any) => {
         const isSelectableCell = th.classList.contains(
           'cps-treetable-selectable-cell'
         );
@@ -1008,30 +1016,22 @@ export class CpsTreeTableComponent
         if (isSelectableCell) hasSelectableCell = true;
         if (isRowCell) hasRowMenuCell = true;
 
-        let thWidth = 55;
-        if (!isSelectableCell && !isRowCell) {
-          this.renderer.setStyle(th, 'width', 'min-content');
-          this.renderer.setStyle(th, 'display', 'block');
-          this.renderer.setStyle(th, 'text-wrap', 'nowrap');
-          thWidth = th.offsetWidth;
-          this.renderer.setStyle(th, 'width', wprev);
-          this.renderer.removeStyle(th, 'display');
-          this.renderer.removeStyle(th, 'text-wrap');
-        }
-        return thWidth;
+        if (isSelectableCell || isRowCell) return defaultCellWidthPx;
+
+        hiddenDiv.innerHTML = th.innerHTML;
+        hiddenDiv.style.width = 'auto';
+        return hiddenDiv.offsetWidth;
       });
 
       const bodyRows = this._scrollableBody?.querySelectorAll('tr');
-      if (!bodyRows?.length) return;
+      if (!bodyRows?.length) {
+        this.renderer.removeChild(this.document.body, hiddenDiv);
+        return;
+      }
 
       const tdWidths: number[] = [];
       const fragment = this.document.createDocumentFragment();
-      const hiddenDiv = this.document.createElement('div');
-      hiddenDiv.style.visibility = 'hidden';
-      hiddenDiv.style.position = 'absolute';
-      hiddenDiv.style.whiteSpace = 'nowrap';
 
-      this.document.body.appendChild(hiddenDiv);
       bodyRows.forEach((tr: HTMLElement) => {
         const tds = tr?.querySelectorAll('td');
         tds?.forEach((td: HTMLElement, idx: number) => {
@@ -1039,7 +1039,7 @@ export class CpsTreeTableComponent
             td.classList.contains('cps-treetable-selectable-cell') ||
             td.classList.contains('cps-treetable-row-menu-cell');
 
-          let tdWidth = 55;
+          let tdWidth = defaultCellWidthPx;
           if (!isSelectableOrRowMenuCell) {
             const clonedTd = td.cloneNode(true) as HTMLElement;
             fragment.appendChild(clonedTd);
@@ -1054,18 +1054,18 @@ export class CpsTreeTableComponent
           tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
         });
       });
-      this.document.body.removeChild(hiddenDiv);
+      this.renderer.removeChild(this.document.body, hiddenDiv);
 
       if (thWidths.length !== tdWidths.length) return;
 
       const maxWidths = thWidths.map((v, idx) => Math.max(v, tdWidths[idx]));
       let sum = maxWidths.reduce((a, b) => a + b, 0);
       if (hasSelectableCell) {
-        sum -= 55;
+        sum -= defaultCellWidthPx;
         maxWidths.shift();
       }
       if (hasRowMenuCell) {
-        sum -= 55;
+        sum -= defaultCellWidthPx;
         maxWidths.pop();
       }
 
@@ -1076,7 +1076,7 @@ export class CpsTreeTableComponent
           (hasSelectableCell && idx === 0) ||
           (hasRowMenuCell && idx === headerCells.length - 1)
         ) {
-          this.renderer.setStyle(th, 'width', '3.4375rem');
+          this.renderer.setStyle(th, 'width', `${DEFAULT_CELL_WIDTH_REM}rem`);
         } else
           this.renderer.setStyle(
             th,
@@ -1092,7 +1092,7 @@ export class CpsTreeTableComponent
             (hasSelectableCell && idx === 0) ||
             (hasRowMenuCell && idx === tds.length - 1)
           ) {
-            this.renderer.setStyle(td, 'width', '3.4375rem');
+            this.renderer.setStyle(td, 'width', `${DEFAULT_CELL_WIDTH_REM}rem`);
           } else {
             this.renderer.setStyle(
               td,
@@ -1437,7 +1437,8 @@ export class CpsTreeTableComponent
 
   onNodeExpanded(event: any) {
     this.nodeExpanded.emit(event);
-    setTimeout(() => {
+    queueMicrotask(() => {
+      this.cdRef.detectChanges();
       this._calcAutoLayoutHeaderWidths(true);
     });
     this._recalcVirtualHeight();
@@ -1445,7 +1446,8 @@ export class CpsTreeTableComponent
 
   onNodeCollapsed(event: any) {
     this.nodeCollapsed.emit(event);
-    setTimeout(() => {
+    queueMicrotask(() => {
+      this.cdRef.detectChanges();
       this._calcAutoLayoutHeaderWidths(true);
     });
     this._recalcVirtualHeight();
