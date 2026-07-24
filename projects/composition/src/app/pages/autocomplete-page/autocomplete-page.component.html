@@ -22,6 +22,7 @@
       [htmlCode]="examples.singleAsync.html"
       [tsCode]="examples.singleAsync.ts">
       <cps-autocomplete
+        data-testid="single-async-autocomplete"
         label="Single search autocomplete with fetched options list"
         hint="This autocomplete fetches matching options list from the server side based on user input"
         [options]="singleOptionsObservable$ | async"
@@ -42,6 +43,7 @@
       [htmlCode]="examples.multipleAsync.html"
       [tsCode]="examples.multipleAsync.ts">
       <cps-autocomplete
+        data-testid="multiple-async-autocomplete"
         label="Multiple search autocomplete with fetched options list"
         hint="This autocomplete fetches matching options list from the server side based on user input"
         [options]="multiOptionsObservable$ | async"
@@ -60,6 +62,7 @@
 
     <app-code-example label="Disabled" [htmlCode]="examples.disabled.html">
       <cps-autocomplete
+        data-testid="disabled-autocomplete"
         label="Disabled autocomplete"
         [disabled]="true"
         hint="This autocomplete is disabled">
@@ -71,6 +74,7 @@
       [htmlCode]="examples.multipleNotClearable.html"
       [tsCode]="examples.multipleNotClearable.ts">
       <cps-autocomplete
+        data-testid="multiple-not-clearable-autocomplete"
         label="Multiple autocomplete"
         [options]="options"
         optionLabel="name"
@@ -91,6 +95,7 @@
       [htmlCode]="examples.virtualScroll.html"
       [tsCode]="examples.virtualScroll.ts">
       <cps-autocomplete
+        data-testid="virtual-scroll-autocomplete"
         label="Multiple autocomplete with virtual scroll, chips and persistent clear icon"
         [options]="options"
         hint="This autocomplete doesn't have Select All option"
@@ -111,6 +116,7 @@
       [htmlCode]="examples.nonClosableChips.html"
       [tsCode]="examples.nonClosableChips.ts">
       <cps-autocomplete
+        data-testid="non-closable-chips-autocomplete"
         label="Multiple autocomplete with non-closable chips"
         [returnObject]="false"
         [options]="options"
@@ -132,6 +138,7 @@
       [htmlCode]="examples.prefixIcon.html"
       [tsCode]="examples.prefixIcon.ts">
       <cps-autocomplete
+        data-testid="prefix-icon-autocomplete"
         label="Multiple autocomplete with prefix icon"
         [options]="options"
         optionLabel="name"
@@ -151,6 +158,7 @@
       [tsCode]="examples.twoWayBinding.ts">
       <div class="sync-val-example">
         <cps-autocomplete
+          data-testid="two-way-binding-autocomplete"
           width="31.25rem"
           label="Multiple autocomplete with two-way binding and keeping initial items order"
           [returnObject]="false"
@@ -212,6 +220,7 @@
       [htmlCode]="examples.asyncValidation.html"
       [tsCode]="examples.asyncValidation.ts">
       <cps-autocomplete
+        data-testid="async-validation-autocomplete"
         label="Autocomplete with async validation"
         [options]="options"
         optionLabel="name"
@@ -224,6 +233,89 @@
         (valueChanged)="onOptionSelected($event)"
         [externalError]="externalError"
         hint="This autocomplete simulates async validation upon selection.">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Filtering by alias"
+      [htmlCode]="examples.aliasFiltering.html"
+      [tsCode]="examples.aliasFiltering.ts">
+      <cps-autocomplete
+        data-testid="alias-filtering-autocomplete"
+        label="Autocomplete filtering by alias"
+        hint="Try typing a country code such as PRG or CPT - it matches the alias field, not the label"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        [withOptionsAliases]="true"
+        [useOptionsAliasesWhenNoMatch]="true"
+        placeholder="Enter a city or its alias">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Custom empty option index"
+      [htmlCode]="examples.emptyOptionIndex.html"
+      [tsCode]="examples.emptyOptionIndex.ts">
+      <cps-autocomplete
+        data-testid="empty-option-index-autocomplete"
+        label="Autocomplete with a custom empty option index"
+        hint="Clearing this autocomplete falls back to Capetown instead of an empty value"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        [emptyOptionIndex]="2"
+        [clearable]="true"
+        [value]="emptyOptionIndexValue">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Clear without reopening"
+      [htmlCode]="examples.openOnClear.html"
+      [tsCode]="examples.openOnClear.ts">
+      <cps-autocomplete
+        data-testid="open-on-clear-false-autocomplete"
+        label="Autocomplete that stays closed after clearing"
+        hint="Clearing this autocomplete does not reopen the dropdown"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        [clearable]="true"
+        [openOnClear]="false"
+        [value]="openOnClearValue">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Hidden hint and error details"
+      [htmlCode]="examples.hideDetails.html"
+      [tsCode]="examples.hideDetails.ts">
+      <cps-autocomplete
+        data-testid="hide-details-autocomplete"
+        label="Required autocomplete without hint or error text"
+        hint="This hint is never shown because hideDetails is true"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        [clearable]="true"
+        [hideDetails]="true"
+        formControlName="hideDetailsAutocomplete">
+      </cps-autocomplete>
+    </app-code-example>
+
+    <app-code-example
+      label="Multiple without select all"
+      [htmlCode]="examples.selectAllFalse.html">
+      <cps-autocomplete
+        data-testid="select-all-false-autocomplete"
+        label="Multiple autocomplete without a Select all option"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        placeholder="Enter a city"
+        [multiple]="true"
+        [selectAll]="false">
       </cps-autocomplete>
     </app-code-example>
   </form>

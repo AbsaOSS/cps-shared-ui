@@ -1,15 +1,15 @@
 const citiesOptionsTs = `
 options = [
-  { name: 'New York', data: { code: 'NY' } },
-  { name: 'Prague', data: { code: 'PRG' }, info: 'Prague info' },
-  { name: 'Capetown', data: { code: 'CPT' }, info: 'Capetown info' },
-  { name: 'Rome', data: { code: 'RM' } },
-  { name: 'London', data: { code: 'LDN' }, info: 'London info' },
-  { name: 'Istanbul', data: { code: 'IST' } },
-  { name: 'Paris', data: { code: 'PRS' } },
-  { name: 'Tokyo', data: { code: 'TOK' } },
-  { name: 'Oslo', data: { code: 'OSL' }, info: 'Oslo info' },
-  { name: 'Berlin', data: { code: 'BER' } }
+  { name: 'New York', data: { code: 'NY' }, alias: 'NYC' },
+  { name: 'Prague', data: { code: 'PRG' }, info: 'Prague info', alias: 'PRG' },
+  { name: 'Capetown', data: { code: 'CPT' }, info: 'Capetown info', alias: 'CPT' },
+  { name: 'Rome', data: { code: 'RM' }, alias: 'ROM' },
+  { name: 'London', data: { code: 'LDN' }, info: 'London info', alias: 'LDN' },
+  { name: 'Istanbul', data: { code: 'IST' }, alias: 'IST' },
+  { name: 'Paris', data: { code: 'PRS' }, alias: 'PAR' },
+  { name: 'Tokyo', data: { code: 'TOK' }, alias: 'TOK' },
+  { name: 'Oslo', data: { code: 'OSL' }, info: 'Oslo info', alias: 'OSL' },
+  { name: 'Berlin', data: { code: 'BER' }, alias: 'BER' }
 ];`;
 
 export const autocompleteExamples: Record<
@@ -265,5 +265,90 @@ onOptionSelected(option: Option): void {
     error: () => (this.externalError = 'Validation failed')
   });
 }`
+  },
+
+  aliasFiltering: {
+    html: `
+<cps-autocomplete
+  label="Autocomplete filtering by alias"
+  hint="Try typing a country code such as PRG or CPT - it matches the alias field, not the label"
+  [options]="options"
+  optionLabel="name"
+  optionInfo="info"
+  [withOptionsAliases]="true"
+  [useOptionsAliasesWhenNoMatch]="true"
+  placeholder="Enter a city or its alias">
+</cps-autocomplete>`,
+    ts: citiesOptionsTs
+  },
+
+  emptyOptionIndex: {
+    html: `
+<cps-autocomplete
+  label="Autocomplete with a custom empty option index"
+  hint="Clearing this autocomplete falls back to Capetown instead of an empty value"
+  [options]="options"
+  optionLabel="name"
+  optionInfo="info"
+  [emptyOptionIndex]="2"
+  [clearable]="true"
+  [value]="emptyOptionIndexValue">
+</cps-autocomplete>`,
+    ts: `
+${citiesOptionsTs.trim()}
+
+emptyOptionIndexValue = this.options[0];`
+  },
+
+  openOnClear: {
+    html: `
+<cps-autocomplete
+  label="Autocomplete that stays closed after clearing"
+  hint="Clearing this autocomplete does not reopen the dropdown"
+  [options]="options"
+  optionLabel="name"
+  optionInfo="info"
+  [clearable]="true"
+  [openOnClear]="false"
+  [value]="openOnClearValue">
+</cps-autocomplete>`,
+    ts: `
+${citiesOptionsTs.trim()}
+
+openOnClearValue = this.options[3];`
+  },
+
+  hideDetails: {
+    html: `
+<cps-autocomplete
+  label="Required autocomplete without hint or error text"
+  hint="This hint is never shown because hideDetails is true"
+  [options]="options"
+  optionLabel="name"
+  optionInfo="info"
+  [clearable]="true"
+  [hideDetails]="true"
+  formControlName="hideDetailsAutocomplete">
+</cps-autocomplete>`,
+    ts: `
+${citiesOptionsTs.trim()}
+
+form = this.fb.group({
+  hideDetailsAutocomplete: [null, [Validators.required]]
+});`
+  },
+
+  selectAllFalse: {
+    html: `
+<cps-autocomplete
+  label="Multiple autocomplete without a Select all option"
+  [options]="options"
+  optionLabel="name"
+  optionInfo="info"
+  placeholder="Enter a city"
+  [multiple]="true"
+  [selectAll]="false">
+</cps-autocomplete>`,
+    ts: citiesOptionsTs
   }
 };
