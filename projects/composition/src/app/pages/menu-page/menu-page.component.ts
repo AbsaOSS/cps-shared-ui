@@ -1,16 +1,23 @@
 import { Component } from '@angular/core';
 import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
-
-import ComponetnData from '../../api-data/cps-menu.json';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import ComponentData from '../../api-data/cps-menu.json';
+import { menuExamples } from './menu-page.examples';
 @Component({
   selector: 'app-menu-page',
-  imports: [CpsMenuComponent, CpsButtonComponent, ComponentDocsViewerComponent],
+  imports: [
+    CpsMenuComponent,
+    CpsButtonComponent,
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
+  ],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class MenuPageComponent {
+  readonly examples = menuExamples;
   items: CpsMenuItem[] = [
     {
       title: 'First item',
@@ -106,7 +113,7 @@ export class MenuPageComponent {
     }
   ];
 
-  componentData = ComponetnData;
+  componentData = ComponentData;
 
   isStandardMenuOpen = false;
   isStandardMenuNoHeaderOpen = false;

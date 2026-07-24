@@ -1,7 +1,10 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <form [formGroup]="form">
-    <div class="tree-autocompletes-group">
+  <app-code-example
+    label="Required single tree autocomplete with a tooltip"
+    [htmlCode]="examples.requiredTreeAutocomplete.html"
+    [tsCode]="examples.requiredTreeAutocomplete.ts">
+    <form [formGroup]="form">
       <cps-tree-autocomplete
         label="Required single tree autocomplete with a tooltip"
         [options]="options"
@@ -12,105 +15,149 @@
         [clearable]="true"
         formControlName="requiredTreeAutocomplete">
       </cps-tree-autocomplete>
+    </form>
+  </app-code-example>
 
+  <app-code-example
+    label="Loading tree autocomplete"
+    [htmlCode]="examples.loadingTreeAutocomplete.html"
+    [tsCode]="examples.loadingTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Loading tree autocomplete"
+      [loading]="true"
+      [options]="options"
+      [initialExpandAll]="true"
+      hint="This tree autocomplete is currently in a loading state">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled tree autocomplete"
+    [htmlCode]="examples.disabledTreeAutocomplete.html">
+    <cps-tree-autocomplete
+      label="Disabled tree autocomplete"
+      [disabled]="true"
+      hint="This tree autocomplete is disabled">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree autocomplete"
+    [htmlCode]="examples.multipleTreeAutocomplete.html"
+    [tsCode]="examples.multipleTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Multiple tree autocomplete"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      [clearable]="false"
+      [value]="selectedItems"
+      [chips]="false"
+      hint="This tree autocomplete is not clearable"
+      [multiple]="true">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree autocomplete with virtual scroll, chips and persistent clear icon"
+    [htmlCode]="examples.virtualScrollTreeAutocomplete.html"
+    [tsCode]="examples.virtualScrollTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Multiple tree autocomplete with virtual scroll, chips and persistent clear icon"
+      [options]="options"
+      optionLabel="label"
+      hint="This tree autocomplete can handle large amounts of data due to virtual scroll"
+      optionInfo="attrType"
+      [value]="[options[1].children[0], options[2].children[0]]"
+      [clearable]="true"
+      [persistentClear]="true"
+      [virtualScroll]="true"
+      [multiple]="true">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree autocomplete with non-closable chips"
+    [htmlCode]="examples.nonClosableChipsTreeAutocomplete.html"
+    [tsCode]="examples.nonClosableChipsTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Multiple tree autocomplete with non-closable chips"
+      [options]="options"
+      optionInfo="attrType"
+      hint="This tree autocomplete doesn't have a chevron icon"
+      [showChevron]="false"
+      [clearable]="true"
+      [multiple]="true"
+      [value]="[options[1].children[0], options[2].children[0]]"
+      [closableChips]="false"></cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree autocomplete with prefix icon"
+    [htmlCode]="examples.prefixIconTreeAutocomplete.html"
+    [tsCode]="examples.prefixIconTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Multiple tree autocomplete with prefix icon"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      prefixIcon="search"
+      [value]="[options[2].children[0]]">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBindingTreeAutocomplete.html"
+    [tsCode]="examples.twoWayBindingTreeAutocomplete.ts">
+    <div class="sync-val-example">
       <cps-tree-autocomplete
-        label="Loading tree autocomplete"
-        [loading]="true"
+        [initialExpandDirectories]="true"
+        width="31.25rem"
+        label="Single tree autocomplete with two-way binding, enter something"
+        hint="This tree autocomplete has a fixed width of 31.25rem"
         [options]="options"
-        [initialExpandAll]="true"
-        hint="This tree autocomplete is currently in a loading state">
-      </cps-tree-autocomplete>
-
-      <cps-tree-autocomplete
-        label="Disabled tree autocomplete"
-        [disabled]="true"
-        hint="This tree autocomplete is disabled">
-      </cps-tree-autocomplete>
-
-      <cps-tree-autocomplete
-        label="Multiple tree autocomplete"
-        [options]="options"
+        optionInfo="attrType"
         optionLabel="label"
-        optionInfo="attrType"
-        [clearable]="false"
-        [value]="selectedItems"
-        [chips]="false"
-        hint="This tree autocomplete is not clearable"
-        [multiple]="true">
-      </cps-tree-autocomplete>
-
-      <cps-tree-autocomplete
-        label="Multiple tree autocomplete with virtual scroll, chips and persistent clear icon"
-        [options]="options"
-        optionLabel="label"
-        hint="This tree autocomplete can handle large amounts of data due to virtual scroll"
-        optionInfo="attrType"
-        [value]="[options[1].children[0], options[2].children[0]]"
         [clearable]="true"
-        [persistentClear]="true"
-        [virtualScroll]="true"
-        [multiple]="true">
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }">
       </cps-tree-autocomplete>
-
-      <cps-tree-autocomplete
-        label="Multiple tree autocomplete with non-closable chips"
-        [options]="options"
-        optionInfo="attrType"
-        hint="This tree autocomplete doesn't have a chevron icon"
-        [showChevron]="false"
-        [clearable]="true"
-        [multiple]="true"
-        [value]="[options[1].children[0], options[2].children[0]]"
-        [closableChips]="false"></cps-tree-autocomplete>
-
-      <cps-tree-autocomplete
-        label="Multiple tree autocomplete with prefix icon"
-        [options]="options"
-        optionInfo="attrType"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        prefixIcon="search"
-        [value]="[options[2].children[0]]">
-      </cps-tree-autocomplete>
-
-      <div class="sync-val-example">
-        <cps-tree-autocomplete
-          [initialExpandDirectories]="true"
-          width="31.25rem"
-          label="Single tree autocomplete with two-way binding, enter something"
-          hint="This tree autocomplete has a fixed width of 31.25rem"
-          [options]="options"
-          optionInfo="attrType"
-          optionLabel="label"
-          [clearable]="true"
-          [(ngModel)]="syncVal"
-          [ngModelOptions]="{ standalone: true }">
-        </cps-tree-autocomplete>
-        <span class="sync-val">{{ syncVal?.label }}</span>
-      </div>
-
-      <cps-tree-autocomplete
-        label="Underlined tree autocomplete"
-        [options]="options"
-        optionInfo="attrType"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        appearance="underlined"
-        prefixIcon="search">
-      </cps-tree-autocomplete>
-
-      <cps-tree-autocomplete
-        label="Borderless tree autocomplete"
-        [options]="options"
-        optionInfo="attrType"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        appearance="borderless"
-        prefixIcon="search">
-      </cps-tree-autocomplete>
+      <span class="sync-val">{{ syncVal?.label }}</span>
     </div>
-  </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Underlined tree autocomplete"
+    [htmlCode]="examples.underlinedTreeAutocomplete.html"
+    [tsCode]="examples.underlinedTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Underlined tree autocomplete"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="underlined"
+      prefixIcon="search">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Borderless tree autocomplete"
+    [htmlCode]="examples.borderlessTreeAutocomplete.html"
+    [tsCode]="examples.borderlessTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      label="Borderless tree autocomplete"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="borderless"
+      prefixIcon="search">
+    </cps-tree-autocomplete>
+  </app-code-example>
 </app-component-docs-viewer>

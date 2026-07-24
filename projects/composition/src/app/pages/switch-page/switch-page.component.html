@@ -1,26 +1,52 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="switches-group">
+  <app-code-example
+    label="Switch with tooltip"
+    [htmlCode]="examples.tooltipSwitch.html">
     <cps-switch
       label="Switch with tooltip"
       [value]="false"
       infoTooltip="Provide any information here">
     </cps-switch>
+  </app-code-example>
+
+  <app-code-example label="Basic switch" [htmlCode]="examples.basicSwitch.html">
     <cps-switch label="Basic switch" [value]="true"></cps-switch>
+  </app-code-example>
+
+  <app-code-example
+    label="Unlabeled switch"
+    [htmlCode]="examples.unlabeledSwitch.html">
     <cps-switch ariaLabel="Unlabeled switch" [value]="true"></cps-switch>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled switch checked"
+    [htmlCode]="examples.disabledCheckedSwitch.html">
     <cps-switch
       label="Disabled switch checked"
       [disabled]="true"
       [value]="true"></cps-switch>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled switch unchecked"
+    [htmlCode]="examples.disabledUncheckedSwitch.html">
     <cps-switch
       label="Disabled switch unchecked"
       [disabled]="true"
       [value]="false"></cps-switch>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBindingSwitch.html"
+    [tsCode]="examples.twoWayBindingSwitch.ts">
     <div class="sync-val-example">
       <cps-switch
         label="Switch with two-way binding"
         [(ngModel)]="syncVal"></cps-switch>
       <div class="sync-val">Is checked: {{ syncVal }}</div>
     </div>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

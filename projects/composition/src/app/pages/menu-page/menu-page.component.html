@@ -1,6 +1,9 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="menu-group">
+  <app-code-example
+    label="Standard menu"
+    [htmlCode]="examples.standardMenu.html"
+    [tsCode]="examples.standardMenu.ts">
     <cps-menu
       #standardMenu
       [items]="items"
@@ -14,7 +17,12 @@
       [ariaExpanded]="isStandardMenuOpen"
       (clicked)="standardMenu.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Standard menu without header"
+    [htmlCode]="examples.standardMenuNoHeader.html"
+    [tsCode]="examples.standardMenuNoHeader.ts">
     <cps-menu
       #standardMenuNoHeader
       [items]="items"
@@ -28,7 +36,12 @@
       [ariaExpanded]="isStandardMenuNoHeaderOpen"
       (clicked)="standardMenuNoHeader.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Compressed menu"
+    [htmlCode]="examples.compressedMenu.html"
+    [tsCode]="examples.compressedMenu.ts">
     <cps-menu
       #compressedMenu
       [items]="items"
@@ -43,7 +56,12 @@
       [ariaExpanded]="isCompressedMenuOpen"
       (clicked)="compressedMenu.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Compressed menu without icons"
+    [htmlCode]="examples.compressedMenuNoIcons.html"
+    [tsCode]="examples.compressedMenuNoIcons.ts">
     <cps-menu
       #compressedMenuNoIcons
       [items]="itemsWithoutIcons"
@@ -58,7 +76,12 @@
       [ariaExpanded]="isCompressedMenuNoIconsOpen"
       (clicked)="compressedMenuNoIcons.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Menu with arbitrary content"
+    [htmlCode]="examples.arbitraryContentMenu.html"
+    [tsCode]="examples.arbitraryContentMenu.ts">
     <cps-menu
       #arbitraryMenu
       (menuShown)="isArbitraryMenuOpen = true"
@@ -89,7 +112,12 @@
       [ariaExpanded]="isArbitraryMenuOpen"
       (clicked)="arbitraryMenu.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Menu that opens on focus"
+    [htmlCode]="examples.openOnFocusMenu.html"
+    [tsCode]="examples.openOnFocusMenu.ts">
     <cps-menu
       #focusMenu
       [items]="items"
@@ -104,7 +132,12 @@
       (focusin)="focusMenu.show(null, $event.target)"
       (focusout)="onFocusMenuFocusOut($event, focusMenu)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Menu that opens on hover"
+    [htmlCode]="examples.openOnHoverMenu.html"
+    [tsCode]="examples.openOnHoverMenu.ts">
     <cps-menu
       #hoverMenu
       [items]="items"
@@ -122,5 +155,5 @@
       (focusin)="hoverMenu.show(null, $event.target)"
       (focusout)="onMenuLeave($event, hoverMenu)">
     </cps-button>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

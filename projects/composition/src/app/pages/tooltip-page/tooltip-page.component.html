@@ -1,9 +1,8 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="tooltip-elems-group">
-    <div class="tooltip-elems-group-title">
-      Different tooltip positions (auto repositioning if doesn't fit the screen)
-    </div>
+  <app-code-example
+    label="Different tooltip positions (auto repositioning if doesn't fit the screen)"
+    [htmlCode]="examples.tooltipPositions.html">
     <div class="tooltip-elems-group-row">
       <cps-button
         cpsTooltip="Bottom tooltip"
@@ -26,10 +25,11 @@
         label="Top tooltip">
       </cps-button>
     </div>
-  </div>
+  </app-code-example>
 
-  <div class="tooltip-elems-group">
-    <div class="tooltip-elems-group-title">Different opening methods</div>
+  <app-code-example
+    label="Different opening methods"
+    [htmlCode]="examples.openingMethods.html">
     <div class="tooltip-elems-group-elem-left">
       <cps-button
         label="Open on hover"
@@ -44,10 +44,11 @@
         tooltipOpenOn="click">
       </cps-button>
     </div>
-  </div>
+  </app-code-example>
 
-  <div class="tooltip-elems-group">
-    <div class="tooltip-elems-group-title">Long open and close delays</div>
+  <app-code-example
+    label="Long open and close delays"
+    [htmlCode]="examples.openCloseDelays.html">
     <div class="tooltip-elems-group-elem-left">
       <cps-button
         cpsTooltip="1 second open delay"
@@ -62,12 +63,11 @@
         [tooltipCloseDelay]="1000">
       </cps-button>
     </div>
-  </div>
+  </app-code-example>
 
-  <div class="tooltip-elems-group">
-    <div class="tooltip-elems-group-title">
-      Persistent tooltip with inner HTML and custom style
-    </div>
+  <app-code-example
+    label="Persistent tooltip with inner HTML and custom style"
+    [htmlCode]="examples.persistentHtmlTooltip.html">
     <cps-button
       cpsTooltip="<span class='ttip-hdr'>Follow the link</span> <a href='https://www.google.com/' target='_blank' rel='noopener noreferrer'>Google</a> <a href='https://www.bing.com/' target='_blank' rel='noopener noreferrer'>Bing</a>"
       tooltipPosition="right"
@@ -75,10 +75,12 @@
       label="Tooltip with clickable content"
       [tooltipPersistent]="true">
     </cps-button>
-  </div>
+  </app-code-example>
 
-  <div class="tooltip-elems-group">
-    <div class="tooltip-elems-group-title">Tooltip disabled state</div>
+  <app-code-example
+    label="Tooltip disabled state"
+    [htmlCode]="examples.disabledTooltipState.html"
+    [tsCode]="examples.disabledTooltipState.ts">
     <div class="tooltip-elems-group-elem-left">
       <cps-button
         tooltipPosition="bottom"
@@ -90,5 +92,5 @@
         [(ngModel)]="ttipEnabled"
         [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
     </div>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>
