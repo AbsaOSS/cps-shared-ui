@@ -5,11 +5,19 @@
     [exactRoutes]="true"
     ariaLabel="Sidebar menu example"></cps-sidebar-menu>
 
-  <div class="sidebar-menu-page-info-card">
-    <cps-icon icon="info-circle" color="info" size="normal"></cps-icon>
-    <div>
-      Provide your app urls into sidebar menu items or into nested menu items to
-      navigate to your routes
+  <div class="sidebar-menu-page-side">
+    <div class="sidebar-menu-page-info-card">
+      <cps-icon icon="info-circle" color="info" size="normal"></cps-icon>
+      <div>
+        Provide your app urls into sidebar menu items or into nested menu items
+        to navigate to your routes
+      </div>
     </div>
+
+    <app-code-example
+      [htmlCode]="examples.basicUsage.html"
+      [tsCode]="examples.basicUsage.ts"
+      [previewOutside]="true">
+    </app-code-example>
   </div>
 </app-component-docs-viewer>

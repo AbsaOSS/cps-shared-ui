@@ -1,7 +1,10 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <form [formGroup]="form">
-    <div class="selects-group">
+  <app-code-example
+    label="Required single select with a tooltip"
+    [htmlCode]="examples.requiredSelect.html"
+    [tsCode]="examples.requiredSelect.ts">
+    <form [formGroup]="form">
       <cps-select
         label="Required single select with a tooltip"
         [options]="options"
@@ -12,118 +15,177 @@
         [clearable]="true"
         formControlName="requiredSelect">
       </cps-select>
+    </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Loading select"
+    [htmlCode]="examples.loadingSelect.html"
+    [tsCode]="examples.loadingSelect.ts">
+    <cps-select
+      label="Loading select"
+      [loading]="true"
+      [options]="options"
+      optionLabel="name"
+      hint="This select is currently in a loading state">
+    </cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled select"
+    [htmlCode]="examples.disabledSelect.html">
+    <cps-select
+      label="Disabled select"
+      [disabled]="true"
+      hint="This select is disabled">
+    </cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple select"
+    [htmlCode]="examples.multipleSelect.html"
+    [tsCode]="examples.multipleSelect.ts">
+    <cps-select
+      label="Multiple select"
+      [options]="options"
+      optionLabel="name"
+      optionValue="data"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="false"
+      [multiple]="true"
+      [chips]="false"
+      [returnObject]="false"
+      [value]="[{ code: 'CPT' }]"
+      hint="This select is not clearable"></cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple select with virtual scroll, chips and persistent clear icon"
+    [htmlCode]="examples.virtualScrollSelect.html"
+    [tsCode]="examples.virtualScrollSelect.ts">
+    <cps-select
+      label="Multiple select with virtual scroll, chips and persistent clear icon"
+      hint="This select doesn't have Select All option"
+      [selectAll]="false"
+      [virtualScroll]="true"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [persistentClear]="true"
+      [value]="[options[0], options[4]]"></cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple select with non-closable chips"
+    [htmlCode]="examples.nonClosableChipsSelect.html"
+    [tsCode]="examples.nonClosableChipsSelect.ts">
+    <cps-select
+      label="Multiple select with non-closable chips"
+      [returnObject]="false"
+      [options]="options"
+      optionLabel="name"
+      optionValue="data"
+      optionInfo="info"
+      placeholder="Select a city"
+      hint="This select doesn't have a chevron icon"
+      [showChevron]="false"
+      [clearable]="true"
+      [multiple]="true"
+      [closableChips]="false"
+      [value]="[options[0].data, options[4].data]"></cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple select with prefix icon"
+    [htmlCode]="examples.prefixIconSelect.html"
+    [tsCode]="examples.prefixIconSelect.ts">
+    <cps-select
+      label="Multiple select with prefix icon"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      prefixIcon="plus"
+      [value]="[options[5]]">
+    </cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Single select with options icons"
+    [htmlCode]="examples.iconsSelect.html"
+    [tsCode]="examples.iconsSelect.ts">
+    <cps-select
+      label="Single select with options icons"
+      [options]="statusOptions"
+      optionLabel="name"
+      optionIconColor="color"
+      placeholder="Select a status">
+    </cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBindingSelect.html"
+    [tsCode]="examples.twoWayBindingSelect.ts">
+    <div class="sync-val-example">
       <cps-select
-        label="Loading select"
-        [loading]="true"
-        [options]="options"
-        optionLabel="name"
-        hint="This select is currently in a loading state">
-      </cps-select>
-      <cps-select
-        label="Disabled select"
-        [disabled]="true"
-        hint="This select is disabled">
-      </cps-select>
-      <cps-select
-        label="Multiple select"
-        [options]="options"
-        optionLabel="name"
-        optionValue="data"
-        optionInfo="info"
-        placeholder="Select a city"
-        [clearable]="false"
-        [multiple]="true"
-        [chips]="false"
+        width="31.25rem"
+        label="Multiple select with two-way binding and keeping initial items order"
         [returnObject]="false"
-        [value]="[{ code: 'CPT' }]"
-        hint="This select is not clearable"></cps-select>
-      <cps-select
-        label="Multiple select with virtual scroll, chips and persistent clear icon"
-        hint="This select doesn't have Select All option"
-        [selectAll]="false"
-        [virtualScroll]="true"
-        [options]="options"
-        optionLabel="name"
-        optionInfo="info"
-        placeholder="Select a city"
-        [clearable]="true"
-        [multiple]="true"
-        [persistentClear]="true"
-        [value]="[options[0], options[4]]"></cps-select>
-      <cps-select
-        label="Multiple select with non-closable chips"
-        [returnObject]="false"
-        [options]="options"
-        optionLabel="name"
-        optionValue="data"
-        optionInfo="info"
-        placeholder="Select a city"
-        hint="This select doesn't have a chevron icon"
-        [showChevron]="false"
+        [options]="syncOptions"
+        [keepInitialOrder]="true"
+        optionLabel="title"
+        optionValue="val"
+        optionInfo="ticker"
+        placeholder="Select a company"
+        hint="This select has a fixed width of 31.25rem"
         [clearable]="true"
         [multiple]="true"
         [closableChips]="false"
-        [value]="[options[0].data, options[4].data]"></cps-select>
-      <cps-select
-        label="Multiple select with prefix icon"
-        [options]="options"
-        optionLabel="name"
-        optionInfo="info"
-        placeholder="Select a city"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        prefixIcon="plus"
-        [value]="[options[5]]">
-      </cps-select>
-      <cps-select
-        label="Single select with options icons"
-        [options]="statusOptions"
-        optionLabel="name"
-        optionIconColor="color"
-        placeholder="Select a status">
-      </cps-select>
-      <div class="sync-val-example">
-        <cps-select
-          width="31.25rem"
-          label="Multiple select with two-way binding and keeping initial items order"
-          [returnObject]="false"
-          [options]="syncOptions"
-          [keepInitialOrder]="true"
-          optionLabel="title"
-          optionValue="val"
-          optionInfo="ticker"
-          placeholder="Select a company"
-          hint="This select has a fixed width of 31.25rem"
-          [clearable]="true"
-          [multiple]="true"
-          [closableChips]="false"
-          [(ngModel)]="syncVal"
-          [ngModelOptions]="{ standalone: true }"></cps-select>
-        <span class="sync-val">{{ syncVal }}</span>
-      </div>
-      <cps-select
-        label="Underlined select"
-        [options]="options"
-        optionLabel="name"
-        optionInfo="info"
-        placeholder="Select a city"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        appearance="underlined">
-      </cps-select>
-      <cps-select
-        label="Borderless select"
-        [options]="options"
-        optionLabel="name"
-        optionInfo="info"
-        placeholder="Select a city"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        appearance="borderless">
-      </cps-select>
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }"></cps-select>
+      <span class="sync-val">{{ syncVal }}</span>
     </div>
-  </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Underlined select"
+    [htmlCode]="examples.underlinedSelect.html"
+    [tsCode]="examples.underlinedSelect.ts">
+    <cps-select
+      label="Underlined select"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="underlined">
+    </cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Borderless select"
+    [htmlCode]="examples.borderlessSelect.html"
+    [tsCode]="examples.borderlessSelect.ts">
+    <cps-select
+      label="Borderless select"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      placeholder="Select a city"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      appearance="borderless">
+    </cps-select>
+  </app-code-example>
 </app-component-docs-viewer>

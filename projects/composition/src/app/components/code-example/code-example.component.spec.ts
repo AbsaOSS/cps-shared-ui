@@ -1,3 +1,4 @@
+import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CodeExampleComponent } from './code-example.component';
@@ -250,6 +251,85 @@ describe('CodeExampleComponent', () => {
     });
   });
 
+  describe('previewOutside', () => {
+    it('does not render a Preview tab', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
+      fixture.componentRef.setInput('previewOutside', true);
+      fixture.detectChanges();
+
+      const tabs = fixture.debugElement.queryAll(By.css('[role="tab"]'));
+      expect(tabs.length).toBe(2);
+      expect(tabs[0].nativeElement.textContent.trim()).toBe('HTML');
+      expect(tabs[1].nativeElement.textContent.trim()).toBe('TS');
+    });
+
+    it('never hides the preview panel, regardless of the active tab', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
+      fixture.componentRef.setInput('previewOutside', true);
+      fixture.detectChanges();
+      component.activeTab.set('ts');
+      fixture.detectChanges();
+
+      const previewPanel = fixture.debugElement.query(
+        By.css('.code-example__preview')
+      );
+      expect(previewPanel).not.toBeNull();
+      expect(
+        previewPanel.nativeElement.classList.contains(
+          'code-example__panel--hidden'
+        )
+      ).toBe(false);
+      expect(previewPanel.nativeElement.getAttribute('aria-hidden')).toBe(null);
+    });
+
+    it('does not render tab-related ARIA attributes on the preview panel', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.componentRef.setInput('previewOutside', true);
+      fixture.detectChanges();
+
+      const previewPanel = fixture.debugElement.query(
+        By.css('.code-example__preview')
+      );
+      expect(previewPanel.nativeElement.getAttribute('role')).toBe(null);
+      expect(previewPanel.nativeElement.getAttribute('id')).toBe(null);
+      expect(previewPanel.nativeElement.getAttribute('aria-labelledby')).toBe(
+        null
+      );
+    });
+
+    it('renders the host with the preview-outside modifier class', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.componentRef.setInput('previewOutside', true);
+      fixture.detectChanges();
+
+      const host = fixture.debugElement.query(By.css('.code-example'));
+      expect(
+        host.nativeElement.classList.contains('code-example--preview-outside')
+      ).toBe(true);
+    });
+
+    it('defaults active tab to the first available tab instead of preview', () => {
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
+      fixture.componentRef.setInput('previewOutside', true);
+      fixture.detectChanges();
+
+      expect(component.activeTab()).toBe('html');
+    });
+  });
+
   describe('tabindex', () => {
     it('preview tabpanel has tabindex -1 by default (interactive content)', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
@@ -263,34 +343,43 @@ describe('CodeExampleComponent', () => {
       expect(previewPanel.nativeElement.tabIndex).toBe(-1);
     });
 
-    it('preview tabpanel has tabindex 0 when isPreviewNonInteractive is true', () => {
+    it('code tabpanel pre elements default to tabindex -1 when not scrollable', () => {
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
       fixture.componentRef.setInput('htmlCode', '<div></div>');
-      fixture.componentRef.setInput('isPreviewNonInteractive', true);
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
 
-      const previewPanel = fixture.debugElement.query(
-        By.css('[id*="-panel-preview"]')
-      );
-      expect(previewPanel.nativeElement.tabIndex).toBe(0);
+      const pres = fixture.debugElement.queryAll(By.css('pre.hljs'));
+      expect(pres[0].nativeElement.tabIndex).toBe(-1);
+      expect(pres[1].nativeElement.tabIndex).toBe(-1);
+    });
+  });
+
+  describe('SSR', () => {
+    afterEach(() => {
+      delete (globalThis as any).ResizeObserver;
     });
 
-    it('preview tabpanel tabindex updates reactively when input changes', () => {
+    it('does not create a ResizeObserver on the server', () => {
+      const observerCtor = jest.fn(() => ({
+        observe: jest.fn(),
+        disconnect: jest.fn()
+      }));
+      (globalThis as any).ResizeObserver = observerCtor;
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [CodeExampleComponent],
+        providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+      });
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;
       fixture.componentRef.setInput('htmlCode', '<div></div>');
-      fixture.componentRef.setInput('isPreviewNonInteractive', false);
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
       fixture.detectChanges();
 
-      const previewPanel = fixture.debugElement.query(
-        By.css('[id*="-panel-preview"]')
-      );
-      expect(previewPanel.nativeElement.tabIndex).toBe(-1);
-
-      fixture.componentRef.setInput('isPreviewNonInteractive', true);
-      fixture.detectChanges();
-      expect(previewPanel.nativeElement.tabIndex).toBe(0);
+      expect(observerCtor).not.toHaveBeenCalled();
     });
   });
 });
