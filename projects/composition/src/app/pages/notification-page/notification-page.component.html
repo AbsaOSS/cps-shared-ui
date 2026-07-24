@@ -1,65 +1,108 @@
 <app-service-docs-viewer [serviceData]="serviceData">
   <!-- Examples of service usage -->
-  <div class="notification-btns-group">
-    <div>
-      <div class="notification-btns-group-title">Basic notifications</div>
-      <div class="notification-btns-group">
-        <cps-button
-          label="Info notification"
-          icon="toast-info"
-          color="calm"
-          (clicked)="showInfoNotification()"></cps-button>
-        <cps-button
-          label="Error notification"
-          icon="toast-error"
-          color="calm"
-          (clicked)="showErrorNotification()"></cps-button>
-        <cps-button
-          label="Success notification"
-          icon="toast-success"
-          color="calm"
-          (clicked)="showSuccessNotification()"></cps-button>
-        <cps-button
-          label="Warning notification"
-          icon="toast-warning"
-          color="calm"
-          (clicked)="showWarningNotification()"></cps-button>
-      </div>
-    </div>
-    <div class="notification-btns-last-group">
-      <div class="notification-btns-group-title">Configured notifications</div>
-      <div class="notification-btns-group">
-        <cps-button
-          label="Bottom info notification with details"
-          icon="toast-info"
-          color="calm"
-          (clicked)="showInfoNotificationWithDetails()"></cps-button>
-        <cps-button
-          label="Right error notification with max 3 in a column"
-          icon="toast-error"
-          color="calm"
-          (clicked)="showErrorRightWithMax3Notification()"></cps-button>
-        <cps-button
-          label="Bottom-left persistent outlined success notification"
-          icon="toast-success"
-          color="calm"
-          (clicked)="
-            showOutlinedBottomLeftPersistentSuccessNotification()
-          "></cps-button>
-        <cps-button
-          label="Bottom-right outlined warning notification with 2-seconds timeout"
-          icon="toast-warning"
-          color="calm"
-          (clicked)="
-            showOutlinedBottomRight2sTimeoutWarningNotification()
-          "></cps-button>
-      </div>
-    </div>
+  <h2 class="section-title">Basic notifications</h2>
+  <app-code-example
+    label="Info notification"
+    [htmlCode]="examples.infoNotification.html"
+    [tsCode]="examples.infoNotification.ts">
+    <cps-button
+      label="Info notification"
+      icon="toast-info"
+      color="calm"
+      (clicked)="showInfoNotification()"></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Error notification"
+    [htmlCode]="examples.errorNotification.html"
+    [tsCode]="examples.errorNotification.ts">
+    <cps-button
+      label="Error notification"
+      icon="toast-error"
+      color="calm"
+      (clicked)="showErrorNotification()"></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Success notification"
+    [htmlCode]="examples.successNotification.html"
+    [tsCode]="examples.successNotification.ts">
+    <cps-button
+      label="Success notification"
+      icon="toast-success"
+      color="calm"
+      (clicked)="showSuccessNotification()"></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Warning notification"
+    [htmlCode]="examples.warningNotification.html"
+    [tsCode]="examples.warningNotification.ts">
+    <cps-button
+      label="Warning notification"
+      icon="toast-warning"
+      color="calm"
+      (clicked)="showWarningNotification()"></cps-button>
+  </app-code-example>
+
+  <h2 class="section-title">Configured notifications</h2>
+  <app-code-example
+    label="Bottom info notification with details"
+    [htmlCode]="examples.infoNotificationWithDetails.html"
+    [tsCode]="examples.infoNotificationWithDetails.ts">
+    <cps-button
+      label="Bottom info notification with details"
+      icon="toast-info"
+      color="calm"
+      (clicked)="showInfoNotificationWithDetails()"></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Right error notification with max 3 in a column"
+    [htmlCode]="examples.errorRightMax3Notification.html"
+    [tsCode]="examples.errorRightMax3Notification.ts">
+    <cps-button
+      label="Right error notification with max 3 in a column"
+      icon="toast-error"
+      color="calm"
+      (clicked)="showErrorRightWithMax3Notification()"></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Bottom-left persistent outlined success notification"
+    [htmlCode]="examples.bottomLeftPersistentOutlinedSuccessNotification.html"
+    [tsCode]="examples.bottomLeftPersistentOutlinedSuccessNotification.ts">
+    <cps-button
+      label="Bottom-left persistent outlined success notification"
+      icon="toast-success"
+      color="calm"
+      (clicked)="
+        showOutlinedBottomLeftPersistentSuccessNotification()
+      "></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Bottom-right outlined warning notification with 2-seconds timeout"
+    [htmlCode]="examples.bottomRightOutlinedWarningNotification.html"
+    [tsCode]="examples.bottomRightOutlinedWarningNotification.ts">
+    <cps-button
+      label="Bottom-right outlined warning notification with 2-seconds timeout"
+      icon="toast-warning"
+      color="calm"
+      (clicked)="
+        showOutlinedBottomRight2sTimeoutWarningNotification()
+      "></cps-button>
+  </app-code-example>
+
+  <app-code-example
+    label="Clear all notifications"
+    [htmlCode]="examples.clearAllNotifications.html"
+    [tsCode]="examples.clearAllNotifications.ts">
     <cps-button
       label="Clear all notifications"
       icon="remove"
       type="outlined"
       (clicked)="clearNotifications()">
     </cps-button>
-  </div>
+  </app-code-example>
 </app-service-docs-viewer>
