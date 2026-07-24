@@ -8,9 +8,11 @@ import {
   computed,
   viewChild,
   ElementRef,
+  PLATFORM_ID,
   type Signal,
   type WritableSignal
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CpsButtonComponent } from 'cps-ui-kit';
 import hljs from 'highlight.js/lib/core';
@@ -38,6 +40,7 @@ export class CodeExampleComponent {
   previewOutside = input(false);
 
   private sanitizer = inject(DomSanitizer);
+  private platformId = inject(PLATFORM_ID);
 
   instanceId = `code-example-${++CodeExampleComponent.instanceCount}`;
   activeTab = signal<TabId>('preview');
@@ -105,6 +108,10 @@ export class CodeExampleComponent {
     elRef: Signal<ElementRef<HTMLElement> | undefined>,
     scrollable: WritableSignal<boolean>
   ): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     effect((onCleanup) => {
       const el = elRef()?.nativeElement;
       if (!el) {
@@ -112,10 +119,7 @@ export class CodeExampleComponent {
         return;
       }
 
-      const update = () =>
-        scrollable.set(
-          el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight
-        );
+      const update = () => scrollable.set(el.scrollWidth > el.clientWidth);
       update();
 
       const observer = new ResizeObserver(update);

@@ -1,3 +1,4 @@
+import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { CodeExampleComponent } from './code-example.component';
@@ -352,6 +353,33 @@ describe('CodeExampleComponent', () => {
       const pres = fixture.debugElement.queryAll(By.css('pre.hljs'));
       expect(pres[0].nativeElement.tabIndex).toBe(-1);
       expect(pres[1].nativeElement.tabIndex).toBe(-1);
+    });
+  });
+
+  describe('SSR', () => {
+    afterEach(() => {
+      delete (globalThis as any).ResizeObserver;
+    });
+
+    it('does not create a ResizeObserver on the server', () => {
+      const observerCtor = jest.fn(() => ({
+        observe: jest.fn(),
+        disconnect: jest.fn()
+      }));
+      (globalThis as any).ResizeObserver = observerCtor;
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [CodeExampleComponent],
+        providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+      });
+      fixture = TestBed.createComponent(CodeExampleComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('htmlCode', '<div></div>');
+      fixture.componentRef.setInput('tsCode', 'const x = 1;');
+      fixture.detectChanges();
+
+      expect(observerCtor).not.toHaveBeenCalled();
     });
   });
 });
