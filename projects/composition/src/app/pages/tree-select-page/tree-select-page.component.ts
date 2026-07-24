@@ -7,16 +7,18 @@ import {
   Validators
 } from '@angular/forms';
 import { CpsTreeSelectComponent } from 'cps-ui-kit';
-
 import ComponentData from '../../api-data/cps-tree-select.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { treeSelectExamples } from './tree-select-page.examples';
 
 @Component({
   imports: [
     CpsTreeSelectComponent,
     FormsModule,
     ReactiveFormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',
@@ -24,6 +26,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class TreeSelectPageComponent implements OnInit {
+  readonly examples = treeSelectExamples;
   selectedItems = [
     {
       label: 'AttrB',
