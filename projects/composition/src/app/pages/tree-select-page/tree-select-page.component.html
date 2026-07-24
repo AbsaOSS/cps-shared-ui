@@ -1,7 +1,10 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <form [formGroup]="form">
-    <div class="tree-selects-group">
+  <app-code-example
+    label="Required single tree select with a tooltip"
+    [htmlCode]="examples.requiredTreeSelect.html"
+    [tsCode]="examples.requiredTreeSelect.ts">
+    <form [formGroup]="form">
       <cps-tree-select
         label="Required single tree select with a tooltip"
         [options]="options"
@@ -12,102 +15,147 @@
         [clearable]="true"
         formControlName="requiredTreeSelect">
       </cps-tree-select>
-      <cps-tree-select
-        label="Loading tree select"
-        [loading]="true"
-        [options]="options"
-        [initialExpandAll]="true"
-        hint="This tree select is currently in a loading state">
-      </cps-tree-select>
+    </form>
+  </app-code-example>
 
-      <cps-tree-select
-        label="Disabled tree select"
-        [disabled]="true"
-        hint="This tree select is disabled">
-      </cps-tree-select>
+  <app-code-example
+    label="Loading tree select"
+    [htmlCode]="examples.loadingTreeSelect.html"
+    [tsCode]="examples.loadingTreeSelect.ts">
+    <cps-tree-select
+      label="Loading tree select"
+      [loading]="true"
+      [options]="options"
+      [initialExpandAll]="true"
+      hint="This tree select is currently in a loading state">
+    </cps-tree-select>
+  </app-code-example>
 
+  <app-code-example
+    label="Disabled tree select"
+    [htmlCode]="examples.disabledTreeSelect.html">
+    <cps-tree-select
+      label="Disabled tree select"
+      [disabled]="true"
+      hint="This tree select is disabled">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree select"
+    [htmlCode]="examples.multipleTreeSelect.html"
+    [tsCode]="examples.multipleTreeSelect.ts">
+    <cps-tree-select
+      label="Multiple tree select"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      [clearable]="false"
+      [value]="selectedItems"
+      [chips]="false"
+      hint="This tree select is not clearable"
+      [multiple]="true">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree select with virtual scroll, chips and persistent clear icon"
+    [htmlCode]="examples.virtualScrollTreeSelect.html"
+    [tsCode]="examples.virtualScrollTreeSelect.ts">
+    <cps-tree-select
+      label="Multiple tree select with virtual scroll, chips and persistent clear icon"
+      [options]="options"
+      optionLabel="label"
+      hint="This tree select can handle large amounts of data due to virtual scroll"
+      optionInfo="attrType"
+      [value]="[options[1].children[0], options[2].children[0]]"
+      [clearable]="true"
+      [persistentClear]="true"
+      [virtualScroll]="true"
+      [multiple]="true">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree select with non-closable chips"
+    [htmlCode]="examples.nonClosableChipsTreeSelect.html"
+    [tsCode]="examples.nonClosableChipsTreeSelect.ts">
+    <cps-tree-select
+      label="Multiple tree select with non-closable chips"
+      [options]="options"
+      optionInfo="attrType"
+      hint="This tree select doesn't have a chevron icon"
+      [showChevron]="false"
+      [clearable]="true"
+      [multiple]="true"
+      [value]="[options[1].children[0], options[2].children[0]]"
+      [closableChips]="false"></cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple tree select with prefix icon"
+    [htmlCode]="examples.prefixIconTreeSelect.html"
+    [tsCode]="examples.prefixIconTreeSelect.ts">
+    <cps-tree-select
+      label="Multiple tree select with prefix icon"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false"
+      prefixIcon="plus"
+      [value]="[options[2].children[0]]">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBindingTreeSelect.html"
+    [tsCode]="examples.twoWayBindingTreeSelect.ts">
+    <div class="sync-val-example">
       <cps-tree-select
-        label="Multiple tree select"
+        [initialExpandDirectories]="true"
+        width="31.25rem"
+        label="Single tree select with two-way binding, select something"
+        hint="This tree select has a fixed width of 31.25rem"
         [options]="options"
+        optionInfo="attrType"
         optionLabel="label"
-        optionInfo="attrType"
-        [clearable]="false"
-        [value]="selectedItems"
-        [chips]="false"
-        hint="This tree select is not clearable"
-        [multiple]="true">
-      </cps-tree-select>
-
-      <cps-tree-select
-        label="Multiple tree select with virtual scroll, chips and persistent clear icon"
-        [options]="options"
-        optionLabel="label"
-        hint="This tree select can handle large amounts of data due to virtual scroll"
-        optionInfo="attrType"
-        [value]="[options[1].children[0], options[2].children[0]]"
         [clearable]="true"
-        [persistentClear]="true"
-        [virtualScroll]="true"
-        [multiple]="true">
+        [(ngModel)]="syncVal"
+        [ngModelOptions]="{ standalone: true }">
       </cps-tree-select>
-
-      <cps-tree-select
-        label="Multiple tree select with non-closable chips"
-        [options]="options"
-        optionInfo="attrType"
-        hint="This tree select doesn't have a chevron icon"
-        [showChevron]="false"
-        [clearable]="true"
-        [multiple]="true"
-        [value]="[options[1].children[0], options[2].children[0]]"
-        [closableChips]="false"></cps-tree-select>
-
-      <cps-tree-select
-        label="Multiple tree select with prefix icon"
-        [options]="options"
-        optionInfo="attrType"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false"
-        prefixIcon="plus"
-        [value]="[options[2].children[0]]">
-      </cps-tree-select>
-
-      <div class="sync-val-example">
-        <cps-tree-select
-          [initialExpandDirectories]="true"
-          width="31.25rem"
-          label="Single tree select with two-way binding, select something"
-          hint="This tree select has a fixed width of 31.25rem"
-          [options]="options"
-          optionInfo="attrType"
-          optionLabel="label"
-          [clearable]="true"
-          [(ngModel)]="syncVal"
-          [ngModelOptions]="{ standalone: true }">
-        </cps-tree-select>
-        <span class="sync-val">{{ syncVal?.label }}</span>
-      </div>
-
-      <cps-tree-select
-        label="Underlined tree select"
-        appearance="underlined"
-        [options]="options"
-        optionInfo="attrType"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false">
-      </cps-tree-select>
-
-      <cps-tree-select
-        label="Borderless tree select"
-        appearance="borderless"
-        [options]="options"
-        optionInfo="attrType"
-        [clearable]="true"
-        [multiple]="true"
-        [chips]="false">
-      </cps-tree-select>
+      <span class="sync-val">{{ syncVal?.label }}</span>
     </div>
-  </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Underlined tree select"
+    [htmlCode]="examples.underlinedTreeSelect.html"
+    [tsCode]="examples.underlinedTreeSelect.ts">
+    <cps-tree-select
+      label="Underlined tree select"
+      appearance="underlined"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Borderless tree select"
+    [htmlCode]="examples.borderlessTreeSelect.html"
+    [tsCode]="examples.borderlessTreeSelect.ts">
+    <cps-tree-select
+      label="Borderless tree select"
+      appearance="borderless"
+      [options]="options"
+      optionInfo="attrType"
+      [clearable]="true"
+      [multiple]="true"
+      [chips]="false">
+    </cps-tree-select>
+  </app-code-example>
 </app-component-docs-viewer>

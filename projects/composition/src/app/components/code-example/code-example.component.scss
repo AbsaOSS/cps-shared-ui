@@ -1,8 +1,14 @@
 @use '../../../../../cps-ui-kit/styles/mixins' as *;
 
-.code-example {
-  margin-bottom: 1.5rem;
+:host {
+  display: block;
 
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.code-example {
   &__label {
     font-size: 1.125rem;
     font-weight: 600;

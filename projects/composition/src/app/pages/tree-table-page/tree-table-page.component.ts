@@ -16,9 +16,10 @@ import {
   CpsTreeTableColumnResizableDirective,
   CpsIconComponent
 } from 'cps-ui-kit';
-
 import ComponentData from '../../api-data/cps-tree-table.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { treeTableExamples } from './tree-table-page.examples';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -36,13 +37,16 @@ import { DatePipe } from '@angular/common';
     CpsTabComponent,
     CpsButtonToggleComponent,
     CpsIconComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class TreeTablePageComponent implements OnInit {
+  readonly examples = treeTableExamples;
+
   selectedTabIndex = 0;
 
   sizesOptions: CpsButtonToggleOption[] = [
@@ -503,13 +507,13 @@ export class TreeTablePageComponent implements OnInit {
       data: {
         a: '<strong>hello</strong>',
         b: '<h2>world</h2>',
-        c: '<a href="https://www.github.com">link to github</a>'
+        c: '<a href="https://www.github.com">link to GitHub</a>'
       },
       children: [
         {
           data: {
             a: 'this is sanitized <script>console.log("pwned")</script>',
-            b: '<img src="./assets/ui_logo.svg" width="100" />',
+            b: '<img src="./assets/ui_logo.svg" alt="CPS UI Kit logo" width="100" />',
             c: '<code>null === undefined</code>'
           }
         }

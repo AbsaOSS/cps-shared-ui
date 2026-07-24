@@ -150,7 +150,10 @@ export const components: ComponentEntry[] = [
     group: 'Menu',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
-      await page.locator('.example-content cps-button').first().click();
+      await page
+        .locator('.example-content cps-button:not(.code-example__copy)')
+        .first()
+        .click();
     }
   },
   {
@@ -160,7 +163,10 @@ export const components: ComponentEntry[] = [
     group: 'Menu',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
-      await page.locator('.example-content cps-button').nth(2).click();
+      await page
+        .locator('.example-content cps-button:not(.code-example__copy)')
+        .nth(2)
+        .click();
     }
   },
   {
@@ -170,7 +176,7 @@ export const components: ComponentEntry[] = [
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       const buttons = page
-        .locator('.example-content cps-button')
+        .locator('.example-content cps-button:not(.code-example__copy)')
         .filter({ hasNotText: /clear all/i });
       const count = await buttons.count();
       for (let i = 0; i < count; i++) {
