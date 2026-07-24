@@ -8,19 +8,23 @@
       <a routerLink="/loader">Loader component</a>
     </div>
   </div>
-  <div class="progr-circ-group">
-    <cps-progress-circular
-      color="luxury"
-      diameter="7.5rem"
-      strokeWidth="0.5rem"></cps-progress-circular>
-    <cps-progress-circular diameter="3.75rem"></cps-progress-circular>
-    <cps-progress-circular
-      color="surprise"
-      diameter="1.875rem"
-      strokeWidth="0.1875rem"></cps-progress-circular>
-    <cps-progress-circular
-      color="prepared"
-      diameter="0.9375rem"
-      strokeWidth="0.125rem"></cps-progress-circular>
-  </div>
+  <app-code-example
+    label="Progress circular"
+    [htmlCode]="examples.variants.html">
+    <div class="progr-circ-group">
+      <cps-progress-circular
+        color="luxury"
+        diameter="7.5rem"
+        strokeWidth="0.5rem"></cps-progress-circular>
+      <cps-progress-circular diameter="3.75rem"></cps-progress-circular>
+      <cps-progress-circular
+        color="surprise"
+        diameter="1.875rem"
+        strokeWidth="0.1875rem"></cps-progress-circular>
+      <cps-progress-circular
+        color="prepared"
+        diameter="0.9375rem"
+        strokeWidth="0.125rem"></cps-progress-circular>
+    </div>
+  </app-code-example>
 </app-component-docs-viewer>
