@@ -1,8 +1,17 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="tags-group">
+  <app-code-example label="Regular tag" [htmlCode]="examples.regularTag.html">
     <cps-tag color="warn" label="Regular tag"></cps-tag>
+  </app-code-example>
+
+  <app-code-example label="Disabled tag" [htmlCode]="examples.disabledTag.html">
     <cps-tag [disabled]="true" color="red" label="Disabled tag"></cps-tag>
+  </app-code-example>
+
+  <app-code-example
+    label="Selectable tag"
+    [htmlCode]="examples.selectableTag.html"
+    [tsCode]="examples.selectableTag.ts">
     <div class="sync-val-example">
       <cps-tag
         [selectable]="true"
@@ -12,5 +21,5 @@
 
       <div class="sync-val">Is selected: {{ syncVal }}</div>
     </div>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

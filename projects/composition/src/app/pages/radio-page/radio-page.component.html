@@ -1,6 +1,9 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="radiogroups-group">
+  <app-code-example
+    label="Required radio group"
+    [htmlCode]="examples.requiredRadioGroup.html"
+    [tsCode]="examples.requiredRadioGroup.ts">
     <form [formGroup]="form">
       <cps-radio-group
         groupLabel="Radio group where 3rd option must be selected"
@@ -8,18 +11,36 @@
         [options]="options">
       </cps-radio-group>
     </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Radio group with a tooltip"
+    [htmlCode]="examples.tooltipRadioGroup.html"
+    [tsCode]="examples.tooltipRadioGroup.ts">
     <cps-radio-group
       groupLabel="Radio group with a tooltip"
       [options]="options"
       infoTooltip="Provide any information here"
       value="second">
     </cps-radio-group>
+  </app-code-example>
+
+  <app-code-example
+    label="Vertical radio group"
+    [htmlCode]="examples.verticalRadioGroup.html"
+    [tsCode]="examples.verticalRadioGroup.ts">
     <cps-radio-group
       groupLabel="Vertical radio group"
       [options]="options"
       value="second"
       [vertical]="true">
     </cps-radio-group>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled vertical radio group"
+    [htmlCode]="examples.disabledVerticalRadioGroup.html"
+    [tsCode]="examples.disabledVerticalRadioGroup.ts">
     <cps-radio-group
       groupLabel="Disabled vertical radio group"
       [options]="options"
@@ -27,10 +48,22 @@
       [disabled]="true"
       [vertical]="true">
     </cps-radio-group>
+  </app-code-example>
+
+  <app-code-example
+    label="Radio group with partially disabled options"
+    [htmlCode]="examples.partiallyDisabledRadioGroup.html"
+    [tsCode]="examples.partiallyDisabledRadioGroup.ts">
     <cps-radio-group
       groupLabel="Radio group with partially disabled options and targeted tooltips"
       [options]="partiallyDisabledOptions">
     </cps-radio-group>
+  </app-code-example>
+
+  <app-code-example
+    label="Radio group with two-way binding"
+    [htmlCode]="examples.twoWayBindingRadioGroup.html"
+    [tsCode]="examples.twoWayBindingRadioGroup.ts">
     <div class="sync-val-example">
       <cps-radio-group
         groupLabel="Radio group with two-way binding"
@@ -39,6 +72,12 @@
       </cps-radio-group>
       <div class="sync-val">Selected value: {{ syncVal }}</div>
     </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Radio group with custom content"
+    [htmlCode]="examples.customContentRadioGroup.html"
+    [tsCode]="examples.customContentRadioGroup.ts">
     <cps-radio-group
       groupLabel="Radio group with custom content"
       class="custom-content-example"
@@ -90,5 +129,5 @@
       </cps-radio>
       <cps-radio [option]="{ label: 'Simple option', value: 2 }"></cps-radio>
     </cps-radio-group>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

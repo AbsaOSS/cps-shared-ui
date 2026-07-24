@@ -1,7 +1,10 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <form [formGroup]="form">
-    <div class="textarea-group">
+  <app-code-example
+    label="Required textarea with a tooltip"
+    [htmlCode]="examples.requiredTextarea.html"
+    [tsCode]="examples.requiredTextarea.ts">
+    <form [formGroup]="form">
       <cps-textarea
         label="Required textarea with a tooltip"
         placeholder="Please enter any text"
@@ -10,36 +13,52 @@
         [clearable]="true"
         formControlName="requiredTextarea">
       </cps-textarea>
+    </form>
+  </app-code-example>
 
-      <cps-textarea label="Disabled textarea" [disabled]="true"></cps-textarea>
+  <app-code-example
+    label="Disabled textarea"
+    [htmlCode]="examples.disabledTextarea.html">
+    <cps-textarea label="Disabled textarea" [disabled]="true"></cps-textarea>
+  </app-code-example>
 
+  <app-code-example
+    label="Readonly textarea"
+    [htmlCode]="examples.readonlyTextarea.html">
+    <cps-textarea
+      label="Readonly textarea"
+      hint="This textarea is readonly"
+      value="Value to show"
+      [readonly]="true">
+    </cps-textarea>
+  </app-code-example>
+
+  <app-code-example
+    label="Clearable textarea with persistent clear icon"
+    [htmlCode]="examples.clearableTextarea.html">
+    <cps-textarea
+      label="Clearable textarea with persistent clear icon"
+      hint="This textarea is clearable"
+      value="Clear me"
+      [clearable]="true"
+      [persistentClear]="true">
+    </cps-textarea>
+  </app-code-example>
+
+  <app-code-example
+    label="Two-way binding"
+    [htmlCode]="examples.twoWayBindingTextarea.html"
+    [tsCode]="examples.twoWayBindingTextarea.ts">
+    <div class="sync-val-example">
       <cps-textarea
-        label="Readonly textarea"
-        hint="This textarea is readonly"
-        value="Value to show"
-        [readonly]="true">
+        width="25rem"
+        label="Textarea with two-way binding, type something in"
+        [(ngModel)]="syncVal"
+        resizable="none"
+        hint="This textarea has a fixed width of 25rem and is not resizable"
+        [ngModelOptions]="{ standalone: true }">
       </cps-textarea>
-
-      <cps-textarea
-        label="Clearable textarea with persistent clear icon"
-        hint="This textarea is clearable"
-        value="Clear me"
-        [clearable]="true"
-        [persistentClear]="true">
-      </cps-textarea>
-
-      <div class="sync-val-example">
-        <cps-textarea
-          width="25rem"
-          label="Textarea with two-way binding, type something in"
-          [(ngModel)]="syncVal"
-          resizable="none"
-          hint="This textarea has a fixed width of 25rem and is not resizable"
-          [ngModelOptions]="{ standalone: true }">
-          >
-        </cps-textarea>
-        <span class="sync-val">{{ syncVal }}</span>
-      </div>
+      <span class="sync-val">{{ syncVal }}</span>
     </div>
-  </form>
+  </app-code-example>
 </app-component-docs-viewer>
