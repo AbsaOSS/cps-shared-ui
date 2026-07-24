@@ -87,16 +87,6 @@ export class CpsTreeTableColumnResizableDirective extends TTResizableColumn {
           table.children[0]?.nodeName === 'COLGROUP' ? table.children[0] : null;
         if (!colGroup) return;
         const cols = Array.from(colGroup.children) as HTMLElement[];
-        if (cols.some((c) => !c.style.width)) {
-          const ths = Array.from(
-            table.querySelectorAll('thead > tr:first-child > th')
-          ) as HTMLElement[];
-          cols.forEach((col, i) => {
-            if (!col.style.width && ths[i]) {
-              col.style.width = ths[i].offsetWidth + 'px';
-            }
-          });
-        }
         const col = cols[resizeColumnIndex] ?? null;
         const nextCol = col?.nextElementSibling as HTMLElement | null;
         if (col) col.style.width = newColumnWidth + 'px';

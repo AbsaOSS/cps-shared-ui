@@ -36,6 +36,61 @@ describe('CpsTreeTableComponent', () => {
 
   afterEach(() => jest.restoreAllMocks());
 
+  function itSchedulesRecalcAsMicrotask(
+    label: string,
+    invoke: () => void,
+    recalcMethodName: string,
+    expectedArgs: unknown[]
+  ) {
+    it(`${label} defers to the recalculation after change detection`, async () => {
+      const recalcSpy = jest
+        .spyOn(component as any, recalcMethodName)
+        .mockImplementation(() => {});
+
+      invoke();
+      await Promise.resolve();
+
+      expect(recalcSpy).toHaveBeenCalledWith(...expectedArgs);
+    });
+
+    it(`${label} runs detectChanges() before the recalculation, in that order`, async () => {
+      const callOrder: string[] = [];
+      jest
+        .spyOn((component as any).cdRef, 'detectChanges')
+        .mockImplementation(() => {
+          callOrder.push('detectChanges');
+        });
+      jest.spyOn(component as any, recalcMethodName).mockImplementation(() => {
+        callOrder.push('recalc');
+      });
+
+      invoke();
+      expect(callOrder).toEqual([]);
+
+      await Promise.resolve();
+      expect(callOrder).toEqual(['detectChanges', 'recalc']);
+    });
+
+    it(`${label} schedules the recalculation as a real microtask, not a macrotask`, async () => {
+      jest.useFakeTimers({ doNotFake: ['queueMicrotask'] });
+      try {
+        jest
+          .spyOn((component as any).cdRef, 'detectChanges')
+          .mockImplementation(() => {});
+        const recalcSpy = jest
+          .spyOn(component as any, recalcMethodName)
+          .mockImplementation(() => {});
+
+        invoke();
+        await Promise.resolve();
+
+        expect(recalcSpy).toHaveBeenCalledWith(...expectedArgs);
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+  }
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -375,6 +430,13 @@ describe('CpsTreeTableComponent', () => {
       component.onSort(event);
       expect(component.sorted.emit).toHaveBeenCalledWith(event);
     });
+
+    itSchedulesRecalcAsMicrotask(
+      'onSort',
+      () => component.onSort({ field: 'name', order: 1 }),
+      '_calcAutoLayoutHeaderWidths',
+      [true]
+    );
   });
 
   describe('onFilter', () => {
@@ -384,6 +446,13 @@ describe('CpsTreeTableComponent', () => {
       component.onFilter(event);
       expect(component.filtered.emit).toHaveBeenCalledWith(event);
     });
+
+    itSchedulesRecalcAsMicrotask(
+      'onFilter',
+      () => component.onFilter({ filters: {} }),
+      '_calcAutoLayoutHeaderWidths',
+      [true]
+    );
   });
 
   describe('onLazyLoaded', () => {
@@ -721,6 +790,693 @@ describe('CpsTreeTableComponent', () => {
       jest.spyOn(event, 'preventDefault');
       component.onPaginatorKeydown(event);
       expect(event.preventDefault).toHaveBeenCalled();
+    });
+  });
+
+  describe('auto layout column widths (incremental expand/collapse)', () => {
+    let originalOffsetWidth: PropertyDescriptor | undefined;
+
+    beforeAll(() => {
+      originalOffsetWidth = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        'offsetWidth'
+      );
+      Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+        configurable: true,
+        get(this: HTMLElement) {
+          return Number(this.getAttribute('data-test-width') || 0);
+        }
+      });
+    });
+
+    afterAll(() => {
+      if (originalOffsetWidth) {
+        Object.defineProperty(
+          HTMLElement.prototype,
+          'offsetWidth',
+          originalOffsetWidth
+        );
+      }
+    });
+
+    function makeCell(
+      tag: 'th' | 'td',
+      width: number,
+      extraClass?: string
+    ): HTMLElement {
+      const el = document.createElement(tag);
+      el.setAttribute('data-test-width', String(width));
+      if (extraClass) el.classList.add(extraClass);
+      return el;
+    }
+
+    function makeHeaderBox(cells: HTMLElement[]): HTMLElement {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = '<table><thead><tr></tr></thead></table>';
+      const tr = wrapper.querySelector('tr') as HTMLElement;
+      cells.forEach((c) => tr.appendChild(c));
+      return wrapper;
+    }
+
+    function makeScrollableBody(rows: HTMLElement[][]): HTMLElement {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = '<table><tbody></tbody></table>';
+      const tbody = wrapper.querySelector('tbody') as HTMLElement;
+      rows.forEach((cells) => {
+        const tr = document.createElement('tr');
+        cells.forEach((c) => tr.appendChild(c));
+        tbody.appendChild(tr);
+      });
+      return wrapper;
+    }
+
+    function setupBasicTable() {
+      component.autoLayout = true;
+      component.scrollable = true;
+      component.virtualScroll = false;
+
+      const th1 = makeCell('th', 100);
+      const th2 = makeCell('th', 50);
+      (component as any)._headerBox = makeHeaderBox([th1, th2]);
+
+      const nodeA: any = { data: { id: 'a' } };
+      const nodeB: any = { data: { id: 'b' } };
+      const rowA = [makeCell('td', 80), makeCell('td', 40)];
+      const rowB = [makeCell('td', 120), makeCell('td', 60)];
+      (component as any)._scrollableBody = makeScrollableBody([rowA, rowB]);
+      component.primengTreeTable.serializedValue = [
+        { node: nodeA, visible: true },
+        { node: nodeB, visible: true }
+      ] as any;
+
+      (component as any)._calcAutoLayoutHeaderWidths(true);
+
+      return { th1, th2, nodeA, nodeB, rowA, rowB };
+    }
+
+    describe('_calcAutoLayoutHeaderWidths (full recalc)', () => {
+      it('populates the per-row cache keyed by tree node and applies percentages', () => {
+        const { th1, th2, nodeA, nodeB } = setupBasicTable();
+
+        expect((component as any)._visibleRowWidthsPxByNode.get(nodeA)).toEqual(
+          [80, 40]
+        );
+        expect((component as any)._visibleRowWidthsPxByNode.get(nodeB)).toEqual(
+          [120, 60]
+        );
+        expect((component as any)._headerWidthsPx).toEqual([100, 50]);
+
+        expect(th1.style.width).toBe(`${(120 / 180) * 100}%`);
+        expect(th2.style.width).toBe(`${(60 / 180) * 100}%`);
+      });
+
+      it('clears stale cache entries for nodes no longer present', () => {
+        const { nodeA } = setupBasicTable();
+        expect((component as any)._visibleRowWidthsPxByNode.has(nodeA)).toBe(
+          true
+        );
+
+        const nodeC: any = { data: { id: 'c' } };
+        const rowC = [makeCell('td', 90), makeCell('td', 45)];
+        (component as any)._scrollableBody = makeScrollableBody([rowC]);
+        component.primengTreeTable.serializedValue = [
+          { node: nodeC, visible: true }
+        ] as any;
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect((component as any)._visibleRowWidthsPxByNode.has(nodeA)).toBe(
+          false
+        );
+        expect((component as any)._visibleRowWidthsPxByNode.get(nodeC)).toEqual(
+          [90, 45]
+        );
+      });
+
+      it('marks _needRecalcAutoLayout for retry when there are no header cells', () => {
+        setupBasicTable();
+        (component as any)._needRecalcAutoLayout = false;
+        (component as any)._headerBox = makeHeaderBox([]);
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect((component as any)._needRecalcAutoLayout).toBe(true);
+      });
+
+      it('marks _needRecalcAutoLayout for retry when header cells all have zero width', () => {
+        setupBasicTable();
+        (component as any)._needRecalcAutoLayout = false;
+        (component as any)._headerBox = makeHeaderBox([
+          makeCell('th', 0),
+          makeCell('th', 0)
+        ]);
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect((component as any)._needRecalcAutoLayout).toBe(true);
+      });
+
+      it('marks _needRecalcAutoLayout for retry when there are no body rows yet', () => {
+        setupBasicTable();
+        (component as any)._needRecalcAutoLayout = false;
+        (component as any)._scrollableBody = makeScrollableBody([]);
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect((component as any)._needRecalcAutoLayout).toBe(true);
+      });
+
+      it('leaves _needRecalcAutoLayout false after a successful recalc', () => {
+        setupBasicTable();
+        expect((component as any)._needRecalcAutoLayout).toBe(false);
+      });
+    });
+
+    describe('resize-pinned columns', () => {
+      function setupThreeColumnTable() {
+        component.autoLayout = true;
+        component.scrollable = true;
+        component.virtualScroll = false;
+
+        const th0 = makeCell('th', 100);
+        const th1 = makeCell('th', 50);
+        const th2 = makeCell('th', 80);
+        (component as any)._headerBox = makeHeaderBox([th0, th1, th2]);
+
+        const nodeA: any = { data: { id: 'a' } };
+        const rowA = [
+          makeCell('td', 100),
+          makeCell('td', 50),
+          makeCell('td', 80)
+        ];
+        (component as any)._scrollableBody = makeScrollableBody([rowA]);
+        component.primengTreeTable.serializedValue = [
+          { node: nodeA, visible: true }
+        ] as any;
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        return { th0, th1, th2, nodeA, rowA };
+      }
+
+      it('onColumnResized pins the resized column by index', () => {
+        const { th1 } = setupThreeColumnTable();
+        th1.setAttribute('data-test-width', '150');
+
+        (component as any).onColumnResized({ element: th1, delta: 100 });
+
+        expect((component as any)._pinnedColumnWidthsPx.get(1)).toBe(150);
+      });
+
+      it('ignores resize events on selectable-checkbox/row-menu columns', () => {
+        setupThreeColumnTable();
+        const th = makeCell('th', 50, 'cps-treetable-selectable-cell');
+
+        (component as any).onColumnResized({ element: th, delta: 10 });
+
+        expect((component as any)._pinnedColumnWidthsPx.size).toBe(0);
+      });
+
+      it('excludes the pinned column from the percentage sum and keeps it at its exact px width', () => {
+        const { th0, th1, th2 } = setupThreeColumnTable();
+
+        (component as any)._pinnedColumnWidthsPx.set(1, 150);
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect(th1.style.width).toBe('150px');
+        expect(th0.style.width).toBe(`${(100 / 180) * 100}%`);
+        expect(th2.style.width).toBe(`${(80 / 180) * 100}%`);
+      });
+
+      it('applies the same fixed width to header and body for a pinned column', () => {
+        const { rowA } = setupThreeColumnTable();
+        (component as any)._pinnedColumnWidthsPx.set(1, 150);
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect(rowA[1].style.width).toBe('150px');
+      });
+
+      it('clears pinned columns when the header cell count changes', () => {
+        setupThreeColumnTable();
+        (component as any)._pinnedColumnWidthsPx.set(1, 150);
+
+        const newTh0 = makeCell('th', 100);
+        const newTh1 = makeCell('th', 50);
+        (component as any)._headerBox = makeHeaderBox([newTh0, newTh1]);
+        const nodeX: any = { data: { id: 'x' } };
+        const rowX = [makeCell('td', 100), makeCell('td', 50)];
+        (component as any)._scrollableBody = makeScrollableBody([rowX]);
+        component.primengTreeTable.serializedValue = [
+          { node: nodeX, visible: true }
+        ] as any;
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect((component as any)._pinnedColumnWidthsPx.size).toBe(0);
+      });
+
+      it('keeps a pinned column at its exact width even when new content would otherwise grow it', () => {
+        const { nodeA, th1 } = setupThreeColumnTable();
+        (component as any)._pinnedColumnWidthsPx.set(1, 150);
+
+        const nodeAChild: any = { data: { id: 'a-child' } };
+        nodeA.children = [nodeAChild];
+
+        const newTr = document.createElement('tr');
+        [makeCell('td', 10), makeCell('td', 300), makeCell('td', 10)].forEach(
+          (c) => newTr.appendChild(c)
+        );
+        const rowATr = (component as any)._scrollableBody.querySelectorAll(
+          'tr'
+        )[0];
+        rowATr.parentElement.insertBefore(newTr, rowATr.nextSibling);
+
+        component.primengTreeTable.serializedValue = [
+          { node: nodeA, visible: true },
+          { node: nodeAChild, visible: true }
+        ] as any;
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(th1.style.width).toBe('150px');
+        expect(newTr.querySelectorAll('td')[1].style.width).toBe('150px');
+      });
+    });
+
+    describe('_expandAutoLayoutIncremental', () => {
+      function setSerializedValue(entries: { node: any; visible: boolean }[]) {
+        component.primengTreeTable.serializedValue = entries as any;
+      }
+
+      it('measures only the newly-revealed rows and adds them to the cache', () => {
+        const { nodeA, nodeB } = setupBasicTable();
+        const measureSpy = jest.spyOn(component as any, '_measureRowsWidthsPx');
+
+        const nodeAChild: any = { data: { id: 'a-child' } };
+        nodeA.children = [nodeAChild];
+
+        const newTr = document.createElement('tr');
+        [makeCell('td', 55), makeCell('td', 20)].forEach((c) =>
+          newTr.appendChild(c)
+        );
+        const rowATr = (component as any)._scrollableBody.querySelectorAll(
+          'tr'
+        )[0];
+        rowATr.parentElement.insertBefore(newTr, rowATr.nextSibling);
+
+        setSerializedValue([
+          { node: nodeA, visible: true },
+          { node: nodeAChild, visible: true },
+          { node: nodeB, visible: true }
+        ]);
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(
+          (component as any)._visibleRowWidthsPxByNode.get(nodeAChild)
+        ).toEqual([55, 20]);
+        expect(measureSpy).toHaveBeenCalledWith(
+          null,
+          [newTr],
+          expect.any(Function)
+        );
+      });
+
+      it('restyles every currently-visible row, not just the new ones, even when nothing grew', () => {
+        const { nodeA, nodeB } = setupBasicTable();
+        const applySpy = jest.spyOn(component as any, '_applyColumnWidths');
+
+        const nodeAChild: any = { data: { id: 'a-child' } };
+        nodeA.children = [nodeAChild];
+
+        const newTr = document.createElement('tr');
+        [makeCell('td', 10), makeCell('td', 5)].forEach((c) =>
+          newTr.appendChild(c)
+        );
+        const rowATr = (component as any)._scrollableBody.querySelectorAll(
+          'tr'
+        )[0];
+        rowATr.parentElement.insertBefore(newTr, rowATr.nextSibling);
+
+        setSerializedValue([
+          { node: nodeA, visible: true },
+          { node: nodeAChild, visible: true },
+          { node: nodeB, visible: true }
+        ]);
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(applySpy).toHaveBeenCalledTimes(1);
+        const allRows = (component as any)._queryBodyRows();
+        expect(applySpy.mock.calls[0][1]).toEqual(allRows);
+        expect(allRows).toContain(newTr);
+      });
+
+      it('restyles headers and all visible rows when a column grows', () => {
+        const { nodeA, nodeB } = setupBasicTable();
+        const applySpy = jest.spyOn(component as any, '_applyColumnWidths');
+
+        const nodeAChild: any = { data: { id: 'a-child' } };
+        nodeA.children = [nodeAChild];
+
+        const newTr = document.createElement('tr');
+        [makeCell('td', 500), makeCell('td', 5)].forEach((c) =>
+          newTr.appendChild(c)
+        );
+        const rowATr = (component as any)._scrollableBody.querySelectorAll(
+          'tr'
+        )[0];
+        rowATr.parentElement.insertBefore(newTr, rowATr.nextSibling);
+
+        setSerializedValue([
+          { node: nodeA, visible: true },
+          { node: nodeAChild, visible: true },
+          { node: nodeB, visible: true }
+        ]);
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(applySpy).toHaveBeenCalledTimes(1);
+        const allRows = (component as any)._queryBodyRows();
+        expect(applySpy.mock.calls[0][1]).toEqual(allRows);
+      });
+
+      it('recurses into already-expanded children to find every newly-visible node', () => {
+        const { nodeA, nodeB } = setupBasicTable();
+
+        const grandchild: any = { data: { id: 'grandchild' } };
+        const child: any = {
+          data: { id: 'child' },
+          expanded: true,
+          children: [grandchild]
+        };
+        nodeA.children = [child];
+
+        const childRow = document.createElement('tr');
+        [makeCell('td', 10), makeCell('td', 5)].forEach((c) =>
+          childRow.appendChild(c)
+        );
+        const grandchildRow = document.createElement('tr');
+        [makeCell('td', 15), makeCell('td', 6)].forEach((c) =>
+          grandchildRow.appendChild(c)
+        );
+
+        const rowATr = (component as any)._scrollableBody.querySelectorAll(
+          'tr'
+        )[0];
+        rowATr.parentElement.insertBefore(grandchildRow, rowATr.nextSibling);
+        rowATr.parentElement.insertBefore(childRow, rowATr.nextSibling);
+
+        setSerializedValue([
+          { node: nodeA, visible: true },
+          { node: child, visible: true },
+          { node: grandchild, visible: true },
+          { node: nodeB, visible: true }
+        ]);
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect((component as any)._visibleRowWidthsPxByNode.get(child)).toEqual(
+          [10, 5]
+        );
+        expect(
+          (component as any)._visibleRowWidthsPxByNode.get(grandchild)
+        ).toEqual([15, 6]);
+      });
+
+      it('never measures when the node has no children, but still reapplies cached widths to every visible row', () => {
+        const { nodeA } = setupBasicTable();
+        const measureSpy = jest.spyOn(component as any, '_measureRowsWidthsPx');
+        const applySpy = jest.spyOn(component as any, '_applyColumnWidths');
+        const fullRecalcSpy = jest.spyOn(
+          component as any,
+          '_calcAutoLayoutHeaderWidths'
+        );
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(measureSpy).not.toHaveBeenCalled();
+        expect(applySpy).toHaveBeenCalledTimes(1);
+        expect(fullRecalcSpy).not.toHaveBeenCalled();
+      });
+
+      it('falls back to a full recalc when virtualScroll is true', () => {
+        const { nodeA } = setupBasicTable();
+        nodeA.children = [{ data: { id: 'a-child' } }];
+        component.virtualScroll = true;
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+
+      it('falls back to a full recalc when no cache exists yet', () => {
+        const { nodeA } = setupBasicTable();
+        nodeA.children = [{ data: { id: 'a-child' } }];
+        (component as any)._headerWidthsPx = null;
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+
+      it('falls back to a full recalc when event.node is missing', () => {
+        setupBasicTable();
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._expandAutoLayoutIncremental({});
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+
+      it('falls back to a full recalc when the toggled node cannot be located in serializedValue', () => {
+        const { nodeA } = setupBasicTable();
+        nodeA.children = [{ data: { id: 'a-child' } }];
+
+        setSerializedValue([]);
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+
+      it('falls back to a full recalc when fewer sibling rows exist than expected', () => {
+        const { nodeA, nodeB } = setupBasicTable();
+        const child1: any = { data: { id: 'child-1' } };
+        const child2: any = { data: { id: 'child-2' } };
+        nodeA.children = [child1, child2];
+
+        setSerializedValue([
+          { node: nodeA, visible: true },
+          { node: child1, visible: true },
+          { node: child2, visible: true },
+          { node: nodeB, visible: true }
+        ]);
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._expandAutoLayoutIncremental({ node: nodeA });
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+    });
+
+    describe('_collapseAutoLayoutIncremental', () => {
+      it('deletes the collapsed subtree from the cache without measuring anything', () => {
+        const { nodeA, nodeB } = setupBasicTable();
+        const measureSpy = jest.spyOn(component as any, '_measureRowsWidthsPx');
+
+        const nodeAChild: any = { data: { id: 'a-child' } };
+        nodeA.children = [nodeAChild];
+        (component as any)._visibleRowWidthsPxByNode.set(nodeAChild, [10, 5]);
+
+        (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
+
+        expect(
+          (component as any)._visibleRowWidthsPxByNode.has(nodeAChild)
+        ).toBe(false);
+        expect((component as any)._visibleRowWidthsPxByNode.has(nodeB)).toBe(
+          true
+        );
+        expect(measureSpy).not.toHaveBeenCalled();
+      });
+
+      it('still reapplies to every visible row even when the collapsed subtree was not driving any column width', () => {
+        const { nodeA } = setupBasicTable();
+        const applySpy = jest.spyOn(component as any, '_applyColumnWidths');
+        const measureSpy = jest.spyOn(component as any, '_measureRowsWidthsPx');
+
+        const nodeAChild: any = { data: { id: 'a-child' } };
+        nodeA.children = [nodeAChild];
+        (component as any)._visibleRowWidthsPxByNode.set(nodeAChild, [10, 5]);
+
+        (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
+
+        expect(applySpy).toHaveBeenCalledTimes(1);
+        expect(measureSpy).not.toHaveBeenCalled();
+      });
+
+      it('recomputes and reapplies from the remaining cache when a column shrinks', () => {
+        const { nodeB } = setupBasicTable();
+        const applySpy = jest.spyOn(component as any, '_applyColumnWidths');
+        const measureSpy = jest.spyOn(component as any, '_measureRowsWidthsPx');
+
+        const parent: any = { data: { id: 'parent' }, children: [nodeB] };
+
+        (component as any)._collapseAutoLayoutIncremental({ node: parent });
+
+        expect((component as any)._visibleRowWidthsPxByNode.has(nodeB)).toBe(
+          false
+        );
+        expect(measureSpy).not.toHaveBeenCalled();
+        expect(applySpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('recurses into already-expanded children to find every newly-invisible node', () => {
+        const { nodeA } = setupBasicTable();
+
+        const grandchild: any = { data: { id: 'grandchild' } };
+        const child: any = {
+          data: { id: 'child' },
+          expanded: true,
+          children: [grandchild]
+        };
+        nodeA.children = [child];
+        (component as any)._visibleRowWidthsPxByNode.set(child, [10, 5]);
+        (component as any)._visibleRowWidthsPxByNode.set(grandchild, [15, 6]);
+
+        (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
+
+        expect((component as any)._visibleRowWidthsPxByNode.has(child)).toBe(
+          false
+        );
+        expect(
+          (component as any)._visibleRowWidthsPxByNode.has(grandchild)
+        ).toBe(false);
+      });
+
+      it('reapplies cached widths without falling back when the node has no children', () => {
+        const { nodeA } = setupBasicTable();
+        const applySpy = jest.spyOn(component as any, '_applyColumnWidths');
+        const fullRecalcSpy = jest.spyOn(
+          component as any,
+          '_calcAutoLayoutHeaderWidths'
+        );
+
+        (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
+
+        expect(applySpy).toHaveBeenCalledTimes(1);
+        expect(fullRecalcSpy).not.toHaveBeenCalled();
+      });
+
+      it('falls back to a full recalc when virtualScroll is true', () => {
+        const { nodeA } = setupBasicTable();
+        nodeA.children = [{ data: { id: 'a-child' } }];
+        component.virtualScroll = true;
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+
+      it('falls back to a full recalc when no cache exists yet', () => {
+        const { nodeA } = setupBasicTable();
+        nodeA.children = [{ data: { id: 'a-child' } }];
+        (component as any)._headerWidthsPx = null;
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+
+      it('falls back to a full recalc when event.node is missing', () => {
+        setupBasicTable();
+
+        const fullRecalcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._collapseAutoLayoutIncremental({});
+
+        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+      });
+    });
+
+    describe('_collectToggledDescendantNodes', () => {
+      it('returns an empty array for a node with no children', () => {
+        expect((component as any)._collectToggledDescendantNodes({})).toEqual(
+          []
+        );
+      });
+
+      it('collects direct children only, when none are already expanded', () => {
+        const child1 = {};
+        const child2 = {};
+        const node = { children: [child1, child2] };
+        expect((component as any)._collectToggledDescendantNodes(node)).toEqual(
+          [child1, child2]
+        );
+      });
+
+      it('recurses into already-expanded children but not collapsed ones', () => {
+        const grandchild = {};
+        const expandedChild = { expanded: true, children: [grandchild] };
+        const collapsedGrandchild = {};
+        const collapsedChild = {
+          expanded: false,
+          children: [collapsedGrandchild]
+        };
+        const node = { children: [expandedChild, collapsedChild] };
+
+        expect((component as any)._collectToggledDescendantNodes(node)).toEqual(
+          [expandedChild, grandchild, collapsedChild]
+        );
+      });
+    });
+
+    describe('wiring into onNodeExpanded/onNodeCollapsed', () => {
+      const expandEvent = { node: { data: { id: 1 } } };
+      const collapseEvent = { node: { data: { id: 2 } } };
+
+      itSchedulesRecalcAsMicrotask(
+        'onNodeExpanded',
+        () => component.onNodeExpanded(expandEvent),
+        '_expandAutoLayoutIncremental',
+        [expandEvent]
+      );
+
+      itSchedulesRecalcAsMicrotask(
+        'onNodeCollapsed',
+        () => component.onNodeCollapsed(collapseEvent),
+        '_collapseAutoLayoutIncremental',
+        [collapseEvent]
+      );
     });
   });
 });

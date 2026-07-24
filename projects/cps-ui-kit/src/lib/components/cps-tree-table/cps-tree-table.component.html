@@ -50,7 +50,8 @@
   (onNodeExpand)="onNodeExpanded($event)"
   (onNodeCollapse)="onNodeCollapsed($event)"
   (onNodeSelect)="onNodeSelected($event)"
-  (onNodeUnselect)="onNodeUnselected($event)">
+  (onNodeUnselect)="onNodeUnselected($event)"
+  (onColResize)="onColumnResized($event)">
   @if (colgroupTemplate) {
     <ng-template pTemplate="colgroup">
       <ng-container *ngTemplateOutlet="colgroupTemplate"></ng-container>
