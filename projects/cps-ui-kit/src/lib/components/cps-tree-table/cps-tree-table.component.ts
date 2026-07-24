@@ -58,6 +58,8 @@ export function treeTableFactory(tableComponent: CpsTreeTableComponent) {
   return tableComponent.primengTreeTable;
 }
 
+const DEFAULT_CELL_WIDTH_REM = 3.4375;
+
 /**
  * CpsTreeTableSize is used to define the size of the tree table.
  * @group Types
@@ -744,6 +746,13 @@ export class CpsTreeTableComponent
 
   private _needRecalcAutoLayout = true;
 
+  private _visibleRowWidthsPxByNode = new Map<any, number[]>();
+  private _headerWidthsPx: number[] | null = null;
+  private _lastHasSelectableCell = false;
+  private _lastHasRowMenuCell = false;
+  private _pinnedColumnWidthsPx = new Map<number, number>();
+  private _lastHeaderCellCount: number | null = null;
+
   private _data: any[] = [];
 
   private window: Window;
@@ -754,7 +763,10 @@ export class CpsTreeTableComponent
     return this._cpsRootFontSizeService?.fontSize() || 16;
   }
 
-  // eslint-disable-next-line no-useless-constructor
+  private get _defaultCellWidthPx(): number {
+    return DEFAULT_CELL_WIDTH_REM * this._rootFontSizePx;
+  }
+
   constructor(
     private cdRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document,
@@ -983,136 +995,375 @@ export class CpsTreeTableComponent
 
       if (!this._needRecalcAutoLayout && !forced) return;
 
-      const headerRows = this._headerBox?.querySelectorAll('tr');
-      if (!headerRows?.length) return;
-
-      const headerCells =
-        headerRows[headerRows.length - 1]?.querySelectorAll('th');
-      if (!headerCells?.length) return;
-
-      let hasSelectableCell = false;
-      let hasRowMenuCell = false;
-
-      const ths = Array.from(headerCells);
-      if (ths.every((th: any) => th.offsetWidth === 0)) return;
-
-      const thWidths = ths.map((th: any) => {
-        const wprev = th.style.width;
-
-        const isSelectableCell = th.classList.contains(
-          'cps-treetable-selectable-cell'
-        );
-
-        const isRowCell = th.classList.contains('cps-treetable-row-menu-cell');
-
-        if (isSelectableCell) hasSelectableCell = true;
-        if (isRowCell) hasRowMenuCell = true;
-
-        let thWidth = 55;
-        if (!isSelectableCell && !isRowCell) {
-          this.renderer.setStyle(th, 'width', 'min-content');
-          this.renderer.setStyle(th, 'display', 'block');
-          this.renderer.setStyle(th, 'text-wrap', 'nowrap');
-          thWidth = th.offsetWidth;
-          this.renderer.setStyle(th, 'width', wprev);
-          this.renderer.removeStyle(th, 'display');
-          this.renderer.removeStyle(th, 'text-wrap');
-        }
-        return thWidth;
-      });
-
-      const bodyRows = this._scrollableBody?.querySelectorAll('tr');
-      if (!bodyRows?.length) return;
-
-      const tdWidths: number[] = [];
-      const fragment = this.document.createDocumentFragment();
-      const hiddenDiv = this.document.createElement('div');
-      hiddenDiv.style.visibility = 'hidden';
-      hiddenDiv.style.position = 'absolute';
-      hiddenDiv.style.whiteSpace = 'nowrap';
-
-      this.document.body.appendChild(hiddenDiv);
-      bodyRows.forEach((tr: HTMLElement) => {
-        const tds = tr?.querySelectorAll('td');
-        tds?.forEach((td: HTMLElement, idx: number) => {
-          const isSelectableOrRowMenuCell =
-            td.classList.contains('cps-treetable-selectable-cell') ||
-            td.classList.contains('cps-treetable-row-menu-cell');
-
-          let tdWidth = 55;
-          if (!isSelectableOrRowMenuCell) {
-            const clonedTd = td.cloneNode(true) as HTMLElement;
-            fragment.appendChild(clonedTd);
-            this.renderer.setStyle(clonedTd, 'width', 'min-content');
-            this.renderer.setStyle(clonedTd, 'display', 'block');
-            hiddenDiv.innerHTML = clonedTd.innerHTML;
-            hiddenDiv.style.width = 'auto';
-            tdWidth = hiddenDiv.offsetWidth;
-            fragment.removeChild(clonedTd);
-          }
-          if (!tdWidths[idx]) tdWidths[idx] = 0;
-          tdWidths[idx] = Math.max(tdWidths[idx], tdWidth);
-        });
-      });
-      this.document.body.removeChild(hiddenDiv);
-
-      if (thWidths.length !== tdWidths.length) return;
-
-      const maxWidths = thWidths.map((v, idx) => Math.max(v, tdWidths[idx]));
-      let sum = maxWidths.reduce((a, b) => a + b, 0);
-      if (hasSelectableCell) {
-        sum -= 55;
-        maxWidths.shift();
-      }
-      if (hasRowMenuCell) {
-        sum -= 55;
-        maxWidths.pop();
+      const headerCells = this._queryHeaderCells();
+      if (!headerCells?.length) {
+        this._needRecalcAutoLayout = true;
+        return;
       }
 
-      const percentages = maxWidths.map((v) => (v / sum) * 100);
+      if (headerCells.every((th) => th.offsetWidth === 0)) {
+        this._needRecalcAutoLayout = true;
+        return;
+      }
 
-      headerCells.forEach((th: any, idx: number) => {
-        if (
-          (hasSelectableCell && idx === 0) ||
-          (hasRowMenuCell && idx === headerCells.length - 1)
-        ) {
-          this.renderer.setStyle(th, 'width', '3.4375rem');
-        } else
-          this.renderer.setStyle(
-            th,
-            'width',
-            percentages[hasSelectableCell ? idx - 1 : idx] + '%'
-          );
-      });
+      if (
+        this._lastHeaderCellCount !== null &&
+        this._lastHeaderCellCount !== headerCells.length
+      ) {
+        this._pinnedColumnWidthsPx.clear();
+      }
+      this._lastHeaderCellCount = headerCells.length;
 
-      bodyRows.forEach((tr: HTMLElement) => {
-        const tds = tr?.querySelectorAll('td');
-        tds?.forEach((td: HTMLElement, idx: number) => {
-          if (
-            (hasSelectableCell && idx === 0) ||
-            (hasRowMenuCell && idx === tds.length - 1)
-          ) {
-            this.renderer.setStyle(td, 'width', '3.4375rem');
-          } else {
-            this.renderer.setStyle(
-              td,
-              'width',
-              percentages[hasSelectableCell ? idx - 1 : idx] + '%'
-            );
-          }
-          this.renderer.setStyle(td, 'opacity', '1');
-          this.renderer.setStyle(td, 'overflow', 'hidden');
-          if (this.bordered)
-            this.renderer.setStyle(
-              td,
-              'border-left-color',
-              'var(--cps-color-line-mid)'
-            );
-        });
+      const bodyRows = this._queryBodyRows();
+      if (!bodyRows.length) {
+        this._needRecalcAutoLayout = true;
+        return;
+      }
+
+      const hasSelectableCell = headerCells.some((th) =>
+        th.classList.contains('cps-treetable-selectable-cell')
+      );
+      const hasRowMenuCell = headerCells.some((th) =>
+        th.classList.contains('cps-treetable-row-menu-cell')
+      );
+
+      const { theadWidthsPx, tbodyWidthsPxByRow } = this._measureRowsWidthsPx(
+        headerCells,
+        bodyRows,
+        this._isSkippableCell
+      );
+      if (!theadWidthsPx) return;
+
+      const serializedVisibleNodes = (
+        this.primengTreeTable?.serializedValue || []
+      ).filter((rn: any) => rn?.visible);
+
+      this._visibleRowWidthsPxByNode.clear();
+      tbodyWidthsPxByRow.forEach((widths, idx) => {
+        const node = serializedVisibleNodes[idx]?.node;
+        if (node) this._visibleRowWidthsPxByNode.set(node, widths);
       });
+      this._headerWidthsPx = theadWidthsPx;
+      this._lastHasSelectableCell = hasSelectableCell;
+      this._lastHasRowMenuCell = hasRowMenuCell;
+
+      const tdWidths = theadWidthsPx.map((_, idx) =>
+        tbodyWidthsPxByRow.reduce(
+          (max, widths) => Math.max(max, widths[idx] ?? 0),
+          0
+        )
+      );
+
+      if (theadWidthsPx.length !== tdWidths.length) return;
+
+      const maxWidths = theadWidthsPx.map((v, idx) =>
+        Math.max(v, tdWidths[idx])
+      );
+
+      const percentages = this._widthsToPercentages(
+        maxWidths,
+        hasSelectableCell,
+        hasRowMenuCell
+      );
+
+      this._applyColumnWidths(
+        headerCells,
+        bodyRows,
+        percentages,
+        hasSelectableCell,
+        hasRowMenuCell
+      );
 
       this._needRecalcAutoLayout = false;
     });
+  }
+
+  private _isSkippableCell(cell: HTMLElement): boolean {
+    return (
+      cell.classList.contains('cps-treetable-selectable-cell') ||
+      cell.classList.contains('cps-treetable-row-menu-cell')
+    );
+  }
+
+  private _queryHeaderCells(): HTMLElement[] {
+    const headerRows = this._headerBox?.querySelectorAll('tr');
+    if (!headerRows?.length) return [];
+    return Array.from(
+      headerRows[headerRows.length - 1]?.querySelectorAll('th') || []
+    ) as HTMLElement[];
+  }
+
+  private _queryBodyRows(): HTMLElement[] {
+    return Array.from(
+      this._scrollableBody?.querySelectorAll('tr') || []
+    ) as HTMLElement[];
+  }
+
+  private _measureRowsWidthsPx(
+    headerCells: HTMLElement[] | null,
+    bodyRows: HTMLElement[],
+    isSkippableCell: (cell: HTMLElement) => boolean
+  ): { theadWidthsPx: number[] | null; tbodyWidthsPxByRow: number[][] } {
+    const shadowWrapper = this.renderer.createElement('div');
+    this.renderer.addClass(shadowWrapper, 'p-treetable');
+    this.renderer.addClass(shadowWrapper, 'p-component');
+    this.renderer.setStyle(shadowWrapper, 'position', 'absolute');
+    this.renderer.setStyle(shadowWrapper, 'visibility', 'hidden');
+    this.renderer.setStyle(shadowWrapper, 'white-space', 'nowrap');
+    this.renderer.appendChild(this._elementRef.nativeElement, shadowWrapper);
+
+    const createShadowRow = (
+      sectionTag: 'thead' | 'tbody',
+      sectionClass: string
+    ) => {
+      const row = this.renderer.createElement('tr');
+      const section = this.renderer.createElement(sectionTag);
+      this.renderer.addClass(section, sectionClass);
+      this.renderer.appendChild(section, row);
+      const table = this.renderer.createElement('table');
+      this.renderer.setStyle(table, 'table-layout', 'fixed');
+      this.renderer.appendChild(table, section);
+      this.renderer.appendChild(shadowWrapper, table);
+      return row;
+    };
+
+    const appendClone = (cell: HTMLElement, shadowRow: HTMLElement) => {
+      const clone = cell.cloneNode(true) as HTMLElement;
+      this.renderer.setStyle(clone, 'display', 'block');
+      this.renderer.setStyle(clone, 'width', 'min-content');
+      this.renderer.appendChild(shadowRow, clone);
+      return clone;
+    };
+
+    let theadClones: (HTMLElement | null)[] | null = null;
+    if (headerCells?.length) {
+      const shadowTheadRow = createShadowRow('thead', 'p-treetable-thead');
+      theadClones = headerCells.map((th) =>
+        isSkippableCell(th) ? null : appendClone(th, shadowTheadRow)
+      );
+    }
+
+    const tbodyClonesByRow: (HTMLElement | null)[][] = bodyRows.map((tr) => {
+      const shadowRow = createShadowRow('tbody', 'p-treetable-tbody');
+      const tds = Array.from(tr.querySelectorAll('td')) as HTMLElement[];
+      return tds.map((td) =>
+        isSkippableCell(td) ? null : appendClone(td, shadowRow)
+      );
+    });
+
+    const theadWidthsPx = theadClones
+      ? theadClones.map((clone) =>
+          clone ? clone.offsetWidth : this._defaultCellWidthPx
+        )
+      : null;
+
+    const tbodyWidthsPxByRow = tbodyClonesByRow.map((clones) =>
+      clones.map((clone) =>
+        clone ? clone.offsetWidth : this._defaultCellWidthPx
+      )
+    );
+
+    this.renderer.removeChild(this._elementRef.nativeElement, shadowWrapper);
+
+    return { theadWidthsPx, tbodyWidthsPxByRow };
+  }
+
+  private _getFixedColumnWidth(
+    idx: number,
+    totalCols: number,
+    hasSelectableCell: boolean,
+    hasRowMenuCell: boolean
+  ): { px: number; cssValue: string } | null {
+    if (
+      (hasSelectableCell && idx === 0) ||
+      (hasRowMenuCell && idx === totalCols - 1)
+    ) {
+      return {
+        px: this._defaultCellWidthPx,
+        cssValue: `${DEFAULT_CELL_WIDTH_REM}rem`
+      };
+    }
+    const pinnedPx = this._pinnedColumnWidthsPx.get(idx);
+    return pinnedPx != null
+      ? { px: pinnedPx, cssValue: `${pinnedPx}px` }
+      : null;
+  }
+
+  private _widthsToPercentages(
+    maxWidths: number[],
+    hasSelectableCell: boolean,
+    hasRowMenuCell: boolean
+  ): number[] {
+    const fixedByIdx = maxWidths.map((_, idx) =>
+      this._getFixedColumnWidth(
+        idx,
+        maxWidths.length,
+        hasSelectableCell,
+        hasRowMenuCell
+      )
+    );
+    const flexibleSum = maxWidths.reduce(
+      (sum, w, idx) => sum + (fixedByIdx[idx] ? 0 : w),
+      0
+    );
+    return maxWidths.map((w, idx) =>
+      fixedByIdx[idx] ? 0 : (w / flexibleSum) * 100
+    );
+  }
+
+  private _applyColumnWidths(
+    headerCells: HTMLElement[],
+    bodyRows: HTMLElement[],
+    percentages: number[],
+    hasSelectableCell: boolean,
+    hasRowMenuCell: boolean
+  ) {
+    const totalCols = headerCells.length;
+    const widthFor = (idx: number): string =>
+      this._getFixedColumnWidth(
+        idx,
+        totalCols,
+        hasSelectableCell,
+        hasRowMenuCell
+      )?.cssValue ?? percentages[idx] + '%';
+
+    headerCells.forEach((th, idx) => {
+      this.renderer.setStyle(th, 'width', widthFor(idx));
+    });
+
+    bodyRows.forEach((tr) => {
+      const tds = Array.from(tr.querySelectorAll('td')) as HTMLElement[];
+      if (tds.length !== totalCols) return;
+
+      tds.forEach((td, idx) => {
+        this.renderer.setStyle(td, 'width', widthFor(idx));
+        this.renderer.setStyle(td, 'opacity', '1');
+        this.renderer.setStyle(td, 'overflow', 'hidden');
+        if (this.bordered)
+          this.renderer.setStyle(
+            td,
+            'border-left-color',
+            'var(--cps-color-line-mid)'
+          );
+      });
+    });
+  }
+
+  private _recomputeMaxWidthsFromCache(): number[] | null {
+    if (!this._headerWidthsPx) return null;
+    const maxWidths = [...this._headerWidthsPx];
+    this._visibleRowWidthsPxByNode.forEach((widths) => {
+      widths.forEach((w, idx) => {
+        if (w > (maxWidths[idx] ?? 0)) maxWidths[idx] = w;
+      });
+    });
+    return maxWidths;
+  }
+
+  private _collectToggledDescendantNodes(node: any): any[] {
+    const result: any[] = [];
+    const children = node?.children;
+    if (!children?.length) return result;
+    for (const child of children) {
+      result.push(child);
+      if (child.expanded)
+        result.push(...this._collectToggledDescendantNodes(child));
+    }
+    return result;
+  }
+
+  private _tryBeginIncrementalRecalc(event: any): HTMLElement[] | null {
+    if (
+      !this.autoLayout ||
+      !this.scrollable ||
+      this.virtualScroll ||
+      !this._headerWidthsPx ||
+      !event?.node
+    ) {
+      this._calcAutoLayoutHeaderWidths(true);
+      return null;
+    }
+
+    const headerCells = this._queryHeaderCells();
+    if (!headerCells.length) {
+      this._calcAutoLayoutHeaderWidths(true);
+      return null;
+    }
+
+    return headerCells;
+  }
+
+  private _recomputeAndReapplyFromCache(headerCells: HTMLElement[]): void {
+    const maxWidths = this._recomputeMaxWidthsFromCache();
+    if (!maxWidths) {
+      this._calcAutoLayoutHeaderWidths(true);
+      return;
+    }
+
+    const percentages = this._widthsToPercentages(
+      maxWidths,
+      this._lastHasSelectableCell,
+      this._lastHasRowMenuCell
+    );
+
+    this._applyColumnWidths(
+      headerCells,
+      this._queryBodyRows(),
+      percentages,
+      this._lastHasSelectableCell,
+      this._lastHasRowMenuCell
+    );
+  }
+
+  private _expandAutoLayoutIncremental(event: any) {
+    const headerCells = this._tryBeginIncrementalRecalc(event);
+    if (!headerCells) return;
+
+    const newNodes = this._collectToggledDescendantNodes(event.node);
+
+    if (newNodes.length) {
+      const serializedVisibleNodes = (
+        this.primengTreeTable?.serializedValue || []
+      ).filter((rn: any) => rn?.visible);
+      const parentIdx = serializedVisibleNodes.findIndex(
+        (rn: any) => rn?.node === event.node
+      );
+      if (parentIdx === -1) {
+        this._calcAutoLayoutHeaderWidths(true);
+        return;
+      }
+
+      const newRows = this._queryBodyRows().slice(
+        parentIdx + 1,
+        parentIdx + 1 + newNodes.length
+      );
+      if (newRows.length !== newNodes.length) {
+        this._calcAutoLayoutHeaderWidths(true);
+        return;
+      }
+
+      const { tbodyWidthsPxByRow } = this._measureRowsWidthsPx(
+        null,
+        newRows,
+        this._isSkippableCell
+      );
+
+      tbodyWidthsPxByRow.forEach((widths, idx) => {
+        this._visibleRowWidthsPxByNode.set(newNodes[idx], widths);
+      });
+    }
+
+    this._recomputeAndReapplyFromCache(headerCells);
+  }
+
+  private _collapseAutoLayoutIncremental(event: any) {
+    const headerCells = this._tryBeginIncrementalRecalc(event);
+    if (!headerCells) return;
+
+    const removedNodes = this._collectToggledDescendantNodes(event.node);
+    removedNodes.forEach((node) => this._visibleRowWidthsPxByNode.delete(node));
+
+    this._recomputeAndReapplyFromCache(headerCells);
   }
 
   private _updateVirtualScrollItemSize() {
@@ -1437,16 +1688,18 @@ export class CpsTreeTableComponent
 
   onNodeExpanded(event: any) {
     this.nodeExpanded.emit(event);
-    setTimeout(() => {
-      this._calcAutoLayoutHeaderWidths(true);
+    queueMicrotask(() => {
+      this.cdRef.detectChanges();
+      this._expandAutoLayoutIncremental(event);
     });
     this._recalcVirtualHeight();
   }
 
   onNodeCollapsed(event: any) {
     this.nodeCollapsed.emit(event);
-    setTimeout(() => {
-      this._calcAutoLayoutHeaderWidths(true);
+    queueMicrotask(() => {
+      this.cdRef.detectChanges();
+      this._collapseAutoLayoutIncremental(event);
     });
     this._recalcVirtualHeight();
   }
@@ -1461,7 +1714,7 @@ export class CpsTreeTableComponent
 
   onSort(event: any) {
     this.sorted.emit(event);
-    setTimeout(() => {
+    queueMicrotask(() => {
       this.cdRef.detectChanges();
       this._calcAutoLayoutHeaderWidths(true);
     });
@@ -1469,10 +1722,23 @@ export class CpsTreeTableComponent
 
   onFilter(event: any) {
     this.filtered.emit(event);
-    setTimeout(() => {
+    queueMicrotask(() => {
+      this.cdRef.detectChanges();
       this._calcAutoLayoutHeaderWidths(true);
     });
     this._recalcVirtualHeight();
+  }
+
+  onColumnResized(event: { element: HTMLElement; delta: number }) {
+    const th = event?.element;
+    if (!th || !this.autoLayout || !this.scrollable) return;
+    if (this._isSkippableCell(th)) return;
+
+    const idx = Array.from(th.parentElement?.children ?? []).indexOf(th);
+    if (idx === -1) return;
+
+    this._pinnedColumnWidthsPx.set(idx, th.offsetWidth);
+    this._calcAutoLayoutHeaderWidths(true);
   }
 
   onSelectionChanged(selection: any) {

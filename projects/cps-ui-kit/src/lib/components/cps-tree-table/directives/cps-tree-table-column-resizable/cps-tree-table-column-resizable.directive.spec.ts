@@ -250,6 +250,24 @@ describe('CpsTreeTableColumnResizableDirective', () => {
       expect(col0.style.width).toBe('120px');
       expect(col1.style.width).toBe('80px');
     });
+
+    it('should not backfill a width onto columns other than the resized one and its neighbor', () => {
+      const table = document.createElement('table');
+      const colGroup = document.createElement('colgroup');
+      const col0 = document.createElement('col');
+      const col1 = document.createElement('col');
+      const col2 = document.createElement('col');
+      colGroup.appendChild(col0);
+      colGroup.appendChild(col1);
+      colGroup.appendChild(col2);
+      table.appendChild(colGroup);
+
+      mockTreeTable.resizeColGroup(table, 0, 120, null);
+
+      expect(col0.style.width).toBe('120px');
+      expect(col1.style.width).toBe('');
+      expect(col2.style.width).toBe('');
+    });
   });
 
   describe('onAfterViewInit — onColumnResize patch', () => {
