@@ -1218,7 +1218,8 @@ export class CpsTreeTableComponent
     hasSelectableCell: boolean,
     hasRowMenuCell: boolean
   ) {
-    const widthFor = (idx: number, totalCols: number): string =>
+    const totalCols = headerCells.length;
+    const widthFor = (idx: number): string =>
       this._getFixedColumnWidth(
         idx,
         totalCols,
@@ -1227,13 +1228,15 @@ export class CpsTreeTableComponent
       )?.cssValue ?? percentages[idx] + '%';
 
     headerCells.forEach((th, idx) => {
-      this.renderer.setStyle(th, 'width', widthFor(idx, headerCells.length));
+      this.renderer.setStyle(th, 'width', widthFor(idx));
     });
 
     bodyRows.forEach((tr) => {
       const tds = Array.from(tr.querySelectorAll('td')) as HTMLElement[];
+      if (tds.length !== totalCols) return;
+
       tds.forEach((td, idx) => {
-        this.renderer.setStyle(td, 'width', widthFor(idx, tds.length));
+        this.renderer.setStyle(td, 'width', widthFor(idx));
         this.renderer.setStyle(td, 'opacity', '1');
         this.renderer.setStyle(td, 'overflow', 'hidden');
         if (this.bordered)

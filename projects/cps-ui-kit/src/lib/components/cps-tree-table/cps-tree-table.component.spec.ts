@@ -913,6 +913,38 @@ describe('CpsTreeTableComponent', () => {
         );
       });
 
+      it('does not resize a row whose cell count does not match the header (e.g. an empty-message row)', () => {
+        const th0 = makeCell('th', 100, 'cps-treetable-selectable-cell');
+        const th1 = makeCell('th', 100);
+        const th2 = makeCell('th', 50);
+        (component as any)._headerBox = makeHeaderBox([th0, th1, th2]);
+
+        const nodeA: any = { data: { id: 'a' } };
+        const rowA = [
+          makeCell('td', 20, 'cps-treetable-selectable-cell'),
+          makeCell('td', 80),
+          makeCell('td', 40)
+        ];
+
+        const emptyMessageCell = makeCell('td', 999);
+        const emptyMessageRow = document.createElement('tr');
+        emptyMessageRow.appendChild(emptyMessageCell);
+
+        (component as any)._scrollableBody = makeScrollableBody([rowA]);
+        (component as any)._scrollableBody
+          .querySelector('tbody')
+          .appendChild(emptyMessageRow);
+
+        component.primengTreeTable.serializedValue = [
+          { node: nodeA, visible: true }
+        ] as any;
+
+        (component as any)._calcAutoLayoutHeaderWidths(true);
+
+        expect(emptyMessageCell.style.width).toBe('');
+        expect(rowA[0].style.width).toBe('3.4375rem');
+      });
+
       it('marks _needRecalcAutoLayout for retry when there are no header cells', () => {
         setupBasicTable();
         (component as any)._needRecalcAutoLayout = false;
