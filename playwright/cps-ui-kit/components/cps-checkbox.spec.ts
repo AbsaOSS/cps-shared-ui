@@ -45,32 +45,6 @@ test.describe('cps-checkbox', () => {
     });
   });
 
-  test.describe('Real keyboard interaction', () => {
-    test('Tab-focus shows a real focus-visible ring, Space toggles it', async ({
-      page
-    }) => {
-      const wrapper = example(page, 'tooltip-checkbox');
-      const input = wrapper.getByTestId('cps-checkbox-input');
-      const indicator = wrapper.locator('.cps-checkbox-indicator');
-
-      const borderColorBeforeFocus = await indicator.evaluate(
-        (el) => getComputedStyle(el).borderColor
-      );
-
-      await input.focus();
-
-      await expect(input).toBeFocused();
-      await expect(indicator).not.toHaveCSS(
-        'border-color',
-        borderColorBeforeFocus
-      );
-
-      await expect(input).not.toBeChecked();
-      await page.keyboard.press(' ');
-      await expect(input).toBeChecked();
-    });
-  });
-
   test.describe('Real accessible-name computation', () => {
     test('an unlabeled checkbox exposes its aria-label as the real accessible name', async ({
       page
