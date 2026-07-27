@@ -133,11 +133,15 @@ test.describe('cps-button-toggle', () => {
     test('a disabled option cannot be interacted with, an enabled sibling stays clickable', async ({
       page
     }) => {
-      const disabledOption = option(page, 'partially-disabled-toggle', 0);
+      const disabledOptionInput = optionInput(
+        page,
+        'partially-disabled-toggle',
+        0
+      );
       const currentlySelected = option(page, 'partially-disabled-toggle', 1);
       const enabledSibling = option(page, 'partially-disabled-toggle', 3);
 
-      await expect(disabledOption).toBeDisabled();
+      await expect(disabledOptionInput).toBeDisabled();
 
       await enabledSibling.click();
       await expect(enabledSibling).toHaveClass(/is-selected/);
@@ -151,12 +155,11 @@ test.describe('cps-button-toggle', () => {
     }) => {
       const widths = await Promise.all(
         [0, 1, 2].map(async (index) => {
-          const box = await option(
-            page,
-            'icons-equal-widths-toggle',
-            index
-          ).boundingBox();
-          return box?.width ?? 0;
+          const el = option(page, 'icons-equal-widths-toggle', index);
+          await el.scrollIntoViewIfNeeded();
+          const box = await el.boundingBox();
+          expect(box).not.toBeNull();
+          return box!.width;
         })
       );
 
@@ -170,12 +173,11 @@ test.describe('cps-button-toggle', () => {
     }) => {
       const widths = await Promise.all(
         [0, 1, 2].map(async (index) => {
-          const box = await option(
-            page,
-            'icons-unequal-widths-toggle',
-            index
-          ).boundingBox();
-          return box?.width ?? 0;
+          const el = option(page, 'icons-unequal-widths-toggle', index);
+          await el.scrollIntoViewIfNeeded();
+          const box = await el.boundingBox();
+          expect(box).not.toBeNull();
+          return box!.width;
         })
       );
 
