@@ -2,6 +2,7 @@
   <app-code-example label="Default" [htmlCode]="examples.default.html">
     <div class="checkboxes-group">
       <cps-checkbox
+        data-testid="tooltip-checkbox"
         label="Checkbox with tooltip"
         [value]="false"
         infoTooltip="Provide any information here">
@@ -14,16 +15,23 @@
         label="Checkbox with icon"
         [value]="false"
         icon="avatar"></cps-checkbox>
+      <cps-checkbox
+        label="Checkbox with custom icon color"
+        [value]="true"
+        icon="settings"
+        iconColor="luxury"></cps-checkbox>
     </div>
   </app-code-example>
 
   <app-code-example label="Disabled" [htmlCode]="examples.disabled.html">
     <div class="checkboxes-group">
       <cps-checkbox
+        data-testid="disabled-checked-checkbox"
         label="Disabled checkbox checked"
         [disabled]="true"
         [value]="true"></cps-checkbox>
       <cps-checkbox
+        data-testid="disabled-unchecked-checkbox"
         label="Disabled checkbox unchecked"
         [disabled]="true"
         [value]="false"></cps-checkbox>
@@ -36,9 +44,12 @@
     [tsCode]="examples.twoWayBinding.ts">
     <div class="sync-val-example">
       <cps-checkbox
+        data-testid="two-way-binding-checkbox"
         label="Checkbox with two-way binding"
         [(ngModel)]="syncVal"></cps-checkbox>
-      <div class="sync-val">Is checked: {{ syncVal }}</div>
+      <div class="sync-val" data-testid="two-way-binding-checkbox-value">
+        Is checked: {{ syncVal }}
+      </div>
     </div>
   </app-code-example>
 </app-component-docs-viewer>
