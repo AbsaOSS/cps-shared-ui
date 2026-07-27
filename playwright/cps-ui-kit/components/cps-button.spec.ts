@@ -132,12 +132,14 @@ test.describe('cps-button', () => {
       const button = example(page, 'misc-custom-size-button').getByTestId(
         'cps-button'
       );
+      await button.scrollIntoViewIfNeeded();
       const box = await button.boundingBox();
+      expect(box).not.toBeNull();
 
-      expect(box?.width).toBeGreaterThan(250);
-      expect(box?.width).toBeLessThan(350);
-      expect(box?.height).toBeGreaterThan(50);
-      expect(box?.height).toBeLessThan(70);
+      expect(box!.width).toBeGreaterThan(250);
+      expect(box!.width).toBeLessThan(350);
+      expect(box!.height).toBeGreaterThan(50);
+      expect(box!.height).toBeLessThan(70);
       await expect(button).not.toHaveCSS('border-radius', '4px');
     });
 
@@ -147,9 +149,11 @@ test.describe('cps-button', () => {
       const button = example(page, 'misc-block-button').getByTestId(
         'cps-button'
       );
+      await button.scrollIntoViewIfNeeded();
       const box = await button.boundingBox();
+      expect(box).not.toBeNull();
 
-      expect(box?.width).toBeGreaterThan(600);
+      expect(box!.width).toBeGreaterThan(600);
     });
   });
 

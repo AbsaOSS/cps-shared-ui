@@ -14,12 +14,10 @@
     (keydown.enter)="onEnterKeydown()"
     (keyup.enter)="onEnterKeyup()"
     (blur)="onBlur()"
-    [ngStyle]="{
-      backgroundColor: type === 'solid' ? buttonColor : 'transparent',
-      color: textColor,
-      height: cvtHeight || 'none',
-      borderRadius: borderRadius
-    }">
+    [style.backgroundColor]="type === 'solid' ? buttonColor : 'transparent'"
+    [style.color]="textColor"
+    [style.height]="cvtHeight || null"
+    [style.borderRadius]="borderRadius">
     <div
       class="cps-button__spinner"
       data-testid="cps-button-spinner"
@@ -56,7 +54,7 @@
         <span
           class="cps-button__text"
           data-testid="cps-button-label"
-          [ngStyle]="{ 'font-size': cvtFontSize || null }">
+          [style.fontSize]="cvtFontSize || null">
           {{ label }}
         </span>
       }
