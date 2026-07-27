@@ -68,6 +68,17 @@ partiallyDisabledOptions: CpsButtonToggleOption[] = [
     ts: optionsTs
   },
 
+  radioNavigation: {
+    html: `
+<cps-button-toggle
+  label="Single button toggles without radio navigation"
+  [options]="options"
+  [radioNavigation]="false"
+  [value]="options[1].value">
+</cps-button-toggle>`,
+    ts: optionsTs
+  },
+
   multiple: {
     html: `
 <cps-button-toggle
@@ -127,6 +138,16 @@ iconOnlyOptions: CpsButtonToggleOption[] = [
 ];`
   },
 
+  ariaLabel: {
+    html: `
+<cps-button-toggle
+  ariaLabel="Choose an option"
+  [options]="options"
+  [value]="options[1].value">
+</cps-button-toggle>`,
+    ts: optionsTs
+  },
+
   twoWayBinding: {
     html: `
 <cps-button-toggle
@@ -164,5 +185,25 @@ options: CpsButtonToggleOption[] = [
   { label: 'Option 4', value: 'fourth' }
 ];
 multiSyncVal = ['third', 'fourth'];`
+  },
+
+  reactiveForm: {
+    html: `
+<form [formGroup]="toggleForm">
+  <cps-button-toggle
+    label="Single button toggles bound to a reactive form control"
+    [options]="options"
+    formControlName="toggleControl">
+  </cps-button-toggle>
+  <div>Selected value: {{ toggleForm.value.toggleControl }}</div>
+</form>`,
+    ts: `
+${optionsTs.trim()}
+
+private readonly fb = inject(FormBuilder);
+
+toggleForm = this.fb.nonNullable.group({
+  toggleControl: this.options[1].value
+});`
   }
 };
