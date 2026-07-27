@@ -179,10 +179,7 @@
     label="Reactive form integration"
     [htmlCode]="examples.reactiveForm.html"
     [tsCode]="examples.reactiveForm.ts">
-    <form
-      class="sync-val-example"
-      data-testid="reactive-form-example"
-      [formGroup]="toggleForm">
+    <form class="sync-val-example" [formGroup]="toggleForm">
       <cps-button-toggle
         data-testid="reactive-form-toggle"
         label="Single button toggles bound to a reactive form control"
