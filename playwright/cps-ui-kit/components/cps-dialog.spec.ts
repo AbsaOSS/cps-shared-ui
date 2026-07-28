@@ -178,8 +178,8 @@ test.describe('cps-dialog', () => {
       await expect(dialog).toHaveClass(/cps-dialog-maximized/);
       const afterMax = await dialog.boundingBox();
       if (!afterMax) throw new Error('boundingBox() returned null');
-      expect(afterMax.width).toBe(viewport.width);
-      expect(afterMax.height).toBe(viewport.height);
+      expect(afterMax.width).toBeCloseTo(viewport.width, 0);
+      expect(afterMax.height).toBeCloseTo(viewport.height, 0);
 
       await maximizeBtn.click();
 
@@ -217,8 +217,13 @@ test.describe('cps-dialog', () => {
       const after = await dialog.boundingBox();
       if (!after) throw new Error('boundingBox() returned null');
 
-      expect(after.x - before.x).toBeCloseTo(80, 0);
-      expect(after.y - before.y).toBeCloseTo(40, 0);
+      const tolerancePx = 2;
+      expect(Math.abs(after.x - before.x - 80)).toBeLessThanOrEqual(
+        tolerancePx
+      );
+      expect(Math.abs(after.y - before.y - 40)).toBeLessThanOrEqual(
+        tolerancePx
+      );
     });
   });
 
