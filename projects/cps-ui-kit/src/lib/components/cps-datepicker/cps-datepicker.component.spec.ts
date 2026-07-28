@@ -109,20 +109,36 @@ describe('CpsDatepickerComponent', () => {
       expect(component.hideDetails).toBe(false);
     });
 
-    it('should apply hideDetails input', () => {
+    it('should apply hideDetails input by hiding the real hint element', () => {
+      fixture.componentRef.setInput('hint', 'Some hint');
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector('.cps-input-hint')
+      ).not.toBeNull();
+
       fixture.componentRef.setInput('hideDetails', true);
       fixture.detectChanges();
       expect(component.hideDetails).toBe(true);
+      expect(fixture.nativeElement.querySelector('.cps-input-hint')).toBeNull();
     });
 
     it('should default persistentClear to false', () => {
       expect(component.persistentClear).toBe(false);
     });
 
-    it('should apply persistentClear input', () => {
+    it('should apply persistentClear input by keeping the real clear button visible without a value', () => {
+      fixture.componentRef.setInput('clearable', true);
+      fixture.detectChanges();
+      expect(
+        fixture.nativeElement.querySelector('.clear-btn').style.visibility
+      ).toBe('hidden');
+
       fixture.componentRef.setInput('persistentClear', true);
       fixture.detectChanges();
       expect(component.persistentClear).toBe(true);
+      expect(
+        fixture.nativeElement.querySelector('.clear-btn').style.visibility
+      ).toBe('visible');
     });
 
     it('should convert width on init', () => {

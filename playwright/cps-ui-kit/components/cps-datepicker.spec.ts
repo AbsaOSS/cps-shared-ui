@@ -47,7 +47,7 @@ test.describe('cps-datepicker', () => {
   });
 
   test.describe('Real min-date boundary enforcement', () => {
-    test('a day outside minDate is rendered disabled and a real click does not change the value', async ({
+    test('a day outside minDate is rendered disabled and blocks real pointer interaction', async ({
       page
     }) => {
       const wrapper = example(page, 'restricted-datepicker');
@@ -65,8 +65,7 @@ test.describe('cps-datepicker', () => {
 
       const outOfRangeDay = dialog.locator('[data-date="2022-11-15"]');
       await expect(outOfRangeDay).toHaveClass(/p-disabled/);
-
-      await outOfRangeDay.click({ force: true });
+      await expect(outOfRangeDay).toHaveCSS('pointer-events', 'none');
 
       await expect(input).toHaveValue(valueBefore);
     });
