@@ -56,6 +56,14 @@ describe('CpsChipComponent', () => {
     expect(component.closed.emit).toHaveBeenCalledWith('Test');
   });
 
+  it('should set custom close button aria-label', () => {
+    fixture.componentRef.setInput('closable', true);
+    fixture.componentRef.setInput('closeButtonAriaLabel', 'Dismiss');
+    fixture.detectChanges();
+    const closeBtn = fixture.nativeElement.querySelector('.cps-chip-close-btn');
+    expect(closeBtn.getAttribute('aria-label')).toBe('Dismiss');
+  });
+
   it('should stop propagation on close click', () => {
     const event = new Event('click');
     jest.spyOn(event, 'stopPropagation');

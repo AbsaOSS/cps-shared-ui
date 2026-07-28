@@ -8,8 +8,12 @@
 
   <app-code-example label="With icon" [htmlCode]="examples.withIcon.html">
     <div class="chips-group-row">
-      <cps-chip label="Left icon chip" icon="checked"></cps-chip>
       <cps-chip
+        data-testid="icon-before-chip"
+        label="Left icon chip"
+        icon="checked"></cps-chip>
+      <cps-chip
+        data-testid="icon-after-chip"
         label="Right icon chip"
         icon="checked"
         iconPosition="after"></cps-chip>
@@ -28,16 +32,32 @@
     <div class="chips-group-row">
       @if (!chipClosed) {
         <cps-chip
+          #closableChipRef
+          data-testid="closable-chip"
           label="Closable chip"
           [closable]="true"
           (closed)="onToggleChip()"></cps-chip>
       }
       @if (chipClosed) {
         <cps-button
+          #resetChipBtnRef
+          data-testid="reset-chip-button"
           label="Reset chip"
           (clicked)="onToggleChip()"
           size="xsmall"></cps-button>
       }
+      <cps-chip
+        data-testid="closable-chip-with-custom-close-label"
+        label="Closable chip with custom close label"
+        [closable]="true"
+        closeButtonAriaLabel="Dismiss"
+        (closed)="onDismissChip()">
+      </cps-chip>
+      <cps-chip
+        data-testid="disabled-closable-chip"
+        label="Disabled closable chip"
+        [disabled]="true"
+        [closable]="true"></cps-chip>
     </div>
   </app-code-example>
 </app-component-docs-viewer>
