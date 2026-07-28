@@ -193,6 +193,24 @@ openBottomRightPositionedDialog() {
 }`
   },
 
+  ariaLabelDialog: {
+    html: `
+<cps-button
+  label="Header-less dialog with an aria-label"
+  (clicked)="openAriaLabelDialog()"></cps-button>`,
+    ts: `
+openAriaLabelDialog() {
+  this._dialogService.open(DialogContentComponent, {
+    ariaLabel: 'Dialog without a visible header',
+    showHeader: false,
+    data: {
+      info: 'Greetings from the dialog content component',
+      icon: 'like'
+    }
+  });
+}`
+  },
+
   topLeftPositionedFromRootInstance: {
     html: `
 <cps-button
