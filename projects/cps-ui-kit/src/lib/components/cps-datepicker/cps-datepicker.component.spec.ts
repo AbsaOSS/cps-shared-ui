@@ -105,6 +105,26 @@ describe('CpsDatepickerComponent', () => {
       expect(component.disabled).toBe(true);
     });
 
+    it('should default hideDetails to false', () => {
+      expect(component.hideDetails).toBe(false);
+    });
+
+    it('should apply hideDetails input', () => {
+      fixture.componentRef.setInput('hideDetails', true);
+      fixture.detectChanges();
+      expect(component.hideDetails).toBe(true);
+    });
+
+    it('should default persistentClear to false', () => {
+      expect(component.persistentClear).toBe(false);
+    });
+
+    it('should apply persistentClear input', () => {
+      fixture.componentRef.setInput('persistentClear', true);
+      fixture.detectChanges();
+      expect(component.persistentClear).toBe(true);
+    });
+
     it('should convert width on init', () => {
       expect(component.cvtWidth).toBe('100%');
     });

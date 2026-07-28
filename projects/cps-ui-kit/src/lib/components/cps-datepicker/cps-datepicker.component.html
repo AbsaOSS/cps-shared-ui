@@ -1,4 +1,8 @@
-<div class="cps-datepicker" [style.width]="cvtWidth" [class.focused]="isOpened">
+<div
+  class="cps-datepicker"
+  data-testid="cps-datepicker"
+  [style.width]="cvtWidth"
+  [class.focused]="isOpened">
   <cps-input
     #datepickerInput
     [disabled]="disabled"
@@ -42,6 +46,7 @@
     containerClass="cps-datepicker-calendar-menu">
     <div
       class="cps-datepicker-calendar"
+      data-testid="cps-datepicker-calendar"
       role="dialog"
       aria-label="Date picker"
       [attr.id]="calendarId"
