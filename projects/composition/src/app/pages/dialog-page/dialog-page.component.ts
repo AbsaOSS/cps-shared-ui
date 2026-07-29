@@ -163,6 +163,17 @@ export class DialogPageComponent {
     });
   }
 
+  openAriaLabelDialog() {
+    this._dialogService.open(DialogContentComponent, {
+      ariaLabel: 'Dialog without a visible header',
+      showHeader: false,
+      data: {
+        info: 'Greetings from the dialog content component',
+        icon: 'like'
+      }
+    });
+  }
+
   openDialogFromRootInstance() {
     this._dialogServiceRoot.open(DialogContentComponent, {
       headerTitle: 'Top-left positioned dialog opened from root instance',
