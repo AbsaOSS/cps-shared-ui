@@ -63,16 +63,13 @@ test.describe('cps-file-upload', () => {
       const panel = example(page, 'extension-dependent-file-upload');
       const dropzone = panel.getByTestId('cps-file-upload-dropzone');
 
-      await expect(dropzone).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      await expect(dropzone).not.toHaveClass(/dragged-over/);
 
       await dropzone.dispatchEvent('dragenter');
-      await expect(dropzone).toHaveCSS(
-        'background-color',
-        'rgb(239, 228, 231)'
-      );
+      await expect(dropzone).toHaveClass(/dragged-over/);
 
       await dropzone.dispatchEvent('dragleave');
-      await expect(dropzone).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      await expect(dropzone).not.toHaveClass(/dragged-over/);
     });
   });
 
