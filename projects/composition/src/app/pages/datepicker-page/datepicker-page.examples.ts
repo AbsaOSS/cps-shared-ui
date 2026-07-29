@@ -84,6 +84,25 @@ maxDate = new Date(2025, 11, 31);`
 </cps-datepicker>`
     },
 
+    ariaLabelDatepicker: {
+      html: `
+<cps-datepicker
+  ariaLabel="Choose a date"
+  [clearable]="true">
+</cps-datepicker>`
+    },
+
+    hideDetailsPersistentClear: {
+      html: `
+<cps-datepicker
+  label="Datepicker without details and with a persistent clear button"
+  hint="This hint will never be shown"
+  [hideDetails]="true"
+  [persistentClear]="true"
+  [clearable]="true">
+</cps-datepicker>`
+    },
+
     twoWayBinding: {
       html: `
 <div class="sync-val-example">
