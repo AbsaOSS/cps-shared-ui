@@ -29,6 +29,7 @@
         color="surprise"
         iconPosition="after"></cps-button>
       <cps-button
+        data-testid="solid-disabled-button"
         icon="add"
         label="Normal button"
         color="luxury"
@@ -327,27 +328,34 @@
     [tsCode]="examples.nativeTypes.ts">
     <form
       class="native-types-form"
+      data-testid="native-types-form"
       [formGroup]="nativeForm"
       (ngSubmit)="onNativeSubmit($event)"
       (reset)="onNativeReset()">
       <cps-input label="Name" formControlName="name"></cps-input>
       <div class="buttons-group-row">
         <cps-button
+          data-testid="native-types-plain-button"
           label="Plain button"
           nativeType="button"
           type="outlined"
           (clicked)="onNativePlainClick()"></cps-button>
         <cps-button
+          data-testid="native-types-submit-button"
           label="Submit"
           nativeType="submit"
           color="luxury"></cps-button>
         <cps-button
+          data-testid="native-types-reset-button"
           label="Reset"
           nativeType="reset"
           type="borderless"
           color="surprise"></cps-button>
       </div>
-      <div class="native-types-form__message" aria-live="polite">
+      <div
+        class="native-types-form__message"
+        data-testid="native-types-message"
+        aria-live="polite">
         {{ nativeSubmitMessage }}
       </div>
     </form>
@@ -359,6 +367,7 @@
     [tsCode]="examples.misc.ts">
     <div class="buttons-group-row dark-background">
       <cps-button
+        data-testid="misc-loading-toggle-button"
         [loading]="isLoading"
         label="Click to load"
         type="outlined"
@@ -377,6 +386,7 @@
         size="large"
         ariaLabel="View"></cps-button>
       <cps-button
+        data-testid="misc-custom-size-button"
         label="Custom size"
         borderRadius="2rem"
         width="300"
@@ -384,8 +394,13 @@
         color="white"
         type="outlined"
         icon="avatar-top-menu"></cps-button>
+      <cps-button
+        label="Custom content color"
+        color="depth-highlighten"
+        contentColor="depth"></cps-button>
     </div>
     <cps-button
+      data-testid="misc-block-button"
       label="Block large button"
       borderRadius="0"
       width="100%"
