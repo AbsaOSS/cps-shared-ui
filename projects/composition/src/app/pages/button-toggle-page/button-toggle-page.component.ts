@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsButtonToggleComponent, CpsButtonToggleOption } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-button-toggle.json';
@@ -21,6 +21,8 @@ import { CodeExampleComponent } from '../../components/code-example/code-example
   host: { class: 'composition-page' }
 })
 export class ButtonTogglePageComponent {
+  private readonly fb = inject(FormBuilder);
+
   options: CpsButtonToggleOption[] = [
     { label: 'Option 1', value: 'first' },
     { label: 'Option 2', value: 'second' },
@@ -81,6 +83,11 @@ export class ButtonTogglePageComponent {
 
   syncVal = 'first';
   multiSyncVal = ['third', 'fourth'];
+
+  toggleForm = this.fb.nonNullable.group({
+    toggleControl: this.options[1].value
+  });
+
   componentData = ComponentData;
 
   readonly examples = buttonToggleExamples;
