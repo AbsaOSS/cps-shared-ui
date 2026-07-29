@@ -23,6 +23,7 @@ export type CpsDividerType = 'solid' | 'dashed' | 'dotted';
   selector: 'cps-divider',
   host: {
     class: 'cps-divider',
+    'data-testid': 'cps-divider',
     role: 'separator',
     '[attr.aria-orientation]': 'vertical() ? "vertical" : "horizontal"',
     '[style.border-top]': 'borderTop()',

@@ -22,5 +22,12 @@ export const dividerExamples: Record<string, { html: string; ts?: string }> = {
 <p>First row</p>
 <cps-divider thickness="0.25rem" color="red" type="dashed"></cps-divider>
 <p>Second row</p>`
+  },
+
+  dottedDivider: {
+    html: `
+<p>First row</p>
+<cps-divider type="dotted"></cps-divider>
+<p>Second row</p>`
   }
 };
