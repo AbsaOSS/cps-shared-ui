@@ -4,15 +4,30 @@ function example(page: Page, testId: string): Locator {
   return page.getByTestId(testId);
 }
 
-function resolveCssColorVar(page: Page, varName: string): Promise<string> {
-  return page.evaluate((name) => {
-    const probe = document.createElement('div');
-    probe.style.color = `var(${name})`;
-    document.body.appendChild(probe);
-    const resolved = getComputedStyle(probe).color;
-    probe.remove();
-    return resolved;
-  }, varName);
+const UNRESOLVED_VAR_SENTINEL = 'rgb(1, 2, 3)';
+
+async function resolveCssColorVar(
+  page: Page,
+  varName: string
+): Promise<string> {
+  const resolved = await page.evaluate(
+    ({ name, sentinel }) => {
+      const probe = document.createElement('div');
+      probe.style.color = `var(${name}, ${sentinel})`;
+      document.body.appendChild(probe);
+      const value = getComputedStyle(probe).color;
+      probe.remove();
+      return value;
+    },
+    { name: varName, sentinel: UNRESOLVED_VAR_SENTINEL }
+  );
+
+  if (resolved === UNRESOLVED_VAR_SENTINEL) {
+    throw new Error(
+      `CSS variable ${varName} is not defined on this page (resolved to the fallback sentinel instead of a real value).`
+    );
+  }
+  return resolved;
 }
 
 test.describe('cps-icon', () => {
@@ -46,17 +61,20 @@ test.describe('cps-icon', () => {
   });
 
   test.describe('Real SVG sprite rendering', () => {
-    test('the icon sprite asset resolves and renders a real visible svg', async ({
+    test('the icon sprite asset resolves and renders real geometry', async ({
       page
     }) => {
       const icon = example(page, 'basic-icon');
-      const svg = icon.locator('svg');
+      const use = icon.locator('svg use');
 
-      await expect(svg).toBeVisible();
-      const box = await svg.boundingBox();
-      if (!box) throw new Error('boundingBox() returned null');
-      expect(box.width).toBeGreaterThan(0);
-      expect(box.height).toBeGreaterThan(0);
+      await expect(use).toHaveAttribute('href', /icons\.svg#like$/);
+
+      const bbox = await use.evaluate((el: SVGUseElement) => {
+        const box = el.getBBox();
+        return { width: box.width, height: box.height };
+      });
+      expect(bbox.width).toBeGreaterThan(0);
+      expect(bbox.height).toBeGreaterThan(0);
     });
   });
 
