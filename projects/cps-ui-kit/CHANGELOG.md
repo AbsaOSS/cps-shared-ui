@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.29.3](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.2...v21.29.3) (2026-07-29)
+
+
+### Bug Fixes
+
+* CpsTreeTableComponent issues ([#763](https://github.com/AbsaOSS/cps-shared-ui/issues/763)) ([5b16263](https://github.com/AbsaOSS/cps-shared-ui/commit/5b16263cf7bfc9f76d172fe67304034b5c26e897))
+
 ## [21.29.2](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.1...v21.29.2) (2026-07-14)
 
 
