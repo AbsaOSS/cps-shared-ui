@@ -23,6 +23,10 @@ $tbar-normal-height: 4.5rem;
   ::ng-deep {
     .p-treetable {
       position: relative;
+      display: block;
+    }
+    .p-treetable.p-treetable-flex-scrollable {
+      display: flex;
     }
     .p-component,
     .p-component * {
