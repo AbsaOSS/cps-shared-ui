@@ -11,7 +11,12 @@ export const checkboxExamples: Record<string, { html: string; ts?: string }> = {
 <cps-checkbox
   label="Checkbox with icon"
   [value]="false"
-  icon="avatar"></cps-checkbox>`
+  icon="avatar"></cps-checkbox>
+<cps-checkbox
+  label="Checkbox with custom icon color"
+  [value]="true"
+  icon="settings"
+  iconColor="luxury"></cps-checkbox>`
   },
 
   disabled: {
