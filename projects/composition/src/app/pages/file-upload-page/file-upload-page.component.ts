@@ -58,6 +58,10 @@ export class FileUploadPageComponent {
     );
   }
 
+  processFailingUploadedFile(): Observable<boolean> {
+    return of(false).pipe(delay(500));
+  }
+
   onFileUploaded(file: File) {
     console.log('File uploaded', file?.name);
   }
