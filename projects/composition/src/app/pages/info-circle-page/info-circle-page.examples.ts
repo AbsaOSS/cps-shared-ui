@@ -30,5 +30,14 @@ export const infoCircleExamples: Record<string, { html: string; ts?: string }> =
   size="large"
   tooltipPosition="bottom"
   tooltipText="Provide any information here"></cps-info-circle>`
+    },
+
+    persistentTooltip: {
+      html: `
+<cps-info-circle
+  size="normal"
+  tooltipPosition="top"
+  [tooltipPersistent]="true"
+  tooltipText="This tooltip stays open until you click elsewhere. <a href='#'>Learn more</a>"></cps-info-circle>`
     }
   };
