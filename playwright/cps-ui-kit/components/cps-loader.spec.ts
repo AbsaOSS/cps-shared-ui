@@ -18,8 +18,6 @@ test.describe('cps-loader', () => {
       const relativeBox = await relativeOverlay.boundingBox();
       if (!containerBox || !relativeBox)
         throw new Error('boundingBox() returned null');
-      // The container has a 1px border, so the overlay (which fills the
-      // border-box interior) is a few px smaller — allow a small tolerance.
       expect(
         Math.abs(relativeBox.width - containerBox.width)
       ).toBeLessThanOrEqual(4);
@@ -72,15 +70,6 @@ test.describe('cps-loader', () => {
     test('when showLabel is false, no visible label is rendered', async ({
       page
     }) => {
-      // Every cps-loader on the page shares one global live-region singleton
-      // (CpsLiveAnnouncerService reuses a single DOM element per politeness
-      // level), and announce() cancels any sibling's pending write before it
-      // fires. Only the last-mounted loader's message ever actually reaches
-      // the DOM, so which loader's *announcement* can be reliably proven via
-      // this shared region depends on template order — that slot is already
-      // taken by the custom-label test above. This test sticks to the part
-      // that's independently, deterministically true regardless of mount
-      // order: no label element renders when showLabel is false.
       await expect(
         page.getByTestId('no-label-loader').getByTestId('cps-loader-label')
       ).toHaveCount(0);
@@ -105,9 +94,6 @@ test.describe('cps-loader', () => {
       const normalCircleDuration = await circle.evaluate(
         (el) => getComputedStyle(el).animationDuration
       );
-      // Angular's view encapsulation prefixes keyframe animation names with
-      // a per-component content attribute, so match by suffix rather than
-      // exact equality.
       expect(normalLabelAnim).toContain('cps-loader-text-animation');
       expect(normalCircleDuration).toBe('1s');
 
