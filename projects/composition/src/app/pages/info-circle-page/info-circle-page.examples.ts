@@ -38,6 +38,6 @@ export const infoCircleExamples: Record<string, { html: string; ts?: string }> =
   size="normal"
   tooltipPosition="top"
   [tooltipPersistent]="true"
-  tooltipText="This tooltip stays open until you click elsewhere. <a href='#'>Learn more</a>"></cps-info-circle>`
+  tooltipText="This tooltip stays open until you click elsewhere. <a href='https://www.google.com/' target='_blank' rel='noopener noreferrer'>Learn more</a>"></cps-info-circle>`
     }
   };
