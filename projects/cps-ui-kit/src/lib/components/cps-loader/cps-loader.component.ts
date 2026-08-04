@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -18,7 +18,6 @@ import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cp
  * @group Components
  */
 @Component({
-  imports: [CommonModule],
   selector: 'cps-loader',
   templateUrl: './cps-loader.component.html',
   styleUrls: ['./cps-loader.component.scss'],

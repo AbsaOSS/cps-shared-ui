@@ -72,6 +72,15 @@ private _checkDigits(control: AbstractControl) {
   [readonly]="true"></cps-input>`
   },
 
+  valueToDisplayInput: {
+    html: `
+<cps-input
+  label="Formatted display value"
+  hint="This text is shown in place of the input and isn't derived from its value"
+  value="42"
+  valueToDisplay="1,234,567"></cps-input>`
+  },
+
   clearableWithPersistentIcon: {
     html: `
 <cps-input
@@ -143,5 +152,21 @@ onClickPrefixIcon() {
   appearance="borderless"
   placeholder="Search something"
   [clearable]="true"></cps-input>`
+  },
+
+  hideDetailsInput: {
+    html: `
+<cps-input
+  label="Input with hidden details"
+  hint="You should not see this hint"
+  [hideDetails]="true"></cps-input>`
+  },
+
+  unlabeledInput: {
+    html: `
+<cps-input
+  ariaLabel="Search"
+  prefixIcon="search"
+  placeholder="Search something"></cps-input>`
   }
 };

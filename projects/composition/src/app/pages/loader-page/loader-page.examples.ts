@@ -32,10 +32,20 @@ onFullScreenClick() {
 </div>`
   },
 
-  relativeLoaderWhiteLabelOpacity: {
+  relativeLoaderThemedLabelOpacity: {
     html: `
 <div style="width: 28.125rem; height: 12.5rem;">
-  <cps-loader labelColor="white" [opacity]="0.6"></cps-loader>
+  <cps-loader labelColor="energy" [opacity]="0.6"></cps-loader>
+</div>`
+  },
+
+  customLabelsLoader: {
+    html: `
+<div style="width: 28.125rem; height: 12.5rem;">
+  <cps-loader
+    label="Uploading files..."
+    ariaLabel="Uploading files, please wait"
+    doneAriaLabel="Upload complete"></cps-loader>
 </div>`
   }
 };

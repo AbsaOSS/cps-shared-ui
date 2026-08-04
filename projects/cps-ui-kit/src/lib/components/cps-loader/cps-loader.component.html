@@ -1,19 +1,22 @@
 <div
   class="cps-loader-overlay"
-  [ngStyle]="{
-    'background-color': backgroundColor,
-    position: fullScreen ? 'fixed' : 'relative'
-  }">
-  <div class="cps-loader-overlay-content">
+  data-testid="cps-loader-overlay"
+  [style.background-color]="backgroundColor"
+  [style.position]="fullScreen ? 'fixed' : 'relative'">
+  <div class="cps-loader-overlay-content" data-testid="cps-loader-content">
     @if (showLabel && label.trim()) {
       <span
         class="cps-loader-overlay-content-text"
+        data-testid="cps-loader-label"
         [style.color]="cvtLabelColor"
         aria-hidden="true">
         {{ label }}
       </span>
     }
-    <div class="cps-loader-overlay-content-circles" aria-hidden="true">
+    <div
+      class="cps-loader-overlay-content-circles"
+      data-testid="cps-loader-spinner"
+      aria-hidden="true">
       <div class="cps-loader-overlay-content-circles-circle cps-sp1">
         <div class="cps-loader-overlay-content-circles-circle cps-sp2">
           <div class="cps-loader-overlay-content-circles-circle cps-sp3"></div>

@@ -6,6 +6,7 @@
     [tsCode]="examples.requiredNumericInput.ts">
     <form [formGroup]="form">
       <cps-input
+        data-testid="required-numeric-input"
         label="Required numeric input with a tooltip"
         formControlName="requiredInput"
         placeholder="Enter 8 digit value"
@@ -18,6 +19,7 @@
     label="Loading input"
     [htmlCode]="examples.loadingInput.html">
     <cps-input
+      data-testid="loading-input"
       label="Loading input"
       hint="This input is currently in a loading state"
       [loading]="true"></cps-input>
@@ -27,6 +29,7 @@
     label="Password input"
     [htmlCode]="examples.passwordInput.html">
     <cps-input
+      data-testid="password-input"
       label="Password input"
       placeholder="Enter password"
       [clearable]="true"
@@ -50,6 +53,17 @@
       hint="This input is readonly"
       value="Value to show"
       [readonly]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Input with a display-only formatted value"
+    [htmlCode]="examples.valueToDisplayInput.html">
+    <cps-input
+      data-testid="value-to-display-input"
+      label="Formatted display value"
+      hint="This text is shown in place of the input and isn't derived from its value"
+      value="42"
+      valueToDisplay="1,234,567"></cps-input>
   </app-code-example>
 
   <app-code-example
@@ -102,6 +116,7 @@
     [htmlCode]="examples.clickablePrefixIconUnderlined.html"
     [tsCode]="examples.clickablePrefixIconUnderlined.ts">
     <cps-input
+      data-testid="clickable-prefix-icon-input"
       label="Underlined input with clickable prefix icon"
       [prefixIconClickable]="true"
       prefixIconAriaLabel="Search"
@@ -116,10 +131,31 @@
     label="Borderless input"
     [htmlCode]="examples.borderlessInput.html">
     <cps-input
+      data-testid="borderless-input"
       label="Borderless input"
       prefixIcon="search"
       appearance="borderless"
       placeholder="Search something"
       [clearable]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Input with hidden hint/error details"
+    [htmlCode]="examples.hideDetailsInput.html">
+    <cps-input
+      data-testid="hide-details-input"
+      label="Input with hidden details"
+      hint="You should not see this hint"
+      [hideDetails]="true"></cps-input>
+  </app-code-example>
+
+  <app-code-example
+    label="Unlabeled input with an accessible name"
+    [htmlCode]="examples.unlabeledInput.html">
+    <cps-input
+      data-testid="unlabeled-input"
+      ariaLabel="Search"
+      prefixIcon="search"
+      placeholder="Search something"></cps-input>
   </app-code-example>
 </app-component-docs-viewer>
