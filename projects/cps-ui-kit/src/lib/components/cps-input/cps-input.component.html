@@ -1,12 +1,17 @@
-<div class="cps-input-container" [style.width]="cvtWidth">
+<div
+  class="cps-input-container"
+  data-testid="cps-input-container"
+  [style.width]="cvtWidth">
   @if (label) {
     <div
       class="cps-input-label"
+      data-testid="cps-input-label"
       [class.cps-input-label-disabled]="disabled && !readonly">
-      <label>{{ label }}</label>
+      <label data-testid="cps-input-label-text">{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
           class="cps-input-label-info-circle"
+          data-testid="cps-input-info-circle"
           size="xsmall"
           [tooltipPosition]="infoTooltipPosition"
           [tooltipContentClass]="infoTooltipClass"
@@ -20,6 +25,7 @@
 
   <div
     class="cps-input-wrap"
+    data-testid="cps-input-wrap"
     [class.password]="type === 'password'"
     [class.cps-input-wrap-error]="error"
     [class.clearable]="clearable"
@@ -28,10 +34,11 @@
     [class.underlined]="appearance === 'underlined'"
     [class.keyboard-focused]="isKeyboardFocused">
     @if (prefixIcon || prefixText) {
-      <div class="cps-input-prefix">
+      <div class="cps-input-prefix" data-testid="cps-input-prefix">
         @if (prefixIcon) {
           <span
             class="cps-input-prefix-icon"
+            data-testid="cps-input-prefix-icon-btn"
             [attr.role]="prefixIconClickable ? 'button' : null"
             [attr.tabindex]="
               prefixIconClickable && !disabled && !readonly ? 0 : null
@@ -43,6 +50,7 @@
             (keydown.enter)="onClickPrefixIcon()"
             (keydown.space)="$event.preventDefault(); onClickPrefixIcon()">
             <cps-icon
+              data-testid="cps-input-prefix-icon"
               [icon]="prefixIcon"
               [size]="prefixIconSize"
               [style.color]="disabled ? 'var(--cps-text-muted)' : null"
@@ -56,7 +64,9 @@
         }
 
         @if (prefixText) {
-          <span class="cps-input-prefix-text">
+          <span
+            class="cps-input-prefix-text"
+            data-testid="cps-input-prefix-text">
             {{ prefixText }}
           </span>
         }
@@ -65,6 +75,7 @@
 
     @if (!valueToDisplay) {
       <input
+        data-testid="cps-input"
         [attr.role]="inputRole"
         [attr.aria-label]="ariaLabel || label || null"
         [attr.aria-expanded]="ariaExpanded"
@@ -91,6 +102,7 @@
 
     @if (valueToDisplay) {
       <input
+        data-testid="cps-input-display"
         [attr.aria-label]="ariaLabel || label || null"
         [attr.aria-describedby]="describedBy"
         [attr.aria-busy]="loading ? true : null"
@@ -101,10 +113,11 @@
     }
 
     @if (!disabled && !readonly) {
-      <div class="cps-input-action-btns">
+      <div class="cps-input-action-btns" data-testid="cps-input-action-btns">
         @if (clearable) {
           <span
             class="clear-btn"
+            data-testid="cps-input-clear-btn"
             role="button"
             tabindex="0"
             aria-label="Clear"
@@ -117,12 +130,16 @@
             (click)="onClear()"
             (keydown.enter)="onClear()"
             (keydown.space)="$event.preventDefault(); onClear()">
-            <cps-icon icon="delete" size="small"></cps-icon>
+            <cps-icon
+              data-testid="cps-input-clear-icon"
+              icon="delete"
+              size="small"></cps-icon>
           </span>
         }
         @if (type === 'password') {
           <span
             class="password-show-btn"
+            data-testid="cps-input-password-toggle-btn"
             [class.password-show-btn-active]="currentType === 'text'"
             role="button"
             tabindex="0"
@@ -134,13 +151,17 @@
             (click)="togglePassword()"
             (keydown.enter)="togglePassword()"
             (keydown.space)="$event.preventDefault(); togglePassword()">
-            <cps-icon icon="eye" size="1.125rem"></cps-icon>
+            <cps-icon
+              data-testid="cps-input-password-toggle-icon"
+              icon="eye"
+              size="1.125rem"></cps-icon>
           </span>
         }
       </div>
     }
     @if (loading) {
       <cps-progress-linear
+        data-testid="cps-input-progress-bar"
         height="0.1875rem"
         radius="0.25rem"
         opacity="0.5"
@@ -150,13 +171,14 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div [id]="hintId" class="cps-input-hint">
+    <div [id]="hintId" data-testid="cps-input-hint" class="cps-input-hint">
       {{ hint }}
     </div>
   }
   @if (error && !hideDetails) {
     <div
       [id]="errorId"
+      data-testid="cps-input-error"
       class="cps-input-error"
       aria-live="polite"
       aria-atomic="true">
