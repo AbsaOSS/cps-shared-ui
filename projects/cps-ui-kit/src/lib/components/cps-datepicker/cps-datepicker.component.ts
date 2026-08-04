@@ -16,7 +16,7 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import {
   CpsMenuComponent,
   CpsMenuHideReason

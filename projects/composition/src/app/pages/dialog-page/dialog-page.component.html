@@ -64,6 +64,14 @@
         (clicked)="openBottomRightPositionedDialog()"></cps-button>
     </app-code-example>
     <app-code-example
+      label="Header-less dialog with an aria-label"
+      [htmlCode]="examples.ariaLabelDialog.html"
+      [tsCode]="examples.ariaLabelDialog.ts">
+      <cps-button
+        label="Header-less dialog with an aria-label"
+        (clicked)="openAriaLabelDialog()"></cps-button>
+    </app-code-example>
+    <app-code-example
       label="Top-left positioned dialog opened from the root instance"
       [htmlCode]="examples.topLeftPositionedFromRootInstance.html"
       [tsCode]="examples.topLeftPositionedFromRootInstance.ts">

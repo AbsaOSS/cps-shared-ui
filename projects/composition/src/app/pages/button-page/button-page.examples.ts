@@ -169,6 +169,9 @@ onNativeReset() {
 <!-- Custom size -->
 <cps-button label="Custom size" borderRadius="2rem" width="300" height="60" color="white" type="outlined" icon="avatar-top-menu"></cps-button>
 
+<!-- Custom content color -->
+<cps-button label="Custom content color" color="depth-highlighten" contentColor="depth"></cps-button>
+
 <!-- Block / full-width -->
 <cps-button label="Block large button" borderRadius="0" width="100%" size="large" color="depth"></cps-button>`,
     ts: `

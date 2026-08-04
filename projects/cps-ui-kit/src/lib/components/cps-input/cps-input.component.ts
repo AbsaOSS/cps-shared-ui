@@ -18,8 +18,8 @@ import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.dir
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import {
   CpsIconComponent,
-  IconType,
-  iconSizeType
+  type IconType,
+  type iconSizeType
 } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';

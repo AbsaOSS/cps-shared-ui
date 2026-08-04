@@ -7,6 +7,7 @@
       [tsCode]="examples.requiredDatepicker.ts">
       <form [formGroup]="form">
         <cps-datepicker
+          data-testid="required-datepicker"
           label="Required datepicker with a tooltip"
           [clearable]="true"
           infoTooltip="Provide any information here"
@@ -33,6 +34,7 @@
       [htmlCode]="examples.dropdownOnInputFocus.html"
       [tsCode]="examples.dropdownOnInputFocus.ts">
       <cps-datepicker
+        data-testid="dropdown-on-focus-datepicker"
         label="Datepicker with a dropdown on input focus"
         hint="This datepicker shows a calendar when input field is focused"
         [value]="today"
@@ -46,6 +48,7 @@
       [htmlCode]="examples.restrictedDateRange.html"
       [tsCode]="examples.restrictedDateRange.ts">
       <cps-datepicker
+        data-testid="restricted-datepicker"
         label="Datepicker with restricted date range"
         hint="This datepicker has selectable dates from 01/01/2023 to 12/31/2025"
         [showTodayButton]="false"
@@ -77,11 +80,35 @@
     </app-code-example>
 
     <app-code-example
+      label="Accessible label without a visible caption"
+      [htmlCode]="examples.ariaLabelDatepicker.html">
+      <cps-datepicker
+        data-testid="aria-label-datepicker"
+        ariaLabel="Choose a date"
+        [clearable]="true">
+      </cps-datepicker>
+    </app-code-example>
+
+    <app-code-example
+      label="Without details and with a persistent clear button"
+      [htmlCode]="examples.hideDetailsPersistentClear.html">
+      <cps-datepicker
+        data-testid="hide-details-persistent-clear-datepicker"
+        label="Datepicker without details and with a persistent clear button"
+        hint="This hint will never be shown"
+        [hideDetails]="true"
+        [persistentClear]="true"
+        [clearable]="true">
+      </cps-datepicker>
+    </app-code-example>
+
+    <app-code-example
       label="Two-way binding"
       [htmlCode]="examples.twoWayBinding.html"
       [tsCode]="examples.twoWayBinding.ts">
       <div class="sync-val-example">
         <cps-datepicker
+          data-testid="two-way-binding-datepicker"
           [clearable]="true"
           label="Datepicker with two-way binding, select a date"
           [(ngModel)]="syncVal"
@@ -90,7 +117,9 @@
           placeholder="Select a date"
           [ngModelOptions]="{ standalone: true }">
         </cps-datepicker>
-        <div class="sync-val">{{ syncVal }}</div>
+        <div class="sync-val" data-testid="two-way-binding-datepicker-value">
+          {{ syncVal }}
+        </div>
       </div>
     </app-code-example>
 

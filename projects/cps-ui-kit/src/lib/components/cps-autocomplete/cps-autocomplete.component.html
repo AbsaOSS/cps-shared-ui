@@ -1,6 +1,7 @@
 <div
   [ngStyle]="{ width: cvtWidth }"
   class="cps-autocomplete"
+  data-testid="cps-autocomplete"
   [ngClass]="{
     disabled: disabled,
     error: error || externalError,
@@ -9,7 +10,7 @@
   }"
   #autocompleteContainer>
   @if (label) {
-    <div class="cps-autocomplete-label">
+    <div class="cps-autocomplete-label" data-testid="cps-autocomplete-label">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -44,14 +45,17 @@
             [icon]="prefixIcon"
             [style.color]="disabled ? 'var(--cps-text-muted)' : null"
             [size]="prefixIconSize"
-            class="prefix-icon">
+            class="prefix-icon"
+            data-testid="cps-autocomplete-prefix-icon">
           </cps-icon>
         }
         @if (hasSelectedValue()) {
           <div class="cps-autocomplete-box-items">
             @if (!multiple) {
               <span class="single-item">
-                <div class="single-item-selection">
+                <div
+                  class="single-item-selection"
+                  data-testid="cps-autocomplete-selected-value">
                   <span [style.opacity]="activeSingle ? 0 : 1">{{
                     returnObject
                       ? value[optionLabel]
@@ -84,6 +88,7 @@
                   ) {
                     <div
                       class="text-group-item"
+                      data-testid="cps-autocomplete-selected-text-item"
                       role="listitem"
                       [ngClass]="{
                         'about-to-remove': last && backspaceClickedOnce
@@ -158,12 +163,13 @@
             <span
               role="button"
               (click)="clear($event)"
-              (mousedown)="$event.preventDefault()"
+              (mousedown)="$event.preventDefault(); $event.stopPropagation()"
               (keydown.enter)="clear($event)"
               (keydown.space)="clear($event)"
               aria-label="Clear selection"
               [tabindex]="disabled ? -1 : 0"
               class="cps-autocomplete-box-clear-icon"
+              data-testid="cps-autocomplete-clear-icon"
               [ngClass]="{
                 'cps-autocomplete-box-clear-icon-hidden':
                   !persistentClear && !hasSelectedValue()
@@ -174,6 +180,7 @@
           @if (showChevron && options.length) {
             <span
               class="cps-autocomplete-box-chevron"
+              data-testid="cps-autocomplete-chevron"
               role="button"
               (mousedown)="onChevronClick($event)"
               (keydown.enter)="onChevronClick($event)"
@@ -202,6 +209,7 @@
         #optionsList
         role="listbox"
         [id]="optionsListId"
+        data-testid="cps-autocomplete-listbox"
         tabindex="-1"
         aria-readonly="false"
         aria-disabled="false"
@@ -212,6 +220,7 @@
         @if (loading && showLoadingMessage) {
           <div
             class="cps-autocomplete-options-loading"
+            data-testid="cps-autocomplete-loading"
             role="option"
             tabindex="-1"
             aria-disabled="true"
@@ -227,6 +236,7 @@
         ) {
           <div
             class="cps-autocomplete-options-empty"
+            data-testid="cps-autocomplete-empty"
             role="option"
             tabindex="-1"
             aria-disabled="true"
@@ -237,6 +247,7 @@
         @if (isSelectAllVisible) {
           <div
             class="cps-autocomplete-options-option select-all-option"
+            data-testid="cps-autocomplete-select-all"
             [id]="selectAllOptionId"
             role="option"
             tabindex="-1"
@@ -311,7 +322,10 @@
     }
   </div>
   @if (!error && !externalError && !hideDetails) {
-    <div [id]="hintId" class="cps-autocomplete-hint">
+    <div
+      [id]="hintId"
+      class="cps-autocomplete-hint"
+      data-testid="cps-autocomplete-hint">
       {{ hint }}
     </div>
   }
@@ -319,6 +333,7 @@
     <div
       [id]="errorId"
       class="cps-autocomplete-error"
+      data-testid="cps-autocomplete-error"
       aria-live="polite"
       aria-atomic="true">
       {{ error || externalError }}
@@ -334,6 +349,7 @@
     #autocompleteInput
     type="text"
     class="cps-autocomplete-box-input"
+    data-testid="cps-autocomplete-input"
     spellcheck="false"
     [disabled]="disabled"
     role="combobox"
@@ -360,6 +376,7 @@
 <ng-template #itemTemplate let-item="item" let-itemIndex="itemIndex">
   <div
     class="cps-autocomplete-options-option"
+    data-testid="cps-autocomplete-option"
     [id]="getOptionId(item, itemIndex)"
     role="option"
     tabindex="-1"

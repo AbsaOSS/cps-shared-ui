@@ -4,6 +4,7 @@
     label="XSmall info circle with a tooltip at the top"
     [htmlCode]="examples.xsmallTopTooltip.html">
     <cps-info-circle
+      data-testid="xsmall-top-info-circle"
       size="xsmall"
       tooltipPosition="top"
       tooltipText="Provide any information here"></cps-info-circle>
@@ -13,6 +14,7 @@
     label="Small info circle with a tooltip at the right"
     [htmlCode]="examples.smallRightTooltip.html">
     <cps-info-circle
+      data-testid="small-right-info-circle"
       size="small"
       tooltipPosition="right"
       tooltipText="Provide any information here"></cps-info-circle>
@@ -22,6 +24,7 @@
     label="Normal info circle with a tooltip at the left"
     [htmlCode]="examples.normalLeftTooltip.html">
     <cps-info-circle
+      data-testid="normal-left-info-circle"
       size="normal"
       tooltipPosition="left"
       tooltipText="Provide any information here"></cps-info-circle>
@@ -31,8 +34,20 @@
     label="Large info circle with a tooltip at the bottom"
     [htmlCode]="examples.largeBottomTooltip.html">
     <cps-info-circle
+      data-testid="large-bottom-info-circle"
       size="large"
       tooltipPosition="bottom"
       tooltipText="Provide any information here"></cps-info-circle>
+  </app-code-example>
+
+  <app-code-example
+    label="Persistent info circle"
+    [htmlCode]="examples.persistentTooltip.html">
+    <cps-info-circle
+      data-testid="persistent-info-circle"
+      size="normal"
+      tooltipPosition="top"
+      [tooltipPersistent]="true"
+      tooltipText="This tooltip stays open until you click elsewhere. <a href='https://www.google.com/' target='_blank' rel='noopener noreferrer'>Learn more</a>"></cps-info-circle>
   </app-code-example>
 </app-component-docs-viewer>

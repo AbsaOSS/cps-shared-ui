@@ -1,14 +1,18 @@
-<div class="cps-confirmation">
-  <span class="cps-confirmation-subtitle" [innerHTML]="subtitle"></span>
+<div class="cps-confirmation" data-testid="cps-confirmation">
+  <span
+    class="cps-confirmation-subtitle"
+    data-testid="cps-confirmation-subtitle"
+    [innerHTML]="subtitle"></span>
   <div class="cps-confirmation-buttons">
     <cps-button
+      data-testid="cps-confirmation-no-btn"
       type="outlined"
       label="No"
       (clicked)="close(false)"
       color="calm">
     </cps-button>
     <cps-button
-      data-testid="btn-yes"
+      data-testid="cps-confirmation-yes-btn"
       label="Yes"
       (clicked)="close(true)"
       color="calm">
