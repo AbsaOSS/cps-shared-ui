@@ -83,7 +83,9 @@ test.describe('cps-menu', () => {
     test('a container that real-renders above its target gets the real flipped class and hides its arrow', async ({
       page
     }) => {
+      await page.setViewportSize({ width: 800, height: 400 });
       const toggle = page.getByTestId('standard-menu-toggle');
+      await toggle.evaluate((el) => el.scrollIntoView({ block: 'end' }));
       await toggle.click();
 
       const container = menuContainer(page);
