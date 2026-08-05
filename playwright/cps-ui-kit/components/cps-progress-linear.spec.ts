@@ -37,6 +37,7 @@ test.describe('cps-progress-linear', () => {
       await expect(dec).toHaveCSS('animation-iteration-count', 'infinite');
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.reload();
 
       await expect(inc).toHaveCSS('animation-duration', '6s');
       await expect(inc).toHaveCSS('animation-iteration-count', 'infinite');
