@@ -7,6 +7,7 @@ export const progressLinearExamples: Record<
 <div style="display: flex; flex-direction: column; gap: 3rem;">
   <cps-progress-linear></cps-progress-linear>
   <cps-progress-linear
+    ariaLabel="Energy progress linear"
     color="energy"
     radius="0.25rem"
     bgColor="energy-highlighten"
