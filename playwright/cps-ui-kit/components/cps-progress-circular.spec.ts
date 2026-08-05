@@ -30,9 +30,16 @@ test.describe('cps-progress-circular', () => {
       await expect(circle).toHaveCSS('animation-iteration-count', 'infinite');
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.reload();
+      const reducedCircle = page
+        .getByRole('progressbar', { name: 'Luxury progress circular' })
+        .getByTestId('cps-progress-circular');
 
-      await expect(circle).toHaveCSS('animation-duration', '2.4s');
-      await expect(circle).toHaveCSS('animation-iteration-count', 'infinite');
+      await expect(reducedCircle).toHaveCSS('animation-duration', '2.4s');
+      await expect(reducedCircle).toHaveCSS(
+        'animation-iteration-count',
+        'infinite'
+      );
     });
   });
 });
