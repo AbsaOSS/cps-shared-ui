@@ -56,9 +56,7 @@ const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
  * @group Types
  */
 export type CpsAutocompleteAppearanceType =
-  | 'outlined'
-  | 'underlined'
-  | 'borderless';
+  'outlined' | 'underlined' | 'borderless';
 
 /**
  * CpsAutocompleteComponent is an input component that provides real-time suggestions when being typed.

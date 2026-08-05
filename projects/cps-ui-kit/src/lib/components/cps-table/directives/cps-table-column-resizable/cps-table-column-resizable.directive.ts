@@ -15,8 +15,7 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
    * @group Props
    */
   @Input('cpsTColResizableDisabled') override pResizableColumnDisabled:
-    | boolean
-    | undefined;
+    boolean | undefined;
 
   private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
 
