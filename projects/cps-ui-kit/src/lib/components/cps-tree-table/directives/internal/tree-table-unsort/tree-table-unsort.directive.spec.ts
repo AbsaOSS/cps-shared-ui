@@ -72,9 +72,7 @@ function buildMockTreeTable(nodes: Node[] = []) {
     },
 
     _multiSortMeta: undefined as
-      | { field: string; order: number }[]
-      | null
-      | undefined,
+      { field: string; order: number }[] | null | undefined,
     get multiSortMeta() {
       return this._multiSortMeta;
     },
