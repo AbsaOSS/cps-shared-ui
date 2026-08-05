@@ -26,9 +26,7 @@ import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown
  * @group Types
  */
 export type CpsTreeAutocompleteAppearanceType =
-  | 'outlined'
-  | 'underlined'
-  | 'borderless';
+  'outlined' | 'underlined' | 'borderless';
 
 /**
  * CpsTreeAutocompleteComponent allows to choose items from hierarchical data dropdown and provides real-time suggestions when being typed.
