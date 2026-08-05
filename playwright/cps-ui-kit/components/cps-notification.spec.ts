@@ -18,11 +18,13 @@ function closeButton(toast: Locator): Locator {
 
 async function waitForTotalToastCount(
   page: Page,
-  count: number
+  count: number,
+  timeout?: number
 ): Promise<void> {
   await page.waitForFunction(
     (n) => document.querySelectorAll('[data-testid="cps-toast"]').length === n,
-    count
+    count,
+    { timeout }
   );
 }
 
@@ -102,7 +104,9 @@ test.describe('cps-notification', () => {
       page
     }) => {
       await trigger(page, 'persistent-notification-trigger').click();
-      const persistentToast = toasts(page).first();
+      const persistentToast = toasts(page).filter({
+        hasText: 'Notification message 0'
+      });
       await expect(persistentToast).toBeVisible();
 
       await trigger(page, 'timeout-warning-notification-trigger').click();
@@ -118,17 +122,21 @@ test.describe('cps-notification', () => {
       page
     }) => {
       await trigger(page, 'timeout-warning-notification-trigger').click();
-      const hoveredToast = toasts(page).first();
+      const hoveredToast = toasts(page).filter({
+        hasText: 'Notification message 0'
+      });
       await expect(hoveredToast).toBeVisible();
       await hoveredToast.hover();
-
-      await trigger(page, 'info-notification-trigger').click();
-      await waitForTotalToastCount(page, 1);
+      await trigger(page, 'info-notification-trigger')
+        .getByTestId('cps-button')
+        .focus();
+      await page.keyboard.press('Enter');
+      await waitForTotalToastCount(page, 1, 7000);
 
       await expect(hoveredToast).toBeVisible();
 
       await page.mouse.move(0, 0);
-      await expect(hoveredToast).toHaveCount(0, { timeout: 8000 });
+      await expect(hoveredToast).toHaveCount(0, { timeout: 4000 });
     });
   });
 
@@ -136,21 +144,27 @@ test.describe('cps-notification', () => {
     test("focusing a toast's close button keeps it alive past its real timeout; blurring lets it dismiss", async ({
       page
     }) => {
-      await trigger(page, 'timeout-warning-notification-trigger').click();
-      const focusedToast = toasts(page).first();
-      await expect(focusedToast).toBeVisible();
-      await closeButton(focusedToast).focus();
-      await expect(closeButton(focusedToast)).toBeFocused();
-
       await trigger(page, 'info-notification-trigger').click();
-      await waitForTotalToastCount(page, 1);
+      await expect(
+        toasts(page).filter({ hasText: 'Notification message 0' })
+      ).toBeVisible();
 
+      await trigger(page, 'timeout-warning-notification-trigger').click();
+      const focusedToast = toasts(page).filter({
+        hasText: 'Notification message 1'
+      });
+      await expect(focusedToast).toBeVisible();
+      const closeBtn = closeButton(focusedToast);
+      await closeBtn.focus();
+      await expect(closeBtn).toBeFocused();
+
+      await waitForTotalToastCount(page, 1, 7000);
       await expect(focusedToast).toBeVisible();
 
       await page.evaluate(() =>
         (document.activeElement as HTMLElement | null)?.blur()
       );
-      await expect(focusedToast).toHaveCount(0, { timeout: 8000 });
+      await expect(focusedToast).toHaveCount(0, { timeout: 4000 });
     });
   });
 
