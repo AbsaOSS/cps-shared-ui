@@ -44,8 +44,4 @@ export type CpsColumnFilterCategoryOption = {
  * @group Types
  */
 export type CpsColumnFilterType =
-  | 'text'
-  | 'number'
-  | 'date'
-  | 'boolean'
-  | 'category';
+  'text' | 'number' | 'date' | 'boolean' | 'category';
