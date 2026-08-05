@@ -39,10 +39,21 @@ test.describe('cps-progress-linear', () => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.reload();
 
-      await expect(inc).toHaveCSS('animation-duration', '6s');
-      await expect(inc).toHaveCSS('animation-iteration-count', 'infinite');
-      await expect(dec).toHaveCSS('animation-duration', '6s');
-      await expect(dec).toHaveCSS('animation-iteration-count', 'infinite');
+      const reducedWrapper = page
+        .getByRole('progressbar', { name: 'Energy progress linear' })
+        .getByTestId('cps-progress-linear');
+      const reducedInc = reducedWrapper.getByTestId('cps-progress-linear-inc');
+      const reducedDec = reducedWrapper.getByTestId('cps-progress-linear-dec');
+      await expect(reducedInc).toHaveCSS('animation-duration', '6s');
+      await expect(reducedInc).toHaveCSS(
+        'animation-iteration-count',
+        'infinite'
+      );
+      await expect(reducedDec).toHaveCSS('animation-duration', '6s');
+      await expect(reducedDec).toHaveCSS(
+        'animation-iteration-count',
+        'infinite'
+      );
     });
   });
 });
