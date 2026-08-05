@@ -13,6 +13,7 @@
       </cps-button-toggle>
       <cps-file-upload
         #fileUpload
+        data-testid="extension-dependent-file-upload"
         [extensions]="[selectedFileUploadType.value]"
         [fileDesc]="selectedFileUploadType!.label || ''"
         width="25rem"
@@ -29,6 +30,7 @@
     [htmlCode]="examples.withExtraInfo.html"
     [tsCode]="examples.withExtraInfo.ts">
     <cps-file-upload
+      data-testid="extra-info-file-upload"
       [extensions]="['.jpg', '.png', 'pdf']"
       [fileInfo]="fileInfo"
       fileDesc="Pictures or PDFs"
@@ -46,11 +48,27 @@
   </app-code-example>
 
   <app-code-example
+    label="File upload component with a failing processing callback"
+    [htmlCode]="examples.failingProcessingCallback.html"
+    [tsCode]="examples.failingProcessingCallback.ts">
+    <cps-file-upload
+      data-testid="failing-processing-file-upload"
+      [extensions]="['.jpg', '.png', 'pdf']"
+      fileDesc="Pictures or PDFs"
+      width="31.25rem"
+      [fileProcessingCallback]="processFailingUploadedFile"
+      (fileProcessingFailed)="onFileProcessingFailed($event)"
+      (fileUploaded)="onFileUploaded($event)">
+    </cps-file-upload>
+  </app-code-example>
+
+  <app-code-example
     label="Disabled file upload component"
     [htmlCode]="examples.disabledFileUpload.html"
     [tsCode]="examples.disabledFileUpload.ts">
     <div class="file-upload-with-toggle">
       <cps-file-upload
+        data-testid="disabled-file-upload"
         [extensions]="['.jpg', '.png', 'pdf']"
         [fileInfo]="fileInfo"
         fileDesc="Pictures or PDFs"

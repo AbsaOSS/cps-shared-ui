@@ -114,6 +114,30 @@ onFileExtensionChanged(event: string) {
       ts: fileUploadHandlersTs
     },
 
+    failingProcessingCallback: {
+      html: `
+<cps-file-upload
+  [extensions]="['.jpg', '.png', 'pdf']"
+  fileDesc="Pictures or PDFs"
+  width="31.25rem"
+  [fileProcessingCallback]="processFailingUploadedFile"
+  (fileProcessingFailed)="onFileProcessingFailed($event)"
+  (fileUploaded)="onFileUploaded($event)">
+</cps-file-upload>`,
+      ts: `
+processFailingUploadedFile(): Observable<boolean> {
+  return of(false).pipe(delay(500));
+}
+
+onFileProcessingFailed(fileName: string) {
+  console.log('File processing failed', fileName);
+}
+
+onFileUploaded(file: File) {
+  console.log('File uploaded', file?.name);
+}`
+    },
+
     disabledFileUpload: {
       html: `
 <cps-file-upload
