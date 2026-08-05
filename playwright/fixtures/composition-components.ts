@@ -180,7 +180,7 @@ export const components: ComponentEntry[] = [
         .filter({ hasNotText: /clear all/i });
       const count = await buttons.count();
       for (let i = 0; i < count; i++) {
-        await buttons.nth(i).click();
+        await buttons.nth(i).click({ force: true });
       }
     }
   },
