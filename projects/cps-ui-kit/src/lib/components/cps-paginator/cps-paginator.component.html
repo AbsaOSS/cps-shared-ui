@@ -1,5 +1,6 @@
 <p-paginator
   #paginator
+  data-testid="cps-paginator"
   (onPageChange)="onPageChange($event)"
   [first]="first"
   [rows]="rows"
@@ -14,13 +15,19 @@
 </p-paginator>
 
 <ng-template #itemsPerPageTemplate>
-  <div class="cps-paginator-itms-per-page">
-    <span class="cps-paginator-items-per-page-title" aria-hidden="true"
+  <div
+    class="cps-paginator-itms-per-page"
+    data-testid="cps-paginator-rows-per-page">
+    <span
+      class="cps-paginator-items-per-page-title"
+      data-testid="cps-paginator-rows-per-page-title"
+      aria-hidden="true"
       >Items per page:
     </span>
     <cps-select
       ariaLabel="Set items per page"
       width="4rem"
+      data-testid="cps-paginator-rows-per-page-select"
       [options]="rowOptions"
       [hideDetails]="true"
       [(ngModel)]="rows"
