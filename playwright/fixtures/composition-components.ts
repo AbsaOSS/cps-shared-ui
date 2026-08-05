@@ -204,18 +204,16 @@ export const components: ComponentEntry[] = [
     'Monthly',
     'Yearly',
     'Advanced'
-  ].map(
-    (tab): ComponentEntry => ({
-      route: '/scheduler',
-      name: tab,
-      selector: 'cps-scheduler',
-      group: 'Scheduler',
-      setup: async (page) => {
-        await page.getByTestId('schedule-type-toggle').getByText(tab).click();
-        await page.waitForSelector('cps-scheduler');
-      }
-    })
-  ),
+  ].map((tab): ComponentEntry => ({
+    route: '/scheduler',
+    name: tab,
+    selector: 'cps-scheduler',
+    group: 'Scheduler',
+    setup: async (page) => {
+      await page.getByTestId('schedule-type-toggle').getByText(tab).click();
+      await page.waitForSelector('cps-scheduler');
+    }
+  })),
   {
     route: '/select',
     name: 'Select',
@@ -247,18 +245,16 @@ export const components: ComponentEntry[] = [
     'Table 8',
     'Table 9',
     'Table 10'
-  ].map(
-    (tab): ComponentEntry => ({
-      route: '/table',
-      name: tab,
-      selector: 'cps-table',
-      group: 'Table',
-      setup: async (page) => {
-        await page.getByRole('tab', { name: tab, exact: true }).click();
-        await page.waitForSelector('cps-table');
-      }
-    })
-  ),
+  ].map((tab): ComponentEntry => ({
+    route: '/table',
+    name: tab,
+    selector: 'cps-table',
+    group: 'Table',
+    setup: async (page) => {
+      await page.getByRole('tab', { name: tab, exact: true }).click();
+      await page.waitForSelector('cps-table');
+    }
+  })),
   { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
@@ -308,18 +304,16 @@ export const components: ComponentEntry[] = [
     'Tree table 8',
     'Tree table 9',
     'Tree table 10'
-  ].map(
-    (tab): ComponentEntry => ({
-      route: '/tree-table',
-      name: tab,
-      selector: 'cps-tree-table',
-      group: 'Tree table',
-      setup: async (page) => {
-        await page.getByRole('tab', { name: tab, exact: true }).click();
-        await page.waitForSelector('cps-tree-table');
-      }
-    })
-  )
+  ].map((tab): ComponentEntry => ({
+    route: '/tree-table',
+    name: tab,
+    selector: 'cps-tree-table',
+    group: 'Tree table',
+    setup: async (page) => {
+      await page.getByRole('tab', { name: tab, exact: true }).click();
+      await page.waitForSelector('cps-tree-table');
+    }
+  }))
 ];
 
 const EXTRA_PAGE_ROUTES = [
