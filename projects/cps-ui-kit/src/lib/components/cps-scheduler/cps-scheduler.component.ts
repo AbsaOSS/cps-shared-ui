@@ -8,7 +8,7 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges
+  type SimpleChanges
 } from '@angular/core';
 import {
   FormBuilder,
