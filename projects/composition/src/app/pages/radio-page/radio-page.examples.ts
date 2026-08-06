@@ -58,6 +58,8 @@ private _checkThirdSelected(control: AbstractControl): ValidationErrors | null {
   </cps-radio-group>
 </form>`,
     ts: `
+private readonly _formBuilder = inject(UntypedFormBuilder);
+
 ${radioOptionsTs.trim()}
 
 form!: UntypedFormGroup;
@@ -73,6 +75,16 @@ ngOnInit() {
       ]
     ]
   });
+}
+
+private _checkThirdSelected(control: AbstractControl): ValidationErrors | null {
+  const val = control.value;
+  if (!val) return null;
+
+  if (val !== 'third') {
+    return { mustSelectThird: 'Only third option must be selected' };
+  }
+  return null;
 }`
   },
 

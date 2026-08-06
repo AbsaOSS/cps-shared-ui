@@ -1,4 +1,12 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page, type Locator } from '@playwright/test';
+
+function example(page: Page, testId: string): Locator {
+  return page.getByTestId(testId);
+}
+
+function radioGroup(page: Page, testId: string): Locator {
+  return example(page, testId).getByRole('radiogroup');
+}
 
 test.describe('cps-radio-group', () => {
   test.beforeEach(async ({ page }) => {
@@ -9,9 +17,7 @@ test.describe('cps-radio-group', () => {
     test('ArrowDown from an enabled radio real-skips a disabled one via native grouping', async ({
       page
     }) => {
-      const group = page.getByRole('radiogroup', {
-        name: 'Radio group with partially disabled options and targeted tooltips'
-      });
+      const group = example(page, 'partially-disabled-radio-group');
       const option2 = group.getByRole('radio', { name: 'Option 2' });
       const option4 = group.getByRole('radio', { name: 'Option 4' });
 
@@ -27,9 +33,7 @@ test.describe('cps-radio-group', () => {
     test('selecting the wrong option shows a real error; selecting the right one clears it', async ({
       page
     }) => {
-      const group = page.getByRole('radiogroup', {
-        name: 'Radio group where 3rd option must be selected'
-      });
+      const group = radioGroup(page, 'required-radio-group');
       const errorEl = group.getByTestId('cps-radio-group-error');
 
       const option1 = group.getByRole('radio', { name: 'Option 1' });
@@ -61,9 +65,7 @@ test.describe('cps-radio-group', () => {
     test('the nested control real-refuses focus until its radio is selected', async ({
       page
     }) => {
-      const group = page.getByRole('radiogroup', {
-        name: 'Radio group with custom content'
-      });
+      const group = example(page, 'custom-content-radio-group');
       const customRadio = group.getByRole('radio', {
         name: 'Custom option with inline selectors'
       });
@@ -88,9 +90,7 @@ test.describe('cps-radio-group', () => {
     test('a hint stays real-absent untouched, and a real error stays real-absent once invalid', async ({
       page
     }) => {
-      const group = page.getByRole('radiogroup', {
-        name: 'Required radio group with hidden details'
-      });
+      const group = radioGroup(page, 'required-hidden-radio-group');
 
       await expect(group.getByTestId('cps-radio-group-hint')).toHaveCount(0);
 

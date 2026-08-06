@@ -37,7 +37,7 @@
   @if (!contentRef.innerHTML.trim()) {
     <div
       class="cps-radio-group-content"
-      data-testid="cps-radio-group-content"
+      data-testid="cps-radio-group-options"
       [class.cps-radio-group-content-vertical]="vertical"
       [class.cps-radio-group-content-horizontal]="!vertical">
       @for (option of options; track option; let i = $index) {

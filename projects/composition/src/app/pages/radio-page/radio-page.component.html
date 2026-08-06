@@ -6,6 +6,7 @@
     [tsCode]="examples.requiredRadioGroup.ts">
     <form [formGroup]="form">
       <cps-radio-group
+        data-testid="required-radio-group"
         groupLabel="Radio group where 3rd option must be selected"
         formControlName="requiredRadio"
         [options]="options">
@@ -19,6 +20,7 @@
     [tsCode]="examples.requiredHiddenRadioGroup.ts">
     <form [formGroup]="form">
       <cps-radio-group
+        data-testid="required-hidden-radio-group"
         groupLabel="Required radio group with hidden details"
         formControlName="requiredRadioHidden"
         [options]="options"
@@ -70,6 +72,7 @@
     [htmlCode]="examples.partiallyDisabledRadioGroup.html"
     [tsCode]="examples.partiallyDisabledRadioGroup.ts">
     <cps-radio-group
+      data-testid="partially-disabled-radio-group"
       groupLabel="Radio group with partially disabled options and targeted tooltips"
       [options]="partiallyDisabledOptions">
     </cps-radio-group>
@@ -105,6 +108,7 @@
     [htmlCode]="examples.customContentRadioGroup.html"
     [tsCode]="examples.customContentRadioGroup.ts">
     <cps-radio-group
+      data-testid="custom-content-radio-group"
       groupLabel="Radio group with custom content"
       class="custom-content-example"
       [value]="2"
