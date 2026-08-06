@@ -13,7 +13,10 @@ import {
   inject,
   type SimpleChanges
 } from '@angular/core';
-import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type IconType
+} from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import { generateUniqueId } from '../../utils/internal/accessibility-utils/accessibility-utils';
