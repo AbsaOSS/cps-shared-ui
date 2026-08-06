@@ -59,5 +59,14 @@ export const expansionPanelExamples: Record<
   width="32rem">
   <div>Some content</div>
 </cps-expansion-panel>`
+  },
+
+  customBorderColor: {
+    html: `
+<cps-expansion-panel
+  headerTitle="Bordered panel with a custom border color"
+  borderColor="calm">
+  <div>Some content</div>
+</cps-expansion-panel>`
   }
 };
