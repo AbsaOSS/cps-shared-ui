@@ -5,6 +5,7 @@
       label="Bordered panel with transparent background"
       [htmlCode]="examples.borderedTransparentBackground.html">
       <cps-expansion-panel
+        data-testid="bordered-transparent-panel"
         headerTitle="Bordered panel with transparent background">
         <div>
           <cps-button label="Sample button"></cps-button>
@@ -15,7 +16,10 @@
     <app-code-example
       label="Disabled panel"
       [htmlCode]="examples.disabledPanel.html">
-      <cps-expansion-panel headerTitle="Disabled panel" [disabled]="true">
+      <cps-expansion-panel
+        data-testid="disabled-panel"
+        headerTitle="Disabled panel"
+        [disabled]="true">
         <div>Some content</div>
       </cps-expansion-panel>
     </app-code-example>
@@ -35,6 +39,7 @@
       label="Borderless panel with white background"
       [htmlCode]="examples.borderlessWhiteBackground.html">
       <cps-expansion-panel
+        data-testid="borderless-white-panel"
         headerTitle="Borderless panel with white background"
         backgroundColor="white"
         [bordered]="false">
@@ -62,6 +67,17 @@
         backgroundColor="white"
         borderRadius="0.25rem"
         width="32rem">
+        <div>Some content</div>
+      </cps-expansion-panel>
+    </app-code-example>
+
+    <app-code-example
+      label="Panel with custom border color"
+      [htmlCode]="examples.customBorderColor.html">
+      <cps-expansion-panel
+        data-testid="custom-border-color-panel"
+        headerTitle="Bordered panel with a custom border color"
+        borderColor="calm">
         <div>Some content</div>
       </cps-expansion-panel>
     </app-code-example>

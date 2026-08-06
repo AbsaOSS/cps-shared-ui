@@ -1,5 +1,6 @@
 <div
   class="cps-expansion-panel"
+  data-testid="cps-expansion-panel"
   [class.expanded]="isExpanded"
   [style.background-color]="cvtBackgroundColor"
   [style.border-radius]="cvtBorderRadius"
@@ -7,6 +8,7 @@
   [style.border]="bordered ? '1px solid ' + cvtBorderColor : ''">
   <div
     class="cps-expansion-panel-header"
+    data-testid="cps-expansion-panel-header"
     role="button"
     [attr.tabindex]="disabled ? -1 : 0"
     [attr.aria-expanded]="isExpanded"
@@ -23,11 +25,15 @@
     [class.disabled]="disabled"
     [class.keyboard-active]="isKeyboardActive"
     [style.cursor]="disabled ? 'default' : 'pointer'"
+    [style.border-bottom-left-radius]="isExpanded ? '0' : null"
+    [style.border-bottom-right-radius]="isExpanded ? '0' : null"
     (click)="toggleExpansion()"
     (keydown)="onHeaderKeydown($event)"
     (keyup)="onHeaderKeyup($event)">
     @if (prefixIcon) {
-      <span class="cps-expansion-panel-prefix-icon">
+      <span
+        class="cps-expansion-panel-prefix-icon"
+        data-testid="cps-expansion-panel-prefix-icon">
         <cps-icon
           [icon]="prefixIcon"
           size="small"
@@ -35,9 +41,15 @@
         </cps-icon>
       </span>
     }
-    <div class="cps-expansion-panel-title">{{ headerTitle }}</div>
+    <div
+      class="cps-expansion-panel-title"
+      data-testid="cps-expansion-panel-title">
+      {{ headerTitle }}
+    </div>
     @if (showChevron && !disabled) {
-      <span class="cps-expansion-panel-chevron">
+      <span
+        class="cps-expansion-panel-chevron"
+        data-testid="cps-expansion-panel-chevron">
         <cps-icon icon="chevron-down" size="small" color="text-dark">
         </cps-icon>
       </span>
@@ -45,6 +57,7 @@
   </div>
   <div
     class="cps-expansion-panel-content"
+    data-testid="cps-expansion-panel-content"
     #panelContentElem
     [id]="contentPanelId"
     [attr.aria-hidden]="!isExpanded">

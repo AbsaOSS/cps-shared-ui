@@ -45,6 +45,10 @@ items: CpsMenuItem[] = [
     title: 'Go google',
     url: 'https://google.com',
     target: '_blank'
+  },
+  {
+    title: 'Menu API',
+    url: '/menu/api'
   }
 ];
 
@@ -96,6 +100,10 @@ itemsWithoutIcons: CpsMenuItem[] = [
     title: 'Go google',
     url: 'https://google.com',
     target: '_blank'
+  },
+  {
+    title: 'Menu API',
+    url: '/menu/api'
   }
 ];
 
@@ -106,23 +114,32 @@ doConsoleLog(event: any) {
 export const menuExamples: Record<string, { html: string; ts?: string }> = {
   standardMenu: {
     html: `
-<cps-menu
-  #standardMenu
-  [items]="items"
-  header="Menu header"
-  (menuShown)="isStandardMenuOpen = true"
-  (menuHidden)="isStandardMenuOpen = false">
-</cps-menu>
-<cps-button
-  label="Standard menu"
-  ariaHaspopup="menu"
-  [ariaExpanded]="isStandardMenuOpen"
-  (clicked)="standardMenu.toggle($event)">
-</cps-button>`,
+<div class="last-hide-reason-example">
+  <cps-menu
+    #standardMenu
+    [items]="items"
+    header="Menu header"
+    (menuShown)="isStandardMenuOpen = true"
+    (menuHidden)="isStandardMenuOpen = false"
+    (beforeMenuHidden)="lastHideReason = $event">
+  </cps-menu>
+  <cps-button
+    label="Standard menu"
+    ariaHaspopup="menu"
+    [ariaExpanded]="isStandardMenuOpen"
+    (clicked)="standardMenu.toggle($event)">
+  </cps-button>
+  <div
+    class="last-hide-reason"
+    [class.last-hide-reason--empty]="!lastHideReason">
+    Last hide reason: {{ lastHideReason }}
+  </div>
+</div>`,
     ts: `
 ${menuItemsTs.trim()}
 
-isStandardMenuOpen = false;`
+isStandardMenuOpen = false;
+lastHideReason: CpsMenuHideReason | '' = '';`
   },
 
   standardMenuNoHeader: {
@@ -277,5 +294,26 @@ onMenuLeave(event: MouseEvent | FocusEvent, menu: CpsMenuComponent) {
     menu.hide();
   }
 }`
+  },
+
+  customClassMenu: {
+    html: `
+<cps-menu
+  #customClassMenu
+  [items]="items"
+  containerClass="menu-page-custom-container"
+  (menuShown)="isCustomClassMenuOpen = true"
+  (menuHidden)="isCustomClassMenuOpen = false">
+</cps-menu>
+<cps-button
+  label="Menu with custom container class"
+  ariaHaspopup="menu"
+  [ariaExpanded]="isCustomClassMenuOpen"
+  (clicked)="customClassMenu.toggle($event)">
+</cps-button>`,
+    ts: `
+${menuItemsTs.trim()}
+
+isCustomClassMenuOpen = false;`
   }
 };
