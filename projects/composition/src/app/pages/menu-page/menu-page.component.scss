@@ -1,3 +1,16 @@
+::ng-deep .cps-menu-container.menu-page-custom-container {
+  border: 0.125rem solid var(--cps-color-energy);
+}
+
+.last-hide-reason-example {
+  .last-hide-reason {
+    margin-top: 1rem;
+    &--empty {
+      opacity: 0;
+    }
+  }
+}
+
 .my-menu-content {
   display: flex;
   flex-direction: column;

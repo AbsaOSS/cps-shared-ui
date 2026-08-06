@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
+import {
+  CpsButtonComponent,
+  CpsMenuComponent,
+  CpsMenuHideReason,
+  CpsMenuItem
+} from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ComponentData from '../../api-data/cps-menu.json';
@@ -64,6 +69,10 @@ export class MenuPageComponent {
       title: 'Go google',
       url: 'https://google.com',
       target: '_blank'
+    },
+    {
+      title: 'Menu API',
+      url: '/menu/api'
     }
   ];
 
@@ -110,6 +119,10 @@ export class MenuPageComponent {
       title: 'Go google',
       url: 'https://google.com',
       target: '_blank'
+    },
+    {
+      title: 'Menu API',
+      url: '/menu/api'
     }
   ];
 
@@ -122,6 +135,9 @@ export class MenuPageComponent {
   isArbitraryMenuOpen = false;
   isFocusMenuOpen = false;
   isHoverMenuOpen = false;
+  isCustomClassMenuOpen = false;
+
+  lastHideReason: CpsMenuHideReason | '' = '';
 
   doConsoleLog(event: any) {
     console.log(event.item.title + ' clicked');
