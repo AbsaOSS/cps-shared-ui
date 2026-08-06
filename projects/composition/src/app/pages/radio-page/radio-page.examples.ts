@@ -46,6 +46,36 @@ private _checkThirdSelected(control: AbstractControl): ValidationErrors | null {
 }`
   },
 
+  requiredHiddenRadioGroup: {
+    html: `
+<form [formGroup]="form">
+  <cps-radio-group
+    groupLabel="Required radio group with hidden details"
+    formControlName="requiredRadioHidden"
+    [options]="options"
+    hint="This hint stays hidden"
+    [hideDetails]="true">
+  </cps-radio-group>
+</form>`,
+    ts: `
+${radioOptionsTs.trim()}
+
+form!: UntypedFormGroup;
+
+ngOnInit() {
+  this.form = this._formBuilder.group({
+    requiredRadioHidden: [
+      '',
+      [
+        Validators.required,
+        (control: AbstractControl): ValidationErrors | null =>
+          this._checkThirdSelected(control)
+      ]
+    ]
+  });
+}`
+  },
+
   tooltipRadioGroup: {
     html: `
 <cps-radio-group
@@ -103,6 +133,16 @@ partiallyDisabledOptions: CpsRadioOption[] = [
   },
   { label: 'Option 4', value: 'fourth' }
 ];`
+  },
+
+  hintRadioGroup: {
+    html: `
+<cps-radio-group
+  groupLabel="Radio group with a hint"
+  [options]="options"
+  hint="Choose the option that best fits your use case">
+</cps-radio-group>`,
+    ts: radioOptionsTs
   },
 
   twoWayBindingRadioGroup: {

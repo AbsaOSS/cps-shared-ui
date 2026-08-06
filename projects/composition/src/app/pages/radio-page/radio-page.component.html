@@ -14,6 +14,21 @@
   </app-code-example>
 
   <app-code-example
+    label="Required radio group with hidden details"
+    [htmlCode]="examples.requiredHiddenRadioGroup.html"
+    [tsCode]="examples.requiredHiddenRadioGroup.ts">
+    <form [formGroup]="form">
+      <cps-radio-group
+        groupLabel="Required radio group with hidden details"
+        formControlName="requiredRadioHidden"
+        [options]="options"
+        hint="This hint stays hidden"
+        [hideDetails]="true">
+      </cps-radio-group>
+    </form>
+  </app-code-example>
+
+  <app-code-example
     label="Radio group with a tooltip"
     [htmlCode]="examples.tooltipRadioGroup.html"
     [tsCode]="examples.tooltipRadioGroup.ts">
@@ -57,6 +72,17 @@
     <cps-radio-group
       groupLabel="Radio group with partially disabled options and targeted tooltips"
       [options]="partiallyDisabledOptions">
+    </cps-radio-group>
+  </app-code-example>
+
+  <app-code-example
+    label="Radio group with a hint"
+    [htmlCode]="examples.hintRadioGroup.html"
+    [tsCode]="examples.hintRadioGroup.ts">
+    <cps-radio-group
+      groupLabel="Radio group with a hint"
+      [options]="options"
+      hint="Choose the option that best fits your use case">
     </cps-radio-group>
   </app-code-example>
 
