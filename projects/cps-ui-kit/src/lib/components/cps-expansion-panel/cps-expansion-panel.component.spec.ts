@@ -126,6 +126,27 @@ describe('CpsExpansionPanelComponent', () => {
     expect(component.cvtBorderRadius).toBe('1rem');
   });
 
+  it('should square the header bottom corners when expanded with a border radius set', () => {
+    fixture.componentRef.setInput('borderRadius', '1rem');
+    component.toggleExpansion();
+    fixture.detectChanges();
+    const header = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-header'
+    );
+    expect(header.style.borderBottomLeftRadius).toBe('0');
+    expect(header.style.borderBottomRightRadius).toBe('0');
+  });
+
+  it('should not override the header bottom corners when collapsed with a border radius set', () => {
+    fixture.componentRef.setInput('borderRadius', '1rem');
+    fixture.detectChanges();
+    const header = fixture.nativeElement.querySelector(
+      '.cps-expansion-panel-header'
+    );
+    expect(header.style.borderBottomLeftRadius).toBe('');
+    expect(header.style.borderBottomRightRadius).toBe('');
+  });
+
   it('should update cvtWidth via ngOnChanges', () => {
     fixture.componentRef.setInput('width', 400);
     fixture.detectChanges();
