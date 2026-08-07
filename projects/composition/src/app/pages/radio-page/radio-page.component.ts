@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormsModule,
@@ -88,19 +88,18 @@ export class RadioPageComponent implements OnInit {
 
   componentData = ComponentData;
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _formBuilder: UntypedFormBuilder) {}
+  private readonly _formBuilder = inject(UntypedFormBuilder);
 
   ngOnInit() {
+    const requiredThirdValidators = [
+      Validators.required,
+      (control: AbstractControl): ValidationErrors | null =>
+        this._checkThirdSelected(control)
+    ];
     this.form = this._formBuilder.group({
-      requiredRadio: [
-        '',
-        [
-          Validators.required,
-          (control: AbstractControl): ValidationErrors | null =>
-            this._checkThirdSelected(control)
-        ]
-      ]
+      requiredRadio: ['', requiredThirdValidators],
+      requiredRadioHidden: ['', requiredThirdValidators],
+      requiredCustomContentRadio: ['', Validators.required]
     });
   }
 

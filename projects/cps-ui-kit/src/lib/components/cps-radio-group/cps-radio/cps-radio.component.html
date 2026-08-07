@@ -3,6 +3,8 @@
   [groupName]="radioGroup?.groupName || ''"
   [groupDisabled]="groupDisabled"
   [checked]="radioGroup?.value == option.value"
+  (blurred)="onBlur()"
+  (focused)="onFocus()"
   (updateValueEvent)="updateValueEvent($event)">
   <ng-content></ng-content>
 </cps-radio-button>

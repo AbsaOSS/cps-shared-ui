@@ -6,9 +6,26 @@
     [tsCode]="examples.requiredRadioGroup.ts">
     <form [formGroup]="form">
       <cps-radio-group
+        data-testid="required-radio-group"
         groupLabel="Radio group where 3rd option must be selected"
         formControlName="requiredRadio"
         [options]="options">
+      </cps-radio-group>
+    </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Required radio group with hidden details"
+    [htmlCode]="examples.requiredHiddenRadioGroup.html"
+    [tsCode]="examples.requiredHiddenRadioGroup.ts">
+    <form [formGroup]="form">
+      <cps-radio-group
+        data-testid="required-hidden-radio-group"
+        groupLabel="Required radio group with hidden details"
+        formControlName="requiredRadioHidden"
+        [options]="options"
+        hint="This hint stays hidden"
+        [hideDetails]="true">
       </cps-radio-group>
     </form>
   </app-code-example>
@@ -55,8 +72,20 @@
     [htmlCode]="examples.partiallyDisabledRadioGroup.html"
     [tsCode]="examples.partiallyDisabledRadioGroup.ts">
     <cps-radio-group
+      data-testid="partially-disabled-radio-group"
       groupLabel="Radio group with partially disabled options and targeted tooltips"
       [options]="partiallyDisabledOptions">
+    </cps-radio-group>
+  </app-code-example>
+
+  <app-code-example
+    label="Radio group with a hint"
+    [htmlCode]="examples.hintRadioGroup.html"
+    [tsCode]="examples.hintRadioGroup.ts">
+    <cps-radio-group
+      groupLabel="Radio group with a hint"
+      [options]="options"
+      hint="Choose the option that best fits your use case">
     </cps-radio-group>
   </app-code-example>
 
@@ -75,59 +104,62 @@
   </app-code-example>
 
   <app-code-example
-    label="Radio group with custom content"
+    label="Required radio group with custom content"
     [htmlCode]="examples.customContentRadioGroup.html"
     [tsCode]="examples.customContentRadioGroup.ts">
-    <cps-radio-group
-      groupLabel="Radio group with custom content"
-      class="custom-content-example"
-      [value]="2"
-      [vertical]="true">
-      <cps-radio
-        [option]="{
-          ariaLabel: 'Custom option with inline selectors',
-          value: 1
-        }">
-        <div class="inline-radio-form">
-          <span>On the</span>
-          <cps-select
-            ariaLabel="Select day"
-            [options]="dayOptions"
-            optionLabel="name"
-            [hideDetails]="true"
-            [value]="dayOptions[0]">
-          </cps-select>
-          <span>of every</span>
-          <cps-select
-            ariaLabel="Select month"
-            [options]="monthOptions"
-            optionLabel="name"
-            [hideDetails]="true"
-            [value]="monthOptions[0]">
-          </cps-select>
-          <span>month(s) at</span>
-          <cps-select
-            ariaLabel="Select hour"
-            [options]="hourOptions"
-            optionLabel="name"
-            [hideDetails]="true"
-            [value]="hourOptions[0]">
-          </cps-select>
-          <span>:</span>
-          <cps-select
-            ariaLabel="Select minute"
-            [options]="minuteOptions"
-            optionLabel="name"
-            [hideDetails]="true"
-            [value]="minuteOptions[0]">
-          </cps-select>
-          <cps-checkbox
-            class="weekday-checkbox"
-            label="During the nearest weekday"
-            [value]="false"></cps-checkbox>
-        </div>
-      </cps-radio>
-      <cps-radio [option]="{ label: 'Simple option', value: 2 }"></cps-radio>
-    </cps-radio-group>
+    <form [formGroup]="form">
+      <cps-radio-group
+        data-testid="custom-content-radio-group"
+        groupLabel="Required radio group with custom content"
+        class="custom-content-example"
+        formControlName="requiredCustomContentRadio"
+        [vertical]="true">
+        <cps-radio
+          [option]="{
+            ariaLabel: 'Custom option with inline selectors',
+            value: 1
+          }">
+          <div class="inline-radio-form">
+            <span>On the</span>
+            <cps-select
+              ariaLabel="Select day"
+              [options]="dayOptions"
+              optionLabel="name"
+              [hideDetails]="true"
+              [value]="dayOptions[0]">
+            </cps-select>
+            <span>of every</span>
+            <cps-select
+              ariaLabel="Select month"
+              [options]="monthOptions"
+              optionLabel="name"
+              [hideDetails]="true"
+              [value]="monthOptions[0]">
+            </cps-select>
+            <span>month(s) at</span>
+            <cps-select
+              ariaLabel="Select hour"
+              [options]="hourOptions"
+              optionLabel="name"
+              [hideDetails]="true"
+              [value]="hourOptions[0]">
+            </cps-select>
+            <span>:</span>
+            <cps-select
+              ariaLabel="Select minute"
+              [options]="minuteOptions"
+              optionLabel="name"
+              [hideDetails]="true"
+              [value]="minuteOptions[0]">
+            </cps-select>
+            <cps-checkbox
+              class="weekday-checkbox"
+              label="During the nearest weekday"
+              [value]="false"></cps-checkbox>
+          </div>
+        </cps-radio>
+        <cps-radio [option]="{ label: 'Simple option', value: 2 }"></cps-radio>
+      </cps-radio-group>
+    </form>
   </app-code-example>
 </app-component-docs-viewer>
