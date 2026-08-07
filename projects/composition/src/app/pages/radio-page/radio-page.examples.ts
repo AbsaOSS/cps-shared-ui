@@ -46,6 +46,48 @@ private _checkThirdSelected(control: AbstractControl): ValidationErrors | null {
 }`
   },
 
+  requiredHiddenRadioGroup: {
+    html: `
+<form [formGroup]="form">
+  <cps-radio-group
+    groupLabel="Required radio group with hidden details"
+    formControlName="requiredRadioHidden"
+    [options]="options"
+    hint="This hint stays hidden"
+    [hideDetails]="true">
+  </cps-radio-group>
+</form>`,
+    ts: `
+private readonly _formBuilder = inject(UntypedFormBuilder);
+
+${radioOptionsTs.trim()}
+
+form!: UntypedFormGroup;
+
+ngOnInit() {
+  this.form = this._formBuilder.group({
+    requiredRadioHidden: [
+      '',
+      [
+        Validators.required,
+        (control: AbstractControl): ValidationErrors | null =>
+          this._checkThirdSelected(control)
+      ]
+    ]
+  });
+}
+
+private _checkThirdSelected(control: AbstractControl): ValidationErrors | null {
+  const val = control.value;
+  if (!val) return null;
+
+  if (val !== 'third') {
+    return { mustSelectThird: 'Only third option must be selected' };
+  }
+  return null;
+}`
+  },
+
   tooltipRadioGroup: {
     html: `
 <cps-radio-group
@@ -105,6 +147,16 @@ partiallyDisabledOptions: CpsRadioOption[] = [
 ];`
   },
 
+  hintRadioGroup: {
+    html: `
+<cps-radio-group
+  groupLabel="Radio group with a hint"
+  [options]="options"
+  hint="Choose the option that best fits your use case">
+</cps-radio-group>`,
+    ts: radioOptionsTs
+  },
+
   twoWayBindingRadioGroup: {
     html: `
 <div class="sync-val-example">
@@ -123,57 +175,63 @@ syncVal = 'first';`
 
   customContentRadioGroup: {
     html: `
-<cps-radio-group
-  groupLabel="Radio group with custom content"
-  [value]="2"
-  [vertical]="true">
-  <cps-radio
-    [option]="{
-      ariaLabel: 'Custom option with inline selectors',
-      value: 1
-    }">
-    <div style="display: flex; align-items: center; gap: 0.3125rem;">
-      <span>On the</span>
-      <cps-select
-        ariaLabel="Select day"
-        [options]="dayOptions"
-        optionLabel="name"
-        [hideDetails]="true"
-        [value]="dayOptions[0]">
-      </cps-select>
-      <span>of every</span>
-      <cps-select
-        ariaLabel="Select month"
-        [options]="monthOptions"
-        optionLabel="name"
-        [hideDetails]="true"
-        [value]="monthOptions[0]">
-      </cps-select>
-      <span>month(s) at</span>
-      <cps-select
-        ariaLabel="Select hour"
-        [options]="hourOptions"
-        optionLabel="name"
-        [hideDetails]="true"
-        [value]="hourOptions[0]">
-      </cps-select>
-      <span>:</span>
-      <cps-select
-        ariaLabel="Select minute"
-        [options]="minuteOptions"
-        optionLabel="name"
-        [hideDetails]="true"
-        [value]="minuteOptions[0]">
-      </cps-select>
-      <cps-checkbox
-        style="margin-left: 0.9375rem;"
-        label="During the nearest weekday"
-        [value]="false"></cps-checkbox>
-    </div>
-  </cps-radio>
-  <cps-radio [option]="{ label: 'Simple option', value: 2 }"></cps-radio>
-</cps-radio-group>`,
+<form [formGroup]="form">
+  <cps-radio-group
+    groupLabel="Required radio group with custom content"
+    formControlName="requiredCustomContentRadio"
+    [vertical]="true">
+    <cps-radio
+      [option]="{
+        ariaLabel: 'Custom option with inline selectors',
+        value: 1
+      }">
+      <div style="display: flex; align-items: center; gap: 0.3125rem;">
+        <span>On the</span>
+        <cps-select
+          ariaLabel="Select day"
+          [options]="dayOptions"
+          optionLabel="name"
+          [hideDetails]="true"
+          [value]="dayOptions[0]">
+        </cps-select>
+        <span>of every</span>
+        <cps-select
+          ariaLabel="Select month"
+          [options]="monthOptions"
+          optionLabel="name"
+          [hideDetails]="true"
+          [value]="monthOptions[0]">
+        </cps-select>
+        <span>month(s) at</span>
+        <cps-select
+          ariaLabel="Select hour"
+          [options]="hourOptions"
+          optionLabel="name"
+          [hideDetails]="true"
+          [value]="hourOptions[0]">
+        </cps-select>
+        <span>:</span>
+        <cps-select
+          ariaLabel="Select minute"
+          [options]="minuteOptions"
+          optionLabel="name"
+          [hideDetails]="true"
+          [value]="minuteOptions[0]">
+        </cps-select>
+        <cps-checkbox
+          style="margin-left: 0.9375rem;"
+          label="During the nearest weekday"
+          [value]="false"></cps-checkbox>
+      </div>
+    </cps-radio>
+    <cps-radio [option]="{ label: 'Simple option', value: 2 }"></cps-radio>
+  </cps-radio-group>
+</form>`,
     ts: `
+private readonly _formBuilder = inject(UntypedFormBuilder);
+
+form!: UntypedFormGroup;
+
 dayOptions = [
   { name: '1st day', data: { code: '1' } },
   { name: '2nd day', data: { code: '2' } },
@@ -193,6 +251,12 @@ hourOptions = [...Array(24).keys()].map((n) => ({
 minuteOptions = [...Array(60).keys()].map((n) => ({
   name: n,
   data: { code: n }
-}));`
+}));
+
+ngOnInit() {
+  this.form = this._formBuilder.group({
+    requiredCustomContentRadio: ['', Validators.required]
+  });
+}`
   }
 };
