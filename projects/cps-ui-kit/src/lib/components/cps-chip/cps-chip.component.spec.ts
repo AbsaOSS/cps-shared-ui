@@ -71,6 +71,17 @@ describe('CpsChipComponent', () => {
     expect(event.stopPropagation).toHaveBeenCalled();
   });
 
+  it('should do nothing on close click when disabled', () => {
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    const event = new Event('click');
+    jest.spyOn(event, 'stopPropagation');
+    jest.spyOn(component.closed, 'emit');
+    component.onCloseClick(event);
+    expect(event.stopPropagation).not.toHaveBeenCalled();
+    expect(component.closed.emit).not.toHaveBeenCalled();
+  });
+
   it('should display custom icon when icon is provided', () => {
     fixture.componentRef.setInput('icon', 'home');
     fixture.componentRef.setInput('label', 'Home');

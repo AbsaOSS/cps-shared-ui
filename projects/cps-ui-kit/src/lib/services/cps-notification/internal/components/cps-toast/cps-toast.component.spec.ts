@@ -139,6 +139,11 @@ describe('CpsToastComponent', () => {
       expect(component.color).toBe(CpsNotificationType.ERROR);
     });
 
+    it('should default color to ERROR when data has no type', () => {
+      setup(defaultConfig, { message: 'No type' });
+      expect(component.color).toBe(CpsNotificationType.ERROR);
+    });
+
     it('should set maxWidth when config.maxWidth is provided', () => {
       setup({ ...defaultConfig, maxWidth: '400px' });
       expect(component.maxWidth).toBeTruthy();
@@ -166,6 +171,12 @@ describe('CpsToastComponent', () => {
       tick(0);
       expect(component.srAnnouncement).toContain('Hello');
       expect(component.srAnnouncement).toContain('info');
+    }));
+
+    it('should omit the type prefix in srAnnouncement when data has no type', fakeAsync(() => {
+      setup(defaultConfig, { message: 'No type here' });
+      tick(0);
+      expect(component.srAnnouncement).toBe('No type here');
     }));
 
     it('should include details in srAnnouncement when provided', fakeAsync(() => {

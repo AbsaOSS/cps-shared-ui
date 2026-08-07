@@ -258,6 +258,46 @@ describe('CpsFileUploadComponent', () => {
 
       expect(setSpy).toHaveBeenCalledWith('');
     });
+
+    it('should not throw when there is no file input element', () => {
+      component.uploadedFile = new File([''], 'photo.jpg');
+      (component as any).fileInput = undefined;
+
+      expect(() => component.removeUploadedFile()).not.toThrow();
+    });
+  });
+
+  describe('nullish file extraction edge cases', () => {
+    it('should fall back to undefined when a drop event has no file at index 0', () => {
+      const dataTransfer = { files: { item: () => null } };
+      const event = new Event('drop');
+      Object.defineProperty(event, 'dataTransfer', { value: dataTransfer });
+      Object.defineProperty(event, 'type', { value: 'drop' });
+
+      expect(() => component.tryUploadFile(event)).not.toThrow();
+      expect(component.uploadedFile).toBeUndefined();
+    });
+
+    it('should fall back to an empty name when a change event resolves to no file despite a non-empty FileList', () => {
+      const input = document.createElement('input');
+      Object.defineProperty(input, 'files', {
+        value: { length: 1, item: () => null }
+      });
+      const event = new Event('change');
+      Object.defineProperty(event, 'target', { value: input });
+      const emitSpy = jest.spyOn(component.fileUploadFailed, 'emit');
+
+      component.tryUploadFile(event);
+
+      expect(component.uploadedFile).toBeUndefined();
+      expect(emitSpy).toHaveBeenCalledWith('');
+    });
+  });
+
+  describe('_isFileExtensionValid', () => {
+    it('should return false when no file is provided', () => {
+      expect((component as any)._isFileExtensionValid(undefined)).toBe(false);
+    });
   });
 
   describe('resetState', () => {
@@ -450,6 +490,27 @@ describe('CpsFileUploadComponent', () => {
 
       expect(component.fileProcessed.emit).not.toHaveBeenCalled();
       expect(component.fileProcessingFailed.emit).not.toHaveBeenCalled();
+    }));
+
+    it('should fall back to an empty name when uploadedFile is cleared before the callback resolves', fakeAsync(() => {
+      const file = new File([''], 'photo.jpg');
+      let resolveCallback!: (value: boolean) => void;
+      const pending$ = new Observable<boolean>((subscriber) => {
+        resolveCallback = (value: boolean) => {
+          subscriber.next(value);
+          subscriber.complete();
+        };
+      });
+      component.fileProcessingCallback = () => pending$;
+      jest.spyOn(component.fileProcessingFailed, 'emit');
+
+      component.tryUploadFile(makeChangeEvent(file));
+      component.uploadedFile = undefined;
+
+      resolveCallback(false);
+      tick();
+
+      expect(component.fileProcessingFailed.emit).toHaveBeenCalledWith('');
     }));
   });
 

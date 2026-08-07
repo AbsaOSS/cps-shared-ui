@@ -211,6 +211,12 @@ describe('TableUnsortDirective', () => {
         order: mockTable.defaultSortOrder
       });
     });
+
+    it('should clear restoringSort when a sort is restored', () => {
+      mockTable.restoringSort = true;
+      mockTable.sort({ field: 'name' });
+      expect(mockTable.restoringSort).toBe(false);
+    });
   });
 
   describe('sortSingle grouped-rows delegation', () => {
@@ -321,6 +327,25 @@ describe('TableUnsortDirective', () => {
       expect(mockTable.multiSortMeta).toEqual([
         { field: 'category', order: 1 }
       ]);
+    });
+
+    it('should prepend the group-rows meta entry when the existing first entry is a different field', () => {
+      mockTable.groupRowsBy = 'category';
+      mockTable.groupRowsByOrder = 1;
+      mockTable.multiSortMeta = [{ field: 'name', order: 1 }];
+
+      (mockTable as any).sortMultiple();
+
+      expect(mockTable.multiSortMeta).toEqual([
+        { field: 'category', order: 1 },
+        { field: 'name', order: 1 }
+      ]);
+    });
+
+    it('should call _filter when the table has an active filter', () => {
+      mockTable.hasFilter.mockReturnValue(true);
+      mockTable.sort({ field: 'name' });
+      expect(mockTable._filter).toHaveBeenCalled();
     });
   });
 });

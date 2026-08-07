@@ -288,4 +288,53 @@ describe('CpsPaginatorComponent', () => {
     // Verify resetPageOnRowsChange is still false
     expect(component.resetPageOnRowsChange).toBe(false);
   });
+
+  describe('ngOnChanges', () => {
+    it('should recompute cvtBackgroundColor when backgroundColor changes after first render', () => {
+      fixture.componentRef.setInput('backgroundColor', 'primary');
+      fixture.detectChanges();
+      expect(component.cvtBackgroundColor).toBe('var(--cps-color-primary)');
+    });
+
+    it('should re-sync rows when rowsPerPageOptions changes after first render', () => {
+      fixture.componentRef.setInput('rowsPerPageOptions', [10, 15, 25]);
+      fixture.detectChanges();
+      expect(component.rowOptions.map((o) => o.value)).toEqual([10, 15, 25]);
+    });
+
+    it('should throw when rows is not among rowsPerPageOptions', () => {
+      expect(() => {
+        fixture.componentRef.setInput('rows', 999);
+        fixture.detectChanges();
+      }).toThrow('rowsPerPageOptions must include rows');
+    });
+  });
+
+  describe('onKeydown page navigation', () => {
+    it('should jump to the next page when at the last button but not the last page', () => {
+      const button = document.createElement('button');
+      button.classList.add('p-paginator-page');
+      jest.spyOn(component as any, '_getPageButtons').mockReturnValue([button]);
+      component.paginator.pageLinks = [1];
+      jest.spyOn(component.paginator, 'getPageCount').mockReturnValue(5);
+      const changePageSpy = jest.spyOn(component.paginator, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: button });
+      component.onKeydown(event);
+      expect(changePageSpy).toHaveBeenCalledWith(1);
+    });
+
+    it('should do nothing when already at the last page boundary going right', () => {
+      const button = document.createElement('button');
+      button.classList.add('p-paginator-page');
+      jest.spyOn(component as any, '_getPageButtons').mockReturnValue([button]);
+      component.paginator.pageLinks = [5];
+      jest.spyOn(component.paginator, 'getPageCount').mockReturnValue(5);
+      const changePageSpy = jest.spyOn(component.paginator, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: button });
+      component.onKeydown(event);
+      expect(changePageSpy).not.toHaveBeenCalled();
+    });
+  });
 });

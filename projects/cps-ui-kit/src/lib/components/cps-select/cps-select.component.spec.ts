@@ -1,11 +1,17 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
+  discardPeriodicTasks,
   fakeAsync,
   tick
 } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
@@ -664,6 +670,709 @@ describe('CpsSelectComponent', () => {
       expect(clearBtn.nativeElement.getAttribute('aria-label')).toBe(
         'Clear selection'
       );
+    });
+  });
+
+  describe('ngOnChanges width', () => {
+    it('should recompute cvtWidth when width changes', () => {
+      fixture.componentRef.setInput('width', 250);
+      fixture.detectChanges();
+      expect(component.cvtWidth).toBe('250px');
+    });
+  });
+
+  describe('select with keepInitialOrder', () => {
+    it('should keep the original option order when adding a selection', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('keepInitialOrder', true);
+      component.value = [component.options[2]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      component.select(component.options[0], false);
+
+      expect(component.value).toEqual([
+        component.options[0],
+        component.options[2]
+      ]);
+    });
+
+    it('should keep the original option order when deselecting', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('keepInitialOrder', true);
+      component.value = [component.options[0], component.options[2]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      component.select(component.options[0], false);
+
+      expect(component.value).toEqual([component.options[2]]);
+    });
+  });
+
+  describe('toggleAll with returnObject false', () => {
+    it('should select values instead of full option objects', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      component.toggleAll();
+
+      expect(component.value).toEqual(['opt1', 'opt2', 'opt3']);
+    });
+  });
+
+  describe('onContainerKeyDown', () => {
+    it('should open the menu on Enter when closed', () => {
+      component.isOpened = false;
+      jest.spyOn(component as any, '_toggleOptions');
+      component.onContainerKeyDown({ keyCode: 13, preventDefault: jest.fn() });
+      expect((component as any)._toggleOptions).toHaveBeenCalledWith(true);
+    });
+
+    it('should close the menu on Enter when nothing is highlighted', () => {
+      component.isOpened = true;
+      component.optionHighlightedIndex = -1;
+      jest.spyOn(component as any, '_toggleOptions');
+      component.onContainerKeyDown({ keyCode: 13, preventDefault: jest.fn() });
+      expect((component as any)._toggleOptions).toHaveBeenCalledWith(false);
+    });
+
+    it('should toggle all when Enter is pressed on the select-all option', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      component.isOpened = true;
+      component.optionHighlightedIndex = 0;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      jest.spyOn(component, 'toggleAll');
+
+      component.onContainerKeyDown({ keyCode: 13, preventDefault: jest.fn() });
+
+      expect(component.toggleAll).toHaveBeenCalled();
+    });
+
+    it('should select the option at the adjusted index when select-all is visible', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      component.isOpened = true;
+      component.optionHighlightedIndex = 1;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      jest.spyOn(component, 'select');
+
+      component.onContainerKeyDown({ keyCode: 13, preventDefault: jest.fn() });
+
+      expect(component.select).toHaveBeenCalledWith(
+        component.options[0],
+        false
+      );
+    });
+
+    it('should open the menu on ArrowDown when closed', () => {
+      component.isOpened = false;
+      jest.spyOn(component as any, '_toggleOptions');
+      component.onContainerKeyDown({ keyCode: 40, preventDefault: jest.fn() });
+      expect((component as any)._toggleOptions).toHaveBeenCalledWith(true);
+    });
+
+    it('should call virtual navigation when virtualScroll is enabled', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      component.isOpened = true;
+      fixture.detectChanges();
+      jest.spyOn(component as any, '_navigateVirtualOptionsByArrows');
+
+      component.onContainerKeyDown({ keyCode: 40, preventDefault: jest.fn() });
+
+      expect(
+        (component as any)._navigateVirtualOptionsByArrows
+      ).toHaveBeenCalledWith(false);
+    });
+
+    it('should navigate options by arrows when not virtual scrolled', () => {
+      component.isOpened = true;
+      jest.spyOn(component as any, '_navigateOptionsByArrows');
+
+      component.onContainerKeyDown({ keyCode: 38, preventDefault: jest.fn() });
+
+      expect((component as any)._navigateOptionsByArrows).toHaveBeenCalledWith(
+        true
+      );
+    });
+  });
+
+  describe('_navigateOptionsByArrows', () => {
+    it('should do nothing when the menu is closed', () => {
+      component.isOpened = false;
+      (component as any)._navigateOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+
+    it('should do nothing when there are no options', () => {
+      fixture.componentRef.setInput('options', []);
+      component.isOpened = true;
+      fixture.detectChanges();
+      (component as any)._navigateOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+
+    it('should navigate forward and highlight the option element', () => {
+      component.isOpened = true;
+      component.optionHighlightedIndex = -1;
+      fixture.detectChanges();
+      const optionsListEl = component.optionsList.nativeElement;
+      const optionId = component.getOptionId(component.options[0], 0);
+      const el = document.createElement('div');
+      el.id = optionId;
+      const parent = document.createElement('div');
+      parent.appendChild(el);
+      optionsListEl.appendChild(parent);
+
+      (component as any)._navigateOptionsByArrows(false);
+
+      expect(component.optionHighlightedIndex).toBe(0);
+      expect(component.isArrowNavigating).toBe(true);
+    });
+
+    it('should stop when the highlighted option id cannot be resolved', () => {
+      component.isOpened = true;
+      component.optionHighlightedIndex = 99;
+      expect(() =>
+        (component as any)._navigateOptionsByArrows(false)
+      ).not.toThrow();
+    });
+  });
+
+  describe('_scrollVirtualListToIndex', () => {
+    it('should scroll via virtualList.scrollToIndex when no scroller element exists', () => {
+      (component as any).optionsList = {
+        nativeElement: document.createElement('div')
+      };
+      const scrollToIndex = jest.fn();
+      (component as any).virtualList = { scrollToIndex };
+      (component as any)._scrollVirtualListToIndex(1);
+      expect(scrollToIndex).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('_navigateVirtualOptionsByArrows', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+    });
+
+    it('should not navigate when the menu is closed', () => {
+      component.isOpened = false;
+      (component as any)._navigateVirtualOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+
+    it('should navigate forward through virtual options', () => {
+      component.isOpened = true;
+      component.optionHighlightedIndex = -1;
+      (component as any)._navigateVirtualOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(0);
+    });
+  });
+
+  describe('activeDescendantId', () => {
+    it('should return the select-all id when highlighted', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.isOpened = true;
+      component.optionHighlightedIndex = 0;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(component.activeDescendantId).toBe(component.selectAllOptionId);
+    });
+
+    it('should return null when the highlighted option no longer exists', () => {
+      component.isOpened = true;
+      component.optionHighlightedIndex = 99;
+      fixture.detectChanges();
+      expect(component.activeDescendantId).toBeNull();
+    });
+  });
+
+  describe('with NgControl (reactive forms)', () => {
+    @Component({
+      imports: [CpsSelectComponent, ReactiveFormsModule],
+      template: `<cps-select
+        [formControl]="control"
+        [options]="options"
+        ariaLabel="Select"></cps-select>`
+    })
+    class HostComponent {
+      control = new FormControl(undefined, Validators.required);
+      options = OPTIONS;
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let select: CpsSelectComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent],
+        providers: [
+          LabelByValuePipe,
+          CombineLabelsPipe,
+          CheckOptionSelectedPipe,
+          {
+            provide: CPS_ROOT_FONT_SIZE_SERVICE,
+            useValue: mockRootFontSizeService
+          }
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      select = hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      select.select(select.options[0], false);
+      hostFixture.detectChanges();
+      expect(host.control.value).toEqual(select.options[0]);
+    });
+
+    it('should report isRequired true when a required validator is present', () => {
+      expect(select.isRequired).toBe(true);
+    });
+
+    it('should report isRequired false when no required validator is present', () => {
+      host.control.clearValidators();
+      host.control.updateValueAndValidity();
+      expect(select.isRequired).toBe(false);
+    });
+
+    it('should set a required error message when touched and invalid', () => {
+      host.control.markAsTouched();
+      host.control.updateValueAndValidity();
+      expect(select.error).toBe('Field is required');
+    });
+
+    it('should not set an error when the control has not been touched', () => {
+      select.onBlur();
+      expect(select.error).toBe('');
+    });
+
+    it('should clear the error when the control becomes valid', () => {
+      host.control.markAsTouched();
+      host.control.setValue(select.options[0]);
+      select.onBlur();
+      expect(select.error).toBe('');
+    });
+
+    it('should use a custom string error message when present', () => {
+      host.control.setValidators(() => ({ custom: 'Custom failure' }));
+      host.control.updateValueAndValidity();
+      host.control.markAsTouched();
+      select.onBlur();
+      expect(select.error).toBe('Custom failure');
+    });
+
+    it('should fall back to "Unknown error" for non-string error values', () => {
+      host.control.setValidators(() => ({ custom: true }));
+      host.control.updateValueAndValidity();
+      host.control.markAsTouched();
+      select.onBlur();
+      expect(select.error).toBe('Unknown error');
+    });
+
+    it('should mark the control as touched and emit focused on focus', () => {
+      jest.spyOn(select.focused, 'emit');
+      expect(host.control.touched).toBe(false);
+      select.onFocus();
+      expect(host.control.touched).toBe(true);
+      expect(select.focused.emit).toHaveBeenCalled();
+    });
+
+    it('should prioritize the error id in describedBy over the hint id', () => {
+      select.hint = 'Some hint';
+      host.control.markAsTouched();
+      select.onBlur();
+      expect(select.describedBy).toBe(select.errorId);
+    });
+  });
+
+  describe('onBeforeOptionsHidden with SCROLL/RESIZE', () => {
+    it('should toggle options closed without dehighlighting on SCROLL', () => {
+      component.isOpened = true;
+      fixture.detectChanges();
+      jest.spyOn(component as any, '_dehighlightOption');
+
+      component.onBeforeOptionsHidden(CpsMenuHideReason.SCROLL);
+
+      expect((component as any)._dehighlightOption).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('focus', () => {
+    it('should focus the container and open the menu', () => {
+      const focusSpy = jest.spyOn(
+        component.selectContainer.nativeElement,
+        'focus'
+      );
+      component.focus();
+      expect(focusSpy).toHaveBeenCalled();
+      expect(component.isOpened).toBe(true);
+    });
+  });
+
+  describe('clear', () => {
+    it('should refocus the container after clearing', fakeAsync(() => {
+      component.value = component.options[0];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const focusSpy = jest.spyOn(
+        component.selectContainer.nativeElement,
+        'focus'
+      );
+
+      component.clear();
+      tick();
+
+      expect(focusSpy).toHaveBeenCalled();
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('onOptionClick / _clickOption', () => {
+    it('should select the option and close the menu in single-select mode', fakeAsync(() => {
+      component.onBoxClick();
+      tick();
+      fixture.detectChanges();
+      expect(component.isOpened).toBe(true);
+
+      component.onOptionClick(component.options[1]);
+      tick();
+
+      expect(component.value).toEqual(component.options[1]);
+      expect(component.isOpened).toBe(false);
+      discardPeriodicTasks();
+    }));
+
+    it('should keep the menu open in multiple-select mode', fakeAsync(() => {
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.onBoxClick();
+      tick();
+
+      component.onOptionClick(component.options[0]);
+      tick();
+
+      expect(component.isOpened).toBe(true);
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('_checkErrors edge cases', () => {
+    it('should clear the error when the errors object has no keys', () => {
+      (component as any)._control = {
+        control: { touched: true },
+        errors: {}
+      };
+      component.error = 'stale error';
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+  });
+
+  describe('_toggleOptions toggle without explicit show', () => {
+    it('should call optionsMenu.toggle when show is omitted', () => {
+      const toggleSpy = jest.spyOn(component.optionsMenu, 'toggle');
+      (component as any)._toggleOptions();
+      expect(toggleSpy).toHaveBeenCalledWith({
+        target: component.selectBox.nativeElement
+      });
+    });
+  });
+
+  describe('recalcVirtualListHeight with virtualScroll enabled', () => {
+    it('should recompute virtualListHeightRem from the options length', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+      component.recalcVirtualListHeight();
+      expect(component.virtualListHeightRem).toBeGreaterThan(0);
+    });
+  });
+
+  describe('_toggleOptions setTimeout scroll behavior', () => {
+    it('should scroll the virtual list to the highlighted index when there is no selected element', fakeAsync(() => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+      component.optionHighlightedIndex = 1;
+      const scrollSpy = jest
+        .spyOn(component as any, '_scrollVirtualListToIndex')
+        .mockImplementation(() => {});
+
+      (component as any)._toggleOptions(true);
+      tick();
+
+      expect(scrollSpy).toHaveBeenCalledWith(1);
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('_scrollVirtualListToIndex with a real scroller element', () => {
+    it('should scroll up when the item starts above the viewport', () => {
+      const scroller = document.createElement('div');
+      scroller.className = 'p-virtualscroller';
+      scroller.scrollTop = 500;
+      Object.defineProperty(scroller, 'clientHeight', {
+        value: 100,
+        configurable: true
+      });
+      Object.defineProperty(scroller, 'scrollHeight', {
+        value: 2000,
+        configurable: true
+      });
+      const optionsListEl = document.createElement('div');
+      optionsListEl.appendChild(scroller);
+      (component as any).optionsList = { nativeElement: optionsListEl };
+
+      (component as any)._scrollVirtualListToIndex(0);
+
+      expect(scroller.scrollTop).toBe(0);
+    });
+  });
+
+  describe('resizeObserver callback', () => {
+    let capturedCallback: ((entries: any[]) => void) | undefined;
+    let localFixture: ComponentFixture<CpsSelectComponent>;
+    let localComponent: CpsSelectComponent;
+    let OriginalRO: any;
+
+    beforeEach(async () => {
+      capturedCallback = undefined;
+      OriginalRO = window.ResizeObserver;
+      (window as any).ResizeObserver = class {
+        constructor(cb: (entries: any[]) => void) {
+          // The select component's own constructor runs first (before any
+          // child component, e.g. cps-menu, also creates a ResizeObserver),
+          // so keep only the first callback captured.
+          if (!capturedCallback) capturedCallback = cb;
+        }
+
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [
+          FormsModule,
+          ReactiveFormsModule,
+          CpsSelectComponent,
+          NoopAnimationsModule
+        ],
+        providers: [
+          LabelByValuePipe,
+          CombineLabelsPipe,
+          CheckOptionSelectedPipe,
+          {
+            provide: CPS_ROOT_FONT_SIZE_SERVICE,
+            useValue: mockRootFontSizeService
+          }
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+      localFixture = TestBed.createComponent(CpsSelectComponent);
+      localComponent = localFixture.componentInstance;
+      localFixture.componentRef.setInput('ariaLabel', 'Test select');
+      localFixture.componentRef.setInput('options', OPTIONS);
+      localFixture.detectChanges();
+    });
+
+    afterEach(() => {
+      window.ResizeObserver = OriginalRO;
+    });
+
+    it('should update selectBoxWidthPx from the observed entry target', () => {
+      const target = document.createElement('div');
+      Object.defineProperty(target, 'offsetWidth', {
+        value: 240,
+        configurable: true
+      });
+      capturedCallback?.([{ target }]);
+      expect(localComponent.selectBoxWidthPx).toBe(240);
+    });
+
+    it('should ignore entries without a target', () => {
+      const before = localComponent.selectBoxWidthPx;
+      expect(() => capturedCallback?.([{}])).not.toThrow();
+      expect(localComponent.selectBoxWidthPx).toBe(before);
+    });
+  });
+
+  describe('select with returnObject false', () => {
+    it('should use the option value in single-select mode', () => {
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.detectChanges();
+      component.select(component.options[1], false);
+      expect(component.value).toBe('opt2');
+    });
+
+    it('should use option values when adding without keepInitialOrder', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('returnObject', false);
+      component.value = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.select(component.options[0], false);
+      expect(component.value).toEqual(['opt1']);
+    });
+
+    it('should use option values when adding with keepInitialOrder', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('keepInitialOrder', true);
+      component.value = ['opt3'];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.select(component.options[0], false);
+      expect(component.value).toEqual(['opt1', 'opt3']);
+    });
+  });
+
+  describe('getOptionId', () => {
+    it('should use the id cached from the option set at its original index, ignoring a later index argument', () => {
+      const option = component.options[0];
+      const idAtOriginalIndex = component.getOptionId(option, 0);
+      const idWithDifferentIndexArg = component.getOptionId(option, 5);
+      expect(idWithDifferentIndexArg).toBe(idAtOriginalIndex);
+      expect(idWithDifferentIndexArg).not.toContain('-5');
+    });
+
+    it('should build a fresh id for a non-object option', () => {
+      const id = component.getOptionId('opt1' as any, 0);
+      expect(id).toContain('-0');
+    });
+  });
+
+  describe('ngOnChanges options with a non-object entry', () => {
+    it('should not throw and should skip caching a primitive option', () => {
+      expect(() => {
+        fixture.componentRef.setInput('options', ['opt1', 'opt2']);
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      const idAtIndex0 = component.getOptionId('opt1', 0);
+      const idAtIndex3 = component.getOptionId('opt1', 3);
+      expect(idAtIndex3).not.toBe(idAtIndex0);
+      expect(idAtIndex3).toContain('-3');
+    });
+  });
+
+  describe('_syncHighlightToValue', () => {
+    it('should highlight based on the first selected value in multiple mode', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', false);
+      component.value = [component.options[1]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      (component as any)._syncHighlightToValue();
+      expect(component.optionHighlightedIndex).toBe(1);
+    });
+
+    it('should leave the highlighted index untouched when the value is not among the options', () => {
+      component.optionHighlightedIndex = -1;
+      component.value = { label: 'Missing', value: 'missing' };
+      (component as any)._syncHighlightToValue();
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+  });
+
+  describe('onContainerKeyDown Enter with select-all visible but not highlighted', () => {
+    it('should decrement the index and click the adjusted option', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      component.isOpened = true;
+      component.optionHighlightedIndex = 2;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      jest.spyOn(component as any, '_clickOption');
+
+      component.onContainerKeyDown({ keyCode: 13, preventDefault: jest.fn() });
+
+      expect((component as any)._clickOption).toHaveBeenCalledWith(
+        component.options[1]
+      );
+    });
+  });
+
+  describe('hasSelectedValue with a string value', () => {
+    it('should return false for a blank string', () => {
+      component.value = '   ';
+      expect(component.hasSelectedValue()).toBe(false);
+    });
+
+    it('should return true for a non-blank string', () => {
+      component.value = 'something';
+      expect(component.hasSelectedValue()).toBe(true);
+    });
+  });
+
+  describe('_navigateVirtualOptionsByArrows with no options', () => {
+    it('should do nothing when there are no options', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.componentRef.setInput('options', []);
+      component.isOpened = true;
+      fixture.detectChanges();
+      expect(() =>
+        (component as any)._navigateVirtualOptionsByArrows(false)
+      ).not.toThrow();
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+  });
+
+  describe('_nextHighlightIndex upward wrap', () => {
+    it('should wrap to the last index when moving up from the first item', () => {
+      component.optionHighlightedIndex = 0;
+      const result = (component as any)._nextHighlightIndex(true, 3);
+      expect(result).toBe(2);
+    });
+
+    it('should move to the previous index when not at the start', () => {
+      component.optionHighlightedIndex = 2;
+      const result = (component as any)._nextHighlightIndex(true, 3);
+      expect(result).toBe(1);
+    });
+  });
+
+  describe('_scrollVirtualListToIndex scrolling down', () => {
+    it('should scroll down when the item ends below the viewport', () => {
+      const scroller = document.createElement('div');
+      scroller.className = 'p-virtualscroller';
+      scroller.scrollTop = 0;
+      Object.defineProperty(scroller, 'clientHeight', {
+        value: 50,
+        configurable: true
+      });
+      Object.defineProperty(scroller, 'scrollHeight', {
+        value: 2000,
+        configurable: true
+      });
+      const optionsListEl = document.createElement('div');
+      optionsListEl.appendChild(scroller);
+      (component as any).optionsList = { nativeElement: optionsListEl };
+
+      (component as any)._scrollVirtualListToIndex(10);
+
+      expect(scroller.scrollTop).toBeGreaterThan(0);
     });
   });
 });
