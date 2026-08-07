@@ -1,5 +1,32 @@
 # Changelog
 
+## [21.30.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.3...v21.30.0) (2026-08-07)
+
+
+### Features
+
+* add test id to icon component ([6b38984](https://github.com/AbsaOSS/cps-shared-ui/commit/6b38984934a973e36f2e9ee444a82ad2bbddb1cd))
+* add test id to info circle component ([11d9d3f](https://github.com/AbsaOSS/cps-shared-ui/commit/11d9d3f78c44a802b9503d73ec0030967f873a04))
+* add test id to progress circular component ([3d0baff](https://github.com/AbsaOSS/cps-shared-ui/commit/3d0baff9bde5f9c3eb9c7c42fcf66bbb797fb4a3))
+* add test ids to autocomplete component and fix openOnClear prop ([2bc4fa0](https://github.com/AbsaOSS/cps-shared-ui/commit/2bc4fa0f1d38b9df39d148d3977855b144942e91))
+* add test ids to button component ([b467b7f](https://github.com/AbsaOSS/cps-shared-ui/commit/b467b7faa810d7e1aa023ea13d53a70812a89824))
+* add test ids to button toggle component ([94d71d7](https://github.com/AbsaOSS/cps-shared-ui/commit/94d71d7029d1f615896a9333d673dadd904b4afc))
+* add test ids to checkbox component ([3e80458](https://github.com/AbsaOSS/cps-shared-ui/commit/3e804580fc901a6585120a6c64ab75ecd657ed3a))
+* add test ids to chip component ([aafeead](https://github.com/AbsaOSS/cps-shared-ui/commit/aafeead0ea3a93e65a8eec45a041a46a13f78056))
+* add test ids to datepicker component ([73354b7](https://github.com/AbsaOSS/cps-shared-ui/commit/73354b79b7bea8b694b592105218e47dce881d25))
+* add test ids to dialog component ([4b05dc1](https://github.com/AbsaOSS/cps-shared-ui/commit/4b05dc1605537db397ccd3e18b3d39e5fd57cb32))
+* add test ids to divider component ([b87cf12](https://github.com/AbsaOSS/cps-shared-ui/commit/b87cf120a1e177defaed8ff489c1a8a5194d78a7))
+* add test ids to expansion panel component and fix header bottom border radius ([423a38d](https://github.com/AbsaOSS/cps-shared-ui/commit/423a38dd3dd4154b22b371218606f1b0dbdceb69))
+* add test ids to file upload component ([03fef05](https://github.com/AbsaOSS/cps-shared-ui/commit/03fef0571680cec5862ffc7e3ac239cac663a0e4))
+* add test ids to input component ([78a7767](https://github.com/AbsaOSS/cps-shared-ui/commit/78a776787ccb40efe2257fa163dbc161e3394345))
+* add test ids to loader component ([c60f884](https://github.com/AbsaOSS/cps-shared-ui/commit/c60f884a8dbbed91ed3481128d47fb11f8b933fb))
+* add test ids to menu component ([2a749fa](https://github.com/AbsaOSS/cps-shared-ui/commit/2a749fa6078e2d1dd136d1ef46e7b6539934b498))
+* add test ids to notifications ([66ca38a](https://github.com/AbsaOSS/cps-shared-ui/commit/66ca38a1593c39ac86b91672008e084ee1584e2f))
+* add test ids to progress linear component ([67f069d](https://github.com/AbsaOSS/cps-shared-ui/commit/67f069d3a0a1ce11b0d5b9960b8d9c25ef73621a))
+* add test ids to radio group and fix cps-radio forward focus/blur state to its parent cps-radio-group ([b66ab0c](https://github.com/AbsaOSS/cps-shared-ui/commit/b66ab0c63183d650e3bc7c92830bc9754f2d416b))
+* add test ids to scheduler component ([42c227a](https://github.com/AbsaOSS/cps-shared-ui/commit/42c227ac2106379d88d25815e0b10bfb67ebd93a))
+* add test ids to select component and fix openOnClear prop ([a37528b](https://github.com/AbsaOSS/cps-shared-ui/commit/a37528bd74bc40c1537ed1d4dfaf751fe65db52a))
+
 ## [21.29.3](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.2...v21.29.3) (2026-07-29)
 
 
