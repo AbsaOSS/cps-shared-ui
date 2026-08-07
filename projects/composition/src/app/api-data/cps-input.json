@@ -14,6 +14,46 @@
                         "description": "Label of the input element."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the input component, used for accessibility, it takes precedence over label."
+                    },
+                    {
+                        "name": "inputRole",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "WAI-ARIA role for the native input element."
+                    },
+                    {
+                        "name": "ariaExpanded",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean | null",
+                        "default": "null",
+                        "description": "Whether the element controlled by this input is expanded."
+                    },
+                    {
+                        "name": "ariaHasPopup",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "Type of popup element the input controls."
+                    },
+                    {
+                        "name": "ariaControls",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string | null",
+                        "default": "null",
+                        "description": "ID of the element controlled by this input."
+                    },
+                    {
                         "name": "hint",
                         "optional": false,
                         "readonly": false,
@@ -44,6 +84,22 @@
                         "type": "boolean",
                         "default": "false",
                         "description": "Determines whether input is readonly."
+                    },
+                    {
+                        "name": "autocomplete",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "off",
+                        "description": "Determines whether the value of the input can be automatically completed by the browser."
+                    },
+                    {
+                        "name": "spellcheck",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the value of the input may be checked for spelling errors."
                     },
                     {
                         "name": "width",
@@ -98,8 +154,16 @@
                         "optional": false,
                         "readonly": false,
                         "type": "iconSizeType",
-                        "default": "18px",
+                        "default": "1.125rem",
                         "description": "Size of icon before input value."
+                    },
+                    {
+                        "name": "prefixIconAriaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the clickable prefix icon, required when prefixIconClickable is true."
                     },
                     {
                         "name": "prefixText",

@@ -1,38 +1,44 @@
 <div>
   <button
-    type="button"
+    data-testid="cps-button"
+    [attr.type]="nativeType"
     [ngClass]="classesList"
     [disabled]="disabled"
     (click)="onClick($event)"
     [attr.aria-busy]="loading ? true : null"
     [attr.aria-label]="ariaLabel || label || null"
+    [attr.aria-haspopup]="ariaHaspopup"
+    [attr.aria-expanded]="ariaExpanded"
     [class.loading]="loading"
     [class.cps-button--key-active]="enterActive"
     (keydown.enter)="onEnterKeydown()"
     (keyup.enter)="onEnterKeyup()"
     (blur)="onBlur()"
-    [ngStyle]="{
-      backgroundColor: type === 'solid' ? buttonColor : 'transparent',
-      color: textColor,
-      height: cvtHeight || 'none',
-      borderRadius: borderRadius
-    }">
-    <div class="cps-button__spinner" aria-hidden="true">
+    [style.backgroundColor]="type === 'solid' ? buttonColor : 'transparent'"
+    [style.color]="textColor"
+    [style.height]="cvtHeight || null"
+    [style.borderRadius]="borderRadius">
+    <div
+      class="cps-button__spinner"
+      data-testid="cps-button-spinner"
+      aria-hidden="true">
       @if (loading) {
         <cps-progress-circular
           color="currentColor"
           [diameter]="cvtIconSize"
-          strokeWidth="2">
+          strokeWidth="0.125rem">
         </cps-progress-circular>
       }
     </div>
     <div
       class="cps-button__content"
+      data-testid="cps-button-content"
       [style.visibility]="loading ? 'hidden' : null"
       [attr.aria-hidden]="loading ? true : null">
       @if (icon) {
         <cps-icon
           class="cps-button__icon"
+          data-testid="cps-button-icon"
           [icon]="icon"
           [color]="
             disabled
@@ -41,14 +47,14 @@
                 : 'text-light'
               : textColor
           "
-          aria-hidden="true"
           [size]="cvtIconSize">
         </cps-icon>
       }
       @if (label) {
         <span
           class="cps-button__text"
-          [ngStyle]="{ 'font-size': cvtFontSize || null }">
+          data-testid="cps-button-label"
+          [style.fontSize]="cvtFontSize || null">
           {{ label }}
         </span>
       }

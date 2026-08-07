@@ -1,43 +1,101 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <div class="menu-group">
-    <cps-menu #standardMenu [items]="items" header="Menu header"> </cps-menu>
-    <cps-button label="Standard menu" (clicked)="standardMenu.toggle($event)">
-    </cps-button>
+  <app-code-example
+    label="Standard menu"
+    [htmlCode]="examples.standardMenu.html"
+    [tsCode]="examples.standardMenu.ts">
+    <div class="last-hide-reason-example">
+      <cps-menu
+        #standardMenu
+        [items]="items"
+        header="Menu header"
+        (menuShown)="isStandardMenuOpen = true"
+        (menuHidden)="isStandardMenuOpen = false"
+        (beforeMenuHidden)="lastHideReason = $event">
+      </cps-menu>
+      <cps-button
+        data-testid="standard-menu-toggle"
+        label="Standard menu"
+        ariaHaspopup="menu"
+        [ariaExpanded]="isStandardMenuOpen"
+        (clicked)="standardMenu.toggle($event)">
+      </cps-button>
+      <div
+        class="last-hide-reason"
+        [class.last-hide-reason--empty]="!lastHideReason"
+        data-testid="standard-menu-last-hide-reason">
+        Last hide reason: {{ lastHideReason }}
+      </div>
+    </div>
+  </app-code-example>
 
+  <app-code-example
+    label="Standard menu without header"
+    [htmlCode]="examples.standardMenuNoHeader.html"
+    [tsCode]="examples.standardMenuNoHeader.ts">
     <cps-menu
       #standardMenuNoHeader
       [items]="items"
-      ariaLabel="Menu with aria label">
+      ariaLabel="Menu with aria label"
+      (menuShown)="isStandardMenuNoHeaderOpen = true"
+      (menuHidden)="isStandardMenuNoHeaderOpen = false">
     </cps-menu>
     <cps-button
       label="Standard menu without header"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isStandardMenuNoHeaderOpen"
       (clicked)="standardMenuNoHeader.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Compressed menu"
+    [htmlCode]="examples.compressedMenu.html"
+    [tsCode]="examples.compressedMenu.ts">
     <cps-menu
       #compressedMenu
       [items]="items"
       [compressed]="true"
-      [withArrow]="false">
+      [withArrow]="false"
+      (menuShown)="isCompressedMenuOpen = true"
+      (menuHidden)="isCompressedMenuOpen = false">
     </cps-menu>
     <cps-button
       label="Compressed menu"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isCompressedMenuOpen"
       (clicked)="compressedMenu.toggle($event)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Compressed menu without icons"
+    [htmlCode]="examples.compressedMenuNoIcons.html"
+    [tsCode]="examples.compressedMenuNoIcons.ts">
     <cps-menu
       #compressedMenuNoIcons
       [items]="itemsWithoutIcons"
       [compressed]="true"
-      [withArrow]="false">
+      [withArrow]="false"
+      (menuShown)="isCompressedMenuNoIconsOpen = true"
+      (menuHidden)="isCompressedMenuNoIconsOpen = false">
     </cps-menu>
     <cps-button
       label="Compressed menu without icons"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isCompressedMenuNoIconsOpen"
       (clicked)="compressedMenuNoIcons.toggle($event)">
     </cps-button>
+  </app-code-example>
 
-    <cps-menu #arbitraryMenu>
+  <app-code-example
+    label="Menu with arbitrary content"
+    [htmlCode]="examples.arbitraryContentMenu.html"
+    [tsCode]="examples.arbitraryContentMenu.ts">
+    <cps-menu
+      #arbitraryMenu
+      (menuShown)="isArbitraryMenuOpen = true"
+      (menuHidden)="isArbitraryMenuOpen = false">
       <div class="my-menu-content">
         <span>Provide your own content here</span>
         <img
@@ -60,28 +118,74 @@
     </cps-menu>
     <cps-button
       label="Menu with arbitrary content"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isArbitraryMenuOpen"
       (clicked)="arbitraryMenu.toggle($event)">
     </cps-button>
+  </app-code-example>
 
-    <cps-menu #focusMenu [items]="items" [focusOnShow]="false"></cps-menu>
+  <app-code-example
+    label="Menu that opens on focus"
+    [htmlCode]="examples.openOnFocusMenu.html"
+    [tsCode]="examples.openOnFocusMenu.ts">
+    <cps-menu
+      #focusMenu
+      [items]="items"
+      [focusOnShow]="false"
+      (menuShown)="isFocusMenuOpen = true"
+      (menuHidden)="isFocusMenuOpen = false">
+    </cps-menu>
     <cps-button
+      data-testid="focus-menu-toggle"
       label="Menu that opens on focus"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isFocusMenuOpen"
       (focusin)="focusMenu.show(null, $event.target)"
       (focusout)="onFocusMenuFocusOut($event, focusMenu)">
     </cps-button>
+  </app-code-example>
 
+  <app-code-example
+    label="Menu that opens on hover"
+    [htmlCode]="examples.openOnHoverMenu.html"
+    [tsCode]="examples.openOnHoverMenu.ts">
     <cps-menu
       #hoverMenu
       [items]="items"
       [focusOnShow]="false"
+      (menuShown)="isHoverMenuOpen = true"
+      (menuHidden)="isHoverMenuOpen = false"
       (containerMouseLeave)="onMenuLeave($event, hoverMenu)">
     </cps-menu>
     <cps-button
+      data-testid="hover-menu-toggle"
       label="Menu that opens on hover"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isHoverMenuOpen"
       (mouseenter)="hoverMenu.show($event)"
       (mouseleave)="onMenuLeave($event, hoverMenu)"
       (focusin)="hoverMenu.show(null, $event.target)"
       (focusout)="onMenuLeave($event, hoverMenu)">
     </cps-button>
-  </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Menu with custom container class"
+    [htmlCode]="examples.customClassMenu.html"
+    [tsCode]="examples.customClassMenu.ts">
+    <cps-menu
+      #customClassMenu
+      [items]="items"
+      containerClass="menu-page-custom-container"
+      (menuShown)="isCustomClassMenuOpen = true"
+      (menuHidden)="isCustomClassMenuOpen = false">
+    </cps-menu>
+    <cps-button
+      data-testid="custom-class-menu-toggle"
+      label="Menu with custom container class"
+      ariaHaspopup="menu"
+      [ariaExpanded]="isCustomClassMenuOpen"
+      (clicked)="customClassMenu.toggle($event)">
+    </cps-button>
+  </app-code-example>
 </app-component-docs-viewer>

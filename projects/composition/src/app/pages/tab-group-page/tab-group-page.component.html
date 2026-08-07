@@ -13,110 +13,120 @@
       }
     </div>
   </ng-template>
-  <div class="tabs-elems-group">
-    <div class="tabs-elems-group-title">
-      Center-aligned tabs with slide transition, badges and disabled last tab
+  <app-code-example
+    label="Center-aligned tabs with slide transition, badges and disabled last tab"
+    [htmlCode]="examples.centerAlignedTabs.html"
+    [tsCode]="examples.centerAlignedTabs.ts">
+    <div class="tabs-elems-group">
+      <cps-tab-group
+        tabsBackground="bg-light"
+        alignment="center"
+        class="tab-example--center-aligned"
+        [selectedIndex]="selectedTabIndex"
+        (afterTabChanged)="changeTab($event)">
+        @for (tab of centerAlignedTabs; track tab.label) {
+          <cps-tab
+            [label]="tab.label"
+            [badgeValue]="tab.badgeValue"
+            [badgeTooltip]="tab.badgeTooltip"
+            [disabled]="tab.disabled">
+            <ng-container
+              [ngTemplateOutlet]="tabContent"
+              [ngTemplateOutletContext]="{
+                showCheckbox: true,
+                tabLabel: tab.label
+              }"></ng-container>
+          </cps-tab>
+        }
+      </cps-tab-group>
     </div>
-    <cps-tab-group
-      tabsBackground="bg-light"
-      alignment="center"
-      class="tab-example--center-aligned"
-      [selectedIndex]="selectedTabIndex"
-      (afterTabChanged)="changeTab($event)">
-      @for (tab of centerAlignedTabs; track tab.label) {
-        <cps-tab
-          [label]="tab.label"
-          [badgeValue]="tab.badgeValue"
-          [badgeTooltip]="tab.badgeTooltip"
-          [disabled]="tab.disabled">
-          <ng-container
-            [ngTemplateOutlet]="tabContent"
-            [ngTemplateOutletContext]="{
-              showCheckbox: true,
-              tabLabel: tab.label
-            }"></ng-container>
-        </cps-tab>
-      }
-    </cps-tab-group>
-  </div>
+  </app-code-example>
 
-  <div class="tabs-elems-group">
-    <div class="tabs-elems-group-title">
-      Left-aligned tabs with fade transition and tooltips
+  <app-code-example
+    label="Left-aligned tabs with fade transition and tooltips"
+    [htmlCode]="examples.leftAlignedTabs.html"
+    [tsCode]="examples.leftAlignedTabs.ts">
+    <div class="tabs-elems-group">
+      <cps-tab-group
+        class="tab-example--left-aligned"
+        animationType="fade"
+        tabsBackground="bg-light"
+        (afterTabChanged)="changeTab($event)">
+        @for (tab of leftAlignedTabs; track tab.label) {
+          <cps-tab [label]="tab.label" [tooltipText]="tab.tooltipText">
+            <ng-container
+              [ngTemplateOutlet]="tabContent"
+              [ngTemplateOutletContext]="{ tabLabel: tab.label }">
+            </ng-container>
+          </cps-tab>
+        }
+      </cps-tab-group>
     </div>
-    <cps-tab-group
-      class="tab-example--left-aligned"
-      animationType="fade"
-      tabsBackground="bg-light"
-      (afterTabChanged)="changeTab($event)">
-      @for (tab of leftAlignedTabs; track tab.label) {
-        <cps-tab [label]="tab.label" [tooltipText]="tab.tooltipText">
-          <ng-container
-            [ngTemplateOutlet]="tabContent"
-            [ngTemplateOutletContext]="{ tabLabel: tab.label }">
-          </ng-container>
-        </cps-tab>
-      }
-    </cps-tab-group>
-  </div>
+  </app-code-example>
 
-  <div class="tabs-elems-group">
-    <div class="tabs-elems-group-title">
-      Right-aligned tabs with icons and without auto activation
+  <app-code-example
+    label="Right-aligned tabs with icons and without auto activation"
+    [htmlCode]="examples.rightAlignedTabs.html"
+    [tsCode]="examples.rightAlignedTabs.ts">
+    <div class="tabs-elems-group">
+      <cps-tab-group
+        alignment="right"
+        [autoActivation]="false"
+        (afterTabChanged)="changeTab($event)"
+        tabsBackground="bg-light">
+        @for (tab of rightAlignedTabs; track tab.label) {
+          <cps-tab [label]="tab.label" [icon]="tab.icon" [attr.id]="tab.id">
+            <ng-container
+              [ngTemplateOutlet]="tabContent"
+              [ngTemplateOutletContext]="{ tabLabel: tab.label }">
+            </ng-container>
+          </cps-tab>
+        }
+      </cps-tab-group>
     </div>
-    <cps-tab-group
-      alignment="right"
-      [autoActivation]="false"
-      (afterTabChanged)="changeTab($event)"
-      tabsBackground="bg-light">
-      @for (tab of rightAlignedTabs; track tab.label) {
-        <cps-tab [label]="tab.label" [icon]="tab.icon" [attr.id]="tab.id">
-          <ng-container
-            [ngTemplateOutlet]="tabContent"
-            [ngTemplateOutletContext]="{ tabLabel: tab.label }">
-          </ng-container>
-        </cps-tab>
-      }
-    </cps-tab-group>
-  </div>
+  </app-code-example>
 
-  <div class="tabs-elems-group">
-    <div class="tabs-elems-group-title">
-      Stretched tabs with slide transition
+  <app-code-example
+    label="Stretched tabs with slide transition"
+    [htmlCode]="examples.stretchedTabs.html"
+    [tsCode]="examples.stretchedTabs.ts">
+    <div class="tabs-elems-group">
+      <cps-tab-group
+        tabsBackground="bg-light"
+        [stretched]="true"
+        (afterTabChanged)="changeTab($event)">
+        @for (tab of stretchedTabs; track tab.label) {
+          <cps-tab [label]="tab.label">
+            <ng-container
+              [ngTemplateOutlet]="tabContent"
+              [ngTemplateOutletContext]="{ tabLabel: tab.label }">
+            </ng-container>
+          </cps-tab>
+        }
+      </cps-tab-group>
     </div>
-    <cps-tab-group
-      tabsBackground="bg-light"
-      [stretched]="true"
-      (afterTabChanged)="changeTab($event)">
-      @for (tab of stretchedTabs; track tab.label) {
-        <cps-tab [label]="tab.label">
-          <ng-container
-            [ngTemplateOutlet]="tabContent"
-            [ngTemplateOutletContext]="{ tabLabel: tab.label }">
-          </ng-container>
-        </cps-tab>
-      }
-    </cps-tab-group>
-  </div>
+  </app-code-example>
 
-  <div class="tabs-elems-group">
-    <div class="tabs-elems-group-title">
-      Tabs styled as subtabs out of the box
+  <app-code-example
+    label="Tabs styled as subtabs"
+    [htmlCode]="examples.subTabs.html"
+    [tsCode]="examples.subTabs.ts">
+    <div class="tabs-elems-group">
+      <cps-tab-group
+        class="tab-example--left-aligned"
+        [isSubTabs]="true"
+        tabsBackground="bg-light"
+        animationType="fade"
+        (afterTabChanged)="changeTab($event)">
+        @for (tab of subTabs; track tab.label) {
+          <cps-tab [label]="tab.label" [icon]="tab.icon" [attr.id]="tab.id">
+            <ng-container
+              [ngTemplateOutlet]="tabContent"
+              [ngTemplateOutletContext]="{ tabLabel: tab.label }">
+            </ng-container>
+          </cps-tab>
+        }
+      </cps-tab-group>
     </div>
-    <cps-tab-group
-      class="tab-example--left-aligned"
-      [isSubTabs]="true"
-      tabsBackground="bg-light"
-      animationType="fade"
-      (afterTabChanged)="changeTab($event)">
-      @for (tab of subTabs; track tab.label) {
-        <cps-tab [label]="tab.label" [icon]="tab.icon" [attr.id]="tab.id">
-          <ng-container
-            [ngTemplateOutlet]="tabContent"
-            [ngTemplateOutletContext]="{ tabLabel: tab.label }">
-          </ng-container>
-        </cps-tab>
-      }
-    </cps-tab-group>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

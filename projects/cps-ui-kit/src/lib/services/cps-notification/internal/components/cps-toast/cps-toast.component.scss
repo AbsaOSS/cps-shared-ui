@@ -1,14 +1,14 @@
 :host {
   .cps-toast-content {
     color: var(--cps-color-text-darkest);
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
+    box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.3);
     display: flex;
     overflow: hidden;
 
     &.success {
       background-color: var(--cps-color-success-bg);
-      border: 2px solid var(--cps-color-success);
+      border: 0.125rem solid var(--cps-color-success);
 
       .cps-toast-icon.filled {
         background-color: var(--cps-color-success);
@@ -17,7 +17,7 @@
 
     &.error {
       background-color: var(--cps-color-error-bg);
-      border: 2px solid var(--cps-color-error);
+      border: 0.125rem solid var(--cps-color-error);
 
       .cps-toast-icon.filled {
         background-color: var(--cps-color-error);
@@ -26,7 +26,7 @@
 
     &.warning {
       background-color: var(--cps-color-warn-bg);
-      border: 2px solid var(--cps-color-warn);
+      border: 0.125rem solid var(--cps-color-warn);
 
       .cps-toast-icon.filled {
         background-color: var(--cps-color-warn);
@@ -35,7 +35,7 @@
 
     &.info {
       background-color: var(--cps-color-info-bg);
-      border: 2px solid var(--cps-color-info);
+      border: 0.125rem solid var(--cps-color-info);
 
       .cps-toast-icon.filled {
         background-color: var(--cps-color-info);
@@ -46,14 +46,14 @@
   .cps-toast-icon {
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 1.25rem;
   }
 
   .cps-toast-message {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 0 16px;
+    padding: 0 1rem;
     font-weight: 600;
     font-family: 'Source Sans Pro', sans-serif;
     cursor: default;
@@ -61,7 +61,7 @@
     & .cps-toast-message-details {
       white-space: pre-line;
       margin-top: 0;
-      font-size: 14px;
+      font-size: 0.875rem;
     }
   }
 
@@ -71,7 +71,7 @@
     align-items: center;
 
     & .cps-toast-close-button {
-      margin: 0 8px;
+      margin: 0 0.5rem;
     }
   }
 }

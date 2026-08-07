@@ -1,8 +1,10 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
+  effect,
   EventEmitter,
+  inject,
   Inject,
   Input,
   OnChanges,
@@ -11,18 +13,22 @@ import {
   Output,
   Renderer2,
   Self,
-  PLATFORM_ID,
   type SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
-import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
   CpsTooltipPosition
 } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import {
+  generateUniqueId,
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsButtonToggleOption is used to define the options of the CpsButtonToggleComponent.
@@ -94,6 +100,13 @@ export class CpsButtonToggleComponent
   @Input() mandatory = true;
 
   /**
+   * When multiple is false, and mandatory is true, uses native radio group behavior:
+   * arrow-key navigation between options. Has no effect when multiple is true or mandatory is false.
+   * @group Props
+   */
+  @Input() radioNavigation = true;
+
+  /**
    * Determines whether all buttons should have equal widths.
    * @group Props
    */
@@ -158,48 +171,45 @@ export class CpsButtonToggleComponent
   @Output() valueChanged = new EventEmitter<any>();
 
   largestButtonWidthRem = 0;
+  readonly groupName = generateUniqueId('cps-btn-toggle');
 
-  private _rootFontSizePx = 16;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
 
   constructor(
     @Self() @Optional() private _control: NgControl,
     @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object,
     private renderer: Renderer2,
-    private cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
+
+    effect(() => {
+      const rootFontSizePx = this._cpsRootFontSizeService?.fontSize() || 16;
+      if (this.document?.fonts?.ready) {
+        this.document.fonts.ready.then(() => {
+          this._setEqualWidths(this._cpsRootFontSizeService?.fontSize() || 16);
+          this._cdr.markForCheck();
+        });
+      } else {
+        this._setEqualWidths(rootFontSizePx);
+      }
+    });
   }
 
   ngOnInit() {
     if (this.multiple && !this._value) {
       this._value = [];
     }
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
-    if (this.document?.fonts?.ready) {
-      this.document.fonts.ready.then(() => {
-        this._setEqualWidths();
-        this.cdr.markForCheck();
-      });
-    } else {
-      this._setEqualWidths();
-    }
+    logMissingAriaLabelError(
+      'CpsButtonToggleComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsButtonToggleComponent: unlabeled button toggle component must have an ariaLabel for accessibility.'
-        );
-      }
-    }
     if (changes.options) {
       const hasInaccessibleOption = this.options.some(
         (opt) => !opt.label?.trim() && !opt.ariaLabel?.trim()
@@ -210,6 +220,11 @@ export class CpsButtonToggleComponent
         );
       }
     }
+    logMissingAriaLabelError(
+      'CpsButtonToggleComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -264,13 +279,18 @@ export class CpsButtonToggleComponent
     this._updateValue(isSame ? undefined : val);
   }
 
+  onRadioChange(val: any): void {
+    if (this.disabled) return;
+    this._updateValue(val);
+  }
+
   private _updateValue(value: any) {
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);
   }
 
-  private _setEqualWidths() {
+  private _setEqualWidths(rootFontSizePx: number) {
     if (!this.equalWidths) return;
 
     const hiddenSpan = this.renderer.createElement('span');
@@ -292,7 +312,7 @@ export class CpsButtonToggleComponent
       const label = opt.label || '';
       this.renderer.setProperty(hiddenSpan, 'textContent', label);
 
-      const textWidthRem = this._pxToRem(hiddenSpan.offsetWidth || 0);
+      const textWidthRem = (hiddenSpan.offsetWidth || 0) / rootFontSizePx;
       let totalWidthRem = textWidthRem + 1.625; // padding: 2×0.75rem + borders: 2×0.0625rem = 1.625rem
       if (opt.icon) {
         totalWidthRem += 1; // icon width: 1rem (cps-icon 'small' size)
@@ -308,9 +328,5 @@ export class CpsButtonToggleComponent
     });
 
     this.renderer.removeChild(this.document.body, hiddenSpan);
-  }
-
-  private _pxToRem(px: number): number {
-    return px / this._rootFontSizePx;
   }
 }

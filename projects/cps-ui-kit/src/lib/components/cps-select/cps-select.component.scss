@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $color-error: var(--cps-state-error);
 $error-background: #fef3f2;
@@ -5,13 +7,14 @@ $select-placeholder-color: var(--cps-color-text-mild);
 $select-background-disabled: var(--cps-color-bg-disabled);
 $select-label-color: var(--cps-color-text-dark);
 $select-label-disabled-color: var(--cps-color-text-mild);
-$select-items-disabled-color: var(--cps-color-text-light);
+$select-items-disabled-color: var(--cps-color-text-mild);
 $select-hint-color: var(--cps-color-text-mild);
 $option-hover-background: var(--cps-color-highlight-hover);
 $selected-option-background: var(--cps-color-highlight-selected);
 $option-highlight-background: var(--cps-color-highlight-active);
 $option-highlight-selected-background: var(--cps-color-highlight-selected-dark);
-$select-option-info-color: var(--cps-color-text-light);
+$select-option-info-color: var(--cps-color-text-medium);
+$select-selected-option-info-color: var(--cps-color-text-dark);
 $select-option-value-color: var(--cps-color-text-dark);
 $select-prefix-icon-color: var(--cps-color-text-dark);
 $select-border-color: var(--cps-color-line-light);
@@ -31,10 +34,12 @@ $hover-transition-duration: 0.2s;
 
     .cps-select-container {
       position: relative;
+      outline: none;
+
       .select-progress-bar {
         position: absolute;
-        bottom: 1px;
-        padding: 0 1px;
+        bottom: 0.0625rem;
+        padding: 0 0.0625rem;
       }
 
       &.borderless,
@@ -47,22 +52,43 @@ $hover-transition-duration: 0.2s;
       }
       &.underlined {
         .cps-select-box {
-          border-bottom: 1px solid $select-border-color !important;
+          border-bottom: 0.0625rem solid $select-border-color !important;
         }
       }
-    }
 
-    &.active {
-      .cps-select-box {
-        border: 1px solid $color-calm;
-        .cps-select-box-left {
-          .prefix-icon {
-            color: $color-calm;
+      &.focused {
+        .cps-select-box {
+          border: 0.0625rem solid $color-calm;
+          .cps-select-box-left {
+            .prefix-icon {
+              color: $color-calm;
+            }
           }
         }
-        .cps-select-box-chevron {
-          top: 22px;
-          transform: rotate(180deg);
+      }
+
+      &.active {
+        .cps-select-box {
+          border: 0.0625rem solid $color-calm;
+          .cps-select-box-left {
+            .prefix-icon {
+              color: $color-calm;
+            }
+          }
+          .cps-select-box-chevron {
+            top: 1.375rem;
+            cps-icon {
+              transform: rotate(180deg);
+            }
+          }
+        }
+      }
+
+      &:focus-visible {
+        @include focus-ring(0, -0.0625rem, 0.25rem);
+        &::before,
+        &::after {
+          pointer-events: none;
         }
       }
     }
@@ -75,17 +101,18 @@ $hover-transition-duration: 0.2s;
       font-size: 0.875rem;
       font-weight: 600;
       .cps-select-label-info-circle {
-        margin-left: 8px;
+        margin-left: 0.5rem;
         pointer-events: all;
       }
     }
 
     .persistent-clear,
     .cps-select-container.focused,
+    .cps-select-container.active,
     .cps-select-container:hover {
       .cps-select-box {
         .cps-select-box-icons {
-          .cps-select-box-clear-icon {
+          .cps-select-box-clear-icon:not(:focus):not(:hover) {
             cps-icon {
               opacity: 0.5;
             }
@@ -97,17 +124,18 @@ $hover-transition-duration: 0.2s;
     .cps-select-box {
       overflow: hidden;
       justify-content: space-between;
-      min-height: 38px;
+      min-height: 2.375rem;
       width: 100%;
       cursor: pointer;
       background: white;
       font-size: 1rem;
       outline: none;
-      padding: 0 12px;
-      border-radius: 4px;
+      padding-left: 0.75rem;
+      padding-right: 0.5rem;
+      border-radius: 0.25rem;
       align-items: center;
       display: flex;
-      border: 1px solid $select-border-color;
+      border: 0.0625rem solid $select-border-color;
       transition-duration: $hover-transition-duration;
 
       &-placeholder {
@@ -116,19 +144,19 @@ $hover-transition-duration: 0.2s;
       }
 
       &-items {
-        margin-top: 3px;
-        margin-bottom: 3px;
+        margin-top: 0.1875rem;
+        margin-bottom: 0.1875rem;
         .text-group,
         .single-item {
           color: $select-option-value-color;
-          padding-top: 3px;
-          padding-bottom: 3px;
+          padding-top: 0.1875rem;
+          padding-bottom: 0.1875rem;
         }
         .chips-group {
           cps-chip {
-            padding-bottom: 3px;
-            padding-top: 3px;
-            padding-right: 4px;
+            padding-bottom: 0.1875rem;
+            padding-top: 0.1875rem;
+            padding-right: 0.25rem;
           }
         }
         .text-group-item {
@@ -146,7 +174,7 @@ $hover-transition-duration: 0.2s;
       }
 
       &:hover {
-        border: 1px solid $color-calm;
+        border: 0.0625rem solid $color-calm;
         .cps-select-box-left {
           .prefix-icon {
             color: $color-calm;
@@ -159,20 +187,41 @@ $hover-transition-duration: 0.2s;
 
         .cps-select-box-clear-icon {
           display: flex;
+          padding: 0.25rem;
           color: $color-error;
-          margin-left: 8px;
+          margin-left: 0.25rem;
+          cursor: pointer;
+          &:focus {
+            outline: none;
+          }
+          &:hover,
+          &:focus {
+            cps-icon {
+              opacity: 1;
+            }
+          }
+          &:focus-visible {
+            @include focus-ring(-0.125rem, -0.25rem, 50%);
+          }
           cps-icon {
             opacity: 0;
             transition-duration: $hover-transition-duration;
-            &:hover {
-              opacity: 1 !important;
-            }
           }
         }
         .cps-select-box-chevron {
           display: flex;
-          margin-left: 8px;
+          padding: 0.25rem;
           transition-duration: $hover-transition-duration;
+          cursor: pointer;
+          cps-icon {
+            transition: transform $hover-transition-duration;
+          }
+          &:focus {
+            outline: none;
+          }
+          &:focus-visible {
+            @include focus-ring(-0.125rem, -0.25rem, 0.375rem);
+          }
         }
       }
     }
@@ -223,11 +272,11 @@ $hover-transition-duration: 0.2s;
 .cps-select-options {
   background: white;
   overflow-x: hidden;
-  max-height: 242px;
+  max-height: 15.125rem;
   overflow-y: auto;
 
   .cps-select-options-option {
-    padding: 12px;
+    padding: 0.75rem;
     justify-content: space-between;
     display: flex;
     cursor: pointer;
@@ -243,7 +292,7 @@ $hover-transition-duration: 0.2s;
     &-left {
       display: flex;
       align-items: center;
-      margin-right: 8px;
+      margin-right: 0.5rem;
     }
 
     &-right {
@@ -251,15 +300,15 @@ $hover-transition-duration: 0.2s;
       display: flex;
       align-items: center;
       &-icon {
-        margin-left: 8px;
+        margin-left: 0.5rem;
       }
     }
 
     &-check {
       background-color: transparent;
       border: 0;
-      width: 16px;
-      height: 16px;
+      width: 1rem;
+      height: 1rem;
       cursor: pointer;
       display: inline-block;
       vertical-align: middle;
@@ -269,21 +318,21 @@ $hover-transition-duration: 0.2s;
       transition:
         border-color 90ms cubic-bezier(0, 0, 0.2, 0.1),
         background-color 90ms cubic-bezier(0, 0, 0.2, 0.1);
-      margin-right: 8px;
+      margin-right: 0.5rem;
       opacity: 0;
       &::after {
         color: $color-calm;
-        top: 4px;
-        left: 1px;
-        width: 8px;
-        height: 3px;
-        border-left: 2px solid currentColor;
+        top: 0.25rem;
+        left: 0.0625rem;
+        width: 0.5rem;
+        height: 0.1875rem;
+        border-left: 0.125rem solid currentColor;
         transform: rotate(-45deg);
         opacity: 1;
         box-sizing: content-box;
         position: absolute;
         content: '';
-        border-bottom: 2px solid currentColor;
+        border-bottom: 0.125rem solid currentColor;
         transition: opacity 90ms cubic-bezier(0, 0, 0.2, 0.1);
       }
     }
@@ -299,6 +348,9 @@ $hover-transition-duration: 0.2s;
     }
     &.selected {
       background: $selected-option-background;
+      .cps-select-options-option-right {
+        color: $select-selected-option-info-color;
+      }
     }
     &.highlighten {
       background: $option-highlight-background;
@@ -309,7 +361,7 @@ $hover-transition-duration: 0.2s;
   }
 
   .select-all-option {
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 0.0625rem solid lightgrey;
     font-weight: 600;
   }
 

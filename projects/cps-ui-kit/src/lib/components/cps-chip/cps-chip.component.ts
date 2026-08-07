@@ -5,7 +5,10 @@ import {
   OnChanges,
   Output
 } from '@angular/core';
-import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type IconType
+} from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 
 /**

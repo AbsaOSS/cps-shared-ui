@@ -1,4 +1,7 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <cps-paginator [first]="0" [rows]="10" [totalRecords]="120"> </cps-paginator>
+  <app-code-example label="Basic usage" [htmlCode]="examples.basicUsage.html">
+    <cps-paginator [first]="0" [rows]="10" [totalRecords]="120">
+    </cps-paginator>
+  </app-code-example>
 </app-component-docs-viewer>

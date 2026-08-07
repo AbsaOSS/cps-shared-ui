@@ -181,7 +181,7 @@ describe('CpsCheckboxComponent', () => {
       fixture.componentRef.setInput('label', '');
       fixture.detectChanges();
       expect(consoleSpy).toHaveBeenCalledWith(
-        'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
+        'CpsCheckboxComponent: unlabeled component must have an ariaLabel for accessibility.'
       );
       consoleSpy.mockRestore();
     });

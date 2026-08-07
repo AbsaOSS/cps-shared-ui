@@ -1,11 +1,12 @@
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  computed,
   ElementRef,
   EventEmitter,
-  Inject,
+  inject,
   Input,
   OnChanges,
   OnDestroy,
@@ -14,7 +15,6 @@ import {
   Output,
   Self,
   ViewChild,
-  PLATFORM_ID,
   type SimpleChanges
 } from '@angular/core';
 import {
@@ -24,11 +24,12 @@ import {
   Validators
 } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
-import { convertSize } from '../../utils/internal/size-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
-  getComputedLabel
-} from '../../utils/internal/accessibility-utils';
+  logMissingAriaLabelError
+} from '../../utils/internal/accessibility-utils/accessibility-utils';
 import {
   CpsIconComponent,
   IconType,
@@ -37,8 +38,8 @@ import {
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { LabelByValuePipe } from '../../pipes/internal/label-by-value.pipe';
-import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected.pipe';
+import { LabelByValuePipe } from '../../pipes/internal/label-by-value/label-by-value.pipe';
+import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { getOptionProp, OptionKey } from '../../utils/internal/option-utils';
@@ -48,7 +49,6 @@ import {
 } from '../cps-menu/cps-menu.component';
 import { Scroller, ScrollerModule } from 'primeng/scroller';
 
-const DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX = 44;
 const VIRTUAL_SCROLL_ITEM_SIZE_REM = 2.75;
 const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
 
@@ -57,9 +57,7 @@ const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
  * @group Types
  */
 export type CpsAutocompleteAppearanceType =
-  | 'outlined'
-  | 'underlined'
-  | 'borderless';
+  'outlined' | 'underlined' | 'borderless';
 
 /**
  * CpsAutocompleteComponent is an input component that provides real-time suggestions when being typed.
@@ -422,18 +420,25 @@ export class CpsAutocompleteComponent
   cvtWidth = '';
   isOpened = false;
   isActive = false;
+  isKeyboardFocused = false;
   inputText = '';
   inputTextDebounced = '';
   filteredOptions: any[] = [];
   backspaceClickedOnce = false;
   activeSingle = false;
   optionHighlightedIndex = -1;
+  isArrowNavigating = false;
 
-  virtualScrollItemSizePx = DEFAULT_VIRTUAL_SCROLL_ITEM_SIZE_PX;
+  readonly virtualScrollItemSizePx = computed(
+    () =>
+      (this._cpsRootFontSizeService?.fontSize() || 16) *
+      VIRTUAL_SCROLL_ITEM_SIZE_REM
+  );
+
   virtualListHeightRem =
     VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
 
-  autocompleteBoxWidthRem = 0;
+  autocompleteBoxWidthPx = 0;
   resizeObserver: ResizeObserver;
 
   isTimePickerField = false;
@@ -443,22 +448,31 @@ export class CpsAutocompleteComponent
     'cps-autocomplete-option-select-all'
   );
 
+  readonly hintId = generateUniqueId('cps-autocomplete-hint');
+  readonly errorId = generateUniqueId('cps-autocomplete-error');
+
+  get describedBy(): string | null {
+    if (this.hideDetails) return null;
+    if (this.error || this.externalError) return this.errorId;
+    if (this.hint) return this.hintId;
+    return null;
+  }
+
   private readonly _optionIdPrefix = generateUniqueId(
     'cps-autocomplete-option'
   );
 
-  private _rootFontSizePx = 16;
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
 
   private _inputChangeSubject$ = new Subject<string>();
   private _destroy$ = new Subject<void>();
 
+  private _mouseActivated = false;
   private _options: any[] = [];
   private _optionIds = new WeakMap<object, string>();
 
   constructor(
     @Self() @Optional() private _control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: object,
     private cdRef: ChangeDetectorRef,
     private _labelByValue: LabelByValuePipe
   ) {
@@ -468,21 +482,12 @@ export class CpsAutocompleteComponent
     this.resizeObserver = new ResizeObserver((entries) => {
       entries.forEach((entry) => {
         if (entry?.target)
-          this.autocompleteBoxWidthRem = this._pxToRem(
-            (entry.target as any).offsetWidth
-          );
+          this.autocompleteBoxWidthPx = (entry.target as any).offsetWidth;
       });
     });
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
-    this.virtualScrollItemSizePx =
-      this._rootFontSizePx * VIRTUAL_SCROLL_ITEM_SIZE_REM;
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM * VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS;
     this.cvtWidth = convertSize(this.width);
@@ -510,9 +515,18 @@ export class CpsAutocompleteComponent
         this.inputTextDebounced = this.inputText;
         this.inputChanged.emit(val);
       });
+
+    logMissingAriaLabelError(
+      'CpsAutocompleteComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes.width) {
+      this.cvtWidth = convertSize(this.width);
+    }
     if (changes.options) {
       this.filteredOptions = this.options;
       this.recalcVirtualListHeight();
@@ -526,13 +540,12 @@ export class CpsAutocompleteComponent
     ) {
       this._toggleOptions(true);
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsAutocompleteComponent: unlabeled autocomplete component must have an ariaLabel for accessibility.'
-        );
-      }
-    }
+
+    logMissingAriaLabelError(
+      'CpsAutocompleteComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   ngAfterViewInit(): void {
@@ -613,6 +626,8 @@ export class CpsAutocompleteComponent
   }
 
   onOptionClick(option: any) {
+    this.isKeyboardFocused = false;
+    this._mouseActivated = true;
     this._clickOption(option);
   }
 
@@ -698,10 +713,9 @@ export class CpsAutocompleteComponent
     event?.stopPropagation();
     event?.preventDefault();
 
-    if (
-      (!this.multiple && !this.isEmptyValue()) ||
-      (this.multiple && this.value?.length > 0)
-    ) {
+    const hadValue = this.hasSelectedValue();
+
+    if (hadValue) {
       if (this.openOnClear) {
         this._toggleOptions(true);
       }
@@ -710,9 +724,15 @@ export class CpsAutocompleteComponent
     }
     this.clearInput();
     this._dehighlightOption();
-    setTimeout(() => {
-      this.focusInput();
-    }, 0);
+    if (hadValue) {
+      this._mouseActivated = !(event instanceof KeyboardEvent);
+      setTimeout(() => {
+        this.focusInput();
+      }, 0);
+    }
+    if (!(event instanceof KeyboardEvent)) {
+      this.isKeyboardFocused = false;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -720,6 +740,8 @@ export class CpsAutocompleteComponent
 
   onBlur() {
     this.isActive = false;
+    this.isKeyboardFocused = false;
+    this._mouseActivated = false;
 
     this._confirmInput(this.inputText || '', false);
 
@@ -734,7 +756,9 @@ export class CpsAutocompleteComponent
   onFocus() {
     if (!this.disabled) {
       this.isActive = true;
+      this.isKeyboardFocused = !this._mouseActivated;
     }
+    this._mouseActivated = false;
 
     if (!this.multiple) {
       this.activeSingle = true;
@@ -759,23 +783,33 @@ export class CpsAutocompleteComponent
     }
     this._confirmInput(this.inputText || '', false);
     this._closeAndClear();
-    this.onBlur();
   }
 
-  onBoxClick() {
+  onBoxClick(fromKeyboard = false) {
+    this._mouseActivated = !fromKeyboard;
+    if (!fromKeyboard) {
+      this.isKeyboardFocused = false;
+    }
+    const wasOpened = this.isOpened;
     if (!this.multiple) {
       this.activeSingle = true;
       if (!this.inputText) this.inputText = this._getValueLabel();
-      if (!this.isOpened) this.filteredOptions = this.options;
+      if (!wasOpened) this.filteredOptions = this.options;
     }
     this._dehighlightOption();
     setTimeout(() => {
-      this.focus();
+      this.focusInput();
+      if (!wasOpened) {
+        this._toggleOptions(true);
+      }
     });
   }
 
   onContainerKeyDown(event: any) {
     const code = event.keyCode;
+    if ([13, 38, 40].includes(code)) {
+      this.isKeyboardFocused = true;
+    }
     // enter
     if (code === 13) {
       let idx = this.optionHighlightedIndex;
@@ -837,12 +871,12 @@ export class CpsAutocompleteComponent
     if (this.isOpened) {
       this._closeAndClear();
     } else {
-      this.onBoxClick();
+      this.onBoxClick(event instanceof KeyboardEvent);
     }
   }
 
   focusInput() {
-    this.autocompleteContainer?.nativeElement?.querySelector('input')?.focus();
+    this.autocompleteInput?.nativeElement?.focus();
   }
 
   focus() {
@@ -856,14 +890,17 @@ export class CpsAutocompleteComponent
     this.virtualListHeightRem =
       VIRTUAL_SCROLL_ITEM_SIZE_REM *
       Math.min(currentLen, VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS);
+    this.virtualList?.setSpacerSize();
   }
 
-  isEmptyValue(): boolean {
+  hasSelectedValue(): boolean {
+    if (this.multiple) {
+      return this.value?.length > 0;
+    }
     return (
-      this.value === null ||
-      this.value === undefined ||
-      (typeof this.value === 'string' && this.value.trim() === '') ||
-      Number.isNaN(this.value)
+      this.value != null &&
+      !(typeof this.value === 'string' && this.value.trim() === '') &&
+      !Number.isNaN(this.value)
     );
   }
 
@@ -878,14 +915,6 @@ export class CpsAutocompleteComponent
 
   get isRequired(): boolean {
     return this._control?.control?.hasValidator(Validators.required) ?? false;
-  }
-
-  get computedLabel(): string | null {
-    return getComputedLabel({
-      label: this.ariaLabel || this.label,
-      error: this.error || this.externalError,
-      hideDetails: this.hideDetails
-    });
   }
 
   get isSelectAllVisible(): boolean {
@@ -959,6 +988,7 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       if (this.isOpened && this.filteredOptions.length > 0) {
         this.recalcVirtualListHeight();
+        this._syncHighlightToValue();
 
         const selected =
           this.optionsList.nativeElement.querySelector('.selected');
@@ -966,17 +996,10 @@ export class CpsAutocompleteComponent
           selected.scrollIntoView({
             behavior: 'instant',
             block: 'nearest',
-            inline: 'center'
+            inline: 'start'
           });
-        } else if (this.virtualScroll && !this.isEmptyValue()) {
-          let v: any;
-          if (this.multiple) {
-            if (this.value.length > 0) {
-              v = this.value[0];
-            }
-          } else v = this.value;
-          const idx = this.filteredOptions.findIndex((o) => isEqual(o, v));
-          if (idx >= 0) this.virtualList.scrollToIndex(idx);
+        } else if (this.virtualScroll && this.optionHighlightedIndex >= 0) {
+          this._scrollVirtualListToIndex(this.optionHighlightedIndex);
         }
       }
     });
@@ -1023,7 +1046,7 @@ export class CpsAutocompleteComponent
   }
 
   private _getValueLabel() {
-    return !this.isEmptyValue()
+    return this.hasSelectedValue()
       ? this.returnObject
         ? getOptionProp(this.value, this.optionLabel)
         : this._labelByValue.transform(
@@ -1043,6 +1066,19 @@ export class CpsAutocompleteComponent
 
   private _dehighlightOption() {
     this.optionHighlightedIndex = -1;
+    this.isArrowNavigating = false;
+  }
+
+  private _syncHighlightToValue(): void {
+    if (!this.hasSelectedValue()) return;
+
+    const firstSelected = this.multiple ? this.value[0] : this.value;
+    const idx = this.filteredOptions.findIndex((o) =>
+      isEqual(this.returnObject ? o : o[this.optionValue], firstSelected)
+    );
+    if (idx < 0) return;
+
+    this.optionHighlightedIndex = idx + (this.isSelectAllVisible ? 1 : 0);
   }
 
   private _getHighlightedOptionId(): string | null {
@@ -1072,7 +1108,7 @@ export class CpsAutocompleteComponent
     if (elRect.top < parentRect.top || elRect.bottom > parentRect.bottom) {
       el.scrollIntoView({
         block: 'nearest',
-        inline: 'center'
+        inline: 'nearest'
       });
     }
   }
@@ -1082,6 +1118,7 @@ export class CpsAutocompleteComponent
 
     if (this.optionsAriaSetSize < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(
       up,
       this.optionsAriaSetSize
@@ -1105,6 +1142,7 @@ export class CpsAutocompleteComponent
     const len = this.filteredOptions.length;
     if (len < 1) return;
 
+    this.isArrowNavigating = true;
     this.optionHighlightedIndex = this._nextHighlightIndex(up, len);
     this._syncVirtualHighlightedOptionIntoView();
   }
@@ -1136,8 +1174,8 @@ export class CpsAutocompleteComponent
       return;
     }
 
-    const itemTop = index * this.virtualScrollItemSizePx;
-    const itemBottom = itemTop + this.virtualScrollItemSizePx;
+    const itemTop = index * this.virtualScrollItemSizePx();
+    const itemBottom = itemTop + this.virtualScrollItemSizePx();
 
     const viewportTop = scrollerEl.scrollTop;
     const viewportBottom = viewportTop + scrollerEl.clientHeight;
@@ -1163,13 +1201,23 @@ export class CpsAutocompleteComponent
 
     searchVal = searchVal.toLowerCase();
     if (!searchVal) {
-      if (this.multiple) return;
-      // Only reset the value if the inputText was changed by the user
-      if (this.inputText !== this._getValueLabel()) {
-        this.updateValue(this._getEmptyValue());
+      if (this.multiple) {
+        this._closeAndClear();
+        return;
       }
-      this.cdRef.detectChanges();
-      this._closeAndClear();
+      const shouldUpdateValue =
+        this.activeSingle && this.inputText !== this._getValueLabel();
+      this.clearInput();
+      this._dehighlightOption();
+      if (shouldUpdateValue) {
+        setTimeout(() => {
+          this.updateValue(this._getEmptyValue());
+          if (needFocusInput) {
+            this.cdRef.detectChanges();
+            this.focusInput();
+          }
+        }, 0);
+      }
       return;
     }
 
@@ -1210,9 +1258,5 @@ export class CpsAutocompleteComponent
     setTimeout(() => {
       this.focusInput();
     }, 0);
-  }
-
-  private _pxToRem(px: number): number {
-    return px / this._rootFontSizePx;
   }
 }

@@ -2,16 +2,21 @@
   [componentData]="componentData"
   [services]="serviceData">
   <!-- Example of component's usage -->
-  <cps-scheduler
-    label="Frequency"
-    [disabled]="false"
-    [(cron)]="cronExpression"
-    (cronChange)="onCronExpressionChanged($event)"
-    [(timeZone)]="timeZone"
-    (timeZoneChange)="onTimezoneChanged($event)"
-    [showAdvanced]="true"
-    [use24HourTime]="true"
-    [showNotSet]="true"
-    [showTimeZone]="true"
-    infoTooltip="Provide frequency"></cps-scheduler>
+  <app-code-example
+    label="Basic usage"
+    [htmlCode]="examples.basicUsage.html"
+    [tsCode]="examples.basicUsage.ts">
+    <cps-scheduler
+      label="Frequency"
+      [disabled]="false"
+      [(cron)]="cronExpression"
+      (cronChange)="onCronExpressionChanged($event)"
+      [(timeZone)]="timeZone"
+      (timeZoneChange)="onTimezoneChanged($event)"
+      [showAdvanced]="true"
+      [use24HourTime]="true"
+      [showNotSet]="true"
+      [showTimeZone]="true"
+      infoTooltip="Provide frequency"></cps-scheduler>
+  </app-code-example>
 </app-component-docs-viewer>

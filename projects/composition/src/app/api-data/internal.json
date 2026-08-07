@@ -14,6 +14,14 @@
                         "description": "Label of the component."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for accessibility, takes precedence over label."
+                    },
+                    {
                         "name": "hint",
                         "optional": false,
                         "readonly": false,
@@ -122,7 +130,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "iconSizeType",
-                        "default": "18px",
+                        "default": "1.125rem",
                         "description": "Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'."
                     },
                     {

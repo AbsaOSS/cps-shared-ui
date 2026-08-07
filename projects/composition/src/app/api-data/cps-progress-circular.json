@@ -10,7 +10,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "number | string",
-                        "default": "40",
+                        "default": "2.5rem",
                         "description": "Diameter of the progress bar, of type number denoting pixels or string."
                     },
                     {
@@ -18,7 +18,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "number | string",
-                        "default": "4",
+                        "default": "0.25rem",
                         "description": "Thickness of the progress bar, of type number denoting pixels or string."
                     },
                     {
@@ -28,6 +28,14 @@
                         "type": "string",
                         "default": "calm",
                         "description": "Color of the progress bar."
+                    },
+                    {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading",
+                        "description": "Accessible label announced by screen readers to describe what is loading.\nFalls back to \"Loading\" when empty value is provided."
                     }
                 ]
             }

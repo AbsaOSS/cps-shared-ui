@@ -6,9 +6,10 @@ import {
   CpsTabChangeEvent,
   CpsCheckboxComponent
 } from 'cps-ui-kit';
-
 import ComponentData from '../../api-data/cps-tab-group.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { tabGroupExamples } from './tab-group-page.examples';
 
 @Component({
   imports: [
@@ -16,7 +17,8 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
     CpsTabGroupComponent,
     CpsTabComponent,
     CpsCheckboxComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-tab-group-page',
   templateUrl: './tab-group-page.component.html',
@@ -25,6 +27,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 })
 export class TabGroupPageComponent {
   componentData = ComponentData;
+  readonly examples = tabGroupExamples;
   selectedTabIndex = 1;
 
   changeTab({ newIndex }: CpsTabChangeEvent) {

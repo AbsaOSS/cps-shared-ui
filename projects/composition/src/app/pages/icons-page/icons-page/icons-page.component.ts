@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsIconComponent,
@@ -10,13 +10,16 @@ import {
 
 import ComponentData from '../../../api-data/cps-icon.json';
 import { ComponentDocsViewerComponent } from '../../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../../components/code-example/code-example.component';
+import { iconsExamples } from './icons-page.examples';
 
 @Component({
   imports: [
     CpsIconComponent,
     CpsInputComponent,
     FormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',
@@ -26,9 +29,9 @@ import { ComponentDocsViewerComponent } from '../../../components/component-docs
 export class IconsPageComponent implements OnInit {
   filteredIconsList: string[] = [];
   componentData = ComponentData;
+  readonly examples = iconsExamples;
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _notificationService: CpsNotificationService) {}
+  private _notificationService = inject(CpsNotificationService);
 
   ngOnInit() {
     this.filteredIconsList = iconNames;
@@ -49,7 +52,7 @@ export class IconsPageComponent implements OnInit {
     navigator.clipboard.writeText(name).then(
       () => {
         this._notificationService.success(
-          `Icon ${name} copied to clipboard`,
+          `Icon "${name}" copied to clipboard`,
           undefined,
           { position: CpsNotificationPosition.BOTTOM, timeout: 1000 }
         );

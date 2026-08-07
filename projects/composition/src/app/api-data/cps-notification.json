@@ -155,6 +155,22 @@
                         "type": "string",
                         "default": "undefined",
                         "description": "Max width of the notification of type number denoting pixels or string."
+                    },
+                    {
+                        "name": "politeError",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Whether to announce error notifications politely instead of assertively."
+                    },
+                    {
+                        "name": "politeWarning",
+                        "optional": true,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Whether to announce warning notifications politely instead of assertively."
                     }
                 ]
             }

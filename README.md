@@ -7,6 +7,10 @@ This repository consists of two projects:
 - `cps-ui-kit` - shared components library itself
 - `composition` - application for previewing compositions of components consumed from the library
 
+#### Accessibility
+
+This library's components and the composition app are tested for WCAG 2.2 AA compliance both with automated tooling ([axe-core](https://github.com/dequelabs/axe-core), via a Playwright test suite and pa11y-ci) and manual accessibility review. See [Run accessibility tests](#run-accessibility-tests) for how to run the automated checks yourself.
+
 #### Available components
 
 - Autocomplete
@@ -94,30 +98,67 @@ Execute `npm run generate-json-api` to generate documentation for any changes in
 
 See [playwright/README.md](playwright/README.md) for full details.
 
+#### Commit / PR title convention
+
+Versioning and the changelog are driven by [Conventional Commits](https://www.conventionalcommits.org/). Because PRs are **squash-merged**, the **PR title** becomes the single commit on `master`, so the PR title is what must follow the convention (enforced by the `Check PR Title` workflow):
+
+```text
+<type>(<scope>): <subject>
+```
+
+**Type** determines the version bump and changelog section:
+
+| Type                                                        | Bump      | Changelog                |
+| ----------------------------------------------------------- | --------- | ------------------------ |
+| `feat`                                                      | **minor** | Features                 |
+| `fix`                                                       | **patch** | Bug Fixes                |
+| `perf`                                                      | **patch** | Performance Improvements |
+| `feat!` / `fix!` / `BREAKING CHANGE:` footer                | **major** | Breaking section         |
+| `docs`, `style`, `refactor`, `test`, `build`, `ci`, `chore` | none      | hidden                   |
+
+**Scope** _(optional)_ is the component the change targets, written as the component name **without the `cps-` prefix**. It only affects how the entry is grouped/labelled in the changelog (this is a single package, so the scope does not change versioning). Use the component name from the list above:
+
+```text
+feat(chip): add dismissible variant
+fix(scheduler): correct keyboard navigation in month view
+fix(tree-table): resolve a11y issue with row focus
+```
+
+Omit the scope for cross-cutting changes that don't map to a single component (theming, shared utilities, build, repo-wide a11y sweeps):
+
+```text
+chore: bump X package to v1.2.3
+```
+
+> There is intentionally **no fixed list of allowed scopes**: scope is free-form so new components don't require a CI change. Keep names consistent with the component directory (minus `cps-`).
+
 #### Versioning and publishing
 
-The CI/CD pipeline automatically bumps the **minor version** and publishes the package to NPM on every push to `master` that either touches files under `projects/cps-ui-kit/**` or modifies `.github/workflows/cps-ui-kit-publish.yml`.
+Publishing is fully automated by [Release Please](https://github.com/googleapis/release-please). **You never edit the version in `package.json` by hand.**
 
-To publish a **major** or **patch** version instead:
+1. Merge feature/fix PRs to `master` as usual (squash merge, conventional title).
+2. Release Please keeps an open **"release" PR** up to date, accumulating the next version bump and the generated `CHANGELOG.md` from the merged commits.
+3. When you're ready to ship, **merge the release PR**. That tags the release and triggers the publish job, which builds and publishes to NPM via [trusted publishing (OIDC)](https://docs.npmjs.com/trusted-publishers), with no NPM token required.
 
-1. Manually update the version in [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) to the desired version.
-2. Include `#SkipVersionBump` in the commit message so the pipeline skips the automatic minor bump and publishes exactly the version you set.
-
-Example commit message for the **final/head commit in the push** (the workflow checks only `github.event.head_commit.message`, so `#SkipVersionBump` must appear in the last commit message; the token is matched against the full message, so placing it in the footer is preferred):
-
-```
-chore: release patch fix
-
-#SkipVersionBump
-```
-
-> **Note:** Without `#SkipVersionBump`, any manual version change in `package.json` will be overwritten by the automatic minor bump before publishing.
+The current released version is tracked in [`.release-please-manifest.json`](.release-please-manifest.json); Release Please updates both it and [`projects/cps-ui-kit/package.json`](projects/cps-ui-kit/package.json) inside the release PR.
 
 #### Run accessibility tests
 
-The project uses [pa11y-ci](https://github.com/pa11y/pa11y-ci) to test all components for WCAG 2.0 AA compliance.
+Accessibility is covered by two complementary tools, run separately and by different CI jobs:
 
-To run accessibility tests:
+**Playwright + axe-core** — scans individual `cps-ui-kit` components (in isolation) and the full `composition` app (pages, shell, interactive states) against WCAG 2.0/2.1/2.2 A/AA + best-practice rules.
+
+```bash
+npm run test:playwright:accessibility              # everything (cps-ui-kit + composition)
+npm run test:playwright:cps-ui-kit:accessibility    # cps-ui-kit components only
+npm run test:playwright:composition:accessibility   # composition app only
+```
+
+These run as part of the `playwright` CI job. See [playwright/README.md](playwright/README.md) for full details, including how component/page entries are structured.
+
+**pa11y-ci** — scans all 33 composition demo pages (one per component) against WCAG 2.0 AA, using axe-core as its underlying test engine. This is a separate, independent check from the Playwright one above and runs as its own `pa11y` CI job.
+
+To run it manually:
 
 1. Start the development server:
 
@@ -127,22 +168,20 @@ To run accessibility tests:
 
 2. In a separate terminal, run the accessibility tests:
    ```bash
-   npm run test:a11y
+   npm run test:pa11y
    ```
 
-Alternatively, use the combined script that starts the server and runs tests:
+Alternatively, use the combined script that starts the server and shows a colorful summary with statistics:
 
 ```bash
-npm run test:a11y:local
+npm run test:pa11y:local
 ```
 
-For a colorful summary with statistics:
+`npm run test:pa11y:summary` produces that same summary, but assumes the server is already running.
 
-```bash
-npm run test:a11y:summary
-```
+`npm run test:pa11y:ci` is the CI equivalent of `test:pa11y:local` — it starts the server and runs the plain `test:pa11y` reporter (full per-URL violation output) instead of the summary. This is what the `pa11y` CI job runs.
 
-This will display:
+The summary variants display:
 
 - Total URLs tested with pass/fail ratio
 - Total accessibility errors found
@@ -150,4 +189,4 @@ This will display:
 - Test engine (axe-core via pa11y-ci)
 - Top 10 components with the most issues
 
-The tests will check all 33 components for accessibility issues and report any violations found.
+Both `test:pa11y` and `test:pa11y:ci` fail (non-zero exit code) if any accessibility error is found on any page.

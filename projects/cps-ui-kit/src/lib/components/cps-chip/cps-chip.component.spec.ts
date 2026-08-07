@@ -39,7 +39,7 @@ describe('CpsChipComponent', () => {
     fixture.componentRef.setInput('closable', true);
     fixture.detectChanges();
     const closeIcon = fixture.nativeElement.querySelector(
-      '.cps-chip-close-icon'
+      '.cps-chip-close-btn'
     );
     expect(closeIcon).toBeTruthy();
   });
@@ -50,10 +50,18 @@ describe('CpsChipComponent', () => {
     fixture.componentRef.setInput('label', 'Test');
     fixture.detectChanges();
     const closeIcon = fixture.nativeElement.querySelector(
-      '.cps-chip-close-icon'
+      '.cps-chip-close-btn'
     );
     closeIcon.click();
     expect(component.closed.emit).toHaveBeenCalledWith('Test');
+  });
+
+  it('should set custom close button aria-label', () => {
+    fixture.componentRef.setInput('closable', true);
+    fixture.componentRef.setInput('closeButtonAriaLabel', 'Dismiss');
+    fixture.detectChanges();
+    const closeBtn = fixture.nativeElement.querySelector('.cps-chip-close-btn');
+    expect(closeBtn.getAttribute('aria-label')).toBe('Dismiss');
   });
 
   it('should stop propagation on close click', () => {

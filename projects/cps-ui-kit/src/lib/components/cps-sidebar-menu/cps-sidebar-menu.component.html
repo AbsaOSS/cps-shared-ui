@@ -11,6 +11,7 @@
         <a
           class="cps-sidebar-menu-item"
           tabindex="0"
+          role="link"
           [routerLink]="item.disabled ? null : [item.url]"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
@@ -18,11 +19,13 @@
           [class.disabled]="item.disabled"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
-          <cps-icon [icon]="item.icon" size="normal" aria-hidden="true">
-          </cps-icon>
+          <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
-            [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+            [@onExpand]="{
+              value: isExpanded ? 'expanded' : 'collapsed',
+              params: { transitionParams: resolvedTransitionParams }
+            }">
             {{ item.title }}
           </span>
         </a>
@@ -40,6 +43,7 @@
         </cps-menu>
         <button
           type="button"
+          (touchstart)="onMenuItemTouchStart()"
           (mouseenter)="showMenu($event, popupMenu)"
           (mouseleave)="leaveMenu($event, popupMenu)"
           (focusin)="showMenu($event, popupMenu, item)"
@@ -56,11 +60,13 @@
           [attr.aria-current]="isActive(item) ? 'page' : null"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
-          <cps-icon [icon]="item.icon" size="normal" aria-hidden="true">
-          </cps-icon>
+          <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
-            [@onExpand]="isExpanded ? 'expanded' : 'collapsed'">
+            [@onExpand]="{
+              value: isExpanded ? 'expanded' : 'collapsed',
+              params: { transitionParams: resolvedTransitionParams }
+            }">
             {{ item.title }}
           </span>
         </button>
@@ -68,11 +74,12 @@
     }
   </nav>
   <button
+    #expandAreaBtn
     type="button"
     class="expand-area"
     (click)="toggleSidebar()"
     [attr.aria-label]="isExpanded ? 'Collapse sidebar' : 'Expand sidebar'"
     [attr.aria-expanded]="isExpanded">
-    <cps-icon icon="menu-shrink" size="normal" aria-hidden="true"> </cps-icon>
+    <cps-icon icon="menu-shrink" size="normal"> </cps-icon>
   </button>
 </div>

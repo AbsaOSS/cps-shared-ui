@@ -1,33 +1,40 @@
 @use '../../../../../cps-ui-kit/styles/mixins' as *;
 
-.code-example {
-  margin-bottom: 1.5rem;
+:host {
+  display: block;
 
+  &:not(:last-child) {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.code-example {
   &__label {
+    font-size: 1.125rem;
     font-weight: 600;
     margin: 0 0 0.5rem;
     color: var(--cps-text-primary);
   }
 
   &__card {
-    border: 1px solid var(--cps-color-line);
-    border-radius: 8px;
+    border: 0.0625rem solid var(--cps-color-line);
+    border-radius: 0.5rem;
   }
 
   // We might want to replace with cps-tab-group
   &__tabbar {
     display: flex;
-    border-bottom: 1px solid var(--cps-color-line);
+    border-bottom: 0.0625rem solid var(--cps-color-line);
     background-color: var(--cps-surface-elevated);
-    border-radius: 7px 7px 0 0;
+    border-radius: 0.4375rem 0.4375rem 0 0;
     padding-left: 0.25rem; // prevent focus ring from being clipped on the left
   }
 
   &__tab {
     padding: 0.5rem 1rem;
     border: none;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    border-bottom: 0.125rem solid transparent;
+    margin-bottom: -0.0625rem;
     background: none;
     cursor: pointer;
     font-size: 0.8125rem;
@@ -54,18 +61,23 @@
 
   &__preview {
     padding: 1.5rem;
+    overflow-x: auto;
     background-color: var(--cps-background-color);
-    border-radius: 0 0 7px 7px;
+    border-radius: 0 0 0.4375rem 0.4375rem;
 
     &:focus-visible {
-      @include focus-ring();
+      outline: none;
+      box-shadow:
+        inset 0 0 0 0.0625rem var(--cps-color-calm),
+        inset 0 0 0 0.125rem var(--cps-background-color),
+        inset 0 0 0 0.1875rem var(--cps-color-calm-highlighten);
     }
   }
 
   &__code {
     position: relative;
     background-color: var(--cps-surface-muted);
-    border-radius: 0 0 7px 7px;
+    border-radius: 0 0 0.4375rem 0.4375rem;
 
     &:focus-visible {
       @include focus-ring();
@@ -77,12 +89,66 @@
       overflow-x: auto;
       font-size: 0.8125rem;
       line-height: 1.6;
+      border-radius: inherit;
+
+      &:focus-visible {
+        outline: none;
+        box-shadow:
+          inset 0 0 0 0.0625rem var(--cps-color-calm),
+          inset 0 0 0 0.125rem var(--cps-background-color),
+          inset 0 0 0 0.1875rem var(--cps-color-calm-highlighten);
+      }
     }
 
     code {
       font-family:
         ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
         'Liberation Mono', monospace;
+    }
+
+    // The atom-one-light/dark hljs themes (loaded globally at runtime) fail
+    // WCAG AA contrast for several syntax classes against our background.
+    // Darkened/lightened variants of the same hues restore compliance.
+    ::ng-deep {
+      .hljs-comment,
+      .hljs-quote {
+        color: #71727a;
+      }
+
+      .hljs-section,
+      .hljs-name,
+      .hljs-selector-tag,
+      .hljs-deletion,
+      .hljs-subst {
+        color: #da3020;
+      }
+
+      .hljs-literal {
+        color: #017bae;
+      }
+
+      .hljs-string,
+      .hljs-regexp,
+      .hljs-addition,
+      .hljs-attribute,
+      .hljs-meta .hljs-string {
+        color: #40803f;
+      }
+
+      .hljs-symbol,
+      .hljs-bullet,
+      .hljs-link,
+      .hljs-meta,
+      .hljs-selector-id,
+      .hljs-title {
+        color: #2d6af1;
+      }
+
+      .hljs-built_in,
+      .hljs-title.class_,
+      .hljs-class .hljs-title {
+        color: #9b6a01;
+      }
     }
   }
 
@@ -91,9 +157,45 @@
     top: 0.625rem;
     right: 0.75rem;
     z-index: 1;
+    background-color: var(--cps-surface-elevated);
+    border-radius: 0.25rem;
   }
 
   &__panel--hidden {
     display: none;
+  }
+
+  &--preview-outside {
+    display: flex;
+    flex-direction: column;
+
+    .code-example__card {
+      display: contents;
+    }
+
+    .code-example__preview {
+      order: 1;
+      padding: 0;
+      margin-bottom: 1.5rem;
+      background-color: transparent;
+      border-radius: 0;
+
+      &:empty {
+        margin-bottom: 0;
+      }
+    }
+
+    .code-example__tabbar {
+      order: 2;
+      border: 0.0625rem solid var(--cps-color-line);
+      border-radius: 0.4375rem 0.4375rem 0 0;
+    }
+
+    .code-example__code {
+      order: 3;
+      border: 0.0625rem solid var(--cps-color-line);
+      border-top: none;
+      border-radius: 0 0 0.4375rem 0.4375rem;
+    }
   }
 }

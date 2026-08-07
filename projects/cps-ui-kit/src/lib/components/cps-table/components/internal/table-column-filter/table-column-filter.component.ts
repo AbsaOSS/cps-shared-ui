@@ -202,6 +202,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   private _onFilterSub?: Subscription;
 
   isFilterApplied = false;
+  isMenuOpen = false;
 
   get isCategoryDropdownOpened() {
     if (this.type !== 'category') return false;
@@ -428,6 +429,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   onMenuShown() {
+    this.isMenuOpen = true;
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
     parent.classList.add(className);
@@ -438,6 +440,7 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   onMenuHidden() {
+    this.isMenuOpen = false;
     const parent = this.elementRef?.nativeElement?.parentElement;
     const className = 'cps-table-col-filter-menu-open';
     parent.classList.remove(className);

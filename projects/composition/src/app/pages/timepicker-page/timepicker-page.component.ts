@@ -9,8 +9,9 @@ import {
   Validators
 } from '@angular/forms';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
-
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ComponentData from '../../api-data/cps-timepicker.json';
+import { timepickerExamples } from './timepicker-page.examples';
 
 @Component({
   selector: 'app-timepicker-page',
@@ -19,13 +20,15 @@ import ComponentData from '../../api-data/cps-timepicker.json';
     CpsTimepickerComponent,
     ReactiveFormsModule,
     FormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   templateUrl: './timepicker-page.component.html',
   styleUrls: ['./timepicker-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class TimepickerPageComponent implements OnInit {
+  readonly examples = timepickerExamples;
   form!: UntypedFormGroup;
 
   syncVal: CpsTime = {

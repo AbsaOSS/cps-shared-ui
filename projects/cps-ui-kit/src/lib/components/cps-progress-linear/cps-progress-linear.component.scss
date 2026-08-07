@@ -17,6 +17,20 @@
     }
   }
 
+  // Keep indicating progress under reduced motion, just slower, instead of freezing
+  @media (prefers-reduced-motion: reduce) {
+    .cps-progress-linear {
+      .inc {
+        animation-duration: 6s !important;
+        animation-iteration-count: infinite !important;
+      }
+      .dec {
+        animation-duration: 6s !important;
+        animation-iteration-count: infinite !important;
+      }
+    }
+  }
+
   @keyframes increase {
     from {
       left: -5%;

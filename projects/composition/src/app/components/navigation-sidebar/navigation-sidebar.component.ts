@@ -1,7 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterLinkActive, RouterModule } from '@angular/router';
 import { CpsInputComponent } from 'cps-ui-kit';
 
 @Component({
@@ -12,6 +21,19 @@ import { CpsInputComponent } from 'cps-ui-kit';
 })
 export class NavigationSidebarComponent implements OnInit {
   @Input() isExpanded = true;
+  @Output() linkClicked = new EventEmitter<void>();
+
+  @ViewChildren(RouterLinkActive, { read: ElementRef })
+  private _navLinks!: QueryList<ElementRef<HTMLAnchorElement>>;
+
+  focusActiveLink(): boolean {
+    if (!this.isExpanded) return false;
+    const link = this._navLinks.find(
+      (ref) => ref.nativeElement.getAttribute('aria-current') === 'page'
+    );
+    link?.nativeElement.focus();
+    return !!link;
+  }
 
   styles = [
     {
@@ -184,8 +206,11 @@ export class NavigationSidebarComponent implements OnInit {
     );
   }
 
-  onComponentSelect() {
-    this.searchVal = '';
-    this.filteredComponents = [...this._components];
+  onLinkClick() {
+    if (this.searchVal) {
+      this.searchVal = '';
+      this.filteredComponents = [...this._components];
+    }
+    this.linkClicked.emit();
   }
 }

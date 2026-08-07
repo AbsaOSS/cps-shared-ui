@@ -1,16 +1,28 @@
 import { Component } from '@angular/core';
-import { CpsButtonComponent, CpsMenuComponent, CpsMenuItem } from 'cps-ui-kit';
+import {
+  CpsButtonComponent,
+  CpsMenuComponent,
+  CpsMenuHideReason,
+  CpsMenuItem
+} from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
-
-import ComponetnData from '../../api-data/cps-menu.json';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import ComponentData from '../../api-data/cps-menu.json';
+import { menuExamples } from './menu-page.examples';
 @Component({
   selector: 'app-menu-page',
-  imports: [CpsMenuComponent, CpsButtonComponent, ComponentDocsViewerComponent],
+  imports: [
+    CpsMenuComponent,
+    CpsButtonComponent,
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
+  ],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class MenuPageComponent {
+  readonly examples = menuExamples;
   items: CpsMenuItem[] = [
     {
       title: 'First item',
@@ -57,6 +69,10 @@ export class MenuPageComponent {
       title: 'Go google',
       url: 'https://google.com',
       target: '_blank'
+    },
+    {
+      title: 'Menu API',
+      url: '/menu/api'
     }
   ];
 
@@ -103,10 +119,25 @@ export class MenuPageComponent {
       title: 'Go google',
       url: 'https://google.com',
       target: '_blank'
+    },
+    {
+      title: 'Menu API',
+      url: '/menu/api'
     }
   ];
 
-  componentData = ComponetnData;
+  componentData = ComponentData;
+
+  isStandardMenuOpen = false;
+  isStandardMenuNoHeaderOpen = false;
+  isCompressedMenuOpen = false;
+  isCompressedMenuNoIconsOpen = false;
+  isArbitraryMenuOpen = false;
+  isFocusMenuOpen = false;
+  isHoverMenuOpen = false;
+  isCustomClassMenuOpen = false;
+
+  lastHideReason: CpsMenuHideReason | '' = '';
 
   doConsoleLog(event: any) {
     console.log(event.item.title + ' clicked');

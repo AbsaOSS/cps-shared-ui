@@ -34,7 +34,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "string | number",
-                        "default": "1px",
+                        "default": "0.0625rem",
                         "description": "Thickness of the divider, a number denoting pixels or a string."
                     }
                 ]

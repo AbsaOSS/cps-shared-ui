@@ -10,13 +10,14 @@ import {
   Optional,
   Output,
   Self,
-  type SimpleChanges
+  ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
-import { getCSSColor } from '../../utils/colors-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsCheckboxComponent is a checkbox element.
@@ -114,10 +115,12 @@ export class CpsCheckboxComponent
 
   private _value = false;
 
+  @ViewChild('checkboxInput')
+  checkboxInput?: ElementRef<HTMLInputElement>;
+
   constructor(
     @Self() @Optional() private _control: NgControl,
-    @Inject(DOCUMENT) private document: Document,
-    private _elementRef: ElementRef<HTMLElement>
+    @Inject(DOCUMENT) private document: Document
   ) {
     if (this._control) {
       this._control.valueAccessor = this;
@@ -126,16 +129,19 @@ export class CpsCheckboxComponent
 
   ngOnInit(): void {
     this.iconColor = getCSSColor(this.iconColor, this.document);
+    logMissingAriaLabelError(
+      'CpsCheckboxComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsCheckboxComponent: icon-only or unlabeled checkbox must have an ariaLabel for accessibility.'
-        );
-      }
-    }
+  ngOnChanges(): void {
+    logMissingAriaLabelError(
+      'CpsCheckboxComponent',
+      this.label,
+      this.ariaLabel
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -172,6 +178,6 @@ export class CpsCheckboxComponent
   setDisabledState(_disabled: boolean) {}
 
   focus() {
-    this._elementRef?.nativeElement?.querySelector('input')?.focus();
+    this.checkboxInput?.nativeElement?.focus();
   }
 }

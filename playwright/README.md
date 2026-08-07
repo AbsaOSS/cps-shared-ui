@@ -1,36 +1,60 @@
 # Playwright E2E Tests
 
-End-to-end tests for the CPS UI Kit components, using [Playwright](https://playwright.dev/).
+End-to-end and accessibility tests for the CPS UI Kit components and the composition app, using [Playwright](https://playwright.dev/).
 
 ## Structure
 
 ```
 playwright/
-├── cps-xxx.spec.ts            # Components tests
-├── fixtures/                  # Test fixture files (e.g. expected xlsx exports)
-└── tsconfig.json              # TypeScript config for editor support
+├── cps-ui-kit/
+│   ├── accessibility-cps-ui-kit.spec.ts   # axe-core scans, per cps-ui-kit component
+│   └── components/                        # Functional/behavioral component tests
+│       ├── cps-autocomplete.spec.ts
+│       ├── cps-scheduler.spec.ts
+│       └── cps-table.spec.ts
+├── composition/
+│   └── accessibility-composition.spec.ts  # axe-core scans across composition app routes
+├── fixtures/
+│   ├── axe-helpers.ts                     # Shared axe-core Playwright fixture + assertion helpers
+│   ├── composition-components.ts          # Component/page registry used to drive scans
+│   └── table_6_fixture.xlsx               # Test data (e.g. expected xlsx exports)
+└── tsconfig.json                          # TypeScript config for editor support
 ```
 
 Tests run against the composition app (`ng serve`) which showcases every component.
 
+Accessibility coverage is split from functional coverage by filename: any spec file with `accessibility` in its name is routed to the dedicated `accessibility` project (see [Browser projects](#browser-projects)); everything else runs under `chromium`/`webkit`. See the root [README's "Run accessibility tests" section](../README.md#run-accessibility-tests) for how this relates to the separate `pa11y-ci` check.
+
 ## Running Tests
 
 ```bash
-# Headless (all browsers)
+# Headless (all projects: chromium, webkit, accessibility)
 npm run test:playwright
 
-# Single browser
+# Single browser (functional tests only, accessibility spec files excluded)
 npm run test:playwright:chromium
 npm run test:playwright:webkit
 
 # Headed (see the browser)
 npm run test:playwright:headed
+npm run test:playwright:chromium:headed
+npm run test:playwright:webkit:headed
 
 # Interactive UI mode
 npm run test:playwright:interactive
 
 # View last HTML report
 npm run test:playwright:report
+
+# Accessibility scans only (Desktop Chrome, both cps-ui-kit and composition)
+npm run test:playwright:accessibility
+
+# Scoped slices
+npm run test:playwright:cps-ui-kit:all             # cps-ui-kit: components + accessibility, chromium+webkit+accessibility
+npm run test:playwright:cps-ui-kit:accessibility   # cps-ui-kit accessibility scans only
+npm run test:playwright:cps-ui-kit:components       # cps-ui-kit functional component tests only, chromium+webkit
+npm run test:playwright:composition:all             # composition: accessibility, chromium+webkit+accessibility
+npm run test:playwright:composition:accessibility   # composition accessibility scans only
 ```
 
 Playwright auto-starts the dev server (`npm run start`) if it isn't already running. If you already have `ng serve` running on port 4200, it will reuse that.
@@ -53,9 +77,9 @@ All config lives in [`playwright.config.ts`](../playwright.config.ts) at the pro
 | Scope                                    | Value |
 | ---------------------------------------- | ----- |
 | Test (`timeout`)                         | 30 s  |
-| Action (`actionTimeout`)                 | 30 s  |
+| Action (`actionTimeout`)                 | 5 s   |
 | Assertion (`expect.timeout`)             | 5 s   |
-| Navigation (`navigationTimeout`)         | 30 s  |
+| Navigation (`navigationTimeout`)         | 5 s   |
 | Dev server startup (`webServer.timeout`) | 120 s |
 
 ### Failure artifacts
@@ -72,17 +96,25 @@ These are written to `test-results/` and the HTML report goes to `playwright-rep
 
 The GitHub Actions workflow uploads artifacts and posts a PR comment summarising results:
 
-| Artifact / action          | Condition | Retention |
-| -------------------------- | --------- | --------- |
-| HTML report                | Always    | 10 days   |
-| Test results (screenshots, videos, traces) | On failure | 10 days |
-| PR comment (via `daun/playwright-report-summary`) | Always | — |
+| Artifact / action                                 | Condition  | Retention |
+| ------------------------------------------------- | ---------- | --------- |
+| HTML report                                       | Always     | 10 days   |
+| Test results (screenshots, videos, traces)        | On failure | 10 days   |
+| PR comment (via `daun/playwright-report-summary`) | Always     | —         |
 
 The PR comment includes direct download links to the uploaded artifacts.
 
 ### Browser projects
 
-Two browser projects are configured: **Chromium** and **WebKit**. Running `npm run test:playwright` executes against both. Use `--project=chromium` (or the npm script shortcuts) to target one.
+Three projects are configured in `playwright.config.ts`:
+
+| Project         | Browser        | Runs                                                |
+| --------------- | -------------- | --------------------------------------------------- |
+| `chromium`      | Desktop Chrome | Any spec file _without_ `accessibility` in its name |
+| `webkit`        | Desktop Safari | Any spec file _without_ `accessibility` in its name |
+| `accessibility` | Desktop Chrome | Any spec file _with_ `accessibility` in its name    |
+
+Running `npm run test:playwright` executes all three. Accessibility (axe-core) scans only run once, on Chrome — there's no need for cross-browser variation there since axe evaluates rendered DOM/ARIA state, not browser-specific rendering quirks. Functional/behavioral tests run on both `chromium` and `webkit`. Use `--project=<name>` (or the npm script shortcuts above) to target one.
 
 ### Web server
 
@@ -111,9 +143,11 @@ Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/i
 
 ## CI
 
-Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). On failure, the HTML report and test artifacts (screenshots, videos) are uploaded as workflow artifacts.
+Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). On failure, the HTML report and test artifacts (screenshots, videos) are uploaded as workflow artifacts. This is a separate job from the `pa11y` one, which runs `pa11y-ci` independently — see the root [README](../README.md#run-accessibility-tests) for how the two relate.
 
 ## Writing Tests
 
-- Test files go in `playwright/` and must end with `.spec.ts`
+- Functional/behavioral test files go in `playwright/cps-ui-kit/components/` or alongside the relevant app area, and must end with `.spec.ts`
+- Accessibility scan files must have `accessibility` in their filename so they're routed to the `accessibility` project — see `accessibility-cps-ui-kit.spec.ts` and `accessibility-composition.spec.ts` for the existing pattern
 - Put test data files in `playwright/fixtures/`
+- Use the `makeAxeBuilder` fixture from `playwright/fixtures/axe-helpers.ts` for any new axe-core scan, so the WCAG tag set (`wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22a`, `wcag22aa`, `best-practice`) stays consistent across the suite

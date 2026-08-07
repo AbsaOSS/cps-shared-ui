@@ -13,6 +13,7 @@ describe('CpsSwitchComponent', () => {
 
     fixture = TestBed.createComponent(CpsSwitchComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Toggle switch');
     fixture.detectChanges();
   });
 
@@ -104,14 +105,14 @@ describe('CpsSwitchComponent', () => {
 
   it('should have disabled class when disabled', () => {
     fixture.componentRef.setInput('disabled', true);
+    fixture.componentRef.setInput('label', 'My Switch');
     fixture.detectChanges();
     const switchLabel =
       fixture.nativeElement.querySelector('.cps-switch-label');
-    if (switchLabel) {
-      expect(switchLabel.classList.contains('cps-switch-label-disabled')).toBe(
-        true
-      );
-    }
+    expect(switchLabel).toBeTruthy();
+    expect(switchLabel.classList.contains('cps-switch-label-disabled')).toBe(
+      true
+    );
     const input = fixture.nativeElement.querySelector('input');
     expect(input.disabled).toBe(true);
   });
@@ -133,5 +134,35 @@ describe('CpsSwitchComponent', () => {
     const switchEl = fixture.nativeElement.querySelector('input');
     switchEl.click();
     expect(component.value).toBe(false);
+  });
+
+  describe('accessibility', () => {
+    it('should have role="switch" on the input', () => {
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('role')).toBe('switch');
+    });
+
+    it('should set aria-label from ariaLabel input', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Custom aria');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-label')).toBe('Custom aria');
+    });
+
+    it('should fall back aria-label to label when ariaLabel is not set', () => {
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.componentRef.setInput('label', 'Enable Feature');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-label')).toBe('Enable Feature');
+    });
+
+    it('should give ariaLabel precedence over label', () => {
+      fixture.componentRef.setInput('ariaLabel', 'aria wins');
+      fixture.componentRef.setInput('label', 'label loses');
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      expect(input.getAttribute('aria-label')).toBe('aria wins');
+    });
   });
 });

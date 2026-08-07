@@ -1,72 +1,72 @@
 @use '../../../../variables.scss' as vars;
 
 :host {
-  padding: 24px;
+  padding: 1.5rem;
 }
 
 .search-input {
-  margin-bottom: 24px;
+  margin-bottom: 1.5rem;
 }
 
 .colors {
   &-group {
-    margin-bottom: 48px;
+    margin-bottom: 3rem;
     &-title {
-      border-bottom: 1px solid lightgrey;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      font-size: 28px;
+      border-bottom: 0.0625rem solid lightgrey;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.75rem;
       color: vars.$color-calm;
     }
     &-body {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 0.75rem;
       &-block {
-        min-width: 270px;
+        min-width: 16.875rem;
         display: block;
-        border: 1px solid lightgrey;
+        border: 0.0625rem solid lightgrey;
         height: fit-content;
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 37.5rem) {
           flex: 0 0 100%;
         }
 
-        /* Small devices (portrait tablets and large phones, 600px and up) */
-        @media only screen and (min-width: 600px) {
+        /* Small devices (portrait tablets and large phones, 37.5rem and up) */
+        @media only screen and (min-width: 37.5rem) {
           flex: 0 0 100%;
         }
 
-        /* Medium devices (landscape tablets, 768px and up) */
-        @media only screen and (min-width: 768px) {
+        /* Medium devices (landscape tablets, 48rem and up) */
+        @media only screen and (min-width: 48rem) {
           flex: 0 0 100%;
         }
 
-        /* Large devices (laptops/desktops, 992px and up) */
-        @media only screen and (min-width: 992px) {
+        /* Large devices (laptops/desktops, 62rem and up) */
+        @media only screen and (min-width: 62rem) {
           flex: 0 0 49%;
         }
 
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
-        @media only screen and (min-width: 1200px) {
+        /* Extra large devices (large laptops and desktops, 75rem and up) */
+        @media only screen and (min-width: 75rem) {
           flex: 0 0 32%;
         }
 
-        @media only screen and (min-width: 1600px) {
+        @media only screen and (min-width: 100rem) {
           flex: 0 0 24%;
         }
 
         &-title {
-          min-height: 60px;
-          padding-left: 12px;
+          min-height: 3.75rem;
+          padding-left: 0.75rem;
           font-weight: bold;
-          font-size: 24px;
+          font-size: 1.5rem;
           display: flex;
           align-items: center;
         }
         &-color {
-          min-height: 40px;
-          padding-left: 24px;
-          padding-right: 20px;
+          min-height: 2.5rem;
+          padding-left: 1.5rem;
+          padding-right: 1.25rem;
           display: flex;
           align-items: center;
           justify-content: space-between;

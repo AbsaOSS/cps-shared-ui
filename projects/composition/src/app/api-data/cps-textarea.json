@@ -14,6 +14,14 @@
                         "description": "Label of the textarea."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the textarea component, used for accessibility, it takes precedence over label."
+                    },
+                    {
                         "name": "placeholder",
                         "optional": false,
                         "readonly": false,
@@ -46,6 +54,22 @@
                         "description": "Determines whether the textarea can auto focus."
                     },
                     {
+                        "name": "spellcheck",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the value of the textarea may be checked for spelling errors."
+                    },
+                    {
+                        "name": "autocomplete",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "off",
+                        "description": "Determines whether the value of the textarea can be automatically completed by the browser."
+                    },
+                    {
                         "name": "hint",
                         "optional": false,
                         "readonly": false,
@@ -60,6 +84,14 @@
                         "type": "boolean",
                         "default": "false",
                         "description": "Determines whether the textarea is disabled."
+                    },
+                    {
+                        "name": "readonly",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether the textarea is readonly."
                     },
                     {
                         "name": "width",
@@ -108,6 +140,14 @@
                         "type": "'vertical' | 'none'",
                         "default": "vertical",
                         "description": "Determines whether the component can be resized vertically or not."
+                    },
+                    {
+                        "name": "maxHeight",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "number | string",
+                        "default": "Infinity",
+                        "description": "Maximum height of the textarea during resize, of type number denoting pixels or string.\nAccepts only units of px, rem and em. When resizable is set to 'none', this prop has no effect."
                     },
                     {
                         "name": "infoTooltip",

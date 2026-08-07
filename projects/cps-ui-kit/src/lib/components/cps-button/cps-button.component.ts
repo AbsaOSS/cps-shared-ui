@@ -6,13 +6,18 @@ import {
   Inject,
   Input,
   OnChanges,
+  OnInit,
   Output,
   type SimpleChanges
 } from '@angular/core';
-import { getCSSColor } from '../../utils/colors-utils';
+import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
 import { CpsProgressCircularComponent } from '../cps-progress-circular/cps-progress-circular.component';
-import { convertSize, parseSize } from '../../utils/internal/size-utils';
+import {
+  convertSize,
+  parseSize
+} from '../../utils/internal/size-utils/size-utils';
+import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
  * CpsButtonComponent is a button element.
@@ -24,7 +29,7 @@ import { convertSize, parseSize } from '../../utils/internal/size-utils';
   templateUrl: './cps-button.component.html',
   styleUrls: ['./cps-button.component.scss']
 })
-export class CpsButtonComponent implements OnChanges {
+export class CpsButtonComponent implements OnInit, OnChanges {
   /**
    * Color of the button.
    * @group Props
@@ -50,6 +55,12 @@ export class CpsButtonComponent implements OnChanges {
   @Input() type: 'solid' | 'outlined' | 'borderless' = 'solid';
 
   /**
+   * Native HTML button type attribute, it can be 'button', 'submit' or 'reset'.
+   * @group Props
+   */
+  @Input() nativeType: 'button' | 'submit' | 'reset' = 'button';
+
+  /**
    * Label or text on the button.
    * @group Props
    */
@@ -60,6 +71,18 @@ export class CpsButtonComponent implements OnChanges {
    * @group Props
    */
   @Input() ariaLabel = '';
+
+  /**
+   * Indicates that the button controls a popup element.
+   * @group Props
+   */
+  @Input() ariaHaspopup: string | null = null;
+
+  /**
+   * Indicates whether the controlled popup element is expanded or collapsed.
+   * @group Props
+   */
+  @Input() ariaExpanded: boolean | null = null;
 
   /**
    * Name of the icon on the button.
@@ -126,6 +149,10 @@ export class CpsButtonComponent implements OnChanges {
   // eslint-disable-next-line no-useless-constructor
   constructor(@Inject(DOCUMENT) private document: Document) {}
 
+  ngOnInit(): void {
+    logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     this.buttonColor = getCSSColor(this.color, this.document);
     this.borderRadius = convertSize(this.borderRadius);
@@ -136,14 +163,18 @@ export class CpsButtonComponent implements OnChanges {
     if (this.disabled || this.loading) {
       this.enterActive = false;
     }
-    if (changes.label || changes.ariaLabel) {
-      if (!this.label?.trim() && !this.ariaLabel?.trim()) {
-        console.error(
-          'CpsButtonComponent: icon-only or unlabeled button must have an ariaLabel for accessibility.'
-        );
-      }
-    }
     this.setClasses();
+    logMissingAriaLabelError('CpsButtonComponent', this.label, this.ariaLabel);
+
+    if (
+      changes.nativeType &&
+      !['button', 'submit', 'reset'].includes(this.nativeType)
+    ) {
+      console.warn(
+        `Invalid nativeType value: ${this.nativeType}. Expected 'button', 'submit', or 'reset'. Defaulting to 'button'.`
+      );
+      this.nativeType = 'button';
+    }
   }
 
   setClasses() {

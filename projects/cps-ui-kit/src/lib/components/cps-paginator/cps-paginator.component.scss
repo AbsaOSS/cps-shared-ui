@@ -1,3 +1,5 @@
+@use '../../../../styles/mixins' as *;
+
 $color-calm: var(--cps-color-calm);
 $text-color: var(--cps-color-text-dark);
 $border-color: var(--cps-color-text-dark);
@@ -22,21 +24,22 @@ $elem-active-background: var(--cps-color-highlight-active);
         align-items: center;
         .cps-paginator-items-per-page-title {
           font-family: 'Source Sans Pro', sans-serif;
-          font-size: 14px;
-          margin-right: 12px;
+          font-size: 0.875rem;
+          margin-right: 0.75rem;
           cursor: default;
         }
 
         .cps-select-box {
-          min-height: 32px !important;
+          min-height: 2rem !important;
           background: transparent !important;
           .cps-select-box-items {
-            font-size: 14px !important;
+            font-size: 0.875rem !important;
           }
           .cps-select-box-chevron {
+            padding: 0.3125rem !important;
             .cps-icon {
-              width: 14px;
-              height: 14px;
+              width: 0.875rem;
+              height: 0.875rem;
             }
           }
         }
@@ -51,7 +54,7 @@ $elem-active-background: var(--cps-color-highlight-active);
       margin: 0.143rem;
       padding: 0 0.5rem;
       font-family: 'Source Sans Pro', sans-serif;
-      font-size: 14px;
+      font-size: 0.875rem;
       height: unset;
     }
 
@@ -76,17 +79,29 @@ $elem-active-background: var(--cps-color-highlight-active);
       cursor: default;
     }
 
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):hover,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):hover {
       background: $elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-first:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
-    .p-paginator .p-paginator-last:not(.p-disabled):not(.p-paginator-page-selected):active {
+    .p-paginator
+      .p-paginator-first:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active,
+    .p-paginator
+      .p-paginator-prev:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-next:not(.p-disabled):not(.p-paginator-page-selected):active,
+    .p-paginator
+      .p-paginator-last:not(.p-disabled):not(
+        .p-paginator-page-selected
+      ):active {
       background: $elem-active-background;
     }
 
@@ -95,11 +110,11 @@ $elem-active-background: var(--cps-color-highlight-active);
     .p-paginator .p-paginator-next,
     .p-paginator .p-paginator-last {
       background-color: transparent;
-      border: 1px solid $border-color;
-      border-radius: 4px;
+      border: 0.0625rem solid $border-color;
+      border-radius: 0.25rem;
       color: $text-color;
-      min-width: 32px;
-      height: 32px;
+      min-width: 2rem;
+      height: 2rem;
       margin: 0.143rem;
       transition: box-shadow 0.2s;
     }
@@ -108,46 +123,76 @@ $elem-active-background: var(--cps-color-highlight-active);
       display: inline-flex;
     }
 
+    .p-paginator-first-icon,
+    .p-paginator-prev-icon,
+    .p-paginator-next-icon,
+    .p-paginator-last-icon {
+      width: 0.875rem;
+      height: 0.875rem;
+    }
+
     .p-disabled,
     .p-disabled * {
       cursor: default !important;
       pointer-events: none;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page.p-paginator-page-selected {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page.p-paginator-page-selected {
       background: $color-calm;
       border-color: $color-calm;
       color: white;
     }
 
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):hover {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):hover {
       background: $elem-hover-background;
       border-color: unset;
     }
-    .p-paginator .p-paginator-pages .p-paginator-page:not(.p-paginator-page-selected):active {
+    .p-paginator
+      .p-paginator-pages
+      .p-paginator-page:not(.p-paginator-page-selected):active {
       background: $elem-active-background;
     }
 
     .p-paginator .p-paginator-pages .p-paginator-page {
       background-color: transparent;
-      border: 1px solid $border-color;
-      border-radius: 4px;
+      border: 0.0625rem solid $border-color;
+      border-radius: 0.25rem;
       color: $text-color;
-      min-width: 32px;
-      height: 32px;
+      min-width: 2rem;
+      height: 2rem;
       margin: 0.143rem;
       transition: box-shadow 0.2s;
     }
 
-    .p-paginator-element:focus {
+    .p-paginator-first:focus,
+    .p-paginator-prev:focus,
+    .p-paginator-next:focus,
+    .p-paginator-last:focus,
+    .p-paginator-page:focus {
       z-index: 1;
-      position: relative;
+      outline: 0 none;
+      box-shadow: unset;
     }
 
-    .p-paginator-page:focus {
-      outline: 0 none;
-      outline-offset: 0;
-      box-shadow: unset;
+    .p-paginator-first:not(.p-disabled):focus-visible,
+    .p-paginator-prev:not(.p-disabled):focus-visible,
+    .p-paginator-next:not(.p-disabled):focus-visible,
+    .p-paginator-last:not(.p-disabled):focus-visible,
+    .p-paginator-page:focus-visible {
+      overflow: visible;
+      @include focus-ring(0.1875rem, 0.25rem, 0.25rem);
+    }
+
+    .p-paginator-first:not(.p-disabled):focus-visible,
+    .p-paginator-prev:not(.p-disabled):focus-visible,
+    .p-paginator-next:not(.p-disabled):focus-visible,
+    .p-paginator-last:not(.p-disabled):focus-visible,
+    .p-paginator-page:not(.p-paginator-page-selected):focus-visible {
+      background: $elem-hover-background;
     }
 
     .p-paginator-page {
@@ -159,7 +204,7 @@ $elem-active-background: var(--cps-color-highlight-active);
       cursor: pointer;
       -webkit-user-select: none;
       user-select: none;
-      font-size: 14px;
+      font-size: 0.875rem;
       font-family: 'Source Sans Pro', sans-serif;
     }
 
@@ -172,6 +217,6 @@ $elem-active-background: var(--cps-color-highlight-active);
 
 ::ng-deep .cps-select-options-menu.cps-paginator-page-options {
   .cps-select-options-option {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 }

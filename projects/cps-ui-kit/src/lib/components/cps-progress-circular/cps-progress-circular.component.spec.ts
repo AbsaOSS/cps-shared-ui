@@ -20,33 +20,33 @@ describe('CpsProgressCircularComponent', () => {
   });
 
   it('should have default values', () => {
-    expect(component.diameter).toBe('40px');
-    expect(component.strokeWidth).toBe('4px');
+    expect(component.diameter).toBe('2.5rem');
+    expect(component.strokeWidth).toBe('0.25rem');
     expect(component.color).toBeTruthy();
   });
 
-  it('should convert diameter on init', () => {
+  it('should convert numeric diameter on init', () => {
     component.diameter = 50;
     component.ngOnInit();
-    expect(component.diameter).toBe('50px');
+    expect(component.cvtDiameter).toBe('50px');
   });
 
-  it('should keep diameter as string if already string', () => {
+  it('should keep string diameter as-is on init', () => {
     component.diameter = '2rem';
     component.ngOnInit();
-    expect(component.diameter).toBe('2rem');
+    expect(component.cvtDiameter).toBe('2rem');
   });
 
-  it('should convert strokeWidth on init', () => {
+  it('should convert numeric strokeWidth on init', () => {
     component.strokeWidth = 5;
     component.ngOnInit();
-    expect(component.strokeWidth).toBe('5px');
+    expect(component.cvtStrokeWidth).toBe('5px');
   });
 
-  it('should keep strokeWidth as string if already string', () => {
+  it('should keep string strokeWidth as-is on init', () => {
     component.strokeWidth = '0.5rem';
     component.ngOnInit();
-    expect(component.strokeWidth).toBe('0.5rem');
+    expect(component.cvtStrokeWidth).toBe('0.5rem');
   });
 
   it('should set custom color', () => {
@@ -60,5 +60,42 @@ describe('CpsProgressCircularComponent', () => {
       '.cps-progress-circular'
     );
     expect(circle).toBeTruthy();
+  });
+
+  describe('Accessibility (aria-label)', () => {
+    it('should default aria-label to "Loading" when no label is provided', () => {
+      const host: HTMLElement = fixture.nativeElement;
+      expect(host.getAttribute('aria-label')).toBe('Loading');
+    });
+
+    it('should set aria-label from the ariaLabel input', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Saving changes');
+      fixture.detectChanges();
+      const host: HTMLElement = fixture.nativeElement;
+      expect(host.getAttribute('aria-label')).toBe('Saving changes');
+    });
+
+    it('should update aria-label when ariaLabel input changes', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Saving changes');
+      fixture.detectChanges();
+      fixture.componentRef.setInput('ariaLabel', 'Uploading file');
+      fixture.detectChanges();
+      const host: HTMLElement = fixture.nativeElement;
+      expect(host.getAttribute('aria-label')).toBe('Uploading file');
+    });
+
+    it('should fall back to "Loading" when ariaLabel is cleared', () => {
+      fixture.componentRef.setInput('ariaLabel', 'Saving changes');
+      fixture.detectChanges();
+      fixture.componentRef.setInput('ariaLabel', '');
+      fixture.detectChanges();
+      const host: HTMLElement = fixture.nativeElement;
+      expect(host.getAttribute('aria-label')).toBe('Loading');
+    });
+
+    it('should have role="progressbar" on the host', () => {
+      const host: HTMLElement = fixture.nativeElement;
+      expect(host.getAttribute('role')).toBe('progressbar');
+    });
   });
 });

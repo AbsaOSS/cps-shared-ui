@@ -54,6 +54,14 @@
                         "description": "Determines whether at least one of the options is mandatory."
                     },
                     {
+                        "name": "radioNavigation",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "true",
+                        "description": "When multiple is false, and mandatory is true, uses native radio group behavior:\narrow-key navigation between options. Has no effect when multiple is true or mandatory is false."
+                    },
+                    {
                         "name": "equalWidths",
                         "optional": false,
                         "readonly": false,

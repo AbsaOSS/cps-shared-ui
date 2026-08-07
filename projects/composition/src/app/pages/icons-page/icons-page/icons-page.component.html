@@ -1,7 +1,38 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
+  <app-code-example label="Basic usage" [htmlCode]="examples.basicUsage.html">
+    <cps-icon
+      data-testid="basic-icon"
+      icon="like"
+      size="normal"
+      color="var(--cps-text-primary)"></cps-icon>
+  </app-code-example>
+
+  <app-code-example
+    label="Icon with a custom color token"
+    [htmlCode]="examples.customColorToken.html">
+    <cps-icon
+      data-testid="token-color-icon"
+      icon="warning"
+      size="normal"
+      color="error"></cps-icon>
+  </app-code-example>
+
+  <app-code-example
+    label="Icons at different sizes"
+    [htmlCode]="examples.differentSizes.html">
+    <div class="icon-sizes-row">
+      <cps-icon data-testid="xsmall-icon" icon="star" size="xsmall"></cps-icon>
+      <cps-icon data-testid="small-icon" icon="star" size="small"></cps-icon>
+      <cps-icon data-testid="normal-icon" icon="star" size="normal"></cps-icon>
+      <cps-icon data-testid="large-icon" icon="star" size="large"></cps-icon>
+    </div>
+  </app-code-example>
+
+  <h2 class="section-title">Browse all icons</h2>
   <div class="search-input">
     <cps-input
+      ariaLabel="Search an icon"
       placeholder="Search an icon"
       (valueChanged)="onSearchChanged($event)"
       hint="Click on any icon to copy its name"
@@ -11,13 +42,17 @@
 
   <div class="icon-grid">
     @for (name of filteredIconsList; track name) {
-      <div class="icon-row" (click)="onCopyIconName(name)">
+      <button
+        type="button"
+        class="icon-row"
+        [attr.aria-label]="'Copy ' + name + ' icon name'"
+        (click)="onCopyIconName(name)">
         <cps-icon
           [icon]="name"
           size="normal"
           color="var(--cps-text-primary)"></cps-icon>
         <span>{{ name }}</span>
-      </div>
+      </button>
     }
   </div>
 </app-component-docs-viewer>

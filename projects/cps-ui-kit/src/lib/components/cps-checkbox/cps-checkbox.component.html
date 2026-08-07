@@ -1,8 +1,13 @@
 <div class="cps-checkbox-container">
-  <label class="cps-checkbox" [class.cps-checkbox-disabled]="disabled">
+  <label
+    class="cps-checkbox"
+    data-testid="cps-checkbox"
+    [class.cps-checkbox-disabled]="disabled">
     <input
+      #checkboxInput
       type="checkbox"
       class="cps-checkbox-input"
+      data-testid="cps-checkbox-input"
       [disabled]="disabled"
       [checked]="value"
       (change)="updateValueEvent($event)"
@@ -11,14 +16,14 @@
     @if (icon) {
       <cps-icon
         class="cps-checkbox-icon"
+        data-testid="cps-checkbox-icon"
         [icon]="icon"
         size="small"
-        [color]="disabled ? 'text-mild' : iconColor"
-        aria-hidden="true">
+        [color]="disabled ? 'text-mild' : iconColor">
       </cps-icon>
     }
     @if (label) {
-      <span class="cps-checkbox-label">
+      <span class="cps-checkbox-label" data-testid="cps-checkbox-label">
         {{ label }}
       </span>
     }
@@ -26,6 +31,7 @@
   @if (infoTooltip) {
     <cps-info-circle
       class="cps-checkbox-info-circle"
+      data-testid="cps-checkbox-info-circle"
       size="xsmall"
       [tooltipPosition]="infoTooltipPosition"
       [tooltipContentClass]="infoTooltipClass"

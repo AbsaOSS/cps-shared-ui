@@ -35,14 +35,19 @@ import { PrimeNG } from 'primeng/config';
 import {
   convertSize,
   parseSize
-} from '../../../../../utils/internal/size-utils';
+} from '../../../../../utils/internal/size-utils/size-utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
-import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CPS_FOCUS_SERVICE } from '../../../../cps-focus/cps-focus.service';
+import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../../../../utils/internal/motion-utils/motion-utils';
 
 const showAnimation = animation([
   style({ transform: '{{transform}}', opacity: 0 }),
@@ -140,9 +145,12 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   _resizeEnded = new EventEmitter<MouseEvent | KeyboardEvent>();
   _maximizedStateChanged = new EventEmitter<boolean>();
 
-  private _rootFontSizePx = 16;
   private _openedByKeyboard = false;
   private readonly _cpsFocusService = inject(CPS_FOCUS_SERVICE);
+  private readonly _cpsRootFontSizeService = inject(CPS_ROOT_FONT_SIZE_SERVICE);
+  private get _rootFontSizePx(): number {
+    return this._cpsRootFontSizeService?.fontSize() || 16;
+  }
 
   get ariaLabel(): string | null {
     if (this.config.ariaLabelledBy) return null;
@@ -171,6 +179,11 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get cvtMaxHeight(): string {
     return this.maximized ? '' : convertSize(this.config.maxHeight);
+  }
+
+  get resolvedTransitionOptions(): string {
+    if (prefersReducedMotion()) return REDUCED_MOTION_DURATION;
+    return this.config.transitionOptions || '150ms cubic-bezier(0, 0, 0.2, 1)';
   }
 
   get minX(): number {
@@ -232,11 +245,6 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this._rootFontSizePx = parseFloat(
-        getComputedStyle(this.document.documentElement).fontSize || '16'
-      );
-    }
     if (
       !this.config.ariaLabel?.trim() &&
       !this.config.ariaLabelledBy?.trim() &&

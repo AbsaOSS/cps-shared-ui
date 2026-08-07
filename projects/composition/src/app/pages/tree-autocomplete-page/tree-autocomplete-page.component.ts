@@ -7,16 +7,18 @@ import {
   Validators
 } from '@angular/forms';
 import { CpsTreeAutocompleteComponent } from 'cps-ui-kit';
-
 import ComponentData from '../../api-data/cps-tree-autocomplete.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { treeAutocompleteExamples } from './tree-autocomplete-page.examples';
 
 @Component({
   imports: [
     CpsTreeAutocompleteComponent,
     FormsModule,
     ReactiveFormsModule,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   selector: 'app-tree-autocomplete-page',
   templateUrl: './tree-autocomplete-page.component.html',
@@ -24,6 +26,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
   host: { class: 'composition-page' }
 })
 export class TreeAutocompletePageComponent implements OnInit {
+  readonly examples = treeAutocompleteExamples;
   selectedItems = [
     {
       label: 'AttrB',

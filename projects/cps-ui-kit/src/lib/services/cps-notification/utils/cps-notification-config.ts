@@ -61,4 +61,14 @@ export interface CpsNotificationConfig {
    * @default undefined
    */
   maxWidth?: string;
+  /**
+   * Whether to announce error notifications politely instead of assertively.
+   * @default false
+   */
+  politeError?: boolean;
+  /**
+   * Whether to announce warning notifications politely instead of assertively.
+   * @default false
+   */
+  politeWarning?: boolean;
 }

@@ -14,6 +14,14 @@
                         "description": "Label of the select component."
                     },
                     {
+                        "name": "ariaLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "",
+                        "description": "Aria label for the select component, used for accessibility, it takes precedence over label."
+                    },
+                    {
                         "name": "placeholder",
                         "optional": false,
                         "readonly": false,
@@ -186,7 +194,7 @@
                         "optional": false,
                         "readonly": false,
                         "type": "iconSizeType",
-                        "default": "18px",
+                        "default": "1.125rem",
                         "description": "Size of icon before input value."
                     },
                     {

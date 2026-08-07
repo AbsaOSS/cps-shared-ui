@@ -1,25 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   CpsButtonComponent,
   CpsNotificationAppearance,
   CpsNotificationPosition,
   CpsNotificationService
 } from 'cps-ui-kit';
-
 import ServiceData from '../../api-data/cps-notification.json';
 import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { notificationExamples } from './notification-page.examples';
 
 @Component({
   selector: 'app-notification-page',
-  imports: [CpsButtonComponent, ServiceDocsViewerComponent],
+  imports: [
+    CpsButtonComponent,
+    ServiceDocsViewerComponent,
+    CodeExampleComponent
+  ],
   templateUrl: './notification-page.component.html',
   styleUrls: ['./notification-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class NotificationPageComponent {
+  private readonly _notifService = inject(CpsNotificationService);
+
   serviceData = ServiceData;
-  // eslint-disable-next-line no-useless-constructor
-  constructor(private _notifService: CpsNotificationService) {}
+  readonly examples = notificationExamples;
 
   counter = 0;
   showSuccessNotification() {
@@ -63,7 +69,7 @@ export class NotificationPageComponent {
   showOutlinedBottomRight2sTimeoutWarningNotification() {
     this._notifService.warning(
       `Notification message ${this.counter}`,
-      'Notifications details',
+      'Notification details',
       {
         timeout: 2000,
         position: CpsNotificationPosition.BOTTOMRIGHT,
@@ -79,7 +85,7 @@ export class NotificationPageComponent {
       'Http failure response for https://my-long-url/epic/fail: 404 Not Found Error',
       {
         position: CpsNotificationPosition.RIGHT,
-        maxWidth: '450px',
+        maxWidth: '28rem',
         maxAmount: 3
       }
     );

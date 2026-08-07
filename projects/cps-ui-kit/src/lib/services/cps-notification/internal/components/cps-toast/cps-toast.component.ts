@@ -11,7 +11,7 @@ import {
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsIconComponent } from '../../../../../components/cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
-import { convertSize } from '../../../../../utils/internal/size-utils';
+import { convertSize } from '../../../../../utils/internal/size-utils/size-utils';
 import {
   CpsNotificationAppearance,
   CpsNotificationConfig
@@ -27,6 +27,10 @@ import {
   transition,
   trigger
 } from '@angular/animations';
+import {
+  prefersReducedMotion,
+  REDUCED_MOTION_DURATION
+} from '../../../../../utils/internal/motion-utils/motion-utils';
 
 @Component({
   imports: [CommonModule, CpsButtonComponent, CpsIconComponent],
@@ -42,20 +46,28 @@ import {
           opacity: 1
         })
       ),
-      transition('void => *', [
-        style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate('200ms ease-out')
-      ]),
-      transition('* => void', [
-        animate(
-          '200ms ease-in',
-          style({
-            height: 0,
-            opacity: 0,
-            transform: 'translateY(-100%)'
-          })
-        )
-      ])
+      transition(
+        'void => *',
+        [
+          style({ transform: 'translateY(100%)', opacity: 0 }),
+          animate('{{showTiming}}')
+        ],
+        { params: { showTiming: '200ms ease-out' } }
+      ),
+      transition(
+        '* => void',
+        [
+          animate(
+            '{{hideTiming}}',
+            style({
+              height: 0,
+              opacity: 0,
+              transform: 'translateY(-100%)'
+            })
+          )
+        ],
+        { params: { hideTiming: '200ms ease-in' } }
+      )
     ])
   ]
 })
@@ -74,6 +86,28 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   maxWidth: string | undefined;
   filled = true;
   color = '';
+  srAnnouncement = '';
+
+  get isPolite(): boolean {
+    if (this.data?.type === CpsNotificationType.ERROR)
+      return !!this.config?.politeError;
+    if (this.data?.type === CpsNotificationType.WARNING)
+      return !!this.config?.politeWarning;
+    return true;
+  }
+
+  get closeAriaLabel(): string {
+    const type = this.data?.type;
+    return `Close ${type ? type + ' ' : ''}notification`;
+  }
+
+  get resolvedShowTiming(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-out';
+  }
+
+  get resolvedHideTiming(): string {
+    return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-in';
+  }
 
   // eslint-disable-next-line no-useless-constructor
   constructor(private zone: NgZone) {}
@@ -89,6 +123,11 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initiateTimeout();
+    setTimeout(() => {
+      const type = this.data?.type;
+      const details = this.data?.details;
+      this.srAnnouncement = `${type ? type + ': ' : ''}${this.data?.message ?? ''}${details ? '. ' + details : ''}`;
+    });
   }
 
   ngOnDestroy() {

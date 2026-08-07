@@ -11,12 +11,12 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
+  type SimpleChanges,
   ViewChild
 } from '@angular/core';
 import { catchError, Observable, of, Subject, take, takeUntil } from 'rxjs';
-import { convertSize } from '../../utils/internal/size-utils';
-import { focusElement } from '../../utils/internal/accessibility-utils';
+import { convertSize } from '../../utils/internal/size-utils/size-utils';
+import { focusElement } from '../../utils/internal/accessibility-utils/accessibility-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,

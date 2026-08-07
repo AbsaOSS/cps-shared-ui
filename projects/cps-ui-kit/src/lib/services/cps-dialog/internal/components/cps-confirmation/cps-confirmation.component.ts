@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
-import { CpsDialogRef } from '../../../utils/cps-dialog-ref';
+import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 
 @Component({
@@ -12,7 +12,6 @@ import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
 export class CpsConfirmationComponent {
   subtitle = '';
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     private _dialogRef: CpsDialogRef,
     private _config: CpsDialogConfig

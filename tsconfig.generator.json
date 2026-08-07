@@ -3,6 +3,11 @@
   "compilerOptions": {
     "skipLibCheck": true
   },
+  "include": [
+    "projects/cps-ui-kit/src/lib/components/**/*.ts",
+    "projects/cps-ui-kit/src/lib/services/**/*.ts",
+    "projects/cps-ui-kit/src/lib/directives/**/*.ts"
+  ],
   "exclude": [
     "projects/composition/**",
     "./node_modules/**",
