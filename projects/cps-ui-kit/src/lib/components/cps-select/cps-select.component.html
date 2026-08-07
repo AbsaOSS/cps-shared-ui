@@ -1,9 +1,11 @@
 <div
-  [ngStyle]="{ width: cvtWidth }"
+  [style.width]="cvtWidth"
   class="cps-select"
-  [ngClass]="{ disabled: disabled, error: error }">
+  data-testid="cps-select"
+  [class.disabled]="disabled"
+  [class.error]="error">
   @if (label) {
-    <div class="cps-select-label">
+    <div class="cps-select-label" data-testid="cps-select-label">
       <label>{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
@@ -20,6 +22,7 @@
   }
   <div
     class="cps-select-container"
+    data-testid="cps-select-container"
     [tabindex]="disabled ? -1 : 0"
     role="combobox"
     aria-haspopup="listbox"
@@ -32,35 +35,40 @@
     [attr.aria-label]="ariaLabel || label || null"
     [attr.aria-describedby]="describedBy"
     [attr.aria-disabled]="disabled || null"
-    [ngClass]="{
-      'persistent-clear': persistentClear,
-      borderless: appearance === 'borderless',
-      underlined: appearance === 'underlined',
-      active: isOpened,
-      focused: isActive
-    }"
+    [class.persistent-clear]="persistentClear"
+    [class.borderless]="appearance === 'borderless'"
+    [class.underlined]="appearance === 'underlined'"
+    [class.active]="isOpened"
+    [class.focused]="isActive"
     #selectContainer
     (keydown)="onContainerKeyDown($event)"
     (focus)="onFocus()"
     (blur)="onBlur()">
-    <div class="cps-select-box" #selectBox (mousedown)="onBoxClick()">
+    <div
+      class="cps-select-box"
+      data-testid="cps-select-box"
+      #selectBox
+      (mousedown)="onBoxClick()">
       <div class="cps-select-box-left">
         @if (prefixIcon) {
           <cps-icon
             [icon]="prefixIcon"
             [style.color]="disabled ? '#9a9595' : null"
             [size]="prefixIconSize"
-            class="prefix-icon">
+            class="prefix-icon"
+            data-testid="cps-select-prefix-icon">
           </cps-icon>
         }
         @if (!hasSelectedValue()) {
-          <div class="cps-select-box-placeholder">
+          <div
+            class="cps-select-box-placeholder"
+            data-testid="cps-select-placeholder">
             {{ placeholder }}
           </div>
         } @else {
           <div class="cps-select-box-items">
             @if (!multiple) {
-              <span class="single-item">
+              <span class="single-item" data-testid="cps-select-selected-value">
                 {{
                   returnObject
                     ? value[optionLabel]
@@ -71,7 +79,10 @@
             }
             @if (multiple && !chips) {
               <div class="text-group" role="list" aria-label="Selected options">
-                <span class="text-group-item" role="listitem">
+                <span
+                  class="text-group-item"
+                  role="listitem"
+                  data-testid="cps-select-selected-text-item">
                   {{
                     value
                       | combineLabels
@@ -113,9 +124,10 @@
           <span
             role="button"
             aria-label="Clear selection"
+            data-testid="cps-select-clear-icon"
             [tabindex]="disabled ? -1 : 0"
             (click)="clear($event)"
-            (mousedown)="$event.preventDefault()"
+            (mousedown)="$event.stopPropagation(); $event.preventDefault()"
             (keydown.enter)="clear($event)"
             (keydown.space)="clear($event)"
             [style.visibility]="
@@ -130,6 +142,7 @@
         @if (showChevron) {
           <span
             class="cps-select-box-chevron"
+            data-testid="cps-select-chevron"
             role="button"
             [attr.aria-label]="isOpened ? 'Collapse options' : 'Expand options'"
             [tabindex]="disabled ? -1 : 0"
@@ -154,6 +167,7 @@
       <div
         #optionsList
         [id]="optionsListId"
+        data-testid="cps-select-listbox"
         role="listbox"
         tabindex="-1"
         aria-readonly="false"
@@ -166,6 +180,7 @@
           @if (multiple && selectAll && options.length > 1) {
             <div
               class="cps-select-options-option select-all-option"
+              data-testid="cps-select-select-all"
               [id]="selectAllOptionId"
               role="option"
               tabindex="-1"
@@ -228,17 +243,21 @@
         radius="0.25rem"
         opacity="0.3"
         class="select-progress-bar"
+        data-testid="cps-select-loading-bar"
         bgColor="transparent">
       </cps-progress-linear>
     }
   </div>
   @if (!error && !hideDetails) {
-    <div [id]="hintId" class="cps-select-hint">{{ hint }}</div>
+    <div [id]="hintId" class="cps-select-hint" data-testid="cps-select-hint">
+      {{ hint }}
+    </div>
   }
   @if (error && !hideDetails) {
     <div
       [id]="errorId"
       class="cps-select-error"
+      data-testid="cps-select-error"
       aria-live="polite"
       aria-atomic="true">
       {{ error }}
@@ -249,6 +268,7 @@
 <ng-template #itemTemplate let-item="item" let-itemIdx="itemIdx">
   <div
     class="cps-select-options-option"
+    data-testid="cps-select-option"
     [id]="getOptionId(item, itemIdx)"
     role="option"
     tabindex="-1"
@@ -273,6 +293,7 @@
       }
       <span
         class="cps-select-options-option-label"
+        data-testid="cps-select-option-label"
         [class.virtual-row]="virtualScroll"
         >{{ item[optionLabel] }}</span
       >
