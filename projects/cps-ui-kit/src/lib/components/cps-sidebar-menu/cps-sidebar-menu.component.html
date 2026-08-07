@@ -20,7 +20,11 @@
           ariaCurrentWhenActive="page"
           [routerLinkActiveOptions]="{ exact: exactRoutes }"
           [target]="item.disabled ? undefined : item.target"
-          [attr.rel]="item.target ? 'noopener' : null"
+          [attr.rel]="
+            !item.disabled && item.target === '_blank'
+              ? 'noopener noreferrer'
+              : null
+          "
           [class.disabled]="item.disabled"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
