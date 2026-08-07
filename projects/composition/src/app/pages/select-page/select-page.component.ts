@@ -60,6 +60,7 @@ export class SelectPageComponent implements OnInit {
 
   form!: UntypedFormGroup;
   syncVal: string[] = [];
+  openOnClearValue = this.options[3];
   componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor
@@ -67,7 +68,8 @@ export class SelectPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._formBuilder.group({
-      requiredSelect: [this.options[1], [Validators.required]]
+      requiredSelect: [this.options[1], [Validators.required]],
+      hideDetailsSelect: [null, [Validators.required]]
     });
   }
 }

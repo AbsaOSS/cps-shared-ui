@@ -14,7 +14,8 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   selector: 'cps-radio',
   imports: [CpsRadioButtonComponent],
   templateUrl: './cps-radio.component.html',
-  styleUrls: ['./cps-radio.component.scss']
+  styleUrls: ['./cps-radio.component.scss'],
+  host: { 'data-testid': 'cps-radio' }
 })
 export class CpsRadioComponent implements OnInit {
   /**
@@ -38,5 +39,13 @@ export class CpsRadioComponent implements OnInit {
 
   updateValueEvent(value: any): void {
     this.radioGroup?.updateValueEvent(value);
+  }
+
+  onBlur(): void {
+    this.radioGroup?.onBlur();
+  }
+
+  onFocus(): void {
+    this.radioGroup?.onFocus();
   }
 }

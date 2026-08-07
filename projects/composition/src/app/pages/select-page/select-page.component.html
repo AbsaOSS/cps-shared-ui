@@ -7,6 +7,7 @@
     <form [formGroup]="form">
       <cps-select
         label="Required single select with a tooltip"
+        data-testid="required-select"
         [options]="options"
         optionLabel="name"
         optionInfo="info"
@@ -24,6 +25,7 @@
     [tsCode]="examples.loadingSelect.ts">
     <cps-select
       label="Loading select"
+      data-testid="loading-select"
       [loading]="true"
       [options]="options"
       optionLabel="name"
@@ -36,6 +38,7 @@
     [htmlCode]="examples.disabledSelect.html">
     <cps-select
       label="Disabled select"
+      data-testid="disabled-select"
       [disabled]="true"
       hint="This select is disabled">
     </cps-select>
@@ -47,6 +50,7 @@
     [tsCode]="examples.multipleSelect.ts">
     <cps-select
       label="Multiple select"
+      data-testid="multiple-select"
       [options]="options"
       optionLabel="name"
       optionValue="data"
@@ -66,6 +70,7 @@
     [tsCode]="examples.virtualScrollSelect.ts">
     <cps-select
       label="Multiple select with virtual scroll, chips and persistent clear icon"
+      data-testid="virtual-scroll-select"
       hint="This select doesn't have Select All option"
       [selectAll]="false"
       [virtualScroll]="true"
@@ -85,6 +90,7 @@
     [tsCode]="examples.nonClosableChipsSelect.ts">
     <cps-select
       label="Multiple select with non-closable chips"
+      data-testid="non-closable-chips-select"
       [returnObject]="false"
       [options]="options"
       optionLabel="name"
@@ -105,6 +111,7 @@
     [tsCode]="examples.prefixIconSelect.ts">
     <cps-select
       label="Multiple select with prefix icon"
+      data-testid="prefix-icon-select"
       [options]="options"
       optionLabel="name"
       optionInfo="info"
@@ -123,6 +130,7 @@
     [tsCode]="examples.iconsSelect.ts">
     <cps-select
       label="Single select with options icons"
+      data-testid="icons-select"
       [options]="statusOptions"
       optionLabel="name"
       optionIconColor="color"
@@ -138,6 +146,7 @@
       <cps-select
         width="31.25rem"
         label="Multiple select with two-way binding and keeping initial items order"
+        data-testid="two-way-binding-select"
         [returnObject]="false"
         [options]="syncOptions"
         [keepInitialOrder]="true"
@@ -161,6 +170,7 @@
     [tsCode]="examples.underlinedSelect.ts">
     <cps-select
       label="Underlined select"
+      data-testid="underlined-select"
       [options]="options"
       optionLabel="name"
       optionInfo="info"
@@ -178,6 +188,7 @@
     [tsCode]="examples.borderlessSelect.ts">
     <cps-select
       label="Borderless select"
+      data-testid="borderless-select"
       [options]="options"
       optionLabel="name"
       optionInfo="info"
@@ -186,6 +197,42 @@
       [multiple]="true"
       [chips]="false"
       appearance="borderless">
+    </cps-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Multiple select with hidden details"
+    [htmlCode]="examples.hideDetailsSelect.html"
+    [tsCode]="examples.hideDetailsSelect.ts">
+    <form [formGroup]="form">
+      <cps-select
+        label="Required select without hint or error text"
+        data-testid="hide-details-select"
+        hint="This hint is never shown because hideDetails is true"
+        [options]="options"
+        optionLabel="name"
+        optionInfo="info"
+        [clearable]="true"
+        [hideDetails]="true"
+        formControlName="hideDetailsSelect">
+      </cps-select>
+    </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Select without reopening on clear"
+    [htmlCode]="examples.openOnClearSelect.html"
+    [tsCode]="examples.openOnClearSelect.ts">
+    <cps-select
+      data-testid="open-on-clear-false-select"
+      label="Select that stays closed after clearing"
+      hint="Clearing this select does not reopen the dropdown"
+      [options]="options"
+      optionLabel="name"
+      optionInfo="info"
+      [clearable]="true"
+      [openOnClear]="false"
+      [value]="openOnClearValue">
     </cps-select>
   </app-code-example>
 </app-component-docs-viewer>
