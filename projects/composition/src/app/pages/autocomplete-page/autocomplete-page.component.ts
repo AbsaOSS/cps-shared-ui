@@ -88,6 +88,8 @@ export class AutocompletePageComponent implements OnInit {
   validating = false;
   selectedOption: any = null;
 
+  getCode = (option: any): string => option.data.code;
+
   get availableOptionInfo() {
     return this.options.map((option) => option.name).join(', ');
   }
