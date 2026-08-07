@@ -1,9 +1,11 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
   <cps-sidebar-menu
+    data-testid="default-sidebar-menu"
     [items]="items"
     [exactRoutes]="true"
-    ariaLabel="Sidebar menu example"></cps-sidebar-menu>
+    ariaLabel="Sidebar menu example">
+  </cps-sidebar-menu>
 
   <div class="sidebar-menu-page-side">
     <div class="sidebar-menu-page-info-card">
