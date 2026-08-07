@@ -92,6 +92,10 @@ export class NotificationPageComponent {
     this.counter += 1;
   }
 
+  showDuplicateNotification() {
+    this._notifService.info('Duplicate notification message');
+  }
+
   clearNotifications() {
     this._notifService.clear();
   }
