@@ -40,4 +40,12 @@ export class CpsRadioComponent implements OnInit {
   updateValueEvent(value: any): void {
     this.radioGroup?.updateValueEvent(value);
   }
+
+  onBlur(): void {
+    this.radioGroup?.onBlur();
+  }
+
+  onFocus(): void {
+    this.radioGroup?.onFocus();
+  }
 }

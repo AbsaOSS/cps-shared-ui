@@ -86,6 +86,25 @@ test.describe('cps-radio-group', () => {
     });
   });
 
+  test.describe('Real focus/blur forwarding from custom-content cps-radio', () => {
+    test('focusing then blurring a custom-content radio without selecting shows a real required error', async ({
+      page
+    }) => {
+      const group = radioGroup(page, 'custom-content-radio-group');
+      const errorEl = group.getByTestId('cps-radio-group-error');
+
+      const simpleOption = group.getByRole('radio', { name: 'Simple option' });
+      await simpleOption.focus();
+      await page.evaluate(() =>
+        (document.activeElement as HTMLElement)?.blur()
+      );
+
+      await expect(errorEl).toBeVisible();
+      await expect(errorEl).toHaveText('Field is required');
+      await expect(group).toHaveAttribute('aria-invalid', 'true');
+    });
+  });
+
   test.describe('Real hideDetails suppresses both a real hint and a real validation error', () => {
     test('a hint stays real-absent untouched, and a real error stays real-absent once invalid', async ({
       page

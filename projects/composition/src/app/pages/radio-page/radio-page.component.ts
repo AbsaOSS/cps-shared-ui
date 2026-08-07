@@ -98,7 +98,8 @@ export class RadioPageComponent implements OnInit {
     ];
     this.form = this._formBuilder.group({
       requiredRadio: ['', requiredThirdValidators],
-      requiredRadioHidden: ['', requiredThirdValidators]
+      requiredRadioHidden: ['', requiredThirdValidators],
+      requiredCustomContentRadio: ['', Validators.required]
     });
   }
 
