@@ -540,6 +540,15 @@ describe('CpsTreeTableComponent', () => {
       component.onSelectedColumnsChange(cols);
       expect(component.columnsSelected.emit).toHaveBeenCalledWith(cols);
     });
+
+    it('should recalc auto layout header widths asynchronously', async () => {
+      const recalcSpy = jest
+        .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+        .mockImplementation(() => {});
+      component.onSelectedColumnsChange([]);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(recalcSpy).toHaveBeenCalledWith(true);
+    });
   });
 
   describe('node events', () => {
@@ -1509,6 +1518,785 @@ describe('CpsTreeTableComponent', () => {
         '_collapseAutoLayoutIncremental',
         [collapseEvent]
       );
+    });
+  });
+
+  describe('onPaginatorKeydown navigation', () => {
+    function makePageButtons(count: number): HTMLButtonElement[] {
+      const buttons: HTMLButtonElement[] = [];
+      for (let i = 0; i < count; i++) {
+        const btn = document.createElement('button');
+        btn.classList.add('p-paginator-page');
+        btn.textContent = String(i + 1);
+        buttons.push(btn);
+        (component as any)._elementRef.nativeElement.appendChild(btn);
+      }
+      return buttons;
+    }
+
+    afterEach(() => {
+      (component as any)._elementRef.nativeElement
+        .querySelectorAll('.p-paginator-page')
+        .forEach((el: HTMLElement) => el.remove());
+    });
+
+    it('should focus and click the next page button on ArrowRight', () => {
+      const buttons = makePageButtons(3);
+      const clickSpy = jest.spyOn(buttons[1], 'click');
+      const focusSpy = jest.spyOn(buttons[1], 'focus');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(focusSpy).toHaveBeenCalled();
+      expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it('should focus and click the previous page button on ArrowLeft', () => {
+      const buttons = makePageButtons(3);
+      const clickSpy = jest.spyOn(buttons[0], 'click');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+      Object.defineProperty(event, 'target', { value: buttons[1] });
+      component.onPaginatorKeydown(event);
+      expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it('should jump to the next page when at the last button but not the last page', () => {
+      const buttons = makePageButtons(1);
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 100;
+      jest.spyOn(component, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(component.changePage).toHaveBeenCalled();
+    });
+
+    it('should do nothing when already at the last page boundary going right', () => {
+      const buttons = makePageButtons(1);
+      buttons[0].textContent = '10';
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 100;
+      jest.spyOn(component, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(component.changePage).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when already at the first page boundary going left', () => {
+      const buttons = makePageButtons(1);
+      buttons[0].textContent = '1';
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 100;
+      jest.spyOn(component, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(component.changePage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('_focusPaginatorSelectedPage', () => {
+    it('should focus the currently selected page button', () => {
+      const btn = document.createElement('button');
+      btn.classList.add('p-paginator-page');
+      btn.setAttribute('aria-current', 'page');
+      (component as any)._elementRef.nativeElement.appendChild(btn);
+      const focusSpy = jest.spyOn(btn, 'focus');
+      (component as any)._focusPaginatorSelectedPage();
+      expect(focusSpy).toHaveBeenCalled();
+      btn.remove();
+    });
+
+    it('should do nothing when there is no selected page button', () => {
+      expect(() =>
+        (component as any)._focusPaginatorSelectedPage()
+      ).not.toThrow();
+    });
+  });
+
+  describe('onPageChange refocus behavior', () => {
+    function flushMacrotask(): Promise<void> {
+      return new Promise((resolve) => setTimeout(resolve, 0));
+    }
+
+    it('should refocus the selected page when leaving the first-page button at the start', async () => {
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 30;
+      const firstBtn = document.createElement('button');
+      firstBtn.classList.add('p-paginator-first');
+      (component as any).document = { activeElement: firstBtn };
+      const focusPaginatorSpy = jest
+        .spyOn(component as any, '_focusPaginatorSelectedPage')
+        .mockImplementation(() => {});
+      component.onPageChange({ first: 0, rows: 10 });
+      await flushMacrotask();
+      expect(focusPaginatorSpy).toHaveBeenCalled();
+    });
+
+    it('should recalc auto layout header widths asynchronously', async () => {
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 30;
+      const recalcSpy = jest
+        .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+        .mockImplementation(() => {});
+      component.onPageChange({ first: 10, rows: 10 });
+      await flushMacrotask();
+      expect(recalcSpy).toHaveBeenCalledWith(true);
+    });
+  });
+
+  describe('onRowsPerPageChanged', () => {
+    it('should reset to first page when resetPageOnRowsChange is true', () => {
+      component.resetPageOnRowsChange = true;
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 30;
+      component.primengTreeTable.first = 20;
+      jest.spyOn(component, 'changePage');
+      component.onRowsPerPageChanged();
+      expect(component.primengTreeTable.first).toBe(0);
+      expect(component.changePage).toHaveBeenCalledWith(0);
+    });
+
+    it('should not reset first when resetPageOnRowsChange is false', () => {
+      component.resetPageOnRowsChange = false;
+      component.rows = 10;
+      component.primengTreeTable.totalRecords = 30;
+      component.primengTreeTable.first = 20;
+      component.onRowsPerPageChanged();
+      expect(component.primengTreeTable.first).toBe(20);
+    });
+  });
+
+  describe('_onWindowResize', () => {
+    it('should debounce and recalc virtual height', () => {
+      jest.useFakeTimers();
+      const recalcSpy = jest
+        .spyOn(component as any, '_recalcVirtualHeight')
+        .mockImplementation(() => {});
+      (component as any)._onWindowResize();
+      (component as any)._onWindowResize();
+      jest.advanceTimersByTime(100);
+      expect(recalcSpy).toHaveBeenCalledTimes(1);
+      jest.useRealTimers();
+    });
+  });
+
+  describe('_setMinWidthOverall', () => {
+    it('should do nothing when minWidthForBodyOnly is true', () => {
+      component.minWidthForBodyOnly = true;
+      component.minWidth = '500px';
+      expect(() => (component as any)._setMinWidthOverall()).not.toThrow();
+    });
+
+    it('should do nothing when minWidth is not set', () => {
+      component.minWidthForBodyOnly = false;
+      component.minWidth = '';
+      expect(() => (component as any)._setMinWidthOverall()).not.toThrow();
+    });
+
+    it('should set min-width on the scrollable wrapper, paginator, loading overlay and header when present', () => {
+      component.minWidthForBodyOnly = false;
+      component.minWidth = '600px';
+      component.scrollable = false;
+
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const main = document.createElement('div');
+      main.className = 'p-treetable';
+      const paginatorEl = document.createElement('div');
+      paginatorEl.className = 'p-paginator';
+      const loadingOverlay = document.createElement('div');
+      loadingOverlay.className = 'p-treetable-loading-overlay';
+      main.appendChild(paginatorEl);
+      main.appendChild(loadingOverlay);
+
+      const scrollableWrapper = document.createElement('div');
+      scrollableWrapper.className = 'p-treetable-scrollable-wrapper';
+
+      const tableWrapper = document.createElement('div');
+      tableWrapper.className = 'p-treetable-wrapper';
+
+      const header = document.createElement('div');
+      header.className = 'p-treetable-header';
+
+      host.appendChild(main);
+      host.appendChild(scrollableWrapper);
+      host.appendChild(tableWrapper);
+      host.appendChild(header);
+
+      (component as any)._setMinWidthOverall();
+
+      expect(main.style.overflow).toBe('auto');
+      expect(paginatorEl.style.minWidth).toBe('600px');
+      expect(loadingOverlay.style.minWidth).toBe('600px');
+      expect(scrollableWrapper.style.minWidth).toBe('600px');
+      expect(tableWrapper.style.minWidth).toBe('600px');
+      expect(header.style.minWidth).toBe('600px');
+
+      host.removeChild(main);
+      host.removeChild(scrollableWrapper);
+      host.removeChild(tableWrapper);
+      host.removeChild(header);
+    });
+
+    it('should skip the non-scrollable table wrapper when scrollable is true', () => {
+      component.minWidthForBodyOnly = false;
+      component.minWidth = '600px';
+      component.scrollable = true;
+
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const tableWrapper = document.createElement('div');
+      tableWrapper.className = 'p-treetable-wrapper';
+      host.appendChild(tableWrapper);
+
+      (component as any)._setMinWidthOverall();
+
+      expect(tableWrapper.style.minWidth).toBe('');
+
+      host.removeChild(tableWrapper);
+    });
+  });
+
+  describe('_updateVirtualScrollItemSize', () => {
+    it('should do nothing when virtualScroll is false', () => {
+      component.virtualScroll = false;
+      expect(() =>
+        (component as any)._updateVirtualScrollItemSize()
+      ).not.toThrow();
+    });
+
+    it('should do nothing when virtualScrollItemHeight is set', () => {
+      component.virtualScroll = true;
+      component.virtualScrollItemHeight = 40;
+      component.virtualScrollItemSize = 99;
+      (component as any)._updateVirtualScrollItemSize();
+
+      expect(component.virtualScrollItemSize).toBe(99);
+    });
+
+    it('should do nothing when there are no body rows', () => {
+      component.virtualScroll = true;
+      component.virtualScrollItemHeight = 0;
+      expect(() =>
+        (component as any)._updateVirtualScrollItemSize()
+      ).not.toThrow();
+    });
+
+    it('should measure the smallest row height across rows', () => {
+      component.virtualScroll = true;
+      component.virtualScrollItemHeight = 0;
+
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const tbody = document.createElement('div');
+      tbody.className = 'p-treetable-tbody';
+      const makeRow = (height: number) => {
+        const tr = document.createElement('tr');
+        Object.defineProperty(tr, 'offsetHeight', {
+          value: height,
+          configurable: true
+        });
+        const td = document.createElement('td');
+        Object.defineProperty(td, 'offsetHeight', {
+          value: height,
+          configurable: true
+        });
+        tr.appendChild(td);
+        return tr;
+      };
+      const row1 = makeRow(50);
+      const row2 = makeRow(30);
+      tbody.appendChild(row1);
+      tbody.appendChild(row2);
+      host.appendChild(tbody);
+
+      (component as any)._updateVirtualScrollItemSize();
+
+      expect(component.virtualScrollItemSize).toBe(30);
+
+      host.removeChild(tbody);
+    });
+  });
+
+  describe('resizeObserver callback', () => {
+    let capturedCallback: ((entries: any[]) => void) | undefined;
+    let localFixture: ComponentFixture<CpsTreeTableComponent>;
+    let localComponent: CpsTreeTableComponent;
+    let OriginalRO: any;
+
+    beforeEach(async () => {
+      OriginalRO = window.ResizeObserver;
+      (window as any).ResizeObserver = class {
+        constructor(cb: (entries: any[]) => void) {
+          capturedCallback = cb;
+        }
+
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [CpsTreeTableComponent, NoopAnimationsModule],
+        providers: [
+          {
+            provide: CPS_ROOT_FONT_SIZE_SERVICE,
+            useValue: mockRootFontSizeService
+          }
+        ]
+      }).compileComponents();
+      localFixture = TestBed.createComponent(CpsTreeTableComponent);
+      localComponent = localFixture.componentInstance;
+      localFixture.detectChanges();
+    });
+
+    afterEach(() => {
+      window.ResizeObserver = OriginalRO;
+    });
+
+    it('should mark the scrollbar visible and apply overflow when virtualScroll is enabled', () => {
+      (localComponent as any)._headerBox = document.createElement('div');
+      (localComponent as any)._scrollableBody = document.createElement('div');
+      (localComponent as any)._scrollbarWidth = 20;
+      localComponent.virtualScroll = true;
+
+      const target = document.createElement('div');
+      Object.defineProperty(target, 'scrollHeight', {
+        value: 200,
+        configurable: true
+      });
+      Object.defineProperty(target, 'clientHeight', {
+        value: 100,
+        configurable: true
+      });
+
+      expect(() => capturedCallback?.([{ target }])).not.toThrow();
+      expect((localComponent as any)._scrollbarVisible).toBe(true);
+    });
+
+    it('should mark the scrollbar not visible when scrollHeight does not exceed clientHeight', () => {
+      (localComponent as any)._headerBox = document.createElement('div');
+      (localComponent as any)._scrollableBody = document.createElement('div');
+      localComponent.virtualScroll = false;
+
+      const target = document.createElement('div');
+      Object.defineProperty(target, 'scrollHeight', {
+        value: 100,
+        configurable: true
+      });
+      Object.defineProperty(target, 'clientHeight', {
+        value: 100,
+        configurable: true
+      });
+
+      capturedCallback?.([{ target }]);
+
+      expect((localComponent as any)._scrollbarVisible).toBe(false);
+    });
+  });
+
+  describe('_recalcVirtualHeight', () => {
+    it('should hide overflow when there is no visible scrollbar and virtualScroll is enabled', () => {
+      component.virtualScroll = true;
+      (component as any)._scrollbarVisible = false;
+      (component as any)._scrollableBody = document.createElement('div');
+      (component as any)._recalcVirtualHeight();
+      expect((component as any)._scrollableBody.style.overflow).toBe('hidden');
+    });
+
+    it('should compute scrollHeight from item size and item count as a microtask', async () => {
+      component.virtualScroll = true;
+      component.defScrollHeight = '400px';
+      (component as any)._scrollableBody = document.createElement('div');
+      component.virtualScrollItemSize = 40;
+      component.primengTreeTable.serializedValue = [{}, {}, {}] as any;
+      jest
+        .spyOn(component as any, '_updateVirtualScrollItemSize')
+        .mockImplementation(() => {});
+
+      (component as any)._recalcVirtualHeight();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(component.scrollHeight).toContain('min(');
+    });
+
+    it('should compute an empty-body height when there are no items', async () => {
+      component.virtualScroll = true;
+      component.defScrollHeight = '400px';
+      component.emptyBodyHeight = '10rem';
+      (component as any)._scrollableBody = document.createElement('div');
+      component.primengTreeTable.serializedValue = [] as any;
+      jest
+        .spyOn(component as any, '_updateVirtualScrollItemSize')
+        .mockImplementation(() => {});
+
+      (component as any)._recalcVirtualHeight();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(component.scrollHeight).toContain('calc(10rem');
+    });
+
+    it('should switch to flex height and mark for check when content exceeds the initial flex height', async () => {
+      component.virtualScroll = true;
+      component.defScrollHeight = 'flex';
+      (component as any)._scrollableBody = document.createElement('div');
+      component.virtualScrollItemSize = 100;
+      (component as any)._defScrollHeightPxInitial = 50;
+      component.primengTreeTable.serializedValue = [{}] as any;
+      jest
+        .spyOn(component as any, '_updateVirtualScrollItemSize')
+        .mockImplementation(() => {});
+      const markSpy = jest.spyOn((component as any).cdRef, 'markForCheck');
+
+      (component as any)._recalcVirtualHeight();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(component.scrollHeight).toBe('flex');
+      expect(markSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('ngAfterViewInit / ngAfterViewChecked', () => {
+    it('should remove an empty tfoot via _removeEmptyFooter', () => {
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const tfoot = document.createElement('tfoot');
+      tfoot.className = 'p-treetable-tfoot';
+      const parent = document.createElement('div');
+      parent.appendChild(tfoot);
+      host.appendChild(parent);
+      const removeChildSpy = jest.spyOn(
+        (component as any).renderer,
+        'removeChild'
+      );
+
+      (component as any)._removeEmptyFooter();
+
+      expect(removeChildSpy).toHaveBeenCalledWith(parent, tfoot);
+      host.removeChild(parent);
+    });
+
+    it('should leave a non-empty tfoot in place', () => {
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const tfoot = document.createElement('tfoot');
+      tfoot.className = 'p-treetable-tfoot';
+      tfoot.appendChild(document.createElement('tr'));
+      const parent = document.createElement('div');
+      parent.appendChild(tfoot);
+      host.appendChild(parent);
+
+      (component as any)._removeEmptyFooter();
+
+      expect(parent.contains(tfoot)).toBe(true);
+      host.removeChild(parent);
+    });
+
+    it('should call _removeEmptyFooter from ngAfterViewInit when not scrollable', () => {
+      component.scrollable = false;
+      const removeSpy = jest
+        .spyOn(component as any, '_removeEmptyFooter')
+        .mockImplementation(() => {});
+      component.ngAfterViewInit();
+      expect(removeSpy).toHaveBeenCalled();
+    });
+
+    it('should recalc header widths in ngAfterViewChecked when needed', () => {
+      (component as any)._needRecalcAutoLayout = true;
+      const recalcSpy = jest
+        .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+        .mockImplementation(() => {});
+      const detectSpy = jest.spyOn((component as any).cdRef, 'detectChanges');
+      component.ngAfterViewChecked();
+      expect(recalcSpy).toHaveBeenCalled();
+      expect(detectSpy).toHaveBeenCalled();
+    });
+
+    it('should do nothing further in ngAfterViewChecked when virtualScroll is disabled', () => {
+      (component as any)._needRecalcAutoLayout = false;
+      component.virtualScroll = false;
+      expect(() => component.ngAfterViewChecked()).not.toThrow();
+    });
+
+    it('should capture the initial flex scroll height once in ngAfterViewChecked', () => {
+      (component as any)._needRecalcAutoLayout = false;
+      component.virtualScroll = true;
+      component.defScrollHeight = 'flex';
+      (component as any)._defScrollHeightPx = 0;
+      (component as any)._scrollableBody = document.createElement('div');
+      Object.defineProperty(
+        (component as any)._scrollableBody,
+        'clientHeight',
+        { value: 250, configurable: true }
+      );
+      component.virtualScrollItemSize = 1;
+
+      component.ngAfterViewChecked();
+
+      expect((component as any)._defScrollHeightPx).toBe(250);
+      expect((component as any)._defScrollHeightPxInitial).toBe(250);
+    });
+  });
+
+  describe('ngAfterViewInit — scrollable-body branches', () => {
+    function buildScrollableHost(): {
+      host: HTMLElement;
+      scrollableBody: HTMLElement;
+      innerTable: HTMLTableElement;
+    } {
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const scrollableBody = document.createElement('div');
+      scrollableBody.className = 'p-treetable-scrollable-body';
+      const innerTable = document.createElement('table');
+      scrollableBody.appendChild(innerTable);
+      host.appendChild(scrollableBody);
+      return { host, scrollableBody, innerTable };
+    }
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('should set min-width on the scrollable-body table when minWidthForBodyOnly is enabled', () => {
+      const { innerTable } = buildScrollableHost();
+      component.minWidthForBodyOnly = true;
+      component.minWidth = '400px';
+      component.virtualScroll = false;
+
+      component.ngAfterViewInit();
+
+      expect(innerTable.style.minWidth).toBe('400px');
+    });
+
+    it('should not set min-width on the scrollable-body table when there is no table element', () => {
+      const { scrollableBody } = buildScrollableHost();
+      scrollableBody.removeChild(scrollableBody.firstChild!);
+      component.minWidthForBodyOnly = true;
+      component.minWidth = '400px';
+      component.virtualScroll = false;
+
+      expect(() => component.ngAfterViewInit()).not.toThrow();
+    });
+
+    it('should skip min-width handling when minWidthForBodyOnly is false', () => {
+      const { innerTable } = buildScrollableHost();
+      component.minWidthForBodyOnly = false;
+      component.minWidth = '400px';
+      component.virtualScroll = false;
+
+      component.ngAfterViewInit();
+
+      expect(innerTable.style.minWidth).toBe('');
+    });
+
+    it('should set tabIndex and capture the initial flex height for virtualScroll', () => {
+      const { scrollableBody } = buildScrollableHost();
+      Object.defineProperty(scrollableBody, 'clientHeight', {
+        value: 300,
+        configurable: true
+      });
+      component.virtualScroll = true;
+      component.defScrollHeight = 'flex';
+      component.autoLayout = false;
+
+      component.ngAfterViewInit();
+
+      expect(scrollableBody.tabIndex).toBe(-1);
+      expect((component as any)._defScrollHeightPx).toBe(300);
+      expect((component as any)._defScrollHeightPxInitial).toBe(300);
+    });
+
+    it('should not capture flex height when defScrollHeight is not "flex"', () => {
+      buildScrollableHost();
+      component.virtualScroll = true;
+      component.defScrollHeight = '400px';
+      component.autoLayout = false;
+      (component as any)._defScrollHeightPx = 0;
+
+      component.ngAfterViewInit();
+
+      expect((component as any)._defScrollHeightPx).toBe(0);
+    });
+
+    it('should subscribe to scroll events for auto layout recalculation when autoLayout is enabled', () => {
+      const { scrollableBody } = buildScrollableHost();
+      component.virtualScroll = true;
+      component.defScrollHeight = '400px';
+      component.autoLayout = true;
+      const recalcSpy = jest
+        .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+        .mockImplementation(() => {});
+
+      component.ngAfterViewInit();
+      recalcSpy.mockClear();
+      scrollableBody.dispatchEvent(new Event('scroll'));
+
+      expect(recalcSpy).toHaveBeenCalledWith(true);
+      (component as any)._scrollSubscription?.unsubscribe();
+    });
+
+    it('should skip virtualScroll-specific setup when virtualScroll is disabled', () => {
+      const { scrollableBody } = buildScrollableHost();
+      scrollableBody.tabIndex = 0;
+      component.virtualScroll = false;
+
+      component.ngAfterViewInit();
+
+      expect(scrollableBody.tabIndex).toBe(0);
+    });
+
+    it('should set min-width on the header-box table and observe the scrollable body when the header box is found', () => {
+      const { host } = buildScrollableHost();
+      const headerBox = document.createElement('div');
+      headerBox.className = 'p-treetable-scrollable-header-box';
+      const headerTable = document.createElement('table');
+      headerBox.appendChild(headerTable);
+      host.appendChild(headerBox);
+      component.minWidthForBodyOnly = true;
+      component.minWidth = '350px';
+      component.virtualScroll = false;
+      const observeSpy = jest.spyOn(
+        (component as any)._resizeObserver,
+        'observe'
+      );
+
+      component.ngAfterViewInit();
+
+      expect(headerTable.style.minWidth).toBe('350px');
+      expect(observeSpy).toHaveBeenCalled();
+    });
+
+    it('should not throw when there is no header box', () => {
+      buildScrollableHost();
+      component.virtualScroll = false;
+
+      expect(() => component.ngAfterViewInit()).not.toThrow();
+    });
+
+    it('should recalc header widths and detect changes when needed after view init', () => {
+      buildScrollableHost();
+      (component as any)._needRecalcAutoLayout = true;
+      const recalcSpy = jest
+        .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+        .mockImplementation(() => {});
+      const detectSpy = jest.spyOn((component as any).cdRef, 'detectChanges');
+
+      component.ngAfterViewInit();
+
+      expect(recalcSpy).toHaveBeenCalled();
+      expect(detectSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('ngAfterViewInit — non-scrollable table wrapper', () => {
+    it('should set min-width on the non-scrollable table wrapper', () => {
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'p-treetable-wrapper';
+      const table = document.createElement('table');
+      wrapper.appendChild(table);
+      host.appendChild(wrapper);
+      component.scrollable = false;
+      component.minWidthForBodyOnly = true;
+      component.minWidth = '500px';
+
+      component.ngAfterViewInit();
+
+      expect(table.style.minWidth).toBe('500px');
+    });
+
+    it('should not throw when the non-scrollable wrapper has no table', () => {
+      const host = (component as any).primengTreeTable.el
+        .nativeElement as HTMLElement;
+      host.innerHTML = '';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'p-treetable-wrapper';
+      host.appendChild(wrapper);
+      component.scrollable = false;
+      component.minWidthForBodyOnly = true;
+      component.minWidth = '500px';
+
+      expect(() => component.ngAfterViewInit()).not.toThrow();
+    });
+  });
+
+  describe('ngOnDestroy virtualScroll cleanup', () => {
+    it('should unsubscribe the scroll subscription and remove the resize listener when virtualScroll and autoLayout are enabled', () => {
+      component.virtualScroll = true;
+      component.autoLayout = true;
+      const sub = { unsubscribe: jest.fn() };
+      (component as any)._scrollSubscription = sub;
+      const removeSpy = jest.spyOn(
+        (component as any).window,
+        'removeEventListener'
+      );
+
+      component.ngOnDestroy();
+
+      expect(sub.unsubscribe).toHaveBeenCalled();
+      expect(removeSpy).toHaveBeenCalledWith('resize', expect.any(Function));
+    });
+
+    it('should skip the scroll unsubscribe when autoLayout is disabled', () => {
+      component.virtualScroll = true;
+      component.autoLayout = false;
+      const sub = { unsubscribe: jest.fn() };
+      (component as any)._scrollSubscription = sub;
+
+      component.ngOnDestroy();
+
+      expect(sub.unsubscribe).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing extra when virtualScroll is disabled', () => {
+      component.virtualScroll = false;
+      const removeSpy = jest.spyOn(
+        (component as any).window,
+        'removeEventListener'
+      );
+
+      component.ngOnDestroy();
+
+      expect(removeSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('_calcAutoLayoutHeaderWidths early returns', () => {
+    it('should do nothing when autoLayout is disabled', () => {
+      component.autoLayout = false;
+      component.scrollable = true;
+      expect(() =>
+        (component as any)._calcAutoLayoutHeaderWidths(true)
+      ).not.toThrow();
+    });
+
+    it('should do nothing when not scrollable', () => {
+      component.autoLayout = true;
+      component.scrollable = false;
+      expect(() =>
+        (component as any)._calcAutoLayoutHeaderWidths(true)
+      ).not.toThrow();
+    });
+
+    it('should skip recalculation when not forced and no recalculation is needed', () => {
+      component.autoLayout = true;
+      component.scrollable = true;
+      (component as any)._needRecalcAutoLayout = false;
+      const querySpy = jest.spyOn(component as any, '_queryHeaderCells');
+      (component as any)._calcAutoLayoutHeaderWidths(false);
+      expect(querySpy).not.toHaveBeenCalled();
     });
   });
 });

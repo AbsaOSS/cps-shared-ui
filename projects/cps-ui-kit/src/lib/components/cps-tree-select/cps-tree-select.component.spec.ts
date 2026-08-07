@@ -1,5 +1,11 @@
 import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  discardPeriodicTasks,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -181,5 +187,33 @@ describe('CpsTreeSelectComponent', () => {
       component.onKeyDown(keyEvent('ArrowUp'));
       expect(component.isOpened).toBe(true);
     });
+
+    it('should do nothing on Tab when already closed', () => {
+      jest.spyOn(component, 'toggleOptions');
+      component.onKeyDown(keyEvent('Tab'));
+      expect(component.toggleOptions).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing for an unrelated key', () => {
+      const event = keyEvent('KeyA');
+      jest.spyOn(event, 'preventDefault');
+      expect(() => component.onKeyDown(event)).not.toThrow();
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('should navigate into options on ArrowDown when already open', () => {
+      component.toggleOptions(true);
+      jest.spyOn(component, 'navigateIntoOptions').mockImplementation(() => {});
+      component.onKeyDown(keyEvent('ArrowDown'));
+      expect(component.navigateIntoOptions).toHaveBeenCalledWith(false);
+    });
+
+    it('should schedule initial arrow navigation after opening', fakeAsync(() => {
+      jest.spyOn(component, 'initArrowsNavigaton').mockImplementation(() => {});
+      component.onKeyDown(keyEvent('ArrowDown'));
+      tick();
+      expect(component.initArrowsNavigaton).toHaveBeenCalledWith(false);
+      discardPeriodicTasks();
+    }));
   });
 });

@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -7,7 +7,12 @@ import {
   flush,
   tick
 } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
@@ -707,5 +712,821 @@ describe('CpsAutocompleteComponent', () => {
       );
       expect(container).toBeTruthy();
     });
+  });
+
+  describe('ngOnInit defaults', () => {
+    it('should default value to an empty array in multiple mode with no initial value', () => {
+      const f = TestBed.createComponent(CpsAutocompleteComponent);
+      const c = f.componentInstance;
+      f.componentRef.setInput('ariaLabel', 'Multi');
+      f.componentRef.setInput('multiple', true);
+      f.detectChanges();
+      expect(c.value).toEqual([]);
+    });
+
+    it('should default value using emptyOptionIndex in single mode', () => {
+      const f = TestBed.createComponent(CpsAutocompleteComponent);
+      const c = f.componentInstance;
+      f.componentRef.setInput('ariaLabel', 'Single');
+      f.componentRef.setInput('options', [
+        { label: 'None', value: '' },
+        { label: 'Option 1', value: 'opt1' }
+      ]);
+      f.componentRef.setInput('emptyOptionIndex', 0);
+      f.detectChanges();
+      expect(c.value).toEqual({ label: 'None', value: '' });
+    });
+  });
+
+  describe('ngOnChanges', () => {
+    it('should recompute cvtWidth when width changes', () => {
+      fixture.componentRef.setInput('width', 300);
+      fixture.detectChanges();
+      expect(component.cvtWidth).toBe('300px');
+    });
+
+    it('should reopen options when loading transitions from true to false', () => {
+      fixture.componentRef.setInput('loading', true);
+      fixture.detectChanges();
+      jest.spyOn(component as any, '_toggleOptions');
+      fixture.componentRef.setInput('loading', false);
+      fixture.detectChanges();
+      expect((component as any)._toggleOptions).toHaveBeenCalledWith(true);
+    });
+  });
+
+  describe('select with keepInitialOrder', () => {
+    it('should keep the original option order when adding a selection', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('keepInitialOrder', true);
+      component.value = [component.options[2]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      component.select(component.options[0], false);
+
+      expect(component.value).toEqual([
+        component.options[0],
+        component.options[2]
+      ]);
+    });
+
+    it('should keep the original option order when deselecting', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('keepInitialOrder', true);
+      component.value = [component.options[0], component.options[2]];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      component.select(component.options[0], false);
+
+      expect(component.value).toEqual([component.options[2]]);
+    });
+  });
+
+  describe('toggleAll with returnObject false', () => {
+    it('should select values instead of full option objects', fakeAsync(() => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      component.toggleAll();
+      tick();
+
+      expect(component.value).toEqual(['opt1', 'opt2', 'opt3']);
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('withOptionsAliases', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('options', [
+        { label: 'Apple', value: 'apple', alias: 'fruit-a' },
+        { label: 'Banana', value: 'banana', alias: 'fruit-b' }
+      ]);
+      fixture.detectChanges();
+    });
+
+    it('should filter by alias when no label matches and withOptionsAliases is true', () => {
+      fixture.componentRef.setInput('withOptionsAliases', true);
+      fixture.detectChanges();
+      component.filterOptions({ target: { value: 'fruit-b' } });
+      expect(component.filteredOptions.length).toBe(1);
+      expect(component.filteredOptions[0].label).toBe('Banana');
+    });
+
+    it('should fall back to alias matching only when useOptionsAliasesWhenNoMatch is true and no label matches', () => {
+      fixture.componentRef.setInput('withOptionsAliases', true);
+      fixture.componentRef.setInput('useOptionsAliasesWhenNoMatch', true);
+      fixture.detectChanges();
+      component.filterOptions({ target: { value: 'fruit-a' } });
+      expect(component.filteredOptions.length).toBe(1);
+      expect(component.filteredOptions[0].label).toBe('Apple');
+    });
+  });
+
+  describe('onBlur', () => {
+    it('should close the options menu when open', fakeAsync(() => {
+      component.onBoxClick();
+      tick();
+      fixture.detectChanges();
+      expect(component.isOpened).toBe(true);
+
+      component.onBlur();
+      tick();
+
+      expect(component.isOpened).toBe(false);
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('onBeforeOptionsHidden with SCROLL/RESIZE', () => {
+    it('should only toggle options closed on SCROLL', fakeAsync(() => {
+      component.onBoxClick();
+      tick();
+      fixture.detectChanges();
+      jest.spyOn(component, 'clearInput');
+
+      component.onBeforeOptionsHidden(CpsMenuHideReason.SCROLL);
+
+      expect(component.clearInput).not.toHaveBeenCalled();
+      discardPeriodicTasks();
+    }));
+
+    it('should only toggle options closed on RESIZE', fakeAsync(() => {
+      component.onBoxClick();
+      tick();
+      fixture.detectChanges();
+      jest.spyOn(component, 'clearInput');
+
+      component.onBeforeOptionsHidden(CpsMenuHideReason.RESIZE);
+
+      expect(component.clearInput).not.toHaveBeenCalled();
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('onContainerKeyDown', () => {
+    it('should toggle all when Enter is pressed on the select-all option', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      component.optionHighlightedIndex = 0;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      jest.spyOn(component, 'toggleAll');
+
+      component.onContainerKeyDown({ keyCode: 13 });
+
+      expect(component.toggleAll).toHaveBeenCalled();
+    });
+
+    it('should select the option at the adjusted index when select-all is visible', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.value = [];
+      component.optionHighlightedIndex = 1;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      jest.spyOn(component, 'select');
+
+      component.onContainerKeyDown({ keyCode: 13 });
+
+      expect(component.select).toHaveBeenCalledWith(
+        component.options[0],
+        false,
+        true,
+        true
+      );
+    });
+
+    it('should dehighlight when filtered options differ from full options', () => {
+      component.filteredOptions = [component.options[0]];
+      component.optionHighlightedIndex = 0;
+      jest.spyOn(component as any, '_dehighlightOption');
+
+      component.onContainerKeyDown({ keyCode: 13 });
+
+      expect((component as any)._dehighlightOption).toHaveBeenCalled();
+    });
+
+    it('should call virtual navigation when virtualScroll is enabled', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      component.isOpened = true;
+      fixture.detectChanges();
+      jest.spyOn(component as any, '_navigateVirtualOptionsByArrows');
+
+      component.onContainerKeyDown({ keyCode: 40 });
+
+      expect(
+        (component as any)._navigateVirtualOptionsByArrows
+      ).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('onInputKeyDown', () => {
+    it('should remove the last value on backspace with empty input', () => {
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [component.options[0]];
+      component.inputText = '';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const event = { keyCode: 8, stopPropagation: jest.fn() };
+
+      component.onInputKeyDown(event);
+
+      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(component.backspaceClickedOnce).toBe(true);
+    });
+
+    it('should open the options menu on Enter when closed', () => {
+      component.isOpened = false;
+      const event = {
+        keyCode: 13,
+        stopPropagation: jest.fn(),
+        preventDefault: jest.fn()
+      };
+
+      component.onInputKeyDown(event);
+
+      expect(event.stopPropagation).toHaveBeenCalled();
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(component.isOpened).toBe(true);
+    });
+
+    it('should confirm input on Enter when open and nothing is highlighted', () => {
+      component.isOpened = true;
+      component.optionHighlightedIndex = -1;
+      const event = {
+        keyCode: 13,
+        target: { value: 'Option 1' },
+        stopPropagation: jest.fn()
+      };
+      jest.spyOn(component as any, '_confirmInput');
+
+      component.onInputKeyDown(event);
+
+      expect(event.stopPropagation).toHaveBeenCalled();
+      expect((component as any)._confirmInput).toHaveBeenCalledWith(
+        'Option 1',
+        true
+      );
+    });
+
+    it('should preventDefault on arrow keys', () => {
+      const event = { keyCode: 38, preventDefault: jest.fn() };
+      component.onInputKeyDown(event);
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+  });
+
+  describe('onChevronClick', () => {
+    it('should close and clear when already open', () => {
+      component.isOpened = true;
+      jest.spyOn(component, 'clearInput');
+      const event = {
+        stopPropagation: jest.fn(),
+        preventDefault: jest.fn()
+      };
+
+      component.onChevronClick(event);
+
+      expect(component.clearInput).toHaveBeenCalled();
+    });
+  });
+
+  describe('getOptionId', () => {
+    it('should build an id for a primitive option', () => {
+      const id = component.getOptionId('opt1', 0);
+      expect(id).toContain('-0');
+    });
+  });
+
+  describe('with NgControl (reactive forms)', () => {
+    @Component({
+      imports: [CpsAutocompleteComponent, ReactiveFormsModule],
+      template: `<cps-autocomplete
+        [formControl]="control"
+        [options]="options"
+        ariaLabel="Autocomplete"></cps-autocomplete>`
+    })
+    class HostComponent {
+      control = new FormControl(undefined, Validators.required);
+      options = [
+        { label: 'Option 1', value: 'opt1' },
+        { label: 'Option 2', value: 'opt2' }
+      ];
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let autocomplete: CpsAutocompleteComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent],
+        providers: [
+          {
+            provide: CPS_ROOT_FONT_SIZE_SERVICE,
+            useValue: mockRootFontSizeService
+          }
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      autocomplete = hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      autocomplete.select(autocomplete.options[0], false);
+      hostFixture.detectChanges();
+      expect(host.control.value).toEqual(autocomplete.options[0]);
+    });
+
+    it('should report isRequired true when a required validator is present', () => {
+      expect(autocomplete.isRequired).toBe(true);
+    });
+
+    it('should report isRequired false when no required validator is present', () => {
+      host.control.clearValidators();
+      host.control.updateValueAndValidity();
+      expect(autocomplete.isRequired).toBe(false);
+    });
+
+    it('should set a required error message when touched and invalid', () => {
+      host.control.markAsTouched();
+      host.control.updateValueAndValidity();
+      expect(autocomplete.error).toBe('Field is required');
+    });
+
+    it('should not set an error when the control has not been touched', () => {
+      autocomplete.onBlur();
+      expect(autocomplete.error).toBe('');
+    });
+
+    it('should clear the error when the control becomes valid', () => {
+      host.control.markAsTouched();
+      host.control.setValue(autocomplete.options[0]);
+      autocomplete.onBlur();
+      expect(autocomplete.error).toBe('');
+    });
+
+    it('should use a custom string error message when present', () => {
+      host.control.setValidators(() => ({ custom: 'Custom failure' }));
+      host.control.updateValueAndValidity();
+      host.control.markAsTouched();
+      autocomplete.onBlur();
+      expect(autocomplete.error).toBe('Custom failure');
+    });
+
+    it('should fall back to "Unknown error" for non-string error values', () => {
+      host.control.setValidators(() => ({ custom: true }));
+      host.control.updateValueAndValidity();
+      host.control.markAsTouched();
+      autocomplete.onBlur();
+      expect(autocomplete.error).toBe('Unknown error');
+    });
+
+    it('should prioritize the error id in describedBy over the hint id', () => {
+      autocomplete.hint = 'Some hint';
+      host.control.markAsTouched();
+      autocomplete.onBlur();
+      expect(autocomplete.describedBy).toBe(autocomplete.errorId);
+    });
+  });
+
+  describe('virtual scroll navigation', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+    });
+
+    it('recalcVirtualListHeight should update virtualListHeightRem based on filtered options', () => {
+      component.filteredOptions = [component.options[0]];
+      component.recalcVirtualListHeight();
+      expect(component.virtualListHeightRem).toBeCloseTo(2.75 * 1);
+    });
+
+    it('should not navigate when the menu is closed', () => {
+      component.isOpened = false;
+      (component as any)._navigateVirtualOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+
+    it('should navigate forward through virtual options', () => {
+      component.isOpened = true;
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = -1;
+      (component as any)._navigateVirtualOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(0);
+      expect(component.isArrowNavigating).toBe(true);
+    });
+
+    it('should navigate backward and wrap to the last item', () => {
+      component.isOpened = true;
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = 0;
+      (component as any)._navigateVirtualOptionsByArrows(true);
+      expect(component.optionHighlightedIndex).toBe(
+        component.options.length - 1
+      );
+    });
+
+    it('should scroll the virtual list to the given index via virtualList.scrollToIndex when no scroller element exists', () => {
+      component.filteredOptions = component.options;
+      (component as any).optionsList = {
+        nativeElement: document.createElement('div')
+      };
+      const scrollToIndex = jest.fn();
+      (component as any).virtualList = { scrollToIndex };
+      (component as any)._scrollVirtualListToIndex(1);
+      expect(scrollToIndex).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('_confirmInput', () => {
+    it('should do nothing when the menu is closed', () => {
+      component.isOpened = false;
+      jest.spyOn(component, 'clearInput');
+      (component as any)._confirmInput('', false);
+      expect(component.clearInput).not.toHaveBeenCalled();
+    });
+
+    it('should close and clear in multiple mode with empty search', () => {
+      fixture.componentRef.setInput('multiple', true);
+      component.isOpened = true;
+      fixture.detectChanges();
+      jest.spyOn(component, 'clearInput');
+
+      (component as any)._confirmInput('', false);
+
+      expect(component.clearInput).toHaveBeenCalled();
+    });
+
+    it('should update value to empty when input is cleared in single mode', fakeAsync(() => {
+      component.isOpened = true;
+      component.activeSingle = true;
+      component.value = component.options[0];
+      component.inputText = 'something else';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      (component as any)._confirmInput('', true);
+      tick();
+
+      expect(component.value).not.toEqual(component.options[0]);
+      discardPeriodicTasks();
+    }));
+
+    it('should select a matching option by typed label', () => {
+      component.isOpened = true;
+      component.filteredOptions = component.options;
+
+      (component as any)._confirmInput('option 2', true);
+
+      expect(component.value).toEqual(component.options[1]);
+    });
+
+    it('should restore the current label when no option matches the typed text', () => {
+      component.isOpened = true;
+      component.value = component.options[0];
+      component.filteredOptions = component.options;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      (component as any)._confirmInput('nonexistent', true);
+
+      expect(component.inputText).toBe('Option 1');
+      expect(component.filteredOptions).toEqual(component.options);
+    });
+
+    it('should select the first filtered option for a time-picker field when no match is found', () => {
+      component.isOpened = true;
+      (component as any).isTimePickerField = true;
+      component.filteredOptions = component.options;
+      const selectSpy = jest.spyOn(component, 'select');
+
+      (component as any)._confirmInput('nonexistent', true);
+
+      expect(selectSpy).toHaveBeenCalledWith(
+        component.options[0],
+        false,
+        false,
+        true
+      );
+    });
+  });
+
+  describe('select with returnObject false', () => {
+    it('should use the option value in single-select mode', () => {
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.detectChanges();
+      component.select(component.options[1], false, false, false);
+      expect(component.value).toBe('opt2');
+    });
+
+    it('should use option values when adding without keepInitialOrder', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('returnObject', false);
+      component.value = [];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.select(component.options[0], false, false, false);
+      expect(component.value).toEqual(['opt1']);
+    });
+
+    it('should use option values when adding with keepInitialOrder', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('keepInitialOrder', true);
+      component.value = ['opt3'];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      component.select(component.options[0], false, false, false);
+      expect(component.value).toEqual(['opt1', 'opt3']);
+    });
+
+    it('should not schedule a focus timeout when needFocusInput is false', fakeAsync(() => {
+      const focusSpy = jest
+        .spyOn(component, 'focusInput')
+        .mockImplementation(() => {});
+      component.select(component.options[0], false, false, false);
+      tick(10);
+      expect(focusSpy).not.toHaveBeenCalled();
+    }));
+
+    it('should not clear the input when needClearInput is false', () => {
+      component.inputText = 'typed';
+      component.select(component.options[0], false, false, false);
+      expect(component.inputText).toBe('typed');
+    });
+  });
+
+  describe('onBoxClick when already open', () => {
+    it('should not reopen the menu when already open', fakeAsync(() => {
+      (component as any)._toggleOptions(true);
+      tick();
+      const toggleSpy = jest.spyOn(component as any, '_toggleOptions');
+      component.onBoxClick();
+      tick();
+      expect(toggleSpy).not.toHaveBeenCalledWith(true);
+      discardPeriodicTasks();
+    }));
+  });
+
+  describe('_syncHighlightToValue', () => {
+    it('should highlight based on the first selected value in multiple mode', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', false);
+      component.value = [component.options[1]];
+      component.filteredOptions = component.options;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      (component as any)._syncHighlightToValue();
+      expect(component.optionHighlightedIndex).toBe(1);
+    });
+
+    it('should leave the highlighted index untouched when the value is not among the filtered options', () => {
+      component.optionHighlightedIndex = -1;
+      component.value = { label: 'Missing', value: 'missing' };
+      component.filteredOptions = component.options;
+      (component as any)._syncHighlightToValue();
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+  });
+
+  describe('_getHighlightedOptionId', () => {
+    it('should return null when nothing is highlighted', () => {
+      component.optionHighlightedIndex = -1;
+      expect((component as any)._getHighlightedOptionId()).toBeNull();
+    });
+
+    it('should return the select-all id when the select-all option is highlighted', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('selectAll', true);
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = 0;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect((component as any)._getHighlightedOptionId()).toBe(
+        component.selectAllOptionId
+      );
+    });
+
+    it('should return null when the highlighted option no longer exists', () => {
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = 99;
+      expect((component as any)._getHighlightedOptionId()).toBeNull();
+    });
+  });
+
+  describe('_navigateOptionsByArrows', () => {
+    it('should do nothing when the menu is closed', () => {
+      component.isOpened = false;
+      (component as any)._navigateOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+
+    it('should do nothing when there are no options', () => {
+      fixture.componentRef.setInput('options', []);
+      component.isOpened = true;
+      fixture.detectChanges();
+      (component as any)._navigateOptionsByArrows(false);
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+
+    it('should stop when the highlighted option id cannot be resolved', () => {
+      component.isOpened = true;
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = 99;
+      expect(() =>
+        (component as any)._navigateOptionsByArrows(false)
+      ).not.toThrow();
+    });
+
+    it('should highlight the option element when found in the DOM', () => {
+      component.isOpened = true;
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = -1;
+      fixture.detectChanges();
+      const optionId = component.getOptionId(component.options[0], 0);
+      const el = document.createElement('div');
+      el.id = optionId;
+      const parent = document.createElement('div');
+      parent.appendChild(el);
+      component.optionsList.nativeElement.appendChild(parent);
+
+      (component as any)._navigateOptionsByArrows(false);
+
+      expect(component.optionHighlightedIndex).toBe(0);
+    });
+  });
+
+  describe('_navigateVirtualOptionsByArrows', () => {
+    it('should do nothing when there are no filtered options', () => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      component.filteredOptions = [];
+      component.isOpened = true;
+      fixture.detectChanges();
+      expect(() =>
+        (component as any)._navigateVirtualOptionsByArrows(false)
+      ).not.toThrow();
+      expect(component.optionHighlightedIndex).toBe(-1);
+    });
+  });
+
+  describe('_nextHighlightIndex upward wrap', () => {
+    it('should wrap to the last index when moving up from the first item', () => {
+      component.optionHighlightedIndex = 0;
+      const result = (component as any)._nextHighlightIndex(true, 3);
+      expect(result).toBe(2);
+    });
+
+    it('should move to the previous index when not at the start', () => {
+      component.optionHighlightedIndex = 2;
+      const result = (component as any)._nextHighlightIndex(true, 3);
+      expect(result).toBe(1);
+    });
+  });
+
+  describe('_scrollVirtualListToIndex with a real scroller element', () => {
+    it('should scroll up when the item starts above the viewport', () => {
+      const scroller = document.createElement('div');
+      scroller.className = 'p-virtualscroller';
+      scroller.scrollTop = 500;
+      Object.defineProperty(scroller, 'clientHeight', {
+        value: 100,
+        configurable: true
+      });
+      Object.defineProperty(scroller, 'scrollHeight', {
+        value: 2000,
+        configurable: true
+      });
+      const optionsListEl = document.createElement('div');
+      optionsListEl.appendChild(scroller);
+      (component as any).optionsList = { nativeElement: optionsListEl };
+
+      (component as any)._scrollVirtualListToIndex(0);
+
+      expect(scroller.scrollTop).toBe(0);
+    });
+
+    it('should scroll down when the item ends below the viewport', () => {
+      const scroller = document.createElement('div');
+      scroller.className = 'p-virtualscroller';
+      scroller.scrollTop = 0;
+      Object.defineProperty(scroller, 'clientHeight', {
+        value: 50,
+        configurable: true
+      });
+      Object.defineProperty(scroller, 'scrollHeight', {
+        value: 2000,
+        configurable: true
+      });
+      const optionsListEl = document.createElement('div');
+      optionsListEl.appendChild(scroller);
+      (component as any).optionsList = { nativeElement: optionsListEl };
+
+      (component as any)._scrollVirtualListToIndex(10);
+
+      expect(scroller.scrollTop).toBeGreaterThan(0);
+    });
+  });
+
+  describe('getOptionId caching', () => {
+    it('should use the id cached from the option set at its original index, ignoring a later index argument', () => {
+      const option = component.options[0];
+      const idAtOriginalIndex = component.getOptionId(option, 0);
+      const idWithDifferentIndexArg = component.getOptionId(option, 5);
+      expect(idWithDifferentIndexArg).toBe(idAtOriginalIndex);
+      expect(idWithDifferentIndexArg).not.toContain('-5');
+    });
+  });
+
+  describe('_getEmptyValue with returnObject false', () => {
+    it('should return the option value instead of the object', () => {
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('emptyOptionIndex', 0);
+      fixture.detectChanges();
+      expect((component as any)._getEmptyValue()).toBe('opt1');
+    });
+  });
+
+  describe('_getValueLabel with returnObject false', () => {
+    it('should use LabelByValuePipe to resolve the label', () => {
+      fixture.componentRef.setInput('returnObject', false);
+      component.value = 'opt2';
+      fixture.detectChanges();
+      expect((component as any)._getValueLabel()).toBe('Option 2');
+    });
+  });
+
+  describe('_checkErrors with an empty errors object', () => {
+    it('should clear the error when the errors object has no keys', () => {
+      (component as any)._control = {
+        control: { touched: true },
+        errors: {}
+      };
+      component.error = 'stale';
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+  });
+
+  describe('_removeLastValue', () => {
+    it('should do nothing in single mode', () => {
+      fixture.componentRef.setInput('multiple', false);
+      expect(() => (component as any)._removeLastValue()).not.toThrow();
+    });
+
+    it('should do nothing when inputText is not empty', () => {
+      fixture.componentRef.setInput('multiple', true);
+      component.inputText = 'typed';
+      (component as any)._removeLastValue();
+      expect(component.backspaceClickedOnce).toBe(false);
+    });
+
+    it('should not arm backspaceClickedOnce when there is no selection', () => {
+      fixture.componentRef.setInput('multiple', true);
+      component.inputText = '';
+      component.value = [];
+      (component as any)._removeLastValue();
+      expect(component.backspaceClickedOnce).toBe(false);
+    });
+  });
+
+  describe('_toggleOptions toggle without explicit show', () => {
+    it('should call optionsMenu.toggle when show is omitted', () => {
+      const toggleSpy = jest.spyOn(component.optionsMenu, 'toggle');
+      (component as any)._toggleOptions();
+      expect(toggleSpy).toHaveBeenCalledWith({
+        target: component.autocompleteBox.nativeElement
+      });
+    });
+  });
+
+  describe('_toggleOptions setTimeout scroll behavior', () => {
+    it('should scroll the virtual list to the highlighted index when there is no selected element', fakeAsync(() => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+      component.filteredOptions = component.options;
+      component.optionHighlightedIndex = 1;
+      const scrollSpy = jest
+        .spyOn(component as any, '_scrollVirtualListToIndex')
+        .mockImplementation(() => {});
+
+      (component as any)._toggleOptions(true);
+      tick();
+
+      expect(scrollSpy).toHaveBeenCalledWith(1);
+      discardPeriodicTasks();
+    }));
   });
 });

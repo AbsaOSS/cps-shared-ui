@@ -3,6 +3,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EventEmitter } from '@angular/core';
 import { FilterMetadata, FilterOperator } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { TreeTable } from 'primeng/treetable';
 import { TableColumnFilterComponent } from './table-column-filter.component';
 import { CpsColumnFilterMatchMode } from '../../../cps-column-filter-types';
 
@@ -612,5 +613,92 @@ describe('TableColumnFilterComponent', () => {
         btn.classList.contains('cps-table-col-filter-menu-button-active')
       ).toBe(true);
     });
+  });
+
+  describe('sort icon color on hover', () => {
+    let unsortedUp: HTMLElement;
+    let unsortedDown: HTMLElement;
+
+    beforeEach(() => {
+      const parent = component.elementRef.nativeElement.parentElement;
+      unsortedUp = document.createElement('span');
+      unsortedUp.className = 'sort-unsorted-arrow-up';
+      unsortedDown = document.createElement('span');
+      unsortedDown.className = 'sort-unsorted-arrow-down';
+      parent.appendChild(unsortedUp);
+      parent.appendChild(unsortedDown);
+    });
+
+    afterEach(() => {
+      unsortedUp.remove();
+      unsortedDown.remove();
+    });
+
+    it('should set the arrow colors on mouseenter', () => {
+      component.onMouseOver();
+      expect(unsortedUp.style.borderBottomColor).toBe(
+        'var(--cps-color-line-dark)'
+      );
+      expect(unsortedDown.style.borderTopColor).toBe(
+        'var(--cps-color-line-dark)'
+      );
+    });
+
+    it('should reset the arrow colors on mouseleave', () => {
+      component.onMouseOver();
+      component.onMouseLeave();
+      expect(unsortedUp.style.borderBottomColor).toBe('');
+      expect(unsortedDown.style.borderTopColor).toBe('');
+    });
+
+    it('should do nothing when no sort-arrow siblings are present', () => {
+      unsortedUp.remove();
+      unsortedDown.remove();
+      expect(() => component.onMouseOver()).not.toThrow();
+    });
+  });
+});
+
+describe('TableColumnFilterComponent (TreeTable field)', () => {
+  let component: TableColumnFilterComponent;
+  let fixture: ComponentFixture<TableColumnFilterComponent>;
+
+  beforeEach(async () => {
+    const mockTreeTable = Object.create(TreeTable.prototype) as TreeTable;
+    (mockTreeTable as { ngOnDestroy: () => void }).ngOnDestroy = jest.fn();
+    (mockTreeTable as { filters: Record<string, unknown> }).filters = {};
+    (mockTreeTable as { onFilter: EventEmitter<any> }).onFilter =
+      new EventEmitter();
+    jest.spyOn(mockTreeTable, 'isFilterBlank').mockReturnValue(false);
+    jest.spyOn(mockTreeTable, '_filter').mockImplementation(() => {});
+
+    await TestBed.configureTestingModule({
+      imports: [TableColumnFilterComponent, NoopAnimationsModule],
+      providers: [{ provide: TreeTable, useValue: mockTreeTable }]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TableColumnFilterComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('field', 'name');
+    fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    document.body
+      .querySelectorAll('.cps-menu-container, .cps-overlay-panel')
+      .forEach((el) => el.remove());
+  });
+
+  it('should build a plain (non-array) filter constraint for a TreeTable field', () => {
+    expect(component.tt.filters.name).toEqual({
+      value: null,
+      matchMode: CpsColumnFilterMatchMode.STARTS_WITH
+    });
+  });
+
+  it('should wrap the single TreeTable filter constraint in an array for fieldConstraints', () => {
+    expect(component.fieldConstraints).toEqual([
+      { value: null, matchMode: CpsColumnFilterMatchMode.STARTS_WITH }
+    ]);
   });
 });

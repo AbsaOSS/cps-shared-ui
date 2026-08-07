@@ -295,6 +295,65 @@ describe('TableColumnVisibilityToggleComponent', () => {
     });
   });
 
+  describe('_scrollIntoView', () => {
+    it('should scroll down when the highlighted item is below the visible area', () => {
+      component.highlightedIndex.set(1);
+      const listbox = (component as any)._listbox().nativeElement;
+      const item = listbox.querySelector(`#${component.listboxId}-opt-1`);
+      Object.defineProperty(item, 'offsetTop', {
+        value: 200,
+        configurable: true
+      });
+      Object.defineProperty(item, 'offsetHeight', {
+        value: 40,
+        configurable: true
+      });
+      listbox.scrollTop = 0;
+      Object.defineProperty(listbox, 'clientHeight', {
+        value: 100,
+        configurable: true
+      });
+
+      (component as any)._scrollIntoView();
+
+      expect(listbox.scrollTop).toBe(140);
+    });
+
+    it('should scroll up when the highlighted item is above the visible area', () => {
+      component.highlightedIndex.set(1);
+      const listbox = (component as any)._listbox().nativeElement;
+      const item = listbox.querySelector(`#${component.listboxId}-opt-1`);
+      Object.defineProperty(item, 'offsetTop', {
+        value: 10,
+        configurable: true
+      });
+      Object.defineProperty(item, 'offsetHeight', {
+        value: 20,
+        configurable: true
+      });
+      listbox.scrollTop = 100;
+      Object.defineProperty(listbox, 'clientHeight', {
+        value: 200,
+        configurable: true
+      });
+
+      (component as any)._scrollIntoView();
+
+      expect(listbox.scrollTop).toBe(10);
+    });
+  });
+
+  describe('onKeydown - Escape', () => {
+    it('should hide the menu', () => {
+      const menu = (component as any)._menu();
+      const hideSpy = jest.spyOn(menu, 'hide').mockImplementation(() => {});
+      component.onKeydown(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      );
+      expect(hideSpy).toHaveBeenCalled();
+    });
+  });
+
   describe('onKeydown - Enter / Space', () => {
     it('should call toggleAllColumns when Enter is pressed at index 0', () => {
       component.highlightedIndex.set(0);

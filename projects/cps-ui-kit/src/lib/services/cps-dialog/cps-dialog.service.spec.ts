@@ -5,6 +5,7 @@ import {
   Injector
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { CpsDialogService } from './cps-dialog.service';
 import { CpsDialogConfig } from './utils/cps-dialog-config';
@@ -174,6 +175,15 @@ describe('CpsDialogService', () => {
       service.open(TestContentComponent, new CpsDialogConfig());
       expect(spySet).toHaveBeenCalledWith(lastCreatedMockRef.instance);
     });
+
+    it('should not throw when the ref was not registered in dialogComponentRefMap', () => {
+      jest
+        .spyOn(service as any, 'appendDialogComponentToBody')
+        .mockImplementation(() => new CpsDialogRef());
+      expect(() =>
+        service.open(TestContentComponent, new CpsDialogConfig())
+      ).not.toThrow();
+    });
   });
 
   describe('openConfirmationDialog()', () => {
@@ -252,6 +262,15 @@ describe('CpsDialogService', () => {
       expect(lastCreatedMockRef.instance.childComponentType).toBe(
         CpsConfirmationComponent
       );
+    });
+
+    it('should not throw when the ref was not registered in dialogComponentRefMap', () => {
+      jest
+        .spyOn(service as any, 'appendDialogComponentToBody')
+        .mockImplementation(() => new CpsDialogRef());
+      expect(() =>
+        service.openConfirmationDialog(new CpsDialogConfig())
+      ).not.toThrow();
     });
 
     it('should add the ref to openDialogs', () => {
@@ -344,6 +363,15 @@ describe('CpsDialogService', () => {
       ref1.destroy();
       expect(service.openDialogs).toHaveLength(1);
     });
+
+    it('should not throw when the ref is registered in the map but already absent from openDialogs', () => {
+      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      service.openDialogs.length = 0;
+      expect(() =>
+        (service as any).removeDialogComponentFromBody(ref)
+      ).not.toThrow();
+      expect(service.dialogComponentRefMap.has(ref)).toBe(false);
+    });
   });
 
   describe('onClose subscription', () => {
@@ -352,6 +380,102 @@ describe('CpsDialogService', () => {
       const capturedRef = lastCreatedMockRef;
       ref.close();
       expect(capturedRef.instance.close).toHaveBeenCalled();
+    });
+  });
+
+  describe('appendDialogComponentToBody() (real, unmocked)', () => {
+    let realService: CpsDialogService;
+    let realAppRef: ApplicationRef;
+
+    beforeEach(() => {
+      jest.restoreAllMocks();
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [CpsDialogService, provideNoopAnimations()]
+      });
+      realService = TestBed.inject(CpsDialogService);
+      realAppRef = TestBed.inject(ApplicationRef);
+    });
+
+    afterEach(() => {
+      realService.closeAll(true);
+      document.body
+        .querySelectorAll('.cps-dialog')
+        .forEach((el) => el.remove());
+    });
+
+    it('should create and attach a real CpsDialogComponent to document.body', () => {
+      const beforeCount = document.body.children.length;
+
+      const ref = realService.open(TestContentComponent, new CpsDialogConfig());
+      realAppRef.tick();
+
+      expect(document.body.children.length).toBeGreaterThan(beforeCount);
+      expect(realService.dialogComponentRefMap.has(ref)).toBe(true);
+      expect(realService.openDialogs).toContain(ref);
+    });
+
+    it('should remove the DOM element and map entry when the ref is destroyed', () => {
+      const ref = realService.open(TestContentComponent, new CpsDialogConfig());
+      realAppRef.tick();
+      expect(realService.dialogComponentRefMap.has(ref)).toBe(true);
+      const domElem = document.body.querySelector('.cps-dialog');
+      expect(domElem).toBeTruthy();
+
+      ref.destroy();
+      realAppRef.tick();
+
+      expect(realService.dialogComponentRefMap.has(ref)).toBe(false);
+      expect(realService.openDialogs).not.toContain(ref);
+      expect(document.body.contains(domElem)).toBe(false);
+    });
+
+    it('should be a no-op to remove a ref that was never registered', () => {
+      const unregistered = new CpsDialogRef();
+      expect(() =>
+        (realService as any).removeDialogComponentFromBody(unregistered)
+      ).not.toThrow();
+    });
+
+    it('should be a no-op to call removeDialogComponentFromBody twice for the same ref', () => {
+      const ref = realService.open(TestContentComponent, new CpsDialogConfig());
+      realAppRef.tick();
+      ref.destroy();
+      expect(() =>
+        (realService as any).removeDialogComponentFromBody(ref)
+      ).not.toThrow();
+    });
+
+    it('should close the real dialog component instance when the ref is closed', () => {
+      const ref = realService.open(TestContentComponent, new CpsDialogConfig());
+      realAppRef.tick();
+      const instance = realService.dialogComponentRefMap.get(ref)?.instance;
+      expect(instance?.visible).toBe(true);
+
+      ref.close();
+      realAppRef.tick();
+
+      expect(instance?.visible).toBe(false);
+    });
+
+    it('should omit elementInjector when it is the same instance as the environment injector', () => {
+      const envInjector = TestBed.inject(EnvironmentInjector);
+      const sameInjectorService = new CpsDialogService(
+        realAppRef,
+        envInjector,
+        envInjector as unknown as Injector,
+        document,
+        undefined as unknown as CpsDialogService
+      );
+
+      const ref = sameInjectorService.open(
+        TestContentComponent,
+        new CpsDialogConfig()
+      );
+      realAppRef.tick();
+
+      expect(sameInjectorService.dialogComponentRefMap.has(ref)).toBe(true);
+      sameInjectorService.closeAll(true);
     });
   });
 

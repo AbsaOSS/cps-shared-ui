@@ -1,3 +1,47 @@
+const collectCoverageFrom =
+  process.env.COVERAGE_PROJECT === 'cps-ui-kit'
+    ? [
+        'projects/cps-ui-kit/src/**/*.ts',
+        '!projects/**/node_modules/**',
+        '!projects/**/*.spec.ts',
+        '!projects/**/testing/**',
+        '!projects/**/public-api.ts',
+        '!projects/cps-ui-kit/src/lib/components/cps-scheduler/cps-scheduler.utils.ts'
+      ]
+    : [
+        'projects/cps-ui-kit/src/**/*.ts',
+        'projects/composition/src/**/*.ts',
+        '!projects/**/node_modules/**',
+        '!projects/**/*.spec.ts',
+        '!projects/**/testing/**',
+        '!projects/**/public-api.ts'
+      ];
+
+const coverageThreshold =
+  process.env.COVERAGE_PROJECT === 'cps-ui-kit'
+    ? {
+        global: {
+          statements: 10,
+          branches: 0,
+          functions: 0,
+          lines: 10
+        },
+        './projects/cps-ui-kit/src/**/*.ts': {
+          statements: 90,
+          branches: 90,
+          functions: 90,
+          lines: 90
+        }
+      }
+    : {
+        global: {
+          statements: 10,
+          branches: 0,
+          functions: 0,
+          lines: 10
+        }
+      };
+
 module.exports = {
   roots: ['<rootDir>/projects'],
   preset: 'jest-preset-angular',
@@ -21,20 +65,6 @@ module.exports = {
   setupFiles: ['zone.js'],
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
   coverageReporters: ['text', 'html', 'lcov', 'json-summary'],
-  collectCoverageFrom: [
-    'projects/cps-ui-kit/src/**/*.ts',
-    'projects/composition/src/**/*.ts',
-    '!projects/**/node_modules/**',
-    '!projects/**/*.spec.ts',
-    '!projects/**/testing/**',
-    '!projects/**/public-api.ts'
-  ],
-  coverageThreshold: {
-    global: {
-      statements: 10,
-      branches: 0,
-      functions: 0,
-      lines: 10
-    }
-  }
+  collectCoverageFrom,
+  coverageThreshold
 };

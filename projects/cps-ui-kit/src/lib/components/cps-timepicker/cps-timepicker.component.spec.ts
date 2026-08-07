@@ -1,8 +1,9 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { CpsTimepickerComponent, CpsTime } from './cps-timepicker.component';
 
@@ -611,6 +612,129 @@ describe('CpsTimepickerComponent', () => {
       const checkErrorsSpy = jest.spyOn(component as any, '_checkErrors');
       statusChanges$.next('INVALID');
       expect(checkErrorsSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('update* no-op branches', () => {
+    it('should not auto-set dayPeriod to PM when the hour is below 13', () => {
+      component.value = { hours: '01', minutes: '00', dayPeriod: 'AM' };
+      component.updateHours('08');
+      expect(component.value?.dayPeriod).toBe('AM');
+    });
+
+    it('should leave value.hours untouched when set to the same value', () => {
+      component.value = { hours: '10', minutes: '30' };
+      component.updateHours('10');
+      expect(component.value?.hours).toBe('10');
+    });
+
+    it('should leave value.minutes untouched when set to the same value', () => {
+      component.value = { hours: '10', minutes: '30' };
+      component.updateMinutes('30');
+      expect(component.value?.minutes).toBe('30');
+    });
+
+    it('should not initialize value when updateSeconds is given an empty string', () => {
+      expect(component.value).toBeUndefined();
+      component.updateSeconds('');
+      expect(component.value).toBeUndefined();
+    });
+
+    it('should leave value.seconds untouched when set to the same value', () => {
+      component.withSeconds = true;
+      component.value = { hours: '10', minutes: '30', seconds: '15' };
+      component.updateSeconds('15');
+      expect(component.value?.seconds).toBe('15');
+    });
+
+    it('should not initialize value when updateDayPeriod is given a falsy value', () => {
+      expect(component.value).toBeUndefined();
+      component.updateDayPeriod(undefined as any);
+      expect(component.value).toBeUndefined();
+    });
+
+    it('should leave value.dayPeriod untouched when set to the same value', () => {
+      component.value = { hours: '10', minutes: '30', dayPeriod: 'PM' };
+      component.updateDayPeriod('PM');
+      expect(component.value?.dayPeriod).toBe('PM');
+    });
+  });
+
+  describe('_isValueValid direct checks', () => {
+    it('should return false when there is no value', () => {
+      component.value = undefined;
+      expect((component as any)._isValueValid()).toBe(false);
+    });
+
+    it('should return false when dayPeriod is missing in 12-hour mode', () => {
+      component.use24HourTime = false;
+      component.value = { hours: '10', minutes: '30' };
+      expect((component as any)._isValueValid()).toBe(false);
+    });
+
+    it('should return true for a complete value in 24-hour mode', () => {
+      component.use24HourTime = true;
+      component.value = { hours: '10', minutes: '30' };
+      expect((component as any)._isValueValid()).toBe(true);
+    });
+  });
+
+  describe('_checkErrors with an empty errors object', () => {
+    it('should clear the error when errors has no keys', () => {
+      component.error = 'stale';
+      (component as any)._control = {
+        control: { touched: true, markAsTouched: jest.fn() },
+        errors: {},
+        statusChanges: new Subject()
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+  });
+
+  describe('with NgControl (reactive forms)', () => {
+    @Component({
+      imports: [CpsTimepickerComponent, ReactiveFormsModule],
+      template: `<cps-timepicker
+        [formControl]="control"
+        ariaLabel="Time"></cps-timepicker>`
+    })
+    class HostComponent {
+      control = new FormControl<CpsTime | undefined>(
+        undefined,
+        Validators.required
+      );
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let timepicker: CpsTimepickerComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      timepicker = hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      const value: CpsTime = { hours: '10', minutes: '30' };
+      timepicker.writeValue(value);
+      timepicker.onChange(value);
+      hostFixture.detectChanges();
+      expect(host.control.value).toEqual(value);
+    });
+
+    it('should set a required error when touched and empty', () => {
+      host.control.markAsTouched();
+      host.control.updateValueAndValidity();
+      expect(timepicker.error).toBe('Field is required');
     });
   });
 });

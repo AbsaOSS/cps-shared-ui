@@ -606,6 +606,61 @@ describe('TreeTableUnsortDirective', () => {
 
       expect(mockTreeTable.resetScrollTop).not.toHaveBeenCalled();
     });
+
+    it('should mark nodes globally matched in non-strict mode and use the merged copy', () => {
+      mockTreeTable.hasFilter.mockReturnValue(true);
+      mockTreeTable.filterMode = undefined;
+      mockTreeTable.filters = { global: { value: 'A', matchMode: 'contains' } };
+      mockTreeTable.columns = [{ field: 'name' }];
+      mockTreeTable.isFilterMatched.mockReturnValue(true);
+
+      (mockTreeTable as any)._filter();
+
+      expect(mockTreeTable.filteredNodes).toHaveLength(3);
+    });
+
+    it('should mark nodes globally matched in strict mode via findFilteredNodes', () => {
+      mockTreeTable.hasFilter.mockReturnValue(true);
+      mockTreeTable.filterMode = 'strict';
+      mockTreeTable.filters = { global: { value: 'A', matchMode: 'contains' } };
+      mockTreeTable.globalFilterFields = ['name'];
+      (mockTreeTable as any).findFilteredNodes = jest
+        .fn()
+        .mockReturnValue(true);
+
+      (mockTreeTable as any)._filter();
+
+      expect(mockTreeTable.filteredNodes).toHaveLength(3);
+    });
+
+    it('should exclude nodes that fail the combined local+global match', () => {
+      mockTreeTable.hasFilter.mockReturnValue(true);
+      mockTreeTable.filters = {
+        name: { value: 'A', matchMode: 'contains' },
+        global: { value: 'A', matchMode: 'contains' }
+      };
+      mockTreeTable.columns = [{ field: 'name' }];
+      mockTreeTable.isFilterMatched.mockImplementation(
+        (node: any) => node.data.name === 'A'
+      );
+
+      (mockTreeTable as any)._filter();
+
+      expect(mockTreeTable.filteredNodes).toHaveLength(1);
+      expect(mockTreeTable.filteredNodes![0].data.name).toBe('A');
+    });
+
+    it('should clear filteredNodes and fall back to value.length for totalRecords when nothing changed', () => {
+      mockTreeTable.hasFilter.mockReturnValue(true);
+      mockTreeTable.value = [];
+      mockTreeTable.paginator = true;
+      mockTreeTable.filters = { name: { value: 'A', matchMode: 'contains' } };
+
+      (mockTreeTable as any)._filter();
+
+      expect(mockTreeTable.filteredNodes).toBeNull();
+      expect(mockTreeTable.totalRecords).toBe(0);
+    });
   });
 
   describe('findFilteredNodes', () => {
