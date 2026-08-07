@@ -6,6 +6,7 @@ export const progressCircularExamples: Record<
     html: `
 <div style="display: flex; align-items: center; gap: 3rem; overflow: hidden;">
   <cps-progress-circular
+    ariaLabel="Luxury progress circular"
     color="luxury"
     diameter="7.5rem"
     strokeWidth="0.5rem"></cps-progress-circular>

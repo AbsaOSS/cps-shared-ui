@@ -216,5 +216,51 @@ syncVal: string[] = [];`
   appearance="borderless">
 </cps-select>`,
     ts: citiesOptionsTs
+  },
+
+  hideDetailsSelect: {
+    html: `
+<form [formGroup]="form">
+  <cps-select
+    label="Required select without hint or error text"
+    hint="This hint is never shown because hideDetails is true"
+    [options]="options"
+    optionLabel="name"
+    optionInfo="info"
+    [clearable]="true"
+    [hideDetails]="true"
+    formControlName="hideDetailsSelect">
+  </cps-select>
+</form>`,
+    ts: `
+private readonly _formBuilder = inject(UntypedFormBuilder);
+
+${citiesOptionsTs.trim()}
+
+form!: UntypedFormGroup;
+
+ngOnInit(): void {
+  this.form = this._formBuilder.group({
+    hideDetailsSelect: [null, [Validators.required]]
+  });
+}`
+  },
+
+  openOnClearSelect: {
+    html: `
+<cps-select
+  label="Select that stays closed after clearing"
+  hint="Clearing this select does not reopen the dropdown"
+  [options]="options"
+  optionLabel="name"
+  optionInfo="info"
+  [clearable]="true"
+  [openOnClear]="false"
+  [value]="openOnClearValue">
+</cps-select>`,
+    ts: `
+${citiesOptionsTs.trim()}
+
+openOnClearValue = this.options[3];`
   }
 };

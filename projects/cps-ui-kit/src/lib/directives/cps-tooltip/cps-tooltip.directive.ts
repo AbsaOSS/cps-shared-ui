@@ -191,12 +191,15 @@ export class CpsTooltipDirective implements OnDestroy {
 
   // Tab from the trigger moves focus into the persistent tooltip instead of
   // the next page element, so keyboard users can interact with tooltip content.
+  // preventScroll avoids the browser's own scroll-into-view side effect,
+  // which would otherwise fire a real scroll event and immediately destroy
+  // the very tooltip focus just moved into (see _onScrollDestroy).
   onTabFromTrigger(event: Event): void {
     if (!this.tooltipPersistent() || !this._popup) return;
     const focusable = this._focusableIn(this._popup);
     if (!focusable.length) return;
     event.preventDefault();
-    focusable[0].focus();
+    focusable[0].focus({ preventScroll: true });
   }
 
   onClick(): void {
@@ -237,10 +240,10 @@ export class CpsTooltipDirective implements OnDestroy {
     const last = focusable[focusable.length - 1];
     const active = this._document.activeElement;
     if (!event.shiftKey && active === last) {
-      this._ariaTarget?.focus();
+      this._ariaTarget?.focus({ preventScroll: true });
     } else if (event.shiftKey && active === first) {
       event.preventDefault();
-      this._ariaTarget?.focus();
+      this._ariaTarget?.focus({ preventScroll: true });
     }
   };
 

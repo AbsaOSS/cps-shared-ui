@@ -1,16 +1,19 @@
 <div
   aria-hidden="true"
   class="cps-progress-linear"
+  data-testid="cps-progress-linear"
   [style.max-width]="cvtWidth()"
   [style.height]="cvtHeight()"
   [style.border-radius]="cvtRadius()"
   [style.background]="cssBgColor()">
   <div
     class="cps-progress-linear-line inc"
+    data-testid="cps-progress-linear-inc"
     [style.background]="cssColor()"
     [style.opacity]="opacity()"></div>
   <div
     class="cps-progress-linear-line dec"
+    data-testid="cps-progress-linear-dec"
     [style.background]="cssColor()"
     [style.opacity]="opacity()"></div>
 </div>

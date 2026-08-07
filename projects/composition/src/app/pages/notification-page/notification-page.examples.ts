@@ -172,6 +172,21 @@ showOutlinedBottomRight2sTimeoutWarningNotification() {
 }`
   },
 
+  duplicateNotification: {
+    html: `
+<cps-button
+  label="Duplicate notification"
+  icon="toast-info"
+  color="calm"
+  (clicked)="showDuplicateNotification()"></cps-button>`,
+    ts: `
+${notifServiceTs}
+
+showDuplicateNotification() {
+  this._notifService.info('Duplicate notification message');
+}`
+  },
+
   clearAllNotifications: {
     html: `
 <cps-button

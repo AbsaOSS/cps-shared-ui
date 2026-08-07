@@ -1,25 +1,23 @@
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
-  NgZone,
   OnDestroy,
   Output,
-  Renderer2,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { SharedModule } from 'primeng/api';
 import { ZIndexUtils } from 'primeng/utils';
 import {
-  CpsNotificationConfig,
+  type CpsNotificationConfig,
   CpsNotificationPosition
 } from '../../../utils/cps-notification-config';
-import { CpsNotificationData } from '../../../utils/internal/cps-notification-data';
+import type { CpsNotificationData } from '../../../utils/internal/cps-notification-data';
 import { CpsToastComponent } from '../cps-toast/cps-toast.component';
 import { animateChild, query, transition, trigger } from '@angular/animations';
 import { PrimeNG } from 'primeng/config';
@@ -28,7 +26,7 @@ type Nullable<T = void> = T | null | undefined;
 
 @Component({
   selector: 'cps-notification-container',
-  imports: [CommonModule, SharedModule, CpsToastComponent],
+  imports: [SharedModule, CpsToastComponent],
   templateUrl: './cps-notification-container.component.html',
   styleUrls: ['./cps-notification-container.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -48,8 +46,7 @@ export class CpsNotificationContainerComponent
   @Input() position = CpsNotificationPosition.TOPRIGHT;
 
   /**
-   * Callback to invoke on notification close.
-   * @param {CpsNotificationConfig} CpsNotificationConfig - notification closed.
+   * Callback to invoke when a notification is closed.
    * @group Emits
    */
   @Output() closed = new EventEmitter();
@@ -65,13 +62,8 @@ export class CpsNotificationContainerComponent
     config: CpsNotificationConfig;
   }[] = [];
 
-  // eslint-disable-next-line no-useless-constructor
-  constructor(
-    public renderer: Renderer2,
-    public zone: NgZone,
-    public primeNG: PrimeNG,
-    private _cdRef: ChangeDetectorRef
-  ) {}
+  private readonly _primeNG = inject(PrimeNG);
+  private readonly _cdRef = inject(ChangeDetectorRef);
 
   ngAfterViewInit() {
     this.wrapper = (
@@ -109,7 +101,7 @@ export class CpsNotificationContainerComponent
     ZIndexUtils.set(
       'modal',
       this.container?.nativeElement,
-      this.primeNG.zIndex.modal
+      this._primeNG.zIndex.modal
     );
     (this.wrapper as HTMLElement).style.zIndex = String(
       parseInt(

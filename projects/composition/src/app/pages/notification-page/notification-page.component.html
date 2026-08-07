@@ -6,6 +6,7 @@
     [htmlCode]="examples.infoNotification.html"
     [tsCode]="examples.infoNotification.ts">
     <cps-button
+      data-testid="info-notification-trigger"
       label="Info notification"
       icon="toast-info"
       color="calm"
@@ -17,6 +18,7 @@
     [htmlCode]="examples.errorNotification.html"
     [tsCode]="examples.errorNotification.ts">
     <cps-button
+      data-testid="error-notification-trigger"
       label="Error notification"
       icon="toast-error"
       color="calm"
@@ -51,6 +53,7 @@
     [htmlCode]="examples.infoNotificationWithDetails.html"
     [tsCode]="examples.infoNotificationWithDetails.ts">
     <cps-button
+      data-testid="bottom-info-notification-trigger"
       label="Bottom info notification with details"
       icon="toast-info"
       color="calm"
@@ -62,6 +65,7 @@
     [htmlCode]="examples.errorRightMax3Notification.html"
     [tsCode]="examples.errorRightMax3Notification.ts">
     <cps-button
+      data-testid="error-max3-notification-trigger"
       label="Right error notification with max 3 in a column"
       icon="toast-error"
       color="calm"
@@ -73,6 +77,7 @@
     [htmlCode]="examples.bottomLeftPersistentOutlinedSuccessNotification.html"
     [tsCode]="examples.bottomLeftPersistentOutlinedSuccessNotification.ts">
     <cps-button
+      data-testid="persistent-notification-trigger"
       label="Bottom-left persistent outlined success notification"
       icon="toast-success"
       color="calm"
@@ -86,6 +91,7 @@
     [htmlCode]="examples.bottomRightOutlinedWarningNotification.html"
     [tsCode]="examples.bottomRightOutlinedWarningNotification.ts">
     <cps-button
+      data-testid="timeout-warning-notification-trigger"
       label="Bottom-right outlined warning notification with 2-seconds timeout"
       icon="toast-warning"
       color="calm"
@@ -95,10 +101,23 @@
   </app-code-example>
 
   <app-code-example
+    label="Duplicate notification"
+    [htmlCode]="examples.duplicateNotification.html"
+    [tsCode]="examples.duplicateNotification.ts">
+    <cps-button
+      data-testid="duplicate-notification-trigger"
+      label="Duplicate notification"
+      icon="toast-info"
+      color="calm"
+      (clicked)="showDuplicateNotification()"></cps-button>
+  </app-code-example>
+
+  <app-code-example
     label="Clear all notifications"
     [htmlCode]="examples.clearAllNotifications.html"
     [tsCode]="examples.clearAllNotifications.ts">
     <cps-button
+      data-testid="clear-notifications-trigger"
       label="Clear all notifications"
       icon="remove"
       type="outlined"
