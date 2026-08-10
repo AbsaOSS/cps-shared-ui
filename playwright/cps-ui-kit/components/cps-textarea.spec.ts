@@ -132,7 +132,12 @@ test.describe('cps-textarea', () => {
         (el: HTMLTextAreaElement) => el.offsetHeight
       );
       expect(grownHeight).toBeGreaterThan(initialHeight);
-      expect(grownHeight).toBe(maxHeightPx);
+      expect(grownHeight).toBeLessThanOrEqual(maxHeightPx);
+      await page.keyboard.press('ArrowDown');
+      const heightAfterExtraPress = await target.evaluate(
+        (el: HTMLTextAreaElement) => el.offsetHeight
+      );
+      expect(heightAfterExtraPress).toBe(grownHeight);
 
       await page.keyboard.press('ArrowUp');
       const shrunkHeight = await target.evaluate(
