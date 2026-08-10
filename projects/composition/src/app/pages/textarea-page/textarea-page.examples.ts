@@ -49,6 +49,31 @@ ngOnInit() {
 </cps-textarea>`
   },
 
+  maxHeightTextarea: {
+    html: `
+<cps-textarea
+  label="Resizable textarea with a max height"
+  hint="Use the resize handle or Arrow keys to resize, up to a cap of 8rem"
+  [rows]="2"
+  [maxHeight]="'8rem'">
+</cps-textarea>`
+  },
+
+  hideDetailsTextarea: {
+    html: `
+<cps-textarea
+  label="Textarea with hidden hint/error details"
+  hint="You should not see this hint"
+  [hideDetails]="true"></cps-textarea>`
+  },
+
+  ariaLabelTextarea: {
+    html: `
+<cps-textarea
+  ariaLabel="Additional comments"
+  placeholder="Type your comments here"></cps-textarea>`
+  },
+
   twoWayBindingTextarea: {
     html: `
 <div class="sync-val-example">
