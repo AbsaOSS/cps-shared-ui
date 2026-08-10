@@ -100,8 +100,8 @@ export class CpsSwitchComponent
   private _value = false;
 
   /**
-   * True once the user has toggled the switch, so the slide/color
-   * transition never plays for a programmatically-set value.
+   * True after the first user interaction. Used to disable the initial
+   * slide/color transition for pre-checked or programmatically-set values.
    */
   ready = false;
 

@@ -29,7 +29,7 @@ test.describe('cps-switch', () => {
   });
 
   test.describe('Real click-through via label text', () => {
-    test('clicking the visible label text toggles the switch via native label association', async ({
+    test('clicking the visible label text toggles the switch', async ({
       page
     }) => {
       const wrapper = example(page, 'tooltip-switch');
@@ -115,7 +115,10 @@ test.describe('cps-switch', () => {
         document.addEventListener(
           'transitionrun',
           (e) => {
-            w.__transitions.push((e.target as HTMLElement).className);
+            const target = e.target as HTMLElement;
+            if (target.classList?.contains('cps-switch-slider')) {
+              w.__transitions.push(target.className);
+            }
           },
           true
         );
