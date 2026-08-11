@@ -5,7 +5,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -77,7 +77,7 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsIconComponent, CpsTooltipDirective],
+  imports: [NgTemplateOutlet, CpsIconComponent, CpsTooltipDirective],
   selector: 'cps-tab-group',
   templateUrl: './cps-tab-group.component.html',
   styleUrls: ['./cps-tab-group.component.scss'],
@@ -277,7 +277,7 @@ export class CpsTabGroupComponent
 
     this.listScroll$ = fromEvent(this.tabsList.nativeElement, 'scroll')
       .pipe(debounceTime(50), distinctUntilChanged())
-      .subscribe((event: any) => this.onScroll(event));
+      .subscribe(() => this.onScroll());
 
     this.cdRef.detectChanges();
   }
@@ -473,21 +473,23 @@ export class CpsTabGroupComponent
       }
     } else if (this.animationType === 'fade') {
       this.animationState = 'fadeOut';
-      setTimeout(() => {
-        this.animationState = 'fadeIn';
-        if (!silent) {
-          this.afterTabChanged.emit({
-            previousIndex: this._previousTabIndex,
-            newIndex: this._currentTabIndex
-          });
-        }
-      }, 100);
+      setTimeout(
+        () => {
+          this.animationState = 'fadeIn';
+          if (!silent) {
+            this.afterTabChanged.emit({
+              previousIndex: this._previousTabIndex,
+              newIndex: this._currentTabIndex
+            });
+          }
+        },
+        prefersReducedMotion() ? 1 : 100
+      );
     }
   }
 
-  onScroll(event: any) {
+  onScroll() {
     this._updateNavBtnsState();
-    event.preventDefault();
   }
 
   onResize() {
