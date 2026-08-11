@@ -83,7 +83,7 @@ test.describe('cps-timepicker', () => {
   });
 
   test.describe('Real AM/PM keyboard selection', () => {
-    test('arrow keys switch the real checked radio in the day-period group', async ({
+    test('Space selects the real checked radio in the day-period group', async ({
       page
     }) => {
       const wrapper = example(page, 'required-timepicker');
