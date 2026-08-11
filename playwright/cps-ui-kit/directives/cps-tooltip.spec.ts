@@ -8,6 +8,23 @@ function tooltip(page: Page): Locator {
   return page.getByTestId('cps-tooltip');
 }
 
+function gapBetween(
+  targetBox: { x: number; y: number; width: number; height: number },
+  tooltipBox: { x: number; y: number; width: number; height: number }
+): number {
+  const horizontalOverlap =
+    tooltipBox.x < targetBox.x + targetBox.width &&
+    tooltipBox.x + tooltipBox.width > targetBox.x;
+  if (!horizontalOverlap) {
+    return tooltipBox.x >= targetBox.x + targetBox.width
+      ? tooltipBox.x - (targetBox.x + targetBox.width)
+      : targetBox.x - (tooltipBox.x + tooltipBox.width);
+  }
+  return tooltipBox.y >= targetBox.y + targetBox.height
+    ? tooltipBox.y - (targetBox.y + targetBox.height)
+    : targetBox.y - (tooltipBox.y + tooltipBox.height);
+}
+
 test.describe('cps-tooltip', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/tooltip');
@@ -119,7 +136,7 @@ test.describe('cps-tooltip', () => {
       const rootFontSizePx = await page.evaluate(() =>
         parseFloat(getComputedStyle(document.documentElement).fontSize)
       );
-      const gap = tooltipBox.x - (targetBox.x + targetBox.width);
+      const gap = gapBetween(targetBox, tooltipBox);
       expect(gap).toBeGreaterThan(rootFontSizePx * 1.5);
       expect(gap).toBeLessThan(rootFontSizePx * 2.5);
     });
@@ -146,7 +163,7 @@ test.describe('cps-tooltip', () => {
       await target.hover();
       await expect(tooltip(page)).toBeVisible();
 
-      await page.mouse.wheel(0, 10);
+      await page.evaluate(() => window.dispatchEvent(new Event('scroll')));
 
       await expect(tooltip(page)).toHaveCount(0);
     });
