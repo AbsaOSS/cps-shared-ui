@@ -54,7 +54,8 @@
             *ngTemplateOutlet="
               tabHeaderTemplate;
               context: {
-                tab: tab
+                tab: tab,
+                tabIndex: tabIndex
               }
             "></ng-container>
         </li>
@@ -78,7 +79,8 @@
             *ngTemplateOutlet="
               tabHeaderTemplate;
               context: {
-                tab: tab
+                tab: tab,
+                tabIndex: tabIndex
               }
             "></ng-container>
         </li>
@@ -123,7 +125,7 @@
               params: { transitionParams: resolvedTransitionParams }
             }"
             class="cps-tab-content-inner"
-            data-testid="cps-tab-content-inner">
+            [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
@@ -134,7 +136,7 @@
               params: { transitionParams: resolvedFadeTransitionParams }
             }"
             class="cps-tab-content-inner"
-            data-testid="cps-tab-content-inner">
+            [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
@@ -143,24 +145,36 @@
   }
 </div>
 
-<ng-template #tabHeaderTemplate let-tab="tab">
+<ng-template #tabHeaderTemplate let-tab="tab" let-tabIndex="tabIndex">
   @if (tab.icon) {
-    <cps-icon class="cps-tab-icon" data-testid="cps-tab-icon" [icon]="tab.icon">
+    <cps-icon
+      class="cps-tab-icon"
+      [attr.data-testid]="'cps-tab-icon-' + tabIndex"
+      [icon]="tab.icon">
     </cps-icon>
   }
-  <span class="cps-tab-link" data-testid="cps-tab-link">{{ tab.label }}</span>
+  <span class="cps-tab-link" [attr.data-testid]="'cps-tab-link-' + tabIndex">{{
+    tab.label
+  }}</span>
   @if (tab.badgeValue) {
     @if (tab.badgeTooltip) {
       <div
         class="cps-tab-badge"
-        data-testid="cps-tab-badge"
+        [attr.data-testid]="'cps-tab-badge-' + tabIndex"
         [cpsTooltip]="tab.badgeTooltip"
         aria-hidden="true">
-        <span data-testid="cps-tab-badge-value">{{ tab.badgeValue }}</span>
+        <span [attr.data-testid]="'cps-tab-badge-value-' + tabIndex">{{
+          tab.badgeValue
+        }}</span>
       </div>
     } @else {
-      <div class="cps-tab-badge" data-testid="cps-tab-badge" aria-hidden="true">
-        <span data-testid="cps-tab-badge-value">{{ tab.badgeValue }}</span>
+      <div
+        class="cps-tab-badge"
+        [attr.data-testid]="'cps-tab-badge-' + tabIndex"
+        aria-hidden="true">
+        <span [attr.data-testid]="'cps-tab-badge-value-' + tabIndex">{{
+          tab.badgeValue
+        }}</span>
       </div>
     }
   }

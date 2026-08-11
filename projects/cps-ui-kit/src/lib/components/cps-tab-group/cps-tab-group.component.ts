@@ -38,12 +38,7 @@ import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
 } from '../../utils/internal/motion-utils/motion-utils';
-import {
-  Subscription,
-  debounceTime,
-  distinctUntilChanged,
-  fromEvent
-} from 'rxjs';
+import { Subscription, debounceTime, fromEvent } from 'rxjs';
 
 /**
  * CpsTabChangeEvent is used to define the tab change event.
@@ -258,7 +253,7 @@ export class CpsTabGroupComponent
     );
 
     this.windowResize$ = fromEvent(window, 'resize')
-      .pipe(debounceTime(50), distinctUntilChanged())
+      .pipe(debounceTime(50))
       .subscribe(() => this.onResize());
   }
 
@@ -276,7 +271,7 @@ export class CpsTabGroupComponent
     this._updateNavBtnsState();
 
     this.listScroll$ = fromEvent(this.tabsList.nativeElement, 'scroll')
-      .pipe(debounceTime(50), distinctUntilChanged())
+      .pipe(debounceTime(50))
       .subscribe(() => this.onScroll());
 
     this.cdRef.detectChanges();

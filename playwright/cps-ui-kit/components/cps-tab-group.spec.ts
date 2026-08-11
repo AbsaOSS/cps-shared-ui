@@ -11,12 +11,15 @@ async function timeToAfterTabChanged(
 ): Promise<number> {
   await group(page, testId).getByRole('tab').first().waitFor();
   await page.evaluate(() => {
-    (window as any).__log = [];
-    const orig = console.log;
-    console.log = (...args: unknown[]) => {
-      (window as any).__log.push({ t: performance.now(), args });
-      orig(...args);
-    };
+    const w = window as any;
+    w.__log = [];
+    if (!w.__origConsoleLog) {
+      w.__origConsoleLog = console.log.bind(console);
+      console.log = (...args: unknown[]) => {
+        w.__log.push({ t: performance.now(), args });
+        w.__origConsoleLog(...args);
+      };
+    }
   });
   const clickTime = await page.evaluate(
     ({ id, index }) => {
