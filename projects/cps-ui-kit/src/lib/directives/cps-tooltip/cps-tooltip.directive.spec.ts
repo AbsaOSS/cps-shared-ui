@@ -78,7 +78,7 @@ describe('CpsTooltipDirective', () => {
 
     expect(tooltipElement).toBeTruthy();
     expect(tooltipElement?.innerHTML).toBe(
-      '<div class="cps-tooltip-content">Add your text to this tooltip</div>'
+      '<div class="cps-tooltip-content" data-testid="cps-tooltip-content">Add your text to this tooltip</div>'
     );
     // Angular informs about stripping some content during sanitization
     expect(consoleWarnSpy).toHaveBeenCalledWith(
@@ -105,7 +105,7 @@ describe('CpsTooltipDirective', () => {
 
     expect(tooltipElement).toBeTruthy();
     expect(tooltipElement?.innerHTML).toBe(
-      '<div class="cps-tooltip-content"><h1>Legit tooltip</h1></div>'
+      '<div class="cps-tooltip-content" data-testid="cps-tooltip-content"><h1>Legit tooltip</h1></div>'
     );
 
     divElement.triggerEventHandler('mouseleave', null);

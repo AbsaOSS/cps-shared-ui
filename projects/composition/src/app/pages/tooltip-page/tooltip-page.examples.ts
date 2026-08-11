@@ -39,6 +39,16 @@ export const tooltipExamples: Record<string, { html: string; ts?: string }> = {
 </cps-button>`
   },
 
+  focusOnlyTooltip: {
+    html: `
+<cps-button
+  label="Open on focus only"
+  tooltipPosition="bottom"
+  cpsTooltip="Triggered on focus only"
+  tooltipOpenOn="focus">
+</cps-button>`
+  },
+
   openCloseDelays: {
     html: `
 <cps-button
@@ -79,5 +89,16 @@ export const tooltipExamples: Record<string, { html: string; ts?: string }> = {
   [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>`,
     ts: `
 ttipEnabled = false;`
+  },
+
+  customOffsetMaxWidthTooltip: {
+    html: `
+<cps-button
+  cpsTooltip="A longer tooltip message to demonstrate a constrained max width"
+  tooltipPosition="right"
+  [tooltipOffset]="'2rem'"
+  [tooltipMaxWidth]="'8rem'"
+  label="Custom offset & max width">
+</cps-button>`
   }
 };
