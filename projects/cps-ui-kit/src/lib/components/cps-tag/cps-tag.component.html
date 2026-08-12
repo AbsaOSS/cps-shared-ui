@@ -1,4 +1,5 @@
 <div
+  data-testid="cps-tag"
   [ngClass]="classesList"
   [class.unselected]="!value && selectable"
   [style.borderColor]="cvtColor"
@@ -11,5 +12,5 @@
   [class.cps-tag--pressing]="pressing"
   (keydown.space)="handleSpaceKeydown($event)"
   (keyup.space)="toggleSelected()">
-  <span>{{ label }}</span>
+  <span data-testid="cps-tag-label">{{ label }}</span>
 </div>
