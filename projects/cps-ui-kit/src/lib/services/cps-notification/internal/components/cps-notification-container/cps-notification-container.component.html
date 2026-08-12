@@ -1,39 +1,52 @@
 <div
   role="region"
+  data-testid="cps-notification-container-mask"
   [attr.aria-label]="'Notifications: ' + position"
-  [ngClass]="{
-    'cps-notification-container-mask': true,
-    'cps-notification-container-left':
-      position === CpsNotificationPosition.LEFT,
-    'cps-notification-container-right':
-      position === CpsNotificationPosition.RIGHT,
-    'cps-notification-container-top': position === CpsNotificationPosition.TOP,
-    'cps-notification-container-bottom':
-      position === CpsNotificationPosition.BOTTOM,
-    'cps-notification-container-top-left':
-      position === CpsNotificationPosition.TOPLEFT,
-    'cps-notification-container-top-right':
-      position === CpsNotificationPosition.TOPRIGHT,
-    'cps-notification-container-bottom-left':
-      position === CpsNotificationPosition.BOTTOMLEFT,
-    'cps-notification-container-bottom-right':
-      position === CpsNotificationPosition.BOTTOMRIGHT
-  }">
-  <div #container class="cps-notification-container">
+  class="cps-notification-container-mask"
+  [class.cps-notification-container-left]="
+    position === CpsNotificationPosition.LEFT
+  "
+  [class.cps-notification-container-right]="
+    position === CpsNotificationPosition.RIGHT
+  "
+  [class.cps-notification-container-top]="
+    position === CpsNotificationPosition.TOP
+  "
+  [class.cps-notification-container-bottom]="
+    position === CpsNotificationPosition.BOTTOM
+  "
+  [class.cps-notification-container-top-left]="
+    position === CpsNotificationPosition.TOPLEFT
+  "
+  [class.cps-notification-container-top-right]="
+    position === CpsNotificationPosition.TOPRIGHT
+  "
+  [class.cps-notification-container-bottom-left]="
+    position === CpsNotificationPosition.BOTTOMLEFT
+  "
+  [class.cps-notification-container-bottom-right]="
+    position === CpsNotificationPosition.BOTTOMRIGHT
+  ">
+  <div
+    #container
+    class="cps-notification-container"
+    data-testid="cps-notification-container">
     <div
       #content
       class="cps-notification-container-content"
-      [ngStyle]="{
-        'align-items': [
+      data-testid="cps-notification-container-content"
+      [style.align-items]="
+        [
           CpsNotificationPosition.RIGHT,
           CpsNotificationPosition.TOPRIGHT,
           CpsNotificationPosition.BOTTOMRIGHT
         ].includes(position)
           ? 'flex-end'
           : 'flex-start'
-      }">
+      ">
       @for (notification of notifications; track notification; let i = $index) {
         <cps-toast
+          [attr.data-testid]="'cps-toast-' + i"
           [data]="notification.data"
           [config]="notification.config"
           @notificationAnimation
