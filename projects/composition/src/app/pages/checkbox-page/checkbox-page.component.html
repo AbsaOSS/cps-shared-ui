@@ -39,6 +39,22 @@
   </app-code-example>
 
   <app-code-example
+    label="Checkbox with valueChanged event"
+    [htmlCode]="examples.valueChangedCheckbox.html"
+    [tsCode]="examples.valueChangedCheckbox.ts">
+    <div class="sync-val-example">
+      <cps-checkbox
+        data-testid="value-changed-checkbox"
+        label="Checkbox with valueChanged event"
+        [value]="false"
+        (valueChanged)="onValueChanged($event)"></cps-checkbox>
+      <div class="sync-val" data-testid="value-changed-checkbox-value">
+        Value changed to: {{ lastValueChanged }}
+      </div>
+    </div>
+  </app-code-example>
+
+  <app-code-example
     label="Two-way binding"
     [htmlCode]="examples.twoWayBinding.html"
     [tsCode]="examples.twoWayBinding.ts">

@@ -22,6 +22,11 @@ import { checkboxExamples } from './checkbox-page.examples';
 })
 export class CheckboxPageComponent {
   syncVal = true;
+  lastValueChanged = false;
   componentData = ComponentData;
   readonly examples = checkboxExamples;
+
+  onValueChanged(value: boolean) {
+    this.lastValueChanged = value;
+  }
 }

@@ -13,7 +13,8 @@ items: CpsSidebarMenuItem[] = [
   {
     title: 'Dashboard',
     icon: 'grid',
-    url: '/'
+    url: '/',
+    target: '_blank'
   },
   {
     title: 'Favourites',
