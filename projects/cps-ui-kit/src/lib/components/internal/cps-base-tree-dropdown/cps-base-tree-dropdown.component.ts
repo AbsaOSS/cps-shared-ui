@@ -408,12 +408,16 @@ export class CpsBaseTreeDropdownComponent
     this.optionsMap?.forEach((value) => {
       if (value.children) value.expanded = true;
     });
+    this._treeRefreshKey++;
+    this.treeList?.cd?.markForCheck();
   }
 
   collapseAll() {
     this.optionsMap?.forEach((value) => {
       if (value.children) value.expanded = false;
     });
+    this._treeRefreshKey++;
+    this.treeList?.cd?.markForCheck();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

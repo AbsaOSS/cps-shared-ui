@@ -209,7 +209,7 @@ test.describe('cps-tree-select', () => {
     test('Expand All reveals a two-level-deep node without any manual clicks', async ({
       page
     }) => {
-      const wrapper = example(page, 'required-tree-select');
+      const wrapper = example(page, 'expand-collapse-tree-select');
 
       await page.getByTestId('expand-all-tree-select-btn').click();
       await open(wrapper);
@@ -224,7 +224,7 @@ test.describe('cps-tree-select', () => {
     });
 
     test('Collapse All hides a previously-expanded node', async ({ page }) => {
-      const wrapper = example(page, 'required-tree-select');
+      const wrapper = example(page, 'expand-collapse-tree-select');
 
       await open(wrapper);
       await page.getByRole('treeitem', { name: 'Dataset 1' }).click();

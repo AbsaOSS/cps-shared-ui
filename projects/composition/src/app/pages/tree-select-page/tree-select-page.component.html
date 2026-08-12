@@ -6,7 +6,6 @@
     [tsCode]="examples.requiredTreeSelect.ts">
     <form [formGroup]="form">
       <cps-tree-select
-        #requiredTreeSelectRef
         data-testid="required-tree-select"
         label="Required single tree select with a tooltip"
         [options]="options"
@@ -18,15 +17,31 @@
         formControlName="requiredTreeSelect">
       </cps-tree-select>
     </form>
+  </app-code-example>
+
+  <app-code-example
+    label="Tree select with expand/collapse all controls"
+    [htmlCode]="examples.expandCollapseTreeSelect.html"
+    [tsCode]="examples.expandCollapseTreeSelect.ts">
+    <cps-tree-select
+      #expandCollapseTreeSelectRef
+      data-testid="expand-collapse-tree-select"
+      label="Tree select with expand/collapse all controls"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      placeholder="Select element"
+      [clearable]="true">
+    </cps-tree-select>
     <div class="tree-select-actions">
       <cps-button
         data-testid="expand-all-tree-select-btn"
         label="Expand All"
-        (clicked)="requiredTreeSelectRef.expandAll()"></cps-button>
+        (clicked)="expandCollapseTreeSelectRef.expandAll()"></cps-button>
       <cps-button
         data-testid="collapse-all-tree-select-btn"
         label="Collapse All"
-        (clicked)="requiredTreeSelectRef.collapseAll()"></cps-button>
+        (clicked)="expandCollapseTreeSelectRef.collapseAll()"></cps-button>
     </div>
   </app-code-example>
 

@@ -92,7 +92,6 @@ export const treeSelectExamples: Record<string, { html: string; ts?: string }> =
       html: `
 <form [formGroup]="form">
   <cps-tree-select
-    #requiredTreeSelectRef
     label="Required single tree select with a tooltip"
     [options]="options"
     optionLabel="label"
@@ -102,13 +101,7 @@ export const treeSelectExamples: Record<string, { html: string; ts?: string }> =
     [clearable]="true"
     formControlName="requiredTreeSelect">
   </cps-tree-select>
-</form>
-<cps-button
-  label="Expand All"
-  (clicked)="requiredTreeSelectRef.expandAll()"></cps-button>
-<cps-button
-  label="Collapse All"
-  (clicked)="requiredTreeSelectRef.collapseAll()"></cps-button>`,
+</form>`,
       ts: `
 private readonly _formBuilder = inject(UntypedFormBuilder);
 
@@ -121,6 +114,26 @@ ngOnInit(): void {
     requiredTreeSelect: [this.options[1].children[0], [Validators.required]]
   });
 }`
+    },
+
+    expandCollapseTreeSelect: {
+      html: `
+<cps-tree-select
+  #expandCollapseTreeSelectRef
+  label="Tree select with expand/collapse all controls"
+  [options]="options"
+  optionLabel="label"
+  optionInfo="attrType"
+  placeholder="Select element"
+  [clearable]="true">
+</cps-tree-select>
+<cps-button
+  label="Expand All"
+  (clicked)="expandCollapseTreeSelectRef.expandAll()"></cps-button>
+<cps-button
+  label="Collapse All"
+  (clicked)="expandCollapseTreeSelectRef.collapseAll()"></cps-button>`,
+      ts: treeOptionsTs
     },
 
     loadingTreeSelect: {
