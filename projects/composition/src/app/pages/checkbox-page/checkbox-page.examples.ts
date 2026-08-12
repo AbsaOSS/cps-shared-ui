@@ -31,6 +31,23 @@ export const checkboxExamples: Record<string, { html: string; ts?: string }> = {
   [value]="false"></cps-checkbox>`
   },
 
+  valueChangedCheckbox: {
+    html: `
+<div class="sync-val-example">
+  <cps-checkbox
+    label="Checkbox with valueChanged event"
+    [value]="false"
+    (valueChanged)="onValueChanged($event)"></cps-checkbox>
+  <div class="sync-val">Value changed to: {{ lastValueChanged }}</div>
+</div>`,
+    ts: `
+lastValueChanged = false;
+
+onValueChanged(value: boolean) {
+  this.lastValueChanged = value;
+}`
+  },
+
   twoWayBinding: {
     html: `
 <div class="sync-val-example">

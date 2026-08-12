@@ -21,6 +21,11 @@ import { switchExamples } from './switch-page.examples';
 })
 export class SwitchPageComponent {
   syncVal = true;
+  lastValueChanged = false;
   componentData = ComponentData;
   readonly examples = switchExamples;
+
+  onValueChanged(value: boolean) {
+    this.lastValueChanged = value;
+  }
 }

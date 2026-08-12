@@ -9,17 +9,49 @@
   </app-code-example>
 
   <app-code-example
+    label="Disabled selectable tag"
+    [htmlCode]="examples.disabledSelectableTag.html">
+    <cps-tag
+      [disabled]="true"
+      [selectable]="true"
+      [value]="false"
+      color="red"
+      label="Disabled selectable tag"></cps-tag>
+  </app-code-example>
+
+  <app-code-example
     label="Selectable tag"
     [htmlCode]="examples.selectableTag.html"
     [tsCode]="examples.selectableTag.ts">
     <div class="sync-val-example">
       <cps-tag
+        data-testid="selectable-tag"
         [selectable]="true"
         color="info"
         [(ngModel)]="syncVal"
         label="Selectable tag"></cps-tag>
 
-      <div class="sync-val">Is selected: {{ syncVal }}</div>
+      <div class="sync-val" data-testid="selectable-tag-value">
+        Is selected: {{ syncVal }}
+      </div>
+    </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Tag with valueChanged event"
+    [htmlCode]="examples.valueChangedTag.html"
+    [tsCode]="examples.valueChangedTag.ts">
+    <div class="sync-val-example">
+      <cps-tag
+        data-testid="value-changed-tag"
+        [selectable]="true"
+        color="info"
+        (valueChanged)="onValueChanged($event)"
+        label="Tag with valueChanged event"></cps-tag>
+
+      <div class="sync-val" data-testid="value-changed-tag-value">
+        Value changed to: {{ lastValueChanged }}
+      </div>
     </div>
   </app-code-example>
 </app-component-docs-viewer>
