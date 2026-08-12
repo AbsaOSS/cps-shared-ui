@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CpsCheckboxComponent, CpsPaginatorComponent } from 'cps-ui-kit';
+import { CpsPaginatorComponent, CpsSwitchComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ComponentData from '../../api-data/cps-paginator.json';
@@ -11,7 +11,7 @@ import { paginatorExamples } from './paginator-page.examples';
   imports: [
     FormsModule,
     CpsPaginatorComponent,
-    CpsCheckboxComponent,
+    CpsSwitchComponent,
     ComponentDocsViewerComponent,
     CodeExampleComponent
   ],

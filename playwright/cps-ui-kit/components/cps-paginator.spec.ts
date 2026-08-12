@@ -122,7 +122,7 @@ test.describe('cps-paginator', () => {
       const exampleBlock = page
         .locator('app-code-example')
         .filter({ has: paginator });
-      await exampleBlock.getByTestId('cps-checkbox-label').click();
+      await exampleBlock.getByTestId('cps-switch-label').click();
 
       await expect(inner).not.toHaveCSS('display', 'none');
       await expect(inner.locator('.p-paginator-current')).toHaveText(

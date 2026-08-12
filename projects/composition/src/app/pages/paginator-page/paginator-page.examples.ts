@@ -28,10 +28,10 @@ onPageChanged(event: { first: number; rows: number }) {
   [totalRecords]="manyRecords ? 120 : 5"
   [alwaysShow]="false">
 </cps-paginator>
-<cps-checkbox
+<cps-switch
   [(ngModel)]="manyRecords"
-  [label]="manyRecords ? 'Showing many records' : 'Showing few records'">
-</cps-checkbox>`,
+  label="Load enough records for multiple pages">
+</cps-switch>`,
       ts: `
 manyRecords = false;`
     },
