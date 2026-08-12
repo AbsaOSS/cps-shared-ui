@@ -1,9 +1,10 @@
-<div class="cps-switch-container">
-  <label class="cps-switch">
+<div class="cps-switch-container" [style.--cps-switch-animated]="ready ? 1 : 0">
+  <label class="cps-switch" data-testid="cps-switch">
     <input
       #switchInput
       type="checkbox"
       role="switch"
+      data-testid="cps-switch-input"
       [disabled]="disabled"
       [checked]="value"
       (change)="updateValueEvent($event)"
@@ -13,14 +14,17 @@
   @if (label) {
     <span
       class="cps-switch-label"
-      [ngClass]="{ 'cps-switch-label-disabled': disabled }"
+      data-testid="cps-switch-label"
+      [class.cps-switch-label-disabled]="disabled"
       aria-hidden="true"
+      (click)="onLabelClick()"
       >{{ label }}</span
     >
   }
   @if (infoTooltip) {
     <cps-info-circle
       class="cps-switch-info-circle"
+      data-testid="cps-switch-info-circle"
       size="xsmall"
       [tooltipPosition]="infoTooltipPosition"
       [tooltipContentClass]="infoTooltipClass"

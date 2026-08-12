@@ -55,6 +55,23 @@ test.describe('cps-checkbox', () => {
     });
   });
 
+  test.describe('Real valueChanged event', () => {
+    test('a real click emits valueChanged and updates the visible readout', async ({
+      page
+    }) => {
+      const wrapper = example(page, 'value-changed-checkbox');
+      const readout = page.getByTestId('value-changed-checkbox-value');
+
+      await expect(readout).toHaveText('Value changed to: false');
+
+      await wrapper.click();
+      await expect(readout).toHaveText('Value changed to: true');
+
+      await wrapper.click();
+      await expect(readout).toHaveText('Value changed to: false');
+    });
+  });
+
   test.describe('Two-way binding - real readout', () => {
     test('a real click toggles the visible value via a real click', async ({
       page

@@ -1,27 +1,41 @@
 <div
   class="cps-sidebar-menu"
+  data-testid="cps-sidebar-menu"
   [style.height]="cvtHeight()"
   [class.cps-sidebar-menu-collapsed]="!isExpanded">
   <nav
     class="cps-sidebar-menubar"
+    data-testid="cps-sidebar-menu-nav"
     [attr.aria-label]="ariaLabel"
     [attr.aria-description]="`Sidebar ${isExpanded ? 'expanded' : 'collapsed'}`">
     @for (item of items; track item) {
       @if (item.url) {
         <a
           class="cps-sidebar-menu-item"
+          [attr.data-testid]="'cps-sidebar-menu-item-' + $index"
           tabindex="0"
           role="link"
           [routerLink]="item.disabled ? null : [item.url]"
           routerLinkActive="active"
           ariaCurrentWhenActive="page"
           [routerLinkActiveOptions]="{ exact: exactRoutes }"
+          [target]="item.disabled ? undefined : item.target"
+          [attr.rel]="
+            !item.disabled && item.target === '_blank'
+              ? 'noopener noreferrer'
+              : null
+          "
           [class.disabled]="item.disabled"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
-          <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
+          <cps-icon
+            [icon]="item.icon"
+            size="normal"
+            data-testid="cps-sidebar-menu-item-icon">
+          </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
+            data-testid="cps-sidebar-menu-item-label"
             [@onExpand]="{
               value: isExpanded ? 'expanded' : 'collapsed',
               params: { transitionParams: resolvedTransitionParams }
@@ -33,6 +47,7 @@
       @if (!item.url) {
         <cps-menu
           #popupMenu
+          [attr.data-testid]="'cps-sidebar-menu-popup-' + $index"
           [items]="item.items || []"
           [header]="item.title"
           [focusOnShow]="false"
@@ -43,6 +58,7 @@
         </cps-menu>
         <button
           type="button"
+          [attr.data-testid]="'cps-sidebar-menu-item-' + $index"
           (touchstart)="onMenuItemTouchStart()"
           (mouseenter)="showMenu($event, popupMenu)"
           (mouseleave)="leaveMenu($event, popupMenu)"
@@ -60,9 +76,14 @@
           [attr.aria-current]="isActive(item) ? 'page' : null"
           [attr.aria-disabled]="item.disabled || null"
           [attr.aria-label]="item.title">
-          <cps-icon [icon]="item.icon" size="normal"> </cps-icon>
+          <cps-icon
+            [icon]="item.icon"
+            size="normal"
+            data-testid="cps-sidebar-menu-item-icon">
+          </cps-icon>
           <span
             class="cps-sidebar-menu-item-label"
+            data-testid="cps-sidebar-menu-item-label"
             [@onExpand]="{
               value: isExpanded ? 'expanded' : 'collapsed',
               params: { transitionParams: resolvedTransitionParams }
@@ -77,9 +98,14 @@
     #expandAreaBtn
     type="button"
     class="expand-area"
+    data-testid="cps-sidebar-menu-expand-btn"
     (click)="toggleSidebar()"
     [attr.aria-label]="isExpanded ? 'Collapse sidebar' : 'Expand sidebar'"
     [attr.aria-expanded]="isExpanded">
-    <cps-icon icon="menu-shrink" size="normal"> </cps-icon>
+    <cps-icon
+      icon="menu-shrink"
+      size="normal"
+      data-testid="cps-sidebar-menu-expand-icon">
+    </cps-icon>
   </button>
 </div>

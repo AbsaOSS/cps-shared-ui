@@ -1,12 +1,17 @@
-<div class="cps-textarea-container" [style.width]="cvtWidth">
+<div
+  class="cps-textarea-container"
+  data-testid="cps-textarea-container"
+  [style.width]="cvtWidth">
   @if (label) {
     <div
       class="cps-textarea-label"
+      data-testid="cps-textarea-label"
       [class.cps-textarea-label-disabled]="disabled && !readonly">
-      <label>{{ label }}</label>
+      <label data-testid="cps-textarea-label-text">{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
           class="cps-textarea-label-info-circle"
+          data-testid="cps-textarea-info-circle"
           size="xsmall"
           [tooltipPosition]="infoTooltipPosition"
           [tooltipContentClass]="infoTooltipClass"
@@ -20,12 +25,14 @@
 
   <div
     class="cps-textarea-wrap"
+    data-testid="cps-textarea-wrap"
     [class.cps-textarea-wrap-error]="!!error"
     [class.clearable]="clearable"
     [class.persistent-clear]="persistentClear"
     [class.keyboard-focused]="isKeyboardFocused">
     <textarea
       #textareaEl
+      data-testid="cps-textarea"
       [attr.spellcheck]="spellcheck"
       [attr.autocomplete]="autocomplete"
       [attr.aria-label]="ariaLabel || label || null"
@@ -51,6 +58,7 @@
     @if (clearable && !disabled && !readonly) {
       <span
         class="clear-btn"
+        data-testid="cps-textarea-clear-btn"
         role="button"
         [attr.tabindex]="isClearButtonVisible ? 0 : null"
         aria-label="Clear"
@@ -60,13 +68,17 @@
         (click)="onClear($event)"
         (keydown.enter)="onClear($event)"
         (keydown.space)="onClear($event)">
-        <cps-icon icon="delete" size="small"></cps-icon>
+        <cps-icon
+          data-testid="cps-textarea-clear-icon"
+          icon="delete"
+          size="small"></cps-icon>
       </span>
     }
 
     @if (resizable === 'vertical' && !disabled && !readonly) {
       <div
         class="cps-textarea-resize-handle"
+        data-testid="cps-textarea-resize-handle"
         role="button"
         tabindex="0"
         aria-label="Vertically resize textarea"
@@ -75,7 +87,10 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div [id]="hintId" class="cps-textarea-hint">
+    <div
+      [id]="hintId"
+      class="cps-textarea-hint"
+      data-testid="cps-textarea-hint">
       {{ hint }}
     </div>
   }
@@ -83,6 +98,7 @@
     <div
       [id]="errorId"
       class="cps-textarea-error"
+      data-testid="cps-textarea-error"
       aria-live="polite"
       aria-atomic="true">
       {{ error }}
