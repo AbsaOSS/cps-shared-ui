@@ -121,6 +121,26 @@ ngOnInit(): void {
 }`
   },
 
+  expandCollapseTreeAutocomplete: {
+    html: `
+<cps-tree-autocomplete
+  #expandCollapseTreeAutocompleteRef
+  label="Tree autocomplete with expand/collapse all controls"
+  [options]="options"
+  optionLabel="label"
+  optionInfo="attrType"
+  placeholder="Select element"
+  [clearable]="true">
+</cps-tree-autocomplete>
+<cps-button
+  label="Expand All"
+  (clicked)="expandCollapseTreeAutocompleteRef.expandAll()"></cps-button>
+<cps-button
+  label="Collapse All"
+  (clicked)="expandCollapseTreeAutocompleteRef.collapseAll()"></cps-button>`,
+    ts: treeOptionsTs
+  },
+
   loadingTreeAutocomplete: {
     html: `
 <cps-tree-autocomplete
@@ -263,6 +283,49 @@ syncVal: any = null;`
   [chips]="false"
   appearance="borderless"
   prefixIcon="search">
+</cps-tree-autocomplete>`,
+    ts: treeOptionsTs
+  },
+
+  ariaLabelTreeAutocomplete: {
+    html: `
+<cps-tree-autocomplete
+  ariaLabel="Select an item"
+  [options]="options">
+</cps-tree-autocomplete>`,
+    ts: treeOptionsTs
+  },
+
+  hideDetailsTreeAutocomplete: {
+    html: `
+<cps-tree-autocomplete
+  label="Tree autocomplete with hidden hint/error details"
+  hint="You should not see this hint"
+  [options]="options"
+  [hideDetails]="true">
+</cps-tree-autocomplete>`,
+    ts: treeOptionsTs
+  },
+
+  openOnClearFalseTreeAutocomplete: {
+    html: `
+<cps-tree-autocomplete
+  label="Tree autocomplete with openOnClear disabled"
+  hint="Clearing this tree autocomplete will not reopen the dropdown"
+  [options]="options"
+  [value]="options[1].children[0]"
+  [clearable]="true"
+  [openOnClear]="false">
+</cps-tree-autocomplete>`,
+    ts: treeOptionsTs
+  },
+
+  emptyMessageTreeAutocomplete: {
+    html: `
+<cps-tree-autocomplete
+  label="Type something that won't match to see the custom message"
+  [options]="options"
+  emptyMessage="Nothing matches your search">
 </cps-tree-autocomplete>`,
     ts: treeOptionsTs
   }
