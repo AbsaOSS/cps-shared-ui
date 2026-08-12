@@ -6,6 +6,7 @@
     [tsCode]="examples.requiredTreeSelect.ts">
     <form [formGroup]="form">
       <cps-tree-select
+        data-testid="required-tree-select"
         label="Required single tree select with a tooltip"
         [options]="options"
         optionLabel="label"
@@ -23,6 +24,7 @@
     [htmlCode]="examples.loadingTreeSelect.html"
     [tsCode]="examples.loadingTreeSelect.ts">
     <cps-tree-select
+      data-testid="loading-tree-select"
       label="Loading tree select"
       [loading]="true"
       [options]="options"
@@ -35,6 +37,7 @@
     label="Disabled tree select"
     [htmlCode]="examples.disabledTreeSelect.html">
     <cps-tree-select
+      data-testid="disabled-tree-select"
       label="Disabled tree select"
       [disabled]="true"
       hint="This tree select is disabled">
@@ -46,6 +49,7 @@
     [htmlCode]="examples.multipleTreeSelect.html"
     [tsCode]="examples.multipleTreeSelect.ts">
     <cps-tree-select
+      data-testid="multiple-tree-select"
       label="Multiple tree select"
       [options]="options"
       optionLabel="label"
@@ -63,6 +67,7 @@
     [htmlCode]="examples.virtualScrollTreeSelect.html"
     [tsCode]="examples.virtualScrollTreeSelect.ts">
     <cps-tree-select
+      data-testid="virtual-scroll-tree-select"
       label="Multiple tree select with virtual scroll, chips and persistent clear icon"
       [options]="options"
       optionLabel="label"
@@ -81,6 +86,7 @@
     [htmlCode]="examples.nonClosableChipsTreeSelect.html"
     [tsCode]="examples.nonClosableChipsTreeSelect.ts">
     <cps-tree-select
+      data-testid="non-closable-chips-tree-select"
       label="Multiple tree select with non-closable chips"
       [options]="options"
       optionInfo="attrType"
@@ -97,6 +103,7 @@
     [htmlCode]="examples.prefixIconTreeSelect.html"
     [tsCode]="examples.prefixIconTreeSelect.ts">
     <cps-tree-select
+      data-testid="prefix-icon-tree-select"
       label="Multiple tree select with prefix icon"
       [options]="options"
       optionInfo="attrType"
@@ -114,6 +121,7 @@
     [tsCode]="examples.twoWayBindingTreeSelect.ts">
     <div class="sync-val-example">
       <cps-tree-select
+        data-testid="two-way-binding-tree-select"
         [initialExpandDirectories]="true"
         width="31.25rem"
         label="Single tree select with two-way binding, select something"
@@ -125,7 +133,9 @@
         [(ngModel)]="syncVal"
         [ngModelOptions]="{ standalone: true }">
       </cps-tree-select>
-      <span class="sync-val">{{ syncVal?.label }}</span>
+      <span class="sync-val" data-testid="two-way-binding-tree-select-value">{{
+        syncVal?.label
+      }}</span>
     </div>
   </app-code-example>
 
@@ -134,6 +144,7 @@
     [htmlCode]="examples.underlinedTreeSelect.html"
     [tsCode]="examples.underlinedTreeSelect.ts">
     <cps-tree-select
+      data-testid="underlined-tree-select"
       label="Underlined tree select"
       appearance="underlined"
       [options]="options"
@@ -149,6 +160,7 @@
     [htmlCode]="examples.borderlessTreeSelect.html"
     [tsCode]="examples.borderlessTreeSelect.ts">
     <cps-tree-select
+      data-testid="borderless-tree-select"
       label="Borderless tree select"
       appearance="borderless"
       [options]="options"
@@ -156,6 +168,42 @@
       [clearable]="true"
       [multiple]="true"
       [chips]="false">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Unlabeled tree select with an accessible name"
+    [htmlCode]="examples.ariaLabelTreeSelect.html">
+    <cps-tree-select
+      data-testid="aria-label-tree-select"
+      ariaLabel="Select an item"
+      [options]="options">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Tree select with hidden hint/error details"
+    [htmlCode]="examples.hideDetailsTreeSelect.html">
+    <cps-tree-select
+      data-testid="hide-details-tree-select"
+      label="Tree select with hidden hint/error details"
+      hint="You should not see this hint"
+      [options]="options"
+      [hideDetails]="true">
+    </cps-tree-select>
+  </app-code-example>
+
+  <app-code-example
+    label="Tree select with openOnClear disabled"
+    [htmlCode]="examples.openOnClearFalseTreeSelect.html">
+    <cps-tree-select
+      data-testid="open-on-clear-false-tree-select"
+      label="Tree select with openOnClear disabled"
+      hint="Clearing this tree select will not reopen the dropdown"
+      [options]="options"
+      [value]="options[1].children[0]"
+      [clearable]="true"
+      [openOnClear]="false">
     </cps-tree-select>
   </app-code-example>
 </app-component-docs-viewer>

@@ -14,7 +14,9 @@ import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown
  * @group Types
  */
 export type CpsTreeSelectAppearanceType =
-  'outlined' | 'underlined' | 'borderless';
+  | 'outlined'
+  | 'underlined'
+  | 'borderless';
 
 /**
  * CpsTreeSelectComponent allows to select items from hierarchical data dropdown.

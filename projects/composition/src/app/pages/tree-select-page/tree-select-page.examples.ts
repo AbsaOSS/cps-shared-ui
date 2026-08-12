@@ -258,5 +258,38 @@ syncVal: any = null;`
   [chips]="false">
 </cps-tree-select>`,
       ts: treeOptionsTs
+    },
+
+    ariaLabelTreeSelect: {
+      html: `
+<cps-tree-select
+  ariaLabel="Select an item"
+  [options]="options">
+</cps-tree-select>`,
+      ts: treeOptionsTs
+    },
+
+    hideDetailsTreeSelect: {
+      html: `
+<cps-tree-select
+  label="Tree select with hidden hint/error details"
+  hint="You should not see this hint"
+  [options]="options"
+  [hideDetails]="true">
+</cps-tree-select>`,
+      ts: treeOptionsTs
+    },
+
+    openOnClearFalseTreeSelect: {
+      html: `
+<cps-tree-select
+  label="Tree select with openOnClear disabled"
+  hint="Clearing this tree select will not reopen the dropdown"
+  [options]="options"
+  [value]="options[1].children[0]"
+  [clearable]="true"
+  [openOnClear]="false">
+</cps-tree-select>`,
+      ts: treeOptionsTs
     }
   };
