@@ -4,6 +4,7 @@
     label="Switch with tooltip"
     [htmlCode]="examples.tooltipSwitch.html">
     <cps-switch
+      data-testid="tooltip-switch"
       label="Switch with tooltip"
       [value]="false"
       infoTooltip="Provide any information here">
@@ -24,6 +25,7 @@
     label="Disabled switch checked"
     [htmlCode]="examples.disabledCheckedSwitch.html">
     <cps-switch
+      data-testid="disabled-checked-switch"
       label="Disabled switch checked"
       [disabled]="true"
       [value]="true"></cps-switch>
@@ -33,9 +35,26 @@
     label="Disabled switch unchecked"
     [htmlCode]="examples.disabledUncheckedSwitch.html">
     <cps-switch
+      data-testid="disabled-unchecked-switch"
       label="Disabled switch unchecked"
       [disabled]="true"
       [value]="false"></cps-switch>
+  </app-code-example>
+
+  <app-code-example
+    label="Switch with valueChanged event"
+    [htmlCode]="examples.valueChangedSwitch.html"
+    [tsCode]="examples.valueChangedSwitch.ts">
+    <div class="sync-val-example">
+      <cps-switch
+        data-testid="value-changed-switch"
+        label="Switch with valueChanged event"
+        [value]="false"
+        (valueChanged)="onValueChanged($event)"></cps-switch>
+      <div class="sync-val" data-testid="value-changed-switch-value">
+        Value changed to: {{ lastValueChanged }}
+      </div>
+    </div>
   </app-code-example>
 
   <app-code-example
@@ -44,9 +63,12 @@
     [tsCode]="examples.twoWayBindingSwitch.ts">
     <div class="sync-val-example">
       <cps-switch
+        data-testid="two-way-binding-switch"
         label="Switch with two-way binding"
         [(ngModel)]="syncVal"></cps-switch>
-      <div class="sync-val">Is checked: {{ syncVal }}</div>
+      <div class="sync-val" data-testid="two-way-binding-switch-value">
+        Is checked: {{ syncVal }}
+      </div>
     </div>
   </app-code-example>
 </app-component-docs-viewer>

@@ -40,7 +40,9 @@
       right: 0;
       bottom: 0;
       background-color: white;
-      transition: $transition-time;
+      transition-duration: calc(
+        var(--cps-switch-animated, 0) * #{$transition-time}
+      );
       border: 0.0625rem solid $color-calm;
       border-radius: 1.875rem;
     }
@@ -51,10 +53,12 @@
       font-style: normal;
       color: $label-color;
       margin-left: 0.625rem;
-      cursor: default;
+      cursor: pointer;
+      user-select: none;
     }
     .cps-switch-label-disabled {
       color: $disabled-label-color;
+      cursor: default;
     }
 
     .cps-switch-slider:before {
@@ -66,7 +70,9 @@
       left: 0.25rem;
       bottom: 0.25rem;
       background-color: $color-calm;
-      transition: $transition-time;
+      transition-duration: calc(
+        var(--cps-switch-animated, 0) * #{$transition-time}
+      );
     }
 
     input:checked + .cps-switch-slider {
