@@ -205,6 +205,46 @@ test.describe('cps-tree-select', () => {
     });
   });
 
+  test.describe('Real expandAll()/collapseAll()', () => {
+    test('Expand All reveals a two-level-deep node without any manual clicks', async ({
+      page
+    }) => {
+      const wrapper = example(page, 'required-tree-select');
+
+      await page.getByTestId('expand-all-tree-select-btn').click();
+      await open(wrapper);
+
+      await expect(
+        page.getByRole('treeitem', { name: 'Dataset 1' })
+      ).toHaveAttribute('aria-expanded', 'true');
+      await expect(
+        page.getByRole('treeitem', { name: 'Attr1_1' })
+      ).toHaveAttribute('aria-expanded', 'true');
+      await expect(page.getByRole('treeitem', { name: 'AttrA' })).toBeVisible();
+    });
+
+    test('Collapse All hides a previously-expanded node', async ({ page }) => {
+      const wrapper = example(page, 'required-tree-select');
+
+      await open(wrapper);
+      await page.getByRole('treeitem', { name: 'Dataset 1' }).click();
+      await expect(
+        page.getByRole('treeitem', { name: 'Attr1_1' })
+      ).toBeVisible();
+      await page.keyboard.press('Escape');
+
+      await page.getByTestId('collapse-all-tree-select-btn').click();
+      await open(wrapper);
+
+      await expect(
+        page.getByRole('treeitem', { name: 'Dataset 1' })
+      ).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.getByRole('treeitem', { name: 'Attr1_1' })).toHaveCount(
+        0
+      );
+    });
+  });
+
   test.describe('openOnClear=false', () => {
     test('clearing a pre-filled tree select does not reopen the dropdown', async ({
       page

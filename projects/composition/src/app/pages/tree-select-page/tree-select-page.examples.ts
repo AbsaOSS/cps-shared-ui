@@ -92,6 +92,7 @@ export const treeSelectExamples: Record<string, { html: string; ts?: string }> =
       html: `
 <form [formGroup]="form">
   <cps-tree-select
+    #requiredTreeSelectRef
     label="Required single tree select with a tooltip"
     [options]="options"
     optionLabel="label"
@@ -101,7 +102,13 @@ export const treeSelectExamples: Record<string, { html: string; ts?: string }> =
     [clearable]="true"
     formControlName="requiredTreeSelect">
   </cps-tree-select>
-</form>`,
+</form>
+<cps-button
+  label="Expand All"
+  (clicked)="requiredTreeSelectRef.expandAll()"></cps-button>
+<cps-button
+  label="Collapse All"
+  (clicked)="requiredTreeSelectRef.collapseAll()"></cps-button>`,
       ts: `
 private readonly _formBuilder = inject(UntypedFormBuilder);
 
