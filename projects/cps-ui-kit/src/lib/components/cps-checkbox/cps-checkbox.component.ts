@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -24,7 +24,7 @@ import { logMissingAriaLabelError } from '../../utils/internal/accessibility-uti
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsInfoCircleComponent, CpsIconComponent],
+  imports: [CpsInfoCircleComponent, CpsIconComponent],
   selector: 'cps-checkbox',
   templateUrl: './cps-checkbox.component.html',
   styleUrls: ['./cps-checkbox.component.scss']
