@@ -42,6 +42,7 @@ import { LabelByValuePipe } from '../../pipes/internal/label-by-value/label-by-v
 import { CheckOptionSelectedPipe } from '../../pipes/internal/check-option-selected/check-option-selected.pipe';
 import { isEqual } from 'lodash-es';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import { getOptionProp, OptionKey } from '../../utils/internal/option-utils';
 import {
   CpsMenuComponent,
   CpsMenuHideReason
@@ -192,22 +193,22 @@ export class CpsAutocompleteComponent
   @Input() keepInitialOrder = false;
 
   /**
-   * Name of the label field of an option.
+   * Name of the label field of an option, or a function that receives the option and returns the label.
    * @group Props
    */
-  @Input() optionLabel = 'label';
+  @Input() optionLabel: OptionKey = 'label';
 
   /**
-   * Name of the value field of an option. Needed only if returnObject prop is false.
+   * Name of the value field of an option, or a function that receives the option and returns the value. Needed only if returnObject prop is false.
    * @group Props
    */
-  @Input() optionValue = 'value';
+  @Input() optionValue: OptionKey = 'value';
 
   /**
-   * Name of the info field of an option, shows the additional information text.
+   * Name of the info field of an option, or a function that receives the option and returns the info text.
    * @group Props
    */
-  @Input() optionInfo = 'info';
+  @Input() optionInfo: OptionKey = 'info';
 
   /**
    * Hides hint and validation errors.
@@ -557,6 +558,10 @@ export class CpsAutocompleteComponent
     this._destroy$.complete();
   }
 
+  getProp(option: any, key: OptionKey): any {
+    return getOptionProp(option, key);
+  }
+
   select(
     option: any,
     byValue: boolean,
@@ -572,7 +577,7 @@ export class CpsAutocompleteComponent
       ? option
       : this.returnObject
         ? option
-        : option[this.optionValue];
+        : getOptionProp(option, this.optionValue);
     if (this.multiple) {
       let res = [];
       if (includes(this.value, val)) {
@@ -580,7 +585,9 @@ export class CpsAutocompleteComponent
       } else {
         if (this.keepInitialOrder) {
           this.options.forEach((o) => {
-            const ov = this.returnObject ? o : o[this.optionValue];
+            const ov = this.returnObject
+              ? o
+              : getOptionProp(o, this.optionValue);
             if (
               this.value.some((v: any) => isEqual(v, ov)) ||
               isEqual(val, ov)
@@ -590,12 +597,15 @@ export class CpsAutocompleteComponent
           });
         } else {
           const opt = this.options.find((o) => {
-            return isEqual(val, this.returnObject ? o : o[this.optionValue]);
+            return isEqual(
+              val,
+              this.returnObject ? o : getOptionProp(o, this.optionValue)
+            );
           });
           if (opt) {
             res = [
               ...this.value,
-              this.returnObject ? opt : opt[this.optionValue]
+              this.returnObject ? opt : getOptionProp(opt, this.optionValue)
             ];
           }
         }
@@ -628,7 +638,7 @@ export class CpsAutocompleteComponent
         res = this.options;
       } else {
         this.options.forEach((o) => {
-          res.push(o[this.optionValue]);
+          res.push(getOptionProp(o, this.optionValue));
         });
       }
     }
@@ -664,7 +674,9 @@ export class CpsAutocompleteComponent
     this.backspaceClickedOnce = false;
 
     let _filteredOptions = this.options.filter((o: any) => {
-      let res = o[this.optionLabel].toLowerCase().includes(searchVal);
+      let res = (getOptionProp(o, this.optionLabel) || '')
+        .toLowerCase()
+        .includes(searchVal);
       if (
         !res &&
         this.withOptionsAliases &&
@@ -950,7 +962,7 @@ export class CpsAutocompleteComponent
       ? undefined
       : this.returnObject
         ? option
-        : option[this.optionValue];
+        : getOptionProp(option, this.optionValue);
   }
 
   private _toggleOptions(show?: boolean): void {
@@ -1036,7 +1048,7 @@ export class CpsAutocompleteComponent
   private _getValueLabel() {
     return this.hasSelectedValue()
       ? this.returnObject
-        ? this.value[this.optionLabel]
+        ? getOptionProp(this.value, this.optionLabel)
         : this._labelByValue.transform(
             this.value,
             this.options,
@@ -1210,7 +1222,8 @@ export class CpsAutocompleteComponent
     }
 
     const found = this.filteredOptions.find(
-      (o: any) => o[this.optionLabel].toLowerCase() === searchVal
+      (o: any) =>
+        (getOptionProp(o, this.optionLabel) || '').toLowerCase() === searchVal
     );
     if (found) {
       this.select(found, false, true, needFocusInput);

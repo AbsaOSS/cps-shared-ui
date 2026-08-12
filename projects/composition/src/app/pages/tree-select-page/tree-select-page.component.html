@@ -122,8 +122,76 @@
         optionInfo="attrType"
         optionLabel="label"
         [clearable]="true"
-        [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }">
+        [persistentClear]="true"
+        [virtualScroll]="true"
+        [multiple]="true">
+      </cps-tree-select>
+
+      <cps-tree-select
+        label="Multiple tree select with non-closable chips"
+        [options]="options"
+        optionInfo="attrType"
+        hint="This tree select doesn't have a chevron icon"
+        [showChevron]="false"
+        [clearable]="true"
+        [multiple]="true"
+        [value]="[options[1].children[0], options[2].children[0]]"
+        [closableChips]="false"></cps-tree-select>
+
+      <cps-tree-select
+        label="Multiple tree select with prefix icon"
+        [options]="options"
+        optionInfo="attrType"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        prefixIcon="plus"
+        [value]="[options[2].children[0]]">
+      </cps-tree-select>
+
+      <div class="sync-val-example">
+        <cps-tree-select
+          [initialExpandDirectories]="true"
+          width="500"
+          label="Single tree select with two-way binding, select something"
+          hint="This tree select has a fixed width of 500px"
+          [options]="options"
+          optionInfo="attrType"
+          optionLabel="label"
+          [clearable]="true"
+          [(ngModel)]="syncVal"
+          [ngModelOptions]="{ standalone: true }">
+        </cps-tree-select>
+        <span class="sync-val">{{ syncVal?.label }}</span>
+      </div>
+
+      <cps-tree-select
+        label="Tree select with function-based optionLabel (computed value)"
+        [options]="options"
+        [optionLabel]="getLabel"
+        optionInfo="attrType"
+        placeholder="Select element"
+        [clearable]="true"
+        hint="optionLabel uses a function: (option) => option.label + ' (' + option.attrType + ')'">
+      </cps-tree-select>
+      <cps-tree-select
+        label="Underlined tree select"
+        appearance="underlined"
+        [options]="options"
+        optionInfo="attrType"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false">
+      </cps-tree-select>
+
+      <cps-tree-select
+        label="Borderless tree select"
+        appearance="borderless"
+        [options]="options"
+        optionInfo="attrType"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false">
       </cps-tree-select>
       <span class="sync-val">{{ syncVal?.label }}</span>
     </div>
