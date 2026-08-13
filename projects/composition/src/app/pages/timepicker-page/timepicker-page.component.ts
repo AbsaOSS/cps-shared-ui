@@ -44,6 +44,11 @@ export class TimepickerPageComponent implements OnInit {
     seconds: '59'
   };
 
+  mandatoryVal: CpsTime = {
+    hours: '09',
+    minutes: '30'
+  };
+
   componentData = ComponentData;
 
   // eslint-disable-next-line no-useless-constructor

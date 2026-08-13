@@ -3,6 +3,11 @@ changeTab({ newIndex }: CpsTabChangeEvent) {
   console.log('Tab changed to: ' + newIndex);
 }`;
 
+const onBeforeTabChangedTs = `
+onBeforeTabChanged({ newIndex }: CpsTabChangeEvent) {
+  console.log('Tab about to change to: ' + newIndex);
+}`;
+
 export const tabGroupExamples: Record<string, { html: string; ts?: string }> = {
   centerAlignedTabs: {
     html: `
@@ -10,6 +15,7 @@ export const tabGroupExamples: Record<string, { html: string; ts?: string }> = {
   tabsBackground="bg-light"
   alignment="center"
   [selectedIndex]="selectedTabIndex"
+  (beforeTabChanged)="onBeforeTabChanged($event)"
   (afterTabChanged)="changeTab($event)">
   @for (tab of centerAlignedTabs; track tab.label) {
     <cps-tab
@@ -41,6 +47,8 @@ centerAlignedTabs = [
   },
   { label: 'Tab 4', badgeValue: '', badgeTooltip: '', disabled: true }
 ];
+
+${onBeforeTabChangedTs.trim()}
 
 ${changeTabTs.trim()}`
   },
@@ -103,6 +111,27 @@ ${changeTabTs.trim()}`
 </cps-tab-group>`,
     ts: `
 stretchedTabs = [{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }];
+
+${changeTabTs.trim()}`
+  },
+
+  iconOnlyTabs: {
+    html: `
+<cps-tab-group
+  tabsBackground="bg-light"
+  (afterTabChanged)="changeTab($event)">
+  @for (tab of iconOnlyTabs; track tab.ariaLabel) {
+    <cps-tab [ariaLabel]="tab.ariaLabel" [icon]="tab.icon">
+      {{ 'Content of ' + tab.ariaLabel.toLowerCase() }}
+    </cps-tab>
+  }
+</cps-tab-group>`,
+    ts: `
+iconOnlyTabs = [
+  { ariaLabel: 'Survivorship', icon: 'survivorship' },
+  { ariaLabel: 'Kris', icon: 'kris' },
+  { ariaLabel: 'DQ', icon: 'dq' }
+];
 
 ${changeTabTs.trim()}`
   },
