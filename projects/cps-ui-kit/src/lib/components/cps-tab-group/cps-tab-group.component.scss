@@ -135,6 +135,7 @@
   .cps-tabs:not(.cps-tabs-subtabs) {
     border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.12);
     .cps-tabs-list .cps-tab {
+      min-height: calc(2.5rem + 0.1875rem);
       &.active:not(.disabled) {
         border-bottom: 0.1875rem solid var(--cps-color-surprise);
       }

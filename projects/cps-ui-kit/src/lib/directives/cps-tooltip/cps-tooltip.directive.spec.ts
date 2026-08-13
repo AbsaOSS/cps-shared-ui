@@ -77,9 +77,11 @@ describe('CpsTooltipDirective', () => {
       document.body.querySelector('.cps-tooltip');
 
     expect(tooltipElement).toBeTruthy();
-    expect(tooltipElement?.innerHTML).toBe(
-      '<div class="cps-tooltip-content">Add your text to this tooltip</div>'
+    const content = tooltipElement?.querySelector(
+      '[data-testid="cps-tooltip-content"]'
     );
+    expect(content).toBeTruthy();
+    expect(content?.textContent).toBe('Add your text to this tooltip');
     // Angular informs about stripping some content during sanitization
     expect(consoleWarnSpy).toHaveBeenCalledWith(
       expect.stringContaining('sanitizing HTML stripped some content')
@@ -104,9 +106,11 @@ describe('CpsTooltipDirective', () => {
       document.body.querySelector('.cps-tooltip');
 
     expect(tooltipElement).toBeTruthy();
-    expect(tooltipElement?.innerHTML).toBe(
-      '<div class="cps-tooltip-content"><h1>Legit tooltip</h1></div>'
+    const content = tooltipElement?.querySelector(
+      '[data-testid="cps-tooltip-content"]'
     );
+    expect(content).toBeTruthy();
+    expect(content?.querySelector('h1')?.textContent).toBe('Legit tooltip');
 
     divElement.triggerEventHandler('mouseleave', null);
     legitComponentFixture.detectChanges();
