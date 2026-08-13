@@ -293,6 +293,22 @@ describe('CpsTableComponent', () => {
     });
   });
 
+  describe('rowTestKey', () => {
+    it('should return the rowIndex as a string when dataKey is not set', () => {
+      expect(component.rowTestKey({ id: 'a1' }, 3)).toBe('3');
+    });
+
+    it('should return the resolved field value when dataKey is a flat field name', () => {
+      component.dataKey = 'id';
+      expect(component.rowTestKey({ id: 'a1' }, 3)).toBe('a1');
+    });
+
+    it('should resolve a nested/dot-path dataKey the same way PrimeNG does', () => {
+      component.dataKey = 'user.id';
+      expect(component.rowTestKey({ user: { id: 'u1' } }, 3)).toBe('u1');
+    });
+  });
+
   describe('onSortFunction', () => {
     it('should emit customSortFunction with the event', () => {
       jest.spyOn(component.customSortFunction, 'emit');

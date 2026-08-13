@@ -244,7 +244,12 @@ export const components: ComponentEntry[] = [
     'Table 7',
     'Table 8',
     'Table 9',
-    'Table 10'
+    'Table 10',
+    'Table 11',
+    'Table 12',
+    'Table 13',
+    'Table 14',
+    'Table 15'
   ].map((tab): ComponentEntry => ({
     route: '/table',
     name: tab,

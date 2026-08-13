@@ -1,5 +1,6 @@
 <div class="cps-table-tbar-coltoggle-btn">
   <cps-button
+    data-testid="cps-table-coltoggle-btn"
     ariaLabel="Toggle column visibility"
     ariaHaspopup="listbox"
     [ariaExpanded]="isMenuOpen()"
@@ -18,6 +19,7 @@
   <div
     #listbox
     class="cps-table-coltoggle-menu suppress-focus-visible"
+    data-testid="cps-table-coltoggle-listbox"
     role="listbox"
     tabindex="0"
     aria-multiselectable="true"
@@ -27,6 +29,7 @@
     <div
       class="cps-table-coltoggle-menu-item select-all-option"
       role="option"
+      data-testid="cps-table-coltoggle-select-all"
       [id]="listboxId + '-opt-0'"
       [attr.aria-selected]="selectedColumns().length === columns().length"
       [class.allselected]="selectedColumns().length === columns().length"
@@ -43,6 +46,7 @@
       <div
         class="cps-table-coltoggle-menu-item"
         role="option"
+        [attr.data-testid]="'cps-table-coltoggle-item-' + col[colHeaderName()]"
         [id]="listboxId + '-opt-' + (i + 1)"
         [attr.aria-selected]="isColumnSelected(col)"
         [class.selected]="isColumnSelected(col)"

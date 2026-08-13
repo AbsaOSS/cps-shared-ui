@@ -32,6 +32,11 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     super.onAfterViewInit();
     if (this.isEnabled() && this.resizer) {
       this.renderer.setAttribute(this.resizer, 'tabindex', '0');
+      this.renderer.setAttribute(
+        this.resizer,
+        'data-testid',
+        'cps-table-col-resizer'
+      );
       this.renderer.setAttribute(this.resizer, 'role', 'separator');
       this.renderer.setAttribute(this.resizer, 'aria-orientation', 'vertical');
       this.renderer.setAttribute(this.resizer, 'aria-label', 'Column resizer');
