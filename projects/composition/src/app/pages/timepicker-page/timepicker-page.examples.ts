@@ -69,6 +69,35 @@ val24: CpsTime = {
 };`
     },
 
+    ariaLabelTimepicker: {
+      html: `
+<cps-timepicker ariaLabel="Choose a time"></cps-timepicker>`
+    },
+
+    hideDetailsTimepicker: {
+      html: `
+<cps-timepicker
+  label="Timepicker with hidden hint/error details"
+  hint="You should not see this hint"
+  [hideDetails]="true">
+</cps-timepicker>`
+    },
+
+    mandatoryValueTimepicker: {
+      html: `
+<cps-timepicker
+  label="Timepicker with a mandatory value"
+  hint="Fields snap back to their first option instead of clearing"
+  [mandatoryValue]="true"
+  [value]="mandatoryVal">
+</cps-timepicker>`,
+      ts: `
+mandatoryVal: CpsTime = {
+  hours: '09',
+  minutes: '30'
+};`
+    },
+
     twoWayBindingTimepicker: {
       html: `
 <div class="sync-val-example">
