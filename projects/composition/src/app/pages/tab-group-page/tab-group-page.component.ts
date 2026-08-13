@@ -34,6 +34,10 @@ export class TabGroupPageComponent {
     console.log('Tab changed to: ' + newIndex);
   }
 
+  onBeforeTabChanged({ newIndex }: CpsTabChangeEvent) {
+    console.log('Tab about to change to: ' + newIndex);
+  }
+
   centerAlignedTabs = [
     {
       label: 'Tab 1',
@@ -63,6 +67,12 @@ export class TabGroupPageComponent {
   ];
 
   stretchedTabs = [{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }];
+
+  iconOnlyTabs = [
+    { ariaLabel: 'Survivorship', icon: 'survivorship' },
+    { ariaLabel: 'Kris', icon: 'kris' },
+    { ariaLabel: 'DQ', icon: 'dq' }
+  ];
 
   subTabs = [
     { label: 'Tab 1', icon: 'avatar', id: 'tab1' },

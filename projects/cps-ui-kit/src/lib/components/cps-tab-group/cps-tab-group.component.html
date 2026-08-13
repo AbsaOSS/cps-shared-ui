@@ -1,17 +1,17 @@
 <div
   class="cps-tabs"
+  data-testid="cps-tab-group-header"
   [class]="headerClass"
-  [ngClass]="{
-    'cps-tabs-subtabs': isSubTabs,
-    'cps-tabs-center-aligned': alignment === 'center',
-    'cps-tabs-right-aligned': alignment === 'right',
-    'cps-tabs-stretched': stretched
-  }"
-  [ngStyle]="{ 'background-color': tabsBackground }">
+  [class.cps-tabs-subtabs]="isSubTabs"
+  [class.cps-tabs-center-aligned]="alignment === 'center'"
+  [class.cps-tabs-right-aligned]="alignment === 'right'"
+  [class.cps-tabs-stretched]="stretched"
+  [style.background-color]="tabsBackground">
   @if (!backBtnVisible) {
     <button
       type="button"
       class="nav-btn nav-btn-back"
+      data-testid="cps-tab-nav-back"
       [style.background-color]="navButtonsBackground"
       aria-hidden="true"
       tabindex="-1"
@@ -20,11 +20,17 @@
       <cps-icon icon="chevron-down" color="text-dark"></cps-icon>
     </button>
   }
-  <ul #tabsList class="cps-tabs-list" role="tablist" tabindex="-1">
+  <ul
+    #tabsList
+    class="cps-tabs-list"
+    data-testid="cps-tab-list"
+    role="tablist"
+    tabindex="-1">
     @for (tab of tabs; track tab; let tabIndex = $index) {
       @if (tab.tooltipText) {
         <li
           class="cps-tab"
+          [attr.data-testid]="'cps-tab-' + tabIndex"
           role="tab"
           [id]="getTabId(tabIndex)"
           [attr.aria-label]="getTabAriaLabel(tab)"
@@ -48,13 +54,15 @@
             *ngTemplateOutlet="
               tabHeaderTemplate;
               context: {
-                tab: tab
+                tab: tab,
+                tabIndex: tabIndex
               }
             "></ng-container>
         </li>
       } @else {
         <li
           class="cps-tab"
+          [attr.data-testid]="'cps-tab-' + tabIndex"
           role="tab"
           [id]="getTabId(tabIndex)"
           [attr.aria-label]="getTabAriaLabel(tab)"
@@ -71,7 +79,8 @@
             *ngTemplateOutlet="
               tabHeaderTemplate;
               context: {
-                tab: tab
+                tab: tab,
+                tabIndex: tabIndex
               }
             "></ng-container>
         </li>
@@ -82,6 +91,7 @@
     <button
       type="button"
       class="nav-btn nav-btn-forward"
+      data-testid="cps-tab-nav-forward"
       [style.background-color]="navButtonsBackground"
       aria-hidden="true"
       tabindex="-1"
@@ -93,14 +103,14 @@
 </div>
 <div
   class="cps-tab-content-wrap"
+  data-testid="cps-tab-group-content-wrap"
   [class]="contentWrapClass"
-  [ngClass]="{
-    'cps-tab-content-wrap-subtabs': isSubTabs
-  }">
+  [class.cps-tab-content-wrap-subtabs]="isSubTabs">
   @for (tab of tabs; track tab; let panelIndex = $index) {
     <div
       #tabPanel
       class="cps-tab-content"
+      [attr.data-testid]="'cps-tab-panel-' + panelIndex"
       role="tabpanel"
       [id]="getPanelId(panelIndex)"
       [attr.aria-labelledby]="getTabId(panelIndex)"
@@ -114,7 +124,8 @@
               value: animationState,
               params: { transitionParams: resolvedTransitionParams }
             }"
-            class="cps-tab-content-inner">
+            class="cps-tab-content-inner"
+            [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
@@ -124,7 +135,8 @@
               value: animationState,
               params: { transitionParams: resolvedFadeTransitionParams }
             }"
-            class="cps-tab-content-inner">
+            class="cps-tab-content-inner"
+            [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
             <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
           </div>
         }
@@ -133,22 +145,36 @@
   }
 </div>
 
-<ng-template #tabHeaderTemplate let-tab="tab">
+<ng-template #tabHeaderTemplate let-tab="tab" let-tabIndex="tabIndex">
   @if (tab.icon) {
-    <cps-icon class="cps-tab-icon" [icon]="tab.icon"> </cps-icon>
+    <cps-icon
+      class="cps-tab-icon"
+      [attr.data-testid]="'cps-tab-icon-' + tabIndex"
+      [icon]="tab.icon">
+    </cps-icon>
   }
-  <span class="cps-tab-link">{{ tab.label }}</span>
+  <span class="cps-tab-link" [attr.data-testid]="'cps-tab-link-' + tabIndex">{{
+    tab.label
+  }}</span>
   @if (tab.badgeValue) {
     @if (tab.badgeTooltip) {
       <div
         class="cps-tab-badge"
+        [attr.data-testid]="'cps-tab-badge-' + tabIndex"
         [cpsTooltip]="tab.badgeTooltip"
         aria-hidden="true">
-        <span>{{ tab.badgeValue }}</span>
+        <span [attr.data-testid]="'cps-tab-badge-value-' + tabIndex">{{
+          tab.badgeValue
+        }}</span>
       </div>
     } @else {
-      <div class="cps-tab-badge" aria-hidden="true">
-        <span>{{ tab.badgeValue }}</span>
+      <div
+        class="cps-tab-badge"
+        [attr.data-testid]="'cps-tab-badge-' + tabIndex"
+        aria-hidden="true">
+        <span [attr.data-testid]="'cps-tab-badge-value-' + tabIndex">{{
+          tab.badgeValue
+        }}</span>
       </div>
     }
   }
