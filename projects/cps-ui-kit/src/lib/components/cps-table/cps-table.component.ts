@@ -877,9 +877,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   rowTestKey(item: any, rowIndex: number): string {
-    return this.dataKey
-      ? String(ObjectUtils.resolveFieldData(item, this.dataKey))
-      : `${rowIndex}`;
+    if (this.dataKey) {
+      const resolved = ObjectUtils.resolveFieldData(item, this.dataKey);
+      if (resolved !== null && resolved !== undefined && resolved !== '') {
+        return String(resolved);
+      }
+    }
+    return `${rowIndex}`;
   }
 
   onSelectionChanged(selection: any[]) {

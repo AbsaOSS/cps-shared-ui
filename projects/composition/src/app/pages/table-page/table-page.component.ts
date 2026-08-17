@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsTableComponent,
@@ -49,7 +49,7 @@ import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class TablePageComponent implements OnInit {
+export class TablePageComponent implements OnInit, OnDestroy {
   private readonly _notifService = inject(CpsNotificationService);
 
   readonly examples = tableExamples;
@@ -433,6 +433,10 @@ export class TablePageComponent implements OnInit {
   ngOnInit(): void {
     this._genVirtualData();
     this.selCols = this.colsWithFilterType;
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this._lazyLoadTimeout);
   }
 
   private _genVirtualData() {

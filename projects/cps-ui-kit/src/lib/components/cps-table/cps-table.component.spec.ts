@@ -307,6 +307,26 @@ describe('CpsTableComponent', () => {
       component.dataKey = 'user.id';
       expect(component.rowTestKey({ user: { id: 'u1' } }, 3)).toBe('u1');
     });
+
+    it('should fall back to the rowIndex when the resolved dataKey value is undefined, so rows with a missing key never collide on the same testid', () => {
+      component.dataKey = 'id';
+      expect(component.rowTestKey({}, 3)).toBe('3');
+    });
+
+    it('should fall back to the rowIndex when the resolved dataKey value is null', () => {
+      component.dataKey = 'id';
+      expect(component.rowTestKey({ id: null }, 3)).toBe('3');
+    });
+
+    it('should fall back to the rowIndex when the resolved dataKey value is an empty string', () => {
+      component.dataKey = 'id';
+      expect(component.rowTestKey({ id: '' }, 3)).toBe('3');
+    });
+
+    it('should still return a resolved value of 0, not fall back to rowIndex, since 0 is a legitimate id', () => {
+      component.dataKey = 'id';
+      expect(component.rowTestKey({ id: 0 }, 3)).toBe('0');
+    });
   });
 
   describe('onSortFunction', () => {

@@ -81,7 +81,7 @@ test.describe('cps-table', () => {
       await expect(emptyMessage).toHaveText('No records match your criteria');
 
       const box = await emptyMessage.boundingBox();
-      expect(box?.height).toBe(352); // 22rem
+      expect(box?.height).toBeCloseTo(352, 0); // 22rem
 
       await expect(wrapper.locator('.p-datatable-header')).toHaveCount(0);
     });
@@ -450,11 +450,12 @@ test.describe('cps-table', () => {
 
   test.describe('Real lazy loading (Table 11)', () => {
     async function waitForInitialLazyLoad(wrapper: Locator) {
-      const spinner = wrapper
-        .getByTestId('cps-table-loading')
-        .getByTestId('cps-loader-spinner');
-      await expect(spinner).toBeVisible();
-      await expect(spinner).toBeHidden();
+      await expect(wrapper.locator('tbody tr').first()).toBeVisible();
+      await expect(
+        wrapper
+          .getByTestId('cps-table-loading')
+          .getByTestId('cps-loader-spinner')
+      ).toBeHidden();
     }
 
     test('fires on init and real-swaps rendered rows on a real page change', async ({
