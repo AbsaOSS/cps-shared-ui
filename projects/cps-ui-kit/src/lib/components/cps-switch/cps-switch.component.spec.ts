@@ -137,6 +137,24 @@ describe('CpsSwitchComponent', () => {
     expect(component.value).toBe(false);
   });
 
+  describe('onLabelClick', () => {
+    it('should click the switch input when not disabled', () => {
+      const input = fixture.nativeElement.querySelector('input');
+      jest.spyOn(input, 'click');
+      component.onLabelClick();
+      expect(input.click).toHaveBeenCalled();
+    });
+
+    it('should do nothing when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      jest.spyOn(input, 'click');
+      component.onLabelClick();
+      expect(input.click).not.toHaveBeenCalled();
+    });
+  });
+
   describe('accessibility', () => {
     it('should have role="switch" on the input', () => {
       const input = fixture.nativeElement.querySelector('input');

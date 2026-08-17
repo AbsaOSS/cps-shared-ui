@@ -484,16 +484,14 @@ describe('CpsTabGroupComponent', () => {
       });
     }
 
-    it('should update nav button visibility on scroll and prevent default', () => {
+    it('should update nav button visibility on scroll', () => {
       setTabsListSizes({
         offsetWidth: 200,
         scrollWidth: 500,
         scrollLeft: 50,
         clientWidth: 200
       });
-      const event = { preventDefault: jest.fn() };
-      component.onScroll(event);
-      expect(event.preventDefault).toHaveBeenCalled();
+      component.onScroll();
       expect(component.backBtnVisible).toBe(false);
     });
 
