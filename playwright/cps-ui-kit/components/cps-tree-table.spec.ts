@@ -159,9 +159,11 @@ test.describe('cps-tree-table', () => {
       const wrapper = example(page, 'treetable-2-virtual-default-render');
 
       await expect(wrapper.locator('.p-virtualscroller')).toBeVisible();
-      const rowCount = await wrapper.locator('tbody tr').count();
-      expect(rowCount).toBeGreaterThan(0);
-      expect(rowCount).toBeLessThan(100);
+      await expect(async () => {
+        const rowCount = await wrapper.locator('tbody tr').count();
+        expect(rowCount).toBeGreaterThan(0);
+        expect(rowCount).toBeLessThan(100);
+      }).toPass();
     });
   });
 
