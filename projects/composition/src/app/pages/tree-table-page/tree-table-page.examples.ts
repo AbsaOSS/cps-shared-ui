@@ -71,6 +71,8 @@ private _removeElementsByName(dataArray: any[], namesArray: string[]) {
   });
 }`;
 
+const notifServiceTs = `private readonly _notifService = inject(CpsNotificationService);`;
+
 export const treeTableExamples: Record<string, { html: string; ts?: string }> =
   {
     treeTable1: {
@@ -278,6 +280,8 @@ ngOnInit(): void {
       ts: `
 ${treeDataTs.trim()}
 
+${notifServiceTs}
+
 isRemoveBtnVisible = false;
 
 ${removeElementsByNameTs.trim()}
@@ -364,6 +368,8 @@ onReloadBtnClicked() {
 </cps-tree-table>`,
       ts: `
 ${treeDataTs.trim()}
+
+${notifServiceTs}
 
 colsWithFilterType = [
   { field: 'name', header: 'Name', filterType: 'text' },
@@ -505,6 +511,8 @@ ${removeElementsByNameTs.trim()}`
 </cps-tree-table>`,
       ts: `
 ${treeDataTs.trim()}
+
+${notifServiceTs}
 
 cols = [
   { field: 'name', header: 'Name' },
@@ -773,6 +781,8 @@ get paginatorDemoData(): any[] {
 </cps-tree-table>`,
       ts: `
 ${treeDataTs.trim()}
+
+${notifServiceTs}
 
 cols = [
   { field: 'name', header: 'Name' },
