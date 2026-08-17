@@ -269,10 +269,12 @@ export class CpsTooltipDirective implements OnDestroy {
       this._domSanitizer.sanitize(SecurityContext.HTML, this.tooltip()) ||
       'Add your text to this tooltip';
     popupContent.className = this.tooltipContentClass();
+    popupContent.setAttribute('data-testid', 'cps-tooltip-content');
     this._popup.appendChild(popupContent);
     this._popup.classList.add('cps-tooltip');
     this._popup.style.maxWidth = convertSize(this.tooltipMaxWidth());
     this._popup.setAttribute('role', 'tooltip');
+    this._popup.setAttribute('data-testid', 'cps-tooltip');
     this._document.body.appendChild(this._popup);
     this._ariaTarget?.setAttribute(
       'aria-description',

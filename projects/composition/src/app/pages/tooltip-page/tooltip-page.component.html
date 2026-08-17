@@ -5,21 +5,25 @@
     [htmlCode]="examples.tooltipPositions.html">
     <div class="tooltip-elems-group-row">
       <cps-button
+        data-testid="bottom-position-tooltip"
         cpsTooltip="Bottom tooltip"
         tooltipPosition="bottom"
         label="Bottom tooltip">
       </cps-button>
       <cps-button
+        data-testid="left-position-tooltip"
         cpsTooltip="Left tooltip"
         tooltipPosition="left"
         label="Left tooltip">
       </cps-button>
       <cps-button
+        data-testid="right-position-tooltip"
         cpsTooltip="Right tooltip"
         tooltipPosition="right"
         label="Right tooltip">
       </cps-button>
       <cps-button
+        data-testid="top-position-tooltip"
         cpsTooltip="Top tooltip"
         tooltipPosition="top"
         label="Top tooltip">
@@ -32,12 +36,14 @@
     [htmlCode]="examples.openingMethods.html">
     <div class="tooltip-elems-group-elem-left">
       <cps-button
+        data-testid="hover-open-tooltip"
         label="Open on hover"
         tooltipPosition="bottom"
         cpsTooltip="Triggered on hover"
         tooltipOpenOn="hover">
       </cps-button>
       <cps-button
+        data-testid="click-open-tooltip"
         label="Open on click"
         tooltipPosition="right"
         cpsTooltip="Triggered on click"
@@ -47,16 +53,30 @@
   </app-code-example>
 
   <app-code-example
+    label="Open on focus only"
+    [htmlCode]="examples.focusOnlyTooltip.html">
+    <cps-button
+      data-testid="focus-only-tooltip"
+      label="Open on focus only"
+      tooltipPosition="bottom"
+      cpsTooltip="Triggered on focus only"
+      tooltipOpenOn="focus">
+    </cps-button>
+  </app-code-example>
+
+  <app-code-example
     label="Long open and close delays"
     [htmlCode]="examples.openCloseDelays.html">
     <div class="tooltip-elems-group-elem-left">
       <cps-button
+        data-testid="open-delay-tooltip"
         cpsTooltip="1 second open delay"
         label="Open delay"
         tooltipPosition="bottom"
         [tooltipOpenDelay]="1000">
       </cps-button>
       <cps-button
+        data-testid="close-delay-tooltip"
         cpsTooltip="1 second close delay"
         label="Close delay"
         tooltipPosition="right"
@@ -69,6 +89,7 @@
     label="Persistent tooltip with inner HTML and custom style"
     [htmlCode]="examples.persistentHtmlTooltip.html">
     <cps-button
+      data-testid="persistent-tooltip"
       cpsTooltip="<span class='ttip-hdr'>Follow the link</span> <a href='https://www.google.com/' target='_blank' rel='noopener noreferrer'>Google</a> <a href='https://www.bing.com/' target='_blank' rel='noopener noreferrer'>Bing</a>"
       tooltipPosition="right"
       tooltipContentClass="my-tooltip-content"
@@ -83,6 +104,7 @@
     [tsCode]="examples.disabledTooltipState.ts">
     <div class="tooltip-elems-group-elem-left">
       <cps-button
+        data-testid="disabled-state-tooltip"
         tooltipPosition="bottom"
         [label]="ttipEnabled ? 'Enabled tooltip' : 'Disabled tooltip'"
         [tooltipDisabled]="!ttipEnabled"
@@ -92,5 +114,18 @@
         [(ngModel)]="ttipEnabled"
         [label]="ttipEnabled ? 'Deactivate' : 'Activate'"></cps-checkbox>
     </div>
+  </app-code-example>
+
+  <app-code-example
+    label="Custom offset and max width"
+    [htmlCode]="examples.customOffsetMaxWidthTooltip.html">
+    <cps-button
+      data-testid="custom-offset-tooltip"
+      cpsTooltip="A longer tooltip message to demonstrate a constrained max width"
+      tooltipPosition="right"
+      [tooltipOffset]="'2rem'"
+      [tooltipMaxWidth]="'8rem'"
+      label="Custom offset & max width">
+    </cps-button>
   </app-code-example>
 </app-component-docs-viewer>

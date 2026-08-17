@@ -34,6 +34,23 @@ export const switchExamples: Record<string, { html: string; ts?: string }> = {
   [value]="false"></cps-switch>`
   },
 
+  valueChangedSwitch: {
+    html: `
+<div class="sync-val-example">
+  <cps-switch
+    label="Switch with valueChanged event"
+    [value]="false"
+    (valueChanged)="onValueChanged($event)"></cps-switch>
+  <div class="sync-val">Value changed to: {{ lastValueChanged }}</div>
+</div>`,
+    ts: `
+lastValueChanged = false;
+
+onValueChanged(value: boolean) {
+  this.lastValueChanged = value;
+}`
+  },
+
   twoWayBindingSwitch: {
     html: `
 <div class="sync-val-example">

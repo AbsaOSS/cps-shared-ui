@@ -21,6 +21,11 @@ import { tagExamples } from './tag-page.examples';
 })
 export class TagPageComponent {
   syncVal = true;
+  lastValueChanged = false;
   componentData = ComponentData;
   readonly examples = tagExamples;
+
+  onValueChanged(value: boolean) {
+    this.lastValueChanged = value;
+  }
 }
