@@ -216,4 +216,80 @@ describe('CpsTreeSelectComponent', () => {
       discardPeriodicTasks();
     }));
   });
+
+  describe('multi-select chips (track expression / NG0956 regression)', () => {
+    beforeEach(() => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+    });
+
+    it('should render chips with correct labels for real tree selections', () => {
+      component.writeValue([OPTIONS[0], OPTIONS[1]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const chipLabels = fixture.debugElement
+        .queryAll(By.css('cps-chip'))
+        .map((el) => el.componentInstance.label);
+      expect(chipLabels).toEqual(['Option 1', 'Option 2']);
+    });
+
+    it('should not warn when re-selecting a different but overlapping set of nodes', () => {
+      component.writeValue([OPTIONS[0], OPTIONS[1]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      component.writeValue([OPTIONS[1]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringMatching(/NG0956|NG0955/)
+      );
+      warnSpy.mockRestore();
+
+      const chipLabels = fixture.debugElement
+        .queryAll(By.css('cps-chip'))
+        .map((el) => el.componentInstance.label);
+      expect(chipLabels).toEqual(['Option 2']);
+    });
+
+    it('should keep sibling/cross-branch node keys unique in a nested tree with multiple selected nodes', () => {
+      const NESTED_OPTIONS = [
+        {
+          label: 'Parent A',
+          value: 'a',
+          children: [
+            { label: 'Child A1', value: 'a1' },
+            { label: 'Child A2', value: 'a2' }
+          ]
+        },
+        {
+          label: 'Parent B',
+          value: 'b',
+          children: [{ label: 'Child B1', value: 'b1' }]
+        }
+      ];
+      fixture.componentRef.setInput('options', NESTED_OPTIONS);
+      fixture.detectChanges();
+
+      component.writeValue([
+        NESTED_OPTIONS[0].children[1],
+        NESTED_OPTIONS[1].children[0]
+      ]);
+      fixture.changeDetectorRef.markForCheck();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringMatching(/NG0956|NG0955/)
+      );
+      warnSpy.mockRestore();
+
+      const chipLabels = fixture.debugElement
+        .queryAll(By.css('cps-chip'))
+        .map((el) => el.componentInstance.label);
+      expect(chipLabels).toEqual(['Child A2', 'Child B1']);
+    });
+  });
 });

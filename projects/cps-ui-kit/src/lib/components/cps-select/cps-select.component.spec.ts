@@ -1375,4 +1375,161 @@ describe('CpsSelectComponent', () => {
       expect(scroller.scrollTop).toBeGreaterThan(0);
     });
   });
+
+  describe('track expression / NG0956 regression', () => {
+    function chipLabels(): string[] {
+      return fixture.debugElement
+        .queryAll(By.css('[data-testid="cps-chip-label"]'))
+        .map((el) => el.nativeElement.textContent.trim());
+    }
+
+    it('should not warn when options are replaced with new-but-value-equal objects (mirrors cps-paginator._syncRows)', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+      component.writeValue([OPTIONS[0], OPTIONS[2]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const NEW_OPTIONS = OPTIONS.map((o) => ({ ...o }));
+      fixture.componentRef.setInput('options', NEW_OPTIONS);
+      component.writeValue([NEW_OPTIONS[0], NEW_OPTIONS[2]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('NG0956')
+      );
+      expect(chipLabels()).toEqual(['Option 1', 'Option 3']);
+      warnSpy.mockRestore();
+    });
+
+    it('should track numeric option values correctly across option-object re-renders (returnObject: false)', () => {
+      const NUMERIC_OPTIONS = [
+        { label: 'One', value: 1 },
+        { label: 'Two', value: 2 },
+        { label: 'Three', value: 3 }
+      ];
+      fixture.componentRef.setInput('options', NUMERIC_OPTIONS);
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+      component.writeValue([1, 3]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.componentRef.setInput(
+        'options',
+        NUMERIC_OPTIONS.map((o) => ({ ...o }))
+      );
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('NG0956')
+      );
+      warnSpy.mockRestore();
+
+      expect(chipLabels()).toEqual(['One', 'Three']);
+    });
+
+    it('should treat falsy-but-valid option[optionValue] fields (0, "", false) as distinct keys, not fall back to object identity', () => {
+      const FALSY_OPTIONS = [
+        { label: 'Zero', value: 0 },
+        { label: 'Empty', value: '' },
+        { label: 'False', value: false }
+      ];
+      fixture.componentRef.setInput('options', FALSY_OPTIONS);
+      fixture.componentRef.setInput('returnObject', true);
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+      component.writeValue([FALSY_OPTIONS[0], FALSY_OPTIONS[2]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const NEW_FALSY = FALSY_OPTIONS.map((o) => ({ ...o }));
+      fixture.componentRef.setInput('options', NEW_FALSY);
+      component.writeValue([NEW_FALSY[0], NEW_FALSY[2]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('NG0956')
+      );
+      warnSpy.mockRestore();
+
+      expect(chipLabels()).toEqual(['Zero', 'False']);
+    });
+
+    it('should not throw when the multi-select value array contains null/undefined elements (returnObject: false)', () => {
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+      fixture.componentRef.setInput('returnObject', false);
+      expect(() => {
+        component.writeValue(['opt1', null, undefined, 'opt3']);
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      }).not.toThrow();
+    });
+
+    it('should render chips correctly for primitive (non-object) options in multi-select', () => {
+      fixture.componentRef.setInput('options', ['opt1', 'opt2', 'opt3']);
+      fixture.componentRef.setInput('returnObject', true);
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      component.writeValue(['opt1', 'opt3']);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('NG0956')
+      );
+      warnSpy.mockRestore();
+
+      const chips = fixture.debugElement.queryAll(By.css('cps-chip'));
+      expect(chips.length).toBe(2);
+    });
+
+    it('should track nested-object optionValue values by stable reference without warning', () => {
+      const CITY_OPTIONS = [
+        { name: 'New York', data: { code: 'NY' } },
+        { name: 'Cape Town', data: { code: 'CPT' } },
+        { name: 'Los Angeles', data: { code: 'LA' } }
+      ];
+      fixture.componentRef.setInput('options', CITY_OPTIONS);
+      fixture.componentRef.setInput('optionLabel', 'name');
+      fixture.componentRef.setInput('optionValue', 'data');
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+      component.writeValue([CITY_OPTIONS[0].data, CITY_OPTIONS[2].data]);
+      fixture.changeDetectorRef.markForCheck();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      fixture.detectChanges();
+      fixture.detectChanges();
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('NG0956')
+      );
+      warnSpy.mockRestore();
+
+      const chips = fixture.debugElement.queryAll(By.css('cps-chip'));
+      expect(chips.length).toBe(2);
+    });
+
+    it('should not throw when two options share the same optionValue (pre-existing unsupported configuration)', () => {
+      const DUPLICATE_OPTIONS = [
+        { label: 'First', value: 'dup' },
+        { label: 'Second', value: 'dup' }
+      ];
+      fixture.componentRef.setInput('options', DUPLICATE_OPTIONS);
+      fixture.componentRef.setInput('multiple', true);
+      fixture.componentRef.setInput('chips', true);
+      expect(() => {
+        component.writeValue([...DUPLICATE_OPTIONS]);
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      }).not.toThrow();
+    });
+  });
 });

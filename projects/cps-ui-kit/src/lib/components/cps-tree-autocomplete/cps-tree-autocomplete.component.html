@@ -68,7 +68,7 @@
             }
             @if (multiple && !chips) {
               <div class="text-group" role="list" aria-label="Selected options">
-                @for (val of treeSelection; track val; let last = $last) {
+                @for (val of treeSelection; track val.key; let last = $last) {
                   <div
                     role="listitem"
                     class="text-group-item"
@@ -94,7 +94,7 @@
                 class="chips-group"
                 role="list"
                 aria-label="Selected options">
-                @for (val of treeSelection; track val; let last = $last) {
+                @for (val of treeSelection; track val.key; let last = $last) {
                   <cps-chip
                     role="listitem"
                     closeButtonAriaLabel="Remove"
