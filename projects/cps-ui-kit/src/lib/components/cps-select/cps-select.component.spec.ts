@@ -1525,11 +1525,15 @@ describe('CpsSelectComponent', () => {
       fixture.componentRef.setInput('options', DUPLICATE_OPTIONS);
       fixture.componentRef.setInput('multiple', true);
       fixture.componentRef.setInput('chips', true);
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
       expect(() => {
         component.writeValue([...DUPLICATE_OPTIONS]);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
       }).not.toThrow();
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('NG0955'));
+      warnSpy.mockRestore();
     });
   });
 });
