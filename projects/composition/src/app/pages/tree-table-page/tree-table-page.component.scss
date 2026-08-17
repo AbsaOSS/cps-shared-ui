@@ -1,6 +1,10 @@
 :host {
   overflow-x: hidden;
 
+  .spaced-from-table {
+    margin-top: 1rem;
+  }
+
   ::ng-deep {
     .treetable-page--sub-tabs {
       padding-top: 0.625rem;

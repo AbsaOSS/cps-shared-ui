@@ -61,6 +61,10 @@ export class CpsTreetableRowTogglerDirective
     this.elementRef.nativeElement.appendChild(spanElement);
 
     spanElement.prepend(this.togglerCompRef.location.nativeElement);
+    this.togglerCompRef.location.nativeElement.setAttribute(
+      'data-testid',
+      'cps-treetable-row-toggler-btn'
+    );
   }
 
   private _rowNodeWithExpanded() {

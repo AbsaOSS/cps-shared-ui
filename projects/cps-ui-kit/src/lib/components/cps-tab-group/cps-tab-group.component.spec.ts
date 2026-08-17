@@ -129,7 +129,7 @@ describe('CpsTabGroupComponent', () => {
   it('should render content of the active tab', () => {
     const panel = hostFixture.nativeElement.querySelector('[role="tabpanel"]');
     expect(panel).toBeTruthy();
-    expect(panel.textContent).toContain('Content 1');
+    expect(panel.textContent.trim()).toBe('Content 1');
   });
 
   it('should apply center-aligned class', () => {

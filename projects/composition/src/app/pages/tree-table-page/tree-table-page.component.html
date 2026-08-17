@@ -10,6 +10,7 @@
         [htmlCode]="examples.treeTable1.html"
         [tsCode]="examples.treeTable1.ts">
         <cps-tree-table
+          data-testid="treetable-1-paginated-filters"
           [data]="data"
           [paginator]="true"
           [scrollable]="false"
@@ -86,6 +87,7 @@
         [tsCode]="examples.treeTable2.ts">
         @if (selectedTabIndex === 1) {
           <cps-tree-table
+            data-testid="treetable-2-virtual-default-render"
             [showGlobalFilter]="true"
             [data]="dataVirtual"
             [columns]="colsVirtual"
@@ -112,6 +114,7 @@
         [htmlCode]="examples.treeTable3.html"
         [tsCode]="examples.treeTable3.ts">
         <cps-tree-table
+          data-testid="treetable-3-menu-actions"
           [data]="data"
           [showActionBtn]="true"
           [showRowMenu]="true"
@@ -164,6 +167,7 @@
         [htmlCode]="examples.treeTable4.html"
         [tsCode]="examples.treeTable4.ts">
         <cps-tree-table
+          data-testid="treetable-4-select-expand"
           [data]="data"
           [columns]="colsWithFilterType"
           [selectable]="true"
@@ -233,6 +237,7 @@
         [htmlCode]="examples.treeTable5.html"
         [tsCode]="examples.treeTable5.ts">
         <cps-tree-table
+          data-testid="treetable-5-nested-header"
           [data]="data"
           [autoLayout]="false"
           (rowsToRemove)="onRowsToRemove($event)"
@@ -307,6 +312,7 @@
         [htmlCode]="examples.treeTable6.html"
         [tsCode]="examples.treeTable6.ts">
         <cps-tree-table
+          data-testid="treetable-6-custom-menu"
           [data]="data"
           [columns]="cols"
           [rowHover]="false"
@@ -350,7 +356,10 @@
       <app-code-example
         [htmlCode]="examples.treeTable7.html"
         [tsCode]="examples.treeTable7.ts">
-        <cps-tree-table [data]="data" [size]="selSize">
+        <cps-tree-table
+          data-testid="treetable-7-toolbar-sizes"
+          [data]="data"
+          [size]="selSize">
           <ng-template #toolbar>
             <span>Tree table with custom toolbar and different sizes</span>
             <cps-button-toggle
@@ -415,6 +424,7 @@
     <cps-tab label="Tree table 8">
       <app-code-example [htmlCode]="examples.treeTable8.html">
         <cps-tree-table
+          data-testid="treetable-8-empty"
           [data]="[]"
           toolbarTitle="Empty tree table"
           emptyBodyHeight="23rem">
@@ -433,6 +443,7 @@
         [htmlCode]="examples.treeTable9.html"
         [tsCode]="examples.treeTable9.ts">
         <cps-tree-table
+          data-testid="treetable-9-loading"
           [data]="data"
           [loading]="true"
           scrollHeight="23rem"
@@ -446,11 +457,102 @@
         [htmlCode]="examples.treeTable10.html"
         [tsCode]="examples.treeTable10.ts">
         <cps-tree-table
+          data-testid="treetable-10-html"
           [data]="treeDataWithHTML"
           scrollHeight="23rem"
           [columns]="colsHTML"
           [renderDataAsHTML]="true"
           toolbarTitle="Table containing HTML">
+        </cps-tree-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Tree table 11">
+      <app-code-example
+        [htmlCode]="examples.treeTable11.html"
+        [tsCode]="examples.treeTable11.ts">
+        <cps-tree-table
+          data-testid="treetable-11-lazy"
+          [data]="lazyData"
+          [columns]="colsVirtual"
+          [lazy]="true"
+          [lazyLoadOnInit]="true"
+          [loading]="lazyLoading"
+          loadingLabel="Fetching..."
+          [paginator]="true"
+          [rows]="lazyRows"
+          [totalRecords]="lazyTotalRecords"
+          (lazyLoaded)="onLazyLoad($event)"
+          toolbarTitle="Tree table with lazy/server-side loading, driven by a simulated 600ms fetch delay">
+        </cps-tree-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Tree table 12">
+      <app-code-example
+        [htmlCode]="examples.treeTable12.html"
+        [tsCode]="examples.treeTable12.ts">
+        <cps-tree-table
+          data-testid="treetable-12-always-show-paginator-false"
+          [data]="paginatorDemoData"
+          [columns]="cols"
+          [paginator]="true"
+          [rows]="5"
+          [alwaysShowPaginator]="false"
+          toolbarTitle="Tree table whose paginator hides when everything fits on one page">
+        </cps-tree-table>
+        <cps-switch
+          class="spaced-from-table"
+          [(ngModel)]="manyRecordsForPaginator"
+          label="Load enough records for multiple pages">
+        </cps-switch>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Tree table 13">
+      <app-code-example
+        [htmlCode]="examples.treeTable13.html"
+        [tsCode]="examples.treeTable13.ts">
+        <cps-tree-table
+          data-testid="treetable-13-additional-btn-on-select"
+          [data]="data"
+          [columns]="cols"
+          [selectable]="true"
+          [showAdditionalBtnOnSelect]="true"
+          additionalBtnOnSelectTitle="Archive"
+          additionalBtnOnSelectIcon="star"
+          (additionalBtnOnSelectClicked)="
+            onAdditionalBtnOnSelectClicked($event)
+          "
+          toolbarTitle="Selectable tree table with an additional toolbar action shown alongside Remove when rows are selected">
+        </cps-tree-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Tree table 14">
+      <app-code-example
+        [htmlCode]="examples.treeTable14.html"
+        [tsCode]="examples.treeTable14.ts">
+        <cps-tree-table
+          data-testid="treetable-14-custom-sort"
+          [data]="customSortData"
+          [columns]="customSortCols"
+          [sortable]="true"
+          [customSort]="true"
+          (customSortFunction)="onCustomSort($event)"
+          toolbarTitle="Tree table with a custom sort function (sorts by string length instead of alphabetically)">
+        </cps-tree-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Tree table 15">
+      <app-code-example
+        [htmlCode]="examples.treeTable15.html"
+        [tsCode]="examples.treeTable15.ts">
+        <cps-tree-table
+          data-testid="treetable-15-initial-columns"
+          [data]="dataVirtual"
+          [columns]="colsVirtual"
+          [initialColumns]="initialColumnsVirtual"
+          [virtualScroll]="true"
+          scrollHeight="26rem"
+          [showColumnsToggleBtn]="true"
+          toolbarTitle="Tree table that initially shows only a subset of columns. Use the columns button to reveal the rest">
         </cps-tree-table>
       </app-code-example>
     </cps-tab>

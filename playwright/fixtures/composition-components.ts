@@ -303,7 +303,12 @@ export const components: ComponentEntry[] = [
     'Tree table 7',
     'Tree table 8',
     'Tree table 9',
-    'Tree table 10'
+    'Tree table 10',
+    'Tree table 11',
+    'Tree table 12',
+    'Tree table 13',
+    'Tree table 14',
+    'Tree table 15'
   ].map((tab): ComponentEntry => ({
     route: '/tree-table',
     name: tab,
