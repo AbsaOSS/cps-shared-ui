@@ -6,7 +6,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import { CpsTreeAutocompleteComponent } from 'cps-ui-kit';
+import { CpsButtonComponent, CpsTreeAutocompleteComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-tree-autocomplete.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
@@ -15,6 +15,7 @@ import { treeAutocompleteExamples } from './tree-autocomplete-page.examples';
 @Component({
   imports: [
     CpsTreeAutocompleteComponent,
+    CpsButtonComponent,
     FormsModule,
     ReactiveFormsModule,
     ComponentDocsViewerComponent,
