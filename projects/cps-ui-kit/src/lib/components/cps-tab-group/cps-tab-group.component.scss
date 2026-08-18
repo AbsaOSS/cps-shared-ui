@@ -156,7 +156,6 @@
 
   .cps-tabs.cps-tabs-subtabs {
     .cps-tabs-list .cps-tab {
-      height: 2.0625rem;
       background-color: #d7d7d759;
 
       &.active {
@@ -165,6 +164,10 @@
       &:hover:not(.disabled),
       &:focus-visible:not(.disabled) {
         color: var(--cps-color-calm);
+      }
+
+      .cps-tab-link {
+        padding: 0.3125rem;
       }
     }
   }

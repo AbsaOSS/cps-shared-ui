@@ -130,6 +130,8 @@ describe('CpsTreeTableComponent', () => {
       expect(component.columnResizeMode).toBe('fit'));
     it('should default sortMode to "single"', () =>
       expect(component.sortMode).toBe('single'));
+    it('should default loadingLabel to "Loading..."', () =>
+      expect(component.loadingLabel).toBe('Loading...'));
   });
 
   describe('data setter / getter', () => {
@@ -435,7 +437,7 @@ describe('CpsTreeTableComponent', () => {
       'onSort',
       () => component.onSort({ field: 'name', order: 1 }),
       '_calcAutoLayoutHeaderWidths',
-      [true]
+      []
     );
   });
 
@@ -451,7 +453,7 @@ describe('CpsTreeTableComponent', () => {
       'onFilter',
       () => component.onFilter({ filters: {} }),
       '_calcAutoLayoutHeaderWidths',
-      [true]
+      []
     );
   });
 
@@ -795,6 +797,7 @@ describe('CpsTreeTableComponent', () => {
 
   describe('auto layout column widths (incremental expand/collapse)', () => {
     let originalOffsetWidth: PropertyDescriptor | undefined;
+    let originalOffsetParent: PropertyDescriptor | undefined;
 
     beforeAll(() => {
       originalOffsetWidth = Object.getOwnPropertyDescriptor(
@@ -807,6 +810,20 @@ describe('CpsTreeTableComponent', () => {
           return Number(this.getAttribute('data-test-width') || 0);
         }
       });
+
+      // jsdom never lays out elements, so offsetParent is always null,
+      // which would make every element look "hidden". Simulate a visible
+      // element by default, matching what these tests exercise.
+      originalOffsetParent = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        'offsetParent'
+      );
+      Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+        configurable: true,
+        get(): HTMLElement {
+          return document.body;
+        }
+      });
     });
 
     afterAll(() => {
@@ -815,6 +832,13 @@ describe('CpsTreeTableComponent', () => {
           HTMLElement.prototype,
           'offsetWidth',
           originalOffsetWidth
+        );
+      }
+      if (originalOffsetParent) {
+        Object.defineProperty(
+          HTMLElement.prototype,
+          'offsetParent',
+          originalOffsetParent
         );
       }
     });
@@ -869,7 +893,7 @@ describe('CpsTreeTableComponent', () => {
         { node: nodeB, visible: true }
       ] as any;
 
-      (component as any)._calcAutoLayoutHeaderWidths(true);
+      (component as any)._calcAutoLayoutHeaderWidths();
 
       return { th1, th2, nodeA, nodeB, rowA, rowB };
     }
@@ -890,6 +914,46 @@ describe('CpsTreeTableComponent', () => {
         expect(th2.style.width).toBe(`${(60 / 180) * 100}%`);
       });
 
+      it('never leaves more than one offscreen shadow-measurement structure attached, across repeated recalcs', () => {
+        setupBasicTable();
+        expect(
+          fixture.nativeElement.querySelectorAll(
+            '.cps-treetable-shadow-measure'
+          ).length
+        ).toBe(0);
+
+        (component as any)._calcAutoLayoutHeaderWidths();
+        (component as any)._calcAutoLayoutHeaderWidths();
+
+        expect(
+          fixture.nativeElement.querySelectorAll(
+            '.cps-treetable-shadow-measure'
+          ).length
+        ).toBe(0);
+      });
+
+      it('removes the shadow-measurement wrapper even if measurement throws partway through', () => {
+        setupBasicTable();
+
+        const cloneNodeSpy = jest
+          .spyOn(HTMLElement.prototype, 'cloneNode')
+          .mockImplementationOnce(() => {
+            throw new Error('boom');
+          });
+
+        expect(() => (component as any)._calcAutoLayoutHeaderWidths()).toThrow(
+          'boom'
+        );
+
+        expect(
+          fixture.nativeElement.querySelectorAll(
+            '.cps-treetable-shadow-measure'
+          ).length
+        ).toBe(0);
+
+        cloneNodeSpy.mockRestore();
+      });
+
       it('clears stale cache entries for nodes no longer present', () => {
         const { nodeA } = setupBasicTable();
         expect((component as any)._visibleRowWidthsPxByNode.has(nodeA)).toBe(
@@ -903,7 +967,7 @@ describe('CpsTreeTableComponent', () => {
           { node: nodeC, visible: true }
         ] as any;
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
         expect((component as any)._visibleRowWidthsPxByNode.has(nodeA)).toBe(
           false
@@ -939,23 +1003,27 @@ describe('CpsTreeTableComponent', () => {
           { node: nodeA, visible: true }
         ] as any;
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
         expect(emptyMessageCell.style.width).toBe('');
         expect(rowA[0].style.width).toBe('3.4375rem');
       });
 
-      it('marks _needRecalcAutoLayout for retry when there are no header cells', () => {
+      it('schedules a retry (via requestAnimationFrame, not an immediate re-check) when there are no header cells', () => {
         setupBasicTable();
         (component as any)._needRecalcAutoLayout = false;
         (component as any)._headerBox = makeHeaderBox([]);
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
-        expect((component as any)._needRecalcAutoLayout).toBe(true);
+        // Deferred to the next real frame rather than re-armed immediately —
+        // an immediate re-arm here would let ngAfterViewChecked retry on
+        // every single change-detection tick, hammering layout reads.
+        expect((component as any)._needRecalcAutoLayout).toBe(false);
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
       });
 
-      it('marks _needRecalcAutoLayout for retry when header cells all have zero width', () => {
+      it('schedules a retry (via requestAnimationFrame, not an immediate re-check) when header cells all have zero width', () => {
         setupBasicTable();
         (component as any)._needRecalcAutoLayout = false;
         (component as any)._headerBox = makeHeaderBox([
@@ -963,24 +1031,156 @@ describe('CpsTreeTableComponent', () => {
           makeCell('th', 0)
         ]);
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
-        expect((component as any)._needRecalcAutoLayout).toBe(true);
+        expect((component as any)._needRecalcAutoLayout).toBe(false);
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
       });
 
-      it('marks _needRecalcAutoLayout for retry when there are no body rows yet', () => {
+      it('schedules a retry (via requestAnimationFrame, not an immediate re-check) when there are no body rows yet', () => {
         setupBasicTable();
         (component as any)._needRecalcAutoLayout = false;
         (component as any)._scrollableBody = makeScrollableBody([]);
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
-        expect((component as any)._needRecalcAutoLayout).toBe(true);
+        expect((component as any)._needRecalcAutoLayout).toBe(false);
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
+      });
+
+      it('re-runs the recalculation when the scheduled retry frame fires', async () => {
+        setupBasicTable();
+        (component as any)._needRecalcAutoLayout = false;
+        (component as any)._headerBox = makeHeaderBox([]);
+
+        const calcSpy = jest.spyOn(
+          component as any,
+          '_calcAutoLayoutHeaderWidths'
+        );
+
+        (component as any)._calcAutoLayoutHeaderWidths();
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
+        calcSpy.mockClear();
+
+        // Let the real (jsdom) scheduled frame actually fire rather than
+        // mocking requestAnimationFrame — zone.js's patching means a bare
+        // rAF call made from inside runOutsideAngular doesn't reliably
+        // route through a window.requestAnimationFrame spy.
+        await new Promise<void>((resolve) => setTimeout(resolve, 50));
+
+        expect(calcSpy).toHaveBeenCalledWith();
+        // The header box is still empty, so this retry attempt fails the
+        // same way and schedules another one — that's the correct, expected
+        // behavior, not a bug: _pendingRecalcRafId should be non-null again.
+        expect((component as any)._needRecalcAutoLayout).toBe(false);
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
+      });
+
+      it('cancels a pending auto-layout retry frame on destroy, so the callback never touches the destroyed component', async () => {
+        setupBasicTable();
+        (component as any)._needRecalcAutoLayout = false;
+        (component as any)._headerBox = makeHeaderBox([]);
+
+        (component as any)._calcAutoLayoutHeaderWidths();
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
+
+        component.ngOnDestroy();
+        expect((component as any)._pendingRecalcRafId).toBeNull();
+
+        await new Promise<void>((resolve) => setTimeout(resolve, 50));
+
+        // If the frame had not actually been cancelled, its callback would
+        // have retried and scheduled a new pending frame by now.
+        expect((component as any)._pendingRecalcRafId).toBeNull();
       });
 
       it('leaves _needRecalcAutoLayout false after a successful recalc', () => {
         setupBasicTable();
         expect((component as any)._needRecalcAutoLayout).toBe(false);
+      });
+
+      it('skips recalculation and does not schedule a retry when the element is hidden (offsetParent === null)', () => {
+        setupBasicTable();
+        Object.defineProperty(
+          (component as any)._elementRef.nativeElement,
+          'offsetParent',
+          { configurable: true, get: () => null }
+        );
+        (component as any)._needRecalcAutoLayout = true;
+        const pendingRafIdBefore = (component as any)._pendingRecalcRafId;
+        const queryHeaderCellsSpy = jest.spyOn(
+          component as any,
+          '_queryHeaderCells'
+        );
+
+        (component as any)._calcAutoLayoutHeaderWidths();
+
+        expect(queryHeaderCellsSpy).not.toHaveBeenCalled();
+        expect((component as any)._needRecalcAutoLayout).toBe(false);
+        expect((component as any)._pendingRecalcRafId).toBe(pendingRafIdBefore);
+      });
+    });
+
+    describe('ngAfterViewChecked (hidden-element guard)', () => {
+      it('does nothing when the element is hidden (offsetParent === null), leaving auto-layout state untouched', () => {
+        setupBasicTable();
+        Object.defineProperty(
+          (component as any)._elementRef.nativeElement,
+          'offsetParent',
+          { configurable: true, get: () => null }
+        );
+        (component as any)._needRecalcAutoLayout = true;
+        const calcSpy = jest.spyOn(
+          component as any,
+          '_calcAutoLayoutHeaderWidths'
+        );
+
+        component.ngAfterViewChecked();
+
+        expect(calcSpy).not.toHaveBeenCalled();
+        expect((component as any)._needRecalcAutoLayout).toBe(true);
+      });
+    });
+
+    describe('_requestRecalc (shared by the scroll listener, ResizeObserver, and the auto-layout retry)', () => {
+      it('coalesces repeated calls within the same frame into a single scheduled frame and a single recalc', async () => {
+        setupBasicTable();
+        const calcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._requestRecalc();
+        const firstId = (component as any)._pendingRecalcRafId;
+        expect(firstId).not.toBeNull();
+
+        // A second call arriving before the frame fires (mirroring a second
+        // 'scroll' or resize event landing in the same frame) must not
+        // schedule a second frame.
+        (component as any)._requestRecalc();
+        expect((component as any)._pendingRecalcRafId).toBe(firstId);
+
+        await new Promise<void>((resolve) => setTimeout(resolve, 50));
+
+        expect(calcSpy).toHaveBeenCalledTimes(1);
+        expect(calcSpy).toHaveBeenCalledWith();
+        expect((component as any)._pendingRecalcRafId).toBeNull();
+      });
+
+      it('cancels a pending coalesced frame on destroy, regardless of which trigger scheduled it', async () => {
+        setupBasicTable();
+        const calcSpy = jest
+          .spyOn(component as any, '_calcAutoLayoutHeaderWidths')
+          .mockImplementation(() => {});
+
+        (component as any)._requestRecalc();
+        expect((component as any)._pendingRecalcRafId).not.toBeNull();
+
+        component.ngOnDestroy();
+        expect((component as any)._pendingRecalcRafId).toBeNull();
+
+        await new Promise<void>((resolve) => setTimeout(resolve, 50));
+
+        expect(calcSpy).not.toHaveBeenCalled();
       });
     });
 
@@ -1006,7 +1206,7 @@ describe('CpsTreeTableComponent', () => {
           { node: nodeA, visible: true }
         ] as any;
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
         return { th0, th1, th2, nodeA, rowA };
       }
@@ -1033,7 +1233,7 @@ describe('CpsTreeTableComponent', () => {
         const { th0, th1, th2 } = setupThreeColumnTable();
 
         (component as any)._pinnedColumnWidthsPx.set(1, 150);
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
         expect(th1.style.width).toBe('150px');
         expect(th0.style.width).toBe(`${(100 / 180) * 100}%`);
@@ -1044,7 +1244,7 @@ describe('CpsTreeTableComponent', () => {
         const { rowA } = setupThreeColumnTable();
         (component as any)._pinnedColumnWidthsPx.set(1, 150);
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
         expect(rowA[1].style.width).toBe('150px');
       });
@@ -1063,7 +1263,7 @@ describe('CpsTreeTableComponent', () => {
           { node: nodeX, visible: true }
         ] as any;
 
-        (component as any)._calcAutoLayoutHeaderWidths(true);
+        (component as any)._calcAutoLayoutHeaderWidths();
 
         expect((component as any)._pinnedColumnWidthsPx.size).toBe(0);
       });
@@ -1264,7 +1464,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._expandAutoLayoutIncremental({ node: nodeA });
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
 
       it('falls back to a full recalc when no cache exists yet', () => {
@@ -1278,7 +1478,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._expandAutoLayoutIncremental({ node: nodeA });
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
 
       it('falls back to a full recalc when event.node is missing', () => {
@@ -1290,7 +1490,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._expandAutoLayoutIncremental({});
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
 
       it('falls back to a full recalc when the toggled node cannot be located in serializedValue', () => {
@@ -1305,7 +1505,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._expandAutoLayoutIncremental({ node: nodeA });
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
 
       it('falls back to a full recalc when fewer sibling rows exist than expected', () => {
@@ -1327,7 +1527,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._expandAutoLayoutIncremental({ node: nodeA });
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
     });
 
@@ -1430,7 +1630,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
 
       it('falls back to a full recalc when no cache exists yet', () => {
@@ -1444,7 +1644,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._collapseAutoLayoutIncremental({ node: nodeA });
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
 
       it('falls back to a full recalc when event.node is missing', () => {
@@ -1456,7 +1656,7 @@ describe('CpsTreeTableComponent', () => {
 
         (component as any)._collapseAutoLayoutIncremental({});
 
-        expect(fullRecalcSpy).toHaveBeenCalledWith(true);
+        expect(fullRecalcSpy).toHaveBeenCalledWith();
       });
     });
 
@@ -1509,6 +1709,41 @@ describe('CpsTreeTableComponent', () => {
         '_collapseAutoLayoutIncremental',
         [collapseEvent]
       );
+    });
+  });
+
+  describe('nodeTestKey', () => {
+    it('returns the index of the rowNode within primengTreeTable.serializedValue', () => {
+      const rowNode = { node: { data: { name: 'a' } } };
+      (component.primengTreeTable as any).serializedValue = [
+        { node: { data: { name: 'z' } } },
+        rowNode
+      ];
+      expect(component.nodeTestKey(rowNode)).toBe('1');
+    });
+
+    it('returns "-1" when the rowNode is not found', () => {
+      (component.primengTreeTable as any).serializedValue = [];
+      expect(component.nodeTestKey({})).toBe('-1');
+    });
+
+    it('rebuilds its index cache only when serializedValue is replaced with a new array, not on every call', () => {
+      const rowNodeA = { node: { data: { name: 'a' } } };
+      const rowNodeB = { node: { data: { name: 'b' } } };
+      const serializedValue = [rowNodeA, rowNodeB];
+      (component.primengTreeTable as any).serializedValue = serializedValue;
+
+      expect(component.nodeTestKey(rowNodeA)).toBe('0');
+      expect(component.nodeTestKey(rowNodeB)).toBe('1');
+      expect(component.nodeTestKey(rowNodeA)).toBe('0');
+      expect((component as any)._nodeIndexCacheSource).toBe(serializedValue);
+
+      const newSerializedValue = [rowNodeB, rowNodeA];
+      (component.primengTreeTable as any).serializedValue = newSerializedValue;
+
+      expect(component.nodeTestKey(rowNodeA)).toBe('1');
+      expect(component.nodeTestKey(rowNodeB)).toBe('0');
+      expect((component as any)._nodeIndexCacheSource).toBe(newSerializedValue);
     });
   });
 });

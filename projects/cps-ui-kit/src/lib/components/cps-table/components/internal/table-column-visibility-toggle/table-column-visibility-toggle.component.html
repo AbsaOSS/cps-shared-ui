@@ -23,6 +23,7 @@
     role="listbox"
     tabindex="0"
     aria-multiselectable="true"
+    data-testid="cps-table-coltoggle-listbox"
     [id]="listboxId"
     [attr.aria-activedescendant]="activeDescendantId()"
     (keydown)="onKeydown($event)">
@@ -31,6 +32,7 @@
       role="option"
       data-testid="cps-table-coltoggle-select-all"
       [id]="listboxId + '-opt-0'"
+      data-testid="cps-table-coltoggle-select-all"
       [attr.aria-selected]="selectedColumns().length === columns().length"
       [class.allselected]="selectedColumns().length === columns().length"
       [class.highlighten]="highlightedIndex() === 0"
@@ -48,6 +50,7 @@
         role="option"
         [attr.data-testid]="'cps-table-coltoggle-item-' + col[colHeaderName()]"
         [id]="listboxId + '-opt-' + (i + 1)"
+        [attr.data-testid]="'cps-table-coltoggle-item-' + col[colHeaderName()]"
         [attr.aria-selected]="isColumnSelected(col)"
         [class.selected]="isColumnSelected(col)"
         [class.highlighten]="highlightedIndex() === i + 1"
