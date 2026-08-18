@@ -73,6 +73,64 @@ private _removeElementsByName(dataArray: any[], namesArray: string[]) {
 
 const notifServiceTs = `private readonly _notifService = inject(CpsNotificationService);`;
 
+const virtualColsAndDataTs = `
+colsVirtual = [
+  { field: 'name', header: 'Name' },
+  { field: 'size', header: 'Size' },
+  { field: 'tag', header: 'Tag' },
+  { field: 'type', header: 'String (only 5 distinct values)' },
+  { field: 'date', header: 'Date', dateFormat: 'dd. MM. yyyy' },
+  { field: 'sizeEven', header: 'Boolean' },
+  {
+    field: 'date2',
+    header: 'Date but with category filter',
+    filterType: 'category',
+    dateFormat: 'yyyy/MM/dd HH:mm:ss'
+  }
+];
+
+dataVirtual: any[] = [];
+
+ngOnInit(): void {
+  for (let i = 0; i <= 1000; i++) {
+    this.dataVirtual.push({
+      data: {
+        name: \`Folder\${i}\`,
+        size: i,
+        tag: i * 3,
+        type: \`Type-\${i % 5}\`,
+        date: new Date(2020, 1, i),
+        sizeEven: i % 2 === 0,
+        date2: new Date(2020, 1, i, 12, 30, 0)
+      },
+      children: [
+        {
+          data: {
+            name: 'primefaces.mkv',
+            size: 1000,
+            tag: 7,
+            type: \`Type-\${i % 5}\`,
+            date: new Date(2020, 1, i),
+            sizeEven: i % 2 === 0,
+            date2: new Date(2020, 1, i, 12, 30, 0)
+          }
+        },
+        {
+          data: {
+            name: 'intro.avi',
+            size: 500,
+            tag: 9,
+            type: \`Type-\${i % 5}\`,
+            date: new Date(2020, 1, i),
+            sizeEven: i % 2 === 0,
+            date2: new Date(2020, 1, i, 12, 30, 0)
+          }
+        }
+      ]
+    });
+  }
+}`;
+
 export const treeTableExamples: Record<string, { html: string; ts?: string }> =
   {
     treeTable1: {
@@ -171,62 +229,7 @@ export const treeTableExamples: Record<string, { html: string; ts?: string }> =
   </ng-template>
 </cps-tree-table>`,
       ts: `
-colsVirtual = [
-  { field: 'name', header: 'Name' },
-  { field: 'size', header: 'Size' },
-  { field: 'tag', header: 'Tag' },
-  { field: 'type', header: 'String (only 5 distinct values)' },
-  { field: 'date', header: 'Date', dateFormat: 'dd. MM. yyyy' },
-  { field: 'sizeEven', header: 'Boolean' },
-  {
-    field: 'date2',
-    header: 'Date but with category filter',
-    filterType: 'category',
-    dateFormat: 'yyyy/MM/dd HH:mm:ss'
-  }
-];
-
-dataVirtual: any[] = [];
-
-ngOnInit(): void {
-  for (let i = 0; i <= 1000; i++) {
-    this.dataVirtual.push({
-      data: {
-        name: \`Folder\${i}\`,
-        size: i,
-        tag: i * 3,
-        type: \`Type-\${i % 5}\`,
-        date: new Date(2020, 1, i),
-        sizeEven: i % 2 === 0,
-        date2: new Date(2020, 1, i, 12, 30, 0)
-      },
-      children: [
-        {
-          data: {
-            name: 'primefaces.mkv',
-            size: 1000,
-            tag: 7,
-            type: \`Type-\${i % 5}\`,
-            date: new Date(2020, 1, i),
-            sizeEven: i % 2 === 0,
-            date2: new Date(2020, 1, i, 12, 30, 0)
-          }
-        },
-        {
-          data: {
-            name: 'intro.avi',
-            size: 500,
-            tag: 9,
-            type: \`Type-\${i % 5}\`,
-            date: new Date(2020, 1, i),
-            sizeEven: i % 2 === 0,
-            date2: new Date(2020, 1, i, 12, 30, 0)
-          }
-        }
-      ]
-    });
-  }
-}`
+${virtualColsAndDataTs.trim()}`
     },
 
     treeTable3: {
@@ -843,6 +846,10 @@ onCustomSort(event: { data: any[]; field?: string; order?: number }) {
   scrollHeight="26rem"
   [showColumnsToggleBtn]="true"
   toolbarTitle="Tree table that initially shows only a subset of columns. Use the columns button to reveal the rest">
-</cps-tree-table>`
+</cps-tree-table>`,
+      ts: `
+${virtualColsAndDataTs.trim()}
+
+initialColumnsVirtual = this.colsVirtual.slice(0, 3);`
     }
   };
