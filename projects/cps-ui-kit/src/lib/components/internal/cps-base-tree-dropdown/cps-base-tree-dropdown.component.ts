@@ -18,17 +18,17 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { TreeNode } from 'primeng/api';
+import type { TreeNode } from 'primeng/api';
 import {
   generateUniqueId,
   logMissingAriaLabelError
 } from '../../../utils/internal/accessibility-utils/accessibility-utils';
 import { Subscription } from 'rxjs';
-import { Tree } from 'primeng/tree';
+import type { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import type { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils/size-utils';
-import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
 
