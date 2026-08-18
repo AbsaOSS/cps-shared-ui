@@ -83,6 +83,50 @@ data = [
   // ...more rows omitted for brevity
 ];`;
 
+const virtualColsAndDataTs = `
+colsVirtual = [
+  { field: 'a', header: 'String' },
+  { field: 'b', header: 'String (only 5 distinct values)' },
+  { field: 'c', header: 'Number' },
+  { field: 'd', header: 'Date', dateFormat: 'dd. MM. yyyy' },
+  { field: 'e', header: 'Boolean' },
+  {
+    field: 'f',
+    header: 'Date but with category filter',
+    filterType: 'category',
+    dateFormat: 'yyyy/MM/dd HH:mm:ss'
+  }
+];
+
+dataVirtual: {
+  a: string;
+  b: string;
+  c: number;
+  d: Date;
+  e: boolean;
+  f: Date;
+}[] = [];
+
+ngOnInit(): void {
+  const sevenRandomDates = Array.from(
+    { length: 7 },
+    () => new Date(Math.round(Math.random() * 1e12))
+  );
+  let c = 0.0;
+  for (let i = 0; i <= 1000; i++) {
+    this.dataVirtual.push({
+      a: 'a' + i,
+      b: 'b' + (i % 5),
+      c,
+      d: new Date(new Date().valueOf() - Math.random() * 1e12),
+      e: Math.random() > 0.5,
+      f: sevenRandomDates[i % 7]
+    });
+
+    c = parseFloat((c += 0.1).toFixed(1));
+  }
+}`;
+
 export const tableExamples: Record<string, { html: string; ts?: string }> = {
   table1: {
     html: `
@@ -147,48 +191,7 @@ dateMatchModes = [
   [resizableColumns]="true">
 </cps-table>`,
     ts: `
-colsVirtual = [
-  { field: 'a', header: 'String' },
-  { field: 'b', header: 'String (only 5 distinct values)' },
-  { field: 'c', header: 'Number' },
-  { field: 'd', header: 'Date', dateFormat: 'dd. MM. yyyy' },
-  { field: 'e', header: 'Boolean' },
-  {
-    field: 'f',
-    header: 'Date but with category filter',
-    filterType: 'category',
-    dateFormat: 'yyyy/MM/dd HH:mm:ss'
-  }
-];
-
-dataVirtual: {
-  a: string;
-  b: string;
-  c: number;
-  d: Date;
-  e: boolean;
-  f: Date;
-}[] = [];
-
-ngOnInit(): void {
-  const sevenRandomDates = Array.from(
-    { length: 7 },
-    () => new Date(Math.round(Math.random() * 1e12))
-  );
-  let c = 0.0;
-  for (let i = 0; i <= 1000; i++) {
-    this.dataVirtual.push({
-      a: 'a' + i,
-      b: 'b' + (i % 5),
-      c,
-      d: new Date(new Date().valueOf() - Math.random() * 1e12),
-      e: Math.random() > 0.5,
-      f: sevenRandomDates[i % 7]
-    });
-
-    c = parseFloat((c += 0.1).toFixed(1));
-  }
-}`
+${virtualColsAndDataTs.trim()}`
   },
 
   table3: {
@@ -748,6 +751,8 @@ onCustomSort(event: { data: any[]; field?: string; order?: number }) {
   scrollHeight="26rem"
   [showColumnsToggleBtn]="true"
   toolbarTitle="Table that initially shows only a subset of columns. Use the columns button to reveal the rest">
-</cps-table>`
+</cps-table>`,
+    ts: `
+${virtualColsAndDataTs.trim()}`
   }
 };
