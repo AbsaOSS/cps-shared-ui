@@ -14,7 +14,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { isEqual } from 'lodash-es';
 import { TreeModule } from 'primeng/tree';
-import { TreeNode } from 'primeng/api';
+import type { TreeNode } from 'primeng/api';
 import {
   CpsMenuComponent,
   CpsMenuHideReason

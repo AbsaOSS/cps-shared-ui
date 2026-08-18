@@ -27,6 +27,7 @@
     "**/src/**/*.spec.ts": "typescriptreact"
   },
   "git.enableCommitSigning": true,
+  "prettier.prettierPath": "./node_modules/prettier",
   "editor.codeLens": true,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
