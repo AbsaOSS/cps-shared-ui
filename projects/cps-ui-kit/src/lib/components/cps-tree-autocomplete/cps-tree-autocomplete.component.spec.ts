@@ -804,6 +804,31 @@ describe('CpsTreeAutocompleteComponent', () => {
       expect(chipLabels).toEqual(['Option 2']);
     });
 
+    it('should not warn when options are replaced with new-but-value-equal objects, forcing optionsMap/innerOptions to rebuild', () => {
+      fixture.componentRef.setInput('chips', true);
+      component.writeValue([OPTIONS[0], OPTIONS[1]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const NEW_OPTIONS = [OPTIONS[0], OPTIONS[1]].map((o) => ({ ...o }));
+      fixture.componentRef.setInput('options', NEW_OPTIONS);
+      fixture.detectChanges();
+      component.writeValue([NEW_OPTIONS[0], NEW_OPTIONS[1]]);
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(warnSpy).not.toHaveBeenCalledWith(
+        expect.stringMatching(/NG0956|NG0955/)
+      );
+      warnSpy.mockRestore();
+
+      const chipLabels = fixture.debugElement
+        .queryAll(By.css('cps-chip'))
+        .map((el) => el.componentInstance.label);
+      expect(chipLabels).toEqual(['Option 1', 'Option 2']);
+    });
+
     it('should keep sibling/cross-branch node keys unique in a nested tree with multiple selected nodes', () => {
       fixture.componentRef.setInput('chips', true);
       const parentChildren = OPTIONS[2].children as unknown as typeof OPTIONS;

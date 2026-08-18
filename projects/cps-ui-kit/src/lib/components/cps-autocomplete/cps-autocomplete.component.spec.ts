@@ -1540,6 +1540,7 @@ describe('CpsAutocompleteComponent', () => {
     it('should not warn when options are replaced with new-but-value-equal objects (mirrors cps-paginator._syncRows)', () => {
       fixture.componentRef.setInput('multiple', true);
       component.value = [component.options[0], component.options[2]];
+      (component as any)._toggleOptions(true);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1554,6 +1555,10 @@ describe('CpsAutocompleteComponent', () => {
         expect.stringContaining('NG0956')
       );
       expect(chipTexts()).toEqual(['Option 1', 'Option 3']);
+      const optionLabels = fixture.debugElement
+        .queryAll(By.css('[data-testid="cps-autocomplete-options"]'))
+        .map((el) => el.nativeElement.textContent.trim());
+      expect(optionLabels).toEqual(['Option 1', 'Option 2', 'Option 3']);
       warnSpy.mockRestore();
     });
 
@@ -1665,6 +1670,36 @@ describe('CpsAutocompleteComponent', () => {
       expect(chips.length).toBe(2);
     });
 
+    it('returnObject=false with an object-valued optionValue field is not identity-churn-safe if options are replaced', () => {
+      const CITY_OPTIONS = [
+        { name: 'New York', data: { code: 'NY' } },
+        { name: 'Cape Town', data: { code: 'CPT' } },
+        { name: 'Los Angeles', data: { code: 'LA' } }
+      ];
+      fixture.componentRef.setInput('options', CITY_OPTIONS);
+      fixture.componentRef.setInput('optionLabel', 'name');
+      fixture.componentRef.setInput('optionValue', 'data');
+      fixture.componentRef.setInput('returnObject', false);
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [CITY_OPTIONS[0].data, CITY_OPTIONS[2].data];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(() => {
+        const NEW_CITY_OPTIONS = CITY_OPTIONS.map((o) => ({
+          ...o,
+          data: { ...o.data }
+        }));
+        fixture.componentRef.setInput('options', NEW_CITY_OPTIONS);
+        component.value = [NEW_CITY_OPTIONS[0].data, NEW_CITY_OPTIONS[2].data];
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      const chips = fixture.debugElement.queryAll(By.css('cps-chip'));
+      expect(chips.length).toBe(2);
+    });
+
     it('should not throw when two options share the same optionValue (pre-existing unsupported configuration)', () => {
       const DUPLICATE_OPTIONS = [
         { label: 'First', value: 'dup' },
@@ -1681,6 +1716,28 @@ describe('CpsAutocompleteComponent', () => {
       }).not.toThrow();
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('NG0955'));
       warnSpy.mockRestore();
+    });
+
+    it('an option whose optionValue field is null/undefined falls back to whole-object identity tracking', () => {
+      const OPTIONS_WITH_MISSING_VALUE = [
+        { label: 'Has value', value: 'opt1' },
+        { label: 'Missing value' }
+      ];
+      fixture.componentRef.setInput('options', OPTIONS_WITH_MISSING_VALUE);
+      fixture.componentRef.setInput('multiple', true);
+      component.value = [...OPTIONS_WITH_MISSING_VALUE];
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(() => {
+        const NEW_OPTIONS = OPTIONS_WITH_MISSING_VALUE.map((o) => ({ ...o }));
+        fixture.componentRef.setInput('options', NEW_OPTIONS);
+        component.value = [...NEW_OPTIONS];
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      }).not.toThrow();
+
+      expect(chipTexts()).toEqual(['Has value', 'Missing value']);
     });
   });
 });

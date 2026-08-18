@@ -2510,7 +2510,7 @@ describe('CpsTreeTableComponent', () => {
       component.autoLayout = false;
       component.scrollable = true;
       expect(() =>
-        (component as any)._calcAutoLayoutHeaderWidths(true)
+        (component as any)._calcAutoLayoutHeaderWidths()
       ).not.toThrow();
     });
 
@@ -2518,17 +2518,43 @@ describe('CpsTreeTableComponent', () => {
       component.autoLayout = true;
       component.scrollable = false;
       expect(() =>
-        (component as any)._calcAutoLayoutHeaderWidths(true)
+        (component as any)._calcAutoLayoutHeaderWidths()
       ).not.toThrow();
     });
 
-    it('should skip recalculation when not forced and no recalculation is needed', () => {
-      component.autoLayout = true;
-      component.scrollable = true;
-      (component as any)._needRecalcAutoLayout = false;
-      const querySpy = jest.spyOn(component as any, '_queryHeaderCells');
-      (component as any)._calcAutoLayoutHeaderWidths(false);
-      expect(querySpy).not.toHaveBeenCalled();
+    it('should not call _calcAutoLayoutHeaderWidths from ngAfterViewChecked when no recalculation is needed', () => {
+      const originalOffsetParent = Object.getOwnPropertyDescriptor(
+        HTMLElement.prototype,
+        'offsetParent'
+      );
+      Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+        configurable: true,
+        get(): HTMLElement {
+          return document.body;
+        }
+      });
+
+      try {
+        component.autoLayout = true;
+        component.scrollable = true;
+        (component as any)._needRecalcAutoLayout = false;
+        const recalcSpy = jest.spyOn(
+          component as any,
+          '_calcAutoLayoutHeaderWidths'
+        );
+
+        component.ngAfterViewChecked();
+
+        expect(recalcSpy).not.toHaveBeenCalled();
+      } finally {
+        if (originalOffsetParent) {
+          Object.defineProperty(
+            HTMLElement.prototype,
+            'offsetParent',
+            originalOffsetParent
+          );
+        }
+      }
     });
   });
 
