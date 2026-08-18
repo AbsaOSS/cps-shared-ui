@@ -10,6 +10,7 @@
         [htmlCode]="examples.table1.html"
         [tsCode]="examples.table1.ts">
         <cps-table
+          data-testid="table-1-paginated-filters"
           [data]="data"
           [paginator]="true"
           sortMode="multiple"
@@ -58,6 +59,7 @@
         [tsCode]="examples.table2.ts">
         @if (selectedTabIndex === 1) {
           <cps-table
+            data-testid="table-2-virtual-default-render"
             [showGlobalFilter]="true"
             [data]="dataVirtual"
             [columns]="colsVirtual"
@@ -77,6 +79,7 @@
         [htmlCode]="examples.table3.html"
         [tsCode]="examples.table3.ts">
         <cps-table
+          data-testid="table-3-reorder-menu"
           [data]="data"
           [reorderableRows]="true"
           [showActionBtn]="true"
@@ -127,6 +130,7 @@
         [htmlCode]="examples.table4.html"
         [tsCode]="examples.table4.ts">
         <cps-table
+          data-testid="table-4-select-expand"
           [data]="data"
           dataKey="a"
           [columns]="colsWithFilterType"
@@ -200,6 +204,7 @@
         [htmlCode]="examples.table5.html"
         [tsCode]="examples.table5.ts">
         <cps-table
+          data-testid="table-5-nested-header"
           [data]="data"
           [selectable]="true"
           toolbarSize="small"
@@ -252,6 +257,7 @@
         [htmlCode]="examples.table6.html"
         [tsCode]="examples.table6.ts">
         <cps-table
+          data-testid="table-6-export"
           [data]="data"
           [columns]="cols"
           [rowHover]="false"
@@ -336,8 +342,10 @@
     <cps-tab label="Table 8">
       <app-code-example [htmlCode]="examples.table8.html">
         <cps-table
+          data-testid="table-8-empty"
           [data]="[]"
-          toolbarTitle="Empty table"
+          [hasToolbar]="false"
+          emptyMessage="No records match your criteria"
           emptyBodyHeight="22rem">
           <ng-template #header>
             <th cpsTColSortable="a">A</th>
@@ -354,6 +362,7 @@
         [htmlCode]="examples.table9.html"
         [tsCode]="examples.table9.ts">
         <cps-table
+          data-testid="table-9-loading"
           [data]="data"
           [loading]="true"
           scrollHeight="25rem"
@@ -367,6 +376,7 @@
         [htmlCode]="examples.table10.html"
         [tsCode]="examples.table10.ts">
         <cps-table
+          data-testid="table-10-html"
           [data]="dataWithHTML"
           scrollHeight="22rem"
           [columns]="colsHTML"
@@ -377,6 +387,96 @@
             renderAsHTML ? 'true' : 'false'
           }}"
           (actionBtnClicked)="renderAsHTML = !renderAsHTML">
+        </cps-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Table 11">
+      <app-code-example
+        [htmlCode]="examples.table11.html"
+        [tsCode]="examples.table11.ts">
+        <cps-table
+          data-testid="table-11-lazy"
+          [data]="lazyData"
+          [columns]="cols"
+          [lazy]="true"
+          [lazyLoadOnInit]="true"
+          [loading]="lazyLoading"
+          loadingLabel="Fetching..."
+          [paginator]="true"
+          [rows]="lazyRows"
+          [totalRecords]="lazyTotalRecords"
+          (lazyLoaded)="onLazyLoad($event)"
+          toolbarTitle="Table with lazy/server-side loading, driven by a simulated 600ms fetch delay">
+        </cps-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Table 12">
+      <app-code-example
+        [htmlCode]="examples.table12.html"
+        [tsCode]="examples.table12.ts">
+        <cps-table
+          data-testid="table-12-always-show-paginator-false"
+          [data]="manyRecordsForPaginator ? data : data.slice(0, 3)"
+          [columns]="cols"
+          [paginator]="true"
+          [rows]="10"
+          [alwaysShowPaginator]="false"
+          toolbarTitle="Table whose paginator hides when everything fits on one page">
+        </cps-table>
+        <cps-switch
+          class="spaced-from-table"
+          [(ngModel)]="manyRecordsForPaginator"
+          label="Load enough records for multiple pages">
+        </cps-switch>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Table 13">
+      <app-code-example
+        [htmlCode]="examples.table13.html"
+        [tsCode]="examples.table13.ts">
+        <cps-table
+          data-testid="table-13-additional-btn-on-select"
+          [data]="data"
+          [columns]="cols"
+          [selectable]="true"
+          [showAdditionalBtnOnSelect]="true"
+          additionalBtnOnSelectTitle="Archive"
+          additionalBtnOnSelectIcon="star"
+          (additionalBtnOnSelectClicked)="
+            onAdditionalBtnOnSelectClicked($event)
+          "
+          toolbarTitle="Selectable table with an additional toolbar action shown alongside Remove when rows are selected">
+        </cps-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Table 14">
+      <app-code-example
+        [htmlCode]="examples.table14.html"
+        [tsCode]="examples.table14.ts">
+        <cps-table
+          data-testid="table-14-custom-sort"
+          [data]="customSortData"
+          [columns]="customSortCols"
+          [sortable]="true"
+          [customSort]="true"
+          (customSortFunction)="onCustomSort($event)"
+          toolbarTitle="Table with a custom sort function (sorts by string length instead of alphabetically)">
+        </cps-table>
+      </app-code-example>
+    </cps-tab>
+    <cps-tab label="Table 15">
+      <app-code-example
+        [htmlCode]="examples.table15.html"
+        [tsCode]="examples.table15.ts">
+        <cps-table
+          data-testid="table-15-initial-columns"
+          [data]="dataVirtual"
+          [columns]="colsVirtual"
+          [initialColumns]="colsVirtual.slice(0, 3)"
+          [virtualScroll]="true"
+          scrollHeight="26rem"
+          [showColumnsToggleBtn]="true"
+          toolbarTitle="Table that initially shows only a subset of columns. Use the columns button to reveal the rest">
         </cps-table>
       </app-code-example>
     </cps-tab>

@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
     tabindex: '0',
     role: 'button',
     '[attr.aria-label]': 'sortAriaLabel',
+    '[attr.data-testid]': "'cps-table-sort-icon-' + field",
     '(keydown.enter)': 'onKeydown($event)',
     '(keydown.space)': 'onKeydown($event)'
   }
