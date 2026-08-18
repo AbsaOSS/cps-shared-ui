@@ -6,7 +6,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import { CpsTreeSelectComponent } from 'cps-ui-kit';
+import { CpsButtonComponent, CpsTreeSelectComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-tree-select.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
@@ -15,6 +15,7 @@ import { treeSelectExamples } from './tree-select-page.examples';
 @Component({
   imports: [
     CpsTreeSelectComponent,
+    CpsButtonComponent,
     FormsModule,
     ReactiveFormsModule,
     ComponentDocsViewerComponent,
