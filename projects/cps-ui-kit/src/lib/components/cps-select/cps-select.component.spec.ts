@@ -1253,7 +1253,8 @@ describe('CpsSelectComponent', () => {
       const idAtOriginalIndex = component.getOptionId(option, 0);
       const idWithDifferentIndexArg = component.getOptionId(option, 5);
       expect(idWithDifferentIndexArg).toBe(idAtOriginalIndex);
-      expect(idWithDifferentIndexArg).not.toContain('-5');
+      expect(idWithDifferentIndexArg.endsWith('-5')).toBe(false);
+      expect(idWithDifferentIndexArg.endsWith('-0')).toBe(true);
     });
 
     it('should build a fresh id for a non-object option', () => {
