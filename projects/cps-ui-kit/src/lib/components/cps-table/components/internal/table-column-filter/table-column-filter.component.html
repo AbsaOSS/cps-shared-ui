@@ -1,4 +1,6 @@
-<div class="cps-table-col-filter">
+<div
+  class="cps-table-col-filter"
+  [attr.data-testid]="'cps-table-col-filter-' + field">
   <cps-menu
     #columnFilterMenu
     [withArrow]="false"
@@ -28,6 +30,7 @@
       @if (isShowOperator) {
         <div class="cps-table-col-filter-menu-content-operator">
           <cps-select
+            data-testid="cps-table-col-filter-operator-select"
             ariaLabel="Select operator"
             [hideDetails]="true"
             [disabled]="!fieldConstraints || fieldConstraints.length < 2"
@@ -127,6 +130,7 @@
   <button
     type="button"
     class="cps-table-col-filter-menu-button"
+    [attr.data-testid]="'cps-table-col-filter-btn-' + field"
     [class.cps-table-col-filter-menu-button-active]="isFilterApplied"
     [attr.data-testid]="'cps-table-col-filter-btn-' + field"
     [attr.aria-label]="

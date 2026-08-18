@@ -437,17 +437,32 @@ $tbar-normal-height: 4.5rem;
       border-color: $color-calm;
       background: $color-calm;
     }
-    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:hover)
-      .p-checkbox-box,
-    .p-checkbox-checked:not(.p-disabled):has(.p-checkbox-input:focus)
-      .p-checkbox-box {
+    .p-checkbox-checked:not(.p-disabled)
+      .p-checkbox-input:hover
+      ~ .p-checkbox-box,
+    .p-checkbox-checked:not(.p-disabled)
+      .p-checkbox-input:focus-visible
+      ~ .p-checkbox-box {
       border-color: $color-calm;
       background: $color-calm;
       color: #ffffff;
     }
-    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:hover) .p-checkbox-box,
-    .p-checkbox:not(.p-disabled):has(.p-checkbox-input:focus) .p-checkbox-box {
+    .p-checkbox:not(.p-disabled) .p-checkbox-input:hover ~ .p-checkbox-box,
+    .p-checkbox:not(.p-disabled)
+      .p-checkbox-input:focus-visible
+      ~ .p-checkbox-box {
       border-color: $color-calm;
+    }
+
+    .p-checkbox-checked:not(.p-disabled)
+      .p-checkbox-input:hover
+      ~ .p-checkbox-box
+      .p-checkbox-icon,
+    .p-checkbox-checked:not(.p-disabled)
+      .p-checkbox-input:focus-visible
+      ~ .p-checkbox-box
+      .p-checkbox-icon {
+      color: #ffffff;
     }
 
     .p-checkbox .p-checkbox-box .p-icon {
