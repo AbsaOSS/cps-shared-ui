@@ -753,19 +753,36 @@ describe('CpsTableComponent', () => {
         .mockImplementation((tag: string) =>
           tag === 'a' ? anchor : realCreateElement(tag)
         );
-      if (!URL.createObjectURL) {
-        (URL as any).createObjectURL = () => 'blob:mock';
+      const hadCreateObjectURL = Object.prototype.hasOwnProperty.call(
+        URL,
+        'createObjectURL'
+      );
+      const originalCreateObjectURL = (URL as any).createObjectURL;
+      const urlSpy = jest.fn().mockReturnValue('blob:mock');
+      Object.defineProperty(URL, 'createObjectURL', {
+        value: urlSpy,
+        configurable: true,
+        writable: true
+      });
+
+      try {
+        component.exportXLSX();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        expect(urlSpy).toHaveBeenCalled();
+        expect(anchor.download).toBe('my-export.xlsx');
+        expect(clickSpy).toHaveBeenCalled();
+      } finally {
+        if (hadCreateObjectURL) {
+          Object.defineProperty(URL, 'createObjectURL', {
+            value: originalCreateObjectURL,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          delete (URL as any).createObjectURL;
+        }
       }
-      const urlSpy = jest
-        .spyOn(URL, 'createObjectURL')
-        .mockReturnValue('blob:mock');
-
-      component.exportXLSX();
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      expect(urlSpy).toHaveBeenCalled();
-      expect(anchor.download).toBe('my-export.xlsx');
-      expect(clickSpy).toHaveBeenCalled();
     });
   });
 

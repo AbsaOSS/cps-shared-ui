@@ -69,6 +69,10 @@ describe('CpsThemeService', () => {
   });
 
   describe('animated transitions', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
     it('should add and schedule removal of the transition class when animated', () => {
       jest.useFakeTimers();
       service.setTheme('dark', true);
@@ -79,7 +83,6 @@ describe('CpsThemeService', () => {
       expect(
         document.documentElement.classList.contains('cps-theme-transition')
       ).toBe(false);
-      jest.useRealTimers();
     });
 
     it('should clear a pending transition timeout when toggling again quickly', () => {
@@ -90,7 +93,6 @@ describe('CpsThemeService', () => {
       expect(
         document.documentElement.classList.contains('cps-theme-transition')
       ).toBe(false);
-      jest.useRealTimers();
     });
 
     it('should not add the transition class when animated is false', () => {
@@ -110,7 +112,6 @@ describe('CpsThemeService', () => {
       expect(
         document.documentElement.classList.contains('cps-theme-transition')
       ).toBe(false);
-      jest.useRealTimers();
     });
 
     it('should animate setBaseTheme by default', () => {
@@ -123,7 +124,6 @@ describe('CpsThemeService', () => {
       expect(
         document.documentElement.classList.contains('cps-theme-transition')
       ).toBe(false);
-      jest.useRealTimers();
     });
 
     it('should animate setRadiusTheme by default', () => {
@@ -136,7 +136,6 @@ describe('CpsThemeService', () => {
       expect(
         document.documentElement.classList.contains('cps-theme-transition')
       ).toBe(false);
-      jest.useRealTimers();
     });
   });
 
