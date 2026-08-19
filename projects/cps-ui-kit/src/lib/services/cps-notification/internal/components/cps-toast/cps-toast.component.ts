@@ -92,7 +92,7 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   icon: CpsIconType = 'toast-error';
   srAnnouncement = '';
 
-  private _ngZone = inject(NgZone);
+  private readonly _zone = inject(NgZone);
 
   get isPolite(): boolean {
     if (this.data.type === CpsNotificationType.ERROR)
@@ -114,8 +114,6 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
   get resolvedHideTiming(): string {
     return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-in';
   }
-
-  private readonly _zone = inject(NgZone);
 
   ngOnInit(): void {
     this.maxWidth = convertSize(this.config.maxWidth || '');
