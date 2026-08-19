@@ -362,6 +362,7 @@ describe('CpsTooltipDirective', () => {
       divElement.triggerEventHandler('mouseenter', null);
       tick(300);
       expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      tick(16);
 
       window.dispatchEvent(new Event('scroll'));
 
