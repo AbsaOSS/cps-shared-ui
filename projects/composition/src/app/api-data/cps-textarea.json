@@ -223,16 +223,6 @@
                         "description": "Callback to invoke when the component receives focus."
                     },
                     {
-                        "name": "prefixIconClicked",
-                        "parameters": [
-                            {
-                                "name": "value",
-                                "type": "any"
-                            }
-                        ],
-                        "description": "Callback to invoke when the prefixIcon is clicked."
-                    },
-                    {
                         "name": "blurred",
                         "parameters": [
                             {
