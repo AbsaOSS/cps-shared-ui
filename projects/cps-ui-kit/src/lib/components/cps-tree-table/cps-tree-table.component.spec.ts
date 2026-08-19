@@ -1886,13 +1886,17 @@ describe('CpsTreeTableComponent', () => {
     it('should do nothing when minWidthForBodyOnly is true', () => {
       component.minWidthForBodyOnly = true;
       component.minWidth = '500px';
-      expect(() => (component as any)._setMinWidthOverall()).not.toThrow();
+      const setStyleSpy = jest.spyOn((component as any).renderer, 'setStyle');
+      (component as any)._setMinWidthOverall();
+      expect(setStyleSpy).not.toHaveBeenCalled();
     });
 
     it('should do nothing when minWidth is not set', () => {
       component.minWidthForBodyOnly = false;
       component.minWidth = '';
-      expect(() => (component as any)._setMinWidthOverall()).not.toThrow();
+      const setStyleSpy = jest.spyOn((component as any).renderer, 'setStyle');
+      (component as any)._setMinWidthOverall();
+      expect(setStyleSpy).not.toHaveBeenCalled();
     });
 
     it('should set min-width on the scrollable wrapper, paginator, loading overlay and header when present', () => {

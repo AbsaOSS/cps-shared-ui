@@ -350,8 +350,12 @@ describe('CpsButtonToggleComponent', () => {
     });
 
     it('should recompute equal widths once document fonts are ready', async () => {
+      let resolveFontsReady: () => void = () => {};
+      const fontsReady = new Promise<void>((resolve) => {
+        resolveFontsReady = resolve;
+      });
       Object.defineProperty(document, 'fonts', {
-        value: { ready: Promise.resolve() },
+        value: { ready: fontsReady },
         configurable: true
       });
 
@@ -361,6 +365,9 @@ describe('CpsButtonToggleComponent', () => {
       f.componentRef.setInput('ariaLabel', 'Toggle group');
       f.componentRef.setInput('options', OPTIONS);
       f.detectChanges();
+
+      expect(setEqualSpy).not.toHaveBeenCalled();
+      resolveFontsReady();
 
       await Promise.resolve();
       await Promise.resolve();

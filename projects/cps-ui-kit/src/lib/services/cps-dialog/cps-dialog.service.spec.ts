@@ -470,7 +470,7 @@ describe('CpsDialogService', () => {
       expect(instance?.visible).toBe(false);
     });
 
-    it('should omit elementInjector when it is the same instance as the environment injector', () => {
+    it('should successfully open a dialog when injector and environmentInjector are the same instance', () => {
       const envInjector = TestBed.inject(EnvironmentInjector);
       const sameInjectorService = new CpsDialogService(
         realAppRef,

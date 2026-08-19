@@ -853,6 +853,7 @@ describe('CpsAutocompleteComponent', () => {
       component.onBeforeOptionsHidden(CpsMenuHideReason.SCROLL);
 
       expect(component.clearInput).not.toHaveBeenCalled();
+      expect(component.isOpened).toBe(false);
       discardPeriodicTasks();
     }));
 
@@ -865,6 +866,7 @@ describe('CpsAutocompleteComponent', () => {
       component.onBeforeOptionsHidden(CpsMenuHideReason.RESIZE);
 
       expect(component.clearInput).not.toHaveBeenCalled();
+      expect(component.isOpened).toBe(false);
       discardPeriodicTasks();
     }));
   });
@@ -1000,8 +1002,8 @@ describe('CpsAutocompleteComponent', () => {
 
   describe('getOptionId', () => {
     it('should build an id for a primitive option', () => {
-      const id = component.getOptionId('opt1', 0);
-      expect(id).toContain('-0');
+      const id = component.getOptionId('opt1', 2);
+      expect(id).toBe(`${(component as any)._optionIdPrefix}-2`);
     });
   });
 

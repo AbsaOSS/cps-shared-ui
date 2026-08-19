@@ -141,23 +141,47 @@ describe('CpsThemeService', () => {
 
   describe('no-op when setting the same value', () => {
     it('should not re-apply theme when setting the same theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveThemePreference');
+
       service.setTheme('light', false);
+
       expect(service.theme()).toBe('light');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
     });
 
     it('should not re-apply color theme when setting the same color theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveColorThemePreference');
+
       service.setColorTheme('calm', false);
+
       expect(service.colorTheme()).toBe('calm');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
     });
 
     it('should not re-apply base theme when setting the same base theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveBaseThemePreference');
+
       service.setBaseTheme('default', false);
+
       expect(service.baseTheme()).toBe('default');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
     });
 
     it('should not re-apply radius theme when setting the same radius theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveRadiusThemePreference');
+
       service.setRadiusTheme('compact', false);
+
       expect(service.radiusTheme()).toBe('compact');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
     });
   });
 

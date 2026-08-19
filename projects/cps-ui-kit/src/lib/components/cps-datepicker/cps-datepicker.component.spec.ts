@@ -920,8 +920,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowDown when the cell two positions ahead is not disabled', () => {
@@ -930,8 +932,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should not block ArrowDown when there is no cell two positions ahead', () => {
@@ -940,8 +944,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowDown', cells[9]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowUp when the cell two positions back is disabled', () => {
@@ -951,8 +957,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowUp', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowUp when there is no cell two positions back', () => {
@@ -961,8 +969,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowUp', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowRight when the next sibling cell is disabled', () => {
@@ -972,8 +982,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowRight', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight when the next sibling cell is not disabled', () => {
@@ -982,8 +994,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowRight', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowRight at page boundary when the next decade is fully disabled', () => {
@@ -993,8 +1007,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', cells[9]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight at page boundary when the next decade has enabled years', () => {
@@ -1004,8 +1020,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowRight', cells[9]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowLeft when the previous sibling cell is disabled', () => {
@@ -1015,8 +1033,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowLeft', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowLeft at page boundary when the previous decade is fully disabled', () => {
@@ -1026,8 +1046,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowLeft at page boundary when the previous decade has enabled years', () => {
@@ -1037,8 +1059,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore non-year-cell elements in year view', () => {
@@ -1049,8 +1073,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', other);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -1079,8 +1105,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowDown when the cell three positions ahead is not disabled', () => {
@@ -1089,8 +1117,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowUp when the cell three positions back is disabled', () => {
@@ -1100,8 +1130,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowUp', cells[3]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowRight when the next sibling cell is disabled', () => {
@@ -1111,8 +1143,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowRight', cells[4]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowRight at page boundary when the next year is disabled', () => {
@@ -1122,8 +1156,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', cells[11]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight at page boundary when the next year is enabled', () => {
@@ -1133,8 +1169,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowRight', cells[11]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowLeft at page boundary when the previous year is disabled', () => {
@@ -1144,8 +1182,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowLeft at page boundary when the previous year is enabled', () => {
@@ -1155,8 +1195,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore non-month-cell elements in month view', () => {
@@ -1167,8 +1209,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', other);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -1188,8 +1232,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight at row end when the next month is enabled', () => {
@@ -1203,8 +1249,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowRight when next sibling span is disabled and next month is disabled', () => {
@@ -1218,8 +1266,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight when next sibling span is not disabled', () => {
@@ -1232,8 +1282,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowLeft at row start when the previous month is disabled', () => {
@@ -1247,8 +1299,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowLeft', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should check month 11 of prev year when moving left from January', () => {
@@ -1263,8 +1317,10 @@ describe('CpsDatepickerComponent', () => {
       });
       (component as any)._datepicker = dp;
       const event = keyEvent('ArrowLeft', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(dp.isMonthDisabled).toHaveBeenCalledWith(11, 2025);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowDown at last row when the next month is disabled', () => {
@@ -1278,8 +1334,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowDown', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowDown when adjacent row cell is disabled and next month is disabled', () => {
@@ -1293,8 +1351,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowDown', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowDown when adjacent row cell is not disabled', () => {
@@ -1307,8 +1367,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowDown', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowUp at first row when the previous month is disabled', () => {
@@ -1322,8 +1384,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowUp', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should check month 0 of next year when moving right from December', () => {
@@ -1338,8 +1402,10 @@ describe('CpsDatepickerComponent', () => {
       });
       (component as any)._datepicker = dp;
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(dp.isMonthDisabled).toHaveBeenCalledWith(0, 2027);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore elements without a data-date attribute', () => {
@@ -1349,8 +1415,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', div);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore non-arrow keys', () => {
@@ -1362,8 +1430,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('Enter', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
   });
 

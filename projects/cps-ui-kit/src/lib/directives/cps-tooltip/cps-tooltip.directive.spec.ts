@@ -330,7 +330,7 @@ describe('CpsTooltipDirective', () => {
 
       const detached = document.createElement('div');
       directive.onDocumentClick(detached);
-      tick();
+      tick(200);
 
       expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
     }));
@@ -344,6 +344,7 @@ describe('CpsTooltipDirective', () => {
       const outside = document.createElement('div');
       document.body.appendChild(outside);
       expect(() => directive.onDocumentClick(outside)).not.toThrow();
+      tick(200);
       expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
       outside.remove();
     }));
@@ -420,6 +421,7 @@ describe('CpsTooltipDirective', () => {
       tick(300);
       const popup = document.body.querySelector('.cps-tooltip');
       (directive as any)._createTooltip();
+      expect(document.body.querySelectorAll('.cps-tooltip').length).toBe(1);
       expect(document.body.querySelector('.cps-tooltip')).toBe(popup);
     }));
 

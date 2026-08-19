@@ -665,6 +665,7 @@ describe('CpsInputComponent', () => {
       f.componentRef.setInput('ariaLabel', 'Test input');
       f.componentRef.setInput('prefixIconClickable', true);
       f.detectChanges();
+      expect(consoleSpy).toHaveBeenCalledTimes(2);
       expect(consoleSpy).toHaveBeenCalledWith(
         expect.stringContaining('prefixIconAriaLabel')
       );

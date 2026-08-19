@@ -585,22 +585,23 @@ describe('CpsTabGroupComponent', () => {
 
       expect(component.backBtn).toBeTruthy();
       expect(component.forwardBtn).toBeTruthy();
-      Object.defineProperty(component.backBtn!.nativeElement, 'offsetWidth', {
-        value: 20,
-        configurable: true
-      });
-      Object.defineProperty(
-        component.forwardBtn!.nativeElement,
-        'offsetWidth',
-        { value: 20, configurable: true }
-      );
+      for (const btn of [component.backBtn!, component.forwardBtn!]) {
+        btn.nativeElement.style.padding = '0';
+        btn.nativeElement.style.borderWidth = '0';
+        Object.defineProperty(btn.nativeElement, 'offsetWidth', {
+          value: 20,
+          configurable: true
+        });
+      }
       setTabsListSizes({
         offsetWidth: 300,
         scrollWidth: 900,
         scrollLeft: 0,
         clientWidth: 300
       });
-      expect(() => component.navForward()).not.toThrow();
+
+      component.navForward();
+      expect(component.tabsList.nativeElement.scrollLeft).toBe(260);
     });
   });
 
