@@ -217,13 +217,6 @@ export class CpsTextareaComponent
   @Output() focused = new EventEmitter();
 
   /**
-   * Callback to invoke when the prefixIcon is clicked.
-   * @param {any}
-   * @group Emits
-   */
-  @Output() prefixIconClicked = new EventEmitter();
-
-  /**
    * Callback to invoke when the component loses focus.
    * @param {any}
    * @group Emits
