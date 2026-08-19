@@ -1,7 +1,17 @@
 :host {
   overflow-x: hidden;
 
-  ::ng-deep .treetable-page--sub-tabs {
-    padding-top: 0.625rem;
+  .spaced-from-table {
+    margin-top: 1rem;
+  }
+
+  ::ng-deep {
+    .treetable-page--sub-tabs {
+      padding-top: 0.625rem;
+    }
+
+    app-code-example {
+      margin-top: 0.0625rem;
+    }
   }
 }

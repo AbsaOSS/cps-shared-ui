@@ -16,7 +16,7 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { Subscription } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import {
   CpsMenuComponent,
   CpsMenuHideReason
@@ -35,18 +35,14 @@ import {
  * @group Types
  */
 export type CpsDatepickerAppearanceType =
-  | 'outlined'
-  | 'underlined'
-  | 'borderless';
+  'outlined' | 'underlined' | 'borderless';
 
 /**
  * CpsDatepickerDateFormat defines the display and input format of the date string.
  * @group Types
  */
 export type CpsDatepickerDateFormat =
-  | 'DD/MM/YYYY'
-  | 'MM/DD/YYYY'
-  | 'YYYY/MM/DD';
+  'DD/MM/YYYY' | 'MM/DD/YYYY' | 'YYYY/MM/DD';
 
 /**
  * CpsDatepickerComponent is an input component to provide date input.
@@ -312,8 +308,7 @@ export class CpsDatepickerComponent
         const cells = Array.from(target.parentElement?.children ?? []);
         const step = view === 'year' ? 2 : 3;
         const dest = cells[cells.indexOf(target) + (isUp ? -step : step)] as
-          | HTMLElement
-          | undefined;
+          HTMLElement | undefined;
         blocked = !!dest?.classList.contains('p-disabled');
       } else {
         const sibling = (

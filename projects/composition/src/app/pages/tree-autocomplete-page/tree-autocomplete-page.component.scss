@@ -1,13 +1,13 @@
-.tree-autocompletes-group {
-  gap: 1.5rem;
-  display: flex;
-  flex-direction: column;
-}
-
 .sync-val-example {
   display: flex;
   align-items: center;
   .sync-val {
     margin-left: 1.5rem;
   }
+}
+
+.tree-autocomplete-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
 }

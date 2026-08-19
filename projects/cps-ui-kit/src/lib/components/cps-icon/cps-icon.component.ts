@@ -160,13 +160,7 @@ export type CpsIconType = (typeof cpsIconNames)[number] | '';
  * @group Types
  */
 export type CpsIconSizeType =
-  | number
-  | string
-  | 'fill'
-  | 'xsmall'
-  | 'small'
-  | 'normal'
-  | 'large';
+  number | string | 'fill' | 'xsmall' | 'small' | 'normal' | 'large';
 
 /**
  * CpsIconComponent is a component that is used for icons.

@@ -2,7 +2,10 @@
   [componentData]="componentData"
   [services]="serviceData">
   <!-- Example of component's usage -->
-  <div class="scheduler-wrapper">
+  <app-code-example
+    label="Basic usage"
+    [htmlCode]="examples.basicUsage.html"
+    [tsCode]="examples.basicUsage.ts">
     <cps-scheduler
       label="Frequency"
       [disabled]="false"
@@ -15,5 +18,5 @@
       [showNotSet]="true"
       [showTimeZone]="true"
       infoTooltip="Provide frequency"></cps-scheduler>
-  </div>
+  </app-code-example>
 </app-component-docs-viewer>

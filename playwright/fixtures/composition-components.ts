@@ -150,7 +150,10 @@ export const components: ComponentEntry[] = [
     group: 'Menu',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
-      await page.locator('.example-content cps-button').first().click();
+      await page
+        .locator('.example-content cps-button:not(.code-example__copy)')
+        .first()
+        .click();
     }
   },
   {
@@ -160,7 +163,10 @@ export const components: ComponentEntry[] = [
     group: 'Menu',
     setup: async (page) => {
       await page.waitForSelector('.example-content');
-      await page.locator('.example-content cps-button').nth(2).click();
+      await page
+        .locator('.example-content cps-button:not(.code-example__copy)')
+        .nth(2)
+        .click();
     }
   },
   {
@@ -170,11 +176,11 @@ export const components: ComponentEntry[] = [
     setup: async (page) => {
       await page.waitForSelector('.example-content');
       const buttons = page
-        .locator('.example-content cps-button')
+        .locator('.example-content cps-button:not(.code-example__copy)')
         .filter({ hasNotText: /clear all/i });
       const count = await buttons.count();
       for (let i = 0; i < count; i++) {
-        await buttons.nth(i).click();
+        await buttons.nth(i).click({ force: true });
       }
     }
   },
@@ -198,18 +204,16 @@ export const components: ComponentEntry[] = [
     'Monthly',
     'Yearly',
     'Advanced'
-  ].map(
-    (tab): ComponentEntry => ({
-      route: '/scheduler',
-      name: tab,
-      selector: 'cps-scheduler',
-      group: 'Scheduler',
-      setup: async (page) => {
-        await page.getByTestId('schedule-type-toggle').getByText(tab).click();
-        await page.waitForSelector('cps-scheduler');
-      }
-    })
-  ),
+  ].map((tab): ComponentEntry => ({
+    route: '/scheduler',
+    name: tab,
+    selector: 'cps-scheduler',
+    group: 'Scheduler',
+    setup: async (page) => {
+      await page.getByTestId('schedule-type-toggle').getByText(tab).click();
+      await page.waitForSelector('cps-scheduler');
+    }
+  })),
   {
     route: '/select',
     name: 'Select',
@@ -240,19 +244,22 @@ export const components: ComponentEntry[] = [
     'Table 7',
     'Table 8',
     'Table 9',
-    'Table 10'
-  ].map(
-    (tab): ComponentEntry => ({
-      route: '/table',
-      name: tab,
-      selector: 'cps-table',
-      group: 'Table',
-      setup: async (page) => {
-        await page.getByRole('tab', { name: tab, exact: true }).click();
-        await page.waitForSelector('cps-table');
-      }
-    })
-  ),
+    'Table 10',
+    'Table 11',
+    'Table 12',
+    'Table 13',
+    'Table 14',
+    'Table 15'
+  ].map((tab): ComponentEntry => ({
+    route: '/table',
+    name: tab,
+    selector: 'cps-table',
+    group: 'Table',
+    setup: async (page) => {
+      await page.getByRole('tab', { name: tab, exact: true }).click();
+      await page.waitForSelector('cps-table');
+    }
+  })),
   { route: '/tag', name: 'Tag', selector: 'cps-tag' },
   { route: '/textarea', name: 'Textarea', selector: 'cps-textarea' },
   {
@@ -301,19 +308,22 @@ export const components: ComponentEntry[] = [
     'Tree table 7',
     'Tree table 8',
     'Tree table 9',
-    'Tree table 10'
-  ].map(
-    (tab): ComponentEntry => ({
-      route: '/tree-table',
-      name: tab,
-      selector: 'cps-tree-table',
-      group: 'Tree table',
-      setup: async (page) => {
-        await page.getByRole('tab', { name: tab, exact: true }).click();
-        await page.waitForSelector('cps-tree-table');
-      }
-    })
-  )
+    'Tree table 10',
+    'Tree table 11',
+    'Tree table 12',
+    'Tree table 13',
+    'Tree table 14',
+    'Tree table 15'
+  ].map((tab): ComponentEntry => ({
+    route: '/tree-table',
+    name: tab,
+    selector: 'cps-tree-table',
+    group: 'Tree table',
+    setup: async (page) => {
+      await page.getByRole('tab', { name: tab, exact: true }).click();
+      await page.waitForSelector('cps-tree-table');
+    }
+  }))
 ];
 
 const EXTRA_PAGE_ROUTES = [

@@ -1,34 +1,43 @@
 <div
   #mask
-  [ngClass]="{
-    'cps-dialog-mask': true,
-    'cps-dialog-overlay': config.modal !== false,
-    'cps-dialog-overlay-enter':
-      config.modal !== false && !config.blurredBackground,
-    'cps-dialog-blurred-overlay cps-dialog-blurred-overlay-enter':
-      config.modal !== false && config.blurredBackground,
-    'cps-dialog-left': position === 'left',
-    'cps-dialog-right': position === 'right',
-    'cps-dialog-top': position === 'top',
-    'cps-dialog-bottom': position === 'bottom',
-    'cps-dialog-top-left': position === 'topleft' || position === 'top-left',
-    'cps-dialog-top-right': position === 'topright' || position === 'top-right',
-    'cps-dialog-bottom-left':
-      position === 'bottomleft' || position === 'bottom-left',
-    'cps-dialog-bottom-right':
-      position === 'bottomright' || position === 'bottom-right'
-  }"
+  data-testid="cps-dialog-mask"
+  class="cps-dialog-mask"
+  [class.cps-dialog-overlay]="config.modal !== false"
+  [class.cps-dialog-overlay-enter]="
+    config.modal !== false && !config.blurredBackground
+  "
+  [class.cps-dialog-blurred-overlay]="
+    config.modal !== false && config.blurredBackground
+  "
+  [class.cps-dialog-blurred-overlay-enter]="
+    config.modal !== false && config.blurredBackground
+  "
+  [class.cps-dialog-left]="position === 'left'"
+  [class.cps-dialog-right]="position === 'right'"
+  [class.cps-dialog-top]="position === 'top'"
+  [class.cps-dialog-bottom]="position === 'bottom'"
+  [class.cps-dialog-top-left]="
+    position === 'topleft' || position === 'top-left'
+  "
+  [class.cps-dialog-top-right]="
+    position === 'topright' || position === 'top-right'
+  "
+  [class.cps-dialog-bottom-left]="
+    position === 'bottomleft' || position === 'bottom-left'
+  "
+  [class.cps-dialog-bottom-right]="
+    position === 'bottomright' || position === 'bottom-right'
+  "
   [class]="config.maskStyleClass || ''">
   @if (visible) {
     <div
       #container
-      [ngClass]="{
-        'cps-dialog': true,
-        'cps-dialog-resizable': resizable,
-        'cps-dialog-draggable': draggable && !maximized,
-        'cps-dialog-dragging': dragging,
-        'cps-dialog-maximized': maximized
-      }"
+      data-testid="cps-dialog"
+      class="cps-dialog"
+      [class.cps-dialog-resizable]="resizable"
+      [class.cps-dialog-draggable]="draggable && !maximized"
+      [class.cps-dialog-dragging]="dragging"
+      [class.cps-dialog-maximized]="maximized"
       [ngStyle]="config.style"
       [class]="config.styleClass || ''"
       [@animation]="{
@@ -55,18 +64,20 @@
       @if (config.showHeader !== false) {
         <div
           #header
+          data-testid="cps-dialog-header"
           class="cps-dialog-header"
-          [ngClass]="{
-            'cps-dialog-header-left-bordered':
-              config.showHeaderLeftBorder !== false,
-            'cps-dialog-header-bottom-bordered':
-              config.showHeaderBottomBorder !== false
-          }"
+          [class.cps-dialog-header-left-bordered]="
+            config.showHeaderLeftBorder !== false
+          "
+          [class.cps-dialog-header-bottom-bordered]="
+            config.showHeaderBottomBorder !== false
+          "
           (mousedown)="initDrag($event)">
           @if (draggable && !maximized) {
             <cps-icon
               #dragHandle
               class="cps-dialog-drag-handle"
+              data-testid="cps-dialog-drag-handle"
               icon="dots"
               role="button"
               tabindex="0"
@@ -77,7 +88,9 @@
             </cps-icon>
           }
           <div class="cps-dialog-header-left">
-            <div class="cps-dialog-header-icon">
+            <div
+              class="cps-dialog-header-icon"
+              data-testid="cps-dialog-header-icon">
               @if (config.headerIcon) {
                 <cps-icon
                   [icon]="config.headerIcon"
@@ -85,10 +98,14 @@
                 </cps-icon>
               }
             </div>
-            <span class="cps-dialog-header-title">{{
-              config.headerTitle
-            }}</span>
-            <div class="cps-dialog-header-info-circle">
+            <span
+              class="cps-dialog-header-title"
+              data-testid="cps-dialog-header-title"
+              >{{ config.headerTitle }}</span
+            >
+            <div
+              class="cps-dialog-header-info-circle"
+              data-testid="cps-dialog-header-info-circle">
               @if (config.headerInfoTooltip) {
                 <cps-info-circle
                   size="small"
@@ -102,6 +119,7 @@
             @if (maximizable) {
               <cps-button
                 class="cps-dialog-header-action-button"
+                data-testid="cps-dialog-maximize-btn"
                 [icon]="maximized ? 'minimize' : 'maximize'"
                 [ariaLabel]="maximized ? 'Minimize dialog' : 'Maximize dialog'"
                 size="small"
@@ -114,6 +132,7 @@
             @if (config.showCloseBtn !== false) {
               <cps-button
                 class="cps-dialog-header-action-button"
+                data-testid="cps-dialog-close-btn"
                 icon="close-x-2"
                 ariaLabel="Close dialog"
                 size="small"
@@ -130,6 +149,7 @@
       <div
         #content
         class="cps-dialog-content"
+        data-testid="cps-dialog-content"
         [ngStyle]="config.contentStyle"
         [class]="config.contentStyleClass || ''">
         <ng-template cpsDialogContent></ng-template>
@@ -137,6 +157,7 @@
       @if (resizable && !maximized) {
         <div
           class="cps-dialog-resizable-handle"
+          data-testid="cps-dialog-resize-handle"
           style="z-index: 90"
           tabindex="0"
           role="button"
@@ -147,6 +168,7 @@
           (keyup)="onResizeHandleKeyup($event)">
           <span
             class="cps-dialog-resizable-handle-grip"
+            data-testid="cps-dialog-resize-handle-grip"
             aria-hidden="true"></span>
         </div>
       }

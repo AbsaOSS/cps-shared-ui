@@ -14,14 +14,13 @@ import {
   CpsIconComponent,
   type CpsIconType
 } from '../../../../../components/cps-icon/cps-icon.component';
-import { CommonModule } from '@angular/common';
 import { convertSize } from '../../../../../utils/internal/size-utils/size-utils';
 import {
   CpsNotificationAppearance,
-  CpsNotificationConfig
+  type CpsNotificationConfig
 } from '../../../utils/cps-notification-config';
 import {
-  CpsNotificationData,
+  type CpsNotificationData,
   CpsNotificationType
 } from '../../../utils/internal/cps-notification-data';
 import {
@@ -37,7 +36,7 @@ import {
 } from '../../../../../utils/internal/motion-utils/motion-utils';
 
 @Component({
-  imports: [CommonModule, CpsButtonComponent, CpsIconComponent],
+  imports: [CpsButtonComponent, CpsIconComponent],
   selector: 'cps-toast',
   templateUrl: './cps-toast.component.html',
   styleUrls: ['./cps-toast.component.scss'],
@@ -116,6 +115,8 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
     return prefersReducedMotion() ? REDUCED_MOTION_DURATION : '200ms ease-in';
   }
 
+  private readonly _zone = inject(NgZone);
+
   ngOnInit(): void {
     this.maxWidth = convertSize(this.config.maxWidth || '');
     this.filled = this.config.appearance === CpsNotificationAppearance.FILLED;
@@ -153,7 +154,7 @@ export class CpsToastComponent implements OnInit, AfterViewInit, OnDestroy {
 
   initiateTimeout() {
     if (this.config.timeout === 0) return;
-    this._ngZone.runOutsideAngular(() => {
+    this._zone.runOutsideAngular(() => {
       this.timeout = setTimeout(() => {
         this.close();
       }, this.config.timeout || 5000);

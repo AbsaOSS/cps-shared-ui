@@ -1,19 +1,19 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <h2 class="section-title">
-    File upload component with the dependency on selected file extension
-  </h2>
-  <div class="section-body">
-    <p>
+  <app-code-example
+    label="File upload component with the dependency on selected file extension"
+    [htmlCode]="examples.dependentOnSelectedExtension.html"
+    [tsCode]="examples.dependentOnSelectedExtension.ts">
+    <div class="file-upload-with-selector">
       <cps-button-toggle
         label="File extension"
         [options]="fileUploadOptions"
         [value]="selectedFileUploadType.value"
         (valueChanged)="onFileExtensionChanged($event)">
       </cps-button-toggle>
-      <br />
       <cps-file-upload
         #fileUpload
+        data-testid="extension-dependent-file-upload"
         [extensions]="[selectedFileUploadType.value]"
         [fileDesc]="selectedFileUploadType!.label || ''"
         width="25rem"
@@ -22,36 +22,53 @@
         (fileUploaded)="onFileUploaded($event)"
         (uploadedFileRemoved)="onUploadedFileRemoved($event)">
       </cps-file-upload>
-    </p>
-    <cps-divider />
-  </div>
+    </div>
+  </app-code-example>
 
-  <h2 class="section-title">File upload component with extra info</h2>
-  <div class="section-body">
-    <p>
-      <cps-file-upload
-        [extensions]="['.jpg', '.png', 'pdf']"
-        [fileInfo]="fileInfo"
-        fileDesc="Pictures or PDFs"
-        ariaLabel="Upload pictures or PDFs"
-        width="31.25rem"
-        fileNameTooltipOffset="0.9375rem"
-        [fileProcessingCallback]="processUploadedFile"
-        (fileProcessingFailed)="onFileProcessingFailed($event)"
-        (fileProcessingCancelled)="onFileProcessingCancelled($event)"
-        (fileUploadFailed)="onFileUploadFailed($event)"
-        (fileUploaded)="onFileUploaded($event)"
-        (fileProcessed)="onFileProcessed($event)"
-        (uploadedFileRemoved)="onUploadedFileRemoved($event)">
-      </cps-file-upload>
-    </p>
-    <cps-divider />
-  </div>
+  <app-code-example
+    label="File upload component with extra info"
+    [htmlCode]="examples.withExtraInfo.html"
+    [tsCode]="examples.withExtraInfo.ts">
+    <cps-file-upload
+      data-testid="extra-info-file-upload"
+      [extensions]="['.jpg', '.png', 'pdf']"
+      [fileInfo]="fileInfo"
+      fileDesc="Pictures or PDFs"
+      ariaLabel="Upload pictures or PDFs"
+      width="31.25rem"
+      fileNameTooltipOffset="0.9375rem"
+      [fileProcessingCallback]="processUploadedFile"
+      (fileProcessingFailed)="onFileProcessingFailed($event)"
+      (fileProcessingCancelled)="onFileProcessingCancelled($event)"
+      (fileUploadFailed)="onFileUploadFailed($event)"
+      (fileUploaded)="onFileUploaded($event)"
+      (fileProcessed)="onFileProcessed($event)"
+      (uploadedFileRemoved)="onUploadedFileRemoved($event)">
+    </cps-file-upload>
+  </app-code-example>
 
-  <h2 class="section-title">Disabled file upload component</h2>
-  <div class="section-body">
-    <p>
+  <app-code-example
+    label="File upload component with a failing processing callback"
+    [htmlCode]="examples.failingProcessingCallback.html"
+    [tsCode]="examples.failingProcessingCallback.ts">
+    <cps-file-upload
+      data-testid="failing-processing-file-upload"
+      [extensions]="['.jpg', '.png', 'pdf']"
+      fileDesc="Pictures or PDFs"
+      width="31.25rem"
+      [fileProcessingCallback]="processFailingUploadedFile"
+      (fileProcessingFailed)="onFileProcessingFailed($event)"
+      (fileUploaded)="onFileUploaded($event)">
+    </cps-file-upload>
+  </app-code-example>
+
+  <app-code-example
+    label="Disabled file upload component"
+    [htmlCode]="examples.disabledFileUpload.html"
+    [tsCode]="examples.disabledFileUpload.ts">
+    <div class="file-upload-with-toggle">
       <cps-file-upload
+        data-testid="disabled-file-upload"
         [extensions]="['.jpg', '.png', 'pdf']"
         [fileInfo]="fileInfo"
         fileDesc="Pictures or PDFs"
@@ -66,11 +83,11 @@
         (fileProcessed)="onFileProcessed($event)"
         (uploadedFileRemoved)="onUploadedFileRemoved($event)">
       </cps-file-upload>
-    </p>
-    <cps-button
-      label="Toggle disabled"
-      (clicked)="toggleDisabled()"
-      size="small">
-    </cps-button>
-  </div>
+      <cps-button
+        label="Toggle disabled"
+        (clicked)="toggleDisabled()"
+        size="small">
+      </cps-button>
+    </div>
+  </app-code-example>
 </app-component-docs-viewer>

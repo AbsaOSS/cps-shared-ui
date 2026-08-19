@@ -1,6 +1,7 @@
 @if (render) {
   <div
     class="cps-menu-container"
+    data-testid="cps-menu-container"
     [class.cps-menu-no-arrow]="!withArrow"
     [class]="containerClass"
     (mousedown)="onOverlayClick($event)"
@@ -15,21 +16,24 @@
     (@animation.done)="onAnimationEnd($event)"
     (mouseleave)="containerMouseLeave.emit($event)">
     @if (withArrow) {
-      <div class="cps-menu-arrow-bridge"></div>
-      <div class="cps-menu-arrow" #menuArrow></div>
+      <div
+        class="cps-menu-arrow-bridge"
+        data-testid="cps-menu-arrow-bridge"></div>
+      <div class="cps-menu-arrow" data-testid="cps-menu-arrow" #menuArrow></div>
     }
-    <div (mousedown)="onContentClick()">
+    <div data-testid="cps-menu-body" (mousedown)="onContentClick()">
       @if (items.length < 1) {
         <ng-content></ng-content>
       }
       @if (items.length > 0) {
         <div
           class="cps-menu-content"
+          data-testid="cps-menu-content"
           [class.cps-menu-content-compressed]="compressed"
           role="menu"
           [attr.aria-label]="ariaLabel || header || null">
           @if (header && !compressed) {
-            <div class="cps-menu-header">
+            <div class="cps-menu-header" data-testid="cps-menu-header">
               {{ header }}
             </div>
           }
@@ -37,6 +41,7 @@
             @if (!item.url) {
               <a
                 role="menuitem"
+                [attr.data-testid]="'cps-menu-item-' + i"
                 [class]="itemsClasses[i]"
                 tabindex="-1"
                 [attr.aria-label]="item.ariaLabel || null"
@@ -57,6 +62,7 @@
             @if (item.url && item.url.startsWith('/')) {
               <a
                 role="menuitem"
+                [attr.data-testid]="'cps-menu-item-' + i"
                 [class]="itemsClasses[i]"
                 tabindex="-1"
                 [attr.aria-label]="item.ariaLabel || null"
@@ -82,6 +88,7 @@
             @if (item.url && !item.url.startsWith('/')) {
               <a
                 role="menuitem"
+                [attr.data-testid]="'cps-menu-item-' + i"
                 [class]="itemsClasses[i]"
                 tabindex="-1"
                 [attr.aria-label]="item.ariaLabel || null"
@@ -114,7 +121,10 @@
 <ng-template #itemTemplate let-item="item">
   @if (!item.loading) {
     @if (withIcons) {
-      <div class="cps-menu-item-icon" aria-hidden="true">
+      <div
+        class="cps-menu-item-icon"
+        data-testid="cps-menu-item-icon"
+        aria-hidden="true">
         @if (item.icon) {
           <cps-icon
             [icon]="item.icon"
@@ -123,14 +133,26 @@
         }
       </div>
     }
-    <div class="cps-menu-item-content">
-      <span class="cps-menu-item-content-title">{{ item.title }}</span>
+    <div class="cps-menu-item-content" data-testid="cps-menu-item-content">
+      <span
+        class="cps-menu-item-content-title"
+        data-testid="cps-menu-item-title"
+        >{{ item.title }}</span
+      >
       @if (item.desc && !compressed) {
-        <span class="cps-menu-item-content-desc">{{ item.desc }}</span>
+        <span
+          class="cps-menu-item-content-desc"
+          data-testid="cps-menu-item-desc"
+          >{{ item.desc }}</span
+        >
       }
     </div>
   } @else {
-    <span class="cps-menu-item-spinner" role="status" aria-label="Loading">
+    <span
+      class="cps-menu-item-spinner"
+      data-testid="cps-menu-item-spinner"
+      role="status"
+      aria-label="Loading">
       <cps-progress-circular
         strokeWidth="0.125rem"
         [color]="compressed ? 'prepared-darken2' : 'calm'"

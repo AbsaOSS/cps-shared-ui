@@ -1,6 +1,7 @@
 <p-treeTable
   #primengTreeTable
   ttWithUnsort
+  data-testid="cps-treetable"
   [pt]="treeTablePassthrough"
   [class.cps-treetable-loading]="loading"
   [class.cps-treetable-flex]="defScrollHeight === 'flex'"
@@ -50,7 +51,8 @@
   (onNodeExpand)="onNodeExpanded($event)"
   (onNodeCollapse)="onNodeCollapsed($event)"
   (onNodeSelect)="onNodeSelected($event)"
-  (onNodeUnselect)="onNodeUnselected($event)">
+  (onNodeUnselect)="onNodeUnselected($event)"
+  (onColResize)="onColumnResized($event)">
   @if (colgroupTemplate) {
     <ng-template pTemplate="colgroup">
       <ng-container *ngTemplateOutlet="colgroupTemplate"></ng-container>
@@ -62,17 +64,27 @@
         <ng-container *ngTemplateOutlet="toolbarTemplate"></ng-container>
       }
       @if (!toolbarTemplate) {
-        <div class="cps-treetable-tbar-left">
+        <div
+          class="cps-treetable-tbar-left"
+          data-testid="cps-treetable-tbar-left">
           @if (toolbarIcon) {
-            <div class="cps-treetable-tbar-icon">
+            <div
+              class="cps-treetable-tbar-icon"
+              data-testid="cps-treetable-tbar-icon">
               <cps-icon
                 [icon]="toolbarIcon"
                 [color]="toolbarIconColor"></cps-icon>
             </div>
           }
-          <div class="cps-treetable-tbar-title">{{ toolbarTitle }}</div>
+          <div
+            class="cps-treetable-tbar-title"
+            data-testid="cps-treetable-tbar-title">
+            {{ toolbarTitle }}
+          </div>
           @if (showGlobalFilter) {
-            <div class="cps-treetable-tbar-global-filter">
+            <div
+              class="cps-treetable-tbar-global-filter"
+              data-testid="cps-treetable-tbar-global-filter">
               <cps-input
                 #globalFilterComp
                 ariaLabel="Global filter"
@@ -89,9 +101,13 @@
             </div>
           }
         </div>
-        <div class="cps-treetable-tbar-right">
+        <div
+          class="cps-treetable-tbar-right"
+          data-testid="cps-treetable-tbar-right">
           @if (showRemoveBtnOnSelect && selectedRows.length > 0) {
-            <div class="cps-treetable-tbar-btn-on-select">
+            <div
+              class="cps-treetable-tbar-btn-on-select"
+              data-testid="cps-treetable-tbar-remove-btn">
               <cps-button
                 label="Remove"
                 [disabled]="removeBtnOnSelectDisabled"
@@ -104,7 +120,9 @@
             </div>
           }
           @if (showAdditionalBtnOnSelect && selectedRows.length > 0) {
-            <div class="cps-treetable-tbar-btn-on-select">
+            <div
+              class="cps-treetable-tbar-btn-on-select"
+              data-testid="cps-treetable-tbar-additional-btn">
               <cps-button
                 [label]="additionalBtnOnSelectTitle"
                 [disabled]="additionalBtnOnSelectDisabled"
@@ -117,7 +135,9 @@
             </div>
           }
           @if (showActionBtn) {
-            <div class="cps-treetable-tbar-action-btn">
+            <div
+              class="cps-treetable-tbar-action-btn"
+              data-testid="cps-treetable-tbar-action-btn">
               <cps-button
                 [label]="actionBtnTitle"
                 [disabled]="actionBtnDisabled"
@@ -130,7 +150,9 @@
             </div>
           }
           @if (showExportBtn) {
-            <div class="cps-treetable-tbar-export-btn">
+            <div
+              class="cps-treetable-tbar-export-btn"
+              data-testid="cps-treetable-tbar-export-btn">
               <cps-button
                 label="Export"
                 [disabled]="exportBtnDisabled"
@@ -143,16 +165,20 @@
             </div>
           }
           @if (showColumnsToggleBtn && columns.length > 0) {
-            <table-column-visibility-toggle
-              [columns]="columns"
-              [selectedColumns]="selectedColumns"
-              [disabled]="columnsToggleBtnDisabled"
-              [colHeaderName]="colHeaderName"
-              (selectedColumnsChange)="onSelectedColumnsChange($event)">
-            </table-column-visibility-toggle>
+            <div data-testid="cps-treetable-tbar-columns-toggle">
+              <table-column-visibility-toggle
+                [columns]="columns"
+                [selectedColumns]="selectedColumns"
+                [disabled]="columnsToggleBtnDisabled"
+                [colHeaderName]="colHeaderName"
+                (selectedColumnsChange)="onSelectedColumnsChange($event)">
+              </table-column-visibility-toggle>
+            </div>
           }
           @if (showDataReloadBtn) {
-            <div class="cps-treetable-tbar-reload-btn">
+            <div
+              class="cps-treetable-tbar-reload-btn"
+              data-testid="cps-treetable-tbar-reload-btn">
               <cps-button
                 ariaLabel="Reload data"
                 icon="refresh"
@@ -186,6 +212,7 @@
         @if (selectable) {
           <th
             scope="col"
+            data-testid="cps-treetable-header-select-all-cell"
             cpsTTHdrSelectable
             cpsTTColResizable
             [cpsTTColResizableDisabled]="!resizableColumns"></th>
@@ -203,6 +230,9 @@
               @for (col of columns; track col) {
                 <th
                   scope="col"
+                  [attr.data-testid]="
+                    'cps-treetable-header-cell-' + col[colFieldName]
+                  "
                   [cpsTTColSortable]="col[colFieldName]"
                   [cpsTTColFilter]="col[colFieldName]"
                   [filterType]="
@@ -220,6 +250,9 @@
               @for (col of columns; track col) {
                 <th
                   scope="col"
+                  [attr.data-testid]="
+                    'cps-treetable-header-cell-' + col[colFieldName]
+                  "
                   [cpsTTColSortable]="col[colFieldName]"
                   cpsTTColResizable
                   [cpsTTColResizableDisabled]="!resizableColumns">
@@ -233,6 +266,9 @@
               @for (col of columns; track col) {
                 <th
                   scope="col"
+                  [attr.data-testid]="
+                    'cps-treetable-header-cell-' + col[colFieldName]
+                  "
                   [cpsTTColFilter]="col[colFieldName]"
                   [filterType]="
                     col[colFilterTypeName] ??
@@ -249,6 +285,9 @@
               @for (col of columns; track col) {
                 <th
                   scope="col"
+                  [attr.data-testid]="
+                    'cps-treetable-header-cell-' + col[colFieldName]
+                  "
                   cpsTTColResizable
                   [cpsTTColResizableDisabled]="!resizableColumns">
                   {{ col[colHeaderName] }}
@@ -261,6 +300,7 @@
           <th
             scope="col"
             class="cps-treetable-row-menu-cell"
+            data-testid="cps-treetable-header-row-menu-spacer"
             cpsTTColResizable
             [cpsTTColResizableDisabled]="!resizableColumns">
             <span class="cps-sr-only">Row actions</span>
@@ -278,6 +318,7 @@
     let-rowIndex="rowIndex">
     <tr
       [ttRow]="rowNode"
+      [attr.data-testid]="'cps-treetable-row-' + nodeTestKey(rowNode)"
       [class.cps-treetable-row-selected]="
         selectable && primengTreeTable.isSelected(rowNode.node)
       ">
@@ -285,7 +326,11 @@
         <span class="cps-table-row-drag-handle" pReorderableRowHandle>☰</span>
       </td> -->
       @if (selectable) {
-        <td [cpsTTRowSelectable]="rowNode"></td>
+        <td
+          [attr.data-testid]="
+            'cps-treetable-row-select-cell-' + nodeTestKey(rowNode)
+          "
+          [cpsTTRowSelectable]="rowNode"></td>
       }
       @if (bodyTemplate) {
         <ng-container
@@ -308,18 +353,37 @@
                 <td
                   class="cps-treetable-html-cell"
                   [cpsTTRowToggler]="rowNode"
+                  [attr.data-testid]="
+                    'cps-treetable-cell-' +
+                    nodeTestKey(rowNode) +
+                    '-' +
+                    col[colFieldName]
+                  "
                   [innerHTML]="rowData[col[colFieldName]]"></td>
               }
               @if (i > 0) {
                 <td
                   class="cps-treetable-html-cell"
+                  [attr.data-testid]="
+                    'cps-treetable-cell-' +
+                    nodeTestKey(rowNode) +
+                    '-' +
+                    col[colFieldName]
+                  "
                   [innerHTML]="rowData[col[colFieldName]]"></td>
               }
             }
           } @else {
             @for (col of columns; track col; let i = $index) {
               @if (i === 0) {
-                <td [cpsTTRowToggler]="rowNode">
+                <td
+                  [cpsTTRowToggler]="rowNode"
+                  [attr.data-testid]="
+                    'cps-treetable-cell-' +
+                    nodeTestKey(rowNode) +
+                    '-' +
+                    col[colFieldName]
+                  ">
                   {{
                     col[colDateFormatName]
                       ? (rowData[col[colFieldName]]
@@ -329,7 +393,13 @@
                 </td>
               }
               @if (i > 0) {
-                <td>
+                <td
+                  [attr.data-testid]="
+                    'cps-treetable-cell-' +
+                    nodeTestKey(rowNode) +
+                    '-' +
+                    col[colFieldName]
+                  ">
                   {{
                     col[colDateFormatName]
                       ? (rowData[col[colFieldName]]
@@ -343,7 +413,11 @@
         }
       }
       @if (showRowMenu && (showRowRemoveButton || showRowEditButton)) {
-        <td class="cps-treetable-row-menu-cell">
+        <td
+          class="cps-treetable-row-menu-cell"
+          [attr.data-testid]="
+            'cps-treetable-row-menu-cell-' + nodeTestKey(rowNode)
+          ">
           <table-row-menu
             (editRowBtnClicked)="onEditRowClicked(rowNode.node)"
             (removeRowBtnClicked)="onRemoveRowClicked(rowNode.node)"
@@ -361,21 +435,31 @@
         colspan="100"
         role="status"
         class="cps-treetable-empty-message-td"
+        data-testid="cps-treetable-empty-message"
         [style.height]="emptyBodyHeight">
         {{ emptyMessage }}
       </td>
     </tr>
   </ng-template>
   <ng-template pTemplate="loadingicon">
-    <cps-loader [fullScreen]="false" opacity="0"></cps-loader>
+    <cps-loader
+      data-testid="cps-treetable-loading"
+      [fullScreen]="false"
+      [label]="loadingLabel"
+      opacity="0"></cps-loader>
   </ng-template>
   <ng-template pTemplate="paginatorleft">
-    <div class="cps-table-paginator-itms-per-page">
-      <span class="cps-table-paginator-items-per-page-title"
+    <div
+      class="cps-table-paginator-itms-per-page"
+      data-testid="cps-treetable-paginator-items-per-page">
+      <span
+        class="cps-table-paginator-items-per-page-title"
+        data-testid="cps-treetable-paginator-label"
         >Rows per page:
       </span>
       <cps-select
         ariaLabel="Set rows per page"
+        data-testid="cps-treetable-paginator-rows-select"
         width="4rem"
         [options]="rowOptions"
         [hideDetails]="true"

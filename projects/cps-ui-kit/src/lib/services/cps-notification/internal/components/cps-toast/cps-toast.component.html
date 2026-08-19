@@ -1,6 +1,7 @@
 <span
   [attr.role]="isPolite ? 'status' : 'alert'"
   aria-atomic="true"
+  data-testid="cps-toast-announcement"
   class="cps-sr-only">
   {{ srAnnouncement }}
 </span>
@@ -18,27 +19,37 @@
     }
   }"
   [style.max-width]="maxWidth"
+  data-testid="cps-toast"
   class="cps-toast-content">
-  <div class="cps-toast-icon" [class.filled]="filled" aria-hidden="true">
+  <div
+    class="cps-toast-icon"
+    data-testid="cps-toast-icon"
+    [class.filled]="filled"
+    aria-hidden="true">
     <cps-icon
       [icon]="icon"
       [color]="filled ? '#fff' : color"
       size="normal"></cps-icon>
   </div>
-  <div class="cps-toast-message">
-    <p class="cps-toast-message-header">{{ data.message || '' }}</p>
+  <div class="cps-toast-message" data-testid="cps-toast-message">
+    <p class="cps-toast-message-header" data-testid="cps-toast-message-header">
+      {{ data.message || '' }}
+    </p>
     @if (data.details) {
-      <p class="cps-toast-message-details">
+      <p
+        class="cps-toast-message-details"
+        data-testid="cps-toast-message-details">
         {{ data.details }}
       </p>
     }
   </div>
-  <div class="cps-toast-buttons">
+  <div class="cps-toast-buttons" data-testid="cps-toast-buttons">
     <cps-button
       (clicked)="close()"
       [color]="color"
       [ariaLabel]="closeAriaLabel"
       icon="close-x"
+      data-testid="cps-toast-close-button"
       class="cps-toast-close-button"
       width="2.5rem"
       type="borderless"></cps-button>

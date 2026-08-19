@@ -137,6 +137,7 @@
   .cps-tabs:not(.cps-tabs-subtabs) {
     border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.12);
     .cps-tabs-list .cps-tab {
+      min-height: calc(2.5rem + 0.1875rem);
       &.active:not(.disabled) {
         border-bottom: 0.1875rem solid var(--cps-color-surprise);
       }
@@ -157,7 +158,6 @@
 
   .cps-tabs.cps-tabs-subtabs {
     .cps-tabs-list .cps-tab {
-      height: 2.0625rem;
       background-color: #d7d7d759;
 
       &.active {
@@ -166,6 +166,10 @@
       &:hover:not(.disabled),
       &:focus-visible:not(.disabled) {
         color: var(--cps-color-calm);
+      }
+
+      .cps-tab-link {
+        padding: 0.3125rem;
       }
     }
   }

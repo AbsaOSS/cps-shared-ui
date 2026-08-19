@@ -18,20 +18,20 @@ import {
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { TreeNode } from '../../../primeng-temp/api/public_api';
+import type { TreeNode } from '../../../primeng-temp/api/public_api';
+import type { Tree } from '../../../primeng-temp/tree/public_api';
 import {
   generateUniqueId,
   logMissingAriaLabelError
 } from '../../../utils/internal/accessibility-utils/accessibility-utils';
 import { Subscription } from 'rxjs';
-import { Tree } from '../../../primeng-temp/tree/public_api';
 import { isEqual } from 'lodash-es';
 import type {
   CpsIconType,
   CpsIconSizeType
 } from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils/size-utils';
-import { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
 
@@ -411,12 +411,16 @@ export class CpsBaseTreeDropdownComponent
     this.optionsMap?.forEach((value) => {
       if (value.children) value.expanded = true;
     });
+    this._treeRefreshKey++;
+    this.treeList?.cd?.markForCheck();
   }
 
   collapseAll() {
     this.optionsMap?.forEach((value) => {
       if (value.children) value.expanded = false;
     });
+    this._treeRefreshKey++;
+    this.treeList?.cd?.markForCheck();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -14,7 +14,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { isEqual } from 'lodash-es';
 import { TreeModule } from '../../primeng-temp/tree/public_api';
-import { TreeNode } from '../../primeng-temp/api/public_api';
+import type { TreeNode } from '../../primeng-temp/api/public_api';
 import {
   CpsMenuComponent,
   CpsMenuHideReason
@@ -26,9 +26,7 @@ import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown
  * @group Types
  */
 export type CpsTreeAutocompleteAppearanceType =
-  | 'outlined'
-  | 'underlined'
-  | 'borderless';
+  'outlined' | 'underlined' | 'borderless';
 
 /**
  * CpsTreeAutocompleteComponent allows to choose items from hierarchical data dropdown and provides real-time suggestions when being typed.

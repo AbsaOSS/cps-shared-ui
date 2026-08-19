@@ -40,7 +40,7 @@
       }
     }
 
-    &.unselected {
+    &.unselected:not(.cps-tag--disabled) {
       border-color: var(--cps-color-text-light) !important;
     }
 

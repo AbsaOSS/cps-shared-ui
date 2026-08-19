@@ -1,10 +1,14 @@
-.menu-group {
-  gap: 2rem;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-  display: flex;
-  flex-direction: column;
+::ng-deep .cps-menu-container.menu-page-custom-container {
+  border: 0.125rem solid var(--cps-color-energy);
+}
+
+.last-hide-reason-example {
+  .last-hide-reason {
+    margin-top: 1rem;
+    &--empty {
+      opacity: 0;
+    }
+  }
 }
 
 .my-menu-content {

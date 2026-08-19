@@ -25,6 +25,7 @@ import {
 import type { TablePassThrough } from '../../primeng-temp/types/table/public_api';
 import type { PaginatorPassThrough } from '../../primeng-temp/types/paginator/public_api';
 import { SortEvent } from '../../primeng-temp/api/public_api';
+import { ObjectUtils } from '../../primeng-temp/utils/public_api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
@@ -220,6 +221,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * @group Props
    */
   @Input() loading = false;
+
+  /**
+   * Text shown alongside the loader while `loading` is true.
+   * @group Props
+   */
+  @Input() loadingLabel = 'Loading...';
 
   /**
    * Inline style of the table.
@@ -783,7 +790,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   private _buildTablePassthrough(): TablePassThrough {
     const pt: TablePassThrough = {};
-    if (!this.virtualScroll && this.scrollHeight) {
+    if (!this.virtualScroll) {
       pt.tableContainer = { tabindex: 0 };
     }
     if (this.paginator) {
@@ -874,6 +881,16 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   clearGlobalFilter() {
     this.globalFilterComp?.clear();
+  }
+
+  rowTestKey(item: any, rowIndex: number): string {
+    if (this.dataKey) {
+      const resolved = ObjectUtils.resolveFieldData(item, this.dataKey);
+      if (resolved !== null && resolved !== undefined && resolved !== '') {
+        return String(resolved);
+      }
+    }
+    return `${rowIndex}`;
   }
 
   onSelectionChanged(selection: any[]) {

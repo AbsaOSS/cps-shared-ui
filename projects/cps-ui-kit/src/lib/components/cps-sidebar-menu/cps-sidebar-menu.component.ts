@@ -128,6 +128,10 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
 
   private _pendingTouch = false;
 
+  // A click always fires mouseenter/focusin first, which would open the
+  // menu right before toggleMenu immediately closes it again. Consumed once.
+  private _openedByHoverOrFocus = false;
+
   onMenuItemTouchStart(): void {
     this._pendingTouch = true;
   }
@@ -159,6 +163,7 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
     }
     this.allMenus?.forEach((m) => m.hide());
     menu.show(null, event.currentTarget, 'tr');
+    this._openedByHoverOrFocus = true;
   }
 
   toggleMenu(
@@ -172,8 +177,13 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
 
     this.focusedItemWithMenu = item;
     if (menu.isVisible()) {
-      menu.hide();
+      if (this._openedByHoverOrFocus) {
+        this._openedByHoverOrFocus = false;
+      } else {
+        menu.hide();
+      }
     } else {
+      this._openedByHoverOrFocus = false;
       this.allMenus?.forEach((m) => m.hide());
       menu.show(null, event.currentTarget as HTMLElement, 'tr');
     }

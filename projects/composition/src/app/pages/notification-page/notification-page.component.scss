@@ -1,23 +1,10 @@
 :host {
-  .notification-btns-group {
-    gap: 1.875rem;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    flex-direction: column;
-
-    &-title {
-      font-size: 1.5rem;
-      color: var(--cps-color-depth);
-      border-bottom: 0.0625rem solid lightgrey;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      font-weight: 600;
-    }
+  .section-title {
+    color: var(--cps-color-depth);
+    margin-top: 0;
   }
-  .notification-btns-last-group {
-    padding-bottom: 0.75rem;
-    border-bottom: 0.0625rem solid lightgrey;
+
+  .section-title:not(:first-child) {
+    margin-top: 3rem;
   }
 }

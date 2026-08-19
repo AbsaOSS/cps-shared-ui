@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsTableComponent,
@@ -14,9 +14,13 @@ import {
   CpsTabChangeEvent,
   CpsColumnFilterMatchMode,
   CpsMenuItem,
-  CpsIconComponent
+  CpsIconComponent,
+  CpsSwitchComponent,
+  CpsNotificationService
 } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { tableExamples } from './table-page.examples';
 
 import ComponentData from '../../api-data/cps-table.json';
 import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
@@ -37,13 +41,19 @@ import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
     CpsTabComponent,
     CpsButtonToggleComponent,
     CpsIconComponent,
-    ComponentDocsViewerComponent
+    CpsSwitchComponent,
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
   host: { class: 'composition-page' }
 })
-export class TablePageComponent implements OnInit {
+export class TablePageComponent implements OnInit, OnDestroy {
+  private readonly _notifService = inject(CpsNotificationService);
+
+  readonly examples = tableExamples;
+
   selectedTabIndex = 0;
 
   dateMatchModes = [
@@ -67,7 +77,7 @@ export class TablePageComponent implements OnInit {
     {
       a: '<h1>hello</h1>',
       b: '<h2>world</h2>',
-      c: '<a href="https://www.github.com">link to github</a>'
+      c: '<a href="https://www.github.com">link to GitHub</a>'
     },
     {
       a: 'this is sanitized <script>console.log("pwned")</script>',
@@ -353,6 +363,19 @@ export class TablePageComponent implements OnInit {
 
   selCols: { [key: string]: any }[] = [];
 
+  customSortData = [
+    { name: 'Andrei', city: 'Tyumen' },
+    { name: 'Oleksandra', city: 'Kharkiv' },
+    { name: 'Lukas', city: 'Kosice' },
+    { name: 'Terrance', city: 'Johannesburg' },
+    { name: 'Michael', city: 'Nairobi' }
+  ];
+
+  customSortCols = [
+    { field: 'name', header: 'Name' },
+    { field: 'city', header: 'City' }
+  ];
+
   dataVirtual: {
     a: string;
     b: string;
@@ -378,6 +401,16 @@ export class TablePageComponent implements OnInit {
 
   colsHTML = this.colsVirtual.slice(0, 3);
 
+  lazyData: any[] = [];
+  lazyTotalRecords = 0;
+  lazyLoading = false;
+  lazyRows = 10;
+  private _lazyLoadTimeout?: ReturnType<typeof setTimeout>;
+  private _lastLazyFirst = -1;
+  private _lastLazyRows = -1;
+
+  manyRecordsForPaginator = false;
+
   componentData = ComponentData;
 
   customRowMenuItems: CpsMenuItem[] = [
@@ -400,6 +433,10 @@ export class TablePageComponent implements OnInit {
   ngOnInit(): void {
     this._genVirtualData();
     this.selCols = this.colsWithFilterType;
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this._lazyLoadTimeout);
   }
 
   private _genVirtualData() {
@@ -425,7 +462,7 @@ export class TablePageComponent implements OnInit {
   onActionBtnClicked() {
     this.isRemoveBtnVisible = !this.isRemoveBtnVisible;
     const visibilityStatus = this.isRemoveBtnVisible ? 'visible' : 'hidden';
-    alert(`'Remove' buttons are now ${visibilityStatus}`);
+    this._notifService.info(`'Remove' buttons are now ${visibilityStatus}`);
   }
 
   onRowsToRemove(rows: any[]) {
@@ -433,11 +470,13 @@ export class TablePageComponent implements OnInit {
   }
 
   onReloadBtnClicked() {
-    alert('Data reload button clicked');
+    this._notifService.info('Data reload button clicked');
   }
 
   onEditRowButtonClicked(item: any) {
-    alert(`Edit row button clicked. Item: ${JSON.stringify(item)}`);
+    this._notifService.info(
+      `Edit row button clicked. Item: ${JSON.stringify(item)}`
+    );
   }
 
   onRowsSelectionChanged(rows: any) {
@@ -450,5 +489,39 @@ export class TablePageComponent implements OnInit {
 
   changeTab({ newIndex }: CpsTabChangeEvent) {
     this.selectedTabIndex = newIndex;
+  }
+
+  onLazyLoad(event: { first?: number; rows?: number }) {
+    const first = event.first ?? 0;
+    const rows = event.rows ?? this.lazyRows;
+
+    if (first === this._lastLazyFirst && rows === this._lastLazyRows) return;
+    this._lastLazyFirst = first;
+    this._lastLazyRows = rows;
+
+    Promise.resolve().then(() => {
+      this.lazyLoading = true;
+      clearTimeout(this._lazyLoadTimeout);
+      this._lazyLoadTimeout = setTimeout(() => {
+        this.lazyTotalRecords = this.dataVirtual.length;
+        this.lazyData = this.dataVirtual.slice(first, first + rows);
+        this.lazyLoading = false;
+      }, 600);
+    });
+  }
+
+  onAdditionalBtnOnSelectClicked(rows: any[]) {
+    this._notifService.success(`Archive clicked for ${rows.length} row(s)`);
+  }
+
+  onCustomSort(event: { data: any[]; field?: string; order?: number }) {
+    const { data, field, order } = event;
+    if (!field) return;
+    data.sort((a, b) => {
+      const v1 = String(a[field] ?? '');
+      const v2 = String(b[field] ?? '');
+      const result = v1.length - v2.length || v1.localeCompare(v2);
+      return (order ?? 1) * result;
+    });
   }
 }

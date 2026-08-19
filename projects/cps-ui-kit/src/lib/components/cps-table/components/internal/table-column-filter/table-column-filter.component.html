@@ -1,4 +1,6 @@
-<div class="cps-table-col-filter">
+<div
+  class="cps-table-col-filter"
+  [attr.data-testid]="'cps-table-col-filter-' + field">
   <cps-menu
     #columnFilterMenu
     [withArrow]="false"
@@ -17,6 +19,7 @@
             <button
               type="button"
               class="cps-table-col-filter-close-btn"
+              data-testid="cps-table-col-filter-close-btn"
               aria-label="Close filter"
               (click)="onCloseClick()">
               <cps-icon icon="close-x" aria-hidden="true"></cps-icon>
@@ -27,6 +30,7 @@
       @if (isShowOperator) {
         <div class="cps-table-col-filter-menu-content-operator">
           <cps-select
+            data-testid="cps-table-col-filter-operator-select"
             ariaLabel="Select operator"
             [hideDetails]="true"
             [disabled]="!fieldConstraints || fieldConstraints.length < 2"
@@ -42,11 +46,18 @@
           track $index;
           let i = $index
         ) {
-          <div class="cps-table-col-filter-menu-content-constraint">
+          <div
+            class="cps-table-col-filter-menu-content-constraint"
+            [attr.data-testid]="
+              'cps-table-col-filter-constraint-' + field + '-' + i
+            ">
             @if (showMatchModes && currentMatchModes) {
               <cps-select
                 ariaLabel="Select match mode"
                 class="cps-table-col-filter-match-mode-select"
+                [attr.data-testid]="
+                  'cps-table-col-filter-match-mode-' + field + '-' + i
+                "
                 [hideDetails]="true"
                 [returnObject]="false"
                 [options]="currentMatchModes"
@@ -98,6 +109,7 @@
       <div class="cps-table-col-filter-buttonbar">
         @if (showClearButton) {
           <cps-button
+            data-testid="cps-table-col-filter-clear-btn"
             (clicked)="clearFilter()"
             type="borderless"
             color="calm"
@@ -106,6 +118,7 @@
         }
         @if (showApplyButton) {
           <cps-button
+            data-testid="cps-table-col-filter-apply-btn"
             (clicked)="applyFilter()"
             color="calm"
             size="small"
@@ -117,7 +130,9 @@
   <button
     type="button"
     class="cps-table-col-filter-menu-button"
+    [attr.data-testid]="'cps-table-col-filter-btn-' + field"
     [class.cps-table-col-filter-menu-button-active]="isFilterApplied"
+    [attr.data-testid]="'cps-table-col-filter-btn-' + field"
     [attr.aria-label]="
       isFilterApplied ? 'Filter applied, open filter menu' : 'Open filter menu'
     "

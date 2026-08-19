@@ -1,4 +1,57 @@
 <app-component-docs-viewer [componentData]="componentData">
   <!-- Example of component's usage -->
-  <cps-paginator [first]="0" [rows]="10" [totalRecords]="120"> </cps-paginator>
+  <app-code-example
+    label="Basic usage"
+    [htmlCode]="examples.basicUsage.html"
+    [tsCode]="examples.basicUsage.ts">
+    <cps-paginator
+      ariaLabel="Basic pagination"
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="120"
+      (pageChanged)="onPageChanged($event)">
+    </cps-paginator>
+  </app-code-example>
+
+  <app-code-example
+    label="Hides with a single page"
+    [htmlCode]="examples.singlePage.html"
+    [tsCode]="examples.singlePage.ts">
+    <cps-paginator
+      ariaLabel="Single-page pagination"
+      [first]="0"
+      [rows]="10"
+      [totalRecords]="manyRecords ? 120 : 5"
+      [alwaysShow]="false">
+    </cps-paginator>
+    <cps-switch
+      [(ngModel)]="manyRecords"
+      [class.spaced-from-paginator]="manyRecords"
+      label="Load enough records for multiple pages">
+    </cps-switch>
+  </app-code-example>
+
+  <app-code-example
+    label="Custom rows per page with reset on change"
+    [htmlCode]="examples.customRowsPerPage.html">
+    <cps-paginator
+      ariaLabel="Custom rows-per-page pagination"
+      [first]="0"
+      [rows]="5"
+      [totalRecords]="120"
+      [rowsPerPageOptions]="[5, 15, 30]"
+      [resetPageOnRowsChange]="true">
+    </cps-paginator>
+  </app-code-example>
+
+  <app-code-example
+    label="Custom background color"
+    [htmlCode]="examples.customBackground.html">
+    <cps-paginator
+      ariaLabel="Custom background pagination"
+      backgroundColor="#f0f4ff"
+      [rows]="10"
+      [totalRecords]="120">
+    </cps-paginator>
+  </app-code-example>
 </app-component-docs-viewer>

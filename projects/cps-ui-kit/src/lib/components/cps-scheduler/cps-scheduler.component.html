@@ -135,6 +135,7 @@
               Every working day at
               <cps-timepicker
                 ariaLabel="Time"
+                data-testid="daily-weekday-timepicker"
                 [disabled]="disabled || state.daily.subTab !== 'everyWeekDay'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -269,6 +270,7 @@
               month(s) at
               <cps-timepicker
                 ariaLabel="Time"
+                data-testid="monthly-day-timepicker"
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 [use24HourTime]="use24HourTime"
                 [mandatoryValue]="true"
@@ -436,6 +438,7 @@
               at
               <cps-timepicker
                 ariaLabel="Time"
+                data-testid="yearly-specific-day-timepicker"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthDay'
                 "
@@ -506,6 +509,7 @@
               <cps-select
                 ariaLabel="Select month"
                 width="7.5rem"
+                data-testid="yearly-specific-week-month-select"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "
@@ -519,6 +523,7 @@
               at
               <cps-timepicker
                 ariaLabel="Time"
+                data-testid="yearly-specific-week-timepicker"
                 [disabled]="
                   disabled || state.yearly.subTab !== 'specificMonthWeek'
                 "

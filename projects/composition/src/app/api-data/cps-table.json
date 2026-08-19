@@ -141,6 +141,14 @@
                         "description": "When enabled, a loader component is displayed."
                     },
                     {
+                        "name": "loadingLabel",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "string",
+                        "default": "Loading...",
+                        "description": "Text shown alongside the loader while  `loading`  is true."
+                    },
+                    {
                         "name": "tableStyle",
                         "optional": false,
                         "readonly": false,

@@ -7,24 +7,29 @@ import {
 
 import ComponentData from '../../api-data/cps-sidebar-menu.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
+import { CodeExampleComponent } from '../../components/code-example/code-example.component';
+import { sidebarMenuExamples } from './sidebar-menu-page.examples';
 
 @Component({
   selector: 'app-sidebar-menu-page',
   imports: [
     CpsSidebarMenuComponent,
     CpsIconComponent,
-    ComponentDocsViewerComponent
+    ComponentDocsViewerComponent,
+    CodeExampleComponent
   ],
   templateUrl: './sidebar-menu-page.component.html',
   styleUrls: ['./sidebar-menu-page.component.scss'],
   host: { class: 'composition-page' }
 })
 export class SidebarMenuPageComponent {
+  readonly examples = sidebarMenuExamples;
   items: CpsSidebarMenuItem[] = [
     {
       title: 'Dashboard',
       icon: 'grid',
-      url: '/'
+      url: '/',
+      target: '_blank'
     },
     {
       title: 'Favourites',

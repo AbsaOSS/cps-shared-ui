@@ -41,9 +41,12 @@ export class CpsTreeTableRowSelectableDirective implements OnInit, OnDestroy {
       pcRowCheckbox: { input: { 'aria-label': 'Select row', tabindex: '0' } }
     });
 
-    this.elementRef.nativeElement.appendChild(
-      this.checkboxCompRef.location.nativeElement
+    const checkboxEl = this.checkboxCompRef.location.nativeElement;
+    checkboxEl.setAttribute(
+      'data-testid',
+      'cps-treetable-row-selectable-checkbox'
     );
+    this.elementRef.nativeElement.appendChild(checkboxEl);
   }
 
   ngOnDestroy(): void {

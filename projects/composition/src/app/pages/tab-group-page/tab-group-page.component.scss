@@ -2,14 +2,6 @@
   .tabs-elems-group {
     margin-bottom: 0.25rem;
 
-    &-title {
-      font-size: 1.5rem;
-      color: var(--cps-color-depth);
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
     ::ng-deep .tab-example--center-aligned {
       .cps-tab-content-wrap {
         margin: 0 20%;

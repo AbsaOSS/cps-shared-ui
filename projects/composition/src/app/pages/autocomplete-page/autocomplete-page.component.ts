@@ -31,16 +31,31 @@ import { CommonModule } from '@angular/common';
 })
 export class AutocompletePageComponent implements OnInit {
   options = [
-    { name: 'New York', data: { code: 'NY' } },
-    { name: 'Prague', data: { code: 'PRG' }, info: 'Prague info' },
-    { name: 'Capetown', data: { code: 'CPT' }, info: 'Capetown info' },
-    { name: 'Rome', data: { code: 'RM' } },
-    { name: 'London', data: { code: 'LDN' }, info: 'London info' },
-    { name: 'Istanbul', data: { code: 'IST' } },
-    { name: 'Paris', data: { code: 'PRS' } },
-    { name: 'Tokyo', data: { code: 'TOK' } },
-    { name: 'Oslo', data: { code: 'OSL' }, info: 'Oslo info' },
-    { name: 'Berlin', data: { code: 'BER' } }
+    { name: 'New York', data: { code: 'NY' }, alias: 'NYC' },
+    {
+      name: 'Prague',
+      data: { code: 'PRG' },
+      info: 'Prague info',
+      alias: 'PRG'
+    },
+    {
+      name: 'Capetown',
+      data: { code: 'CPT' },
+      info: 'Capetown info',
+      alias: 'CPT'
+    },
+    { name: 'Rome', data: { code: 'RM' }, alias: 'ROM' },
+    {
+      name: 'London',
+      data: { code: 'LDN' },
+      info: 'London info',
+      alias: 'LDN'
+    },
+    { name: 'Istanbul', data: { code: 'IST' }, alias: 'IST' },
+    { name: 'Paris', data: { code: 'PRS' }, alias: 'PAR' },
+    { name: 'Tokyo', data: { code: 'TOK' }, alias: 'TOK' },
+    { name: 'Oslo', data: { code: 'OSL' }, info: 'Oslo info', alias: 'OSL' },
+    { name: 'Berlin', data: { code: 'BER' }, alias: 'BER' }
   ];
 
   syncOptions = [
@@ -56,6 +71,9 @@ export class AutocompletePageComponent implements OnInit {
   form!: FormGroup;
   syncVal: any = [];
   componentData = ComponentData;
+
+  emptyOptionIndexValue = this.options[0];
+  openOnClearValue = this.options[3];
 
   isSingleLoading = false;
   isMultiLoading = false;
@@ -79,7 +97,8 @@ export class AutocompletePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this._formBuilder.group({
-      requiredAutocomplete: [this.options[1], [Validators.required]]
+      requiredAutocomplete: [this.options[1], [Validators.required]],
+      hideDetailsAutocomplete: [null, [Validators.required]]
     });
 
     this.singleOptionsObservable$ = this._defineOptionsObservable(
