@@ -4,8 +4,7 @@
     "outDir": "../../out-tsc/spec",
     "rootDir": "./src/lib",
     "types": ["jest"],
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "resolveJsonModule": true
   },
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

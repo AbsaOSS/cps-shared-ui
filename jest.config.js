@@ -48,6 +48,7 @@ const coverageThreshold =
 
 module.exports = {
   roots: ['<rootDir>/projects'],
+  coverageDirectory: '<rootDir>/coverage',
   preset: 'jest-preset-angular',
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
