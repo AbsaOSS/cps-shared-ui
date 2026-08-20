@@ -348,4 +348,32 @@ describe('CpsExpansionPanelComponent', () => {
       expect(component.resolvedTransitionType).toBe('1ms');
     });
   });
+
+  describe('ngOnChanges color recomputation', () => {
+    it('should recompute cvtBorderColor when borderColor changes', () => {
+      fixture.componentRef.setInput('borderColor', 'primary');
+      fixture.detectChanges();
+      expect(component.cvtBorderColor).toBe('var(--cps-color-primary)');
+    });
+
+    it('should recompute cvtBackgroundColor when backgroundColor changes', () => {
+      fixture.componentRef.setInput('backgroundColor', 'primary');
+      fixture.detectChanges();
+      expect(component.cvtBackgroundColor).toBe('var(--cps-color-primary)');
+    });
+  });
+
+  describe('headerTitle accessibility warning', () => {
+    it('should log an error when headerTitle is empty', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      consoleSpy.mockClear();
+      fixture.componentRef.setInput('headerTitle', '');
+      fixture.detectChanges();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('headerTitle')
+      );
+    });
+  });
 });

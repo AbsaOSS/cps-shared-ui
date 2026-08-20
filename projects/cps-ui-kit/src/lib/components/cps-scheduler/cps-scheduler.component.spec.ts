@@ -786,6 +786,64 @@ describe('CpsSchedulerComponent', () => {
 
       expect(() => component.regenerateCron()).toThrow('Invalid cron type');
     });
+
+    it('should generate a cron expression for Hourly', () => {
+      component.setActiveScheduleType('Hourly');
+      component.state.hourly.minutes = 15;
+      component.state.hourly.hours = 2;
+      component.regenerateCron();
+      expect(component.cron).toBe('15 0/2 1/1 * ? *');
+    });
+
+    it('should generate a cron expression for Daily/everyWeekDay', () => {
+      component.setActiveScheduleType('Daily');
+      component.state.daily.subTab = 'everyWeekDay';
+      component.state.daily.everyWeekDay.minutes = 5;
+      component.state.daily.everyWeekDay.hours = 9;
+      component.state.daily.everyWeekDay.hourType = 'AM';
+      component.regenerateCron();
+      expect(component.cron).toContain('? * MON-FRI *');
+    });
+
+    it('should generate a cron expression for Weekly', () => {
+      component.setActiveScheduleType('Weekly');
+      component.state.weekly.minutes = 30;
+      component.state.weekly.hours = 8;
+      const firstDayKey = component.selectOptions.days[0].value;
+      component.state.weekly[firstDayKey] = true;
+      component.regenerateCron();
+      expect(component.cron).toContain(firstDayKey);
+    });
+
+    it('should generate a cron expression for Monthly/specificWeekDay', () => {
+      component.setActiveScheduleType('Monthly');
+      component.state.monthly.subTab = 'specificWeekDay';
+      component.state.monthly.specificWeekDay.minutes = 0;
+      component.state.monthly.specificWeekDay.hours = 6;
+      component.regenerateCron();
+      expect(component.cron).toContain(
+        String(component.state.monthly.specificWeekDay.day)
+      );
+    });
+
+    it('should generate a cron expression for Yearly/specificMonthWeek', () => {
+      component.setActiveScheduleType('Yearly');
+      component.state.yearly.subTab = 'specificMonthWeek';
+      component.regenerateCron();
+      expect(component.cron).toContain(
+        String(component.state.yearly.specificMonthWeek.month)
+      );
+    });
+  });
+
+  describe('_getMonthDayLabel special suffixes', () => {
+    it('should label "LW" as Last Weekday', () => {
+      expect((component as any)._getMonthDayLabel('LW')).toBe('Last Weekday');
+    });
+
+    it('should label "1W" as First Weekday', () => {
+      expect((component as any)._getMonthDayLabel('1W')).toBe('First Weekday');
+    });
   });
 
   describe('ngOnChanges', () => {

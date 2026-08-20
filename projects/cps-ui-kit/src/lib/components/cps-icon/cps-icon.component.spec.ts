@@ -41,6 +41,7 @@ describe('CpsIconComponent', () => {
       expect(host.getAttribute('role')).toBe('img');
       expect(host.getAttribute('aria-label')).toBe('Warning icon');
       expect(host.getAttribute('aria-hidden')).toBeNull();
+      expect(component.ariaLabel).toBe('Warning icon');
     });
 
     it('should restore decorative state when ariaLabel is cleared', () => {

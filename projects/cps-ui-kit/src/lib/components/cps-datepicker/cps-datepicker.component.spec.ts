@@ -354,6 +354,403 @@ describe('CpsDatepickerComponent', () => {
       (component as any)._checkErrors();
       expect(component.error).toBe('');
     });
+
+    it('should clear error when the control has not been touched', () => {
+      (component as any)._control = {
+        control: { touched: false },
+        errors: { required: true }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+
+    it('should set a required error message when touched and required', () => {
+      (component as any)._control = {
+        control: { touched: true },
+        errors: { required: true }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('Field is required');
+    });
+
+    it('should clear error when errors object is empty', () => {
+      (component as any)._control = {
+        control: { touched: true },
+        errors: {}
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+
+    it('should use a custom string error message when present', () => {
+      (component as any)._control = {
+        control: { touched: true },
+        errors: { custom: 'Custom failure' }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('Custom failure');
+    });
+
+    it('should fall back to "Unknown error" for non-string error values', () => {
+      (component as any)._control = {
+        control: { touched: true },
+        errors: { custom: true }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('Unknown error');
+    });
+  });
+
+  describe('onInputFocus', () => {
+    it('should mark the control as touched', () => {
+      const markAsTouched = jest.fn();
+      (component as any)._control = { control: { markAsTouched } };
+      component.onInputFocus();
+      expect(markAsTouched).toHaveBeenCalled();
+    });
+
+    it('should open the calendar when openOnInputFocus is true', () => {
+      fixture.componentRef.setInput('openOnInputFocus', true);
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      component.onInputFocus();
+      expect(component.toggleCalendar).toHaveBeenCalledWith(true);
+    });
+
+    it('should not open the calendar when openOnInputFocus is false', () => {
+      fixture.componentRef.setInput('openOnInputFocus', false);
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      component.onInputFocus();
+      expect(component.toggleCalendar).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onInputKeydown', () => {
+    it('should do nothing when the calendar is closed', () => {
+      component.isOpened = false;
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      const event = keyEvent('ArrowDown', document.body);
+      component.onInputKeydown(event);
+      expect(component.toggleCalendar).not.toHaveBeenCalled();
+    });
+
+    it('should focus the active calendar cell on ArrowDown', () => {
+      component.isOpened = true;
+      const focusSpy = jest
+        .spyOn(component as any, '_focusActiveCalendarCell')
+        .mockImplementation(() => {});
+      const event = keyEvent('ArrowDown', document.body);
+      const preventSpy = jest.spyOn(event, 'preventDefault');
+      component.onInputKeydown(event);
+      expect(preventSpy).toHaveBeenCalled();
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should close the calendar on Tab', () => {
+      component.isOpened = true;
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      const event = keyEvent('Tab', document.body);
+      component.onInputKeydown(event);
+      expect(component.toggleCalendar).toHaveBeenCalledWith(false);
+    });
+
+    it('should ignore unrelated keys', () => {
+      component.isOpened = true;
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      const event = keyEvent('Escape', document.body);
+      component.onInputKeydown(event);
+      expect(component.toggleCalendar).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onInputEnterClicked', () => {
+    it('should do nothing when the calendar is closed', () => {
+      component.isOpened = false;
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      component.onInputEnterClicked();
+      expect(component.toggleCalendar).not.toHaveBeenCalled();
+    });
+
+    it('should mark touched, validate, and close the calendar', () => {
+      component.isOpened = true;
+      const markAsTouched = jest.fn();
+      (component as any)._control = { control: { markAsTouched } };
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      component.onInputEnterClicked();
+      expect(markAsTouched).toHaveBeenCalled();
+      expect(component.toggleCalendar).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('onClickCalendarIcon', () => {
+    it('should do nothing when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      component.onClickCalendarIcon();
+      expect(component.toggleCalendar).not.toHaveBeenCalled();
+    });
+
+    it('should update the value from input string when already open', () => {
+      component.isOpened = true;
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      const updateSpy = jest.spyOn(
+        component as any,
+        '_updateValueFromInputString'
+      );
+      component.onClickCalendarIcon();
+      expect(updateSpy).toHaveBeenCalled();
+      expect(component.toggleCalendar).toHaveBeenCalled();
+    });
+
+    it('should request focus-on-open when closed', () => {
+      component.isOpened = false;
+      jest.spyOn(component, 'toggleCalendar').mockImplementation(() => {});
+      component.onClickCalendarIcon();
+      expect((component as any)._focusCalendarOnOpen).toBe(true);
+      expect(component.toggleCalendar).toHaveBeenCalled();
+    });
+  });
+
+  describe('onCalendarClick', () => {
+    it('should initialize the focusable cell when in month/year view', fakeAsync(() => {
+      (component as any)._datepicker = makeDp({ currentView: 'year' });
+      const initSpy = jest
+        .spyOn(component as any, '_initFocusableViewCell')
+        .mockImplementation(() => {});
+      component.onCalendarClick(new MouseEvent('click'));
+      tick();
+      expect(initSpy).toHaveBeenCalledWith(true);
+      expect((component as any)._suppressNextContentClick).toBe(true);
+    }));
+
+    it('should do nothing when in date view', fakeAsync(() => {
+      (component as any)._datepicker = makeDp({ currentView: 'date' });
+      const initSpy = jest
+        .spyOn(component as any, '_initFocusableViewCell')
+        .mockImplementation(() => {});
+      component.onCalendarClick(new MouseEvent('click'));
+      tick();
+      expect(initSpy).not.toHaveBeenCalled();
+    }));
+  });
+
+  describe('onYearSelected', () => {
+    it('should suppress next content click and init focusable cell', fakeAsync(() => {
+      const initSpy = jest
+        .spyOn(component as any, '_initFocusableViewCell')
+        .mockImplementation(() => {});
+      component.onYearSelected();
+      expect((component as any)._suppressNextContentClick).toBe(true);
+      tick();
+      expect(initSpy).toHaveBeenCalledWith(true);
+    }));
+  });
+
+  describe('_initFocusableViewCell', () => {
+    it('should do nothing outside month/year views', () => {
+      (component as any)._datepicker = makeDp({ currentView: 'date' });
+      expect(() => (component as any)._initFocusableViewCell()).not.toThrow();
+    });
+
+    it('should set preventFocus when focus is not requested', () => {
+      const dp = makeDp({ currentView: 'month' }) as any;
+      dp.preventFocus = false;
+      dp.initFocusableCell = jest.fn();
+      (component as any)._datepicker = dp;
+      (component as any)._initFocusableViewCell(false);
+      expect(dp.preventFocus).toBe(true);
+      expect(dp.initFocusableCell).toHaveBeenCalled();
+    });
+
+    it('should not set preventFocus when focus is requested', () => {
+      const dp = makeDp({ currentView: 'year' }) as any;
+      dp.preventFocus = false;
+      dp.initFocusableCell = jest.fn();
+      (component as any)._datepicker = dp;
+      (component as any)._initFocusableViewCell(true);
+      expect(dp.preventFocus).toBe(false);
+      expect(dp.initFocusableCell).toHaveBeenCalled();
+    });
+  });
+
+  describe('_focusActiveCalendarCell', () => {
+    it('should do nothing when there is no container', () => {
+      (component as any).calendarMenu = { container: null };
+      expect(() => (component as any)._focusActiveCalendarCell()).not.toThrow();
+    });
+
+    it('should delegate to _initFocusableViewCell in month/year view', () => {
+      (component as any).calendarMenu = {
+        container: document.createElement('div')
+      };
+      (component as any)._datepicker = makeDp({ currentView: 'month' });
+      const initSpy = jest
+        .spyOn(component as any, '_initFocusableViewCell')
+        .mockImplementation(() => {});
+      (component as any)._focusActiveCalendarCell();
+      expect(initSpy).toHaveBeenCalledWith(true);
+    });
+
+    it('should focus the cell matching the selected value', () => {
+      const container = document.createElement('div');
+      const span = document.createElement('span');
+      span.setAttribute('data-date', '2026-5-15');
+      container.appendChild(span);
+      const focusSpy = jest.spyOn(span, 'focus');
+      (component as any).calendarMenu = { container };
+      (component as any)._datepicker = makeDp({ currentView: 'date' });
+      component.writeValue(new Date(2026, 5, 15));
+
+      (component as any)._focusActiveCalendarCell();
+
+      expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
+      expect(span.tabIndex).toBe(0);
+    });
+
+    it("should fall back to today's cell when no value is selected", () => {
+      const container = document.createElement('div');
+      const todayCell = document.createElement('td');
+      todayCell.className = 'p-datepicker-today';
+      const span = document.createElement('span');
+      todayCell.appendChild(span);
+      container.appendChild(todayCell);
+      const focusSpy = jest.spyOn(span, 'focus');
+      (component as any).calendarMenu = { container };
+      (component as any)._datepicker = makeDp({ currentView: 'date' });
+      component.writeValue(null);
+
+      (component as any)._focusActiveCalendarCell();
+
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should fall back to the first available cell when there is no today cell', () => {
+      const { tbody } = makeDateGrid(1, 1);
+      tbody.className = 'p-datepicker-calendar';
+      const container = document.createElement('div');
+      container.appendChild(tbody);
+      const span = tbody.querySelector('span') as HTMLElement;
+      const focusSpy = jest.spyOn(span, 'focus');
+      (component as any).calendarMenu = { container };
+      (component as any)._datepicker = makeDp({ currentView: 'date' });
+      component.writeValue(null);
+
+      (component as any)._focusActiveCalendarCell();
+
+      expect(focusSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('onInputClear', () => {
+    it('should focus the input when the calendar is open', () => {
+      component.isOpened = true;
+      const focusSpy = jest
+        .spyOn(component, 'focusInput')
+        .mockImplementation(() => {});
+      component.onInputClear();
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should not focus the input when the calendar is closed', () => {
+      component.isOpened = false;
+      const focusSpy = jest
+        .spyOn(component, 'focusInput')
+        .mockImplementation(() => {});
+      component.onInputClear();
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onCalendarContentClick', () => {
+    it('should suppress the first click after a view switch', () => {
+      (component as any)._suppressNextContentClick = true;
+      const focusSpy = jest
+        .spyOn(component, 'focusInput')
+        .mockImplementation(() => {});
+      component.onCalendarContentClick();
+      expect((component as any)._suppressNextContentClick).toBe(false);
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+
+    it('should focus the input on subsequent clicks while open', () => {
+      (component as any)._suppressNextContentClick = false;
+      component.isOpened = true;
+      const focusSpy = jest
+        .spyOn(component, 'focusInput')
+        .mockImplementation(() => {});
+      component.onCalendarContentClick();
+      expect(focusSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleCalendar', () => {
+    let inputWrap: HTMLElement;
+
+    beforeEach(() => {
+      inputWrap = document.createElement('div');
+      (component as any).datepickerInput = {
+        elementRef: { nativeElement: { querySelector: () => inputWrap } },
+        focus: jest.fn()
+      };
+    });
+
+    it('should do nothing when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      (component as any).calendarMenu = {
+        show: jest.fn(),
+        hide: jest.fn(),
+        toggle: jest.fn(),
+        isVisible: jest.fn().mockReturnValue(false)
+      };
+      component.toggleCalendar(true);
+      expect((component as any).calendarMenu.show).not.toHaveBeenCalled();
+    });
+
+    it('should show the calendar when show is true', () => {
+      const show = jest.fn();
+      (component as any).calendarMenu = {
+        show,
+        isVisible: jest.fn().mockReturnValue(true)
+      };
+      component.toggleCalendar(true);
+      expect(show).toHaveBeenCalledWith({ target: inputWrap });
+      expect(component.isOpened).toBe(true);
+    });
+
+    it('should hide the calendar when show is false and check errors', () => {
+      const hide = jest.fn();
+      const markAsTouched = jest.fn();
+      (component as any)._control = { control: { markAsTouched } };
+      (component as any).calendarMenu = {
+        hide,
+        isVisible: jest.fn().mockReturnValue(false)
+      };
+      component.isOpened = true;
+      component.toggleCalendar(false);
+      expect(hide).toHaveBeenCalled();
+      expect(component.isOpened).toBe(false);
+      expect(markAsTouched).toHaveBeenCalled();
+    });
+
+    it('should toggle the calendar when no explicit show value is given', () => {
+      const toggle = jest.fn();
+      (component as any).calendarMenu = {
+        toggle,
+        isVisible: jest.fn().mockReturnValue(true)
+      };
+      component.toggleCalendar();
+      expect(toggle).toHaveBeenCalledWith({ target: inputWrap });
+    });
+
+    it('should not refocus the input when needFocusInput is false', () => {
+      const hide = jest.fn();
+      (component as any).calendarMenu = {
+        hide,
+        isVisible: jest.fn().mockReturnValue(false)
+      };
+      component.isOpened = true;
+      component.toggleCalendar(false, false);
+      expect((component as any).datepickerInput.focus).not.toHaveBeenCalled();
+    });
   });
 
   describe('onSelectCalendarDate', () => {
@@ -523,8 +920,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowDown when the cell two positions ahead is not disabled', () => {
@@ -533,8 +932,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should not block ArrowDown when there is no cell two positions ahead', () => {
@@ -543,8 +944,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowDown', cells[9]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowUp when the cell two positions back is disabled', () => {
@@ -554,8 +957,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowUp', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowUp when there is no cell two positions back', () => {
@@ -564,8 +969,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowUp', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowRight when the next sibling cell is disabled', () => {
@@ -575,8 +982,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowRight', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight when the next sibling cell is not disabled', () => {
@@ -585,8 +994,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowRight', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowRight at page boundary when the next decade is fully disabled', () => {
@@ -596,8 +1007,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', cells[9]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight at page boundary when the next decade has enabled years', () => {
@@ -607,8 +1020,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowRight', cells[9]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowLeft when the previous sibling cell is disabled', () => {
@@ -618,8 +1033,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2020
       });
       const event = keyEvent('ArrowLeft', cells[2]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowLeft at page boundary when the previous decade is fully disabled', () => {
@@ -629,8 +1046,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowLeft at page boundary when the previous decade has enabled years', () => {
@@ -640,8 +1059,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore non-year-cell elements in year view', () => {
@@ -652,8 +1073,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', other);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -682,8 +1105,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowDown when the cell three positions ahead is not disabled', () => {
@@ -692,8 +1117,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowDown', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowUp when the cell three positions back is disabled', () => {
@@ -703,8 +1130,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowUp', cells[3]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowRight when the next sibling cell is disabled', () => {
@@ -714,8 +1143,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowRight', cells[4]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowRight at page boundary when the next year is disabled', () => {
@@ -725,8 +1156,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', cells[11]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight at page boundary when the next year is enabled', () => {
@@ -736,8 +1169,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowRight', cells[11]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowLeft at page boundary when the previous year is disabled', () => {
@@ -747,8 +1182,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowLeft at page boundary when the previous year is enabled', () => {
@@ -758,8 +1195,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowLeft', cells[0]);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore non-month-cell elements in month view', () => {
@@ -770,8 +1209,10 @@ describe('CpsDatepickerComponent', () => {
         isYearDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', other);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -791,8 +1232,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight at row end when the next month is enabled', () => {
@@ -806,8 +1249,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(false)
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowRight when next sibling span is disabled and next month is disabled', () => {
@@ -821,8 +1266,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowRight when next sibling span is not disabled', () => {
@@ -835,8 +1282,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowLeft at row start when the previous month is disabled', () => {
@@ -850,8 +1299,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowLeft', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should check month 11 of prev year when moving left from January', () => {
@@ -866,8 +1317,10 @@ describe('CpsDatepickerComponent', () => {
       });
       (component as any)._datepicker = dp;
       const event = keyEvent('ArrowLeft', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(dp.isMonthDisabled).toHaveBeenCalledWith(11, 2025);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowDown at last row when the next month is disabled', () => {
@@ -881,8 +1334,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowDown', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should block ArrowDown when adjacent row cell is disabled and next month is disabled', () => {
@@ -896,8 +1351,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowDown', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should not block ArrowDown when adjacent row cell is not disabled', () => {
@@ -910,8 +1367,10 @@ describe('CpsDatepickerComponent', () => {
         currentYear: 2026
       });
       const event = keyEvent('ArrowDown', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should block ArrowUp at first row when the previous month is disabled', () => {
@@ -925,8 +1384,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowUp', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(true);
+      expect(stopSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should check month 0 of next year when moving right from December', () => {
@@ -941,8 +1402,10 @@ describe('CpsDatepickerComponent', () => {
       });
       (component as any)._datepicker = dp;
       const event = keyEvent('ArrowRight', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(dp.isMonthDisabled).toHaveBeenCalledWith(0, 2027);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore elements without a data-date attribute', () => {
@@ -952,8 +1415,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('ArrowRight', div);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
 
     it('should ignore non-arrow keys', () => {
@@ -965,8 +1430,10 @@ describe('CpsDatepickerComponent', () => {
         isMonthDisabled: jest.fn().mockReturnValue(true)
       });
       const event = keyEvent('Enter', span);
+      const stopSpy = jest.spyOn(event, 'stopImmediatePropagation');
       trigger(event);
       expect(event.defaultPrevented).toBe(false);
+      expect(stopSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -1052,6 +1519,31 @@ describe('CpsDatepickerComponent', () => {
       component.onDatepickerMonthChange();
       tick();
       expect(focusSpy).toHaveBeenCalled();
+    }));
+
+    it('should focus the cell matching an explicit focusKey', fakeAsync(() => {
+      const span = document.createElement('span');
+      span.setAttribute('data-date', '2026-6-10');
+      const container = document.createElement('div');
+      container.appendChild(span);
+      const focusSpy = jest.spyOn(span, 'focus');
+      (component as any)._datepicker = makeDp({
+        navigationState: {},
+        _focusKey: 'span[data-date="2026-6-10"]'
+      });
+      (component as any).calendarMenu = { container };
+      component.onDatepickerMonthChange();
+      tick();
+      expect(focusSpy).toHaveBeenCalled();
+    }));
+
+    it('should do nothing when there is no calendar container', fakeAsync(() => {
+      (component as any)._datepicker = makeDp({ navigationState: null });
+      (component as any).calendarMenu = { container: null };
+      expect(() => {
+        component.onDatepickerMonthChange();
+        tick();
+      }).not.toThrow();
     }));
   });
 });

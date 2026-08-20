@@ -196,6 +196,16 @@ describe('CpsSidebarMenuComponent', () => {
       expect(mockMenu.show).toHaveBeenCalledWith(null, el, 'tr');
     });
 
+    it('should actually call hide() on every other menu in the list', () => {
+      const el = document.createElement('button');
+      const event = { type: 'mouseenter', currentTarget: el } as any;
+      (mockMenu.isVisible as jest.Mock).mockReturnValue(false);
+      const otherMenu = { hide: jest.fn() };
+      component.allMenus = [otherMenu] as any;
+      component.showMenu(event, mockMenu as CpsMenuComponent);
+      expect(otherMenu.hide).toHaveBeenCalled();
+    });
+
     it('should call show again on focusin when menu is already visible', () => {
       const el = document.createElement('button');
       const item: CpsSidebarMenuItem = { title: 'Reports', icon: 'reports' };
@@ -253,6 +263,16 @@ describe('CpsSidebarMenuComponent', () => {
       component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
       expect((component.allMenus as any).forEach).toHaveBeenCalled();
       expect(mockMenu.show).toHaveBeenCalledWith(null, el, 'tr');
+    });
+
+    it('should actually call hide() on every other menu in the list', () => {
+      const el = document.createElement('button');
+      const event = { currentTarget: el } as unknown as MouseEvent;
+      (mockMenu.isVisible as jest.Mock).mockReturnValue(false);
+      const otherMenu = { hide: jest.fn() };
+      component.allMenus = [otherMenu] as any;
+      component.toggleMenu(event, mockMenu as CpsMenuComponent, item);
+      expect(otherMenu.hide).toHaveBeenCalled();
     });
 
     it('should always set focusedItemWithMenu to the given item', () => {

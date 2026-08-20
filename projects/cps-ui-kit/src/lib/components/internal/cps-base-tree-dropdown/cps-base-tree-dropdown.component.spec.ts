@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, signal } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -7,7 +7,12 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { CombineLabelsPipe } from '../../../pipes/internal/combine-labels/combine-labels.pipe';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsTreeSelectComponent } from '../../cps-tree-select/cps-tree-select.component';
@@ -624,6 +629,881 @@ describe('CpsBaseTreeDropdownComponent', () => {
 
     it('should return false for isRequired when no form control is bound', () => {
       expect(component.isRequired).toBe(false);
+    });
+  });
+
+  describe('onSelectNode', () => {
+    it('should close the dropdown and focus the container in single mode', () => {
+      component.toggleOptions(true);
+      const focusSpy = jest.spyOn(
+        component.componentContainer.nativeElement,
+        'focus'
+      );
+      component.onSelectNode();
+      expect(component.isOpened).toBe(false);
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should do nothing in multiple mode', () => {
+      fixture.componentRef.setInput('multiple', true);
+      component.toggleOptions(true);
+      component.onSelectNode();
+      expect(component.isOpened).toBe(true);
+    });
+  });
+
+  describe('onClickFullyExpandable', () => {
+    it('should do nothing when the element has no key class', () => {
+      const parent = document.createElement('div');
+      const elem = document.createElement('div');
+      parent.appendChild(elem);
+      const updateOptionsSpy = jest.spyOn(component, 'updateOptions');
+      component.onClickFullyExpandable(elem);
+      expect(updateOptionsSpy).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when no matching tree node is found for the key', () => {
+      const parent = document.createElement('div');
+      parent.classList.add('key-nonexistent');
+      const elem = document.createElement('div');
+      parent.appendChild(elem);
+      const updateOptionsSpy = jest.spyOn(component, 'updateOptions');
+      component.onClickFullyExpandable(elem);
+      expect(updateOptionsSpy).not.toHaveBeenCalled();
+    });
+
+    it('should toggle expanded state and schedule a node-toggled focus update', fakeAsync(() => {
+      const key = component.innerOptions[2].key!;
+      const parent = document.createElement('div');
+      parent.classList.add('key-' + key);
+      const elem = document.createElement('div');
+      parent.appendChild(elem);
+      (component as any).treeList = {
+        cd: { markForCheck: jest.fn() }
+      };
+      const wasExpanded = component.innerOptions[2].expanded;
+
+      component.onClickFullyExpandable(elem);
+      tick();
+
+      expect(component.innerOptions[2].expanded).toBe(!wasExpanded);
+    }));
+  });
+
+  describe('initArrowsNavigaton', () => {
+    it('should do nothing when the dropdown is closed', () => {
+      component.initArrowsNavigaton();
+      expect(component.optionFocused).toBe(false);
+    });
+
+    it('should do nothing when an option is already focused', () => {
+      component.toggleOptions(true);
+      component.optionFocused = true;
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.initArrowsNavigaton();
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+
+    it('should focus the aria-selected treeitem when found', () => {
+      component.toggleOptions(true);
+      const selected = document.createElement('div');
+      const querySelector = jest.fn().mockReturnValue(selected);
+      (component as any).treeContainerElement = {
+        querySelector,
+        querySelectorAll: () => [] as any,
+        removeEventListener: jest.fn()
+      };
+      component.initArrowsNavigaton();
+      expect(querySelector).toHaveBeenCalledWith(
+        '[role="treeitem"][aria-selected="true"]'
+      );
+      expect(component.optionFocused).toBe(true);
+      expect(component.isArrowNavigating).toBe(true);
+    });
+
+    it('should fall back to the last visible node when navigating up with no selection', () => {
+      component.toggleOptions(true);
+      const last = document.createElement('div');
+      jest
+        .spyOn(component as any, '_getLastVisibleTreeNodeLi')
+        .mockReturnValue(last);
+      (component as any).treeContainerElement = {
+        querySelector: () => null,
+        querySelectorAll: () => [] as any,
+        removeEventListener: jest.fn()
+      };
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.initArrowsNavigaton(true);
+      expect(focusSpy).toHaveBeenCalledWith(last);
+    });
+
+    it('should fall back to the first tree node when navigating down with no selection', () => {
+      component.toggleOptions(true);
+      const first = document.createElement('div');
+      const querySelector = jest
+        .fn()
+        .mockReturnValueOnce(null)
+        .mockReturnValueOnce(first);
+      (component as any).treeContainerElement = {
+        querySelector,
+        querySelectorAll: () => [] as any,
+        removeEventListener: jest.fn()
+      };
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.initArrowsNavigaton(false);
+      expect(focusSpy).toHaveBeenCalledWith(first);
+    });
+  });
+
+  describe('_focusTreeNode', () => {
+    it('should do nothing when elem is null', () => {
+      expect(() => (component as any)._focusTreeNode(null)).not.toThrow();
+    });
+
+    it('should reset tabIndex of other tree items and focus the given element', () => {
+      const other = document.createElement('div');
+      other.tabIndex = 0;
+      (component as any).treeContainerElement = {
+        querySelectorAll: () => [other],
+        removeEventListener: jest.fn()
+      };
+      const elem = document.createElement('div');
+      const focusSpy = jest.spyOn(elem, 'focus');
+
+      (component as any)._focusTreeNode(elem);
+
+      expect(other.tabIndex).toBe(-1);
+      expect(elem.tabIndex).toBe(0);
+      expect(focusSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('navigateIntoOptions', () => {
+    it('should do nothing when the dropdown is closed', () => {
+      const initSpy = jest.spyOn(component, 'initArrowsNavigaton');
+      component.navigateIntoOptions(false);
+      expect(initSpy).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when an option is already focused', () => {
+      component.toggleOptions(true);
+      component.optionFocused = true;
+      const initSpy = jest.spyOn(component, 'initArrowsNavigaton');
+      component.navigateIntoOptions(false);
+      expect(initSpy).not.toHaveBeenCalled();
+    });
+
+    it('should stop after initArrowsNavigaton when there is no selected node', () => {
+      component.toggleOptions(true);
+      (component as any).treeContainerElement = {
+        querySelector: () => null,
+        querySelectorAll: () => [] as any,
+        contains: () => false,
+        removeEventListener: jest.fn()
+      };
+      const initSpy = jest.spyOn(component, 'initArrowsNavigaton');
+      component.navigateIntoOptions(false);
+      expect(initSpy).toHaveBeenCalledWith(false);
+    });
+
+    it('should stop when there is no active element inside the container', () => {
+      component.toggleOptions(true);
+      const selected = document.createElement('div');
+      (component as any).treeContainerElement = {
+        querySelector: () => selected,
+        querySelectorAll: () => [] as any,
+        contains: () => false,
+        removeEventListener: jest.fn()
+      };
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.navigateIntoOptions(false);
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should focus the next treeitem when navigating forward', () => {
+      component.toggleOptions(true);
+      const item1 = document.createElement('div');
+      const item2 = document.createElement('div');
+      document.body.appendChild(item1);
+      document.body.appendChild(item2);
+      item1.tabIndex = 0;
+      item1.focus();
+
+      (component as any).treeContainerElement = {
+        querySelector: () => item1,
+        querySelectorAll: () => [item1, item2],
+        contains: (el: Node) => el === item1 || el === item2,
+        removeEventListener: jest.fn()
+      };
+
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.navigateIntoOptions(false);
+      expect(focusSpy).toHaveBeenCalledWith(item2);
+
+      item1.remove();
+      item2.remove();
+    });
+
+    it('should do nothing further when there is no next treeitem', () => {
+      component.toggleOptions(true);
+      const item1 = document.createElement('div');
+      document.body.appendChild(item1);
+      item1.tabIndex = 0;
+      item1.focus();
+
+      (component as any).treeContainerElement = {
+        querySelector: () => item1,
+        querySelectorAll: () => [item1],
+        contains: (el: Node) => el === item1,
+        removeEventListener: jest.fn()
+      };
+
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.navigateIntoOptions(true);
+      expect(focusSpy).toHaveBeenCalledTimes(1);
+
+      item1.remove();
+    });
+  });
+
+  describe('onOptionsKeyDown', () => {
+    it('should close the dropdown on Escape', () => {
+      component.toggleOptions(true);
+      const event = { code: 'Escape', preventDefault: jest.fn() } as any;
+      component.onOptionsKeyDown(event);
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(component.isOpened).toBe(false);
+    });
+
+    it('should close the dropdown on Tab', () => {
+      component.toggleOptions(true);
+      const event = { code: 'Tab', preventDefault: jest.fn() } as any;
+      component.onOptionsKeyDown(event);
+      expect(component.isOpened).toBe(false);
+    });
+
+    it('should focus the last visible node on ArrowUp when target is active', () => {
+      const target = document.createElement('div');
+      document.body.appendChild(target);
+      target.tabIndex = 0;
+      target.focus();
+
+      const last = document.createElement('div');
+      jest
+        .spyOn(component as any, '_getLastVisibleTreeNodeLi')
+        .mockReturnValue(last);
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+
+      const event = {
+        code: 'ArrowUp',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      component.onOptionsKeyDown(event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+      expect(focusSpy).toHaveBeenCalledWith(last);
+      expect(component.isArrowNavigating).toBe(true);
+
+      target.remove();
+    });
+
+    it('should focus the first tree node on ArrowDown when target is active', () => {
+      const target = document.createElement('div');
+      document.body.appendChild(target);
+      target.tabIndex = 0;
+      target.focus();
+
+      const first = document.createElement('div');
+      (component as any).treeContainerElement = {
+        querySelector: () => first,
+        querySelectorAll: () => [] as any,
+        removeEventListener: jest.fn()
+      };
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+
+      const event = {
+        code: 'ArrowDown',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      component.onOptionsKeyDown(event);
+
+      expect(focusSpy).toHaveBeenCalledWith(first);
+
+      target.remove();
+    });
+
+    it('should not navigate on ArrowDown when target is not the active element', () => {
+      const target = document.createElement('div');
+      const event = {
+        code: 'ArrowDown',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      component.onOptionsKeyDown(event);
+      expect(event.preventDefault).not.toHaveBeenCalled();
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+
+    it('should break early on Enter when aria-expanded is not present', () => {
+      const target = document.createElement('div');
+      const event = {
+        code: 'Enter',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      expect(() => component.onOptionsKeyDown(event)).not.toThrow();
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('should click the toggle button and focus the first child when collapsed', fakeAsync(() => {
+      const target = document.createElement('div');
+      target.setAttribute('aria-expanded', 'false');
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'p-tree-node-toggle-button';
+      const toggleClickSpy = jest.spyOn(toggleBtn, 'click');
+      target.appendChild(toggleBtn);
+      const firstChild = document.createElement('div');
+      firstChild.setAttribute('role', 'treeitem');
+      target.appendChild(firstChild);
+
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      const event = {
+        code: 'Enter',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      component.onOptionsKeyDown(event);
+      tick();
+
+      expect(toggleClickSpy).toHaveBeenCalled();
+      expect(focusSpy).toHaveBeenCalledWith(firstChild);
+    }));
+
+    it('should click the toggle button without scheduling a focus update when fully expandable and already expanded', () => {
+      const target = document.createElement('div');
+      target.setAttribute('aria-expanded', 'true');
+      target.classList.add('cps-tree-node-fully-expandable');
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'p-tree-node-toggle-button';
+      const toggleClickSpy = jest.spyOn(toggleBtn, 'click');
+      target.appendChild(toggleBtn);
+
+      const event = {
+        code: 'Space',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      component.onOptionsKeyDown(event);
+
+      expect(toggleClickSpy).toHaveBeenCalled();
+    });
+
+    it('should do nothing on NumpadEnter when already expanded and not fully expandable', () => {
+      const target = document.createElement('div');
+      target.setAttribute('aria-expanded', 'true');
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'p-tree-node-toggle-button';
+      const toggleClickSpy = jest.spyOn(toggleBtn, 'click');
+      target.appendChild(toggleBtn);
+
+      const event = {
+        code: 'NumpadEnter',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      component.onOptionsKeyDown(event);
+
+      expect(toggleClickSpy).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when collapsed but there is no toggle button', () => {
+      const target = document.createElement('div');
+      target.setAttribute('aria-expanded', 'false');
+      const event = {
+        code: 'Enter',
+        target,
+        preventDefault: jest.fn()
+      } as any;
+      expect(() => component.onOptionsKeyDown(event)).not.toThrow();
+    });
+  });
+
+  describe('_handleOnContainerClick', () => {
+    it('should invoke onClickFullyExpandable when the clicked element is a fully-expandable node content', () => {
+      const parent = document.createElement('div');
+      parent.classList.add('cps-tree-node-fully-expandable');
+      const content = document.createElement('div');
+      content.classList.add('p-tree-node-content');
+      parent.appendChild(content);
+
+      const expandSpy = jest
+        .spyOn(component, 'onClickFullyExpandable')
+        .mockImplementation(() => {});
+      (component as any)._handleOnContainerClick({ target: content });
+
+      expect(expandSpy).toHaveBeenCalledWith(content);
+      expect(component.optionFocused).toBe(true);
+      expect(component.isArrowNavigating).toBe(false);
+    });
+
+    it('should climb up to find the node-content ancestor', () => {
+      const parent = document.createElement('div');
+      parent.classList.add('cps-tree-node-fully-expandable');
+      const content = document.createElement('div');
+      content.classList.add('p-tree-node-content');
+      const inner = document.createElement('span');
+      content.appendChild(inner);
+      parent.appendChild(content);
+
+      const expandSpy = jest
+        .spyOn(component, 'onClickFullyExpandable')
+        .mockImplementation(() => {});
+      (component as any)._handleOnContainerClick({ target: inner });
+
+      expect(expandSpy).toHaveBeenCalledWith(content);
+    });
+
+    it('should not invoke onClickFullyExpandable when no ancestor has node-content class', () => {
+      const detached = document.createElement('span');
+      const expandSpy = jest
+        .spyOn(component, 'onClickFullyExpandable')
+        .mockImplementation(() => {});
+      (component as any)._handleOnContainerClick({ target: detached });
+      expect(expandSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not invoke onClickFullyExpandable when the parent is not fully-expandable', () => {
+      const parent = document.createElement('div');
+      const content = document.createElement('div');
+      content.classList.add('p-tree-node-content');
+      parent.appendChild(content);
+
+      const expandSpy = jest
+        .spyOn(component, 'onClickFullyExpandable')
+        .mockImplementation(() => {});
+      (component as any)._handleOnContainerClick({ target: content });
+      expect(expandSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('_getHTMLElementKey', () => {
+    it('should return an empty string when the element has no classList', () => {
+      expect((component as any)._getHTMLElementKey(null)).toBe('');
+      expect((component as any)._getHTMLElementKey({})).toBe('');
+    });
+
+    it('should return an empty string when no class starts with key-', () => {
+      const el = document.createElement('div');
+      el.className = 'foo bar';
+      expect((component as any)._getHTMLElementKey(el)).toBe('');
+    });
+
+    it('should extract the key from a key- prefixed class', () => {
+      const el = document.createElement('div');
+      el.className = 'foo key-abc bar';
+      expect((component as any)._getHTMLElementKey(el)).toBe('abc');
+    });
+  });
+
+  describe('_nodeToggled', () => {
+    beforeEach(() => {
+      (component as any).treeList = { cd: { markForCheck: jest.fn() } };
+    });
+
+    it('should focus the element found by key', fakeAsync(() => {
+      const found = document.createElement('div');
+      (component as any).treeContainerElement = {
+        querySelector: jest.fn().mockReturnValue(found),
+        querySelectorAll: () => [] as any,
+        removeEventListener: jest.fn()
+      };
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      const alignSpy = jest
+        .spyOn(component.optionsMenu, 'align')
+        .mockImplementation(() => {});
+
+      (component as any)._nodeToggled(document.createElement('div'), 'abc');
+      tick();
+
+      expect(focusSpy).toHaveBeenCalledWith(found);
+      expect(alignSpy).toHaveBeenCalled();
+    }));
+
+    it('should focus the parent element when no key is provided', fakeAsync(() => {
+      jest.spyOn(component.optionsMenu, 'align').mockImplementation(() => {});
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      const parent = document.createElement('div');
+      const elem = document.createElement('div');
+      parent.appendChild(elem);
+
+      (component as any)._nodeToggled(elem);
+      tick();
+
+      expect(focusSpy).toHaveBeenCalledWith(parent);
+    }));
+  });
+
+  describe('_refocusVirtualNode', () => {
+    it('should do nothing when key is undefined', () => {
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+      (component as any)._refocusVirtualNode(undefined);
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+
+    it('should focus the element found by key', fakeAsync(() => {
+      const found = document.createElement('div');
+      (component as any).treeContainerElement = {
+        querySelector: jest.fn().mockReturnValue(found),
+        querySelectorAll: () => [] as any,
+        removeEventListener: jest.fn()
+      };
+      const focusSpy = jest.spyOn(component as any, '_focusTreeNode');
+
+      (component as any)._refocusVirtualNode('xyz');
+      tick();
+
+      expect(focusSpy).toHaveBeenCalledWith(found);
+    }));
+  });
+
+  describe('onNodeExpand / onNodeCollapse', () => {
+    it('should refocus the virtual node when virtualScroll is enabled (expand)', fakeAsync(() => {
+      fixture.componentRef.setInput('virtualScroll', true);
+      fixture.detectChanges();
+      (component as any).treeList = { cd: { markForCheck: jest.fn() } };
+      const refocusSpy = jest.spyOn(component as any, '_refocusVirtualNode');
+      const parent = document.createElement('div');
+      const currentTarget = document.createElement('div');
+      parent.appendChild(currentTarget);
+
+      component.onNodeExpand({
+        originalEvent: { currentTarget },
+        node: { key: 'k1' }
+      });
+      tick();
+
+      expect(refocusSpy).toHaveBeenCalledWith('k1');
+    }));
+
+    it('should not refocus when virtualScroll is disabled (collapse)', () => {
+      (component as any).treeList = { cd: { markForCheck: jest.fn() } };
+      const refocusSpy = jest.spyOn(component as any, '_refocusVirtualNode');
+      const parent = document.createElement('div');
+      const currentTarget = document.createElement('div');
+      parent.appendChild(currentTarget);
+
+      component.onNodeCollapse({
+        originalEvent: { currentTarget },
+        node: { key: 'k1' }
+      });
+
+      expect(refocusSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('_checkErrors', () => {
+    it('should clear error when the control is not touched', () => {
+      (component as any).control = { control: { touched: false }, errors: {} };
+      component.error = 'stale';
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+
+    it('should clear error when there are no errors', () => {
+      (component as any).control = {
+        control: { touched: true },
+        errors: null
+      };
+      component.error = 'stale';
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+
+    it('should set a required message when errors include required', () => {
+      (component as any).control = {
+        control: { touched: true },
+        errors: { required: true }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('Field is required');
+    });
+
+    it('should clear error when errors is an empty object', () => {
+      (component as any).control = {
+        control: { touched: true },
+        errors: {}
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+
+    it('should use a string error message when present', () => {
+      (component as any).control = {
+        control: { touched: true },
+        errors: { custom: 'Custom error message' }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('Custom error message');
+    });
+
+    it('should fall back to Unknown error when no string message is found', () => {
+      (component as any).control = {
+        control: { touched: true },
+        errors: { custom: 42 }
+      };
+      (component as any)._checkErrors();
+      expect(component.error).toBe('Unknown error');
+    });
+  });
+
+  describe('_expandToNodes', () => {
+    it('should expand the parent node and recurse when found', () => {
+      const child = { key: '0-0' };
+      const parentNode = { key: '0', expanded: false };
+      component.optionsMap.set('0', parentNode as any);
+      (component as any)._expandToNodes([child]);
+      expect(parentNode.expanded).toBe(true);
+    });
+
+    it('should do nothing when the parent node is not found', () => {
+      expect(() =>
+        (component as any)._expandToNodes([{ key: 'unknown' }])
+      ).not.toThrow();
+    });
+
+    it('should do nothing for a top-level key with no separator', () => {
+      expect(() =>
+        (component as any)._expandToNodes([{ key: '5' }])
+      ).not.toThrow();
+    });
+  });
+
+  describe('_valueToTreeSelection via writeValue', () => {
+    it('should skip unmatched values in multiple mode', () => {
+      fixture.componentRef.setInput('multiple', true);
+      component.writeValue([OPTIONS[0], { label: 'Unknown', value: 'zzz' }]);
+      expect(component.treeSelection).toHaveLength(1);
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    it('should remove the container click listener and disconnect the resize observer', () => {
+      const removeEventListener = jest.fn();
+      (component as any).treeContainerElement = { removeEventListener };
+      const disconnectSpy = jest.spyOn(component.resizeObserver, 'disconnect');
+
+      component.ngOnDestroy();
+
+      expect(removeEventListener).toHaveBeenCalledWith(
+        'click',
+        expect.any(Function)
+      );
+      expect(disconnectSpy).toHaveBeenCalled();
+    });
+
+    it('should not throw when there is no treeContainerElement', () => {
+      (component as any).treeContainerElement = undefined;
+      expect(() => component.ngOnDestroy()).not.toThrow();
+    });
+  });
+
+  describe('resizeObserver callback', () => {
+    let capturedCallback: any;
+    let localFixture: ComponentFixture<CpsTreeSelectComponent>;
+    let localComponent: CpsTreeSelectComponent;
+    let OriginalResizeObserver: typeof ResizeObserver;
+
+    beforeEach(() => {
+      OriginalResizeObserver = window.ResizeObserver;
+      capturedCallback = undefined;
+      (window as any).ResizeObserver = class {
+        constructor(cb: any) {
+          if (!capturedCallback) capturedCallback = cb;
+        }
+
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+
+      localFixture = TestBed.createComponent(CpsTreeSelectComponent);
+      localComponent = localFixture.componentInstance;
+      localFixture.componentRef.setInput('ariaLabel', 'Test tree select 2');
+      localFixture.componentRef.setInput('options', OPTIONS);
+      localFixture.detectChanges();
+    });
+
+    afterEach(() => {
+      window.ResizeObserver = OriginalResizeObserver;
+    });
+
+    it('should update boxWidthPx when a resize entry has a target', () => {
+      capturedCallback?.(
+        [{ target: { offsetWidth: 123 } } as any],
+        {} as ResizeObserver
+      );
+      expect(localComponent.boxWidthPx).toBe(123);
+    });
+
+    it('should skip entries without a target', () => {
+      const before = localComponent.boxWidthPx;
+      capturedCallback?.([{ target: undefined } as any], {} as ResizeObserver);
+      expect(localComponent.boxWidthPx).toBe(before);
+    });
+  });
+
+  describe('treeSelectionChanged', () => {
+    it('should update the value from the tree selection', () => {
+      const onChange = jest.fn();
+      component.registerOnChange(onChange);
+      component.treeSelectionChanged(component.innerOptions[0]);
+      expect(onChange).toHaveBeenCalledWith(OPTIONS[0]);
+    });
+  });
+
+  describe('_findLastVisibleDescendantLi', () => {
+    it('should return the node li when it has no nested children', () => {
+      const pTreeNode = document.createElement('div');
+      const li = document.createElement('li');
+      li.setAttribute('data-pc-section', 'node');
+      const placeholder = document.createElement('div');
+      const childrenUl = document.createElement('ul');
+      li.appendChild(placeholder);
+      li.appendChild(childrenUl);
+      pTreeNode.appendChild(li);
+
+      const result = (component as any)._findLastVisibleDescendantLi(pTreeNode);
+      expect(result).toBe(li);
+    });
+
+    it('should recurse into the last nested child when present', () => {
+      const outerNode = document.createElement('div');
+      const outerLi = document.createElement('li');
+      outerLi.setAttribute('data-pc-section', 'node');
+      const outerPlaceholder = document.createElement('div');
+      const outerChildrenUl = document.createElement('ul');
+      outerLi.appendChild(outerPlaceholder);
+      outerLi.appendChild(outerChildrenUl);
+      outerNode.appendChild(outerLi);
+
+      const innerNode = document.createElement('div');
+      const innerLi = document.createElement('li');
+      innerLi.setAttribute('data-pc-section', 'node');
+      const innerPlaceholder = document.createElement('div');
+      const innerChildrenUl = document.createElement('ul');
+      innerLi.appendChild(innerPlaceholder);
+      innerLi.appendChild(innerChildrenUl);
+      innerNode.appendChild(innerLi);
+      outerChildrenUl.appendChild(innerNode);
+
+      const result = (component as any)._findLastVisibleDescendantLi(outerNode);
+      expect(result).toBe(innerLi);
+    });
+
+    it('should return null when no node li is found', () => {
+      const pTreeNode = document.createElement('div');
+      const result = (component as any)._findLastVisibleDescendantLi(pTreeNode);
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('directory options', () => {
+    it('should mark directory options as fully-expandable and non-selectable', () => {
+      fixture.componentRef.setInput('options', [
+        {
+          label: 'Folder',
+          value: 'folder',
+          isDirectory: true,
+          children: [{ label: 'Child', value: 'child' }]
+        }
+      ]);
+      fixture.detectChanges();
+
+      const folderOption = component.innerOptions[0];
+      expect(folderOption.type).toBe('directory');
+      expect(folderOption.selectable).toBe(false);
+      expect(folderOption.styleClass).toContain(
+        'cps-tree-node-fully-expandable'
+      );
+    });
+
+    it('should expand directory options initially when initialExpandDirectories is true', () => {
+      fixture.componentRef.setInput('initialExpandDirectories', true);
+      fixture.componentRef.setInput('options', [
+        { label: 'Folder', value: 'folder', isDirectory: true }
+      ]);
+      fixture.detectChanges();
+
+      expect(component.innerOptions[0].expanded).toBe(true);
+    });
+  });
+
+  describe('ngOnInit with a pre-existing value', () => {
+    it('should resolve treeSelection from the initial value before the first change detection', () => {
+      const freshFixture = TestBed.createComponent(CpsTreeSelectComponent);
+      const freshComponent = freshFixture.componentInstance;
+      freshFixture.componentRef.setInput('ariaLabel', 'Fresh tree select');
+      freshFixture.componentRef.setInput('options', OPTIONS);
+      freshComponent.writeValue(OPTIONS[0], true);
+
+      freshFixture.detectChanges();
+
+      expect(freshComponent.treeSelection).toBeTruthy();
+      expect(freshComponent.treeSelection.key).toBe('0');
+    });
+  });
+
+  describe('with NgControl (reactive forms)', () => {
+    @Component({
+      imports: [CpsTreeSelectComponent, ReactiveFormsModule],
+      template: `<cps-tree-select
+        [formControl]="control"
+        [options]="options"
+        ariaLabel="Tree select"></cps-tree-select>`
+    })
+    class HostComponent {
+      control = new FormControl(undefined, Validators.required);
+      options = OPTIONS;
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let treeSelect: CpsTreeSelectComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent],
+        providers: [
+          CombineLabelsPipe,
+          {
+            provide: CPS_ROOT_FONT_SIZE_SERVICE,
+            useValue: mockRootFontSizeService
+          }
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      treeSelect = hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      treeSelect.writeValue(treeSelect.options[0]);
+      treeSelect.value = treeSelect.options[0];
+      hostFixture.detectChanges();
+      expect(host.control.value).toEqual(treeSelect.options[0]);
+    });
+
+    it('should run _checkErrors when the control status changes', () => {
+      host.control.markAsTouched();
+      host.control.updateValueAndValidity();
+      expect(treeSelect.error).toBe('Field is required');
     });
   });
 });

@@ -146,6 +146,26 @@ describe('TableColumnFilterConstraintComponent', () => {
         { label: 'Inactive', value: 'Inactive' }
       ]);
     });
+
+    it('should recursively derive categories from TreeTable node data (including children)', () => {
+      const mockTreeTable = {
+        value: [
+          {
+            data: { status: 'Active' },
+            children: [{ data: { status: 'Inactive' }, children: [] }]
+          },
+          { data: { status: 'Active' } }
+        ]
+      };
+      component._tableInstance = mockTreeTable as any;
+      fixture.componentRef.setInput('type', 'category');
+      fixture.componentRef.setInput('field', 'status');
+      fixture.detectChanges();
+      expect(component.categories).toEqual([
+        { label: 'Active', value: 'Active' },
+        { label: 'Inactive', value: 'Inactive' }
+      ]);
+    });
   });
 
   describe('onValueChange', () => {

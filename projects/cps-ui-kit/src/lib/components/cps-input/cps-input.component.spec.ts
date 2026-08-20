@@ -1,5 +1,6 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CpsInputComponent } from './cps-input.component';
 
@@ -643,6 +644,130 @@ describe('CpsInputComponent', () => {
         );
         expect(component.currentType).toBe('text');
       });
+    });
+  });
+
+  describe('onInputMousedown', () => {
+    it('should set the mouse-activated flag', () => {
+      component.onInputMousedown();
+      component.onFocus();
+      expect(component.isKeyboardFocused).toBe(false);
+    });
+  });
+
+  describe('ngOnInit', () => {
+    it('should warn when prefixIconClickable is true without prefixIconAriaLabel on first render', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      consoleSpy.mockClear();
+      const f = TestBed.createComponent(CpsInputComponent);
+      f.componentRef.setInput('ariaLabel', 'Test input');
+      f.componentRef.setInput('prefixIconClickable', true);
+      f.detectChanges();
+      expect(consoleSpy).toHaveBeenCalledTimes(2);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('prefixIconAriaLabel')
+      );
+    });
+  });
+
+  describe('ngOnChanges', () => {
+    it('should recompute cvtWidth when width changes', () => {
+      fixture.componentRef.setInput('width', 240);
+      fixture.detectChanges();
+      expect(component.cvtWidth).toBe('240px');
+    });
+
+    it('should warn when prefixIconClickable is set without prefixIconAriaLabel', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      consoleSpy.mockClear();
+      fixture.componentRef.setInput('prefixIconClickable', true);
+      fixture.componentRef.setInput('prefixIconAriaLabel', '');
+      fixture.detectChanges();
+      expect(consoleSpy).toHaveBeenCalledWith(
+        expect.stringContaining('prefixIconAriaLabel')
+      );
+    });
+
+    it('should not warn when prefixIconAriaLabel is provided', () => {
+      const consoleSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      consoleSpy.mockClear();
+      fixture.componentRef.setInput('prefixIconAriaLabel', 'Clear');
+      fixture.componentRef.setInput('prefixIconClickable', true);
+      fixture.detectChanges();
+      expect(consoleSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining('prefixIconAriaLabel')
+      );
+    });
+  });
+
+  describe('_checkErrors edge cases', () => {
+    it('should clear the error when the errors object has no keys', () => {
+      (component as any)._control = {
+        errors: {},
+        control: { touched: true }
+      };
+      component.error = 'stale error';
+      (component as any)._checkErrors();
+      expect(component.error).toBe('');
+    });
+  });
+
+  describe('registerOnTouched', () => {
+    it('should register the onTouched callback', () => {
+      const fn = jest.fn();
+      component.registerOnTouched(fn);
+      expect(component.onTouched).toBe(fn);
+    });
+  });
+
+  describe('with NgControl (reactive forms)', () => {
+    @Component({
+      imports: [CpsInputComponent, ReactiveFormsModule],
+      template: `<cps-input
+        [formControl]="control"
+        ariaLabel="Test input"></cps-input>`
+    })
+    class HostComponent {
+      control = new FormControl('', Validators.required);
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let input: CpsInputComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      input = hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      input.writeValue('hello');
+      input.onChange('hello');
+      hostFixture.detectChanges();
+      expect(host.control.value).toBe('hello');
+    });
+
+    it('should recompute the error via the statusChanges subscription', () => {
+      host.control.markAsTouched();
+      host.control.updateValueAndValidity();
+      expect(input.error).toBe('Field is required');
+    });
+
+    it('should report isRequired true when a required validator is present', () => {
+      expect(input.isRequired).toBe(true);
     });
   });
 });

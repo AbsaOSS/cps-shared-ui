@@ -252,6 +252,55 @@ describe('CpsButtonComponent', () => {
     expect(component.enterActive).toBe(false);
   });
 
+  it('should set enterActive on Enter keydown', () => {
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('button');
+    button.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
+    );
+    expect(component.enterActive).toBe(true);
+  });
+
+  it('should not set enterActive on Enter keydown when disabled', () => {
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    component.onEnterKeydown();
+    expect(component.enterActive).toBe(false);
+  });
+
+  it('should not set enterActive on Enter keydown when loading', () => {
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+    component.onEnterKeydown();
+    expect(component.enterActive).toBe(false);
+  });
+
+  it('should clear enterActive on Enter keyup', () => {
+    fixture.detectChanges();
+    component.enterActive = true;
+    const button = fixture.nativeElement.querySelector('button');
+    button.dispatchEvent(
+      new KeyboardEvent('keyup', { key: 'Enter', bubbles: true })
+    );
+    expect(component.enterActive).toBe(false);
+  });
+
+  it('should not emit clicked event when disabled', () => {
+    jest.spyOn(component.clicked, 'emit');
+    fixture.componentRef.setInput('disabled', true);
+    fixture.detectChanges();
+    component.onClick(new Event('click'));
+    expect(component.clicked.emit).not.toHaveBeenCalled();
+  });
+
+  it('should not emit clicked event when loading', () => {
+    jest.spyOn(component.clicked, 'emit');
+    fixture.componentRef.setInput('loading', true);
+    fixture.detectChanges();
+    component.onClick(new Event('click'));
+    expect(component.clicked.emit).not.toHaveBeenCalled();
+  });
+
   describe('nativeType', () => {
     it('should default native type attribute to "button"', () => {
       const button = fixture.nativeElement.querySelector('button');

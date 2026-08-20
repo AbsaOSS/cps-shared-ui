@@ -235,6 +235,16 @@ describe('CpsNotificationService', () => {
       );
     });
 
+    it('should default to TOPRIGHT when appending directly with no position set', () => {
+      (service as any)._appendNotificationToContainer(
+        { type: CpsNotificationType.INFO, message: 'msg' },
+        {}
+      );
+      expect(
+        (service as any)._containersMap.has(CpsNotificationPosition.TOPRIGHT)
+      ).toBe(true);
+    });
+
     it('should subscribe to the closed event and call _tryRemoveContainer', () => {
       service.info('msg');
       const container = (service as any)._containersMap.get(

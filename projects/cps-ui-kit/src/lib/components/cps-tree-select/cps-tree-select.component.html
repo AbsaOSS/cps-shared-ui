@@ -104,7 +104,7 @@
                 data-testid="cps-treeselect-chips-group"
                 role="list"
                 aria-label="Selected options">
-                @for (val of treeSelection; track val) {
+                @for (val of treeSelection; track val.key) {
                   <cps-chip
                     role="listitem"
                     closeButtonAriaLabel="Remove"
