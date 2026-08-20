@@ -429,6 +429,284 @@ describe('CpsTabGroupComponent', () => {
     expect(unsubSpy).toHaveBeenCalled();
   });
 
+  it('should not move focus on an unhandled key', () => {
+    const tabEls = getTabEls(hostFixture);
+    expect(() => dispatchKeydown(tabEls[0], 'Escape')).not.toThrow();
+    hostFixture.detectChanges();
+    expect(component.tabs.toArray()[0].active).toBe(true);
+  });
+
+  it('should suppress the focus ring on mousedown', () => {
+    const suppressSpy = jest.spyOn(
+      (component as any)._focusService,
+      'suppressNextFocusRing'
+    );
+    const tabEl = getTabEls(hostFixture)[0];
+    tabEl.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    expect(suppressSpy).toHaveBeenCalledWith(tabEl);
+  });
+
+  it('should not append badge tooltip suffix when badgeTooltip is empty', () => {
+    const tab = component.tabs.toArray()[0];
+    tab.badgeTooltip = '';
+    expect(component.getTabAriaLabel(tab)).toBe('Tab 1, Badge: 3');
+  });
+
+  it('should return null targetIndex when no other tab is enabled', () => {
+    host.selectedIndex = 1;
+    hostFixture.detectChanges();
+    component.tabs.toArray().forEach((t, i) => {
+      t.disabled = i !== 1;
+    });
+    hostFixture.detectChanges();
+    const tabEls = getTabEls(hostFixture);
+    expect(() => dispatchKeydown(tabEls[1], 'ArrowRight')).not.toThrow();
+    hostFixture.detectChanges();
+    expect(component.tabs.toArray()[1].active).toBe(true);
+  });
+
+  describe('onResize / onScroll (direct calls)', () => {
+    function setTabsListSizes(props: {
+      offsetWidth?: number;
+      scrollWidth?: number;
+      scrollLeft?: number;
+      clientWidth?: number;
+    }) {
+      const el = component.tabsList.nativeElement;
+      el.style.padding = '0';
+      el.style.borderWidth = '0';
+      Object.entries(props).forEach(([key, value]) => {
+        if (key === 'scrollLeft') {
+          el.scrollLeft = value;
+        } else {
+          Object.defineProperty(el, key, { value, configurable: true });
+        }
+      });
+    }
+
+    it('should update nav button visibility on scroll', () => {
+      setTabsListSizes({
+        offsetWidth: 200,
+        scrollWidth: 500,
+        scrollLeft: 50,
+        clientWidth: 200
+      });
+      component.onScroll();
+      expect(component.backBtnVisible).toBe(false);
+    });
+
+    it('should update nav button visibility on resize', () => {
+      setTabsListSizes({
+        offsetWidth: 0,
+        scrollWidth: 0,
+        scrollLeft: 0,
+        clientWidth: 0
+      });
+      component.onResize();
+      expect(component.backBtnVisible).toBe(true);
+      expect(component.forwardBtnVisible).toBe(true);
+    });
+
+    it('should react to a real window resize event', fakeAsync(() => {
+      const spy = jest.spyOn(component, 'onResize');
+      window.dispatchEvent(new Event('resize'));
+      tick(60);
+      expect(spy).toHaveBeenCalled();
+    }));
+  });
+
+  describe('navBackward / navForward', () => {
+    function setTabsListSizes(props: {
+      offsetWidth?: number;
+      scrollWidth?: number;
+      scrollLeft?: number;
+      clientWidth?: number;
+    }) {
+      const el = component.tabsList.nativeElement;
+      el.style.padding = '0';
+      el.style.borderWidth = '0';
+      Object.entries(props).forEach(([key, value]) => {
+        if (key === 'scrollLeft') {
+          el.scrollLeft = value;
+        } else {
+          Object.defineProperty(el, key, { value, configurable: true });
+        }
+      });
+    }
+
+    it('should clamp scrollLeft to 0 when navigating backward past the start', () => {
+      setTabsListSizes({
+        offsetWidth: 300,
+        scrollWidth: 600,
+        scrollLeft: 10,
+        clientWidth: 300
+      });
+      component.navBackward();
+      expect(component.tabsList.nativeElement.scrollLeft).toBe(0);
+    });
+
+    it('should scroll backward by the visible width', () => {
+      setTabsListSizes({
+        offsetWidth: 300,
+        scrollWidth: 900,
+        scrollLeft: 400,
+        clientWidth: 300
+      });
+      component.navBackward();
+      expect(component.tabsList.nativeElement.scrollLeft).toBe(100);
+    });
+
+    it('should clamp scrollLeft to the last position when navigating forward past the end', () => {
+      setTabsListSizes({
+        offsetWidth: 300,
+        scrollWidth: 400,
+        scrollLeft: 350,
+        clientWidth: 300
+      });
+      component.navForward();
+      expect(component.tabsList.nativeElement.scrollLeft).toBe(100);
+    });
+
+    it('should scroll forward by the visible width', () => {
+      setTabsListSizes({
+        offsetWidth: 300,
+        scrollWidth: 900,
+        scrollLeft: 0,
+        clientWidth: 300
+      });
+      component.navForward();
+      expect(component.tabsList.nativeElement.scrollLeft).toBe(300);
+    });
+
+    it('should account for visible nav button widths when both are shown', () => {
+      component.backBtnVisible = false;
+      component.forwardBtnVisible = false;
+      hostFixture.detectChanges();
+
+      expect(component.backBtn).toBeTruthy();
+      expect(component.forwardBtn).toBeTruthy();
+      for (const btn of [component.backBtn!, component.forwardBtn!]) {
+        btn.nativeElement.style.padding = '0';
+        btn.nativeElement.style.borderWidth = '0';
+        Object.defineProperty(btn.nativeElement, 'offsetWidth', {
+          value: 20,
+          configurable: true
+        });
+      }
+      setTabsListSizes({
+        offsetWidth: 300,
+        scrollWidth: 900,
+        scrollLeft: 0,
+        clientWidth: 300
+      });
+
+      component.navForward();
+      expect(component.tabsList.nativeElement.scrollLeft).toBe(260);
+    });
+  });
+
+  describe('_scrollTabIntoView', () => {
+    it('should scroll left when the target tab starts before the visible area', () => {
+      const tabEls = getTabEls(hostFixture);
+      const list = component.tabsList.nativeElement;
+      list.scrollLeft = 100;
+      Object.defineProperty(tabEls[0], 'offsetLeft', {
+        value: 10,
+        configurable: true
+      });
+      Object.defineProperty(tabEls[0], 'offsetWidth', {
+        value: 50,
+        configurable: true
+      });
+      (component as any)._scrollTabIntoView(tabEls[0]);
+      expect(list.scrollLeft).toBe(10);
+    });
+
+    it('should scroll right when the target tab ends after the visible area', () => {
+      const tabEls = getTabEls(hostFixture);
+      const list = component.tabsList.nativeElement;
+      Object.defineProperty(list, 'clientWidth', {
+        value: 100,
+        configurable: true
+      });
+      list.scrollLeft = 0;
+      Object.defineProperty(tabEls[3], 'offsetLeft', {
+        value: 500,
+        configurable: true
+      });
+      Object.defineProperty(tabEls[3], 'offsetWidth', {
+        value: 50,
+        configurable: true
+      });
+      (component as any)._scrollTabIntoView(tabEls[3]);
+      expect(list.scrollLeft).toBe(450);
+    });
+  });
+
+  describe('Home / End with all tabs disabled', () => {
+    beforeEach(() => {
+      component.tabs.toArray().forEach((t) => (t.disabled = true));
+      hostFixture.detectChanges();
+    });
+
+    it('should not navigate on Home when every tab is disabled', () => {
+      const tabEls = getTabEls(hostFixture);
+      expect(() => dispatchKeydown(tabEls[0], 'Home')).not.toThrow();
+    });
+
+    it('should not navigate on End when every tab is disabled', () => {
+      const tabEls = getTabEls(hostFixture);
+      expect(() => dispatchKeydown(tabEls[0], 'End')).not.toThrow();
+    });
+  });
+
+  describe('_nextEnabledTab backward wrap skipping a disabled tab', () => {
+    it('should skip a disabled tab while wrapping backward past the start', () => {
+      const tabs = component.tabs.toArray();
+      tabs[3].disabled = true;
+      hostFixture.detectChanges();
+      const result = (component as any)._nextEnabledTab(0, -1, tabs);
+      expect(result).toBe(1);
+    });
+  });
+
+  describe('selectTab with out-of-range tab indexes', () => {
+    it('should skip deactivating the previous tab when its index is out of range', () => {
+      component.selectedIndex = 1;
+      hostFixture.detectChanges();
+      (component as any)._previousTabIndex = 99;
+      expect(() => component.selectTab()).not.toThrow();
+    });
+
+    it('should skip activating the new tab when its index is out of range', () => {
+      (component as any)._currentTabIndex = 99;
+      (component as any)._previousTabIndex = 0;
+      expect(() => component.selectTab()).not.toThrow();
+    });
+  });
+
+  describe('selectTab with an unrecognized animationType', () => {
+    it('should not set an animation state for an unknown animationType', () => {
+      component.animationType = 'unknown' as any;
+      component.animationState = 'fadeIn';
+      component.selectedIndex = 1;
+      component.selectTab();
+      expect(component.animationState).toBe('fadeIn');
+    });
+  });
+
+  describe('selectTab with fade animation and silent=true', () => {
+    it('should not emit afterTabChanged after the fade timeout when silent', fakeAsync(() => {
+      host.animationType = 'fade';
+      hostFixture.detectChanges();
+      jest.spyOn(component.afterTabChanged, 'emit');
+      component.selectedIndex = 1;
+      component.selectTab(true);
+      tick(100);
+      expect(component.afterTabChanged.emit).not.toHaveBeenCalled();
+    }));
+  });
+
   describe('reduced motion', () => {
     afterEach(() => {
       jest.restoreAllMocks();

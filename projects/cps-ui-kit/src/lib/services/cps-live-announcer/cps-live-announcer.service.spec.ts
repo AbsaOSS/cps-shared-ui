@@ -1,6 +1,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Injector, PLATFORM_ID } from '@angular/core';
 import {
+  CPS_LIVE_ANNOUNCER_SERVICE,
   CpsLiveAnnouncerPoliteness,
   CpsLiveAnnouncerService
 } from './cps-live-announcer.service';
@@ -19,6 +20,11 @@ describe('CpsLiveAnnouncerService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  it('should resolve CPS_LIVE_ANNOUNCER_SERVICE to the singleton service', () => {
+    const injected = TestBed.inject(CPS_LIVE_ANNOUNCER_SERVICE);
+    expect(injected).toBeInstanceOf(CpsLiveAnnouncerService);
   });
 
   it('should add a polite live region to document.body on creation', () => {

@@ -175,6 +175,12 @@ describe('CpsTreetableRowTogglerDirective', () => {
       const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
       expect(passedNode.expanded).toBe(false);
     });
+
+    it('should not call setInput when the change set does not include rowNode', () => {
+      mockTogglerRef.setInput.mockClear();
+      directive.ngOnChanges({});
+      expect(mockTogglerRef.setInput).not.toHaveBeenCalled();
+    });
   });
 
   describe('_rowNodeWithExpanded', () => {

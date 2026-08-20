@@ -66,6 +66,12 @@ describe('CpsLoaderComponent', () => {
     expect(component.backgroundColor).toBe('rgba(0, 0, 0, 0.5)');
   });
 
+  it('should update background color when opacity changes via ngOnChanges', () => {
+    fixture.componentRef.setInput('opacity', 0.7);
+    fixture.detectChanges();
+    expect(component.backgroundColor).toBe('rgba(0, 0, 0, 0.7)');
+  });
+
   it('should convert label color on init', () => {
     fixture.componentRef.setInput('labelColor', 'primary');
     fixture.detectChanges();

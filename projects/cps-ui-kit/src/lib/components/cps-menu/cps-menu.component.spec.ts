@@ -301,6 +301,17 @@ describe('CpsMenuComponent', () => {
       component.toggle(null, target2);
       expect(component.destroyCallback).not.toBeNull();
     });
+
+    it('should show the new target when destroyCallback is invoked', () => {
+      const target1 = document.createElement('button');
+      const target2 = document.createElement('button');
+      component.show(null, target1);
+      component.isOverlayAnimationInProgress = false;
+      component.toggle(null, target2);
+      jest.spyOn(component, 'show');
+      component.destroyCallback?.();
+      expect(component.show).toHaveBeenCalledWith(null, target2, undefined);
+    });
   });
 
   describe('hasTargetChanged', () => {
@@ -797,6 +808,619 @@ describe('CpsMenuComponent', () => {
       component.ngOnDestroy();
       expect(mockScrollHandler.destroy).toHaveBeenCalled();
       expect(component.scrollHandler).toBeNull();
+    });
+  });
+
+  describe('resizeObserver callback', () => {
+    let capturedCallback: ((entries: any[]) => void) | undefined;
+    let localFixture: ComponentFixture<CpsMenuComponent>;
+    let localComponent: CpsMenuComponent;
+    let OriginalRO: any;
+
+    beforeEach(async () => {
+      OriginalRO = window.ResizeObserver;
+      (window as any).ResizeObserver = class {
+        constructor(cb: (entries: any[]) => void) {
+          capturedCallback = cb;
+        }
+
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [CpsMenuComponent, NoopAnimationsModule],
+        providers: [
+          provideRouter([]),
+          { provide: CPS_FOCUS_SERVICE, useValue: mockFocusService }
+        ],
+        schemas: [NO_ERRORS_SCHEMA]
+      }).compileComponents();
+      localFixture = TestBed.createComponent(CpsMenuComponent);
+      localComponent = localFixture.componentInstance;
+      localFixture.detectChanges();
+    });
+
+    afterEach(() => {
+      window.ResizeObserver = OriginalRO;
+    });
+
+    it('should call align for each entry when target is set', () => {
+      const target = document.createElement('button');
+      localComponent.target = target;
+      jest.spyOn(localComponent, 'align').mockImplementation(() => {});
+      capturedCallback?.([{}, null]);
+      expect(localComponent.align).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call align when there is no target', () => {
+      localComponent.target = null;
+      jest.spyOn(localComponent, 'align').mockImplementation(() => {});
+      capturedCallback?.([{}]);
+      expect(localComponent.align).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('align', () => {
+    let target: HTMLElement;
+    let container: HTMLDivElement;
+
+    beforeEach(() => {
+      target = document.createElement('button');
+      document.body.appendChild(target);
+      container = document.createElement('div');
+      document.body.appendChild(container);
+      component.container = container;
+      component.target = target;
+    });
+
+    afterEach(() => {
+      target.remove();
+      container.remove();
+    });
+
+    it('should do nothing when there is no target', () => {
+      component.target = null;
+      expect(() => component.align()).not.toThrow();
+    });
+
+    it('should hide and destroy when target is no longer connected', () => {
+      jest.spyOn(component, 'hide');
+      target.remove();
+      component.align();
+      expect(component.hide).toHaveBeenCalledWith(
+        CpsMenuHideReason.TARGET_NOT_CONNECTED
+      );
+    });
+
+    it('should set z-index when autoZIndex is true', () => {
+      component.autoZIndex = true;
+      component.align();
+      expect(container.style.zIndex).not.toBe('');
+    });
+
+    it('should skip z-index handling when autoZIndex is false', () => {
+      component.autoZIndex = false;
+      component.align();
+      expect(container.style.zIndex).toBe('');
+    });
+
+    it.each(['bl', 'br', 'tl', 'tr', 'default'] as const)(
+      'should position the container for position "%s"',
+      (pos) => {
+        component.position = pos;
+        component.align();
+        expect(container.style.top).toBe('0px');
+        expect(container.style.left).toBe('0px');
+      }
+    );
+
+    it('should position the arrow when withArrow is true', () => {
+      component.withArrow = true;
+      const arrowEl = document.createElement('div');
+      container.appendChild(arrowEl);
+      (component as any)._menuArrow = { nativeElement: arrowEl };
+      component.align();
+      expect(arrowEl.style.left).toBe('-1px');
+    });
+
+    it('should skip arrow positioning when withArrow is false', () => {
+      component.withArrow = false;
+      (component as any)._menuArrow = undefined;
+      expect(() => component.align()).not.toThrow();
+    });
+
+    it('should skip arrow positioning when arrow element is not present', () => {
+      component.withArrow = true;
+      (component as any)._menuArrow = undefined;
+      expect(() => component.align()).not.toThrow();
+    });
+
+    it('should add flipped class when container is above target', () => {
+      jest
+        .spyOn(container, 'getBoundingClientRect')
+        .mockReturnValue({ top: -100, left: 0 } as DOMRect);
+      jest
+        .spyOn(target, 'getBoundingClientRect')
+        .mockReturnValue({ top: 100, left: 0 } as DOMRect);
+      component.align();
+      expect(container.classList.contains('cps-menu-container-flipped')).toBe(
+        true
+      );
+    });
+  });
+
+  describe('onAnimationStart / onAnimationEnd', () => {
+    let target: HTMLElement;
+
+    beforeEach(() => {
+      target = document.createElement('button');
+      document.body.appendChild(target);
+      component.target = target;
+      jest.spyOn(component, 'align').mockImplementation(() => {});
+      jest.spyOn(component, 'appendContainer').mockImplementation(() => {});
+      jest
+        .spyOn(component, 'bindDocumentClickListener')
+        .mockImplementation(() => {});
+      jest
+        .spyOn(component, 'bindDocumentKeydownListener')
+        .mockImplementation(() => {});
+      jest
+        .spyOn(component, 'bindDocumentResizeListener')
+        .mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      document.body.removeChild(target);
+    });
+
+    it('should emit beforeMenuHidden when animation moves to close', () => {
+      jest.spyOn(component.beforeMenuHidden, 'emit');
+      component.hideReason = CpsMenuHideReason.CLICK_ITEM;
+      component.onAnimationStart({
+        toState: 'close'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.beforeMenuHidden.emit).toHaveBeenCalledWith(
+        CpsMenuHideReason.CLICK_ITEM
+      );
+    });
+
+    it('should set up listeners and emit menuShown when animation moves to open', () => {
+      jest.spyOn(component.menuShown, 'emit');
+      const containerEl = document.createElement('div');
+      component.onAnimationStart({
+        toState: 'open',
+        element: containerEl
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.container).toBe(containerEl);
+      expect(component.appendContainer).toHaveBeenCalled();
+      expect(component.align).toHaveBeenCalled();
+      expect(component.menuShown.emit).toHaveBeenCalled();
+      expect(component.isOverlayAnimationInProgress).toBe(true);
+    });
+
+    it('should focus on show when focusOnShow is true', () => {
+      component.focusOnShow = true;
+      jest.spyOn(component, 'focus').mockImplementation(() => {});
+      component.onAnimationStart({
+        toState: 'open',
+        element: document.createElement('div')
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.focus).toHaveBeenCalled();
+    });
+
+    it('should not focus on show when focusOnShow is false', () => {
+      component.focusOnShow = false;
+      jest.spyOn(component, 'focus').mockImplementation(() => {});
+      component.onAnimationStart({
+        toState: 'open',
+        element: document.createElement('div')
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.focus).not.toHaveBeenCalled();
+    });
+
+    it('should not react to other animation states on start', () => {
+      component.onAnimationStart({
+        toState: 'void'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.isOverlayAnimationInProgress).toBe(true);
+    });
+
+    it('should bind scroll listener when animation ends in open', () => {
+      jest.spyOn(component, 'bindScrollListener').mockImplementation(() => {});
+      component.onAnimationEnd({
+        toState: 'open'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.bindScrollListener).toHaveBeenCalled();
+      expect(component.isOverlayAnimationInProgress).toBe(false);
+    });
+
+    it('should invoke destroyCallback and unsubscribe when animation ends in void', () => {
+      const destroyCallback = jest.fn();
+      component.destroyCallback = destroyCallback;
+      component.overlaySubscription =
+        component.overlayService.clickObservable.subscribe(() => {});
+      jest.spyOn(component.overlaySubscription, 'unsubscribe');
+      component.onAnimationEnd({
+        toState: 'void'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(destroyCallback).toHaveBeenCalled();
+      expect(component.destroyCallback).toBeNull();
+    });
+
+    it('should do nothing extra when animation ends in void with no destroyCallback or subscription', () => {
+      component.destroyCallback = null;
+      component.overlaySubscription = undefined;
+      expect(() =>
+        component.onAnimationEnd({
+          toState: 'void'
+        } as unknown as import('@angular/animations').AnimationEvent)
+      ).not.toThrow();
+    });
+
+    it('should clear z-index and emit menuHidden when animation ends in close', () => {
+      jest.spyOn(component.menuHidden, 'emit');
+      component.autoZIndex = true;
+      component.hideReason = CpsMenuHideReason.CLICK_OUTSIDE;
+      component.onAnimationEnd({
+        toState: 'close'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.menuHidden.emit).toHaveBeenCalledWith(
+        CpsMenuHideReason.CLICK_OUTSIDE
+      );
+      expect(component.render).toBe(false);
+    });
+
+    it('should unsubscribe overlaySubscription when animation ends in close', () => {
+      component.overlaySubscription =
+        component.overlayService.clickObservable.subscribe(() => {});
+      jest.spyOn(component.overlaySubscription, 'unsubscribe');
+      component.onAnimationEnd({
+        toState: 'close'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.overlaySubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('should set selfClick when overlay is clicked inside the container', () => {
+      const containerEl = document.createElement('div');
+      const innerTarget = document.createElement('span');
+      containerEl.appendChild(innerTarget);
+      component.onAnimationStart({
+        toState: 'open',
+        element: containerEl
+      } as unknown as import('@angular/animations').AnimationEvent);
+
+      component.selfClick = false;
+      (component.overlayService as any).clickSource.next({
+        target: innerTarget
+      });
+      expect(component.selfClick).toBe(true);
+    });
+
+    it('should skip z-index clearing when autoZIndex is false on close', () => {
+      component.autoZIndex = false;
+      component.onAnimationEnd({
+        toState: 'close'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(component.render).toBe(false);
+    });
+  });
+
+  describe('_focusTarget', () => {
+    it('should do nothing when there is no target', () => {
+      component.target = null;
+      expect(() => (component as any)._focusTarget()).not.toThrow();
+    });
+
+    it('should use the focus service when available', () => {
+      const target = document.createElement('button');
+      component.target = target;
+      (component as any)._focusTarget();
+      expect(mockFocusService.focusElement).toHaveBeenCalledWith(
+        target,
+        expect.any(Boolean)
+      );
+    });
+
+    it('should fall back to native focus when focus service is unavailable', () => {
+      const target = document.createElement('button');
+      jest.spyOn(target, 'focus');
+      component.target = target;
+      (component as any)._cpsFocusService = undefined;
+      (component as any)._focusTarget();
+      expect(target.focus).toHaveBeenCalled();
+    });
+  });
+
+  describe('_focusableIn', () => {
+    it('should return focusable, visible, enabled elements', () => {
+      const container = document.createElement('div');
+      const btn = document.createElement('button');
+      Object.defineProperty(btn, 'offsetWidth', { value: 10 });
+      const disabledBtn = document.createElement('button');
+      disabledBtn.disabled = true;
+      Object.defineProperty(disabledBtn, 'offsetWidth', { value: 10 });
+      const notTabbable = document.createElement('div');
+      notTabbable.tabIndex = -1;
+      container.appendChild(btn);
+      container.appendChild(disabledBtn);
+      container.appendChild(notTabbable);
+      document.body.appendChild(container);
+
+      const result = (component as any)._focusableIn(container);
+      expect(result).toContain(btn);
+      expect(result).not.toContain(disabledBtn);
+      expect(result).not.toContain(notTabbable);
+
+      document.body.removeChild(container);
+    });
+  });
+
+  describe('bindDocumentResizeListener / unbindDocumentResizeListener', () => {
+    afterEach(() => {
+      component.unbindDocumentResizeListener();
+    });
+
+    it('should bind a resize listener', () => {
+      component.bindDocumentResizeListener();
+      expect(component.documentResizeListener).toBeTruthy();
+    });
+
+    it('should not bind a second listener when one already exists', () => {
+      component.bindDocumentResizeListener();
+      const first = component.documentResizeListener;
+      component.bindDocumentResizeListener();
+      expect(component.documentResizeListener).toBe(first);
+    });
+
+    it('should clear the listener on unbind', () => {
+      component.bindDocumentResizeListener();
+      component.unbindDocumentResizeListener();
+      expect(component.documentResizeListener).toBeNull();
+    });
+  });
+
+  describe('bindScrollListener / unbindScrollListener', () => {
+    beforeEach(() => {
+      const target = document.createElement('button');
+      component.target = target;
+    });
+
+    afterEach(() => {
+      component.unbindScrollListener();
+    });
+
+    it('should create and bind a scroll handler', () => {
+      component.bindScrollListener();
+      expect(component.scrollHandler).toBeTruthy();
+    });
+
+    it('should hide the menu when scroll fires while overlay visible', () => {
+      component.bindScrollListener();
+      jest.spyOn(component, 'hide');
+      component.overlayVisible = true;
+      (component.scrollHandler as any).listener();
+      expect(component.hide).toHaveBeenCalledWith(CpsMenuHideReason.SCROLL);
+    });
+
+    it('should not hide the menu when scroll fires while overlay hidden', () => {
+      component.bindScrollListener();
+      jest.spyOn(component, 'hide');
+      component.overlayVisible = false;
+      (component.scrollHandler as any).listener();
+      expect(component.hide).not.toHaveBeenCalled();
+    });
+
+    it('should not recreate the scroll handler if one already exists', () => {
+      component.bindScrollListener();
+      const first = component.scrollHandler;
+      component.bindScrollListener();
+      expect(component.scrollHandler).toBe(first);
+    });
+  });
+
+  describe('appendContainer / restoreAppend', () => {
+    it('should append the container to the document body', () => {
+      const container = document.createElement('div');
+      component.container = container;
+      component.appendContainer();
+      expect(container.parentElement).toBe(document.body);
+      document.body.removeChild(container);
+    });
+
+    it('should restore the container into the host element', () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      component.container = container;
+      component.restoreAppend();
+      expect(container.parentElement).toBe(component.el.nativeElement);
+    });
+
+    it('should do nothing on restoreAppend when there is no container', () => {
+      component.container = null;
+      expect(() => component.restoreAppend()).not.toThrow();
+    });
+  });
+
+  describe('onContainerDestroy', () => {
+    it('should clear the target when change detector is not destroyed', () => {
+      component.target = document.createElement('button');
+      component.onContainerDestroy();
+      expect(component.target).toBeNull();
+    });
+
+    it('should unbind all listeners', () => {
+      jest.spyOn(component, 'unbindDocumentClickListener');
+      jest.spyOn(component, 'unbindDocumentKeydownListener');
+      jest.spyOn(component, 'unbindDocumentResizeListener');
+      jest.spyOn(component, 'unbindScrollListener');
+      component.onContainerDestroy();
+      expect(component.unbindDocumentClickListener).toHaveBeenCalled();
+      expect(component.unbindDocumentKeydownListener).toHaveBeenCalled();
+      expect(component.unbindDocumentResizeListener).toHaveBeenCalled();
+      expect(component.unbindScrollListener).toHaveBeenCalled();
+    });
+  });
+
+  describe('ngOnDestroy / _destroy', () => {
+    it('should destroy the scroll handler and clear container z-index', () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      component.container = container;
+      component.autoZIndex = true;
+      const mockScrollHandler = {
+        destroy: jest.fn(),
+        unbindScrollListener: jest.fn(),
+        bindScrollListener: jest.fn()
+      };
+      component.scrollHandler = mockScrollHandler as any;
+      component.ngOnDestroy();
+      expect(mockScrollHandler.destroy).toHaveBeenCalled();
+      expect(component.container).toBeTruthy();
+      document.body.removeChild(
+        component.el.nativeElement.contains(container)
+          ? component.el.nativeElement
+          : container
+      );
+    });
+
+    it('should unsubscribe from overlaySubscription on destroy', () => {
+      component.overlaySubscription =
+        component.overlayService.clickObservable.subscribe(() => {});
+      jest.spyOn(component.overlaySubscription, 'unsubscribe');
+      component.ngOnDestroy();
+      expect(component.overlaySubscription.unsubscribe).toHaveBeenCalled();
+    });
+
+    it('should handle destroy with no scrollHandler or container gracefully', () => {
+      component.scrollHandler = null;
+      component.container = null;
+      expect(() => component.ngOnDestroy()).not.toThrow();
+    });
+  });
+
+  describe('bindDocumentKeydownListener Tab handling without items', () => {
+    let container: HTMLDivElement;
+    let focusableEl: HTMLElement;
+
+    beforeEach(() => {
+      jest.spyOn(DomHandler, 'isTouchDevice').mockReturnValue(false);
+      container = document.createElement('div');
+      focusableEl = document.createElement('button');
+      Object.defineProperty(focusableEl, 'offsetWidth', { value: 10 });
+      container.appendChild(focusableEl);
+      document.body.appendChild(container);
+
+      component.container = container;
+      component.target = document.createElement('button');
+      component.overlayVisible = true;
+      component.dismissable = true;
+      component.bindDocumentKeydownListener();
+    });
+
+    afterEach(() => {
+      component.unbindDocumentKeydownListener();
+      document.body.removeChild(container);
+    });
+
+    it('should hide on Tab at the last focusable element without shift', () => {
+      jest.spyOn(component, 'hide');
+      focusableEl.focus();
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Tab', bubbles: true })
+      );
+      expect(component.hide).toHaveBeenCalledWith(
+        CpsMenuHideReason.KEYDOWN_TAB
+      );
+    });
+
+    it('should hide on Shift+Tab at the first focusable element', () => {
+      jest.spyOn(component, 'hide');
+      focusableEl.focus();
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'Tab',
+          shiftKey: true,
+          bubbles: true
+        })
+      );
+      expect(component.hide).toHaveBeenCalledWith(
+        CpsMenuHideReason.KEYDOWN_TAB
+      );
+    });
+
+    it('should not hide on Tab when focus is not at a boundary', () => {
+      jest.spyOn(component, 'hide');
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Tab', bubbles: true })
+      );
+      expect(component.hide).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ArrowDown / ArrowUp / Home / End with no items', () => {
+    beforeEach(() => {
+      jest.spyOn(DomHandler, 'isTouchDevice').mockReturnValue(false);
+      component.container = document.createElement('div');
+      component.target = document.createElement('button');
+      component.overlayVisible = true;
+      component.dismissable = true;
+      component.bindDocumentKeydownListener();
+    });
+
+    afterEach(() => {
+      component.unbindDocumentKeydownListener();
+    });
+
+    it('should not navigate on ArrowDown when there are no items', () => {
+      expect(() =>
+        document.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })
+        )
+      ).not.toThrow();
+    });
+
+    it('should not navigate on Home when there are no items', () => {
+      expect(() =>
+        document.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'Home', bubbles: true })
+        )
+      ).not.toThrow();
+    });
+
+    it('should not navigate on End when there are no items', () => {
+      expect(() =>
+        document.dispatchEvent(
+          new KeyboardEvent('keydown', { key: 'End', bubbles: true })
+        )
+      ).not.toThrow();
+    });
+  });
+
+  describe('_navigateItems with no active item', () => {
+    it('should focus the first item when no item currently has focus', () => {
+      const container = document.createElement('div');
+      const item1 = document.createElement('a');
+      item1.className = 'cps-menu-item';
+      const item2 = document.createElement('a');
+      item2.className = 'cps-menu-item';
+      container.appendChild(item1);
+      container.appendChild(item2);
+      document.body.appendChild(container);
+      component.container = container;
+
+      jest.spyOn(item1, 'focus');
+      (component as any)._navigateItems(1);
+      expect(item1.focus).toHaveBeenCalled();
+
+      document.body.removeChild(container);
+    });
+
+    it('should do nothing when there are no menu items', () => {
+      component.container = document.createElement('div');
+      expect(() => (component as any)._navigateItems(1)).not.toThrow();
     });
   });
 

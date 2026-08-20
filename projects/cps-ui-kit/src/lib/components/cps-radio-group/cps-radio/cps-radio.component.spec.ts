@@ -34,6 +34,14 @@ describe('CpsRadioComponent', () => {
       expect(() => component.updateValueEvent('a')).not.toThrow();
     });
 
+    it('should not throw when onBlur is called without a radio group', () => {
+      expect(() => component.onBlur()).not.toThrow();
+    });
+
+    it('should not throw when onFocus is called without a radio group', () => {
+      expect(() => component.onFocus()).not.toThrow();
+    });
+
     it('should render a cps-radio-button with the option passed through', () => {
       const radioButton = fixture.debugElement.query(
         By.directive(CpsRadioButtonComponent)
@@ -46,10 +54,20 @@ describe('CpsRadioComponent', () => {
   describe('with a radio group', () => {
     let component: CpsRadioComponent;
     let fixture: ComponentFixture<CpsRadioComponent>;
-    let mockGroup: { disabled: boolean; updateValueEvent: jest.Mock };
+    let mockGroup: {
+      disabled: boolean;
+      updateValueEvent: jest.Mock;
+      onBlur: jest.Mock;
+      onFocus: jest.Mock;
+    };
 
     beforeEach(async () => {
-      mockGroup = { disabled: true, updateValueEvent: jest.fn() };
+      mockGroup = {
+        disabled: true,
+        updateValueEvent: jest.fn(),
+        onBlur: jest.fn(),
+        onFocus: jest.fn()
+      };
 
       await TestBed.configureTestingModule({
         imports: [CpsRadioComponent],
@@ -69,6 +87,16 @@ describe('CpsRadioComponent', () => {
     it('should delegate updateValueEvent to the injected group', () => {
       component.updateValueEvent('a');
       expect(mockGroup.updateValueEvent).toHaveBeenCalledWith('a');
+    });
+
+    it('should delegate onBlur to the injected group', () => {
+      component.onBlur();
+      expect(mockGroup.onBlur).toHaveBeenCalled();
+    });
+
+    it('should delegate onFocus to the injected group', () => {
+      component.onFocus();
+      expect(mockGroup.onFocus).toHaveBeenCalled();
     });
   });
 

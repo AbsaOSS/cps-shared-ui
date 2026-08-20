@@ -94,7 +94,7 @@
                 aria-label="Selected options">
                 @for (
                   val of treeSelection;
-                  track val;
+                  track val.key;
                   let last = $last;
                   let i = $index
                 ) {
@@ -130,7 +130,7 @@
                 aria-label="Selected options">
                 @for (
                   val of treeSelection;
-                  track val;
+                  track val.key;
                   let last = $last;
                   let i = $index
                 ) {

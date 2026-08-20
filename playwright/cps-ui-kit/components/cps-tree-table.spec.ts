@@ -578,6 +578,8 @@ test.describe('cps-tree-table', () => {
 
       await page.getByTestId('cps-switch-label').click();
 
+      await expect(page.getByTestId('cps-switch-input')).toBeChecked();
+
       await expect(wrapper.locator('.p-paginator')).toBeVisible();
     });
   });

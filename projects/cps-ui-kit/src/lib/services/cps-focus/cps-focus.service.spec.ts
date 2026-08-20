@@ -195,6 +195,34 @@ describe('CpsFocusService', () => {
       expect(btn3.focus).toHaveBeenCalled();
     });
 
+    it('should ignore non-Tab keydown events', () => {
+      service.trapFocus(container);
+      btn3.focus();
+      jest.spyOn(btn1, 'focus');
+      jest.spyOn(btn3, 'focus');
+      container.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })
+      );
+      expect(btn1.focus).not.toHaveBeenCalled();
+      expect(btn3.focus).not.toHaveBeenCalled();
+    });
+
+    it('should wrap focus from the container to the last element on Shift+Tab', () => {
+      service.trapFocus(container);
+      jest.spyOn(btn3, 'focus');
+      container.focus();
+      container.dispatchEvent(tab(true));
+      expect(btn3.focus).toHaveBeenCalled();
+    });
+
+    it('should wrap focus from the container to the first element on Tab', () => {
+      service.trapFocus(container);
+      jest.spyOn(btn1, 'focus');
+      container.focus();
+      container.dispatchEvent(tab());
+      expect(btn1.focus).toHaveBeenCalled();
+    });
+
     it('should not trap when Tab is pressed on a middle element', () => {
       service.trapFocus(container);
       jest.spyOn(btn1, 'focus');

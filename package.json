@@ -10,7 +10,7 @@
     "test": "ng test",
     "test:composition": "ng test --project=composition",
     "test:cps-ui-kit": "ng test --project=cps-ui-kit",
-    "test:coverage:cps-ui-kit": "ng test --project=cps-ui-kit --coverage --coverage-reporters text-summary --coverage-reporters lcov --json --output-file=./coverage/report.json",
+    "test:coverage:cps-ui-kit": "COVERAGE_PROJECT=cps-ui-kit ng test --project=cps-ui-kit --coverage --coverage-reporters text-summary --coverage-reporters lcov --json --output-file=./coverage/report.json",
     "test:coverage:composition": "ng test --project=composition --coverage --coverage-reporters text-summary --coverage-reporters lcov --json --output-file=./coverage/report.json",
     "lint": "eslint \"**/*.ts\"",
     "typecheck": "tsc --noEmit",

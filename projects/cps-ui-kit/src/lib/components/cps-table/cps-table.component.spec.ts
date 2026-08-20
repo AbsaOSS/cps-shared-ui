@@ -1,5 +1,10 @@
 import { SimpleChange } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick
+} from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BaseComponent } from '../../primeng-temp/basecomponent/public_api';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
@@ -720,6 +725,451 @@ describe('CpsTableComponent', () => {
     it('should do nothing when drag is not active', () => {
       expect(component.keyboardDragRowIndex).toBeNull();
       expect(() => component._onDragHandleBlur()).not.toThrow();
+    });
+  });
+
+  describe('exportTable xlsx', () => {
+    it('should delegate to exportXLSX for xlsx format', () => {
+      component.columns = [{ header: 'Name', field: 'name' }];
+      component.selectedColumns = component.columns;
+      jest.spyOn(component, 'exportXLSX').mockImplementation(() => {});
+      component.exportTable('xlsx');
+      expect(component.exportXLSX).toHaveBeenCalled();
+    });
+  });
+
+  describe('exportXLSX', () => {
+    it('should build a workbook and trigger a download', async () => {
+      component.data = [{ name: 'Alice' }, { name: 'Bob' }];
+      component.columns = [{ header: 'Name', field: 'name' }];
+      component.selectedColumns = component.columns;
+      component.exportFilename = 'my-export';
+
+      const realCreateElement = document.createElement.bind(document);
+      const anchor = realCreateElement('a');
+      const clickSpy = jest.spyOn(anchor, 'click').mockImplementation(() => {});
+      jest
+        .spyOn(document, 'createElement')
+        .mockImplementation((tag: string) =>
+          tag === 'a' ? anchor : realCreateElement(tag)
+        );
+      const hadCreateObjectURL = Object.prototype.hasOwnProperty.call(
+        URL,
+        'createObjectURL'
+      );
+      const originalCreateObjectURL = (URL as any).createObjectURL;
+      const urlSpy = jest.fn().mockReturnValue('blob:mock');
+      Object.defineProperty(URL, 'createObjectURL', {
+        value: urlSpy,
+        configurable: true,
+        writable: true
+      });
+
+      try {
+        component.exportXLSX();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+
+        expect(urlSpy).toHaveBeenCalled();
+        expect(anchor.download).toBe('my-export.xlsx');
+        expect(clickSpy).toHaveBeenCalled();
+      } finally {
+        if (hadCreateObjectURL) {
+          Object.defineProperty(URL, 'createObjectURL', {
+            value: originalCreateObjectURL,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          delete (URL as any).createObjectURL;
+        }
+      }
+    });
+  });
+
+  describe('onFilterGlobal', () => {
+    it('should call primengTable.filterGlobal with the value and "contains"', () => {
+      jest
+        .spyOn(component.primengTable, 'filterGlobal')
+        .mockImplementation(() => {});
+      component.onFilterGlobal('abc');
+      expect(component.primengTable.filterGlobal).toHaveBeenCalledWith(
+        'abc',
+        'contains'
+      );
+    });
+  });
+
+  describe('onRowsPerPageChanged', () => {
+    it('should reset to first page when resetPageOnRowsChange is true', () => {
+      component.resetPageOnRowsChange = true;
+      component.rows = 10;
+      component.primengTable.totalRecords = 30;
+      component.primengTable.first = 20;
+      jest.spyOn(component, 'changePage');
+      component.onRowsPerPageChanged();
+      expect(component.primengTable.first).toBe(0);
+      expect(component.changePage).toHaveBeenCalledWith(0);
+    });
+
+    it('should not reset first when resetPageOnRowsChange is false', () => {
+      component.resetPageOnRowsChange = false;
+      component.rows = 10;
+      component.primengTable.totalRecords = 30;
+      component.primengTable.first = 20;
+      jest.spyOn(component, 'changePage');
+      component.onRowsPerPageChanged();
+      expect(component.primengTable.first).toBe(20);
+    });
+  });
+
+  describe('clearGlobalFilter / resetSortingState', () => {
+    it('should call clear on the global filter component when present', () => {
+      const clearSpy = jest.fn();
+      (component as any).globalFilterComp = { clear: clearSpy };
+      component.clearGlobalFilter();
+      expect(clearSpy).toHaveBeenCalled();
+    });
+
+    it('should do nothing when there is no global filter component', () => {
+      (component as any).globalFilterComp = undefined;
+      expect(() => component.clearGlobalFilter()).not.toThrow();
+    });
+
+    it('should call resetDefaultSortOrder on the unsort directive when present', () => {
+      const resetSpy = jest.fn();
+      (component as any).tUnsortDirective = {
+        resetDefaultSortOrder: resetSpy
+      };
+      component.resetSortingState();
+      expect(resetSpy).toHaveBeenCalled();
+    });
+
+    it('should do nothing when there is no unsort directive', () => {
+      (component as any).tUnsortDirective = undefined;
+      expect(() => component.resetSortingState()).not.toThrow();
+    });
+  });
+
+  describe('onExportData / onExportMenuShown', () => {
+    it('should do nothing when the export button is disabled', () => {
+      component.exportBtnDisabled = true;
+      (component as any).exportMenu = { toggle: jest.fn() };
+      component.onExportData(new Event('click'));
+      expect((component as any).exportMenu.toggle).not.toHaveBeenCalled();
+    });
+
+    it('should toggle the export menu when enabled', () => {
+      component.exportBtnDisabled = false;
+      const toggle = jest.fn();
+      (component as any).exportMenu = { toggle };
+      const event = new Event('click');
+      component.onExportData(event);
+      expect(toggle).toHaveBeenCalledWith(event);
+    });
+
+    it('should size the export menu container to the target width', () => {
+      const container = document.createElement('div');
+      const target = document.createElement('button');
+      Object.defineProperty(target, 'offsetWidth', {
+        value: 120,
+        configurable: true
+      });
+      (component as any).exportMenu = { container, target };
+      component.onExportMenuShown();
+      expect(component.isExportMenuOpen).toBe(true);
+      expect(container.style.width).toBe('120px');
+    });
+
+    it('should not throw when the export menu container or target is missing', () => {
+      (component as any).exportMenu = { container: null, target: null };
+      expect(() => component.onExportMenuShown()).not.toThrow();
+    });
+  });
+
+  describe('ngAfterViewChecked', () => {
+    it('should set the header height custom property once the header has a height', () => {
+      component.scrollHeight = '400px';
+      (component as any)._headerHeightSet = false;
+      const headerEl = document.createElement('div');
+      headerEl.className = 'p-datatable-header';
+      Object.defineProperty(headerEl, 'offsetHeight', {
+        value: 48,
+        configurable: true
+      });
+      const tableRoot = document.createElement('div');
+      tableRoot.appendChild(headerEl);
+      (component as any).primengTable = {
+        ...component.primengTable,
+        el: { nativeElement: tableRoot }
+      };
+      component.ngAfterViewChecked();
+      expect(tableRoot.style.getPropertyValue('--cps-header-height')).toBe(
+        '48px'
+      );
+      expect((component as any)._headerHeightSet).toBe(true);
+    });
+
+    it('should compute virtualScrollItemSize from the first row when virtualScroll is enabled', () => {
+      component.scrollHeight = '';
+      component.virtualScroll = true;
+      component.virtualScrollItemSize = 0;
+      const tr = document.createElement('tr');
+      Object.defineProperty(tr, 'clientHeight', {
+        value: 42,
+        configurable: true
+      });
+      const tbody = document.createElement('tbody');
+      tbody.className = 'p-datatable-tbody';
+      tbody.appendChild(tr);
+      const tableRoot = document.createElement('div');
+      tableRoot.appendChild(tbody);
+      (component as any).primengTable = {
+        ...component.primengTable,
+        el: { nativeElement: tableRoot }
+      };
+      const cdSpy = jest.spyOn((component as any)._cdRef, 'detectChanges');
+      component.ngAfterViewChecked();
+      expect(component.virtualScrollItemSize).toBe(42);
+      expect(cdSpy).toHaveBeenCalled();
+    });
+
+    it('should skip virtualScrollItemSize computation once already set', () => {
+      component.scrollHeight = '';
+      component.virtualScroll = true;
+      component.virtualScrollItemSize = 42;
+      const cdSpy = jest.spyOn((component as any)._cdRef, 'detectChanges');
+      component.ngAfterViewChecked();
+      expect(cdSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onPaginatorKeydown', () => {
+    function makePageButtons(count: number): HTMLButtonElement[] {
+      const buttons: HTMLButtonElement[] = [];
+      for (let i = 0; i < count; i++) {
+        const btn = document.createElement('button');
+        btn.classList.add('p-paginator-page');
+        btn.textContent = String(i + 1);
+        buttons.push(btn);
+        (component as any)._elementRef.nativeElement.appendChild(btn);
+      }
+      return buttons;
+    }
+
+    afterEach(() => {
+      (component as any)._elementRef.nativeElement
+        .querySelectorAll('.p-paginator-page')
+        .forEach((el: HTMLElement) => el.remove());
+    });
+
+    it('should ignore non-arrow keys', () => {
+      const btn = document.createElement('button');
+      btn.classList.add('p-paginator-page');
+      const event = new KeyboardEvent('keydown', { key: 'Enter' });
+      Object.defineProperty(event, 'target', { value: btn });
+      jest.spyOn(event, 'preventDefault');
+      component.onPaginatorKeydown(event);
+      expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should ignore keys from non-page-button targets', () => {
+      const div = document.createElement('div');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: div });
+      jest.spyOn(event, 'preventDefault');
+      component.onPaginatorKeydown(event);
+      expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should focus and click the next page button on ArrowRight', () => {
+      const buttons = makePageButtons(3);
+      const clickSpy = jest.spyOn(buttons[1], 'click');
+      const focusSpy = jest.spyOn(buttons[1], 'focus');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(focusSpy).toHaveBeenCalled();
+      expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it('should focus and click the previous page button on ArrowLeft', () => {
+      const buttons = makePageButtons(3);
+      const clickSpy = jest.spyOn(buttons[0], 'click');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+      Object.defineProperty(event, 'target', { value: buttons[1] });
+      component.onPaginatorKeydown(event);
+      expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it('should jump to the next page when at the last button but not at the last page', fakeAsync(() => {
+      const buttons = makePageButtons(1);
+      component.rows = 10;
+      component.primengTable.totalRecords = 100;
+      jest.spyOn(component, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(component.changePage).toHaveBeenCalled();
+      tick();
+    }));
+
+    it('should do nothing when already at the last page boundary going right', () => {
+      const buttons = makePageButtons(1);
+      buttons[0].textContent = '10';
+      component.rows = 10;
+      component.primengTable.totalRecords = 100;
+      jest.spyOn(component, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowRight' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(component.changePage).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when already at the first page boundary going left', () => {
+      const buttons = makePageButtons(1);
+      buttons[0].textContent = '1';
+      component.rows = 10;
+      component.primengTable.totalRecords = 100;
+      jest.spyOn(component, 'changePage');
+      const event = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+      Object.defineProperty(event, 'target', { value: buttons[0] });
+      component.onPaginatorKeydown(event);
+      expect(component.changePage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('onPageChange', () => {
+    it('should update first/rows and emit pageChanged', () => {
+      component.rows = 10;
+      component.primengTable.totalRecords = 30;
+      jest.spyOn(component.pageChanged, 'emit');
+      component.onPageChange({ first: 10, rows: 10 });
+      expect(component.first).toBe(10);
+      expect(component.rows).toBe(10);
+      expect(component.pageChanged.emit).toHaveBeenCalled();
+    });
+
+    it('should refocus the selected page button when moving away from the first-page button at the start', fakeAsync(() => {
+      component.rows = 10;
+      component.primengTable.totalRecords = 30;
+      const firstBtn = document.createElement('button');
+      firstBtn.classList.add('p-paginator-first');
+      document.body.appendChild(firstBtn);
+      jest.spyOn(document, 'activeElement', 'get').mockReturnValue(firstBtn);
+      const focusPaginatorSpy = jest
+        .spyOn(component as any, '_focusPaginatorSelectedPage')
+        .mockImplementation(() => {});
+      component.onPageChange({ first: 0, rows: 10 });
+      tick();
+      expect(focusPaginatorSpy).toHaveBeenCalled();
+      document.body.removeChild(firstBtn);
+    }));
+
+    it('should not refocus when not at a paginator boundary', () => {
+      component.rows = 10;
+      component.primengTable.totalRecords = 30;
+      const focusPaginatorSpy = jest.spyOn(
+        component as any,
+        '_focusPaginatorSelectedPage'
+      );
+      component.onPageChange({ first: 10, rows: 10 });
+      expect(focusPaginatorSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('_focusPaginatorSelectedPage', () => {
+    it('should focus the currently selected page button', () => {
+      const btn = document.createElement('button');
+      btn.classList.add('p-paginator-page');
+      btn.setAttribute('aria-current', 'page');
+      (component as any)._elementRef.nativeElement.appendChild(btn);
+      const focusSpy = jest.spyOn(btn, 'focus');
+      (component as any)._focusPaginatorSelectedPage();
+      expect(focusSpy).toHaveBeenCalled();
+      btn.remove();
+    });
+
+    it('should do nothing when there is no selected page button', () => {
+      expect(() =>
+        (component as any)._focusPaginatorSelectedPage()
+      ).not.toThrow();
+    });
+  });
+
+  describe('keyboard drag focus handling', () => {
+    beforeEach(() => {
+      component.data = [{ id: 0 }, { id: 1 }, { id: 2 }];
+      window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    });
+
+    function makeDragHandle(rowIndex: number): HTMLElement {
+      const handle = document.createElement('div');
+      handle.classList.add('cps-table-row-drag-handle');
+      handle.setAttribute('data-row-index', String(rowIndex));
+      (component as any)._elementRef.nativeElement.appendChild(handle);
+      return handle;
+    }
+
+    afterEach(() => {
+      (component as any)._elementRef.nativeElement
+        .querySelectorAll('.cps-table-row-drag-handle')
+        .forEach((el: HTMLElement) => el.remove());
+    });
+
+    it('should focus the drag handle for the moved row after moving', fakeAsync(() => {
+      const handle = makeDragHandle(2);
+      const focusSpy = jest.spyOn(handle, 'focus');
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+        1
+      );
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+        1
+      );
+      tick();
+      expect(focusSpy).toHaveBeenCalled();
+    }));
+
+    it('should focus the drag handle at the drop position after confirming', () => {
+      const handle = makeDragHandle(0);
+      const focusSpy = jest.spyOn(handle, 'focus');
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+        0
+      );
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+        0
+      );
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should focus the drag handle at the original position after cancelling', () => {
+      const handle = makeDragHandle(0);
+      const focusSpy = jest.spyOn(handle, 'focus');
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+        0
+      );
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'Escape' }),
+        0
+      );
+      expect(focusSpy).toHaveBeenCalled();
+    });
+
+    it('should not throw when the drag handle element is not in the DOM', () => {
+      component._onDragHandleKeydown(
+        new KeyboardEvent('keydown', { key: 'Enter' }),
+        0
+      );
+      expect(() =>
+        component._onDragHandleKeydown(
+          new KeyboardEvent('keydown', { key: 'Enter' }),
+          0
+        )
+      ).not.toThrow();
     });
   });
 });

@@ -67,4 +67,226 @@ describe('CpsThemeService', () => {
   it('should initialize with compact radius theme by default', () => {
     expect(service.radiusTheme()).toBe('compact');
   });
+
+  describe('animated transitions', () => {
+    afterEach(() => {
+      jest.useRealTimers();
+    });
+
+    it('should add and schedule removal of the transition class when animated', () => {
+      jest.useFakeTimers();
+      service.setTheme('dark', true);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(true);
+      jest.advanceTimersByTime(500);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(false);
+    });
+
+    it('should clear a pending transition timeout when toggling again quickly', () => {
+      jest.useFakeTimers();
+      service.setTheme('dark', true);
+      service.setTheme('light', true);
+      jest.advanceTimersByTime(500);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(false);
+    });
+
+    it('should not add the transition class when animated is false', () => {
+      service.setTheme('dark', false);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(false);
+    });
+
+    it('should animate setColorTheme by default', () => {
+      jest.useFakeTimers();
+      service.setColorTheme('energy');
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(true);
+      jest.advanceTimersByTime(500);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(false);
+    });
+
+    it('should animate setBaseTheme by default', () => {
+      jest.useFakeTimers();
+      service.setBaseTheme('midnight');
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(true);
+      jest.advanceTimersByTime(500);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(false);
+    });
+
+    it('should animate setRadiusTheme by default', () => {
+      jest.useFakeTimers();
+      service.setRadiusTheme('pill');
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(true);
+      jest.advanceTimersByTime(500);
+      expect(
+        document.documentElement.classList.contains('cps-theme-transition')
+      ).toBe(false);
+    });
+  });
+
+  describe('no-op when setting the same value', () => {
+    it('should not re-apply theme when setting the same theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveThemePreference');
+
+      service.setTheme('light', false);
+
+      expect(service.theme()).toBe('light');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not re-apply color theme when setting the same color theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveColorThemePreference');
+
+      service.setColorTheme('calm', false);
+
+      expect(service.colorTheme()).toBe('calm');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not re-apply base theme when setting the same base theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveBaseThemePreference');
+
+      service.setBaseTheme('default', false);
+
+      expect(service.baseTheme()).toBe('default');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not re-apply radius theme when setting the same radius theme', () => {
+      const applySpy = jest.spyOn(service as any, 'applyCurrentTheme');
+      const saveSpy = jest.spyOn(service as any, 'saveRadiusThemePreference');
+
+      service.setRadiusTheme('compact', false);
+
+      expect(service.radiusTheme()).toBe('compact');
+      expect(applySpy).not.toHaveBeenCalled();
+      expect(saveSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('initial theme from localStorage', () => {
+    afterEach(() => {
+      localStorage.clear();
+      TestBed.resetTestingModule();
+    });
+
+    it('should read a stored dark theme preference', () => {
+      localStorage.setItem('cps-theme-preference', 'dark');
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+      expect(freshService.theme()).toBe('dark');
+    });
+
+    it('should ignore an invalid stored theme preference', () => {
+      localStorage.setItem('cps-theme-preference', 'not-a-theme');
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+      expect(freshService.theme()).toBe('light');
+    });
+
+    it('should read a stored color theme preference', () => {
+      localStorage.setItem('cps-color-theme-preference', 'passion');
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+      expect(freshService.colorTheme()).toBe('passion');
+    });
+
+    it('should read a stored base theme preference', () => {
+      localStorage.setItem('cps-base-theme-preference', 'graphite');
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+      expect(freshService.baseTheme()).toBe('graphite');
+    });
+
+    it('should read a stored radius theme preference', () => {
+      localStorage.setItem('cps-radius-theme-preference', 'pill');
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+      expect(freshService.radiusTheme()).toBe('pill');
+    });
+  });
+
+  describe('watchSystemTheme', () => {
+    afterEach(() => {
+      TestBed.resetTestingModule();
+    });
+
+    it('should do nothing when matchMedia is unavailable', () => {
+      const original = window.matchMedia;
+      (window as any).matchMedia = undefined;
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      expect(() => TestBed.inject(CpsThemeService)).not.toThrow();
+      window.matchMedia = original;
+    });
+
+    it('should switch theme on system change when no preference is stored', () => {
+      let changeHandler: ((e: { matches: boolean }) => void) | undefined;
+      const original = window.matchMedia;
+      (window as any).matchMedia = jest.fn().mockReturnValue({
+        matches: false,
+        addEventListener: (_: string, handler: any) => {
+          changeHandler = handler;
+        },
+        removeEventListener: jest.fn()
+      });
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+
+      changeHandler?.({ matches: true });
+      expect(freshService.theme()).toBe('dark');
+
+      window.matchMedia = original;
+    });
+
+    it('should not switch theme on system change when a preference is already stored', () => {
+      let changeHandler: ((e: { matches: boolean }) => void) | undefined;
+      const original = window.matchMedia;
+      (window as any).matchMedia = jest.fn().mockReturnValue({
+        matches: false,
+        addEventListener: (_: string, handler: any) => {
+          changeHandler = handler;
+        },
+        removeEventListener: jest.fn()
+      });
+      localStorage.setItem('cps-theme-preference', 'light');
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({});
+      const freshService = TestBed.inject(CpsThemeService);
+
+      changeHandler?.({ matches: true });
+      expect(freshService.theme()).toBe('light');
+
+      window.matchMedia = original;
+    });
+  });
 });
