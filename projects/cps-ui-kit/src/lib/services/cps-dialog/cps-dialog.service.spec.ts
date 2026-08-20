@@ -180,9 +180,7 @@ describe('CpsDialogService', () => {
       jest
         .spyOn(service as any, 'appendDialogComponentToBody')
         .mockImplementation(() => new CpsDialogRef());
-      expect(() =>
-        service.open(TestContentComponent, new CpsDialogConfig())
-      ).not.toThrow();
+      expect(() => service.open(TestContentComponent, {})).not.toThrow();
     });
   });
 
@@ -268,9 +266,7 @@ describe('CpsDialogService', () => {
       jest
         .spyOn(service as any, 'appendDialogComponentToBody')
         .mockImplementation(() => new CpsDialogRef());
-      expect(() =>
-        service.openConfirmationDialog(new CpsDialogConfig())
-      ).not.toThrow();
+      expect(() => service.openConfirmationDialog({})).not.toThrow();
     });
 
     it('should add the ref to openDialogs', () => {
@@ -365,7 +361,7 @@ describe('CpsDialogService', () => {
     });
 
     it('should not throw when the ref is registered in the map but already absent from openDialogs', () => {
-      const ref = service.open(TestContentComponent, new CpsDialogConfig());
+      const ref = service.open(TestContentComponent, {});
       service.openDialogs.length = 0;
       expect(() =>
         (service as any).removeDialogComponentFromBody(ref)
@@ -407,10 +403,9 @@ describe('CpsDialogService', () => {
     it('should create and attach a real CpsDialogComponent to document.body', () => {
       const beforeCount = document.body.children.length;
 
-      const ref = realService.open(
-        TestContentComponent,
-        Object.assign(new CpsDialogConfig(), { headerTitle: 'Test' })
-      );
+      const ref = realService.open(TestContentComponent, {
+        headerTitle: 'Test'
+      });
       realAppRef.tick();
 
       expect(document.body.children.length).toBeGreaterThan(beforeCount);
@@ -419,10 +414,9 @@ describe('CpsDialogService', () => {
     });
 
     it('should remove the DOM element and map entry when the ref is destroyed', () => {
-      const ref = realService.open(
-        TestContentComponent,
-        Object.assign(new CpsDialogConfig(), { headerTitle: 'Test' })
-      );
+      const ref = realService.open(TestContentComponent, {
+        headerTitle: 'Test'
+      });
       realAppRef.tick();
       expect(realService.dialogComponentRefMap.has(ref)).toBe(true);
       const domElem = document.body.querySelector('.cps-dialog');
@@ -444,10 +438,9 @@ describe('CpsDialogService', () => {
     });
 
     it('should be a no-op to call removeDialogComponentFromBody twice for the same ref', () => {
-      const ref = realService.open(
-        TestContentComponent,
-        Object.assign(new CpsDialogConfig(), { headerTitle: 'Test' })
-      );
+      const ref = realService.open(TestContentComponent, {
+        headerTitle: 'Test'
+      });
       realAppRef.tick();
       ref.destroy();
       expect(() =>
@@ -456,10 +449,9 @@ describe('CpsDialogService', () => {
     });
 
     it('should close the real dialog component instance when the ref is closed', () => {
-      const ref = realService.open(
-        TestContentComponent,
-        Object.assign(new CpsDialogConfig(), { headerTitle: 'Test' })
-      );
+      const ref = realService.open(TestContentComponent, {
+        headerTitle: 'Test'
+      });
       realAppRef.tick();
       const instance = realService.dialogComponentRefMap.get(ref)?.instance;
       expect(instance?.visible).toBe(true);
@@ -480,10 +472,9 @@ describe('CpsDialogService', () => {
         undefined as unknown as CpsDialogService
       );
 
-      const ref = sameInjectorService.open(
-        TestContentComponent,
-        Object.assign(new CpsDialogConfig(), { headerTitle: 'Test' })
-      );
+      const ref = sameInjectorService.open(TestContentComponent, {
+        headerTitle: 'Test'
+      });
       realAppRef.tick();
 
       expect(sameInjectorService.dialogComponentRefMap.has(ref)).toBe(true);
