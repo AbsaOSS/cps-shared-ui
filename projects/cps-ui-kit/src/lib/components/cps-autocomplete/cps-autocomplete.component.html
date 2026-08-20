@@ -367,6 +367,7 @@
     (input)="filterOptions($event)"
     (keydown)="onInputKeyDown($event)"
     [(ngModel)]="inputText"
+    [ngModelOptions]="{ standalone: true }"
     (focus)="onFocus()"
     (blur)="onBlur()"
     [attr.aria-describedby]="describedBy"

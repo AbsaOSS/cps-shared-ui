@@ -31,6 +31,7 @@
       [options]="rowOptions"
       [hideDetails]="true"
       [(ngModel)]="rows"
+      [ngModelOptions]="{ standalone: true }"
       (valueChanged)="onRowsPerPageChange($event)"
       [returnObject]="false"
       optionsClass="cps-paginator-page-options"></cps-select>

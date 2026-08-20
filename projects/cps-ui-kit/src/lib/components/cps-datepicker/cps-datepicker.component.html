@@ -53,6 +53,7 @@
       (click)="onCalendarClick($event)">
       <p-datepicker
         [(ngModel)]="value"
+        [ngModelOptions]="{ standalone: true }"
         [inline]="true"
         [showIcon]="true"
         [showButtonBar]="showTodayButton"
