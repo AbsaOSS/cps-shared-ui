@@ -259,7 +259,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
   documentClickListener!: VoidListener | null;
   documentKeydownListener!: VoidListener | null;
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   destroyCallback: Nullable<Function>;
   overlaySubscription: Subscription | undefined;
 
