@@ -15,7 +15,8 @@ import {
   Output,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -81,6 +82,7 @@ export type CpsAutocompleteAppearanceType =
   providers: [LabelByValuePipe, CheckOptionSelectedPipe],
   selector: 'cps-autocomplete',
   templateUrl: './cps-autocomplete.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-autocomplete.component.scss']
 })
 export class CpsAutocompleteComponent

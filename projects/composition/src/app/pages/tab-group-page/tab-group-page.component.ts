@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CpsTabGroupComponent,
@@ -24,6 +24,7 @@ import { tabGroupExamples } from './tab-group-page.examples';
   selector: 'app-tab-group-page',
   templateUrl: './tab-group-page.component.html',
   styleUrls: ['./tab-group-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TabGroupPageComponent {

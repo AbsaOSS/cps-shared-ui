@@ -5,7 +5,7 @@
       [placeholder]="placeholder"
       [hideDetails]="true"
       (keydown.enter)="onEnterKeyDown($event)"
-      [value]="filterConstraint?.value"
+      [value]="$safeNavigationMigration(filterConstraint?.value)"
       (valueChanged)="onValueChange($event)"
       type="text"></cps-input>
   }
@@ -15,7 +15,7 @@
       [hideDetails]="true"
       [placeholder]="placeholder"
       (keydown.enter)="onEnterKeyDown($event)"
-      [value]="filterConstraint?.value"
+      [value]="$safeNavigationMigration(filterConstraint?.value)"
       (valueChanged)="onValueChange($event)"
       type="number"></cps-input>
   }
@@ -24,7 +24,7 @@
       <cps-button-toggle
         ariaLabel="Boolean filter"
         [options]="booleanOptions"
-        [value]="filterConstraint?.value"
+        [value]="$safeNavigationMigration(filterConstraint?.value)"
         (valueChanged)="onValueChange($event)"
         [mandatory]="false">
       </cps-button-toggle>
@@ -36,7 +36,7 @@
       [openOnInputFocus]="true"
       [hideDetails]="true"
       [placeholder]="placeholder"
-      [value]="filterConstraint?.value"
+      [value]="$safeNavigationMigration(filterConstraint?.value)"
       (keydown.enter)="onEnterKeyDown($event)"
       (valueChanged)="onValueChange($event)">
     </cps-datepicker>
@@ -51,7 +51,7 @@
         [options]="categories"
         [hideDetails]="true"
         [clearable]="true"
-        [value]="filterConstraint?.value"
+        [value]="$safeNavigationMigration(filterConstraint?.value)"
         (valueChanged)="onValueChange($event)"
         [returnObject]="false"
         [multiple]="!singleSelection">
@@ -62,7 +62,7 @@
         <cps-button-toggle
           ariaLabel="Category filter"
           [options]="categories"
-          [value]="filterConstraint?.value"
+          [value]="$safeNavigationMigration(filterConstraint?.value)"
           (valueChanged)="onValueChange($event)"
           [mandatory]="false"
           [multiple]="!singleSelection">

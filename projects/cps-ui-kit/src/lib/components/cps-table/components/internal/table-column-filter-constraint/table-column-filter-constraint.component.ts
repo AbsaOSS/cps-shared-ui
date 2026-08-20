@@ -3,7 +3,8 @@ import {
   Input,
   OnChanges,
   Optional,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -38,6 +39,7 @@ import {
     CpsAutocompleteComponent
   ],
   templateUrl: './table-column-filter-constraint.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
 export class TableColumnFilterConstraintComponent implements OnChanges {

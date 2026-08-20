@@ -10,7 +10,8 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -30,6 +31,7 @@ import { logMissingAriaLabelError } from '../../utils/internal/accessibility-uti
   imports: [CpsInfoCircleComponent, CpsIconComponent],
   selector: 'cps-checkbox',
   templateUrl: './cps-checkbox.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-checkbox.component.scss']
 })
 export class CpsCheckboxComponent

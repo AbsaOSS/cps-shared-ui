@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {
   AbstractControl,
   FormsModule,
@@ -34,6 +39,7 @@ import { radioExamples } from './radio-page.examples';
   selector: 'app-radio-page',
   templateUrl: './radio-page.component.html',
   styleUrls: ['./radio-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class RadioPageComponent implements OnInit {

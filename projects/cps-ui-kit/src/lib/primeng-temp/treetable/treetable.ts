@@ -288,6 +288,7 @@ export class TreeTableService {
         '[attr.data-p]': 'dataP',
         '[attr.data-scrollselectors]': "'.p-treetable-scrollable-body'"
     },
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [Bind]
 })
 export class TreeTable extends BaseComponent<TreeTablePassThrough> implements BlockableUI {
@@ -2391,6 +2392,7 @@ export class TreeTable extends BaseComponent<TreeTablePassThrough> implements Bl
         </ng-container>
     `,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     host: {
         '[attr.data-p]': 'dataP'
     }
@@ -2539,6 +2541,7 @@ export class TTBody extends BaseComponent {
         </div>
     `,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [TreeTableStyle]
 })
 export class TTScrollableView extends BaseComponent {
@@ -3719,6 +3722,7 @@ export class TTEditableColumn extends BaseComponent {
         </ng-container>
     `,
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [Bind]
 })
 export class TreeTableCellEditor extends BaseComponent {
@@ -4010,6 +4014,7 @@ export class TTRow extends BaseComponent {
     `,
     encapsulation: ViewEncapsulation.None,
     providers: [TreeTableStyle],
+    changeDetection: ChangeDetectionStrategy.Eager,
     hostDirectives: [Bind]
 })
 export class TreeTableToggler extends BaseComponent {

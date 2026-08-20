@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
   ComponentAPI,
   EnumsAPI,
@@ -22,6 +22,7 @@ import { ApiTypeComponent } from '../shared/api-type/api-type.component';
   selector: 'app-component-docs-viewer',
   templateUrl: './component-docs-viewer.component.html',
   styleUrl: './component-docs-viewer.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CpsTabComponent,
     CpsTabGroupComponent,

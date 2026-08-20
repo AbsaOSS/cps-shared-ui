@@ -4,7 +4,8 @@ import {
   Input,
   OnChanges,
   Output,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CpsRadioOption } from '../cps-radio-group.component';
 import { CommonModule } from '@angular/common';
@@ -19,6 +20,7 @@ import { generateUniqueId } from '../../../utils/internal/accessibility-utils/ac
   imports: [CommonModule, CpsTooltipDirective],
   selector: 'cps-radio-button',
   templateUrl: './cps-radio-button.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-radio-button.component.scss']
 })
 export class CpsRadioButtonComponent implements OnChanges {

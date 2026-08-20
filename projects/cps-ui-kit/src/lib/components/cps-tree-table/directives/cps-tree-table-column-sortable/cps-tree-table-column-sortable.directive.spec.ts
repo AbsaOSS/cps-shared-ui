@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,6 +8,7 @@ import { TreeTable } from '../../../../primeng-temp/treetable/public_api';
 import { CpsTreeTableColumnSortableDirective } from './cps-tree-table-column-sortable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<th [cpsTTColSortable]="field"><span>Name</span></th>`,
   imports: [CpsTreeTableColumnSortableDirective]
 })

@@ -8,11 +8,12 @@
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { CommonModule } from '@angular/common';
-import { Component, Directive, Input, NgModule, TemplateRef } from '@angular/core';
+import { Component, Directive, Input, NgModule, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
     selector: 'p-header',
     template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class Header {}
@@ -20,6 +21,7 @@ export class Header {}
 @Component({
     selector: 'p-footer',
     template: '<ng-content></ng-content>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class Footer {}

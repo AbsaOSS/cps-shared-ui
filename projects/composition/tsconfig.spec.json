@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "rootDir": "../../",
-    "types": ["jest"]
+    "types": ["jest"],
+    "isolatedModules": true
   },
   "include": [
     "src/**/*.spec.ts",

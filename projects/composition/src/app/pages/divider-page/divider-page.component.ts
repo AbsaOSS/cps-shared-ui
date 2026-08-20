@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CpsDividerComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
@@ -14,6 +14,7 @@ import { dividerExamples } from './divider-page.examples';
   ],
   templateUrl: './divider-page.component.html',
   styleUrl: './divider-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class DividerPageComponent {

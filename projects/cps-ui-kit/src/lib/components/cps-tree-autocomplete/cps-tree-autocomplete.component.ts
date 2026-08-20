@@ -5,7 +5,8 @@ import {
   ElementRef,
   Input,
   Optional,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -45,6 +46,7 @@ export type CpsTreeAutocompleteAppearanceType =
   ],
   selector: 'cps-tree-autocomplete',
   templateUrl: './cps-tree-autocomplete.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-tree-autocomplete.component.scss']
 })
 export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {

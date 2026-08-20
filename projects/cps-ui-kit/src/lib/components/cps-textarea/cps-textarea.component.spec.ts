@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsTextareaComponent } from './cps-textarea.component';
 import {
@@ -405,6 +405,7 @@ describe('CpsTextareaComponent', () => {
 
   describe('with NgControl (reactive forms)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsTextareaComponent, ReactiveFormsModule],
       template: `<cps-textarea
         [formControl]="control"

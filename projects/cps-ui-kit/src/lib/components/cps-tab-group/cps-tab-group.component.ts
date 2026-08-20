@@ -26,7 +26,8 @@ import {
   afterRenderEffect,
   inject,
   signal,
-  viewChildren
+  viewChildren,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
@@ -76,6 +77,7 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
   selector: 'cps-tab-group',
   templateUrl: './cps-tab-group.component.html',
   styleUrls: ['./cps-tab-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('slideInOut', [
       state('slideLeft', style({ transform: 'translateX(0)' })),

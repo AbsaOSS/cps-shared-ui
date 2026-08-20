@@ -8,7 +8,8 @@ import {
   OnChanges,
   OnInit,
   Output,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import {
@@ -30,6 +31,7 @@ import { logMissingAriaLabelError } from '../../utils/internal/accessibility-uti
   imports: [CommonModule, CpsIconComponent, CpsProgressCircularComponent],
   selector: 'cps-button',
   templateUrl: './cps-button.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-button.component.scss']
 })
 export class CpsButtonComponent implements OnInit, OnChanges {

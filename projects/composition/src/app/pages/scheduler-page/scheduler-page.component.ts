@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CpsSchedulerComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-scheduler.json';
 import ServiceData from '../../api-data/cps-cron-validation.json';
@@ -14,6 +14,7 @@ import { schedulerExamples } from './scheduler-page.examples';
     CodeExampleComponent
   ],
   templateUrl: './scheduler-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class SchedulerPageComponent {

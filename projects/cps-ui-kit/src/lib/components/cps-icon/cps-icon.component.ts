@@ -9,7 +9,8 @@ import {
   OnChanges,
   OnInit,
   Renderer2,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
@@ -171,6 +172,7 @@ export type CpsIconSizeType =
   selector: 'cps-icon',
   templateUrl: './cps-icon.component.html',
   styleUrls: ['./cps-icon.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     '[attr.role]': 'hasAriaLabel() ? "img" : null',
     '[attr.aria-hidden]': 'hasAriaLabel() ? null : "true"'

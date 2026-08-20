@@ -3,7 +3,8 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CpsIconComponent,
@@ -19,6 +20,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-chip',
   templateUrl: './cps-chip.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-chip.component.scss']
 })
 export class CpsChipComponent implements OnChanges {

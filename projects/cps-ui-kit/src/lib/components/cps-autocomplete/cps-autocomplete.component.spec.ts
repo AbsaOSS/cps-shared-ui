@@ -1,4 +1,9 @@
-import { Component, NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NO_ERRORS_SCHEMA,
+  signal
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -1009,6 +1014,7 @@ describe('CpsAutocompleteComponent', () => {
 
   describe('with NgControl (reactive forms)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsAutocompleteComponent, ReactiveFormsModule],
       template: `<cps-autocomplete
         [formControl]="control"

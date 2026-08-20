@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   ViewChild,
@@ -12,6 +13,7 @@ import { TTHeaderCheckbox } from '../../../../primeng-temp/treetable/public_api'
 import { CpsTreeTableHeaderSelectableDirective } from './cps-tree-table-header-selectable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<th cpsTTHdrSelectable></th>`,
   imports: [CpsTreeTableHeaderSelectableDirective]
 })
@@ -20,7 +22,10 @@ class TestHostComponent {
   directive!: CpsTreeTableHeaderSelectableDirective;
 }
 
-@Component({ template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ''
+})
 class VcrProbeComponent {
   readonly vcr = inject(ViewContainerRef);
 }

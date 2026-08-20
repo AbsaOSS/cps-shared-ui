@@ -1,4 +1,9 @@
-import { Component, EventEmitter, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  ViewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -10,6 +15,7 @@ import {
 import { CpsTreeTableColumnFilterDirective } from './cps-tree-table-column-filter.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<th
     [cpsTTColFilter]="field"
     [filterType]="filterType"

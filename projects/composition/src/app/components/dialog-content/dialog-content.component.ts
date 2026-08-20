@@ -1,4 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {
   CPS_DIALOG_CONFIG,
   CpsButtonComponent,
@@ -12,6 +17,7 @@ import {
   imports: [CpsButtonComponent, CpsIconComponent],
   selector: 'app-dialog-content',
   templateUrl: './dialog-content.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./dialog-content.component.scss']
 })
 export class DialogContentComponent implements OnInit {

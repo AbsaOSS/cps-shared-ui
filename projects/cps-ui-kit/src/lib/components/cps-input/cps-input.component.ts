@@ -10,7 +10,8 @@ import {
   Optional,
   Output,
   Self,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -47,6 +48,7 @@ export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
   ],
   selector: 'cps-input',
   templateUrl: './cps-input.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-input.component.scss']
 })
 export class CpsInputComponent

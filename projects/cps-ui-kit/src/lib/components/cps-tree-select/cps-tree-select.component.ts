@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  Optional,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
@@ -34,6 +40,7 @@ export type CpsTreeSelectAppearanceType =
   providers: [CombineLabelsPipe],
   selector: 'cps-tree-select',
   templateUrl: './cps-tree-select.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-tree-select.component.scss']
 })
 export class CpsTreeSelectComponent extends CpsBaseTreeDropdownComponent {

@@ -10,7 +10,8 @@ import {
   Output,
   Self,
   type SimpleChanges,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
@@ -58,6 +59,7 @@ export type CpsDatepickerDateFormat =
   ],
   selector: 'cps-datepicker',
   templateUrl: './cps-datepicker.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-datepicker.component.scss']
 })
 export class CpsDatepickerComponent

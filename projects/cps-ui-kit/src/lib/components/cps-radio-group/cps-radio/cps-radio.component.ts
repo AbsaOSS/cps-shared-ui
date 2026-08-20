@@ -1,4 +1,11 @@
-import { Component, Inject, Input, OnInit, Optional } from '@angular/core';
+import {
+  Component,
+  Inject,
+  Input,
+  OnInit,
+  Optional,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {
   CPS_RADIO_GROUP,
   CpsRadioGroupComponent,
@@ -15,6 +22,7 @@ import { CpsRadioButtonComponent } from '../cps-radio-button/cps-radio-button.co
   imports: [CpsRadioButtonComponent],
   templateUrl: './cps-radio.component.html',
   styleUrls: ['./cps-radio.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { 'data-testid': 'cps-radio' }
 })
 export class CpsRadioComponent implements OnInit {

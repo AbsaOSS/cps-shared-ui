@@ -8,7 +8,8 @@ import {
   Optional,
   QueryList,
   ViewChild,
-  ViewChildren
+  ViewChildren,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -46,6 +47,7 @@ import { Subscription } from 'rxjs';
     TableColumnFilterConstraintComponent
   ],
   templateUrl: './table-column-filter.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./table-column-filter.component.scss']
 })
 export class TableColumnFilterComponent implements OnInit, OnDestroy {

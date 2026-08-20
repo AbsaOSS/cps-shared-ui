@@ -9,7 +9,8 @@ import {
   OnInit,
   Output,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -32,6 +33,7 @@ const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
   imports: [PaginatorModule, CpsSelectComponent, FormsModule],
   templateUrl: './cps-paginator.component.html',
   styleUrls: ['./cps-paginator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     role: 'navigation',
     '[attr.aria-label]': 'computedAriaLabel',

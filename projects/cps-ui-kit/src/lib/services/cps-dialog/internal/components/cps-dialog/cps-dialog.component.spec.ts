@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -17,7 +17,10 @@ import {
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
-@Component({ template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ''
+})
 class TestChildComponent {}
 
 const mockRootFontSizeService = {

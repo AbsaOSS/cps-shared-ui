@@ -8,11 +8,12 @@ import {
   CpsTooltipDirective,
   CpsTooltipPosition
 } from './cps-tooltip.directive';
-import { Component, PLATFORM_ID } from '@angular/core';
+import { ChangeDetectionStrategy, Component, PLATFORM_ID } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<div cpsTooltip="<style onload='alert(420);'></style>"></div>`,
   imports: [CpsTooltipDirective]
 })
@@ -22,12 +23,14 @@ const mockRootFontSizeService = {
 };
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<div cpsTooltip="<h1>Legit tooltip</h1>"></div>`,
   imports: [CpsTooltipDirective]
 })
 class LegitTooltipComponent {}
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<div
     cpsTooltip="Tooltip text"
     [tooltipOpenOn]="openOn"
