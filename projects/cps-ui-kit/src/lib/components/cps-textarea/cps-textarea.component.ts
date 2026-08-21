@@ -15,7 +15,8 @@ import {
   PLATFORM_ID,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
@@ -43,6 +44,7 @@ const RESIZE_STEP_REM = 1.5;
   selector: 'cps-textarea',
   imports: [CpsIconComponent, CpsInfoCircleComponent],
   templateUrl: './cps-textarea.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-textarea.component.scss']
 })
 export class CpsTextareaComponent

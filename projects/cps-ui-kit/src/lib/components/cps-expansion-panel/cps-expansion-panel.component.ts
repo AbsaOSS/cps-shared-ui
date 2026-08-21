@@ -11,7 +11,8 @@ import {
   Renderer2,
   ViewChild,
   inject,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CpsIconComponent,
@@ -46,6 +47,7 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
   selector: 'cps-expansion-panel',
   templateUrl: './cps-expansion-panel.component.html',
   styleUrls: ['./cps-expansion-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('panelHeader', [
       state(

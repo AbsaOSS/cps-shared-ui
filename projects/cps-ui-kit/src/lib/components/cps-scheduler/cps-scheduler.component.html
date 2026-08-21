@@ -7,6 +7,7 @@
     [label]="label"
     [infoTooltip]="infoTooltip"
     [(ngModel)]="activeScheduleType"
+    [ngModelOptions]="{ standalone: true }"
     (ngModelChange)="setActiveScheduleType($event)">
   </cps-button-toggle>
 </div>
@@ -32,6 +33,7 @@
             data-testid="minutes-input"
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.minutes.minutes"
+            [ngModelOptions]="{ standalone: true }"
             [options]="selectOptions.minutes"
             class="cps-scheduler-select-control">
           </cps-select>
@@ -53,6 +55,7 @@
             data-testid="hourly-hours-input"
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.hourly.hours"
+            [ngModelOptions]="{ standalone: true }"
             [options]="selectOptions.hours"
             class="cps-scheduler-select-control">
           </cps-select>
@@ -66,6 +69,7 @@
             data-testid="hourly-minutes-input"
             (valueChanged)="regenerateCron()"
             [(ngModel)]="state.hourly.minutes"
+            [ngModelOptions]="{ standalone: true }"
             [options]="selectOptions.fullMinutes"
             class="cps-scheduler-select-control">
           </cps-select>
@@ -79,6 +83,7 @@
           ariaLabel="Daily schedule frequency"
           [hideDetails]="true"
           [(ngModel)]="state.daily.subTab"
+          [ngModelOptions]="{ standalone: true }"
           (valueChanged)="regenerateCron()"
           [vertical]="true">
           <cps-radio
@@ -103,6 +108,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.daily.everyDays.days"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthDays"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -159,49 +165,56 @@
             [disabled]="disabled"
             data-testid="weekly-MON"
             label="Monday"
-            [(ngModel)]="state.weekly.MON">
+            [(ngModel)]="state.weekly.MON"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
             data-testid="weekly-TUE"
             label="Tuesday"
-            [(ngModel)]="state.weekly.TUE">
+            [(ngModel)]="state.weekly.TUE"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
             data-testid="weekly-WED"
             label="Wednesday"
-            [(ngModel)]="state.weekly.WED">
+            [(ngModel)]="state.weekly.WED"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
             data-testid="weekly-THU"
             label="Thursday"
-            [(ngModel)]="state.weekly.THU">
+            [(ngModel)]="state.weekly.THU"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
             data-testid="weekly-FRI"
             label="Friday"
-            [(ngModel)]="state.weekly.FRI">
+            [(ngModel)]="state.weekly.FRI"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
             data-testid="weekly-SAT"
             label="Saturday"
-            [(ngModel)]="state.weekly.SAT">
+            [(ngModel)]="state.weekly.SAT"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
           <cps-checkbox
             (valueChanged)="regenerateCron()"
             [disabled]="disabled"
             data-testid="weekly-SUN"
             label="Sunday"
-            [(ngModel)]="state.weekly.SUN">
+            [(ngModel)]="state.weekly.SUN"
+            [ngModelOptions]="{ standalone: true }">
           </cps-checkbox>
         </div>
         <div class="cps-scheduler-tab-pane-row">
@@ -226,6 +239,7 @@
           ariaLabel="Monthly schedule frequency"
           [hideDetails]="true"
           [(ngModel)]="state.monthly.subTab"
+          [ngModelOptions]="{ standalone: true }"
           (valueChanged)="regenerateCron()"
           [vertical]="true">
           <cps-radio
@@ -251,6 +265,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.monthly.specificDay.day"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthDaysWithLasts"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -264,6 +279,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.monthly.specificDay.months"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthsNumeric"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -286,6 +302,7 @@
                 [disabled]="disabled || state.monthly.subTab !== 'specificDay'"
                 label="During the nearest weekday"
                 [(ngModel)]="state.monthly.runOnWeekday"
+                [ngModelOptions]="{ standalone: true }"
                 class="cps-scheduler-nearest-weekday-checkbox">
               </cps-checkbox>
             </div>
@@ -316,6 +333,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.monthly.specificWeekDay.monthWeek"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthWeeks"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -330,6 +348,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.monthly.specificWeekDay.day"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.days"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -345,6 +364,7 @@
                 (valueChanged)="regenerateCron()"
                 data-testid="monthly-weekday-months-input"
                 [(ngModel)]="state.monthly.specificWeekDay.months"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthsNumeric"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -360,6 +380,7 @@
                 data-testid="monthly-weekday-start-month-select"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.monthly.specificWeekDay.startMonth"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.months"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -390,6 +411,7 @@
           ariaLabel="Yearly schedule frequency"
           [hideDetails]="true"
           [(ngModel)]="state.yearly.subTab"
+          [ngModelOptions]="{ standalone: true }"
           (valueChanged)="regenerateCron()"
           [vertical]="true">
           <cps-radio
@@ -416,6 +438,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.yearly.specificMonthDay.month"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.months"
                 data-testid="yearly-month-select"
                 class="cps-scheduler-select-control">
@@ -432,6 +455,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.yearly.specificMonthDay.day"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthDaysWithLasts"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -458,6 +482,7 @@
                 "
                 label="During the nearest weekday"
                 [(ngModel)]="state.yearly.runOnWeekday"
+                [ngModelOptions]="{ standalone: true }"
                 class="cps-scheduler-nearest-weekday-checkbox">
               </cps-checkbox>
             </div>
@@ -488,6 +513,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.yearly.specificMonthWeek.monthWeek"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.monthWeeks"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -502,6 +528,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.yearly.specificMonthWeek.day"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.days"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -517,6 +544,7 @@
                 [hideDetails]="true"
                 (valueChanged)="regenerateCron()"
                 [(ngModel)]="state.yearly.specificMonthWeek.month"
+                [ngModelOptions]="{ standalone: true }"
                 [options]="selectOptions.months"
                 class="cps-scheduler-select-control">
               </cps-select>
@@ -565,6 +593,7 @@
         [disabled]="disabled"
         data-testid="timezone-select"
         [(ngModel)]="timeZone"
+        [ngModelOptions]="{ standalone: true }"
         (valueChanged)="onTimeZoneChanged($event)"
         [returnObject]="false"
         width="18.75rem"

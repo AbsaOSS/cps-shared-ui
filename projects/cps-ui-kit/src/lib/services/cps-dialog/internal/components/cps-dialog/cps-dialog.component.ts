@@ -39,7 +39,7 @@ import {
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
 import {
   CPS_DIALOG_CONFIG,
-  type CpsDialogConfig
+  CpsDialogConfig
 } from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
@@ -84,7 +84,7 @@ const MIN_DRAG_VISIBLE_REM = 3;
       transition('visible => void', [useAnimation(hideAnimation)])
     ])
   ],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {

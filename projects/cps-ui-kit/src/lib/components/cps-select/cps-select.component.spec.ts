@@ -1,4 +1,8 @@
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NO_ERRORS_SCHEMA
+} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -901,6 +905,7 @@ describe('CpsSelectComponent', () => {
 
   describe('with NgControl (reactive forms)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsSelectComponent, ReactiveFormsModule],
       template: `<cps-select
         [formControl]="control"

@@ -1,15 +1,16 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import {
   CPS_DIALOG_CONFIG,
-  type CpsDialogConfig
+  CpsDialogConfig
 } from '../../../utils/cps-dialog-config';
 
 @Component({
   imports: [CpsButtonComponent],
   selector: 'cps-confirmation',
   templateUrl: './cps-confirmation.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-confirmation.component.scss']
 })
 export class CpsConfirmationComponent {

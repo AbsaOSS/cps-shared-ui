@@ -9,7 +9,8 @@ import {
   OnDestroy,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { SharedModule } from '../../../../../primeng-temp/api/public_api';
 import { ZIndexUtils } from '../../../../../primeng-temp/utils/public_api';
@@ -30,6 +31,7 @@ type Nullable<T = void> = T | null | undefined;
   templateUrl: './cps-notification-container.component.html',
   styleUrls: ['./cps-notification-container.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('notificationAnimation', [
       transition(':enter, :leave', [query('@*', animateChild())])

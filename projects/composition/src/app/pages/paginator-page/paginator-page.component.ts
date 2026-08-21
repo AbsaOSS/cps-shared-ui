@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CpsPaginatorComponent, CpsSwitchComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -17,6 +17,7 @@ import { paginatorExamples } from './paginator-page.examples';
   ],
   templateUrl: './paginator-page.component.html',
   styleUrls: ['./paginator-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class PaginatorPageComponent {

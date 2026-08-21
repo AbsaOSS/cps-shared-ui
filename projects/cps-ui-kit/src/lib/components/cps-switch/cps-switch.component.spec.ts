@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsSwitchComponent } from './cps-switch.component';
 import { FormsModule } from '@angular/forms';
@@ -187,6 +187,7 @@ describe('CpsSwitchComponent', () => {
 
   describe('with NgControl (ngModel)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsSwitchComponent, FormsModule],
       template: `<cps-switch
         [(ngModel)]="value"

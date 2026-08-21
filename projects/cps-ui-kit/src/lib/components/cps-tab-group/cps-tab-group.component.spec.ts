@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -11,6 +11,7 @@ import { CpsTabGroupComponent } from './cps-tab-group.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [CpsTabGroupComponent, CpsTabComponent],
   template: `

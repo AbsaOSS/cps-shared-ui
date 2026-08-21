@@ -6,7 +6,8 @@ import {
   OnInit,
   OnChanges,
   inject,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
@@ -20,6 +21,7 @@ import { getCSSColor } from '../../utils/colors-utils/colors-utils';
   selector: 'cps-progress-circular',
   templateUrl: './cps-progress-circular.component.html',
   styleUrls: ['./cps-progress-circular.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     role: 'progressbar',
     '[attr.aria-label]': 'computedAriaLabel'

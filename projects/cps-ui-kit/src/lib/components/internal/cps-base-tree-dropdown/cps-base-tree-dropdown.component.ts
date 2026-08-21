@@ -14,7 +14,8 @@ import {
   Output,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
@@ -44,6 +45,7 @@ const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 6;
  */
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class CpsBaseTreeDropdownComponent

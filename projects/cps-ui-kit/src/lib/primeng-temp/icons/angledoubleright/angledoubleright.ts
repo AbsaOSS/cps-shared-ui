@@ -7,12 +7,13 @@
  * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseIcon } from '../baseicon/public_api';
 
 @Component({
     selector: '[data-p-icon="angle-double-right"]',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <svg:path
             fill-rule="evenodd"

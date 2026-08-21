@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
   CpsIconComponent,
   type CpsIconSizeType
@@ -16,6 +16,7 @@ import {
   selector: 'cps-info-circle',
   imports: [CpsIconComponent, CpsTooltipDirective],
   templateUrl: './cps-info-circle.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-info-circle.component.scss']
 })
 export class CpsInfoCircleComponent {

@@ -5,11 +5,12 @@ import {
   inject,
   NgZone,
   PLATFORM_ID,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import packageJson from 'projects/cps-ui-kit/package.json';
+import packageJson from '../../../cps-ui-kit/package.json';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { CpsThemeService } from 'cps-ui-kit';
@@ -19,6 +20,7 @@ import { CpsThemeService } from 'cps-ui-kit';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: false,
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { '(document:keydown.escape)': 'onEscapeKey()' }
 })
 export class AppComponent {

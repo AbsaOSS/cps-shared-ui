@@ -1,4 +1,4 @@
-import { Component, SkipSelf } from '@angular/core';
+import { Component, SkipSelf, ChangeDetectionStrategy } from '@angular/core';
 import { CpsButtonComponent, CpsDialogService } from 'cps-ui-kit';
 import { DialogContentComponent } from '../../components/dialog-content/dialog-content.component';
 import { ServiceDocsViewerComponent } from '../../components/service-docs-viewer/service-docs-viewer.component';
@@ -16,6 +16,7 @@ import { dialogExamples } from './dialog-page.examples';
   templateUrl: './dialog-page.component.html',
   styleUrls: ['./dialog-page.component.scss'],
   host: { class: 'composition-page' },
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [CpsDialogService]
 })
 export class DialogPageComponent {

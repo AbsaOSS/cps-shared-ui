@@ -7,7 +7,8 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
@@ -21,6 +22,7 @@ import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cp
   selector: 'cps-loader',
   templateUrl: './cps-loader.component.html',
   styleUrls: ['./cps-loader.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { 'aria-busy': 'true' }
 })
 export class CpsLoaderComponent

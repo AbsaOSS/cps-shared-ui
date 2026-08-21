@@ -7,7 +7,8 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import {
@@ -40,6 +41,7 @@ import {
   selector: 'cps-toast',
   templateUrl: './cps-toast.component.html',
   styleUrls: ['./cps-toast.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('toastState', [
       state(

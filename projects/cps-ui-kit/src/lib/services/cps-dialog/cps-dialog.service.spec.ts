@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ApplicationRef,
   Component,
   EnvironmentInjector,
@@ -12,7 +13,10 @@ import type { CpsDialogConfig } from './utils/cps-dialog-config';
 import { CpsDialogRef } from './utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsConfirmationComponent } from './internal/components/cps-confirmation/cps-confirmation.component';
 
-@Component({ template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ''
+})
 class TestContentComponent {}
 
 function makeMockDialogComponentInstance() {

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,7 @@ import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-s
 import { CpsTableColumnResizableDirective } from './cps-table-column-resizable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<table>
     <thead>
       <tr>

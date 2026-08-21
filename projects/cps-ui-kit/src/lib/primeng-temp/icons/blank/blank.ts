@@ -7,12 +7,13 @@
  * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BaseIcon } from '../baseicon/public_api';
 
 @Component({
     selector: '[data-p-icon="blank"]',
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: ` <svg:rect width="1" height="1" fill="currentColor" fill-opacity="0" /> `
 })
 export class BlankIcon extends BaseIcon {}

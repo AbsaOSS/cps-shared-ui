@@ -192,9 +192,9 @@ jobs:
         id: generate-api
         run: |
           npm run generate-json-api
-          if [[ -n "$(git status --porcelain projects/composition/src/assets/api-data/)" ]]; then
+          if [[ -n "$(git status --porcelain projects/composition/src/app/api-data/)" ]]; then
             echo "API data has changed. Please commit the updated API data.";
-            git --no-pager diff projects/composition/src/assets/api-data/
+            git --no-pager diff projects/composition/src/app/api-data/
             exit 1;
           else
             echo "No changes in API data.";

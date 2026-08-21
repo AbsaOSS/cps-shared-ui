@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, signal, SimpleChange } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  signal,
+  SimpleChange
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsButtonToggleComponent,
@@ -296,6 +301,7 @@ describe('CpsButtonToggleComponent', () => {
 
   describe('with NgControl (ngModel)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsButtonToggleComponent, FormsModule],
       template: `<cps-button-toggle
         [(ngModel)]="value"

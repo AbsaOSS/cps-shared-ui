@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   CpsIconComponent,
   CpsSidebarMenuComponent,
@@ -20,6 +20,7 @@ import { sidebarMenuExamples } from './sidebar-menu-page.examples';
   ],
   templateUrl: './sidebar-menu-page.component.html',
   styleUrls: ['./sidebar-menu-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class SidebarMenuPageComponent {

@@ -9,7 +9,8 @@ import {
   ViewChildren,
   computed,
   inject,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
@@ -53,6 +54,7 @@ export type CpsSidebarMenuItem = {
   imports: [CommonModule, CpsMenuComponent, CpsIconComponent, RouterModule],
   templateUrl: './cps-sidebar-menu.component.html',
   styleUrls: ['./cps-sidebar-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('onExpand', [
       state(

@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 import { CpsThemeService } from 'cps-ui-kit';
 import { AppComponent } from './app.component';
 
-jest.mock('projects/cps-ui-kit/package.json', () => ({ version: '1.0.0' }), {
+jest.mock('../../../cps-ui-kit/package.json', () => ({ version: '1.0.0' }), {
   virtual: true
 });
 

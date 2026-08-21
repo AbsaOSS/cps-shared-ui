@@ -14,7 +14,8 @@ import {
   Output,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -81,6 +82,7 @@ const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
   providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
   selector: 'cps-select',
   templateUrl: './cps-select.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-select.component.scss']
 })
 export class CpsSelectComponent

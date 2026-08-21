@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsButtonToggleComponent, CpsButtonToggleOption } from 'cps-ui-kit';
 
@@ -18,6 +18,7 @@ import { CodeExampleComponent } from '../../components/code-example/code-example
   selector: 'app-button-toggle-page',
   templateUrl: './button-toggle-page.component.html',
   styleUrls: ['./button-toggle-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class ButtonTogglePageComponent {

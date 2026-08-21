@@ -42,7 +42,7 @@
       (focused)="onFieldFocus()"
       (blurred)="onFieldBlur()"
       [returnObject]="false"
-      [value]="value?.hours"
+      [value]="$safeNavigationMigration(value?.hours)"
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
       placeholder="HH"></cps-autocomplete>
@@ -67,7 +67,7 @@
       (focused)="onFieldFocus()"
       (blurred)="onFieldBlur()"
       [returnObject]="false"
-      [value]="value?.minutes"
+      [value]="$safeNavigationMigration(value?.minutes)"
       (valueChanged)="updateMinutes($event)"
       [externalError]="minutesError"
       placeholder="MM"></cps-autocomplete>
@@ -93,7 +93,7 @@
         (focused)="onFieldFocus()"
         (blurred)="onFieldBlur()"
         [returnObject]="false"
-        [value]="value?.seconds"
+        [value]="$safeNavigationMigration(value?.seconds)"
         (valueChanged)="updateSeconds($event)"
         [externalError]="secondsError"
         placeholder="SS"></cps-autocomplete>

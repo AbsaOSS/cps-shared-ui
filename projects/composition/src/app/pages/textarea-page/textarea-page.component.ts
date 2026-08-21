@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -23,6 +23,7 @@ import { textareaExamples } from './textarea-page.examples';
   ],
   templateUrl: './textarea-page.component.html',
   styleUrls: ['./textarea-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TextareaPageComponent implements OnInit {

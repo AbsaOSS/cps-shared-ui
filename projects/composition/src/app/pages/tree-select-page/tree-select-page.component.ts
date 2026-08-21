@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -24,6 +24,7 @@ import { treeSelectExamples } from './tree-select-page.examples';
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',
   styleUrls: ['./tree-select-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TreeSelectPageComponent implements OnInit {

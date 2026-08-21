@@ -1,4 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsIconComponent,
@@ -25,6 +30,7 @@ import { iconsExamples } from './icons-page.examples';
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',
   styleUrls: ['./icons-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class IconsPageComponent implements OnInit {
