@@ -8,7 +8,8 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -23,6 +24,7 @@ import { logMissingAriaLabelError } from '../../utils/internal/accessibility-uti
   imports: [CpsInfoCircleComponent],
   selector: 'cps-switch',
   templateUrl: './cps-switch.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-switch.component.scss']
 })
 export class CpsSwitchComponent

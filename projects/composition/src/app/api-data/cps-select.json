@@ -185,7 +185,7 @@
                         "name": "prefixIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "IconType",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "Icon before input value."
                     },
@@ -193,7 +193,7 @@
                         "name": "prefixIconSize",
                         "optional": false,
                         "readonly": false,
-                        "type": "iconSizeType",
+                        "type": "CpsIconSizeType",
                         "default": "1.125rem",
                         "description": "Size of icon before input value."
                     },

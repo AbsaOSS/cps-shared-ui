@@ -12,7 +12,8 @@ import {
   OnInit,
   Output,
   type SimpleChanges,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { catchError, Observable, of, Subject, take, takeUntil } from 'rxjs';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
@@ -37,6 +38,7 @@ import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-
     CpsTooltipDirective
   ],
   templateUrl: './cps-file-upload.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-file-upload.component.scss']
 })
 export class CpsFileUploadComponent implements OnInit, OnChanges, OnDestroy {

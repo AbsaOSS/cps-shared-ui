@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TableCheckbox } from 'primeng/table';
+import { TableCheckbox } from '../../../../primeng-temp/table/public_api';
 
 /**
  * CpsTableRowSelectableDirective is a directive used to apply a checkbox to a body cell.

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -23,6 +23,7 @@ import { datepickerExamples } from './datepicker-page.examples';
   selector: 'app-datepicker-page',
   templateUrl: './datepicker-page.component.html',
   styleUrls: ['./datepicker-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class DatepickerPageComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CpsIconComponent, CpsProgressCircularComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -17,6 +17,7 @@ import { progressCircularExamples } from './progress-circular-page.examples';
   selector: 'app-progress-circular-page',
   templateUrl: './progress-circular-page.component.html',
   styleUrls: ['./progress-circular-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class ProgressCircularPageComponent {

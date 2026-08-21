@@ -1,7 +1,7 @@
 import { signal, SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BaseComponent } from 'primeng/basecomponent';
+import { BaseComponent } from '../../primeng-temp/basecomponent/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsTreeTableComponent } from './cps-tree-table.component';
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -27,6 +27,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-autocomplete-page',
   templateUrl: './autocomplete-page.component.html',
   styleUrls: ['./autocomplete-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class AutocompletePageComponent implements OnInit {

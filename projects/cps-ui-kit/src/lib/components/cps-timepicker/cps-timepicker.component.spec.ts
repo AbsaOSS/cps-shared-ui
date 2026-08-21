@@ -1,4 +1,8 @@
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NO_ERRORS_SCHEMA
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -694,6 +698,7 @@ describe('CpsTimepickerComponent', () => {
 
   describe('with NgControl (reactive forms)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsTimepickerComponent, ReactiveFormsModule],
       template: `<cps-timepicker
         [formControl]="control"

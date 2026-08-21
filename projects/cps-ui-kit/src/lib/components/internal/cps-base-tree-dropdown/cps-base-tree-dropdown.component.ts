@@ -14,19 +14,23 @@ import {
   Output,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import type { TreeNode } from 'primeng/api';
+import type { TreeNode } from '../../../primeng-temp/api/public_api';
+import type { Tree } from '../../../primeng-temp/tree/public_api';
 import {
   generateUniqueId,
   logMissingAriaLabelError
 } from '../../../utils/internal/accessibility-utils/accessibility-utils';
 import { Subscription } from 'rxjs';
-import type { Tree } from 'primeng/tree';
 import { isEqual } from 'lodash-es';
-import type { IconType, iconSizeType } from '../../cps-icon/cps-icon.component';
+import type {
+  CpsIconType,
+  CpsIconSizeType
+} from '../../cps-icon/cps-icon.component';
 import { convertSize } from '../../../utils/internal/size-utils/size-utils';
 import type { CpsTooltipPosition } from '../../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsMenuComponent } from '../../cps-menu/cps-menu.component';
@@ -41,6 +45,7 @@ const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 6;
  */
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class CpsBaseTreeDropdownComponent
@@ -134,13 +139,13 @@ export class CpsBaseTreeDropdownComponent
    * Icon before input value.
    * @group Props
    */
-  @Input() prefixIcon: IconType = '';
+  @Input() prefixIcon: CpsIconType = '';
 
   /**
    * Size of icon before input value, of type number, string, 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '1.125rem';
+  @Input() prefixIconSize: CpsIconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.

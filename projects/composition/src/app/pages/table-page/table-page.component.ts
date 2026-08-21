@@ -1,4 +1,10 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsTableComponent,
@@ -47,6 +53,7 @@ import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
   ],
   templateUrl: './table-page.component.html',
   styleUrls: ['./table-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TablePageComponent implements OnInit, OnDestroy {

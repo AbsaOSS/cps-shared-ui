@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ServiceAPI } from '../../models/service-api.model';
 import {
   CpsTabComponent,
@@ -14,6 +14,7 @@ import { ApiTypeComponent } from '../shared/api-type/api-type.component';
   selector: 'app-service-docs-viewer',
   templateUrl: './service-docs-viewer.component.html',
   styleUrl: './service-docs-viewer.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CpsTabComponent,
     CpsTabGroupComponent,

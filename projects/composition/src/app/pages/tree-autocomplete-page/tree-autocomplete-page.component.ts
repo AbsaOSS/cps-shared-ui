@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -24,6 +24,7 @@ import { treeAutocompleteExamples } from './tree-autocomplete-page.examples';
   selector: 'app-tree-autocomplete-page',
   templateUrl: './tree-autocomplete-page.component.html',
   styleUrls: ['./tree-autocomplete-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TreeAutocompletePageComponent implements OnInit {

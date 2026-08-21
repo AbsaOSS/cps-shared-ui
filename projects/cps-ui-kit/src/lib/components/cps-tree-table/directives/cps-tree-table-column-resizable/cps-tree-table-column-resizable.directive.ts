@@ -1,5 +1,5 @@
 import { Directive, Input, inject } from '@angular/core';
-import { TTResizableColumn } from 'primeng/treetable';
+import { TTResizableColumn } from '../../../../primeng-temp/treetable/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**

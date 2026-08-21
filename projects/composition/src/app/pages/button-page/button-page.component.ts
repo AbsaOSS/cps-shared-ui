@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CpsButtonComponent, CpsInputComponent } from 'cps-ui-kit';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -18,6 +18,7 @@ import { buttonExamples } from './button-page.examples';
   selector: 'app-button-page',
   templateUrl: './button-page.component.html',
   styleUrls: ['./button-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class ButtonPageComponent {

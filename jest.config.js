@@ -6,7 +6,9 @@ const collectCoverageFrom =
         '!projects/**/*.spec.ts',
         '!projects/**/testing/**',
         '!projects/**/public-api.ts',
-        '!projects/cps-ui-kit/src/lib/components/cps-scheduler/cps-scheduler.utils.ts'
+        '!projects/cps-ui-kit/src/lib/components/cps-scheduler/cps-scheduler.utils.ts',
+        '!projects/cps-ui-kit/src/lib/primeng-temp/**',
+        '!projects/cps-ui-kit/src/lib/primeuix-temp/**'
       ]
     : [
         'projects/cps-ui-kit/src/**/*.ts',
@@ -14,7 +16,9 @@ const collectCoverageFrom =
         '!projects/**/node_modules/**',
         '!projects/**/*.spec.ts',
         '!projects/**/testing/**',
-        '!projects/**/public-api.ts'
+        '!projects/**/public-api.ts',
+        '!projects/cps-ui-kit/src/lib/primeng-temp/**',
+        '!projects/cps-ui-kit/src/lib/primeuix-temp/**'
       ];
 
 const coverageThreshold =
@@ -44,6 +48,7 @@ const coverageThreshold =
 
 module.exports = {
   roots: ['<rootDir>/projects'],
+  coverageDirectory: '<rootDir>/coverage',
   preset: 'jest-preset-angular',
   moduleNameMapper: {
     '^lodash-es$': 'lodash',

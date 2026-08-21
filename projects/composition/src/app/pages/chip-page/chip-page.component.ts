@@ -1,4 +1,10 @@
-import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  inject,
+  ViewChild,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {
   CpsButtonComponent,
   CpsChipComponent,
@@ -21,6 +27,7 @@ import { chipExamples } from './chip-page.examples';
   selector: 'app-chip-page',
   templateUrl: './chip-page.component.html',
   styleUrls: ['./chip-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class ChipPageComponent {

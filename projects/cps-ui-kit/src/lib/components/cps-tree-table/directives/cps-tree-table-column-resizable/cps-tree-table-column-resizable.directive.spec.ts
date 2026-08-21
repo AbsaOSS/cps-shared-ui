@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,12 +6,13 @@ import {
   TTResizableColumn,
   TreeTable,
   TreeTableStyle
-} from 'primeng/treetable';
-import { BaseComponent } from 'primeng/basecomponent';
+} from '../../../../primeng-temp/treetable/public_api';
+import { BaseComponent } from '../../../../primeng-temp/basecomponent/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsTreeTableColumnResizableDirective } from './cps-tree-table-column-resizable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<table>
     <thead>
       <tr>

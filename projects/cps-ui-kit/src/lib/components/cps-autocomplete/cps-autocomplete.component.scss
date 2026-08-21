@@ -117,6 +117,7 @@ $hover-transition-duration: 0.2s;
       overflow: hidden;
       min-height: 2.375rem;
       width: 100%;
+      box-sizing: border-box;
       cursor: text;
       background: var(--cps-input-background);
       font-size: 1rem;

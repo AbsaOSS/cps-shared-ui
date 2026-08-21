@@ -81,7 +81,7 @@
                         "name": "prefixIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "IconType",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "Name of the icon in front of the title."
                     }

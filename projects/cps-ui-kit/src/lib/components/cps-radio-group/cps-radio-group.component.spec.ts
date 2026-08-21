@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsRadioGroupComponent } from './cps-radio-group.component';
 import {
@@ -213,6 +213,7 @@ describe('CpsRadioGroupComponent', () => {
 
   describe('with NgControl (reactive forms)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsRadioGroupComponent, ReactiveFormsModule],
       template: `<cps-radio-group
         [formControl]="control"

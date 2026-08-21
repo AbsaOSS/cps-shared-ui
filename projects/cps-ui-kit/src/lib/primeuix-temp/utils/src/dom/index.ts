@@ -1,0 +1,61 @@
+/**
+ * Vendored from primeuix (https://github.com/primefaces/primeuix, commit b9467bc448d35738d4f651dbc3caa4d4cb9a6a96).
+ * Original file: packages/utils/src/dom/index.ts
+ * Modified: import paths rewritten to resolve locally. See ../../../NOTICE.md.
+ * Original license: MIT, Copyright (c) 2025 PrimeTek.
+ */
+export { default as blockBodyScroll } from './helpers/blockBodyScroll';
+export { default as unblockBodyScroll } from './helpers/unblockBodyScroll';
+export { default as absolutePosition } from './methods/absolutePosition';
+export { default as addClass } from './methods/addClass';
+export { default as addStyle } from './methods/addStyle';
+export { default as appendChild } from './methods/appendChild';
+export { default as calculateBodyScrollbarWidth } from './methods/calculateBodyScrollbarWidth';
+export { default as calculateScrollbarHeight } from './methods/calculateScrollbarHeight';
+export { default as calculateScrollbarWidth } from './methods/calculateScrollbarWidth';
+export { default as clearSelection } from './methods/clearSelection';
+export { default as createElement } from './methods/createElement';
+export { default as fadeIn } from './methods/fadeIn';
+export { default as find } from './methods/find';
+export { default as findSingle } from './methods/findSingle';
+export { default as focus } from './methods/focus';
+export { default as getAttribute } from './methods/getAttribute';
+export { default as getCSSVariableByRegex } from './methods/getCSSVariableByRegex';
+export { default as getFirstFocusableElement } from './methods/getFirstFocusableElement';
+export { default as getFocusableElements } from './methods/getFocusableElements';
+export { default as getHeight } from './methods/getHeight';
+export { default as getHiddenElementDimensions } from './methods/getHiddenElementDimensions';
+export { default as getHiddenElementOuterHeight } from './methods/getHiddenElementOuterHeight';
+export { default as getHiddenElementOuterWidth } from './methods/getHiddenElementOuterWidth';
+export { default as getIndex } from './methods/getIndex';
+export { default as getLastFocusableElement } from './methods/getLastFocusableElement';
+export { default as getOffset } from './methods/getOffset';
+export { default as getOuterHeight } from './methods/getOuterHeight';
+export { default as getOuterWidth } from './methods/getOuterWidth';
+export { default as getParentNode } from './methods/getParentNode';
+export { default as getScrollLeft } from './methods/getScrollLeft';
+export { default as getSelection } from './methods/getSelection';
+export { default as getTargetElement } from './methods/getTargetElement';
+export { default as getViewport } from './methods/getViewport';
+export { default as getWidth } from './methods/getWidth';
+export { default as getWindowScrollLeft } from './methods/getWindowScrollLeft';
+export { default as getWindowScrollTop } from './methods/getWindowScrollTop';
+export { default as hasClass } from './methods/hasClass';
+export { default as invokeElementMethod } from './methods/invokeElementMethod';
+export { default as isClickable } from './methods/isClickable';
+export { default as isElement } from './methods/isElement';
+export { default as isExist } from './methods/isExist';
+export { default as isPrefersReducedMotion } from './methods/isPrefersReducedMotion';
+export { default as isRTL } from './methods/isRTL';
+export { default as isTouchDevice } from './methods/isTouchDevice';
+export { default as isVisible } from './methods/isVisible';
+export { default as nextFrame } from './methods/nextFrame';
+export { default as relativePosition } from './methods/relativePosition';
+export { default as remove } from './methods/remove';
+export { default as removeChild } from './methods/removeChild';
+export { default as removeClass } from './methods/removeClass';
+export { default as scrollInView } from './methods/scrollInView';
+export { default as setAttribute } from './methods/setAttribute';
+export { default as setAttributes } from './methods/setAttributes';
+export { default as setCSSProperty } from './methods/setCSSProperty';
+export { default as toElement } from './methods/toElement';

@@ -30,6 +30,7 @@ $disabled-label-color: var(--cps-color-text-mild);
       color: $border-color;
       width: 1.25rem;
       height: 1.25rem;
+      box-sizing: border-box;
       border: 0.15rem solid currentColor;
       border-radius: 50%;
 

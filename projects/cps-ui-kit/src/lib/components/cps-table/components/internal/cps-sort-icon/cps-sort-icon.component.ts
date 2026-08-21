@@ -7,8 +7,8 @@ import {
   OnInit,
   Optional
 } from '@angular/core';
-import { Table } from 'primeng/table';
-import { TreeTable } from 'primeng/treetable';
+import { Table } from '../../../../../primeng-temp/table/public_api';
+import { TreeTable } from '../../../../../primeng-temp/treetable/public_api';
 import { Subscription } from 'rxjs';
 
 @Component({

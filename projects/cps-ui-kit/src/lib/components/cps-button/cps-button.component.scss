@@ -5,6 +5,7 @@
   display: inline-block;
   .cps-button {
     width: 100%;
+    box-sizing: border-box;
     letter-spacing: normal;
     font-family: 'Source Sans Pro', sans-serif;
     user-select: none;

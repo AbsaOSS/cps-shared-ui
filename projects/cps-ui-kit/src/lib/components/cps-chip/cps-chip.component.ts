@@ -3,11 +3,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  Output
+  Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CpsIconComponent,
-  type IconType
+  type CpsIconType
 } from '../cps-icon/cps-icon.component';
 import { CommonModule } from '@angular/common';
 
@@ -19,6 +20,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, CpsIconComponent],
   selector: 'cps-chip',
   templateUrl: './cps-chip.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-chip.component.scss']
 })
 export class CpsChipComponent implements OnChanges {
@@ -32,7 +34,7 @@ export class CpsChipComponent implements OnChanges {
    * Name of the icon.
    * @group Props
    */
-  @Input() icon: IconType = '';
+  @Input() icon: CpsIconType = '';
 
   /**
    * Color of the icon.

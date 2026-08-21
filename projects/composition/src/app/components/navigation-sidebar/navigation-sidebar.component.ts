@@ -7,7 +7,8 @@ import {
   OnInit,
   Output,
   QueryList,
-  ViewChildren
+  ViewChildren,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLinkActive, RouterModule } from '@angular/router';
@@ -17,6 +18,7 @@ import { CpsInputComponent } from 'cps-ui-kit';
   imports: [RouterModule, CommonModule, FormsModule, CpsInputComponent],
   selector: 'app-navigation-sidebar',
   templateUrl: './navigation-sidebar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./navigation-sidebar.component.scss']
 })
 export class NavigationSidebarComponent implements OnInit {

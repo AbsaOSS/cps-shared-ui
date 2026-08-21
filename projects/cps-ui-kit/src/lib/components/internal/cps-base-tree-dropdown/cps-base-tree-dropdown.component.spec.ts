@@ -1,4 +1,9 @@
-import { Component, NO_ERRORS_SCHEMA, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NO_ERRORS_SCHEMA,
+  signal
+} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -1458,6 +1463,7 @@ describe('CpsBaseTreeDropdownComponent', () => {
 
   describe('with NgControl (reactive forms)', () => {
     @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
       imports: [CpsTreeSelectComponent, ReactiveFormsModule],
       template: `<cps-tree-select
         [formControl]="control"
