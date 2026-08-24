@@ -1,5 +1,10 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import {
   CpsInputComponent,
   CpsNotificationPosition,
@@ -18,6 +23,7 @@ type colorGroupsType = {
   selector: 'app-colors-page',
   templateUrl: './colors-page.component.html',
   styleUrls: ['./colors-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class ColorsPageComponent implements OnInit {

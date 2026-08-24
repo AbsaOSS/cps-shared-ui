@@ -1,6 +1,6 @@
 import { Directive, Host, Self, Optional } from '@angular/core';
-import { TreeTable } from 'primeng/treetable';
-import { ObjectUtils } from 'primeng/utils';
+import { TreeTable } from '../../../../../primeng-temp/treetable/public_api';
+import { ObjectUtils } from '../../../../../primeng-temp/utils/public_api';
 
 @Directive({
   standalone: true,

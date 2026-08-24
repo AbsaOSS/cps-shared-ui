@@ -9,7 +9,8 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -49,6 +50,7 @@ export interface CpsTime {
     CpsInfoCircleComponent
   ],
   templateUrl: './cps-timepicker.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-timepicker.component.scss']
 })
 export class CpsTimepickerComponent

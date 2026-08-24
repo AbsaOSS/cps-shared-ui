@@ -7,8 +7,8 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { DomHandler } from 'primeng/dom';
-import { Table } from 'primeng/table';
+import { DomHandler } from '../../../../primeng-temp/dom/public_api';
+import { Table } from '../../../../primeng-temp/table/public_api';
 import { Subscription } from 'rxjs';
 import { CpsSortIconComponent } from '../../components/internal/cps-sort-icon/cps-sort-icon.component';
 

@@ -3,13 +3,6 @@
 @use './_colors-dark.scss';
 @use './_fonts.scss';
 @use './_cps-tooltip-style.scss';
-@use 'primeicons/primeicons.css';
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 
 // See https://github.com/primefaces/primeng/issues/17437
 .p-scrollbar-measure {

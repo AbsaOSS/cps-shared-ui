@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {
   CpsFileUploadComponent,
   CpsButtonToggleComponent,
@@ -23,6 +23,7 @@ import { fileUploadExamples } from './file-upload-page.examples';
   ],
   templateUrl: './file-upload-page.component.html',
   styleUrls: ['./file-upload-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class FileUploadPageComponent {

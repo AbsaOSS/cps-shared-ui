@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 import { CpsInfoCircleComponent } from 'cps-ui-kit';
 
@@ -15,6 +15,7 @@ import { infoCircleExamples } from './info-circle-page.examples';
     CodeExampleComponent
   ],
   templateUrl: './info-circle-page.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class InfoCirclePageComponent {

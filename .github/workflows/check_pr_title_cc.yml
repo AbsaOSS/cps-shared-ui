@@ -3,7 +3,7 @@ name: Check PR Title (Conventional Commits)
 on:
   pull_request:
     types: [opened, synchronize, reopened, edited, labeled, unlabeled]
-    branches: [master]
+    branches: [master, next-major]
 
 jobs:
   check-pr-title:

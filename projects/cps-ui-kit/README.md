@@ -41,3 +41,7 @@
 ### License
 
 Apache License 2.0 (see the [LICENSE](https://github.com/AbsaOSS/cps-shared-ui/blob/master/LICENSE) file for the full text)
+
+### Third-party notices
+
+`cps-ui-kit` vendors source code from [PrimeNG](https://github.com/primefaces/primeng) and [primeuix](https://github.com/primefaces/primeuix) (both MIT License) rather than depending on them as npm packages. See [NOTICE](https://github.com/AbsaOSS/cps-shared-ui/blob/master/NOTICE) for details.

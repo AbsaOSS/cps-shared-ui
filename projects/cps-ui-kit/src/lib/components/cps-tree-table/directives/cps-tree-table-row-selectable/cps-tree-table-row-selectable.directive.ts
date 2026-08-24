@@ -7,7 +7,7 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TTCheckbox } from 'primeng/treetable';
+import { TTCheckbox } from '../../../../primeng-temp/treetable/public_api';
 
 /**
  * CpsTreeTableRowSelectableDirective is a directive used to apply a checkbox to a body cell.

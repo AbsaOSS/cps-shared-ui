@@ -3,7 +3,8 @@ import {
   ViewEncapsulation,
   computed,
   inject,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
@@ -31,6 +32,7 @@ export type CpsDividerType = 'solid' | 'dashed' | 'dotted';
   },
   template: '',
   styleUrl: './cps-divider.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class CpsDividerComponent {

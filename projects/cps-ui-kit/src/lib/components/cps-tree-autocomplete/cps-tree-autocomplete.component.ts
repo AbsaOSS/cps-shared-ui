@@ -5,7 +5,8 @@ import {
   ElementRef,
   Input,
   Optional,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
@@ -13,8 +14,8 @@ import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { isEqual } from 'lodash-es';
-import { TreeModule } from 'primeng/tree';
-import type { TreeNode } from 'primeng/api';
+import { TreeModule } from '../../primeng-temp/tree/public_api';
+import type { TreeNode } from '../../primeng-temp/api/public_api';
 import {
   CpsMenuComponent,
   CpsMenuHideReason
@@ -45,6 +46,7 @@ export type CpsTreeAutocompleteAppearanceType =
   ],
   selector: 'cps-tree-autocomplete',
   templateUrl: './cps-tree-autocomplete.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-tree-autocomplete.component.scss']
 })
 export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {

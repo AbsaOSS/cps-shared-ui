@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TTHeaderCheckbox } from 'primeng/treetable';
+import { TTHeaderCheckbox } from '../../../../primeng-temp/treetable/public_api';
 
 /**
  * CpsTreeTableHeaderSelectableDirective is a directive used to apply a checkbox to a header cell.

@@ -9,10 +9,14 @@ import {
   OnInit,
   Output,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { Paginator, PaginatorModule } from 'primeng/paginator';
+import {
+  Paginator,
+  PaginatorModule
+} from '../../primeng-temp/paginator/public_api';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { FormsModule } from '@angular/forms';
@@ -29,6 +33,7 @@ const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
   imports: [PaginatorModule, CpsSelectComponent, FormsModule],
   templateUrl: './cps-paginator.component.html',
   styleUrls: ['./cps-paginator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     role: 'navigation',
     '[attr.aria-label]': 'computedAriaLabel',

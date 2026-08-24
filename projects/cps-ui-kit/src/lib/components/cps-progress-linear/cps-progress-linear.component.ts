@@ -4,7 +4,8 @@ import {
   HostAttributeToken,
   computed,
   inject,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
@@ -17,6 +18,7 @@ import { convertSize } from '../../utils/internal/size-utils/size-utils';
   selector: 'cps-progress-linear',
   templateUrl: './cps-progress-linear.component.html',
   styleUrls: ['./cps-progress-linear.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     role: 'progressbar',
     '[attr.aria-label]': 'computedAriaLabel()'

@@ -232,7 +232,7 @@
                         "name": "toolbarIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "string",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "Toolbar icon name."
                     },
@@ -440,7 +440,7 @@
                         "name": "additionalBtnOnSelectIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "string",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "AdditionalBtnOnSelect icon."
                     },
@@ -472,7 +472,7 @@
                         "name": "actionBtnIcon",
                         "optional": false,
                         "readonly": false,
-                        "type": "string",
+                        "type": "CpsIconType",
                         "default": "",
                         "description": "Action button icon."
                     },

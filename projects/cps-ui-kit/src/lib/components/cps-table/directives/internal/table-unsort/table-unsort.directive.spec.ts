@@ -1,4 +1,4 @@
-import { Table } from 'primeng/table';
+import { Table } from '../../../../../primeng-temp/table/public_api';
 import { TableUnsortDirective } from './table-unsort.directive';
 
 type Row = { id: number; name: string };

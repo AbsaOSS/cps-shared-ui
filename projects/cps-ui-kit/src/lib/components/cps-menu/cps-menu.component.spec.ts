@@ -7,7 +7,7 @@ import {
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { DomHandler } from 'primeng/dom';
+import { DomHandler } from '../../primeng-temp/dom/public_api';
 import { CPS_FOCUS_SERVICE } from '../../services/cps-focus/cps-focus.service';
 import {
   CpsMenuComponent,

@@ -10,7 +10,8 @@ import {
   OnInit,
   Optional,
   Output,
-  Self
+  Self,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
@@ -34,6 +35,11 @@ export type CpsRadioOption = {
   tooltip?: string;
 };
 
+/**
+ * Injection token used by child radio buttons to look up their parent
+ * `CpsRadioGroupComponent`.
+ * @group Tokens
+ */
 export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   'CpsRadioGroupComponent'
 );
@@ -47,6 +53,7 @@ export const CPS_RADIO_GROUP = new InjectionToken<CpsRadioGroupComponent>(
   selector: 'cps-radio-group',
   templateUrl: './cps-radio-group.component.html',
   styleUrls: ['./cps-radio-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: CPS_RADIO_GROUP,

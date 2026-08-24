@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   ViewChild,
@@ -8,10 +9,11 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TableHeaderCheckbox } from 'primeng/table';
+import { TableHeaderCheckbox } from '../../../../primeng-temp/table/public_api';
 import { CpsTableHeaderSelectableDirective } from './cps-table-header-selectable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   template: `<th cpsTHdrSelectable></th>`,
   imports: [CpsTableHeaderSelectableDirective]
@@ -21,7 +23,11 @@ class TestHostComponent {
   directive!: CpsTableHeaderSelectableDirective;
 }
 
-@Component({ standalone: true, template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: true,
+  template: ''
+})
 class VcrProbeComponent {
   readonly vcr = inject(ViewContainerRef);
 }

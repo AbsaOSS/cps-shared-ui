@@ -9,7 +9,8 @@ import {
   Optional,
   Output,
   Self,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
@@ -22,6 +23,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
   imports: [CommonModule],
   selector: 'cps-tag',
   templateUrl: './cps-tag.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-tag.component.scss']
 })
 export class CpsTagComponent

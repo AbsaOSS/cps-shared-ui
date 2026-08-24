@@ -9,7 +9,10 @@
     flex-wrap: nowrap;
     display: inline-flex;
     align-items: center;
-    gap: 0.35rem;
+
+    .type-sep {
+      margin-right: 0.35rem;
+    }
   }
 
   .type-part {

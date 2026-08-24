@@ -15,7 +15,8 @@ import {
   PLATFORM_ID,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
@@ -43,6 +44,7 @@ const RESIZE_STEP_REM = 1.5;
   selector: 'cps-textarea',
   imports: [CpsIconComponent, CpsInfoCircleComponent],
   templateUrl: './cps-textarea.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-textarea.component.scss']
 })
 export class CpsTextareaComponent
@@ -215,13 +217,6 @@ export class CpsTextareaComponent
    * @group Emits
    */
   @Output() focused = new EventEmitter();
-
-  /**
-   * Callback to invoke when the prefixIcon is clicked.
-   * @param {any}
-   * @group Emits
-   */
-  @Output() prefixIconClicked = new EventEmitter();
 
   /**
    * Callback to invoke when the component loses focus.

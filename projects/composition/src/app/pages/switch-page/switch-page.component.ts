@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsSwitchComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-switch.json';
@@ -17,6 +17,7 @@ import { switchExamples } from './switch-page.examples';
   selector: 'app-switch-page',
   templateUrl: './switch-page.component.html',
   styleUrls: ['./switch-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class SwitchPageComponent {

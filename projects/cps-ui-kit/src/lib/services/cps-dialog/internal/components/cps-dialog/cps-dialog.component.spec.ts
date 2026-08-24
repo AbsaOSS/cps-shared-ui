@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -6,15 +6,21 @@ import {
   tick
 } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { PrimeNG } from 'primeng/config';
-import { DomHandler } from 'primeng/dom';
-import { ZIndexUtils } from 'primeng/utils';
+import { PrimeNG } from '../../../../../primeng-temp/config/public_api';
+import { DomHandler } from '../../../../../primeng-temp/dom/public_api';
+import { ZIndexUtils } from '../../../../../primeng-temp/utils/public_api';
 import { CpsDialogComponent } from './cps-dialog.component';
-import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
+import {
+  CPS_DIALOG_CONFIG,
+  type CpsDialogConfig
+} from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../cps-root-font-size/cps-root-font-size.service';
 
-@Component({ template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ''
+})
 class TestChildComponent {}
 
 const mockRootFontSizeService = {
@@ -44,13 +50,13 @@ describe('CpsDialogComponent', () => {
       componentInstance: null
     };
 
-    config = Object.assign(new CpsDialogConfig(), configOverrides);
+    config = { ...configOverrides };
 
     TestBed.configureTestingModule({
       imports: [CpsDialogComponent, NoopAnimationsModule],
       providers: [
         { provide: CpsDialogRef, useValue: mockDialogRef },
-        { provide: CpsDialogConfig, useValue: config },
+        { provide: CPS_DIALOG_CONFIG, useValue: config },
         {
           provide: CPS_ROOT_FONT_SIZE_SERVICE,
           useValue: mockRootFontSizeService

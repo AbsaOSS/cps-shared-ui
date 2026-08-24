@@ -68,6 +68,7 @@
       display: flex;
       align-items: center;
       min-height: 3.125rem;
+      box-sizing: border-box;
       padding-bottom: 0.5rem;
       font-weight: 600;
       color: var(--cps-color-text-dark);
@@ -82,6 +83,7 @@
       border-top: 0.0625rem solid #0000001f;
       cursor: pointer;
       min-height: 3.625rem;
+      box-sizing: border-box;
 
       .cps-menu-item-icon {
         width: 3rem;

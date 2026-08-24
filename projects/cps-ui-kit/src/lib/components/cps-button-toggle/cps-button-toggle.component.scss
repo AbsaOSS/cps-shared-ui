@@ -58,6 +58,7 @@ $option-active-background: var(--cps-color-highlight-active);
 
     &-content-option {
       height: 2.375rem;
+      box-sizing: border-box;
       display: flex;
       align-items: center;
       justify-content: center;

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsButtonComponent,
@@ -22,6 +22,7 @@ import { tooltipExamples } from './tooltip-page.examples';
   ],
   templateUrl: './tooltip-page.component.html',
   styleUrls: ['./tooltip-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TooltipPageComponent {

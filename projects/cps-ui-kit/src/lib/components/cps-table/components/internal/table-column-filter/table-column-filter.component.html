@@ -37,6 +37,7 @@
             [returnObject]="false"
             [options]="operatorOptions"
             [ngModel]="operator"
+            [ngModelOptions]="{ standalone: true }"
             (valueChanged)="onOperatorChange($event)"></cps-select>
         </div>
       }
@@ -62,6 +63,7 @@
                 [returnObject]="false"
                 [options]="currentMatchModes"
                 [ngModel]="fieldConstraint.matchMode"
+                [ngModelOptions]="{ standalone: true }"
                 (valueChanged)="
                   onMenuMatchModeChange($event, fieldConstraint)
                 "></cps-select>

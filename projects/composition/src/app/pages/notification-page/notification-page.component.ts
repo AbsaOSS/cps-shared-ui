@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import {
   CpsButtonComponent,
   CpsNotificationAppearance,
@@ -19,6 +19,7 @@ import { notificationExamples } from './notification-page.examples';
   ],
   templateUrl: './notification-page.component.html',
   styleUrls: ['./notification-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class NotificationPageComponent {
