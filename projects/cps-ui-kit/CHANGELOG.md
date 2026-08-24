@@ -1,5 +1,22 @@
 # Changelog
 
+## [22.0.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.30.0...v22.0.0) (2026-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* v22 major update ([#849](https://github.com/AbsaOSS/cps-shared-ui/issues/849))
+
+### Features
+
+* change default date format in the CpsDatepickerComponent to DD/MM/YYYY ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* delete box-sizing global override ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* make icon type a restricted string union ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* remove dead prefixIconClicked output from CpsTextareaComponent ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* remove primeng/@primeuix/* dependencies and vendor MIT-licensed source ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* replace CpsDialogConfig class with interface + InjectionToken ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* v22 major update ([#849](https://github.com/AbsaOSS/cps-shared-ui/issues/849)) ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+
 ## [21.30.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.3...v21.30.0) (2026-08-20)
 
 
