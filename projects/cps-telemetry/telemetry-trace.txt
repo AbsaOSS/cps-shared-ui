@@ -1,0 +1,1328 @@
+----------------------------------------------------------------------
+[1/27] SCENARIO  route-navigation  status=success  delta=100ms
+trigger: boot + navigate /colors -> /autocomplete
+
+{
+  "scenarioId": "5e45c8e3-9a3b-438b-b1b5-018f31dfeb9d",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/colors?experimental=true",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:20.590Z",
+  "endTime": "2026-08-27T19:43:20.690Z",
+  "delta": 100,
+  "elapsed": 725,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 623,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 100,
+      "stepDelta": 99,
+      "elapsed": 723,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 100,
+      "endOffset": 100,
+      "stepDelta": 0,
+      "elapsed": 724,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 100,
+      "endOffset": 100,
+      "stepDelta": 0,
+      "elapsed": 724,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/colors"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[2/27] SCENARIO  route-navigation  status=success  delta=83ms
+trigger: boot + navigate /colors -> /autocomplete
+
+{
+  "scenarioId": "6fdbc6a5-42f7-4ab5-b8f8-bd02f181c40f",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/autocomplete?experimental=true",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:21.118Z",
+  "endTime": "2026-08-27T19:43:21.201Z",
+  "delta": 83,
+  "elapsed": 327,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 243,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 83,
+      "stepDelta": 82,
+      "elapsed": 326,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 83,
+      "endOffset": 83,
+      "stepDelta": 0,
+      "elapsed": 326,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 83,
+      "endOffset": 83,
+      "stepDelta": 0,
+      "elapsed": 327,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/autocomplete"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[3/27] SCENARIO  route-navigation  status=success  delta=92ms
+trigger: boot + navigate /colors -> /autocomplete
+
+{
+  "scenarioId": "978cc878-493a-409e-82ca-f9b0c96a0342",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/autocomplete/examples",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:21.204Z",
+  "endTime": "2026-08-27T19:43:21.296Z",
+  "delta": 92,
+  "elapsed": 422,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 329,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 92,
+      "stepDelta": 91,
+      "elapsed": 421,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 92,
+      "endOffset": 92,
+      "stepDelta": 0,
+      "elapsed": 422,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 92,
+      "endOffset": 92,
+      "stepDelta": 0,
+      "elapsed": 422,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/autocomplete/examples"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[4/27] BI  sidebar_toggled
+trigger: sidebar toggle + theme toggle
+
+{
+  "eventName": "sidebar_toggled",
+  "eventTime": "2026-08-27T19:43:21.389Z",
+  "metadata": {
+    "expanded": false
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[5/27] BI  theme_changed
+trigger: sidebar toggle + theme toggle
+
+{
+  "eventName": "theme_changed",
+  "eventTime": "2026-08-27T19:43:21.751Z",
+  "metadata": {
+    "theme": "dark"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[6/27] BI  sidebar_searched
+trigger: sidebar search (debounced)
+
+{
+  "eventName": "sidebar_searched",
+  "eventTime": "2026-08-27T19:43:22.334Z",
+  "metadata": {
+    "resultCount": 3
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[7/27] SCENARIO  autocomplete-search  status=abandoned  delta=761ms
+trigger: autocomplete search: superseded query, then a settled one
+
+{
+  "scenarioId": "74d872a5-8c4f-4e67-bdce-cec3ec7de0d9",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "abandoned",
+  "startTime": "2026-08-27T19:43:23.313Z",
+  "endTime": "2026-08-27T19:43:24.074Z",
+  "delta": 761,
+  "elapsed": 3199,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2438,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 2,
+      "endOffset": 761,
+      "stepDelta": 759,
+      "elapsed": 3199,
+      "status": "abandoned"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 761,
+      "endOffset": 761,
+      "stepDelta": 0,
+      "elapsed": 3199,
+      "status": "abandoned"
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "message": "superseded"
+}
+
+----------------------------------------------------------------------
+[8/27] SCENARIO  autocomplete-search  status=success  delta=1002ms
+trigger: autocomplete search: superseded query, then a settled one
+
+{
+  "scenarioId": "67586749-9c69-40e2-b097-d5218065431e",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:24.075Z",
+  "endTime": "2026-08-27T19:43:25.077Z",
+  "delta": 1002,
+  "elapsed": 4201,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 3200,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "endOffset": 1002,
+      "stepDelta": 1002,
+      "elapsed": 4201,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1002,
+      "endOffset": 1002,
+      "stepDelta": 0,
+      "elapsed": 4201,
+      "status": "success"
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "resultCount": 1
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[9/27] SCENARIO  autocomplete-validate  status=success  delta=3002ms
+trigger: autocomplete validate: success
+
+{
+  "scenarioId": "5718c228-2359-4bda-9f94-0b243e49fc89",
+  "scenarioName": "autocomplete-validate",
+  "feature": "autocomplete",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:26.420Z",
+  "endTime": "2026-08-27T19:43:29.422Z",
+  "delta": 3002,
+  "elapsed": 8547,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 5545,
+      "status": "success"
+    },
+    {
+      "name": "validate",
+      "startOffset": 1,
+      "endOffset": 3002,
+      "stepDelta": 3001,
+      "elapsed": 8547,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 3002,
+      "endOffset": 3002,
+      "stepDelta": 0,
+      "elapsed": 8547,
+      "status": "success"
+    }
+  ],
+  "previousStep": "validate",
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[10/27] SCENARIO  route-navigation  status=success  delta=37ms
+trigger: file upload: success path (3s processing)
+
+{
+  "scenarioId": "24c11afa-c30a-41cf-9fb2-ed40bc199d26",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/file-upload?experimental=true",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:30.250Z",
+  "endTime": "2026-08-27T19:43:30.287Z",
+  "delta": 37,
+  "elapsed": 341,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 304,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 37,
+      "stepDelta": 36,
+      "elapsed": 340,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 37,
+      "endOffset": 37,
+      "stepDelta": 0,
+      "elapsed": 341,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 37,
+      "endOffset": 37,
+      "stepDelta": 0,
+      "elapsed": 341,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/file-upload"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[11/27] SCENARIO  route-navigation  status=success  delta=37ms
+trigger: file upload: success path (3s processing)
+
+{
+  "scenarioId": "608b98b9-542e-4b7a-9213-b7d6f822a191",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/file-upload/examples",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:30.290Z",
+  "endTime": "2026-08-27T19:43:30.327Z",
+  "delta": 37,
+  "elapsed": 380,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 343,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 36,
+      "stepDelta": 35,
+      "elapsed": 379,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 36,
+      "endOffset": 37,
+      "stepDelta": 1,
+      "elapsed": 380,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 37,
+      "endOffset": 37,
+      "stepDelta": 0,
+      "elapsed": 380,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/file-upload/examples"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[12/27] SCENARIO  file-upload  status=success  delta=3011ms
+trigger: file upload: success path (3s processing)
+
+{
+  "scenarioId": "ce0bfb9f-15d6-4b25-a98e-886f78cb7c57",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:30.400Z",
+  "endTime": "2026-08-27T19:43:33.411Z",
+  "delta": 3011,
+  "elapsed": 3465,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 453,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "endOffset": 3011,
+      "stepDelta": 3011,
+      "elapsed": 3464,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 3011,
+      "endOffset": 3011,
+      "stepDelta": 0,
+      "elapsed": 3465,
+      "status": "success"
+    }
+  ],
+  "previousStep": "process",
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[13/27] SCENARIO  file-upload  status=failure  delta=503ms
+trigger: file upload: failure path (always-false processing callback)
+
+{
+  "scenarioId": "68e17550-4524-4b9b-a153-6261432de835",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process-failing",
+  "status": "failure",
+  "startTime": "2026-08-27T19:43:33.928Z",
+  "endTime": "2026-08-27T19:43:34.431Z",
+  "delta": 503,
+  "elapsed": 4484,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 3981,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 1,
+      "endOffset": 503,
+      "stepDelta": 502,
+      "elapsed": 4484,
+      "status": "failure"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 503,
+      "endOffset": 503,
+      "stepDelta": 0,
+      "elapsed": 4484,
+      "status": "failure"
+    }
+  ],
+  "previousStep": "process",
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[14/27] SCENARIO  file-upload  status=abandoned  delta=538ms
+trigger: file upload: cancel path
+
+{
+  "scenarioId": "ec62f773-502a-4939-b14f-53e81fbc7c2d",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process",
+  "status": "abandoned",
+  "startTime": "2026-08-27T19:43:34.992Z",
+  "endTime": "2026-08-27T19:43:35.530Z",
+  "delta": 538,
+  "elapsed": 5583,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 5045,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "endOffset": 538,
+      "stepDelta": 538,
+      "elapsed": 5583,
+      "status": "abandoned"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 538,
+      "endOffset": 538,
+      "stepDelta": 0,
+      "elapsed": 5583,
+      "status": "abandoned"
+    }
+  ],
+  "previousStep": "process",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "message": "user-cancelled"
+}
+
+----------------------------------------------------------------------
+[15/27] SCENARIO  route-navigation  status=success  delta=67ms
+trigger: table lazy-load
+
+{
+  "scenarioId": "2c0ebd28-78ea-4084-855b-b142ccab0ddd",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/table?experimental=true",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:36.099Z",
+  "endTime": "2026-08-27T19:43:36.166Z",
+  "delta": 67,
+  "elapsed": 324,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 257,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 67,
+      "stepDelta": 66,
+      "elapsed": 324,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 67,
+      "endOffset": 67,
+      "stepDelta": 0,
+      "elapsed": 324,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 67,
+      "endOffset": 67,
+      "stepDelta": 0,
+      "elapsed": 324,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/table"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[16/27] SCENARIO  route-navigation  status=success  delta=430ms
+trigger: table lazy-load
+
+{
+  "scenarioId": "b115ec8e-595c-457c-ba59-aab7f62ec9bb",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/table/examples",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:36.169Z",
+  "endTime": "2026-08-27T19:43:36.599Z",
+  "delta": 430,
+  "elapsed": 758,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 328,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 429,
+      "stepDelta": 428,
+      "elapsed": 757,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 429,
+      "endOffset": 430,
+      "stepDelta": 1,
+      "elapsed": 758,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 430,
+      "endOffset": 430,
+      "stepDelta": 0,
+      "elapsed": 758,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/table/examples"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[17/27] SCENARIO  table-page-load  status=success  delta=660ms
+trigger: table lazy-load
+
+{
+  "scenarioId": "f253f737-96d4-4ca7-a7c1-b7dbeb4fd408",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:36.539Z",
+  "endTime": "2026-08-27T19:43:37.199Z",
+  "delta": 660,
+  "elapsed": 1358,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 698,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 1,
+      "endOffset": 660,
+      "stepDelta": 659,
+      "elapsed": 1358,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 660,
+      "endOffset": 660,
+      "stepDelta": 0,
+      "elapsed": 1358,
+      "status": "success"
+    }
+  ],
+  "previousStep": "fetch",
+  "metadata": {
+    "first": 0,
+    "rows": 10,
+    "totalRecords": 1001
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[18/27] SCENARIO  route-navigation  status=success  delta=38ms
+trigger: code example: copy code
+
+{
+  "scenarioId": "2fb9d69a-ead3-405a-867f-6a2f3e529e7e",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/autocomplete?experimental=true",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:38.529Z",
+  "endTime": "2026-08-27T19:43:38.567Z",
+  "delta": 38,
+  "elapsed": 310,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 273,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 37,
+      "stepDelta": 36,
+      "elapsed": 310,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 37,
+      "endOffset": 38,
+      "stepDelta": 1,
+      "elapsed": 310,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 38,
+      "endOffset": 38,
+      "stepDelta": 0,
+      "elapsed": 310,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/autocomplete"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[19/27] SCENARIO  route-navigation  status=success  delta=60ms
+trigger: code example: copy code
+
+{
+  "scenarioId": "95e5c444-b189-4cd4-b17e-795fda575675",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/autocomplete/examples",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:38.569Z",
+  "endTime": "2026-08-27T19:43:38.629Z",
+  "delta": 60,
+  "elapsed": 372,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 312,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 59,
+      "stepDelta": 58,
+      "elapsed": 372,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 59,
+      "endOffset": 60,
+      "stepDelta": 1,
+      "elapsed": 372,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 60,
+      "endOffset": 60,
+      "stepDelta": 0,
+      "elapsed": 372,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/autocomplete/examples"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[20/27] SCENARIO  route-navigation  status=success  delta=54ms
+trigger: theme option changes (experimental)
+
+{
+  "scenarioId": "2171dc2f-f74f-4472-954e-13515bd9bea8",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/colors?experimental=true",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:38.989Z",
+  "endTime": "2026-08-27T19:43:39.043Z",
+  "delta": 54,
+  "elapsed": 154,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 99,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 1,
+      "endOffset": 54,
+      "stepDelta": 53,
+      "elapsed": 153,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 54,
+      "endOffset": 54,
+      "stepDelta": 0,
+      "elapsed": 154,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 54,
+      "endOffset": 54,
+      "stepDelta": 0,
+      "elapsed": 154,
+      "status": "success"
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/colors"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[21/27] BI  theme_option_changed
+trigger: theme option changes (experimental)
+
+{
+  "eventName": "theme_option_changed",
+  "eventTime": "2026-08-27T19:43:39.346Z",
+  "metadata": {
+    "dimension": "color",
+    "value": "calm"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[22/27] SCENARIO  route-navigation  status=success  delta=0ms
+trigger: userId: scenario recorded before sign-in (userId absent)
+
+{
+  "scenarioId": "bd9b3b20-5ffc-4ed5-a71d-d5737d1525a8",
+  "scenarioName": "route-navigation",
+  "operation": "telemetry-verification-presignin-probe",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:39.453Z",
+  "endTime": "2026-08-27T19:43:39.453Z",
+  "delta": 0,
+  "elapsed": 564,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 564,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 564,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 564,
+      "status": "success"
+    }
+  ],
+  "previousStep": "resolve-route",
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[23/27] SCENARIO  route-navigation  status=success  delta=0ms
+trigger: userId: scenario recorded after sign-in (userId present)
+
+{
+  "scenarioId": "ecad7217-ef98-4f63-848f-0e5d4f6da417",
+  "scenarioName": "route-navigation",
+  "operation": "telemetry-verification-postsignin-probe",
+  "status": "success",
+  "startTime": "2026-08-27T19:43:39.459Z",
+  "endTime": "2026-08-27T19:43:39.459Z",
+  "delta": 0,
+  "elapsed": 570,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 570,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 570,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 570,
+      "status": "success"
+    }
+  ],
+  "previousStep": "resolve-route",
+  "application": "composition",
+  "userId": "demo-user-42"
+}
+
+----------------------------------------------------------------------
+[24/27] SCENARIO  route-navigation  status=timeout  delta=502ms
+trigger: edge case: scenario auto-abandon on timeout
+
+{
+  "scenarioId": "6293c234-40e0-446b-8880-9565d85878a7",
+  "scenarioName": "route-navigation",
+  "operation": "telemetry-verification-timeout-probe",
+  "status": "timeout",
+  "startTime": "2026-08-27T19:43:39.463Z",
+  "endTime": "2026-08-27T19:43:39.965Z",
+  "delta": 502,
+  "elapsed": 1076,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 574,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 502,
+      "stepDelta": 502,
+      "elapsed": 1075,
+      "status": "timeout"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 502,
+      "endOffset": 502,
+      "stepDelta": 0,
+      "elapsed": 1076,
+      "status": "timeout"
+    }
+  ],
+  "previousStep": "resolve-route",
+  "application": "composition",
+  "userId": "demo-user-42",
+  "message": "Scenario did not settle within 500ms"
+}
+
+----------------------------------------------------------------------
+[25/27] SCENARIO  autocomplete-search  status=incomplete  delta=1ms
+trigger: edge case: scenario settled as incomplete
+
+{
+  "scenarioId": "05d136cf-12d8-420e-8219-7a7cc4fa6467",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "telemetry-verification-incomplete-probe",
+  "status": "incomplete",
+  "startTime": "2026-08-27T19:43:40.370Z",
+  "endTime": "2026-08-27T19:43:40.371Z",
+  "delta": 1,
+  "elapsed": 1482,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 1481,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 1,
+      "endOffset": 1,
+      "stepDelta": 0,
+      "elapsed": 1482,
+      "status": "incomplete"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1,
+      "endOffset": 1,
+      "stepDelta": 0,
+      "elapsed": 1482,
+      "status": "incomplete"
+    }
+  ],
+  "previousStep": "query",
+  "application": "composition",
+  "userId": "demo-user-42",
+  "message": "no-results-found"
+}
+
+----------------------------------------------------------------------
+[26/27] SCENARIO  autocomplete-validate  status=failure  delta=1ms
+trigger: edge case: autocomplete-validate failure (dead error branch in real code)
+
+{
+  "scenarioId": "d5890ce3-eb19-40ca-ab4f-3a707bce4dd6",
+  "scenarioName": "autocomplete-validate",
+  "operation": "telemetry-verification-failure-probe",
+  "status": "failure",
+  "startTime": "2026-08-27T19:43:40.383Z",
+  "endTime": "2026-08-27T19:43:40.384Z",
+  "delta": 1,
+  "elapsed": 1494,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 1493,
+      "status": "success"
+    },
+    {
+      "name": "validate",
+      "startOffset": 0,
+      "endOffset": 1,
+      "stepDelta": 1,
+      "elapsed": 1494,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "simulated validation failure",
+        "stack": "Error: simulated validation failure\n    at eval (eval at evaluate (:311:30), <anonymous>:13:19)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+      }
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1,
+      "endOffset": 1,
+      "stepDelta": 0,
+      "elapsed": 1494,
+      "status": "failure"
+    }
+  ],
+  "previousStep": "validate",
+  "application": "composition",
+  "userId": "demo-user-42",
+  "error": {
+    "name": "Error",
+    "message": "simulated validation failure",
+    "stack": "Error: simulated validation failure\n    at eval (eval at evaluate (:311:30), <anonymous>:13:19)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+  }
+}
+
+----------------------------------------------------------------------
+[27/27] BI  telemetry_verification_dedup_probe
+trigger: edge case: BI dedup — two rapid identical events collapse to one
+
+{
+  "eventName": "telemetry_verification_dedup_probe",
+  "eventTime": "2026-08-27T19:43:40.391Z",
+  "metadata": {
+    "probe": true
+  },
+  "application": "composition"
+}
+
+
+======================================================================
+-> Log API  (CpsLoggerService)
+======================================================================
+Each entry is the literal CpsLogRecord handed to CpsLogBatcher.
+
+----------------------------------------------------------------------
+[1/7] LOG  Application started  status=log
+trigger: boot + navigate /colors -> /autocomplete
+
+{
+  "timestamp": "2026-08-27T19:43:20.551Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0"
+}
+
+----------------------------------------------------------------------
+[2/7] LOG  Application started  status=log
+trigger: boot + navigate /colors -> /autocomplete
+
+{
+  "timestamp": "2026-08-27T19:43:21.105Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0"
+}
+
+----------------------------------------------------------------------
+[3/7] LOG  Application started  status=log
+trigger: file upload: success path (3s processing)
+
+{
+  "timestamp": "2026-08-27T19:43:30.235Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0"
+}
+
+----------------------------------------------------------------------
+[4/7] LOG  Application started  status=log
+trigger: table lazy-load
+
+{
+  "timestamp": "2026-08-27T19:43:36.085Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0"
+}
+
+----------------------------------------------------------------------
+[5/7] LOG  Application started  status=log
+trigger: code example: copy code
+
+{
+  "timestamp": "2026-08-27T19:43:38.515Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0"
+}
+
+----------------------------------------------------------------------
+[6/7] LOG  Application started  status=log
+trigger: theme option changes (experimental)
+
+{
+  "timestamp": "2026-08-27T19:43:38.975Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0"
+}
+
+----------------------------------------------------------------------
+[7/7] LOG  Autocomplete selection failed validation (simulated)  status=error
+trigger: edge case: autocomplete-validate failure (dead error branch in real code)
+
+{
+  "timestamp": "2026-08-27T19:43:40.383Z",
+  "level": "error",
+  "message": "Autocomplete selection failed validation (simulated)",
+  "logger": "autocomplete",
+  "context": "Autocomplete",
+  "error": {
+    "name": "Error",
+    "message": "simulated validation failure",
+    "stack": "Error: simulated validation failure\n    at eval (eval at evaluate (:311:30), <anonymous>:9:14)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)"
+  },
+  "correlationId": "d5890ce3-eb19-40ca-ab4f-3a707bce4dd6",
+  "application": "composition",
+  "environment": "production",
+  "version": "22.0.0",
+  "userId": "demo-user-42"
+}
+

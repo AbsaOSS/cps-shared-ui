@@ -1,0 +1,38 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "rootDir": "./src",
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    // Required by the optional `aws-rum-web` peer: `@aws-rum/web-core` pins
+    // rrweb@2.0.0-alpha.4, whose typings predate the rrweb-snapshot@2.1.1 that
+    // resolution actually picks up, so its .d.ts files do not compile. Errors
+    // inside third-party declarations cannot be suppressed any other way. Only
+    // .d.ts files are skipped; this library's own sources are fully checked.
+    "skipLibCheck": true,
+    "types": []
+  },
+  // The base `tsconfig.json` sets `"files": []` (it only exists to hold
+  // `references` for the workspace-wide `tsc -b`), which is inherited here
+  // and — because neither this config nor the base one sets `"include"` —
+  // suppresses `tsc`'s normal "everything under this directory" default.
+  // Without this, `npx tsc --noEmit -p` on this file silently checks zero
+  // files and reports success no matter what the source says; only
+  // `ng-packagr` (via `npm run build:telemetry`), which builds its own
+  // program from the entry point, was ever really checking anything.
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
+}

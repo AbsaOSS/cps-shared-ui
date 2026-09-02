@@ -3,7 +3,10 @@
   "compileOnSave": false,
   "compilerOptions": {
     "resolveJsonModule": true,
-    "paths": { "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"] },
+    "paths": {
+      "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"],
+      "cps-telemetry": ["./projects/cps-telemetry/src/public-api.ts"]
+    },
     "esModuleInterop": true,
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -33,6 +36,8 @@
   "references": [
     { "path": "./projects/cps-ui-kit/tsconfig.lib.json" },
     { "path": "./projects/cps-ui-kit/tsconfig.spec.json" },
+    { "path": "./projects/cps-telemetry/tsconfig.lib.json" },
+    { "path": "./projects/cps-telemetry/tsconfig.spec.json" },
     { "path": "./projects/composition/tsconfig.app.json" },
     { "path": "./projects/composition/tsconfig.spec.json" }
   ],
