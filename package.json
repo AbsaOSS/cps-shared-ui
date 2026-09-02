@@ -10,6 +10,7 @@
     "watch": "ng build cps-ui-kit --watch --configuration development",
     "test": "ng test",
     "test:composition": "ng test --project=composition",
+    "trace:telemetry": "ng test --project=composition --watch=false",
     "test:cps-ui-kit": "ng test --project=cps-ui-kit",
     "test:cps-telemetry": "ng test --project=cps-telemetry",
     "test:coverage:cps-ui-kit": "COVERAGE_PROJECT=cps-ui-kit ng test --project=cps-ui-kit --coverage --coverage-reporters text-summary --coverage-reporters lcov --json --output-file=./coverage/report.json",

@@ -2,6 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
+import {
+  CPS_LOG_API_PROVIDER,
+  CpsNoopTelemetrySink,
+  CpsTelemetrySink,
+  provideCpsTelemetry
+} from 'cps-telemetry';
+import { AppLogApiProvider } from '../../services/app-log-api.provider';
+import { AppTelemetryService } from '../../services/app-telemetry.service';
 import { NavigationSidebarComponent } from './navigation-sidebar.component';
 
 describe('NavigationSidebarComponent', () => {
@@ -11,7 +19,16 @@ describe('NavigationSidebarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [NavigationSidebarComponent],
-      providers: [provideRouter([]), provideNoopAnimations()]
+      providers: [
+        provideRouter([]),
+        provideNoopAnimations(),
+        provideCpsTelemetry({
+          application: 'composition-test',
+          environment: 'test'
+        }),
+        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(NavigationSidebarComponent);
@@ -154,6 +171,35 @@ describe('NavigationSidebarComponent', () => {
 
       expect(target.focus).not.toHaveBeenCalled();
       expect(result).toBe(false);
+    });
+  });
+
+  describe('ngOnDestroy', () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    it('should not fire the debounced search report after the component is destroyed', () => {
+      const appTelemetry = TestBed.inject(AppTelemetryService);
+      const trackClick = jest.spyOn(appTelemetry, 'trackClick');
+
+      component.onSearchChanged('button');
+      fixture.destroy();
+      jest.advanceTimersByTime(400);
+
+      expect(trackClick).not.toHaveBeenCalled();
+    });
+
+    it('should still fire it normally when the component is not destroyed', () => {
+      const appTelemetry = TestBed.inject(AppTelemetryService);
+      const trackClick = jest.spyOn(appTelemetry, 'trackClick');
+
+      component.onSearchChanged('button');
+      jest.advanceTimersByTime(400);
+
+      expect(trackClick).toHaveBeenCalledWith(
+        'sidebar_searched',
+        expect.objectContaining({ resultCount: expect.any(Number) })
+      );
     });
   });
 

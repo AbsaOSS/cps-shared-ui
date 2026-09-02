@@ -3,6 +3,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
+    // Needed since this app wires up the AWS RUM sink: `aws-rum-web` pulls in
+    // rrweb typings that do not compile (see cps-telemetry/tsconfig.lib.json).
+    "skipLibCheck": true,
     "types": []
   },
   "files": ["src/main.ts"],

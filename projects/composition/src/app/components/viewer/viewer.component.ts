@@ -27,13 +27,6 @@ export abstract class ViewerComponent implements OnInit, AfterViewInit {
     this._route.params
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe((params) => {
-        if (!params.type) {
-          this._router.navigate(['./examples'], {
-            relativeTo: this._route,
-            replaceUrl: true
-          });
-          return;
-        }
         if (params.type === 'examples') {
           this.selectedTabIndex = 0;
         } else if (params.type === 'api') {

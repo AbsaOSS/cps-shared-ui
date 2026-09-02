@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -12,8 +18,15 @@ import { CodeExampleComponent } from '../../components/code-example/code-example
 import ComponentData from '../../api-data/cps-autocomplete.json';
 import { autocompleteExamples } from './autocomplete-page.examples';
 import { Observable, Subject, of, delay } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import {
+  CpsLoggerService,
+  CpsScenario,
+  CpsScenarioTelemetryService,
+  traceScenario
+} from 'cps-telemetry';
+import '../../services/telemetry.schema';
 
 @Component({
   imports: [
@@ -30,7 +43,7 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
-export class AutocompletePageComponent implements OnInit {
+export class AutocompletePageComponent implements OnInit, OnDestroy {
   options = [
     { name: 'New York', data: { code: 'NY' }, alias: 'NYC' },
     {
@@ -89,6 +102,39 @@ export class AutocompletePageComponent implements OnInit {
   validating = false;
   selectedOption: any = null;
 
+  private readonly scenarioTelemetry = inject(CpsScenarioTelemetryService);
+  private readonly logger = inject(CpsLoggerService).getLogger('autocomplete');
+
+  /** The in-flight search per autocomplete, so a newer query can cancel it. */
+  private singleSearchScenario?: CpsScenario;
+  private multiSearchScenario?: CpsScenario;
+  /** The in-flight selection validation, so it can be cancelled on destroy. */
+  private validateScenario?: CpsScenario;
+
+  /** Per-side accessors for the two identically-shaped autocompletes. */
+  private readonly _searchSides: Record<
+    'single' | 'multi',
+    {
+      operation: 'single' | 'multi';
+      getScenario: () => CpsScenario | undefined;
+      setScenario: (scenario: CpsScenario | undefined) => void;
+      setLoading: (loading: boolean) => void;
+    }
+  > = {
+    single: {
+      operation: 'single',
+      getScenario: () => this.singleSearchScenario,
+      setScenario: (scenario) => (this.singleSearchScenario = scenario),
+      setLoading: (loading) => (this.isSingleLoading = loading)
+    },
+    multi: {
+      operation: 'multi',
+      getScenario: () => this.multiSearchScenario,
+      setScenario: (scenario) => (this.multiSearchScenario = scenario),
+      setLoading: (loading) => (this.isMultiLoading = loading)
+    }
+  };
+
   get availableOptionInfo() {
     return this.options.map((option) => option.name).join(', ');
   }
@@ -104,13 +150,19 @@ export class AutocompletePageComponent implements OnInit {
 
     this.singleOptionsObservable$ = this._defineOptionsObservable(
       this._singleFilterOptionSubject$,
-      true
+      'single'
     );
 
     this.multiOptionsObservable$ = this._defineOptionsObservable(
       this._multiFilterOptionSubject$,
-      false
+      'multi'
     );
+  }
+
+  ngOnDestroy(): void {
+    this.singleSearchScenario?.cancel({ reason: 'component-destroyed' });
+    this.multiSearchScenario?.cancel({ reason: 'component-destroyed' });
+    this.validateScenario?.cancel({ reason: 'component-destroyed' });
   }
 
   onSingleInputChanged(val: string) {
@@ -128,22 +180,54 @@ export class AutocompletePageComponent implements OnInit {
 
   private _defineOptionsObservable(
     subject$: Subject<string>,
-    single: boolean
+    side: 'single' | 'multi'
   ): Observable<any> | undefined {
+    const state = this._searchSides[side];
+
     return subject$.pipe(
       switchMap((value) => {
-        if (single) this.isSingleLoading = true;
-        else this.isMultiLoading = true;
+        state.getScenario()?.cancel({ reason: 'superseded' });
+
+        const scenario = this.scenarioTelemetry.start({
+          name: 'autocomplete-search',
+          feature: 'autocomplete',
+          operation: state.operation
+        });
+        scenario.step('query');
+        state.setScenario(scenario);
+        state.setLoading(true);
+
+        let resultCount = 0;
         return this._getOptionsFromServer(value).pipe(
           tap({
+            next: (results: unknown[]) => {
+              resultCount = results.length;
+            },
             complete: () => {
-              if (single) this.isSingleLoading = false;
-              else this.isMultiLoading = false;
+              scenario.complete({ metadata: { resultCount } });
+              this._clearSearchState(side);
             }
+          }),
+          catchError((error: unknown) => {
+            this.logger.error('Autocomplete search failed', {
+              error,
+              context: 'Autocomplete',
+              correlationId: scenario.id
+            });
+            scenario.fail({ error });
+            this._clearSearchState(side);
+            return of([]);
           })
         );
       })
     );
+  }
+
+  /** Resets the loading flag and forgets the finished scenario for one side. */
+  private _clearSearchState(side: 'single' | 'multi'): void {
+    const state = this._searchSides[side];
+    state.setLoading(false);
+    state.setScenario(undefined);
   }
 
   private _getOptionsFromServer(val: string): Observable<any> {
@@ -158,18 +242,31 @@ export class AutocompletePageComponent implements OnInit {
     this.validating = true;
     this.selectedOption = option;
     this.externalError = '';
+
+    const scenario = this.scenarioTelemetry.start({
+      name: 'autocomplete-validate',
+      feature: 'autocomplete'
+    });
+    scenario.step('validate');
+    this.validateScenario = scenario;
+
     // Simulate async validation with a delay
     of(option)
-      .pipe(
-        delay(3000) // Simulate a delay of 2 seconds
-      )
+      .pipe(delay(3000), traceScenario(scenario))
       .subscribe({
         next: () => {
           this.validating = false;
+          this.validateScenario = undefined;
         },
-        error: () => {
+        error: (error: unknown) => {
           // Handle errors and finalize validation state
           this.externalError = 'Validation failed';
+          this.logger.error('Autocomplete selection failed validation', {
+            error,
+            context: 'Autocomplete',
+            correlationId: scenario.id
+          });
+          this.validateScenario = undefined;
         }
       });
   }

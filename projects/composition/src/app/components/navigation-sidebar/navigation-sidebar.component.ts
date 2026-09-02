@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  DestroyRef,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
@@ -10,9 +12,13 @@ import {
   ViewChildren,
   ChangeDetectionStrategy
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLinkActive, RouterModule } from '@angular/router';
+import { Subject } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 import { CpsInputComponent } from 'cps-ui-kit';
+import { AppTelemetryService } from '../../services/app-telemetry.service';
 
 @Component({
   imports: [RouterModule, CommonModule, FormsModule, CpsInputComponent],
@@ -188,12 +194,31 @@ export class NavigationSidebarComponent implements OnInit {
 
   searchVal = '';
 
+  private readonly appTelemetry = inject(AppTelemetryService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  /** Reports the search once typing pauses, not on every keystroke. */
+  private readonly searchTelemetry$ = new Subject<string>();
+
   ngOnInit(): void {
     this.filteredComponents = [...this._components];
+
+    this.searchTelemetry$
+      .pipe(
+        debounceTime(400),
+        filter((value) => !!value),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.appTelemetry.trackClick('sidebar_searched', {
+          resultCount: this.filteredComponents.length
+        });
+      });
   }
 
   onSearchChanged(value: string) {
     this._filterComponentsList(value);
+    this.searchTelemetry$.next(value);
   }
 
   private _filterComponentsList(searchStr: string) {
@@ -210,6 +235,8 @@ export class NavigationSidebarComponent implements OnInit {
 
   onLinkClick() {
     if (this.searchVal) {
+      // Resets the debounce timer so a pending search report doesn't fire after the search is cleared.
+      this.searchTelemetry$.next('');
       this.searchVal = '';
       this.filteredComponents = [...this._components];
     }
