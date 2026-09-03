@@ -26,7 +26,8 @@ describe('AutocompletePageComponent', () => {
       providers: [
         provideCpsTelemetry({
           application: 'composition-test',
-          environment: 'test'
+          environment: 'test',
+          version: '0.0.0'
         }),
         { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
         { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
@@ -90,6 +91,94 @@ describe('AutocompletePageComponent', () => {
       component.onSingleInputChanged('par');
 
       expect(component.isSingleLoading).toBe(true);
+    });
+  });
+
+  describe('onOptionSelected', () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    it('should cancel a still-running validation when a newer selection supersedes it', () => {
+      const settled = jest.fn();
+      scenarioTelemetry.settled$.subscribe(settled);
+
+      component.onOptionSelected(component.options[0]);
+      expect(scenarioTelemetry.getActive()).toHaveLength(1);
+
+      component.onOptionSelected(component.options[1]);
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(1);
+      expect(settled).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 'abandoned' })
+      );
+    });
+
+    it("should let ngOnDestroy cancel the newer selection even past the superseded one's original timer mark", () => {
+      component.onOptionSelected(component.options[0]);
+      component.onOptionSelected(component.options[1]);
+
+      jest.advanceTimersByTime(3000);
+      component.ngOnDestroy();
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+    });
+
+    it('should settle the newer selection successfully once its own delay elapses', () => {
+      component.onOptionSelected(component.options[0]);
+      component.onOptionSelected(component.options[1]);
+
+      jest.advanceTimersByTime(3000);
+
+      expect(component.validating).toBe(false);
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+    });
+
+    it('should not leave the validating flag stuck when validation errors', () => {
+      jest
+        .spyOn(
+          component as unknown as { _validateOption: unknown },
+          '_validateOption'
+        )
+        .mockReturnValue(
+          throwError(() => new Error('validation backend down'))
+        );
+
+      component.onOptionSelected(component.options[0]);
+
+      expect(component.validating).toBe(false);
+      expect(component.externalError).toBe('Validation failed');
+    });
+
+    it('should not leave the scenario open when validation errors', () => {
+      jest
+        .spyOn(
+          component as unknown as { _validateOption: unknown },
+          '_validateOption'
+        )
+        .mockReturnValue(
+          throwError(() => new Error('validation backend down'))
+        );
+
+      component.onOptionSelected(component.options[0]);
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+    });
+
+    it('should not kill the pipeline for later selections after one errors', () => {
+      jest
+        .spyOn(
+          component as unknown as { _validateOption: unknown },
+          '_validateOption'
+        )
+        .mockReturnValueOnce(
+          throwError(() => new Error('validation backend down'))
+        );
+
+      component.onOptionSelected(component.options[0]);
+      expect(component.validating).toBe(false);
+
+      component.onOptionSelected(component.options[1]);
+      expect(component.validating).toBe(true);
     });
   });
 

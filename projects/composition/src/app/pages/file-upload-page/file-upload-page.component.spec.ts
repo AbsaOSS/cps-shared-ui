@@ -26,7 +26,8 @@ describe('FileUploadPageComponent', () => {
       providers: [
         provideCpsTelemetry({
           application: 'composition-test',
-          environment: 'test'
+          environment: 'test',
+          version: '0.0.0'
         }),
         { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
         { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
@@ -39,22 +40,22 @@ describe('FileUploadPageComponent', () => {
     scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
   });
 
-  describe('two widgets sharing processUploadedFile', () => {
-    it("should track each widget instance's scenario independently by filename", () => {
-      component.processUploadedFile(makeFile('a.txt')).subscribe();
-      component.processUploadedFile(makeFile('b.txt')).subscribe();
+  describe('processing scenarios within one widget', () => {
+    it("should track each filename's scenario independently", () => {
+      component.processExtraInfoUploadedFile(makeFile('a.txt')).subscribe();
+      component.processExtraInfoUploadedFile(makeFile('b.txt')).subscribe();
 
       expect(scenarioTelemetry.getActive()).toHaveLength(2);
     });
 
-    it('should cancel only the widget that fired the cancel, not a different one still in flight', () => {
-      component.processUploadedFile(makeFile('a.txt')).subscribe();
-      component.processUploadedFile(makeFile('b.txt')).subscribe();
+    it('should cancel only the file that fired the cancel, not a different one still in flight', () => {
+      component.processExtraInfoUploadedFile(makeFile('a.txt')).subscribe();
+      component.processExtraInfoUploadedFile(makeFile('b.txt')).subscribe();
 
       const settled = jest.fn();
       scenarioTelemetry.settled$.subscribe(settled);
 
-      component.onFileProcessingCancelled('a.txt');
+      component.onExtraInfoFileProcessingCancelled('a.txt');
 
       expect(settled).toHaveBeenCalledTimes(1);
       expect(settled).toHaveBeenCalledWith(
@@ -64,26 +65,52 @@ describe('FileUploadPageComponent', () => {
     });
 
     it('should not leave either scenario open once both are cancelled', () => {
-      component.processUploadedFile(makeFile('a.txt')).subscribe();
-      component.processUploadedFile(makeFile('b.txt')).subscribe();
+      component.processExtraInfoUploadedFile(makeFile('a.txt')).subscribe();
+      component.processExtraInfoUploadedFile(makeFile('b.txt')).subscribe();
 
-      component.onFileProcessingCancelled('a.txt');
-      component.onFileProcessingCancelled('b.txt');
+      component.onExtraInfoFileProcessingCancelled('a.txt');
+      component.onExtraInfoFileProcessingCancelled('b.txt');
 
       expect(scenarioTelemetry.getActive()).toHaveLength(0);
     });
 
     it('should tolerate a cancel for a filename with nothing in flight', () => {
       expect(() =>
-        component.onFileProcessingCancelled('never-started.txt')
+        component.onExtraInfoFileProcessingCancelled('never-started.txt')
       ).not.toThrow();
+    });
+  });
+
+  describe('processing scenarios across the two widgets', () => {
+    it('should track both scenarios independently even when the two widgets upload a same-named file', () => {
+      component
+        .processExtraInfoUploadedFile(makeFile('report.csv'))
+        .subscribe();
+      component.processDisabledUploadedFile(makeFile('report.csv')).subscribe();
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(2);
+    });
+
+    it("should cancel only the widget that fired the cancel, not the other widget's same-named file", () => {
+      component
+        .processExtraInfoUploadedFile(makeFile('report.csv'))
+        .subscribe();
+      component.processDisabledUploadedFile(makeFile('report.csv')).subscribe();
+
+      component.onExtraInfoFileProcessingCancelled('report.csv');
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(1);
+
+      component.onDisabledFileProcessingCancelled('report.csv');
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
     });
   });
 
   describe('ngOnDestroy', () => {
     it('should cancel every widget still processing when the page is destroyed', () => {
-      component.processUploadedFile(makeFile('a.txt')).subscribe();
-      component.processUploadedFile(makeFile('b.txt')).subscribe();
+      component.processExtraInfoUploadedFile(makeFile('a.txt')).subscribe();
+      component.processDisabledUploadedFile(makeFile('b.txt')).subscribe();
       component.processFailingUploadedFile().subscribe();
 
       component.ngOnDestroy();

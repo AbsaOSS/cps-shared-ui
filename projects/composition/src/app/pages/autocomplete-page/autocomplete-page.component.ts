@@ -17,7 +17,7 @@ import { ComponentDocsViewerComponent } from '../../components/component-docs-vi
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
 import ComponentData from '../../api-data/cps-autocomplete.json';
 import { autocompleteExamples } from './autocomplete-page.examples';
-import { Observable, Subject, of, delay } from 'rxjs';
+import { Observable, Subject, Subscription, of, delay } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import {
@@ -108,8 +108,11 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
   /** The in-flight search per autocomplete, so a newer query can cancel it. */
   private singleSearchScenario?: CpsScenario;
   private multiSearchScenario?: CpsScenario;
-  /** The in-flight selection validation, so it can be cancelled on destroy. */
+  /** The in-flight selection validation, so a newer one can cancel it. */
   private validateScenario?: CpsScenario;
+
+  private readonly _validateOptionSubject$ = new Subject<any>();
+  private _validateSubscription?: Subscription;
 
   /** Per-side accessors for the two identically-shaped autocompletes. */
   private readonly _searchSides: Record<
@@ -157,12 +160,15 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
       this._multiFilterOptionSubject$,
       'multi'
     );
+
+    this._validateSubscription = this._defineValidateOptionObservable();
   }
 
   ngOnDestroy(): void {
     this.singleSearchScenario?.cancel({ reason: 'component-destroyed' });
     this.multiSearchScenario?.cancel({ reason: 'component-destroyed' });
     this.validateScenario?.cancel({ reason: 'component-destroyed' });
+    this._validateSubscription?.unsubscribe();
   }
 
   onSingleInputChanged(val: string) {
@@ -230,6 +236,12 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
     state.setScenario(undefined);
   }
 
+  /** The `validate` counterpart of {@link _clearSearchState}. */
+  private _clearValidateState(): void {
+    this.validating = false;
+    this.validateScenario = undefined;
+  }
+
   private _getOptionsFromServer(val: string): Observable<any> {
     const filteredRes = this.options.filter((option) => {
       return option.name?.toLowerCase()?.includes(val);
@@ -237,38 +249,51 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
     return of(filteredRes).pipe(delay(1000));
   }
 
+  /** Simulates async validation of a selected option with a delay. */
+  private _validateOption(option: any): Observable<any> {
+    return of(option).pipe(delay(3000));
+  }
+
   // Method to handle selection changes for async validation
   onOptionSelected(option: any) {
     this.validating = true;
     this.selectedOption = option;
     this.externalError = '';
+    this._validateOptionSubject$.next(option);
+  }
 
-    const scenario = this.scenarioTelemetry.start({
-      name: 'autocomplete-validate',
-      feature: 'autocomplete'
-    });
-    scenario.step('validate');
-    this.validateScenario = scenario;
+  /** Routes selections through `switchMap` so a newer one cancels a running validation. */
+  private _defineValidateOptionObservable(): Subscription {
+    return this._validateOptionSubject$
+      .pipe(
+        switchMap((option) => {
+          this.validateScenario?.cancel({ reason: 'superseded' });
 
-    // Simulate async validation with a delay
-    of(option)
-      .pipe(delay(3000), traceScenario(scenario))
-      .subscribe({
-        next: () => {
-          this.validating = false;
-          this.validateScenario = undefined;
-        },
-        error: (error: unknown) => {
-          // Handle errors and finalize validation state
-          this.externalError = 'Validation failed';
-          this.logger.error('Autocomplete selection failed validation', {
-            error,
-            context: 'Autocomplete',
-            correlationId: scenario.id
+          const scenario = this.scenarioTelemetry.start({
+            name: 'autocomplete-validate',
+            feature: 'autocomplete'
           });
-          this.validateScenario = undefined;
-        }
-      });
+          scenario.step('validate');
+          this.validateScenario = scenario;
+
+          return this._validateOption(option).pipe(
+            traceScenario(scenario),
+            tap(() => this._clearValidateState()),
+            catchError((error: unknown) => {
+              // Handle errors and finalize validation state
+              this.externalError = 'Validation failed';
+              this.logger.error('Autocomplete selection failed validation', {
+                error,
+                context: 'Autocomplete',
+                correlationId: scenario.id
+              });
+              this._clearValidateState();
+              return of(undefined);
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 
   readonly examples = autocompleteExamples;

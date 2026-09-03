@@ -12,8 +12,8 @@ export interface CpsBiConfig {
   /**
    * Distinct event keys tracked before expired ones are swept.
    *
-   * Keyed per `eventName|scenarioId`, which grows unbounded over a long
-   * session without this cap.
+   * Keyed per `eventName|scenarioId|eventType|feature|metadata`, which
+   * grows unbounded over a long session without this cap.
    */
   dedupMaxKeys: number;
 

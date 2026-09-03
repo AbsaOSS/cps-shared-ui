@@ -40,7 +40,11 @@ export type CpsBroadcastMessage =
       payload: object;
       metadata?: CpsTelemetryMetadata;
     }
-  | { kind: 'error'; error: CpsTelemetryError }
+  | {
+      kind: 'error';
+      error: CpsTelemetryError;
+      metadata?: CpsTelemetryMetadata;
+    }
   | { kind: 'user'; userId: string | undefined }
   | { kind: 'flush'; beacon: boolean }
   | { kind: 'identity-request' }
@@ -88,6 +92,49 @@ export function cpsOpenBroadcastChannel(
   } catch {
     return undefined;
   }
+}
+
+/** Minimal Web Locks API surface this library relies on. */
+interface CpsLockManagerLike {
+  request(name: string, callback: () => Promise<void>): Promise<void>;
+}
+
+/**
+ * Elects exactly one leader among same-origin realms on this channel, via
+ * the Web Locks API — prevents two shell tabs from both recording every
+ * forwarded message. Fails open (elects immediately) when Web Locks is
+ * unavailable.
+ *
+ * @returns releases the lock so the next queued realm can become leader.
+ */
+export function cpsElectBroadcastHostLeader(
+  channelName: string,
+  onElected: () => void
+): () => void {
+  const locks = (globalThis as { navigator?: { locks?: CpsLockManagerLike } })
+    .navigator?.locks;
+
+  if (!locks) {
+    onElected();
+    return () => undefined;
+  }
+
+  let release: () => void = () => undefined;
+  locks
+    .request(
+      `cps-telemetry-host:${channelName}`,
+      () =>
+        new Promise<void>((resolve) => {
+          release = resolve;
+          onElected();
+        })
+    )
+    .catch(() => {
+      // request() can reject without ever invoking the callback — fail open.
+      onElected();
+    });
+
+  return () => release();
 }
 
 /** A realm's live connection to the shared broadcast channel. */
@@ -174,7 +221,8 @@ export function cpsIsBroadcastMessage(
         typeof error === 'object' &&
         error !== null &&
         typeof error.name === 'string' &&
-        typeof error.message === 'string'
+        typeof error.message === 'string' &&
+        (error.stack === undefined || typeof error.stack === 'string')
       );
     }
     case 'flush':
@@ -183,6 +231,11 @@ export function cpsIsBroadcastMessage(
       // Absent or `undefined` userId both mean "clear it".
       return message.userId === undefined || typeof message.userId === 'string';
     case 'identity':
+      return (
+        (message.sessionId === undefined ||
+          typeof message.sessionId === 'string') &&
+        (message.userId === undefined || typeof message.userId === 'string')
+      );
     case 'identity-request':
       return true;
   }

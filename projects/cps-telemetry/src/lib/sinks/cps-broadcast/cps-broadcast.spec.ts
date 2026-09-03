@@ -27,6 +27,7 @@ import {
   CPS_BROADCAST_CHANNEL,
   CPS_DEFAULT_BROADCAST_CHANNEL,
   cpsConnectBroadcastChannel,
+  cpsElectBroadcastHostLeader,
   cpsIsBroadcastMessage
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
@@ -154,6 +155,45 @@ export class CpsBroadcastChannelStub {
   }
 }
 
+/** Minimal Web Locks API stub: grants each named lock to one requester at a time. */
+class LockManagerStub {
+  private readonly held = new Set<string>();
+  private readonly queues = new Map<string, Array<() => void>>();
+
+  request(name: string, callback: () => Promise<void>): Promise<void> {
+    return new Promise((resolve) => {
+      const grant = () => {
+        this.held.add(name);
+        callback().then(() => {
+          this.held.delete(name);
+          resolve();
+          this.queues.get(name)?.shift()?.();
+        });
+      };
+
+      if (this.held.has(name)) {
+        const queue = this.queues.get(name) ?? [];
+        queue.push(grant);
+        this.queues.set(name, queue);
+      } else {
+        grant();
+      }
+    });
+  }
+
+  /** Installs the stub as `navigator.locks`. */
+  static install(): void {
+    Object.defineProperty(globalThis.navigator, 'locks', {
+      value: new LockManagerStub(),
+      configurable: true
+    });
+  }
+
+  static uninstall(): void {
+    delete (globalThis.navigator as { locks?: unknown }).locks;
+  }
+}
+
 /** Captures what the library emitted, so a test can assert on it. */
 @Injectable()
 class RecordingSink extends CpsTelemetrySink {
@@ -164,6 +204,7 @@ class RecordingSink extends CpsTelemetrySink {
   }[] = [];
 
   readonly errors: CpsTelemetryError[] = [];
+  readonly errorMetadata: (CpsTelemetryMetadata | undefined)[] = [];
   readonly flushes: boolean[] = [];
   userId?: string;
   sessionId: string | undefined = 'test-session';
@@ -180,8 +221,9 @@ class RecordingSink extends CpsTelemetrySink {
     });
   }
 
-  recordError(error: CpsTelemetryError): void {
+  recordError(error: CpsTelemetryError, metadata?: CpsTelemetryMetadata): void {
     this.errors.push(error);
+    this.errorMetadata.push(metadata);
   }
 
   getSessionId(): string | undefined {
@@ -314,6 +356,21 @@ describe('broadcast telemetry across realms', () => {
       expect(shellSink.errors).toEqual([
         { name: 'TypeError', message: 'boom' }
       ]);
+    });
+
+    it('should attribute a forwarded error to the realm that recorded it', async () => {
+      const fragment = createFragment();
+      fragment
+        .get(CpsTelemetrySink)
+        .recordError({ name: 'TypeError', message: 'boom' });
+
+      await CpsBroadcastChannelStub.settle();
+
+      expect(shellSink.errorMetadata[0]).toMatchObject({
+        application: 'realm',
+        environment: 'test',
+        appVersion: '1.0.0'
+      });
     });
 
     it('should forward flush requests, preserving the beacon flag', async () => {
@@ -550,6 +607,88 @@ describe('broadcast telemetry across realms', () => {
     });
   });
 
+  describe('leader election', () => {
+    // These tests build their own hosts, after the stub is installed,
+    // rather than relying on the outer `host` (built before the stub).
+    beforeEach(() => LockManagerStub.install());
+    afterEach(() => LockManagerStub.uninstall());
+
+    function createHost(): {
+      host: CpsTelemetryBroadcastHost;
+      sink: RecordingSink;
+    } {
+      const sink = new RecordingSink();
+      const realmHost = createRealm([
+        { provide: RecordingSink, useValue: sink },
+        { provide: CpsTelemetrySink, useExisting: RecordingSink },
+        CpsTelemetryBroadcastHost
+      ]).get(CpsTelemetryBroadcastHost);
+      return { host: realmHost, sink };
+    }
+
+    it('should keep a second host passive while the first is still leader', async () => {
+      const first = createHost();
+      const second = createHost();
+
+      const fragment = createFragment();
+      fragment.get(CpsTelemetrySink).record('com.cps.bi', { eventName: 'x' });
+      await CpsBroadcastChannelStub.settle();
+
+      expect(first.sink.events).toHaveLength(1);
+      expect(second.sink.events).toHaveLength(0);
+      expect(second.host.received).toBe(0);
+    });
+
+    it('should hand off leadership once the leader is destroyed', async () => {
+      const first = createHost();
+      const second = createHost();
+
+      first.host.ngOnDestroy();
+      await CpsBroadcastChannelStub.settle();
+
+      const fragment = createFragment();
+      fragment.get(CpsTelemetrySink).record('com.cps.bi', { eventName: 'x' });
+      await CpsBroadcastChannelStub.settle();
+
+      expect(second.sink.events).toHaveLength(1);
+      expect(second.host.received).toBe(1);
+    });
+  });
+
+  describe('cpsElectBroadcastHostLeader', () => {
+    afterEach(() => LockManagerStub.uninstall());
+
+    it('should elect immediately when the Locks API is unavailable', () => {
+      const onElected = jest.fn();
+      cpsElectBroadcastHostLeader('cps-telemetry', onElected);
+
+      expect(onElected).toHaveBeenCalledTimes(1);
+    });
+
+    it('should elect once the lock is granted', () => {
+      LockManagerStub.install();
+      const onElected = jest.fn();
+      cpsElectBroadcastHostLeader('cps-telemetry', onElected);
+
+      expect(onElected).toHaveBeenCalledTimes(1);
+    });
+
+    it('should fail open and still elect when request() itself rejects', async () => {
+      Object.defineProperty(globalThis.navigator, 'locks', {
+        value: { request: () => Promise.reject(new Error('not-fully-active')) },
+        configurable: true
+      });
+      const onElected = jest.fn();
+
+      cpsElectBroadcastHostLeader('cps-telemetry', onElected);
+      // Let the rejection's microtask settle.
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(onElected).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('cpsIsBroadcastMessage', () => {
     it.each([null, undefined, 'string', 42, ['array']])(
       'should reject the non-object payload %p',
@@ -594,9 +733,19 @@ describe('broadcast telemetry across realms', () => {
       {},
       { error: { name: 'Error' } },
       { error: { message: 'boom' } },
-      { error: 'boom' }
+      { error: 'boom' },
+      { error: { name: 'Error', message: 'boom', stack: 42 } }
     ])('should reject a malformed error message %p', (fields) => {
       expect(cpsIsBroadcastMessage({ kind: 'error', ...fields })).toBe(false);
+    });
+
+    it('should accept an error message with a string stack', () => {
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'error',
+          error: { name: 'Error', message: 'boom', stack: 'at foo.ts:1' }
+        })
+      ).toBe(true);
     });
 
     it('should accept a well-formed flush message', () => {
@@ -635,6 +784,15 @@ describe('broadcast telemetry across realms', () => {
     ])('should accept an identity message %p', (fields) => {
       expect(cpsIsBroadcastMessage({ kind: 'identity', ...fields })).toBe(true);
     });
+
+    it.each([{ sessionId: 42 }, { userId: 42 }, { sessionId: 42, userId: 42 }])(
+      'should reject an identity message with a non-string, non-undefined field %p',
+      (fields) => {
+        expect(cpsIsBroadcastMessage({ kind: 'identity', ...fields })).toBe(
+          false
+        );
+      }
+    );
   });
 
   describe('cpsConnectBroadcastChannel', () => {

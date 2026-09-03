@@ -24,7 +24,8 @@ describe('NavigationSidebarComponent', () => {
         provideNoopAnimations(),
         provideCpsTelemetry({
           application: 'composition-test',
-          environment: 'test'
+          environment: 'test',
+          version: '0.0.0'
         }),
         { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
         { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }

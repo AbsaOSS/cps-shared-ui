@@ -113,7 +113,12 @@ export class AppRumCredentialsProvider implements CpsRumCredentialsProvider {
 }
 ```
 
-Returning `null` turns off shipping without disabling the library.
+Returning `null` turns off shipping without disabling the library — including
+from a later refresh, not just the initial load, so a provider can revoke
+telemetry mid-session and the already-running client is torn down rather
+than left collecting with stale credentials. Returning a bootstrap with
+`credentials` omitted is a different, valid state: an app monitor configured
+for unauthenticated access, not a disable signal.
 
 ### Advanced RUM configuration
 
@@ -405,7 +410,9 @@ biTelemetry.track(
 );
 ```
 
-Identical events within 400ms are collapsed into one.
+Identical events within 400ms are collapsed into one — "identical" meaning
+the same name, scenario correlation, event type, feature, and metadata
+content; differing in any one of those is a distinct event.
 
 All BI events share a single event type, with `eventName` carried as a field
 — one schema to query, one extended-metric definition. If an existing
@@ -723,11 +730,17 @@ bootstrapApplication(FragmentRoot, {
 
 **What a fragment must not provide**
 
-| Do not                               | Why                                                                                                                      |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `provideCpsTelemetrySink('rum')`     | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid           |
-| `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                              |
-| `provideCpsTelemetryBroadcastHost()` | Only one realm should host. A second one double-records everything; the host warns in the console when it notices a peer |
+| Do not                               | Why                                                                                                             |
+| ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `provideCpsTelemetrySink('rum')`     | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid  |
+| `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                     |
+| `provideCpsTelemetryBroadcastHost()` | Only one realm should host — a second one just wins or loses a leader election and idles either way (see below) |
+
+The shell itself can safely be open in more than one tab: `BroadcastChannel`
+is origin-wide, so every tab's host shares the same channel, but only one is
+elected leader (a Web Locks-based election) and actually records forwarded
+telemetry — the rest stay fully passive until the leader tab closes. See
+DESIGN.md §13 for the mechanism.
 
 ### A fragment that also deploys standalone
 
@@ -965,6 +978,9 @@ class RecordingSink extends CpsTelemetrySink {
   record(eventType: string, payload: object): void {
     this.events.push({ eventType, payload });
   }
+  // recordError also takes an optional `metadata` second argument — a
+  // sink can drop it, as here, or use it the way the RUM sink does, to
+  // fold a broadcast-forwarded error's origin into its own record.
   recordError(): void {}
   getSessionId(): string | undefined {
     return 'test-session';

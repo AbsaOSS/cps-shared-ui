@@ -6,6 +6,7 @@ import {
 import {
   CpsBroadcastConnection,
   cpsConnectBroadcastChannel,
+  cpsElectBroadcastHostLeader,
   cpsIsBroadcastMessage
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
@@ -17,6 +18,9 @@ import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/c
  * Runs in the shell, the realm with the real sink. Fragments using
  * {@link CpsBroadcastTelemetrySink} post their events here, so one AWS client,
  * one session and one event budget serve the whole composed page.
+ *
+ * A Web Locks-based election ({@link cpsElectBroadcastHostLeader}) keeps
+ * exactly one host active per channel; others stay passive.
  *
  * @example
  * ```typescript
@@ -47,9 +51,19 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
   private lastAnnouncedSessionId?: string;
   private lastAnnouncedUserId?: string;
 
+  /** Whether this realm won the leader election; non-leaders stay passive. */
+  private isLeader = false;
+  private releaseLeadership: () => void = () => undefined;
+
   constructor() {
     this.connection.onMessage((data) => this.onMessage(data));
-    this.announceIdentity();
+    this.releaseLeadership = cpsElectBroadcastHostLeader(
+      this.connection.channelName,
+      () => {
+        this.isLeader = true;
+        this.announceIdentity();
+      }
+    );
   }
 
   /** How many follower messages have been accepted. */
@@ -59,12 +73,13 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
 
   /** @inheritdoc */
   ngOnDestroy(): void {
+    this.releaseLeadership();
     this.connection.close();
   }
 
   private onMessage(data: unknown): void {
     cpsSafeVoid('broadcastHost.receive', () => {
-      if (!cpsIsBroadcastMessage(data)) {
+      if (!this.isLeader || !cpsIsBroadcastMessage(data)) {
         return;
       }
 
@@ -78,7 +93,7 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
           this.reannounceIfIdentityChanged();
           break;
         case 'error':
-          this.sink.recordError(data.error);
+          this.sink.recordError(data.error, data.metadata);
           this.reannounceIfIdentityChanged();
           break;
         case 'user':

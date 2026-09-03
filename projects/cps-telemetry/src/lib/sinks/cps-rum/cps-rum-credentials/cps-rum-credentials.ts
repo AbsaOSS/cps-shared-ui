@@ -150,12 +150,10 @@ export interface CpsRumAppMonitorConfig {
   compressionStrategy?: { enabled: boolean };
 
   /**
-   * Overrides the SDK's own `fetch`-based transport. Matches the browser's
-   * `fetch` signature, typed as `unknown` args/return since this library's
-   * `tsconfig` has no DOM lib. Default unset — the SDK uses the global
-   * `fetch`.
+   * Overrides the SDK's own `fetch`-based transport. Default unset — the
+   * SDK uses the global `fetch`.
    */
-  fetchFunction?: (...args: unknown[]) => Promise<unknown>;
+  fetchFunction?: typeof fetch;
 
   /**
    * Overrides how the SDK builds its data-plane HTTP client. An advanced

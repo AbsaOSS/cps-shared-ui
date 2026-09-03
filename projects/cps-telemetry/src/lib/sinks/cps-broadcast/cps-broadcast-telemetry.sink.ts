@@ -80,8 +80,12 @@ export class CpsBroadcastTelemetrySink
   }
 
   /** @inheritdoc */
-  recordError(error: CpsTelemetryError): void {
-    this.connection.post({ kind: 'error', error });
+  recordError(error: CpsTelemetryError, metadata?: CpsTelemetryMetadata): void {
+    this.connection.post({
+      kind: 'error',
+      error,
+      metadata: { ...metadata, ...this.origin }
+    });
   }
 
   /**

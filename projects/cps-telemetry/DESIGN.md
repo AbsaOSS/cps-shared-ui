@@ -344,14 +344,14 @@ left off.
 The brief suggested several fields that are **not** collected. Each has its
 own reason:
 
-| Omitted                            | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `device`, `browser`, `page`        | The RUM envelope already attaches `browserName`, `browserVersion`, `osName`, `osVersion`, `deviceType`, `pageUrl`, `pageId`, `countryCode`, `referrerUrl` to _every_ event. Repeating them would just be duplicated payload against a capped event budget.                                                                                                                                                                                                                                 |
-| `sessionId`, `userId` on BI events | Already carried once per session via `addSessionAttributes` for every event type, BI included. The scenario record makes the opposite trade for these two specifically — see above for why.                                                                                                                                                                                                                                                                                                |
-| `environment`, `version` on events | Same session-attributes argument. `application` is the one exception here (see above); `environment`/`version` stay off both records. **Except when forwarded across realms**: the host records through _its own_ client, so `CpsBroadcastTelemetrySink` stamps its own `application`/`environment`/`appVersion` onto each forwarded event's _metadata_ — a second, independent place a fragment's identity ends up, since the host has no other way to tell which fragment sent it (§13). |
-| `networkType`                      | The Network Information API is Chromium-only and its values are coarse and unreliable — a metric nobody can trust across browsers is worse than no metric at all.                                                                                                                                                                                                                                                                                                                          |
-| `timeToStart`                      | RUM's built-in navigation timing already answers "how long until the app was interactive".                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Separate `latency`                 | For a scenario that is `delta`; for a step it is the step's own `stepDelta`. A third name for the same number would just invite inconsistent dashboards.                                                                                                                                                                                                                                                                                                                                   |
+| Omitted                            | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `device`, `browser`, `page`        | The RUM envelope already attaches `browserName`, `browserVersion`, `osName`, `osVersion`, `deviceType`, `pageUrl`, `pageId`, `countryCode`, `referrerUrl` to _every_ event. Repeating them would just be duplicated payload against a capped event budget.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `sessionId`, `userId` on BI events | Already carried once per session via `addSessionAttributes` for every event type, BI included. The scenario record makes the opposite trade for these two specifically — see above for why.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `environment`, `version` on events | Same session-attributes argument. `application` is the one exception here (see above); `environment`/`version` stay off both records. **Except when forwarded across realms**: the host records through _its own_ client, so `CpsBroadcastTelemetrySink` stamps its own `application`/`environment`/`appVersion` onto each forwarded event's _metadata_ — a second, independent place a fragment's identity ends up, since the host has no other way to tell which fragment sent it (§13). A forwarded **error** has no metadata field to carry this in — `AwsRum.recordError(error: any)` takes no second argument at all — so `CpsRumTelemetrySink` instead folds a differing origin into the error's own `name` (e.g. `[fragment-app] TypeError`) rather than silently attributing every fragment error to the shell. |
+| `networkType`                      | The Network Information API is Chromium-only and its values are coarse and unreliable — a metric nobody can trust across browsers is worse than no metric at all.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `timeToStart`                      | RUM's built-in navigation timing already answers "how long until the app was interactive".                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Separate `latency`                 | For a scenario that is `delta`; for a step it is the step's own `stepDelta`. A third name for the same number would just invite inconsistent dashboards.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ---
 
@@ -1302,13 +1302,24 @@ call leaves application code unaffected.
 
 - One RUM event per scenario, not per step (the packed model).
 - BI events deduplicated within a 400ms window, absorbing double-fires from
-  a handler bound to both `click` and `keydown`.
+  a handler bound to both `click` and `keydown`. Two events count as the
+  same only if their name, scenario correlation, event-type override,
+  feature, and metadata content all match — differing in any one of those
+  is a distinct event, not a duplicate.
 - Redaction is a single shallow pass over a flat object.
 - Durations use `performance.now()`, which is immune to wall-clock
   adjustments — a sleeping device would otherwise produce negative or
   wildly inflated durations.
-- Batching, retry and network dispatch are left to the SDK, which already
-  does them well.
+- Batching, retry and network dispatch of already-recorded events are left
+  to the SDK, which already does them well.
+- **Credential refresh** is this sink's own responsibility, and never fires
+  immediately: a broker returning already-expired or near-expiry
+  credentials falls back to the same bounded retry delay used for a failed
+  refresh, so a broker stuck returning bad credentials can't tight-loop
+  the sink. A refresh returning `null` — the documented session-disable
+  signal on `CpsRumCredentialsProvider.load()` — tears the client down and
+  stops scheduling further refreshes, instead of retrying forever against
+  an already-disabled sink still holding a stale, capped event buffer.
 - A bounded 100-event pre-init buffer preserves bootstrap telemetry without
   growing without limit if init never completes.
 
@@ -1505,11 +1516,11 @@ Three of these are really the same mistake — recreating in a fragment
 something that belongs to the shell — and the fourth is the one people get
 wrong by symmetry:
 
-| Not in a fragment                    | Why                                                                                          |
-| ------------------------------------ | -------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetrySink('rum')`     | A second AWS client, which is exactly the situation this whole arrangement exists to prevent |
-| `CPS_RUM_CREDENTIALS_PROVIDER`       | Without a RUM sink there is nothing to authenticate                                          |
-| `provideCpsTelemetryBroadcastHost()` | Two hosts double-record every forwarded event                                                |
+| Not in a fragment                    | Why                                                                                                  |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| `provideCpsTelemetrySink('rum')`     | A second AWS client, which is exactly the situation this whole arrangement exists to prevent         |
+| `CPS_RUM_CREDENTIALS_PROVIDER`       | Without a RUM sink there is nothing to authenticate                                                  |
+| `provideCpsTelemetryBroadcastHost()` | Two hosts elect one leader and idle the other (§13) — still wasted setup, not a reason to rely on it |
 
 ### Fragments that also deploy standalone
 
@@ -1543,6 +1554,27 @@ own, and failing loudly just because the composition it will eventually
 live in is absent would be the wrong trade. It is the same fail-open posture
 the RUM sink takes when the credentials broker is unreachable.
 
+### Multiple hosts on one channel
+
+`BroadcastChannel` is origin-wide, not page-local — a shell opened in two
+tabs starts two independent `CpsTelemetryBroadcastHost` instances on the
+same channel, each with its own injector and its own AWS RUM client.
+Recording through both would double every forwarded event, so
+`CpsTelemetryBroadcastHost` runs a Web Locks-based leader election
+(`cpsElectBroadcastHostLeader`) in its constructor: the same lock name,
+requested by every host on a channel, is granted to exactly one caller at
+a time. Only the elected leader records anything or announces identity;
+every other host stays fully passive until the leader is destroyed (its
+tab closes) and releases the lock, at which point the next queued host
+takes over.
+
+Feature-detected and fail-open both ways: a browser without the Web Locks
+API elects immediately (matching this arrangement's pre-election, single-
+host behaviour), and a lock _request_ that itself rejects — document not
+fully active, a Permissions-Policy blocking Web Locks — also elects
+immediately rather than leaving a host silently non-leader, and therefore
+permanently inert, for the rest of the session.
+
 ### Known limits
 
 - **Forwarding at unload is best-effort.** `BroadcastChannel` delivers on a
@@ -1553,10 +1585,3 @@ the RUM sink takes when the credentials broker is unreachable.
   forwarded messages included, but it is a page-lifecycle safety net for
   every app, not a fragment-specific fix, and it cannot rescue a message
   still in flight on the channel when the fragment's frame is torn down.
-- **Only one realm should call `provideCpsTelemetryBroadcastHost()`.** Each
-  realm has its own injector, so a second host would run its own separate
-  AWS RUM client and session — every event a fragment forwards would then
-  be recorded twice, once through each. Nothing stops a second host from
-  starting: the two only find out about each other over
-  `BroadcastChannel`, logging a console warning once they do, but by then
-  both are already recording, and neither shuts itself down.

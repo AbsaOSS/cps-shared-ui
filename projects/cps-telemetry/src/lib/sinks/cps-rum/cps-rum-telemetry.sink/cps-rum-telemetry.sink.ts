@@ -104,6 +104,8 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   private refreshTimer: ReturnType<typeof setTimeout> | null = null;
   private buffer: BufferedItem[] = [];
   private userId?: string;
+  /** Set once a refresh returns null/undefined; distinct from `!awsRum` alone. */
+  private disabled = false;
   /**
    * Memoized so every caller — `provideCpsTelemetrySink('rum')`'s
    * `APP_INITIALIZER`, {@link ensureInitialized}, and a caller awaiting
@@ -186,7 +188,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   ): void {
     this.ensureInitialized();
     cpsSafeVoid('rum.record', () => {
-      if (!this.isBrowser) {
+      if (!this.isBrowser || this.disabled) {
         return;
       }
 
@@ -200,10 +202,10 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   }
 
   /** @inheritdoc */
-  recordError(error: CpsTelemetryError): void {
+  recordError(error: CpsTelemetryError, metadata?: CpsTelemetryMetadata): void {
     this.ensureInitialized();
     cpsSafeVoid('rum.recordError', () => {
-      this.awsRum?.recordError(error);
+      this.awsRum?.recordError(this.withOrigin(error, metadata));
     });
   }
 
@@ -281,7 +283,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   recordPageView(pageId: string): void {
     this.ensureInitialized();
     cpsSafeVoid('rum.recordPageView', () => {
-      if (!this.isBrowser) {
+      if (!this.isBrowser || this.disabled) {
         return;
       }
 
@@ -421,21 +423,25 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   }
 
   private scheduleRefresh(expiration: string): void {
+    const delay =
+      new Date(expiration).getTime() - Date.now() - CREDENTIAL_REFRESH_SKEW_MS;
+
+    if (!Number.isFinite(delay) || delay <= 0) {
+      // Avoid tight-looping on an already-expired/unparsable expiration.
+      this.scheduleRetry();
+      return;
+    }
+
     if (this.refreshTimer) {
       clearTimeout(this.refreshTimer);
     }
 
-    const delay =
-      new Date(expiration).getTime() - Date.now() - CREDENTIAL_REFRESH_SKEW_MS;
-
-    const safeDelay = Math.min(
-      Math.max(Number.isFinite(delay) ? delay : 0, 0),
-      MAX_TIMEOUT_MS
+    this.refreshTimer = setTimeout(
+      () => {
+        this.refreshCredentials().catch(() => undefined);
+      },
+      Math.min(delay, MAX_TIMEOUT_MS)
     );
-
-    this.refreshTimer = setTimeout(() => {
-      this.refreshCredentials().catch(() => undefined);
-    }, safeDelay);
   }
 
   private async refreshCredentials(): Promise<void> {
@@ -446,10 +452,16 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
         return;
       }
 
-      if (bootstrap?.credentials) {
+      if (!bootstrap) {
+        // null/undefined disables RUM for the session (see load()'s contract).
+        this.awsRum = null;
+        this.disabled = true;
+        return;
+      }
+
+      // Omitted credentials mean unauthenticated access, not a failure.
+      if (bootstrap.credentials) {
         this.applyCredentials(bootstrap.credentials);
-      } else {
-        this.scheduleRetry();
       }
     } catch (error) {
       if (!this.destroyed) {
@@ -538,5 +550,20 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
     }
 
     return Object.keys(result).length ? result : undefined;
+  }
+
+  /**
+   * Folds a forwarded error's origin into its name. `AwsRum.recordError`
+   * takes no metadata argument, so `name` is the only field left to carry it.
+   */
+  private withOrigin(
+    error: CpsTelemetryError,
+    metadata?: CpsTelemetryMetadata
+  ): CpsTelemetryError {
+    const origin = metadata?.application;
+    if (typeof origin !== 'string' || origin === this.config.application) {
+      return error;
+    }
+    return { ...error, name: `[${origin}] ${error.name}` };
   }
 }

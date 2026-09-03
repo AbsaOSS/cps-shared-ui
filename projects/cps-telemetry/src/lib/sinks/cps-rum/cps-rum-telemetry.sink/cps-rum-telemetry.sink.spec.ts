@@ -554,6 +554,32 @@ describe('CpsRumTelemetrySink', () => {
       });
     });
 
+    it('should fold a forwarded error origin into its name, since the SDK has no metadata channel for errors', async () => {
+      await sink.init();
+      sink.recordError(
+        { name: 'TypeError', message: 'boom' },
+        { application: 'fragment-app' }
+      );
+
+      expect(awsRumInstance.recordError).toHaveBeenCalledWith({
+        name: '[fragment-app] TypeError',
+        message: 'boom'
+      });
+    });
+
+    it('should not modify the error when its origin matches this realm', async () => {
+      await sink.init();
+      sink.recordError(
+        { name: 'TypeError', message: 'boom' },
+        { application: 'test-app' }
+      );
+
+      expect(awsRumInstance.recordError).toHaveBeenCalledWith({
+        name: 'TypeError',
+        message: 'boom'
+      });
+    });
+
     it('should forward page views', async () => {
       await sink.init();
       sink.recordPageView('/customers');
@@ -676,12 +702,29 @@ describe('CpsRumTelemetrySink', () => {
       expect(awsRumInstance.setAwsCredentials).toHaveBeenCalledTimes(2);
     });
 
-    it('should refresh immediately for already-expired credentials', async () => {
+    it('should retry after the bounded delay for already-expired credentials, instead of refreshing immediately', async () => {
       configure({ loadImpl: async () => bootstrap(undefined, -1000) });
       await sink.init();
 
-      await jest.advanceTimersByTimeAsync(0);
+      expect(load).toHaveBeenCalledTimes(1);
 
+      await jest.advanceTimersByTimeAsync(0);
+      expect(load).toHaveBeenCalledTimes(1);
+
+      await jest.advanceTimersByTimeAsync(30 * 1000);
+      expect(load).toHaveBeenCalledTimes(2);
+    });
+
+    it('should retry, not schedule a near-immediate refresh, for credentials expiring within the skew window', async () => {
+      configure({ loadImpl: async () => bootstrap(undefined, 2 * 60 * 1000) });
+      await sink.init();
+
+      expect(load).toHaveBeenCalledTimes(1);
+
+      await jest.advanceTimersByTimeAsync(0);
+      expect(load).toHaveBeenCalledTimes(1);
+
+      await jest.advanceTimersByTimeAsync(30 * 1000);
       expect(load).toHaveBeenCalledTimes(2);
     });
 
@@ -751,7 +794,7 @@ describe('CpsRumTelemetrySink', () => {
       });
     });
 
-    it('should retry when a scheduled refresh comes back with no credentials', async () => {
+    it('should not retry when a scheduled refresh comes back with credentials intentionally omitted', async () => {
       let calls = 0;
       configure({
         loadImpl: async () => {
@@ -766,10 +809,60 @@ describe('CpsRumTelemetrySink', () => {
 
       await jest.advanceTimersByTimeAsync(60 * 1000);
       expect(calls).toBe(2);
+      expect(awsRumInstance.setAwsCredentials).toHaveBeenCalledTimes(1);
 
-      await jest.advanceTimersByTimeAsync(30 * 1000);
-      expect(calls).toBe(3);
-      expect(awsRumInstance.setAwsCredentials).toHaveBeenCalledTimes(2);
+      await jest.advanceTimersByTimeAsync(60 * 60 * 1000);
+      expect(calls).toBe(2);
+    });
+
+    it('should disable RUM for the session when a scheduled refresh returns null, per the provider contract', async () => {
+      let calls = 0;
+      configure({
+        loadImpl: async () => {
+          calls++;
+          if (calls === 2) {
+            return null;
+          }
+          return bootstrap(undefined, 6 * 60 * 1000);
+        }
+      });
+      await sink.init();
+
+      await jest.advanceTimersByTimeAsync(60 * 1000);
+      expect(calls).toBe(2);
+
+      // No further refresh or retry should be scheduled once disabled.
+      await jest.advanceTimersByTimeAsync(60 * 60 * 1000);
+      expect(calls).toBe(2);
+
+      sink.record('a', {});
+      expect(awsRumInstance.recordEvent).not.toHaveBeenCalled();
+    });
+
+    it('should drop, not buffer, events recorded after being disabled', async () => {
+      let calls = 0;
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      configure({
+        loadImpl: async () => {
+          calls++;
+          if (calls === 2) {
+            return null;
+          }
+          return bootstrap(undefined, 6 * 60 * 1000);
+        }
+      });
+      await sink.init();
+
+      await jest.advanceTimersByTimeAsync(60 * 1000);
+      expect(calls).toBe(2);
+
+      sink.record('a', {});
+      sink.record('b', {});
+      sink.flush();
+
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('RUM event(s) lost')
+      );
     });
 
     it('should not arm a new refresh timer if destroyed while a refresh is in flight', async () => {

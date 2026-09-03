@@ -419,6 +419,8 @@ export class TablePageComponent implements OnInit, OnDestroy {
   private _lastLazyRows = -1;
   private readonly _scenarioTelemetry = inject(CpsScenarioTelemetryService);
   private _lazyLoadScenario?: CpsScenario;
+  /** Checked in the queued callbacks below, past `ngOnDestroy`'s clearTimeout. */
+  private _destroyed = false;
 
   manyRecordsForPaginator = false;
 
@@ -447,6 +449,7 @@ export class TablePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._destroyed = true;
     clearTimeout(this._lazyLoadTimeout);
     this._lazyLoadScenario?.cancel({ reason: 'component-destroyed' });
   }
@@ -520,9 +523,11 @@ export class TablePageComponent implements OnInit, OnDestroy {
     this._lazyLoadScenario = scenario;
 
     Promise.resolve().then(() => {
+      if (this._destroyed) return;
       this.lazyLoading = true;
       clearTimeout(this._lazyLoadTimeout);
       this._lazyLoadTimeout = setTimeout(() => {
+        if (this._destroyed) return;
         this.lazyTotalRecords = this.dataVirtual.length;
 
         this.lazyData = this.dataVirtual

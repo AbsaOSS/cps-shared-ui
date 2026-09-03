@@ -322,6 +322,20 @@ describe('CpsBiTelemetryService', () => {
       expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(2);
     });
 
+    it('should not collapse the same event across different features', () => {
+      service.track('export_clicked', undefined, { feature: 'customers' });
+      service.track('export_clicked', undefined, { feature: 'invoices' });
+
+      expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(2);
+    });
+
+    it('should not collapse the same event across different event types', () => {
+      service.track('export_clicked', undefined, { eventType: 'com.cps.a' });
+      service.track('export_clicked', undefined, { eventType: 'com.cps.b' });
+
+      expect(sink.events).toHaveLength(2);
+    });
+
     it('should allow the event again once the window has passed', () => {
       const nowSpy = jest.spyOn(performance, 'now');
       nowSpy.mockReturnValue(1_000_000);

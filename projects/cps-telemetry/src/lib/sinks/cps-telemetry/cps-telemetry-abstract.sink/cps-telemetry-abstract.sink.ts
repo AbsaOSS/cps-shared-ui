@@ -34,8 +34,13 @@ export abstract class CpsTelemetrySink {
    * {@link CpsLogConfig.mirrorErrorsToRum} is enabled.
    *
    * @param error the normalized error
+   * @param metadata optional flat attributes attached to the error envelope
+   *   (e.g. a forwarding sink's own origin identity)
    */
-  abstract recordError(error: CpsTelemetryError): void;
+  abstract recordError(
+    error: CpsTelemetryError,
+    metadata?: CpsTelemetryMetadata
+  ): void;
 
   /** Returns the current session identifier, when the implementation has one. */
   abstract getSessionId(): string | undefined;

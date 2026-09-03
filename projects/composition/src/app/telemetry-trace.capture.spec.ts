@@ -414,9 +414,9 @@ describe('Real: file-upload', () => {
 
   afterEach(() => jest.useRealTimers());
 
-  it('processUploadedFile settles as success', async () => {
+  it('processExtraInfoUploadedFile settles as success', async () => {
     sink.currentCase = 'success';
-    component.processUploadedFile(makeFile('schema.json')).subscribe();
+    component.processExtraInfoUploadedFile(makeFile('schema.json')).subscribe();
     await Promise.resolve();
     jest.advanceTimersByTime(3000);
     await Promise.resolve();
@@ -441,12 +441,12 @@ describe('Real: file-upload', () => {
     ).toBeUndefined();
   });
 
-  it('onFileProcessingCancelled settles as abandoned', async () => {
+  it('onExtraInfoFileProcessingCancelled settles as abandoned', async () => {
     sink.currentCase = 'abandoned (user-cancelled)';
-    component.processUploadedFile(makeFile('big.csv')).subscribe();
+    component.processExtraInfoUploadedFile(makeFile('big.csv')).subscribe();
     await Promise.resolve();
     jest.advanceTimersByTime(1200);
-    component.onFileProcessingCancelled('big.csv');
+    component.onExtraInfoFileProcessingCancelled('big.csv');
     expect(
       trace.some((e) => e.group === sink.group && e.case === sink.currentCase)
     ).toBe(true);
@@ -454,7 +454,9 @@ describe('Real: file-upload', () => {
 
   it('ngOnDestroy mid-flight settles as abandoned', async () => {
     sink.currentCase = 'abandoned (component-destroyed)';
-    component.processUploadedFile(makeFile('mid-flight.csv')).subscribe();
+    component
+      .processExtraInfoUploadedFile(makeFile('mid-flight.csv'))
+      .subscribe();
     await Promise.resolve();
     jest.advanceTimersByTime(800);
     component.ngOnDestroy();
@@ -466,7 +468,7 @@ describe('Real: file-upload', () => {
   it('a rejecting file read logs "Error reading file"', async () => {
     sink.currentCase = 'error reading file -> log line';
     component
-      .processUploadedFile(makeFile('corrupt.csv', true))
+      .processExtraInfoUploadedFile(makeFile('corrupt.csv', true))
       .subscribe({ error: () => undefined });
     await Promise.resolve();
     await Promise.resolve();

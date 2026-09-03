@@ -21,7 +21,8 @@ describe('TablePageComponent', () => {
       providers: [
         provideCpsTelemetry({
           application: 'composition-test',
-          environment: 'test'
+          environment: 'test',
+          version: '0.0.0'
         }),
         { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
         { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
@@ -68,6 +69,26 @@ describe('TablePageComponent', () => {
       jest.advanceTimersByTime(600);
 
       expect(scenarioTelemetry.getActive()).toHaveLength(0);
+    });
+
+    it('should not populate lazy data via a timer created after a same-tick destroy', async () => {
+      component.dataVirtual = Array.from({ length: 5 }, (_, i) => ({
+        a: `a${i}`,
+        b: `b${i % 5}`,
+        c: i,
+        d: new Date(),
+        e: i % 2 === 0,
+        f: new Date()
+      }));
+
+      component.onLazyLoad({ first: 0, rows: 10 });
+      component.ngOnDestroy();
+
+      await Promise.resolve();
+      jest.advanceTimersByTime(600);
+
+      expect(component.lazyData).toEqual([]);
+      expect(component.lazyLoading).toBe(false);
     });
   });
 

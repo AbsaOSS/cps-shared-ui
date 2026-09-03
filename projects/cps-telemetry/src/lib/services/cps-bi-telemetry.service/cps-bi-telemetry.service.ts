@@ -119,7 +119,7 @@ export class CpsBiTelemetryService {
     metadata: CpsTelemetryMetadata | undefined,
     detail?: CpsBiEventDetail
   ): boolean {
-    const key = `${eventName}|${detail?.scenarioId ?? ''}|${this.metadataKey(metadata)}`;
+    const key = `${eventName}|${detail?.scenarioId ?? ''}|${detail?.eventType ?? ''}|${detail?.feature ?? ''}|${this.metadataKey(metadata)}`;
     const now = cpsNow();
     const last = this.lastEmittedAt.get(key);
 

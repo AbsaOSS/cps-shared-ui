@@ -45,12 +45,11 @@ export class FileUploadPageComponent implements OnDestroy {
   private readonly scenarioTelemetry = inject(CpsScenarioTelemetryService);
   private readonly logger = inject(CpsLoggerService).getLogger('file-upload');
 
-  /**
-   * Processing scenarios in flight, keyed by filename — two
-   * `<cps-file-upload>` widgets share this callback, and filename is what
-   * {@link onFileProcessingCancelled} correlates by.
-   */
-  private uploadScenarios = new Map<string, CpsScenario>();
+  /** Processing scenarios in flight for the "extra info" widget, keyed by filename. */
+  private extraInfoUploadScenarios = new Map<string, CpsScenario>();
+
+  /** Same as {@link extraInfoUploadScenarios}, for the "disabled" widget. */
+  private disabledUploadScenarios = new Map<string, CpsScenario>();
 
   /**
    * The processing scenario for the failing-upload demo widget, which has no
@@ -75,9 +74,18 @@ export class FileUploadPageComponent implements OnDestroy {
   fileInfo: string =
     'The file should be a small sample file to infer the schema, which will be shown in the next step';
 
-  processUploadedFile = (file: File): Observable<boolean> => {
+  processExtraInfoUploadedFile = (file: File): Observable<boolean> =>
+    this._processUploadedFile(file, this.extraInfoUploadScenarios);
+
+  processDisabledUploadedFile = (file: File): Observable<boolean> =>
+    this._processUploadedFile(file, this.disabledUploadScenarios);
+
+  private _processUploadedFile(
+    file: File,
+    scenarios: Map<string, CpsScenario>
+  ): Observable<boolean> {
     const scenario = this._startUploadScenario('process');
-    this.uploadScenarios.set(file.name, scenario);
+    scenarios.set(file.name, scenario);
 
     return from(file.text()).pipe(
       delay(3000),
@@ -86,7 +94,7 @@ export class FileUploadPageComponent implements OnDestroy {
       })),
       map((fileContentsAsText) => {
         console.log(fileContentsAsText);
-        this.uploadScenarios.delete(file.name);
+        scenarios.delete(file.name);
         return true;
       }),
       catchError((error) => {
@@ -95,11 +103,11 @@ export class FileUploadPageComponent implements OnDestroy {
           context: 'FileUpload',
           correlationId: scenario.id
         });
-        this.uploadScenarios.delete(file.name);
+        scenarios.delete(file.name);
         return of(false);
       })
     );
-  };
+  }
 
   processFailingUploadedFile = (): Observable<boolean> => {
     const scenario = this._startUploadScenario('process-failing');
@@ -142,18 +150,36 @@ export class FileUploadPageComponent implements OnDestroy {
     console.log('File processing failed', fileName);
   }
 
-  onFileProcessingCancelled(fileName: string) {
+  onExtraInfoFileProcessingCancelled(fileName: string) {
     console.log('File processing cancelled', fileName);
-    this.uploadScenarios.get(fileName)?.cancel({ reason: 'user-cancelled' });
-    this.uploadScenarios.delete(fileName);
+    this._cancel(this.extraInfoUploadScenarios, fileName, 'user-cancelled');
+  }
+
+  onDisabledFileProcessingCancelled(fileName: string) {
+    console.log('File processing cancelled', fileName);
+    this._cancel(this.disabledUploadScenarios, fileName, 'user-cancelled');
+  }
+
+  private _cancel(
+    scenarios: Map<string, CpsScenario>,
+    fileName: string,
+    reason: string
+  ): void {
+    scenarios.get(fileName)?.cancel({ reason });
+    scenarios.delete(fileName);
   }
 
   ngOnDestroy(): void {
-    for (const scenario of this.uploadScenarios.values()) {
+    this._cancelAll(this.extraInfoUploadScenarios);
+    this._cancelAll(this.disabledUploadScenarios);
+    this.failingUploadScenario?.cancel({ reason: 'component-destroyed' });
+  }
+
+  private _cancelAll(scenarios: Map<string, CpsScenario>): void {
+    for (const scenario of scenarios.values()) {
       scenario.cancel({ reason: 'component-destroyed' });
     }
-    this.uploadScenarios.clear();
-    this.failingUploadScenario?.cancel({ reason: 'component-destroyed' });
+    scenarios.clear();
   }
 
   onUploadedFileRemoved(fileName: string) {
