@@ -3,7 +3,7 @@ import {
   cpsMark,
   cpsMarkName,
   cpsMeasure
-} from './cps-user-timings.util';
+} from './cps-user-timings-internal.util';
 
 /**
  * jsdom implements `performance.now` and `timeOrigin` but neither `mark` nor

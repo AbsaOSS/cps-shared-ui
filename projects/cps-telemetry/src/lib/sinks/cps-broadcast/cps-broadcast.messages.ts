@@ -6,7 +6,7 @@ import {
 import {
   cpsIsBrowser,
   cpsSafeVoid
-} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
 
 /**
  * Default `BroadcastChannel` name used between telemetry realms.

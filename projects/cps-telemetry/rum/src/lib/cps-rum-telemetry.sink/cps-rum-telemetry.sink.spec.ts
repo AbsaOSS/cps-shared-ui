@@ -672,7 +672,7 @@ describe('CpsRumTelemetrySink', () => {
 
       expect(() => sink.record('a', {})).not.toThrow();
       // Reported, not silently dropped — see cpsSafe's dev-mode reporting
-      // contract, tested in cps-telemetry-safe.util.spec.ts.
+      // contract, tested in cps-telemetry-safe-internal.util.spec.ts.
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('rum.record failed'),
         expect.any(Error)

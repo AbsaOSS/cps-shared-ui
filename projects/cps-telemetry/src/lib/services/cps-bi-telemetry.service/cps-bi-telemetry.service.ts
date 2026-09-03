@@ -22,7 +22,7 @@ import {
 import {
   cpsNow,
   cpsSafeVoid
-} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
 
 /**
  * Business and UX event tracking — feature adoption, interaction analysis,

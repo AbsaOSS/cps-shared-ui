@@ -2,7 +2,7 @@ import { defer, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CpsScenarioOutcome } from '../../models/cps-scenario.models/cps-scenario.models';
 import { CpsScenario } from '../cps-scenario/cps-scenario';
-import { cpsSafe } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+import { cpsSafe } from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
 
 /**
  * Options for configuring scenario completion within an RxJS stream.

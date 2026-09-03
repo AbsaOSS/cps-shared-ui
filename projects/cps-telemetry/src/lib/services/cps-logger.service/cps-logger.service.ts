@@ -29,7 +29,7 @@ import {
   cpsSafe,
   cpsSafeVoid,
   cpsSafeVoidMaybeAsync
-} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
 
 /**
  * Detail pre-bound onto a child logger by {@link CpsLogger.child}.

@@ -2,8 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { inject, isDevMode, PLATFORM_ID } from '@angular/core';
 
 /**
- * A local copy of `cps-telemetry`'s own internal `cps-telemetry-safe.util.ts`
- * — `cpsSafe`/`cpsSafeVoid`/`cpsIsBrowser`/`cpsIsDevMode`/`cpsUuid`, verbatim.
+ * A local copy of `cps-telemetry`'s own internal
+ * `cps-telemetry-safe-internal.util.ts` —
+ * `cpsSafe`/`cpsSafeVoid`/`cpsIsBrowser`/`cpsIsDevMode`/`cpsUuid`, verbatim.
  *
  * Not imported from the main entry point: ng-packagr fixes every entry
  * point's `rootDir` to its own `src` directory (unconditionally — see

@@ -32,13 +32,13 @@ import {
   cpsSafe,
   cpsSafeVoid,
   cpsUuid
-} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
 import {
   cpsClearMarks,
   cpsMark,
   cpsMarkName,
   cpsMeasure
-} from '../../utils/cps-user-timings.util/cps-user-timings.util';
+} from '../../utils/cps-user-timings-internal.util/cps-user-timings-internal.util';
 
 /**
  * Collaborators a scenario needs. Supplied by

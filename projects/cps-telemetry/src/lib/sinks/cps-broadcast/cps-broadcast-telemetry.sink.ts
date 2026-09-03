@@ -4,7 +4,7 @@ import {
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import { CPS_TELEMETRY_IDENTITY } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
-import { cpsSafeVoid } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+import { cpsSafeVoid } from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
 import {
   CpsBroadcastConnection,
   cpsConnectBroadcastChannel,

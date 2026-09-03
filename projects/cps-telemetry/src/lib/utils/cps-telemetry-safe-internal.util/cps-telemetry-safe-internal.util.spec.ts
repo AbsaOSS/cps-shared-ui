@@ -7,7 +7,7 @@ import {
   cpsSafeVoid,
   cpsSafeVoidMaybeAsync,
   cpsUuid
-} from './cps-telemetry-safe.util';
+} from './cps-telemetry-safe-internal.util';
 
 jest.mock('@angular/core', () => ({
   ...jest.requireActual('@angular/core'),
