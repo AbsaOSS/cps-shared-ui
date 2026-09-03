@@ -123,29 +123,34 @@ export function cpsElectBroadcastHostLeader(
   let release: () => void = () => {
     released = true;
   };
-  locks
-    .request(
-      `cps-telemetry-host:${channelName}`,
-      () =>
-        new Promise<void>((resolve) => {
-          if (released) {
-            resolve();
-            return;
-          }
-          release = () => {
-            released = true;
-            resolve();
-          };
-          onElected();
-        })
-    )
-    .catch(() => {
-      // request() can reject without ever invoking the callback — fail open,
-      // unless release was already requested before we got here.
-      if (!released) {
-        onElected();
-      }
-    });
+
+  const failOpen = () => {
+    if (!released) {
+      onElected();
+    }
+  };
+
+  try {
+    locks
+      .request(
+        `cps-telemetry-host:${channelName}`,
+        () =>
+          new Promise<void>((resolve) => {
+            if (released) {
+              resolve();
+              return;
+            }
+            release = () => {
+              released = true;
+              resolve();
+            };
+            onElected();
+          })
+      )
+      .catch(failOpen);
+  } catch {
+    failOpen();
+  }
 
   return () => release();
 }

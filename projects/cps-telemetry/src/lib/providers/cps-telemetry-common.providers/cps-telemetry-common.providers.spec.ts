@@ -523,5 +523,45 @@ describe('with*() features', () => {
 
       expect(shared).toHaveLength(1);
     });
+
+    it('should give each call its own extraValueTransforms array too', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideCpsTelemetry(identity, withRedaction())]
+      });
+      const redactA = TestBed.inject(CPS_REDACT_CONFIG);
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [provideCpsTelemetry(identity, withRedaction())]
+      });
+      const redactB = TestBed.inject(CPS_REDACT_CONFIG);
+
+      expect(redactA.extraValueTransforms).not.toBe(
+        redactB.extraValueTransforms
+      );
+      expect(redactA.extraValueTransforms).not.toBe(
+        CPS_DEFAULT_TELEMETRY_CONFIG.redact.extraValueTransforms
+      );
+    });
+
+    it('should still copy an explicitly supplied extraValueTransforms array, not share it back', () => {
+      const shared = [(value: string) => value];
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideCpsTelemetry(
+            identity,
+            withRedaction({ extraValueTransforms: shared })
+          )
+        ]
+      });
+
+      TestBed.inject(CPS_REDACT_CONFIG).extraValueTransforms.push(
+        (value) => value
+      );
+
+      expect(shared).toHaveLength(1);
+    });
   });
 });

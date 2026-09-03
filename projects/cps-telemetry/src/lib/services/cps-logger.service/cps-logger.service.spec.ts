@@ -312,6 +312,14 @@ describe('CpsLoggerService', () => {
         'GET https://api.dev/me failed'
       );
     });
+
+    it('should scrub correlationId the same way context is scrubbed, not pass it through unredacted', () => {
+      logger.log('hello', {
+        correlationId: 'https://api.dev/trace?access_token=xyz'
+      });
+
+      expect(transport.records[0].correlationId).toBe('https://api.dev/trace');
+    });
   });
 
   describe('withLogging({ redact: false })', () => {

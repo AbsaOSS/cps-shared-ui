@@ -134,6 +134,9 @@ export function withRedaction(
           ],
           extraValuePatterns: [
             ...(config.extraValuePatterns ?? defaults.extraValuePatterns)
+          ],
+          extraValueTransforms: [
+            ...(config.extraValueTransforms ?? defaults.extraValueTransforms)
           ]
         }
       }

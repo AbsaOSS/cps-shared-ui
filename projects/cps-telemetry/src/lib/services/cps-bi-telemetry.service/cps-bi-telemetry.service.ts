@@ -130,6 +130,8 @@ export class CpsBiTelemetryService {
     const last = this.lastEmittedAt.get(key);
 
     if (last !== undefined && now - last < this.biConfig.dedupWindowMs) {
+      this.lastEmittedAt.delete(key);
+      this.lastEmittedAt.set(key, last);
       return true;
     }
 

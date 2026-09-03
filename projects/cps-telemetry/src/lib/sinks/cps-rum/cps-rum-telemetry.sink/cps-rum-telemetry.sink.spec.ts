@@ -412,10 +412,18 @@ describe('CpsRumTelemetrySink', () => {
     });
 
     it('should stay disabled when the broker declines', async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       configure({ loadImpl: async () => null });
       await sink.init();
 
       expect(AwsRumCtor).not.toHaveBeenCalled();
+
+      sink.record('a', {});
+      sink.flush();
+      expect(awsRumInstance.recordEvent).not.toHaveBeenCalled();
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('RUM event(s) lost')
+      );
     });
 
     it('should not throw when the broker rejects', async () => {

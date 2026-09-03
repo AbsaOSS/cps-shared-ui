@@ -510,6 +510,47 @@ describe('CpsBiTelemetryService', () => {
       expect(keyCEvents).toHaveLength(2);
     });
 
+    it('should not evict a frequently-duplicated ("hot") key over one that was only ever touched once, purely because duplicate hits never move it in Map order', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideCpsTelemetry(
+            { application: 'test-app', environment: 'test', version: '1.0.0' },
+            withBiEvents({ dedupWindowMs: 1_000, dedupMaxKeys: 2 })
+          ),
+          RecordingLogApi,
+          { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
+          RecordingSink,
+          { provide: CpsTelemetrySink, useExisting: RecordingSink }
+        ]
+      });
+      const capped = TestBed.inject(CpsBiTelemetryService);
+      const cappedSink = TestBed.inject(RecordingSink);
+      const nowSpy = jest.spyOn(performance, 'now');
+
+      nowSpy.mockReturnValue(0);
+      capped.track('hot');
+
+      nowSpy.mockReturnValue(100);
+      capped.track('cold');
+
+      nowSpy.mockReturnValue(200);
+      capped.track('hot');
+
+      nowSpy.mockReturnValue(300);
+      capped.track('warm');
+
+      nowSpy.mockReturnValue(310);
+      capped.track('hot');
+
+      const hotEvents = cappedSink
+        .ofType(CPS_TELEMETRY_EVENT_TYPE.bi)
+        .filter(
+          (e) => (e.payload as { eventName: string }).eventName === 'hot'
+        );
+      expect(hotEvents).toHaveLength(1);
+    });
+
     it('should not let a backwards Date.now jump affect dedup timing at all', () => {
       const dateSpy = jest.spyOn(Date, 'now');
       dateSpy.mockReturnValue(2_000_000_000);

@@ -47,10 +47,12 @@ export class AppLogApiProvider implements CpsLogApiProvider {
       found = found.filter((r) => CPS_LOG_LEVEL_ORDER[r.level] >= floor);
     }
     if (filter.from) {
-      found = found.filter((r) => r.timestamp >= filter.from!);
+      const fromTime = new Date(filter.from).getTime();
+      found = found.filter((r) => new Date(r.timestamp).getTime() >= fromTime);
     }
     if (filter.to) {
-      found = found.filter((r) => r.timestamp <= filter.to!);
+      const toTime = new Date(filter.to).getTime();
+      found = found.filter((r) => new Date(r.timestamp).getTime() <= toTime);
     }
     if (filter.limit !== undefined) {
       found = found.slice(0, filter.limit);

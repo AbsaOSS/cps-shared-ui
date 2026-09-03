@@ -1330,7 +1330,12 @@ call leaves application code unaffected.
   the sink. A refresh returning `null` — the documented session-disable
   signal on `CpsRumCredentialsProvider.load()` — tears the client down and
   stops scheduling further refreshes, instead of retrying forever against
-  an already-disabled sink still holding a stale, capped event buffer.
+  an already-disabled sink still holding a stale, capped event buffer. The
+  very first load honors the identical contract: `performInit()` sets the
+  same `disabled` flag when the broker declines before the client is ever
+  constructed, not only on a later refresh — otherwise every `record()`
+  call would buffer into the capped pre-init queue forever instead of
+  becoming the clean no-op a deliberately-disabled session should be.
 - A bounded 100-item pre-init buffer preserves bootstrap telemetry —
   events, page views, and errors alike, replayed through the same code
   path once the client is ready — without growing without limit if init
@@ -1583,10 +1588,15 @@ takes over.
 
 Feature-detected and fail-open both ways: a browser without the Web Locks
 API elects immediately (matching this arrangement's pre-election, single-
-host behaviour), and a lock _request_ that itself rejects — document not
-fully active, a Permissions-Policy blocking Web Locks — also elects
-immediately rather than leaving a host silently non-leader, and therefore
-permanently inert, for the rest of the session.
+host behaviour), and a lock _request_ that fails — document not fully
+active, a Permissions-Policy blocking Web Locks — also elects immediately
+rather than leaving a host silently non-leader, and therefore permanently
+inert, for the rest of the session. That covers a rejected promise and a
+synchronous throw from `request()` itself alike (a `try`/`catch` around
+the call, not just a `.catch()` on its result) — this runs unguarded from
+`CpsTelemetryBroadcastHost`'s constructor, itself constructed eagerly
+inside an `APP_INITIALIZER`, so an uncaught synchronous throw here would
+crash application bootstrap rather than just fail to elect a leader.
 
 A host destroyed while its own request is still queued — never granted —
 is also handled correctly: `cpsElectBroadcastHostLeader` tracks that a

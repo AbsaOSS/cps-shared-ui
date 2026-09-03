@@ -149,6 +149,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
     try {
       const bootstrap = await this.credentialsProvider.load();
       if (!bootstrap?.config) {
+        this.disabled = true;
         return;
       }
 

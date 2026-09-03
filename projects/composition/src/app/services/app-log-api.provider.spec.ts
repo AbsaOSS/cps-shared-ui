@@ -110,6 +110,11 @@ describe('AppLogApiProvider', () => {
       expect(found[0].correlationId).toBe('c-2');
     });
 
+    it('should compare a non-UTC-offset from bound by its actual instant, not by lexicographic string order', async () => {
+      const found = await provider.query({ from: '2024-01-02T01:00:00+02:00' });
+      expect(found.map((r) => r.correlationId)).toEqual(['c-2', 'c-1']);
+    });
+
     it('should cap the result at limit', async () => {
       const found = await provider.query({ limit: 2 });
       expect(found).toHaveLength(2);

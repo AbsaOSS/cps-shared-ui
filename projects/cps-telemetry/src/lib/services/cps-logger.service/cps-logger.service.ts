@@ -302,7 +302,9 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
         : undefined,
       metadata: cpsRedactMetadata(detail?.metadata, redact),
       error: cpsNormalizeError(detail?.error, redact),
-      correlationId: detail?.correlationId,
+      correlationId: detail?.correlationId
+        ? cpsScrubString(detail.correlationId, redact)
+        : undefined,
       application: identity.application,
       environment: identity.environment,
       version: identity.version,

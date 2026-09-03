@@ -695,6 +695,23 @@ describe('broadcast telemetry across realms', () => {
       expect(onElected).toHaveBeenCalledTimes(1);
     });
 
+    it('should fail open and still elect when request() itself throws synchronously', () => {
+      Object.defineProperty(globalThis.navigator, 'locks', {
+        value: {
+          request: () => {
+            throw new Error('locks unavailable in this context');
+          }
+        },
+        configurable: true
+      });
+      const onElected = jest.fn();
+
+      expect(() =>
+        cpsElectBroadcastHostLeader('cps-telemetry', onElected)
+      ).not.toThrow();
+      expect(onElected).toHaveBeenCalledTimes(1);
+    });
+
     it('should not elect a requester released while still queued, and should let the next requester through', async () => {
       LockManagerStub.install();
       const onElectedHolder = jest.fn();
