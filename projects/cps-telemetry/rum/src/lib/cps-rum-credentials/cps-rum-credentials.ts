@@ -15,6 +15,18 @@ export interface CpsRumCredentials {
 }
 
 /**
+ * Mirrors `aws-rum-web`'s own `AwsCredentialIdentity | AwsCredentialIdentityProvider`
+ * union — used only by {@link CpsRumAppMonitorConfig.clientBuilder}.
+ */
+type ClientBuilderCredentials =
+  | { accessKeyId: string; secretAccessKey: string; sessionToken?: string }
+  | (() => Promise<{
+      accessKeyId: string;
+      secretAccessKey: string;
+      sessionToken?: string;
+    }>);
+
+/**
  * Settings for the RUM app monitor, mapped onto the underlying `aws-rum-web`
  * SDK's own `Config`. Every optional field left unset falls back to a
  * default: `allowCookies`, `enableXRay`, `endpoint` and `telemetries` fall
@@ -161,7 +173,12 @@ export interface CpsRumAppMonitorConfig {
    * signature (`(endpoint: URL, region: string, credentials?, compressionStrategy?) => DataPlaneClient`).
    * Default unset.
    */
-  clientBuilder?: (endpoint: URL, region: string) => unknown;
+  clientBuilder?: (
+    endpoint: URL,
+    region: string,
+    credentials?: ClientBuilderCredentials,
+    compressionStrategy?: { enabled: boolean }
+  ) => unknown;
 
   // ---- Cookies & privacy ----
 

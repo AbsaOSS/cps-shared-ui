@@ -1555,6 +1555,27 @@ describe('CpsScenarioTelemetryService', () => {
       ]);
     });
 
+    it('should freeze an aggregate left open at settlement, not keep advancing on later toRecord() calls', () => {
+      const nowSpy = jest.spyOn(performance, 'now');
+      nowSpy.mockReturnValue(0);
+      const scenario = service.start({ name: 'render' });
+
+      nowSpy.mockReturnValue(100);
+      scenario.aggregateStart('op');
+      nowSpy.mockReturnValue(400);
+      scenario.complete();
+
+      const atSettlement = scenario.toRecord().aggregates;
+      expect(atSettlement).toEqual([
+        { name: 'op', elapsed: 300, callCount: 1 }
+      ]);
+
+      nowSpy.mockReturnValue(10_000);
+      const muchLater = scenario.toRecord().aggregates;
+
+      expect(muchLater).toEqual(atSettlement);
+    });
+
     it('should omit the field when nothing was aggregated', () => {
       service.start({ name: 'render' }).complete();
       expect(onlyScenarioRecord().aggregates).toBeUndefined();

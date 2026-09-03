@@ -587,13 +587,14 @@ export class CpsScenario {
   /** Snapshots the aggregate totals, closing any call still open. */
   private collectAggregates(): CpsScenarioAggregate[] {
     const result: CpsScenarioAggregate[] = [];
+    const now = this.isSettled ? this.startedAt + this._elapsed : cpsNow();
 
     for (const [name, entry] of this.aggregates) {
       let total = entry.total;
       let callCount = entry.callCount;
 
       if (entry.openedAt !== undefined) {
-        total += cpsNow() - entry.openedAt;
+        total += now - entry.openedAt;
         callCount++;
       }
 

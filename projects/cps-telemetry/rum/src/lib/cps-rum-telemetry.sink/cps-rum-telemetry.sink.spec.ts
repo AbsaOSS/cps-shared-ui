@@ -226,7 +226,17 @@ describe('CpsRumTelemetrySink', () => {
       const clientBuilder = (
         endpoint: URL,
         region: string,
-        credentials?: { accessKeyId: string },
+        credentials?:
+          | {
+              accessKeyId: string;
+              secretAccessKey: string;
+              sessionToken?: string;
+            }
+          | (() => Promise<{
+              accessKeyId: string;
+              secretAccessKey: string;
+              sessionToken?: string;
+            }>),
         compressionStrategy?: { enabled: boolean }
       ) => ({ endpoint, region, credentials, compressionStrategy });
 
@@ -236,6 +246,33 @@ describe('CpsRumTelemetrySink', () => {
       await sink.init();
 
       expect(AwsRumCtor.mock.calls[0][3]).toMatchObject({ clientBuilder });
+    });
+
+    it("should infer clientBuilder's credentials/compressionStrategy parameter types from CpsRumAppMonitorConfig itself, with no explicit annotation needed", async () => {
+      configure({
+        loadImpl: async () =>
+          bootstrap({
+            clientBuilder: (
+              endpoint,
+              region,
+              credentials,
+              compressionStrategy
+            ) => ({
+              endpoint,
+              region,
+              accessKeyId:
+                credentials && 'accessKeyId' in credentials
+                  ? credentials.accessKeyId
+                  : undefined,
+              compressionEnabled: compressionStrategy?.enabled
+            })
+          })
+      });
+      await sink.init();
+
+      expect(AwsRumCtor.mock.calls[0][3]).toMatchObject({
+        clientBuilder: expect.any(Function)
+      });
     });
 
     it('should pass through every SDK-default-mirroring field the representative-sample test above leaves uncovered', async () => {
@@ -426,6 +463,29 @@ describe('CpsRumTelemetrySink', () => {
       );
     });
 
+    it('should clear the pre-init buffer, not just stop future buffering, when the broker declines', async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      let resolveLoad!: (bootstrap: CpsRumBootstrap | null) => void;
+      configure({
+        loadImpl: () =>
+          new Promise<CpsRumBootstrap | null>((resolve) => {
+            resolveLoad = resolve;
+          })
+      });
+
+      const initPromise = sink.init();
+      sink.record('a', {});
+
+      resolveLoad(null);
+      await initPromise;
+
+      sink.flush();
+
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('RUM event(s) lost')
+      );
+    });
+
     it('should not throw when the broker rejects', async () => {
       const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       configure({
@@ -441,6 +501,31 @@ describe('CpsRumTelemetrySink', () => {
           name: 'Error',
           message: 'broker unreachable'
         })
+      );
+    });
+
+    it('should disable RUM and clear the pre-init buffer, not buffer forever, when init throws', async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      let rejectLoad!: (error: Error) => void;
+      configure({
+        loadImpl: () =>
+          new Promise<CpsRumBootstrap | null>((_resolve, reject) => {
+            rejectLoad = reject;
+          })
+      });
+
+      const initPromise = sink.init();
+      sink.record('a', {});
+
+      rejectLoad(new Error('broker unreachable'));
+      await initPromise;
+
+      sink.record('b', {});
+      sink.flush();
+
+      expect(awsRumInstance.recordEvent).not.toHaveBeenCalled();
+      expect(warn).not.toHaveBeenCalledWith(
+        expect.stringContaining('RUM event(s) lost')
       );
     });
 

@@ -155,6 +155,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
       const bootstrap = await this.credentialsProvider.load();
       if (!bootstrap?.config) {
         this.disabled = true;
+        this.buffer = [];
         return;
       }
 
@@ -174,6 +175,8 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
       this.applyCredentials(bootstrap.credentials);
       this.replayBuffer();
     } catch (error) {
+      this.disabled = true;
+      this.buffer = [];
       this.reportFailure('RUM init failed, monitoring disabled', error);
     }
   }
@@ -284,7 +287,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   flush(beacon = false): void {
     cpsSafeVoid('rum.flush', () => {
       if (!this.awsRum) {
-        if (this.buffer.length > 0 && cpsIsDevMode()) {
+        if (!this.disabled && this.buffer.length > 0 && cpsIsDevMode()) {
           // eslint-disable-next-line no-console
           console.warn(
             `[cps-telemetry] ${this.buffer.length} RUM event(s) lost: page unloaded before RUM finished initializing`
