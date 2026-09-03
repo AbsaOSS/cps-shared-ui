@@ -187,11 +187,18 @@ export class AppTelemetryService {
    * `route` stays one metric dimension per route rather than splitting into
    * one series per resolved value. This app's own routes are all static (see
    * `app-routing.module.ts` — no `:id`-style segments anywhere), so a
-   * resolved URL and its template only ever differ by the query string and
-   * fragment a link happened to carry; stripping those is enough here.
+   * resolved URL and its template only ever differ by the query string,
+   * fragment, and any matrix parameters (`;key=value`) a link happened to
+   * carry; stripping those is enough here. Matrix parameters are legal on
+   * any segment of a static route too, not just parameterized ones, so they
+   * are stripped per-segment rather than assumed absent.
    */
   private routeTemplate(url: string): string {
-    return url.split(/[?#]/)[0];
+    return url
+      .split(/[?#]/)[0]
+      .split('/')
+      .map((segment) => segment.split(';')[0])
+      .join('/');
   }
 
   private navigationStartedAt(): number | undefined {

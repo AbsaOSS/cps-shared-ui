@@ -154,7 +154,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
     try {
       const bootstrap = await this.credentialsProvider.load();
       if (!bootstrap?.config) {
-        this.disabled = true;
+        this.disableAwsRum();
         this.buffer = [];
         return;
       }
@@ -175,7 +175,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
       this.applyCredentials(bootstrap.credentials);
       this.replayBuffer();
     } catch (error) {
-      this.disabled = true;
+      this.disableAwsRum();
       this.buffer = [];
       this.reportFailure('RUM init failed, monitoring disabled', error);
     }
@@ -287,7 +287,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   flush(beacon = false): void {
     cpsSafeVoid('rum.flush', () => {
       if (!this.awsRum) {
-        if (!this.disabled && this.buffer.length > 0 && cpsIsDevMode()) {
+        if (this.buffer.length > 0 && cpsIsDevMode()) {
           // eslint-disable-next-line no-console
           console.warn(
             `[cps-telemetry] ${this.buffer.length} RUM event(s) lost: page unloaded before RUM finished initializing`
@@ -331,6 +331,23 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
       clearTimeout(this.refreshTimer);
       this.refreshTimer = null;
     }
+    this.disableAwsRum();
+  }
+
+  /**
+   * Disables the sink: stops the AWS RUM client's own listeners, plugins,
+   * and dispatch timer before dropping the reference — clearing `awsRum`
+   * alone only stops this class from talking to it; the already-constructed
+   * instance would otherwise keep running orphaned in the page (and, on
+   * destroy, could duplicate telemetry if the app is bootstrapped again in
+   * the same one) — and marks the session disabled, so every call site that
+   * tears the client down does so atomically with the flag `recordOrBuffer`
+   * checks, instead of each caller having to remember to set both.
+   */
+  private disableAwsRum(): void {
+    cpsSafeVoid('rum.disable', () => this.awsRum?.disable());
+    this.awsRum = null;
+    this.disabled = true;
   }
 
   /**
@@ -483,8 +500,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
 
       if (!bootstrap) {
         // null/undefined disables RUM for the session (see load()'s contract).
-        this.awsRum = null;
-        this.disabled = true;
+        this.disableAwsRum();
         return;
       }
 

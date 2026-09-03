@@ -152,9 +152,15 @@ export interface CpsRumAppMonitorConfig {
   useBeacon?: boolean;
 
   /**
-   * Whether dispatch requests are SigV4-signed. Default `true`. Has no
-   * effect unless paired with `identityPoolId`, which this library does not
-   * expose; credentials come from `CpsRumCredentialsProvider` instead.
+   * Whether dispatch requests are SigV4-signed. Default `true`. Signing is
+   * active whenever credentials are present — which they are here, via
+   * `setAwsCredentials` from `CpsRumCredentialsProvider` — independent of
+   * `identityPoolId`; that field only matters for the SDK's own, separate
+   * Cognito guest-identity flow, which this library does not use. Leave
+   * this enabled for broker-supplied credentials: disabling it here still
+   * sends unsigned requests to the same signed-only endpoint and gets
+   * rejected. Only turn it off if something in front of dispatch (a proxy,
+   * a different transport) already signs the request itself.
    */
   signing?: boolean;
 

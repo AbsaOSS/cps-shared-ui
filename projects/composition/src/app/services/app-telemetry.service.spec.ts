@@ -108,6 +108,21 @@ describe('AppTelemetryService', () => {
     expect(scenarios()[0]).toMatchObject({ route: '/colors' });
   });
 
+  it('should strip matrix parameters from every segment, not just the query string and fragment', () => {
+    routerEvents.next(
+      new NavigationStart(1, '/customers;id=123/details;tab=billing?x=1#h')
+    );
+    routerEvents.next(
+      new NavigationEnd(
+        1,
+        '/customers;id=123/details;tab=billing?x=1#h',
+        '/customers/details'
+      )
+    );
+
+    expect(scenarios()[0]).toMatchObject({ route: '/customers/details' });
+  });
+
   it('should cancel the scenario on NavigationCancel', () => {
     routerEvents.next(new NavigationStart(1, '/button'));
     routerEvents.next(new NavigationCancel(1, '/button', 'guard rejected'));

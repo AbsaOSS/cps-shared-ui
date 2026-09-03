@@ -24,7 +24,8 @@ const awsRumInstance = {
   startSession: jest.fn(() => 'rum-session-2'),
   getSessionId: jest.fn(() => 'rum-session-1'),
   dispatch: jest.fn(),
-  dispatchBeacon: jest.fn()
+  dispatchBeacon: jest.fn(),
+  disable: jest.fn()
 };
 
 // Typed on the real `new AwsRum(applicationId, applicationVersion, region,
@@ -504,6 +505,21 @@ describe('CpsRumTelemetrySink', () => {
       );
     });
 
+    it('should disable the client, not just log a warning, when the SDK throws after construction', async () => {
+      jest.spyOn(console, 'warn').mockImplementation(() => {});
+      awsRumInstance.addSessionAttributes.mockImplementationOnce(() => {
+        throw new Error('sdk exploded');
+      });
+
+      await sink.init();
+
+      expect(AwsRumCtor).toHaveBeenCalled();
+      expect(awsRumInstance.disable).toHaveBeenCalled();
+
+      sink.record('a', {});
+      expect(awsRumInstance.recordEvent).not.toHaveBeenCalled();
+    });
+
     it('should disable RUM and clear the pre-init buffer, not buffer forever, when init throws', async () => {
       const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       let rejectLoad!: (error: Error) => void;
@@ -575,6 +591,15 @@ describe('CpsRumTelemetrySink', () => {
       await initPromise;
 
       expect(AwsRumCtor).not.toHaveBeenCalled();
+    });
+
+    it('should disable the already-constructed AWS RUM client on destroy, not just stop the credential-refresh timer', async () => {
+      await sink.init();
+      expect(AwsRumCtor).toHaveBeenCalled();
+
+      sink.ngOnDestroy();
+
+      expect(awsRumInstance.disable).toHaveBeenCalled();
     });
 
     it('should work without credentials for an unauthenticated app monitor', async () => {
@@ -1029,6 +1054,25 @@ describe('CpsRumTelemetrySink', () => {
 
       sink.record('a', {});
       expect(awsRumInstance.recordEvent).not.toHaveBeenCalled();
+    });
+
+    it('should disable the already-constructed AWS RUM client, not just drop the reference, when a scheduled refresh returns null', async () => {
+      let calls = 0;
+      configure({
+        loadImpl: async () => {
+          calls++;
+          if (calls === 2) {
+            return null;
+          }
+          return bootstrap(undefined, 6 * 60 * 1000);
+        }
+      });
+      await sink.init();
+      expect(awsRumInstance.disable).not.toHaveBeenCalled();
+
+      await jest.advanceTimersByTimeAsync(60 * 1000);
+
+      expect(awsRumInstance.disable).toHaveBeenCalled();
     });
 
     it('should drop, not buffer, events recorded after being disabled', async () => {
