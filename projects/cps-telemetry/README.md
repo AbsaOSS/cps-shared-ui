@@ -136,7 +136,12 @@ from a later refresh, not just the initial load, so a provider can revoke
 telemetry mid-session and the already-running client is torn down rather
 than left collecting with stale credentials. Returning a bootstrap with
 `credentials` omitted is a different, valid state: an app monitor configured
-for unauthenticated access, not a disable signal.
+for unauthenticated access, not a disable signal — as long as the session was
+never authenticated to begin with. The underlying AWS RUM client has no way
+to clear credentials once applied, so a _later_ refresh that omits
+`credentials` for a session that already had real ones doesn't downgrade it
+to unauthenticated; the sink keeps using the existing credentials and retries
+the refresh instead, reporting a dev-mode warning rather than going silent.
 
 ### Advanced RUM configuration
 

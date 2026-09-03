@@ -27,6 +27,7 @@ import {
   cpsScrubString
 } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
 import {
+  cpsDeepClone,
   cpsEpochToPerf,
   cpsNow,
   cpsSafe,
@@ -439,10 +440,12 @@ export class CpsScenario {
       delta: Math.round(this.delta),
       elapsed: Math.round(cpsNow()),
       stepCount: this._stepCount,
-      steps: [...this.steps],
+      steps: cpsDeepClone(this.steps),
       previousStep: this.previousStep,
       aggregates: aggregates.length ? aggregates : undefined,
-      metadata: Object.keys(this.metadata).length ? this.metadata : undefined,
+      metadata: Object.keys(this.metadata).length
+        ? cpsDeepClone(this.metadata)
+        : undefined,
       application: this.deps.identity.application,
       sessionId: this.sessionId(),
       userId: this.userId()
@@ -461,7 +464,7 @@ export class CpsScenario {
     if (this.settledReason) {
       record.reason = this.settledReason;
     }
-    if (this.settleError) {
+    if (this.settleError !== undefined) {
       record.error = cpsNormalizeError(this.settleError, redact);
     }
 

@@ -138,6 +138,26 @@ describe('CpsScenario (direct construction)', () => {
       expect(() => scenario.step('too-late')).not.toThrow();
       expect(scenario.toRecord().stepCount).toBe(0);
     });
+
+    it("should not let a mutated mid-flight toRecord() snapshot change what's later emitted", () => {
+      const { deps, sink } = createDeps();
+      const scenario = new CpsScenario({ name: 'checkout' }, deps);
+
+      scenario.step('fetch', { count: 1 });
+      scenario.setData({ owner: 'checkout-team' });
+
+      const snapshot = scenario.toRecord();
+      const fetchStep = snapshot.steps.find((s) => s.name === 'fetch');
+      (fetchStep!.metadata as CpsTelemetryMetadata).count = 999;
+      (snapshot.metadata as CpsTelemetryMetadata).owner = 'hijacked';
+
+      scenario.complete();
+
+      const emitted = sink.events[0].payload as unknown as CpsScenarioRecord;
+      const emittedFetchStep = emitted.steps.find((s) => s.name === 'fetch');
+      expect(emittedFetchStep?.metadata?.count).toBe(1);
+      expect(emitted.metadata?.owner).toBe('checkout-team');
+    });
   });
 
   describe('settle', () => {
@@ -198,6 +218,17 @@ describe('CpsScenario (direct construction)', () => {
         (s) => s.name === 'scenario-end'
       );
       expect(scenarioEndStep?.error).toBeUndefined();
+    });
+
+    it('should retain a legitimately falsy thrown value, not treat it as no error', () => {
+      const { deps } = createDeps();
+      const scenario = new CpsScenario({ name: 'checkout' }, deps);
+
+      scenario.fail({ error: 0 });
+
+      const record = scenario.toRecord();
+      expect(record.error).toBeDefined();
+      expect(record.error).toMatchObject({ name: 'number' });
     });
   });
 

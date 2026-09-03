@@ -39,10 +39,18 @@ export class AppRumCredentialsProvider implements CpsRumCredentialsProvider {
    *   deployment or the broker is unreachable
    */
   async load(): Promise<CpsRumBootstrap | null> {
-    const response = await fetch('/rum/init', {
-      headers: { Accept: 'application/json' },
-      cache: 'no-store'
-    });
+    let response: Response;
+    try {
+      response = await fetch('/rum/init', {
+        headers: { Accept: 'application/json' },
+        cache: 'no-store'
+      });
+    } catch {
+      // A network-level failure (offline, DNS, connection refused, ...)
+      // rejects before any response exists — treat it the same as an
+      // unreachable broker, per this method's own documented contract.
+      return null;
+    }
 
     if (!response.ok) {
       return null;

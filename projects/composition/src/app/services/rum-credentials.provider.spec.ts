@@ -99,4 +99,14 @@ describe('AppRumCredentialsProvider', () => {
 
     expect(await provider.load()).toBeNull();
   });
+
+  it('should return null, not reject, when fetch itself fails at the network level', async () => {
+    globalThis.fetch = jest
+      .fn()
+      .mockRejectedValue(
+        new TypeError('Failed to fetch')
+      ) as unknown as typeof fetch;
+
+    await expect(provider.load()).resolves.toBeNull();
+  });
 });

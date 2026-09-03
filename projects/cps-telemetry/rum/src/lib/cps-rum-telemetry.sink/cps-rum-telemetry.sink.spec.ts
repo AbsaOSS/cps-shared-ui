@@ -435,9 +435,6 @@ describe('CpsRumTelemetrySink', () => {
       });
 
       await expect(sink.init()).resolves.toBeUndefined();
-      // Normalized/redacted, like every other error this library reports —
-      // never the raw caught value, which could carry credentials or PII
-      // from a broker error body.
       expect(warn).toHaveBeenCalledWith(
         '[cps-telemetry] RUM init failed, monitoring disabled',
         expect.objectContaining({
@@ -445,6 +442,23 @@ describe('CpsRumTelemetrySink', () => {
           message: 'broker unreachable'
         })
       );
+    });
+
+    it("should not reject init()'s promise even if console.warn itself throws", async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {
+        throw new Error('console patched to throw');
+      });
+      const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+      configure({
+        loadImpl: async () => {
+          throw new Error('broker unreachable');
+        }
+      });
+
+      await expect(sink.init()).resolves.toBeUndefined();
+
+      warn.mockRestore();
+      error.mockRestore();
     });
 
     it('should leave the application functional after a failed init', async () => {
@@ -671,8 +685,6 @@ describe('CpsRumTelemetrySink', () => {
       });
 
       expect(() => sink.record('a', {})).not.toThrow();
-      // Reported, not silently dropped — see cpsSafe's dev-mode reporting
-      // contract, tested in cps-telemetry-safe-internal.util.spec.ts.
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('rum.record failed'),
         expect.any(Error)
@@ -867,7 +879,20 @@ describe('CpsRumTelemetrySink', () => {
       });
     });
 
-    it('should not retry when a scheduled refresh comes back with credentials intentionally omitted', async () => {
+    it('should not retry when the very first load is unauthenticated (credentials omitted from the start)', async () => {
+      configure({
+        loadImpl: async () => ({ config: bootstrap().config })
+      });
+      await sink.init();
+
+      expect(awsRumInstance.setAwsCredentials).not.toHaveBeenCalled();
+
+      await jest.advanceTimersByTimeAsync(60 * 60 * 1000);
+      expect(load).toHaveBeenCalledTimes(1);
+    });
+
+    it('should keep retrying, not go silent forever, when an already-authenticated session refreshes into credentials omitted', async () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       let calls = 0;
       configure({
         loadImpl: async () => {
@@ -883,9 +908,18 @@ describe('CpsRumTelemetrySink', () => {
       await jest.advanceTimersByTimeAsync(60 * 1000);
       expect(calls).toBe(2);
       expect(awsRumInstance.setAwsCredentials).toHaveBeenCalledTimes(1);
+      expect(warn).toHaveBeenCalledWith(
+        '[cps-telemetry] RUM credential refresh',
+        expect.objectContaining({
+          name: 'Error',
+          message: expect.stringContaining('already-authenticated')
+        })
+      );
 
-      await jest.advanceTimersByTimeAsync(60 * 60 * 1000);
-      expect(calls).toBe(2);
+      await jest.advanceTimersByTimeAsync(30 * 1000);
+      expect(calls).toBe(3);
+
+      warn.mockRestore();
     });
 
     it('should disable RUM for the session when a scheduled refresh returns null, per the provider contract', async () => {
