@@ -6,12 +6,11 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleStrategy } from '@angular/router';
 import { CpsIconComponent } from 'cps-ui-kit';
+import { CPS_LOG_API_PROVIDER, provideCpsTelemetry } from 'cps-telemetry';
 import {
-  CPS_LOG_API_PROVIDER,
   CPS_RUM_CREDENTIALS_PROVIDER,
-  provideCpsTelemetry,
-  provideCpsTelemetrySink
-} from 'cps-telemetry';
+  provideCpsTelemetryRumSink
+} from 'cps-telemetry/rum';
 import packageJson from '../../../cps-ui-kit/package.json';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -40,7 +39,7 @@ import './services/telemetry.schema';
       environment: resolveDeploymentEnvironment(),
       version: packageJson.version
     }),
-    provideCpsTelemetrySink('rum'),
+    provideCpsTelemetryRumSink(),
     {
       provide: CPS_RUM_CREDENTIALS_PROVIDER,
       useExisting: AppRumCredentialsProvider

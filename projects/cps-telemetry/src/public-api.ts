@@ -28,7 +28,7 @@ export {
 // Providers
 export {
   CpsTelemetryFeature,
-  CpsTelemetrySinkMode,
+  CpsTelemetryLocalSinkMode,
   provideCpsTelemetry,
   provideCpsTelemetryBroadcastHost,
   provideCpsTelemetrySink,
@@ -96,14 +96,6 @@ export {
   CPS_BROADCAST_CHANNEL,
   CPS_DEFAULT_BROADCAST_CHANNEL
 } from './lib/sinks/cps-broadcast/cps-broadcast.messages';
-export {
-  CPS_RUM_CREDENTIALS_PROVIDER,
-  CpsRumAppMonitorConfig,
-  CpsRumBootstrap,
-  CpsRumCredentials,
-  CpsRumCredentialsProvider
-} from './lib/sinks/cps-rum/cps-rum-credentials/cps-rum-credentials';
-export { CpsRumTelemetrySink } from './lib/sinks/cps-rum/cps-rum-telemetry.sink/cps-rum-telemetry.sink';
 export { CpsTelemetrySink } from './lib/sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 export { CpsNoopTelemetrySink } from './lib/sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 

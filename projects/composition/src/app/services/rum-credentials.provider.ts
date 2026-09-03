@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
-import type { CpsRumBootstrap, CpsRumCredentialsProvider } from 'cps-telemetry';
+import type {
+  CpsRumBootstrap,
+  CpsRumCredentialsProvider
+} from 'cps-telemetry/rum';
 
 /**
  * Shape returned by the backend RUM broker.

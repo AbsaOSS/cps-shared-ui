@@ -3,12 +3,6 @@ import { ApplicationInitStatus, Injectable, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CpsLoggerService } from '../../services/cps-logger.service/cps-logger.service';
 import { CpsScenarioTelemetryService } from '../../services/cps-scenario-telemetry.service/cps-scenario-telemetry.service';
-import { CpsRumTelemetrySink } from '../../sinks/cps-rum/cps-rum-telemetry.sink/cps-rum-telemetry.sink';
-import {
-  CPS_RUM_CREDENTIALS_PROVIDER,
-  CpsRumBootstrap,
-  CpsRumCredentialsProvider
-} from '../../sinks/cps-rum/cps-rum-credentials/cps-rum-credentials';
 import { CpsNoopTelemetrySink } from '../../sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import {
@@ -28,7 +22,7 @@ import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadca
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
 import {
   CpsTelemetryFeature,
-  CpsTelemetrySinkMode,
+  CpsTelemetryLocalSinkMode,
   provideCpsTelemetry,
   provideCpsTelemetryBroadcastHost,
   provideCpsTelemetrySink,
@@ -37,15 +31,6 @@ import {
   withRedaction,
   withScenarios
 } from './cps-telemetry-common.providers';
-
-jest.mock('aws-rum-web', () => ({ AwsRum: class {} }), { virtual: true });
-
-@Injectable()
-class StubCredentialsProvider implements CpsRumCredentialsProvider {
-  async load(): Promise<CpsRumBootstrap | null> {
-    return null;
-  }
-}
 
 /** Keeps every record, so a test can assert on what was shipped. */
 @Injectable()
@@ -188,50 +173,9 @@ describe('provideCpsTelemetry', () => {
   });
 });
 
-describe("provideCpsTelemetrySink('rum')", () => {
-  beforeEach(() => {
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
-      providers: [
-        provideCpsTelemetry({
-          application: 'my-app',
-          environment: 'prod',
-          version: '1.0.0'
-        }),
-        provideCpsTelemetrySink('rum'),
-        {
-          provide: CPS_RUM_CREDENTIALS_PROVIDER,
-          useClass: StubCredentialsProvider
-        }
-      ]
-    });
-  });
-
-  it('should replace the default sink with the RUM sink', () => {
-    expect(TestBed.inject(CpsTelemetrySink)).toBeInstanceOf(
-      CpsRumTelemetrySink
-    );
-  });
-
-  it('should resolve the sink token and the concrete class to one instance', () => {
-    expect(TestBed.inject(CpsTelemetrySink)).toBe(
-      TestBed.inject(CpsRumTelemetrySink)
-    );
-  });
-
-  it("should call the sink's init() automatically via app initialization", async () => {
-    const initSpy = jest.spyOn(CpsRumTelemetrySink.prototype, 'init');
-
-    await TestBed.inject(ApplicationInitStatus).donePromise;
-
-    expect(initSpy).toHaveBeenCalled();
-    initSpy.mockRestore();
-  });
-});
-
 describe('provideCpsTelemetrySink', () => {
   function configure(
-    mode: CpsTelemetrySinkMode,
+    mode: CpsTelemetryLocalSinkMode,
     options?: { channelName?: string }
   ): void {
     TestBed.resetTestingModule();
@@ -244,21 +188,10 @@ describe('provideCpsTelemetrySink', () => {
         }),
         provideCpsTelemetrySink(mode, options),
         RecordingLogApi,
-        { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
-        {
-          provide: CPS_RUM_CREDENTIALS_PROVIDER,
-          useClass: StubCredentialsProvider
-        }
+        { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi }
       ]
     });
   }
-
-  it('should wire the RUM sink for a standalone deployment', () => {
-    configure('rum');
-    expect(TestBed.inject(CpsTelemetrySink)).toBeInstanceOf(
-      CpsRumTelemetrySink
-    );
-  });
 
   it('should wire the forwarding sink for an embedded deployment', () => {
     configure('broadcast');
@@ -286,36 +219,18 @@ describe('provideCpsTelemetrySink', () => {
     ).toBeNull();
   });
 
-  describe('leaves application code unchanged across modes', () => {
-    let consoleWarn: jest.SpyInstance;
+  it.each(['broadcast', 'noop'] as CpsTelemetryLocalSinkMode[])(
+    'should leave application code unchanged in %s mode',
+    (mode) => {
+      configure(mode);
+      const scenario = TestBed.inject(CpsScenarioTelemetryService).start({
+        name: 'add-to-cart'
+      });
 
-    beforeAll(() => {
-      consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-    });
-
-    afterAll(() => {
-      consoleWarn.mockRestore();
-    });
-
-    it.each(['rum', 'broadcast', 'noop'] as CpsTelemetrySinkMode[])(
-      'should leave application code unchanged in %s mode',
-      (mode) => {
-        configure(mode);
-        const scenario = TestBed.inject(CpsScenarioTelemetryService).start({
-          name: 'add-to-cart'
-        });
-
-        expect(() => scenario.step('one').complete()).not.toThrow();
-        expect(scenario.status).toBe('success');
-      }
-    );
-
-    it('should report the rum-mode scenario above as lost, not silently dropped', () => {
-      expect(consoleWarn).toHaveBeenCalledWith(
-        expect.stringContaining('RUM event(s) lost')
-      );
-    });
-  });
+      expect(() => scenario.step('one').complete()).not.toThrow();
+      expect(scenario.status).toBe('success');
+    }
+  );
 });
 
 describe('provideCpsTelemetryBroadcastHost', () => {

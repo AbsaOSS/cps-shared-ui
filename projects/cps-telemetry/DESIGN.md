@@ -104,14 +104,31 @@ swapped out in production and stubbed in tests.
 
 ### Entry points
 
-Just one: `cps-telemetry`. The public barrel lists its exports one by one
-rather than re-exporting whole modules — this is a published package, so
-every exported name is a permanent compatibility promise. Id generation, the
-clock, the fail-open wrappers, user timings, and the broadcast channel
-plumbing all stay internal, so they can change freely without a breaking
-release. Redaction is the exception: an author writing a custom sink needs
-`cpsRedactMetadata`, `cpsNormalizeError`, `cpsScrubString` and
-`cpsRedactConfigFor`, so those are exported.
+Two: `cps-telemetry` and `cps-telemetry/rum`. Both barrels list their
+exports one by one rather than re-exporting whole modules — this is a
+published package, so every exported name is a permanent compatibility
+promise. Id generation, the clock, the fail-open wrappers, user timings,
+and the broadcast channel plumbing all stay internal, so they can change
+freely without a breaking release. Redaction is the exception: an author
+writing a custom sink needs `cpsRedactMetadata`, `cpsNormalizeError`,
+`cpsScrubString` and `cpsRedactConfigFor`, so those are exported.
+
+`CpsRumTelemetrySink`, `provideCpsTelemetryRumSink`, and everything
+`CpsRumCredentialsProvider`-shaped live in `cps-telemetry/rum`, not the main
+entry point. `aws-rum-web` is an optional peer dependency: a bundler
+resolves every statically-imported module in a file's graph unconditionally,
+and a dynamic `import()`'s specifier at build time regardless of whether
+that code path runs — so keeping `CpsRumTelemetrySink` (and its
+`await import('aws-rum-web')`) out of the main entry point's module graph is
+what keeps `aws-rum-web` resolvable only for code that imports
+`cps-telemetry/rum`. An app calling only
+`provideCpsTelemetrySink('broadcast' | 'noop')` never needs it.
+
+`cps-telemetry/rum` carries its own private copy of
+`cpsSafe`/`cpsSafeVoid`/`cpsIsBrowser`/`cpsIsDevMode`/`cpsUuid`. ng-packagr
+fixes every entry point's `rootDir` to its own `src` directory (see its own
+`tsconfig.js`), so `cps-telemetry/rum` cannot reach the main entry point's
+internal utilities by relative import.
 
 **Test doubles are not shipped, and do not get their own folder or file.** A
 `RecordingSink` or `ThrowingSink` is declared inline, at the top of whichever
@@ -1170,8 +1187,8 @@ JSDoc — see the README for a worked example of the advanced fields.
 
 Optional providers, each isolating a dependency:
 
-- `provideCpsTelemetrySink('rum')` — the only thing that pulls in
-  `aws-rum-web`
+- `provideCpsTelemetryRumSink()`, from the `cps-telemetry/rum` entry point —
+  the only thing that pulls in `aws-rum-web`
 
 Nothing pulls in `@angular/router` at all, so it is not a peer dependency.
 
@@ -1348,13 +1365,18 @@ call leaves application code unaffected.
 ### Bootstrap
 
 ```ts
+import {
+  provideCpsTelemetryRumSink,
+  CPS_RUM_CREDENTIALS_PROVIDER
+} from 'cps-telemetry/rum';
+
 providers: [
   provideCpsTelemetry({
     application: 'composition',
     environment: 'production',
     version: packageJson.version
   }),
-  provideCpsTelemetrySink('rum'),
+  provideCpsTelemetryRumSink(),
   {
     provide: CPS_RUM_CREDENTIALS_PROVIDER,
     useExisting: AppRumCredentialsProvider
@@ -1454,7 +1476,7 @@ AWS RUM client.
 ```mermaid
 flowchart LR
     subgraph shell [Shell realm]
-      S["provideCpsTelemetrySink('rum')"] --> R[AwsRum]
+      S[provideCpsTelemetryRumSink] --> R[AwsRum]
       H[provideCpsTelemetryBroadcastHost]
       H --> S
     end
@@ -1473,7 +1495,7 @@ flowchart LR
 // shell
 providers: [
   provideCpsTelemetry({ application: 'shell', environment: 'prod', version }),
-  provideCpsTelemetrySink('rum'),
+  provideCpsTelemetryRumSink(),
   provideCpsTelemetryBroadcastHost()
 ];
 
@@ -1536,7 +1558,7 @@ wrong by symmetry:
 
 | Not in a fragment                    | Why                                                                                                  |
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetrySink('rum')`     | A second AWS client, which is exactly the situation this whole arrangement exists to prevent         |
+| `provideCpsTelemetryRumSink()`       | A second AWS client, which is exactly the situation this whole arrangement exists to prevent         |
 | `CPS_RUM_CREDENTIALS_PROVIDER`       | Without a RUM sink there is nothing to authenticate                                                  |
 | `provideCpsTelemetryBroadcastHost()` | Two hosts elect one leader and idle the other (§13) — still wasted setup, not a reason to rely on it |
 
@@ -1544,8 +1566,10 @@ wrong by symmetry:
 
 A fragment shipped both ways needs a different sink in each: forwarding
 when embedded, its own client when it is the whole page.
-`provideCpsTelemetrySink` takes that as a mode — `'rum' | 'broadcast' |
-'noop'` — read from the deployment's own configuration.
+`provideCpsTelemetrySink('broadcast')` covers forwarding;
+`provideCpsTelemetryRumSink()`, from the separate `cps-telemetry/rum` entry
+point, covers a standalone deployment's own client. Which one applies is
+read from the deployment's own configuration.
 
 Runtime detection was considered and rejected. A realm cannot tell
 synchronously whether a shell is listening; the identity handshake takes a
@@ -1557,7 +1581,7 @@ something to be discovered at runtime — it is a deployment fact, and
 configuration states facts exactly.
 
 The trade is one line of conditional configuration in the fragment.
-Application code is unchanged across all three modes.
+Application code is unchanged either way.
 
 ### Behaviour without a host
 

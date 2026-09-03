@@ -3,26 +3,24 @@ import { inject, Injectable, OnDestroy } from '@angular/core';
 import type { AwsRum, AwsRumConfig } from 'aws-rum-web';
 import {
   CPS_REDACT_CONFIG,
-  CPS_TELEMETRY_IDENTITY
-} from '../../../config/cps-telemetry-common.config/cps-telemetry-common.config';
-import {
+  CPS_TELEMETRY_IDENTITY,
   CpsTelemetryError,
-  CpsTelemetryMetadata
-} from '../../../models/cps-telemetry-common.models/cps-telemetry-common.models';
-import { cpsNormalizeError } from '../../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
+  CpsTelemetryMetadata,
+  CpsTelemetrySink,
+  cpsNormalizeError
+} from 'cps-telemetry';
 import {
   cpsIsBrowser,
   cpsIsDevMode,
   cpsSafe,
   cpsSafeVoid,
   cpsUuid
-} from '../../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
+} from '../cps-rum-internal.util/cps-rum-internal.util';
 import {
   CPS_RUM_CREDENTIALS_PROVIDER,
   CpsRumBootstrap,
   CpsRumCredentials
 } from '../cps-rum-credentials/cps-rum-credentials';
-import { CpsTelemetrySink } from '../../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 
 /** Refresh credentials this long before they expire. */
 const CREDENTIAL_REFRESH_SKEW_MS = 5 * 60 * 1000;

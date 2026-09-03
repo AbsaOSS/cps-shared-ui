@@ -3,14 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import {
   CPS_DEFAULT_TELEMETRY_CONFIG,
   CPS_REDACT_CONFIG,
+  CPS_TELEMETRY_EVENT_TYPE,
   CPS_TELEMETRY_IDENTITY
-} from '../../../config/cps-telemetry-common.config/cps-telemetry-common.config';
+} from 'cps-telemetry';
 import {
   CPS_RUM_CREDENTIALS_PROVIDER,
   CpsRumBootstrap
 } from '../cps-rum-credentials/cps-rum-credentials';
 import { CpsRumTelemetrySink } from './cps-rum-telemetry.sink';
-import { CPS_TELEMETRY_EVENT_TYPE } from '../../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 
 /** Stand-in for the real `AwsRum` client. */
 const awsRumInstance = {

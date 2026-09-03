@@ -23,12 +23,15 @@ npm install aws-rum-web
 ```ts
 import {
   CPS_LOG_API_PROVIDER,
-  CPS_RUM_CREDENTIALS_PROVIDER,
   provideCpsTelemetry,
   provideCpsTelemetrySink,
   withLogging,
   withScenarios
 } from 'cps-telemetry';
+import {
+  CPS_RUM_CREDENTIALS_PROVIDER,
+  provideCpsTelemetryRumSink
+} from 'cps-telemetry/rum';
 
 providers: [
   provideCpsTelemetry(
@@ -55,7 +58,10 @@ providers: [
 
   // Required. Both are chosen explicitly. There is no default destination,
   // so an app can never look wired up while actually shipping nothing.
-  provideCpsTelemetrySink('rum'), // 'rum' | 'broadcast' | 'noop'
+  // provideCpsTelemetryRumSink() (from 'cps-telemetry/rum') is the RUM sink;
+  // provideCpsTelemetrySink('broadcast' | 'noop') covers the other two —
+  // see "Two entry points" below for why RUM is split out.
+  provideCpsTelemetryRumSink(),
   { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend },
 
   // Optional.
@@ -65,6 +71,17 @@ providers: [
   }
 ];
 ```
+
+### Two entry points
+
+`CpsRumTelemetrySink`, `provideCpsTelemetryRumSink`, and everything
+`CpsRumCredentialsProvider`-shaped live in a separate secondary entry point,
+`cps-telemetry/rum`, not the main `cps-telemetry` barrel. That's so an app
+using only `'broadcast'`/`'noop'` never needs `aws-rum-web` (an optional peer
+dependency) resolvable at build time — importing anything from
+`cps-telemetry/rum` is what opts an app into that requirement. See
+[DESIGN.md §3, "Entry points"](./DESIGN.md#entry-points) for the full
+reasoning.
 
 Each concern is independently optional. An app that only configures logging
 never has to think about scenarios, BI events, or redaction. If you want to
@@ -696,7 +713,7 @@ Instead, one realm hosts and the rest forward to it over `BroadcastChannel`:
 // shell — owns the only AWS client
 providers: [
   provideCpsTelemetry({ application: 'shell', environment: 'prod', version }),
-  provideCpsTelemetrySink('rum'),
+  provideCpsTelemetryRumSink(),
   provideCpsTelemetryBroadcastHost()
 ];
 
@@ -740,7 +757,7 @@ bootstrapApplication(FragmentRoot, {
 
 | Do not                               | Why                                                                                                             |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetrySink('rum')`     | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid  |
+| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid  |
 | `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                     |
 | `provideCpsTelemetryBroadcastHost()` | Only one realm should host — a second one just wins or loses a leader election and idles either way (see below) |
 
@@ -766,27 +783,29 @@ providers: [
     eventNamespace: 'com.my-app'
   }),
 
-  provideCpsTelemetrySink(environment.embedded ? 'broadcast' : 'rum'),
+  environment.embedded
+    ? provideCpsTelemetrySink('broadcast')
+    : provideCpsTelemetryRumSink(),
 
-  // Used only in 'rum' mode; harmless when embedded.
+  // Used only when standalone; harmless when embedded.
   { provide: CPS_RUM_CREDENTIALS_PROVIDER, useExisting: CartRumCredentials }
 ];
 ```
 
-| Mode          | Sends to                                  | Needs                                                |
-| ------------- | ----------------------------------------- | ---------------------------------------------------- |
-| `'broadcast'` | The shell's host, over `BroadcastChannel` | A shell running `provideCpsTelemetryBroadcastHost()` |
-| `'rum'`       | AWS CloudWatch RUM directly               | `CPS_RUM_CREDENTIALS_PROVIDER`                       |
-| `'noop'`      | Nowhere — everything runs, nothing ships  | Nothing. Useful for local development                |
+| Mode          | Sends to                                                        | Needs                                                |
+| ------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| `'broadcast'` | The shell's host, over `BroadcastChannel`                       | A shell running `provideCpsTelemetryBroadcastHost()` |
+| RUM           | AWS CloudWatch RUM directly, via `provideCpsTelemetryRumSink()` | `CPS_RUM_CREDENTIALS_PROVIDER`                       |
+| `'noop'`      | Nowhere — everything runs, nothing ships                        | Nothing. Useful for local development                |
 
 Use `provideCpsTelemetrySink('broadcast', { channelName })` if the shell uses
 a custom channel.
 
-Application code stays identical across all three modes, so nothing outside
-this provider list needs to be conditional. Note that in `'rum'` mode the
-fragment is a full telemetry client on its own — its own session, its own
-event budget. That is correct when it is the whole page, and exactly what
-you are trying to avoid when it is not.
+Application code stays identical across these modes, so nothing outside this
+provider list needs to be conditional. Note that in RUM mode the fragment is
+a full telemetry client on its own — its own session, its own event budget.
+That is correct when it is the whole page, and exactly what you are trying
+to avoid when it is not.
 
 Deciding this here, rather than probing at runtime, is deliberate: a fragment
 cannot tell synchronously whether a shell exists. Runtime detection would mean

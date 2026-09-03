@@ -8,7 +8,6 @@ import {
 import { CpsTelemetryBroadcastHost } from '../../sinks/cps-broadcast/cps-broadcast-host.service';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
-import { CpsRumTelemetrySink } from '../../sinks/cps-rum/cps-rum-telemetry.sink/cps-rum-telemetry.sink';
 import { CpsNoopTelemetrySink } from '../../sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import { CpsRedactConfig } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
@@ -159,13 +158,15 @@ export function withRedaction(
  *
  * @example
  * ```typescript
+ * import { provideCpsTelemetryRumSink, CPS_RUM_CREDENTIALS_PROVIDER } from 'cps-telemetry/rum';
+ *
  * providers: [
  *   provideCpsTelemetry(
  *     { application: 'composition', environment: 'prod', version: '22.0.0' },
  *     withLogging({ minLevel: 'warn' }),
  *     withScenarios({ maxSteps: 10 })
  *   ),
- *   provideCpsTelemetrySink('rum'),
+ *   provideCpsTelemetryRumSink(),
  *   { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogApiProvider },
  *
  *   { provide: CPS_RUM_CREDENTIALS_PROVIDER, useExisting: AppRumCredentials }
@@ -203,35 +204,39 @@ export function provideCpsTelemetry(
 }
 
 /**
- * Where a realm sends its telemetry.
+ * Where a realm sends its telemetry, selectable via
+ * {@link provideCpsTelemetrySink} without any optional peer dependency.
+ * AWS RUM isn't one of these — it lives in its own entry point; see
+ * {@link provideCpsTelemetryRumSink}.
  *
  * @group Types
  */
-export type CpsTelemetrySinkMode =
-  /** Straight to AWS CloudWatch RUM. Requires {@link CPS_RUM_CREDENTIALS_PROVIDER}. */
-  | 'rum'
+export type CpsTelemetryLocalSinkMode =
   /** To a shell realm running {@link provideCpsTelemetryBroadcastHost}. */
   | 'broadcast'
   /** Nowhere. Everything still runs; nothing is shipped. */
   | 'noop';
 
 /**
- * Binds the telemetry destination. Every application needs exactly one call.
+ * Binds the telemetry destination. Every application needs exactly one call
+ * — this one, or {@link provideCpsTelemetryRumSink} for the RUM sink.
  *
- * - `'rum'` creates the AWS client and starts it during application
- *   initialization, fire-and-forget. Requires
- *   {@link CPS_RUM_CREDENTIALS_PROVIDER}.
  * - `'broadcast'` forwards to a shell realm running
  *   {@link provideCpsTelemetryBroadcastHost}, on a channel both sides name
  *   identically.
  * - `'noop'` discards everything.
  *
+ * Sending straight to AWS CloudWatch RUM is `provideCpsTelemetryRumSink()`,
+ * imported from `cps-telemetry/rum` — a separate entry point, not a third
+ * mode here, so that an application using only `'broadcast'`/`'noop'` is
+ * never required to have the optional `aws-rum-web` peer resolvable at
+ * build time. See DESIGN.md §3, "Entry points".
+ *
  * @example
  * ```typescript
  * providers: [
  *   provideCpsTelemetry({ application: 'cart', environment, version }),
- *   provideCpsTelemetrySink(environment.embedded ? 'broadcast' : 'rum'),
- *   { provide: CPS_RUM_CREDENTIALS_PROVIDER, useExisting: CartRumCredentials }
+ *   provideCpsTelemetrySink(environment.embedded ? 'broadcast' : 'noop')
  * ]
  * ```
  *
@@ -242,23 +247,10 @@ export type CpsTelemetrySinkMode =
  * @group Utils
  */
 export function provideCpsTelemetrySink(
-  mode: CpsTelemetrySinkMode,
+  mode: CpsTelemetryLocalSinkMode,
   options?: { channelName?: string }
 ): EnvironmentProviders {
   switch (mode) {
-    case 'rum':
-      return makeEnvironmentProviders([
-        CpsRumTelemetrySink,
-        { provide: CpsTelemetrySink, useExisting: CpsRumTelemetrySink },
-        provideAppInitializer(() => {
-          // Not returned, so a slow or hung credential broker doesn't delay
-          // first paint.
-          inject(CpsRumTelemetrySink)
-            .init()
-            .catch(() => undefined);
-        })
-      ]);
-
     case 'broadcast':
       return makeEnvironmentProviders([
         CpsBroadcastTelemetrySink,
@@ -272,6 +264,9 @@ export function provideCpsTelemetrySink(
       return makeEnvironmentProviders([
         { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
       ]);
+
+    default:
+      throw new Error(`[cps-telemetry] Unknown sink mode "${mode}".`);
   }
 }
 
