@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   ViewChild,
@@ -8,10 +9,11 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TTCheckbox } from 'primeng/treetable';
+import { TTCheckbox } from '../../../../primeng-temp/treetable/public_api';
 import { CpsTreeTableRowSelectableDirective } from './cps-tree-table-row-selectable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<td [cpsTTRowSelectable]="value"></td>`,
   imports: [CpsTreeTableRowSelectableDirective]
 })
@@ -22,7 +24,10 @@ class TestHostComponent {
   value: unknown = 'row-1';
 }
 
-@Component({ template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ''
+})
 class VcrProbeComponent {
   readonly vcr = inject(ViewContainerRef);
 }

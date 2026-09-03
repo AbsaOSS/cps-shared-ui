@@ -10,7 +10,8 @@ import {
   Output,
   Self,
   type SimpleChanges,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
@@ -21,7 +22,10 @@ import {
   CpsMenuComponent,
   CpsMenuHideReason
 } from '../cps-menu/cps-menu.component';
-import { DatePicker, DatePickerModule } from 'primeng/datepicker';
+import {
+  DatePicker,
+  DatePickerModule
+} from '../../primeng-temp/datepicker/public_api';
 import {
   logMissingAriaLabelError,
   generateUniqueId
@@ -55,6 +59,7 @@ export type CpsDatepickerDateFormat =
   ],
   selector: 'cps-datepicker',
   templateUrl: './cps-datepicker.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-datepicker.component.scss']
 })
 export class CpsDatepickerComponent
@@ -88,7 +93,7 @@ export class CpsDatepickerComponent
    * Date format for displaying and parsing the date string.
    * @group Props
    */
-  @Input() dateFormat: CpsDatepickerDateFormat = 'MM/DD/YYYY';
+  @Input() dateFormat: CpsDatepickerDateFormat = 'DD/MM/YYYY';
 
   /**
    * Placeholder text. Defaults to the configured dateFormat.

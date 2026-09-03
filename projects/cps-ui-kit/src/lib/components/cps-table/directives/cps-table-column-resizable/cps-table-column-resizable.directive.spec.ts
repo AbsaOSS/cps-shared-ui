@@ -1,13 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ResizableColumn, Table, TableStyle } from 'primeng/table';
-import { BaseComponent } from 'primeng/basecomponent';
+import {
+  ResizableColumn,
+  Table,
+  TableStyle
+} from '../../../../primeng-temp/table/public_api';
+import { BaseComponent } from '../../../../primeng-temp/basecomponent/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 import { CpsTableColumnResizableDirective } from './cps-table-column-resizable.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<table>
     <thead>
       <tr>
@@ -354,6 +359,154 @@ describe('CpsTableColumnResizableDirective', () => {
       expect(mockTable.resizeTableCells).not.toHaveBeenCalled();
 
       nextTh.remove();
+    });
+  });
+
+  describe('resizer focus/blur/focusin listeners', () => {
+    it('should add the focused class when the resizer is focused', () => {
+      mockResizer.dispatchEvent(new Event('focus'));
+      expect(mockResizer.classList.contains('cps-col-resizer-focused')).toBe(
+        true
+      );
+    });
+
+    it('should remove the focused class when the resizer is blurred', () => {
+      mockResizer.classList.add('cps-col-resizer-focused');
+      mockResizer.dispatchEvent(new Event('blur'));
+      expect(mockResizer.classList.contains('cps-col-resizer-focused')).toBe(
+        false
+      );
+    });
+
+    it('should reset horizontal scroll on the th when the resizer receives focusin', () => {
+      const th = fixture.debugElement.query(By.css('th'))
+        .nativeElement as HTMLElement;
+      th.appendChild(mockResizer);
+      th.scrollLeft = 50;
+      const rafSpy = jest
+        .spyOn(window, 'requestAnimationFrame')
+        .mockImplementation((rafCallback: any) => {
+          rafCallback(0);
+          return 0;
+        });
+      const event = new Event('focusin', { bubbles: true });
+      Object.defineProperty(event, 'target', {
+        value: mockResizer,
+        configurable: true
+      });
+      th.dispatchEvent(event);
+      expect(rafSpy).toHaveBeenCalled();
+    });
+
+    it('should ignore focusin events not targeting the resizer', () => {
+      const th = fixture.debugElement.query(By.css('th'))
+        .nativeElement as HTMLElement;
+      const rafSpy = jest.spyOn(window, 'requestAnimationFrame');
+      const other = document.createElement('span');
+      const event = new Event('focusin', { bubbles: true });
+      Object.defineProperty(event, 'target', {
+        value: other,
+        configurable: true
+      });
+      th.dispatchEvent(event);
+      expect(rafSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('patched resizeTableCells', () => {
+    let headers: HTMLElement[];
+    let thead: HTMLElement;
+    let tableEl: HTMLTableElement;
+
+    beforeEach(() => {
+      tableEl = document.createElement('table');
+      mockTable.tableViewChild = { nativeElement: tableEl };
+
+      thead = document.createElement('thead');
+      thead.setAttribute('data-pc-section', 'thead');
+      const tr = document.createElement('tr');
+      headers = [0, 1].map((i) => {
+        const th = document.createElement('th');
+        Object.defineProperty(th, 'offsetWidth', {
+          value: 100 + i,
+          configurable: true
+        });
+        tr.appendChild(th);
+        return th;
+      });
+      thead.appendChild(tr);
+      mockTable.el.nativeElement.innerHTML = '';
+      mockTable.el.nativeElement.appendChild(thead);
+
+      mockTable.resizeColumnElement = headers[0];
+    });
+
+    it('should fall back to the original implementation when the table or thead element is missing', () => {
+      mockTable.tableViewChild = { nativeElement: null as any };
+      expect(() => mockTable.resizeTableCells(120, null)).not.toThrow();
+      expect(tableEl.style.tableLayout).toBe('');
+    });
+
+    it('should return early when there is no resizeColumnElement', () => {
+      mockTable.resizeColumnElement = null;
+      expect(() => mockTable.resizeTableCells(120, null)).not.toThrow();
+    });
+
+    it('should return early when the resize column is not among the headers', () => {
+      mockTable.resizeColumnElement = document.createElement('th');
+      expect(() => mockTable.resizeTableCells(120, null)).not.toThrow();
+    });
+
+    it('should resize the target column width and switch to fixed table layout', () => {
+      mockTable.resizeTableCells(150, null);
+      expect(headers[0].style.width).toBe('150px');
+      expect(tableEl.style.tableLayout).toBe('fixed');
+    });
+
+    it('should revert to the original widths when the resized offsetWidth did not change (jsdom has no real layout)', () => {
+      mockTable.resizeTableCells(150, 80);
+      expect(headers[0].style.width).toBe('100px');
+      expect(headers[1].style.width).toBe('101px');
+    });
+  });
+
+  describe('patched onColumnResize', () => {
+    it('should do nothing further when there is no resize indicator', () => {
+      mockTable.resizeHelperViewChild = null;
+      expect(() =>
+        mockTable.onColumnResize(new Event('mousemove'))
+      ).not.toThrow();
+    });
+
+    it('should position the resize indicator relative to its offset parent', () => {
+      const indicator = document.createElement('div');
+      const ancestor = document.createElement('div');
+      ancestor.appendChild(indicator);
+      document.body.appendChild(ancestor);
+      Object.defineProperty(indicator, 'offsetParent', {
+        value: ancestor,
+        configurable: true
+      });
+      jest
+        .spyOn(ancestor, 'getBoundingClientRect')
+        .mockReturnValue({ top: 10 } as DOMRect);
+      const tableEl = document.createElement('table');
+      Object.defineProperty(tableEl, 'offsetHeight', {
+        value: 300,
+        configurable: true
+      });
+      jest
+        .spyOn(tableEl, 'getBoundingClientRect')
+        .mockReturnValue({ top: 60 } as DOMRect);
+      mockTable.tableViewChild = { nativeElement: tableEl };
+      mockTable.resizeHelperViewChild = { nativeElement: indicator };
+
+      mockTable.onColumnResize(new Event('mousemove'));
+
+      expect(indicator.style.top).toBe('50px');
+      expect(indicator.style.height).toBe('300px');
+
+      document.body.removeChild(ancestor);
     });
   });
 

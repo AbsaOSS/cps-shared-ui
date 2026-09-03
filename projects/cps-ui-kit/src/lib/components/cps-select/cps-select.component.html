@@ -99,7 +99,10 @@
                 class="chips-group"
                 role="list"
                 aria-label="Selected options">
-                @for (val of value; track val) {
+                @for (
+                  val of value;
+                  track returnObject ? (val?.[optionValue] ?? val) : val
+                ) {
                   <cps-chip
                     role="listitem"
                     closeButtonAriaLabel="Remove"
@@ -202,7 +205,11 @@
               </span>
             </div>
           }
-          @for (item of options; track item; let itemIdx = $index) {
+          @for (
+            item of options;
+            track item?.[optionValue] ?? item;
+            let itemIdx = $index
+          ) {
             <ng-container
               *ngTemplateOutlet="
                 itemTemplate;

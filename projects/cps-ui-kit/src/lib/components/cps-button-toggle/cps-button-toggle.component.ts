@@ -13,7 +13,8 @@ import {
   Output,
   Renderer2,
   Self,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { isEqual } from 'lodash-es';
@@ -58,6 +59,7 @@ export type CpsButtonToggleOption = {
   providers: [CheckOptionSelectedPipe],
   selector: 'cps-button-toggle',
   templateUrl: './cps-button-toggle.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-button-toggle.component.scss']
 })
 export class CpsButtonToggleComponent

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -9,11 +8,12 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
 /**
@@ -21,9 +21,10 @@ import { logMissingAriaLabelError } from '../../utils/internal/accessibility-uti
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsInfoCircleComponent],
+  imports: [CpsInfoCircleComponent],
   selector: 'cps-switch',
   templateUrl: './cps-switch.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-switch.component.scss']
 })
 export class CpsSwitchComponent
@@ -100,6 +101,12 @@ export class CpsSwitchComponent
 
   private _value = false;
 
+  /**
+   * True after the first user interaction. Used to disable the initial
+   * slide/color transition for pre-checked or programmatically-set values.
+   */
+  ready = false;
+
   @ViewChild('switchInput')
   switchInput?: ElementRef<HTMLInputElement>;
 
@@ -135,6 +142,11 @@ export class CpsSwitchComponent
     this.value = value;
   }
 
+  onLabelClick() {
+    if (this.disabled) return;
+    this.switchInput?.nativeElement?.click();
+  }
+
   updateValueEvent(event: any) {
     event.preventDefault();
     if (this.disabled) return;
@@ -142,6 +154,7 @@ export class CpsSwitchComponent
   }
 
   private _updateValue(value: boolean) {
+    this.ready = true;
     this.writeValue(value);
     this.onChange(value);
     this.valueChanged.emit(value);

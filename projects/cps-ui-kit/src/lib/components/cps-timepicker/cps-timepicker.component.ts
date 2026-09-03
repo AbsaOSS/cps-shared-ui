@@ -9,9 +9,9 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule, NgControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
@@ -19,7 +19,7 @@ import {
   CpsButtonToggleOption
 } from '../cps-button-toggle/cps-button-toggle.component';
 import { CpsAutocompleteComponent } from '../cps-autocomplete/cps-autocomplete.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import {
   generateUniqueId,
@@ -44,13 +44,13 @@ export interface CpsTime {
 @Component({
   selector: 'cps-timepicker',
   imports: [
-    CommonModule,
     FormsModule,
     CpsButtonToggleComponent,
     CpsAutocompleteComponent,
     CpsInfoCircleComponent
   ],
   templateUrl: './cps-timepicker.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-timepicker.component.scss']
 })
 export class CpsTimepickerComponent

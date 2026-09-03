@@ -11,11 +11,12 @@ import {
   Renderer2,
   ViewChild,
   inject,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   CpsIconComponent,
-  type IconType
+  type CpsIconType
 } from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
@@ -46,6 +47,7 @@ const transitionType = '0.2s cubic-bezier(0.4, 0, 0.2, 1)';
   selector: 'cps-expansion-panel',
   templateUrl: './cps-expansion-panel.component.html',
   styleUrls: ['./cps-expansion-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('panelHeader', [
       state(
@@ -129,7 +131,7 @@ export class CpsExpansionPanelComponent
    * Name of the icon in front of the title.
    * @group Props
    */
-  @Input() prefixIcon: IconType = '';
+  @Input() prefixIcon: CpsIconType = '';
 
   /**
    * Callback to invoke after a tab gets collapsed.

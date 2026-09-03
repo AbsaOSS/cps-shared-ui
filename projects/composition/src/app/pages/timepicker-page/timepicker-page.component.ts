@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CpsTime, CpsTimepickerComponent } from 'cps-ui-kit';
 import {
@@ -25,6 +25,7 @@ import { timepickerExamples } from './timepicker-page.examples';
   ],
   templateUrl: './timepicker-page.component.html',
   styleUrls: ['./timepicker-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TimepickerPageComponent implements OnInit {
@@ -42,6 +43,11 @@ export class TimepickerPageComponent implements OnInit {
     hours: '22',
     minutes: '59',
     seconds: '59'
+  };
+
+  mandatoryVal: CpsTime = {
+    hours: '09',
+    minutes: '30'
   };
 
   componentData = ComponentData;

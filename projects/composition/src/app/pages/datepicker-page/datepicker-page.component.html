@@ -50,7 +50,7 @@
       <cps-datepicker
         data-testid="restricted-datepicker"
         label="Datepicker with restricted date range"
-        hint="This datepicker has selectable dates from 01/01/2023 to 12/31/2025"
+        hint="This datepicker has selectable dates from 01/01/2023 to 31/12/2025"
         [showTodayButton]="false"
         [value]="defaultDate"
         [clearable]="true"
@@ -73,9 +73,9 @@
       label="Custom date format"
       [htmlCode]="examples.customDateFormat.html">
       <cps-datepicker
-        label="Datepicker with DD/MM/YYYY date format"
+        label="Datepicker with MM/DD/YYYY date format"
         [clearable]="true"
-        dateFormat="DD/MM/YYYY">
+        dateFormat="MM/DD/YYYY">
       </cps-datepicker>
     </app-code-example>
 

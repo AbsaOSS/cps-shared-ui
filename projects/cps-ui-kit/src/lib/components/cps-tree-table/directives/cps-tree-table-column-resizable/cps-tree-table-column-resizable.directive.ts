@@ -1,5 +1,5 @@
 import { Directive, Input, inject } from '@angular/core';
-import { TTResizableColumn } from 'primeng/treetable';
+import { TTResizableColumn } from '../../../../primeng-temp/treetable/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**
@@ -32,6 +32,11 @@ export class CpsTreeTableColumnResizableDirective extends TTResizableColumn {
     super.onAfterViewInit();
     if (this.isEnabled() && this.resizer) {
       this.renderer.setAttribute(this.resizer, 'tabindex', '0');
+      this.renderer.setAttribute(
+        this.resizer,
+        'data-testid',
+        'cps-treetable-col-resizer'
+      );
       this.renderer.setAttribute(this.resizer, 'role', 'separator');
       this.renderer.setAttribute(this.resizer, 'aria-orientation', 'vertical');
       this.renderer.setAttribute(this.resizer, 'aria-label', 'Column resizer');

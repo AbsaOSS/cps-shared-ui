@@ -5,7 +5,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -26,7 +26,8 @@ import {
   afterRenderEffect,
   inject,
   signal,
-  viewChildren
+  viewChildren,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsTabComponent } from './cps-tab/cps-tab.component';
@@ -38,12 +39,7 @@ import {
   prefersReducedMotion,
   REDUCED_MOTION_DURATION
 } from '../../utils/internal/motion-utils/motion-utils';
-import {
-  Subscription,
-  debounceTime,
-  distinctUntilChanged,
-  fromEvent
-} from 'rxjs';
+import { Subscription, debounceTime, fromEvent } from 'rxjs';
 
 /**
  * CpsTabChangeEvent is used to define the tab change event.
@@ -77,10 +73,11 @@ export type CpsTabsAlignmentType = 'left' | 'center' | 'right';
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsIconComponent, CpsTooltipDirective],
+  imports: [NgTemplateOutlet, CpsIconComponent, CpsTooltipDirective],
   selector: 'cps-tab-group',
   templateUrl: './cps-tab-group.component.html',
   styleUrls: ['./cps-tab-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('slideInOut', [
       state('slideLeft', style({ transform: 'translateX(0)' })),
@@ -258,7 +255,7 @@ export class CpsTabGroupComponent
     );
 
     this.windowResize$ = fromEvent(window, 'resize')
-      .pipe(debounceTime(50), distinctUntilChanged())
+      .pipe(debounceTime(50))
       .subscribe(() => this.onResize());
   }
 
@@ -276,8 +273,8 @@ export class CpsTabGroupComponent
     this._updateNavBtnsState();
 
     this.listScroll$ = fromEvent(this.tabsList.nativeElement, 'scroll')
-      .pipe(debounceTime(50), distinctUntilChanged())
-      .subscribe((event: any) => this.onScroll(event));
+      .pipe(debounceTime(50))
+      .subscribe(() => this.onScroll());
 
     this.cdRef.detectChanges();
   }
@@ -473,21 +470,23 @@ export class CpsTabGroupComponent
       }
     } else if (this.animationType === 'fade') {
       this.animationState = 'fadeOut';
-      setTimeout(() => {
-        this.animationState = 'fadeIn';
-        if (!silent) {
-          this.afterTabChanged.emit({
-            previousIndex: this._previousTabIndex,
-            newIndex: this._currentTabIndex
-          });
-        }
-      }, 100);
+      setTimeout(
+        () => {
+          this.animationState = 'fadeIn';
+          if (!silent) {
+            this.afterTabChanged.emit({
+              previousIndex: this._previousTabIndex,
+              newIndex: this._currentTabIndex
+            });
+          }
+        },
+        prefersReducedMotion() ? 1 : 100
+      );
     }
   }
 
-  onScroll(event: any) {
+  onScroll() {
     this._updateNavBtnsState();
-    event.preventDefault();
   }
 
   onResize() {

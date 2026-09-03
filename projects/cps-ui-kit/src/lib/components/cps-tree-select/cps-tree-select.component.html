@@ -1,14 +1,16 @@
 <div
   [style.width]="cvtWidth"
   class="cps-treeselect"
+  data-testid="cps-treeselect"
   [class.disabled]="disabled"
   [class.error]="error">
   @if (label) {
-    <div class="cps-treeselect-label">
-      <label>{{ label }}</label>
+    <div class="cps-treeselect-label" data-testid="cps-treeselect-label">
+      <label data-testid="cps-treeselect-label-text">{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
           class="cps-treeselect-label-info-circle"
+          data-testid="cps-treeselect-info-circle"
           size="xsmall"
           [tooltipPosition]="infoTooltipPosition"
           [tooltipContentClass]="infoTooltipClass"
@@ -21,6 +23,7 @@
   }
   <div
     class="cps-treeselect-container"
+    data-testid="cps-treeselect-container"
     [tabindex]="disabled ? -1 : 0"
     [class.focused]="isOpened"
     [class.persistent-clear]="persistentClear"
@@ -41,13 +44,18 @@
     (keydown)="onKeyDown($event)"
     (focus)="onFocus()"
     (blur)="onBlur()">
-    <div class="cps-treeselect-box" #boxEl (click)="onBoxClick()">
+    <div
+      class="cps-treeselect-box"
+      data-testid="cps-treeselect-box"
+      #boxEl
+      (click)="onBoxClick()">
       <div class="cps-treeselect-box-left">
         @if (prefixIcon) {
           <cps-icon
             [icon]="prefixIcon"
             [style.color]="disabled ? '#9a9595' : null"
             [size]="prefixIconSize"
+            data-testid="cps-treeselect-prefix-icon"
             class="prefix-icon">
           </cps-icon>
         }
@@ -55,7 +63,9 @@
           (!treeSelection && !multiple) ||
           (treeSelection?.length < 1 && multiple)
         ) {
-          <div class="cps-treeselect-box-placeholder">
+          <div
+            class="cps-treeselect-box-placeholder"
+            data-testid="cps-treeselect-placeholder">
             {{ placeholder }}
           </div>
         }
@@ -65,11 +75,22 @@
         ) {
           <div class="cps-treeselect-box-items">
             @if (!multiple) {
-              <span class="single-item"> {{ treeSelection.label }}</span>
+              <span
+                class="single-item"
+                data-testid="cps-treeselect-selected-value">
+                {{ treeSelection.label }}</span
+              >
             }
             @if (multiple && !chips) {
-              <div class="text-group" role="list" aria-label="Selected options">
-                <span class="text-group-item" role="listitem">
+              <div
+                class="text-group"
+                data-testid="cps-treeselect-text-group"
+                role="list"
+                aria-label="Selected options">
+                <span
+                  class="text-group-item"
+                  data-testid="cps-treeselect-selected-text-item"
+                  role="listitem">
                   {{
                     treeSelection
                       | combineLabels: innerOptions : '' : 'label' : true
@@ -80,9 +101,10 @@
             @if (multiple && chips) {
               <div
                 class="chips-group"
+                data-testid="cps-treeselect-chips-group"
                 role="list"
                 aria-label="Selected options">
-                @for (val of treeSelection; track val) {
+                @for (val of treeSelection; track val.key) {
                   <cps-chip
                     role="listitem"
                     closeButtonAriaLabel="Remove"
@@ -101,6 +123,7 @@
         @if (clearable && !disabled) {
           <span
             role="button"
+            data-testid="cps-treeselect-clear-icon"
             aria-label="Clear selection"
             [tabindex]="disabled ? -1 : 0"
             (click)="clear($event)"
@@ -122,6 +145,7 @@
         @if (showChevron) {
           <span
             class="cps-treeselect-box-chevron"
+            data-testid="cps-treeselect-chevron"
             role="button"
             [attr.aria-label]="isOpened ? 'Collapse options' : 'Expand options'"
             [tabindex]="disabled ? -1 : 0"
@@ -147,6 +171,7 @@
       <div
         [id]="optionsTreeId"
         class="cps-treeselect-options"
+        data-testid="cps-treeselect-options"
         [class.arrow-navigating]="isArrowNavigating"
         [style.width.px]="boxWidthPx"
         (keydown)="onOptionsKeyDown($event)">
@@ -167,22 +192,35 @@
           [metaKeySelection]="multiple ? false : true"
           [selectionMode]="multiple ? 'multiple' : 'single'">
           <ng-template let-node pTemplate="directory">
-            <span class="cps-treeselect-directory-elem">{{ node.label }}</span>
+            <span
+              class="cps-treeselect-directory-elem"
+              [attr.data-testid]="'cps-treeselect-directory-elem-' + node.key"
+              >{{ node.label }}</span
+            >
           </ng-template>
           <ng-template let-node pTemplate="default">
-            <span class="cps-treeselect-option">
+            <span
+              class="cps-treeselect-option"
+              [attr.data-testid]="'cps-treeselect-option-' + node.key">
               <span class="cps-treeselect-option-left">
                 @if (multiple) {
-                  <span class="cps-treeselect-option-check"> </span>
+                  <span
+                    class="cps-treeselect-option-check"
+                    [attr.data-testid]="
+                      'cps-treeselect-option-check-' + node.key
+                    ">
+                  </span>
                 }
                 <span
                   class="cps-treeselect-option-label"
+                  [attr.data-testid]="'cps-treeselect-option-label-' + node.key"
                   [class.virtual-row]="virtualScroll"
                   >{{ node.label }}</span
                 >
               </span>
               <span
                 class="cps-treeselect-option-info"
+                [attr.data-testid]="'cps-treeselect-option-info-' + node.key"
                 [class.virtual-row]="virtualScroll"
                 >{{ node.info }}</span
               >
@@ -197,12 +235,16 @@
         radius="0.25rem"
         opacity="0.3"
         class="cps-treeselect-progress-bar"
+        data-testid="cps-treeselect-loading-bar"
         bgColor="transparent">
       </cps-progress-linear>
     }
   </div>
   @if (!error && !hideDetails) {
-    <div [id]="hintId" class="cps-treeselect-hint">
+    <div
+      [id]="hintId"
+      class="cps-treeselect-hint"
+      data-testid="cps-treeselect-hint">
       {{ hint }}
     </div>
   }
@@ -210,6 +252,7 @@
     <div
       [id]="errorId"
       class="cps-treeselect-error"
+      data-testid="cps-treeselect-error"
       aria-live="polite"
       aria-atomic="true">
       {{ error }}

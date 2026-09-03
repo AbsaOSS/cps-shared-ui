@@ -15,9 +15,10 @@ import {
   PLATFORM_ID,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
@@ -26,7 +27,7 @@ import {
 } from '../../utils/internal/size-utils/size-utils';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
-import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
+import type { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import {
   generateUniqueId,
@@ -41,8 +42,9 @@ const RESIZE_STEP_REM = 1.5;
  */
 @Component({
   selector: 'cps-textarea',
-  imports: [CommonModule, CpsIconComponent, CpsInfoCircleComponent],
+  imports: [CpsIconComponent, CpsInfoCircleComponent],
   templateUrl: './cps-textarea.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-textarea.component.scss']
 })
 export class CpsTextareaComponent
@@ -215,13 +217,6 @@ export class CpsTextareaComponent
    * @group Emits
    */
   @Output() focused = new EventEmitter();
-
-  /**
-   * Callback to invoke when the prefixIcon is clicked.
-   * @param {any}
-   * @group Emits
-   */
-  @Output() prefixIconClicked = new EventEmitter();
 
   /**
    * Callback to invoke when the component loses focus.

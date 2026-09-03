@@ -1,6 +1,12 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsTextareaComponent } from './cps-textarea.component';
-import { FormsModule } from '@angular/forms';
+import {
+  FormsModule,
+  ReactiveFormsModule,
+  FormControl,
+  Validators
+} from '@angular/forms';
 
 describe('CpsTextareaComponent', () => {
   let component: CpsTextareaComponent;
@@ -303,6 +309,25 @@ describe('CpsTextareaComponent', () => {
       fixture.detectChanges();
       expect(component.maxHeightPx).toBeNull();
     });
+
+    it('should convert rem maxHeight into pixels', () => {
+      fixture.componentRef.setInput('maxHeight', '10rem');
+      fixture.detectChanges();
+      expect(component.maxHeightPx).toBe(160);
+    });
+
+    it('should convert em maxHeight into pixels', () => {
+      fixture.componentRef.setInput('maxHeight', '2em');
+      fixture.detectChanges();
+      expect(component.maxHeightPx).toBe(32);
+    });
+
+    it('should throw for an unsupported maxHeight unit', () => {
+      expect(() => {
+        fixture.componentRef.setInput('maxHeight', '50%');
+        fixture.detectChanges();
+      }).toThrow('Unsupported unit "%" for maxHeight.');
+    });
   });
 
   describe('resize handle keyboard interaction', () => {
@@ -356,6 +381,149 @@ describe('CpsTextareaComponent', () => {
       });
       component.onResizeHandleKeydown(event);
       expect(textarea.style.height).toBe('110px');
+    });
+
+    it('should ignore unrelated keys', () => {
+      textarea.style.height = '100px';
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        cancelable: true
+      });
+      component.onResizeHandleKeydown(event);
+      expect(textarea.style.height).toBe('100px');
+    });
+
+    it('should do nothing when the textarea element is not available', () => {
+      (component as any)._textareaEl = undefined;
+      const event = new KeyboardEvent('keydown', {
+        key: 'ArrowUp',
+        cancelable: true
+      });
+      expect(() => component.onResizeHandleKeydown(event)).not.toThrow();
+    });
+  });
+
+  describe('with NgControl (reactive forms)', () => {
+    @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
+      imports: [CpsTextareaComponent, ReactiveFormsModule],
+      template: `<cps-textarea
+        [formControl]="control"
+        ariaLabel="Textarea"></cps-textarea>`
+    })
+    class HostComponent {
+      control = new FormControl('', Validators.required);
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let textareaComponent: CpsTextareaComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      textareaComponent =
+        hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      textareaComponent.writeValue('hello');
+      textareaComponent.onChange('hello');
+      hostFixture.detectChanges();
+      expect(host.control.value).toBe('hello');
+    });
+
+    it('should report isRequired true when a required validator is present', () => {
+      expect(textareaComponent.isRequired).toBe(true);
+    });
+
+    it('should report isRequired false when no required validator is present', () => {
+      host.control.clearValidators();
+      host.control.updateValueAndValidity();
+      expect(textareaComponent.isRequired).toBe(false);
+    });
+
+    it('should recompute the error when the control status changes', () => {
+      host.control.markAsTouched();
+      host.control.updateValueAndValidity();
+      expect(textareaComponent.error).toBe('Field is required');
+    });
+
+    it('should not set an error when the control has not been touched', () => {
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe('');
+    });
+
+    it('should clear the error when the control becomes valid', () => {
+      host.control.markAsTouched();
+      host.control.setValue('some value');
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe('');
+    });
+
+    it('should set a pattern error message', () => {
+      host.control.setValidators(Validators.pattern(/^\d+$/));
+      host.control.setValue('abc');
+      host.control.markAsTouched();
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe('Value is invalid');
+    });
+
+    it('should set a minlength error message', () => {
+      host.control.setValidators(Validators.minLength(5));
+      host.control.setValue('ab');
+      host.control.markAsTouched();
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe(
+        'Field must contain at least 5 characters'
+      );
+    });
+
+    it('should set a maxlength error message', () => {
+      host.control.setValidators(Validators.maxLength(2));
+      host.control.setValue('abcdef');
+      host.control.markAsTouched();
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe(
+        'Field must contain 2 characters maximum'
+      );
+    });
+
+    it('should use a custom string error message when present', () => {
+      host.control.setValidators(() => ({ custom: 'Custom failure' }));
+      host.control.updateValueAndValidity();
+      host.control.markAsTouched();
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe('Custom failure');
+    });
+
+    it('should fall back to "Unknown error" for non-string error values', () => {
+      host.control.setValidators(() => ({ custom: true }));
+      host.control.updateValueAndValidity();
+      host.control.markAsTouched();
+      textareaComponent.onBlur();
+      expect(textareaComponent.error).toBe('Unknown error');
+    });
+
+    it('should mark the control as touched and emit focused on focus', () => {
+      jest.spyOn(textareaComponent.focused, 'emit');
+      expect(host.control.touched).toBe(false);
+      textareaComponent.onFocus();
+      expect(host.control.touched).toBe(true);
+      expect(textareaComponent.focused.emit).toHaveBeenCalled();
+    });
+
+    it('should prioritize the error id in describedBy over the hint id', () => {
+      textareaComponent.hint = 'Some hint';
+      host.control.markAsTouched();
+      textareaComponent.onBlur();
+      expect(textareaComponent.describedBy).toBe(textareaComponent.errorId);
     });
   });
 });

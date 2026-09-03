@@ -1,3 +1,4 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsSwitchComponent } from './cps-switch.component';
 import { FormsModule } from '@angular/forms';
@@ -136,6 +137,24 @@ describe('CpsSwitchComponent', () => {
     expect(component.value).toBe(false);
   });
 
+  describe('onLabelClick', () => {
+    it('should click the switch input when not disabled', () => {
+      const input = fixture.nativeElement.querySelector('input');
+      jest.spyOn(input, 'click');
+      component.onLabelClick();
+      expect(input.click).toHaveBeenCalled();
+    });
+
+    it('should do nothing when disabled', () => {
+      fixture.componentRef.setInput('disabled', true);
+      fixture.detectChanges();
+      const input = fixture.nativeElement.querySelector('input');
+      jest.spyOn(input, 'click');
+      component.onLabelClick();
+      expect(input.click).not.toHaveBeenCalled();
+    });
+  });
+
   describe('accessibility', () => {
     it('should have role="switch" on the input', () => {
       const input = fixture.nativeElement.querySelector('input');
@@ -163,6 +182,42 @@ describe('CpsSwitchComponent', () => {
       fixture.detectChanges();
       const input = fixture.nativeElement.querySelector('input');
       expect(input.getAttribute('aria-label')).toBe('aria wins');
+    });
+  });
+
+  describe('with NgControl (ngModel)', () => {
+    @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
+      imports: [CpsSwitchComponent, FormsModule],
+      template: `<cps-switch
+        [(ngModel)]="value"
+        ariaLabel="Toggle switch"></cps-switch>`
+    })
+    class HostComponent {
+      value = false;
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let switchDebugComponent: CpsSwitchComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      hostFixture.detectChanges();
+      switchDebugComponent =
+        hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      const input = hostFixture.nativeElement.querySelector('input');
+      input.click();
+      hostFixture.detectChanges();
+      expect(hostFixture.componentInstance.value).toBe(true);
+      expect(switchDebugComponent.value).toBe(true);
     });
   });
 });

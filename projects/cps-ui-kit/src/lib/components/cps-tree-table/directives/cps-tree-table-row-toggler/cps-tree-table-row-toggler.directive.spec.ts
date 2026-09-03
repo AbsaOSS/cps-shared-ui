@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ComponentRef,
   ViewChild,
@@ -8,10 +9,11 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TreeTableToggler } from 'primeng/treetable';
+import { TreeTableToggler } from '../../../../primeng-temp/treetable/public_api';
 import { CpsTreetableRowTogglerDirective } from './cps-tree-table-row-toggler.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<td [cpsTTRowToggler]="rowNode">
     <span class="cell-content">Content</span>
   </td>`,
@@ -24,7 +26,10 @@ class TestHostComponent {
   rowNode: unknown = { node: { data: 'row-1' } };
 }
 
-@Component({ template: '' })
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  template: ''
+})
 class VcrProbeComponent {
   readonly vcr = inject(ViewContainerRef);
 }
@@ -174,6 +179,12 @@ describe('CpsTreetableRowTogglerDirective', () => {
       fixture.detectChanges();
       const passedNode = mockTogglerRef.setInput.mock.calls.at(-1)![1];
       expect(passedNode.expanded).toBe(false);
+    });
+
+    it('should not call setInput when the change set does not include rowNode', () => {
+      mockTogglerRef.setInput.mockClear();
+      directive.ngOnChanges({});
+      expect(mockTogglerRef.setInput).not.toHaveBeenCalled();
     });
   });
 

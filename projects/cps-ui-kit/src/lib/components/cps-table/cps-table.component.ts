@@ -17,14 +17,22 @@ import {
 } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Table, TableService, TableModule } from 'primeng/table';
-import type { TablePassThrough } from 'primeng/types/table';
-import type { PaginatorPassThrough } from 'primeng/types/paginator';
-import { SortEvent } from 'primeng/api';
+import {
+  Table,
+  TableService,
+  TableModule
+} from '../../primeng-temp/table/public_api';
+import type { TablePassThrough } from '../../primeng-temp/types/table/public_api';
+import type { PaginatorPassThrough } from '../../primeng-temp/types/paginator/public_api';
+import { SortEvent } from '../../primeng-temp/api/public_api';
+import { ObjectUtils } from '../../primeng-temp/utils/public_api';
 import { CpsInputComponent } from '../cps-input/cps-input.component';
 import { CpsButtonComponent } from '../cps-button/cps-button.component';
 import { CpsSelectComponent } from '../cps-select/cps-select.component';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
 import { CpsLoaderComponent } from '../cps-loader/cps-loader.component';
 import { TableRowMenuComponent } from './components/internal/table-row-menu/table-row-menu.component';
@@ -215,6 +223,12 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() loading = false;
 
   /**
+   * Text shown alongside the loader while `loading` is true.
+   * @group Props
+   */
+  @Input() loadingLabel = 'Loading...';
+
+  /**
    * Inline style of the table.
    * @group Props
    */
@@ -279,7 +293,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * Toolbar icon name.
    * @group Props
    */
-  @Input() toolbarIcon = '';
+  @Input() toolbarIcon: CpsIconType = '';
 
   /**
    * Toolbar icon color.
@@ -435,7 +449,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * AdditionalBtnOnSelect icon.
    * @group Props
    */
-  @Input() additionalBtnOnSelectIcon = '';
+  @Input() additionalBtnOnSelectIcon: CpsIconType = '';
 
   /**
    * Determines whether additionalBtnOnSelect is disabled.
@@ -459,7 +473,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
    * Action button icon.
    * @group Props
    */
-  @Input() actionBtnIcon = '';
+  @Input() actionBtnIcon: CpsIconType = '';
 
   /**
    * Determines whether actionBtn is disabled.
@@ -776,7 +790,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   private _buildTablePassthrough(): TablePassThrough {
     const pt: TablePassThrough = {};
-    if (!this.virtualScroll && this.scrollHeight) {
+    if (!this.virtualScroll) {
       pt.tableContainer = { tabindex: 0 };
     }
     if (this.paginator) {
@@ -867,6 +881,16 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   clearGlobalFilter() {
     this.globalFilterComp?.clear();
+  }
+
+  rowTestKey(item: any, rowIndex: number): string {
+    if (this.dataKey) {
+      const resolved = ObjectUtils.resolveFieldData(item, this.dataKey);
+      if (resolved !== null && resolved !== undefined && resolved !== '') {
+        return String(resolved);
+      }
+    }
+    return `${rowIndex}`;
   }
 
   onSelectionChanged(selection: any[]) {

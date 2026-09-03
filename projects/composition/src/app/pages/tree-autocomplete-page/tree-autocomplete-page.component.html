@@ -6,6 +6,7 @@
     [tsCode]="examples.requiredTreeAutocomplete.ts">
     <form [formGroup]="form">
       <cps-tree-autocomplete
+        data-testid="required-tree-autocomplete"
         label="Required single tree autocomplete with a tooltip"
         [options]="options"
         optionLabel="label"
@@ -19,10 +20,39 @@
   </app-code-example>
 
   <app-code-example
+    label="Tree autocomplete with expand/collapse all controls"
+    [htmlCode]="examples.expandCollapseTreeAutocomplete.html"
+    [tsCode]="examples.expandCollapseTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      #expandCollapseTreeAutocompleteRef
+      data-testid="expand-collapse-tree-autocomplete"
+      label="Tree autocomplete with expand/collapse all controls"
+      [options]="options"
+      optionLabel="label"
+      optionInfo="attrType"
+      placeholder="Select element"
+      [clearable]="true">
+    </cps-tree-autocomplete>
+    <div class="tree-autocomplete-actions">
+      <cps-button
+        data-testid="expand-all-tree-autocomplete-btn"
+        label="Expand All"
+        (clicked)="expandCollapseTreeAutocompleteRef.expandAll()"></cps-button>
+      <cps-button
+        data-testid="collapse-all-tree-autocomplete-btn"
+        label="Collapse All"
+        (clicked)="
+          expandCollapseTreeAutocompleteRef.collapseAll()
+        "></cps-button>
+    </div>
+  </app-code-example>
+
+  <app-code-example
     label="Loading tree autocomplete"
     [htmlCode]="examples.loadingTreeAutocomplete.html"
     [tsCode]="examples.loadingTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="loading-tree-autocomplete"
       label="Loading tree autocomplete"
       [loading]="true"
       [options]="options"
@@ -35,6 +65,7 @@
     label="Disabled tree autocomplete"
     [htmlCode]="examples.disabledTreeAutocomplete.html">
     <cps-tree-autocomplete
+      data-testid="disabled-tree-autocomplete"
       label="Disabled tree autocomplete"
       [disabled]="true"
       hint="This tree autocomplete is disabled">
@@ -46,6 +77,7 @@
     [htmlCode]="examples.multipleTreeAutocomplete.html"
     [tsCode]="examples.multipleTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="multiple-tree-autocomplete"
       label="Multiple tree autocomplete"
       [options]="options"
       optionLabel="label"
@@ -63,6 +95,7 @@
     [htmlCode]="examples.virtualScrollTreeAutocomplete.html"
     [tsCode]="examples.virtualScrollTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="virtual-scroll-tree-autocomplete"
       label="Multiple tree autocomplete with virtual scroll, chips and persistent clear icon"
       [options]="options"
       optionLabel="label"
@@ -81,6 +114,7 @@
     [htmlCode]="examples.nonClosableChipsTreeAutocomplete.html"
     [tsCode]="examples.nonClosableChipsTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="non-closable-chips-tree-autocomplete"
       label="Multiple tree autocomplete with non-closable chips"
       [options]="options"
       optionInfo="attrType"
@@ -97,6 +131,7 @@
     [htmlCode]="examples.prefixIconTreeAutocomplete.html"
     [tsCode]="examples.prefixIconTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="prefix-icon-tree-autocomplete"
       label="Multiple tree autocomplete with prefix icon"
       [options]="options"
       optionInfo="attrType"
@@ -114,6 +149,7 @@
     [tsCode]="examples.twoWayBindingTreeAutocomplete.ts">
     <div class="sync-val-example">
       <cps-tree-autocomplete
+        data-testid="two-way-binding-tree-autocomplete"
         [initialExpandDirectories]="true"
         width="31.25rem"
         label="Single tree autocomplete with two-way binding, enter something"
@@ -195,7 +231,11 @@
         appearance="borderless"
         prefixIcon="search">
       </cps-tree-autocomplete>
-      <span class="sync-val">{{ syncVal?.label }}</span>
+      <span
+        class="sync-val"
+        data-testid="two-way-binding-tree-autocomplete-value"
+        >{{ syncVal?.label }}</span
+      >
     </div>
   </app-code-example>
 
@@ -204,6 +244,7 @@
     [htmlCode]="examples.underlinedTreeAutocomplete.html"
     [tsCode]="examples.underlinedTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="underlined-tree-autocomplete"
       label="Underlined tree autocomplete"
       [options]="options"
       optionInfo="attrType"
@@ -220,6 +261,7 @@
     [htmlCode]="examples.borderlessTreeAutocomplete.html"
     [tsCode]="examples.borderlessTreeAutocomplete.ts">
     <cps-tree-autocomplete
+      data-testid="borderless-tree-autocomplete"
       label="Borderless tree autocomplete"
       [options]="options"
       optionInfo="attrType"
@@ -228,6 +270,57 @@
       [chips]="false"
       appearance="borderless"
       prefixIcon="search">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Unlabeled tree autocomplete with an accessible name"
+    [htmlCode]="examples.ariaLabelTreeAutocomplete.html"
+    [tsCode]="examples.ariaLabelTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      data-testid="aria-label-tree-autocomplete"
+      ariaLabel="Select an item"
+      [options]="options">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Tree autocomplete with hidden hint/error details"
+    [htmlCode]="examples.hideDetailsTreeAutocomplete.html"
+    [tsCode]="examples.hideDetailsTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      data-testid="hide-details-tree-autocomplete"
+      label="Tree autocomplete with hidden hint/error details"
+      hint="You should not see this hint"
+      [options]="options"
+      [hideDetails]="true">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Tree autocomplete with openOnClear disabled"
+    [htmlCode]="examples.openOnClearFalseTreeAutocomplete.html"
+    [tsCode]="examples.openOnClearFalseTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      data-testid="open-on-clear-false-tree-autocomplete"
+      label="Tree autocomplete with openOnClear disabled"
+      hint="Clearing this tree autocomplete will not reopen the dropdown"
+      [options]="options"
+      [value]="options[1].children[0]"
+      [clearable]="true"
+      [openOnClear]="false">
+    </cps-tree-autocomplete>
+  </app-code-example>
+
+  <app-code-example
+    label="Tree autocomplete with a custom empty message"
+    [htmlCode]="examples.emptyMessageTreeAutocomplete.html"
+    [tsCode]="examples.emptyMessageTreeAutocomplete.ts">
+    <cps-tree-autocomplete
+      data-testid="empty-message-tree-autocomplete"
+      label="Type something that won't match to see the custom message"
+      [options]="options"
+      emptyMessage="Nothing matches your search">
     </cps-tree-autocomplete>
   </app-code-example>
 </app-component-docs-viewer>

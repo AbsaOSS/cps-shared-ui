@@ -269,10 +269,12 @@ export class CpsTooltipDirective implements OnDestroy {
       this._domSanitizer.sanitize(SecurityContext.HTML, this.tooltip()) ||
       'Add your text to this tooltip';
     popupContent.className = this.tooltipContentClass();
+    popupContent.setAttribute('data-testid', 'cps-tooltip-content');
     this._popup.appendChild(popupContent);
     this._popup.classList.add('cps-tooltip');
     this._popup.style.maxWidth = convertSize(this.tooltipMaxWidth());
     this._popup.setAttribute('role', 'tooltip');
+    this._popup.setAttribute('data-testid', 'cps-tooltip');
     this._document.body.appendChild(this._popup);
     this._ariaTarget?.setAttribute(
       'aria-description',
@@ -301,8 +303,27 @@ export class CpsTooltipDirective implements OnDestroy {
       this._popup.addEventListener('keydown', this._onPopupKeydown);
     }
 
-    this.window.addEventListener('scroll', this._onScrollDestroy, true);
+    this._attachScrollDestroyWhenSettled();
   };
+
+  // Focusing the target can trigger the browser's own smooth-scroll-into-view,
+  // which fires scroll events for several frames. Attaching the destroy
+  // listener before that settles would self-destroy the tooltip we just opened.
+  private _attachScrollDestroyWhenSettled(): void {
+    let lastX = this.window.scrollX;
+    let lastY = this.window.scrollY;
+    const checkIfSettled = (): void => {
+      if (!this._popup) return;
+      if (this.window.scrollX !== lastX || this.window.scrollY !== lastY) {
+        lastX = this.window.scrollX;
+        lastY = this.window.scrollY;
+        requestAnimationFrame(checkIfSettled);
+      } else {
+        this.window.addEventListener('scroll', this._onScrollDestroy, true);
+      }
+    };
+    requestAnimationFrame(checkIfSettled);
+  }
 
   private _destroyTooltip = (destroyImmediately?: boolean): void => {
     this.window.removeEventListener('scroll', this._onScrollDestroy, true);

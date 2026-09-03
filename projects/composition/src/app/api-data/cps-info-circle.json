@@ -9,7 +9,7 @@
                         "name": "size",
                         "optional": false,
                         "readonly": false,
-                        "type": "iconSizeType",
+                        "type": "CpsIconSizeType",
                         "default": "small",
                         "description": "Size of the icon, it can be of type number denoting pixels, string or 'fill', 'xsmall', 'small', 'normal' or 'large'."
                     },

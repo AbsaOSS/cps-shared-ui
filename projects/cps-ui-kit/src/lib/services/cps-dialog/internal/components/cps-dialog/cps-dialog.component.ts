@@ -28,16 +28,19 @@ import {
   ViewEncapsulation,
   ViewRef
 } from '@angular/core';
-import { SharedModule } from 'primeng/api';
-import { DomHandler } from 'primeng/dom';
-import { ZIndexUtils } from 'primeng/utils';
-import { PrimeNG } from 'primeng/config';
+import { SharedModule } from '../../../../../primeng-temp/api/public_api';
+import { DomHandler } from '../../../../../primeng-temp/dom/public_api';
+import { ZIndexUtils } from '../../../../../primeng-temp/utils/public_api';
+import { PrimeNG } from '../../../../../primeng-temp/config/public_api';
 import {
   convertSize,
   parseSize
 } from '../../../../../utils/internal/size-utils/size-utils';
 import { CpsDialogContentDirective } from '../../directives/cps-dialog-content.directive';
-import { CpsDialogConfig } from '../../../utils/cps-dialog-config';
+import {
+  CPS_DIALOG_CONFIG,
+  CpsDialogConfig
+} from '../../../utils/cps-dialog-config';
 import { CpsDialogRef } from '../../../utils/cps-dialog-ref/cps-dialog-ref';
 import { CpsButtonComponent } from '../../../../../components/cps-button/cps-button.component';
 import { CpsInfoCircleComponent } from '../../../../../components/cps-info-circle/cps-info-circle.component';
@@ -81,7 +84,7 @@ const MIN_DRAG_VISIBLE_REM = 3;
       transition('visible => void', [useAnimation(hideAnimation)])
     ])
   ],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None
 })
 export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -239,7 +242,7 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
     private _dialogRef: CpsDialogRef,
     private _cdRef: ChangeDetectorRef,
     public renderer: Renderer2,
-    public config: CpsDialogConfig,
+    @Inject(CPS_DIALOG_CONFIG) public config: CpsDialogConfig,
     public zone: NgZone,
     public primeNG: PrimeNG
   ) {}

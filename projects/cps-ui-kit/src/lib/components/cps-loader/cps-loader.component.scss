@@ -36,6 +36,7 @@ $color-inner: var(--cps-color-energy);
         width: 5.625rem;
 
         &-circle {
+          box-sizing: border-box;
           border-left: 0.3125rem solid;
           border-top-left-radius: 100%;
           border-top: 0.3125rem solid;

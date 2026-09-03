@@ -1,11 +1,17 @@
-import { ChangeDetectorRef, Component, Input, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  Optional,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { FormsModule, NgControl } from '@angular/forms';
 import { CpsIconComponent } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CombineLabelsPipe } from '../../pipes/internal/combine-labels/combine-labels.pipe';
-import { TreeModule } from 'primeng/tree';
+import { TreeModule } from '../../primeng-temp/tree/public_api';
 import { CpsMenuComponent } from '../cps-menu/cps-menu.component';
 import { CpsBaseTreeDropdownComponent } from '../internal/cps-base-tree-dropdown/cps-base-tree-dropdown.component';
 
@@ -34,6 +40,7 @@ export type CpsTreeSelectAppearanceType =
   providers: [CombineLabelsPipe],
   selector: 'cps-tree-select',
   templateUrl: './cps-tree-select.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-tree-select.component.scss']
 })
 export class CpsTreeSelectComponent extends CpsBaseTreeDropdownComponent {

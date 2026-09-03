@@ -9,5 +9,13 @@
     "inlineSources": true,
     "types": []
   },
-  "exclude": ["**/*.spec.ts", "**/*.cy.ts"]
+  "exclude": ["**/*.spec.ts", "**/*.cy.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
 }

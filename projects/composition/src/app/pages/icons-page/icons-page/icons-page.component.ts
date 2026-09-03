@@ -1,11 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsIconComponent,
   CpsInputComponent,
   CpsNotificationPosition,
   CpsNotificationService,
-  iconNames
+  cpsIconNames,
+  type CpsIconType
 } from 'cps-ui-kit';
 
 import ComponentData from '../../../api-data/cps-icon.json';
@@ -24,17 +30,18 @@ import { iconsExamples } from './icons-page.examples';
   selector: 'app-icons-page',
   templateUrl: './icons-page.component.html',
   styleUrls: ['./icons-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class IconsPageComponent implements OnInit {
-  filteredIconsList: string[] = [];
+  filteredIconsList: CpsIconType[] = [];
   componentData = ComponentData;
   readonly examples = iconsExamples;
 
   private _notificationService = inject(CpsNotificationService);
 
   ngOnInit() {
-    this.filteredIconsList = iconNames;
+    this.filteredIconsList = [...cpsIconNames];
   }
 
   onSearchChanged(value: string) {
@@ -43,7 +50,7 @@ export class IconsPageComponent implements OnInit {
 
   private _filterIcons(name: string) {
     name = name.toLowerCase();
-    this.filteredIconsList = iconNames.filter((n) =>
+    this.filteredIconsList = cpsIconNames.filter((n) =>
       n.toLowerCase().includes(name)
     );
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -24,6 +24,7 @@ import { selectExamples } from './select-page.examples';
   selector: 'app-select-page',
   templateUrl: './select-page.component.html',
   styleUrls: ['./select-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class SelectPageComponent implements OnInit {

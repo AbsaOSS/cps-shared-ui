@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FilterMetadata } from 'primeng/api';
-import { Table } from 'primeng/table';
+import { FilterMetadata } from '../../../../../primeng-temp/api/public_api';
+import { Table } from '../../../../../primeng-temp/table/public_api';
 import { TableColumnFilterConstraintComponent } from './table-column-filter-constraint.component';
 import { CpsColumnFilterCategoryOption } from '../../../cps-column-filter-types';
 
@@ -138,6 +138,26 @@ describe('TableColumnFilterConstraintComponent', () => {
         { status: 'Active' },
         { status: 'Inactive' }
       ];
+      fixture.componentRef.setInput('type', 'category');
+      fixture.componentRef.setInput('field', 'status');
+      fixture.detectChanges();
+      expect(component.categories).toEqual([
+        { label: 'Active', value: 'Active' },
+        { label: 'Inactive', value: 'Inactive' }
+      ]);
+    });
+
+    it('should recursively derive categories from TreeTable node data (including children)', () => {
+      const mockTreeTable = {
+        value: [
+          {
+            data: { status: 'Active' },
+            children: [{ data: { status: 'Inactive' }, children: [] }]
+          },
+          { data: { status: 'Active' } }
+        ]
+      };
+      component._tableInstance = mockTreeTable as any;
       fixture.componentRef.setInput('type', 'category');
       fixture.componentRef.setInput('field', 'status');
       fixture.detectChanges();

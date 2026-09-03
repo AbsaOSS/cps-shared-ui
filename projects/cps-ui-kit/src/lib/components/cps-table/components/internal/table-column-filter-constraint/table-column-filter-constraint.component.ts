@@ -3,13 +3,17 @@ import {
   Input,
   OnChanges,
   Optional,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-import { FilterMetadata, TreeNode } from 'primeng/api';
-import { Table } from 'primeng/table';
-import { TreeTable } from 'primeng/treetable';
+import {
+  FilterMetadata,
+  TreeNode
+} from '../../../../../primeng-temp/api/public_api';
+import { Table } from '../../../../../primeng-temp/table/public_api';
+import { TreeTable } from '../../../../../primeng-temp/treetable/public_api';
 import { CpsInputComponent } from '../../../../cps-input/cps-input.component';
 import { CpsDatepickerComponent } from '../../../../cps-datepicker/cps-datepicker.component';
 import {
@@ -35,6 +39,7 @@ import {
     CpsAutocompleteComponent
   ],
   templateUrl: './table-column-filter-constraint.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./table-column-filter-constraint.component.scss']
 })
 export class TableColumnFilterConstraintComponent implements OnChanges {

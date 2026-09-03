@@ -14,7 +14,8 @@ import {
   Output,
   Self,
   ViewChild,
-  type SimpleChanges
+  type SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -30,8 +31,8 @@ import {
 } from '../../utils/internal/accessibility-utils/accessibility-utils';
 import {
   CpsIconComponent,
-  iconSizeType,
-  IconType
+  type CpsIconSizeType,
+  type CpsIconType
 } from '../cps-icon/cps-icon.component';
 import { CpsChipComponent } from '../cps-chip/cps-chip.component';
 import { CpsProgressLinearComponent } from '../cps-progress-linear/cps-progress-linear.component';
@@ -47,7 +48,10 @@ import {
   CpsMenuComponent,
   CpsMenuHideReason
 } from '../cps-menu/cps-menu.component';
-import { Scroller, ScrollerModule } from 'primeng/scroller';
+import {
+  Scroller,
+  ScrollerModule
+} from '../../primeng-temp/scroller/public_api';
 
 /**
  * CpsSelectAppearanceType is used to define the border of the select input.
@@ -79,6 +83,7 @@ const VIRTUAL_SCROLL_MAX_VISIBLE_ITEMS = 5.5;
   providers: [LabelByValuePipe, CombineLabelsPipe, CheckOptionSelectedPipe],
   selector: 'cps-select',
   templateUrl: './cps-select.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-select.component.scss']
 })
 export class CpsSelectComponent
@@ -220,13 +225,13 @@ export class CpsSelectComponent
    * Icon before input value.
    * @group Props
    */
-  @Input() prefixIcon: IconType = '';
+  @Input() prefixIcon: CpsIconType = '';
 
   /**
    * Size of icon before input value.
    * @group Props
    */
-  @Input() prefixIconSize: iconSizeType = '1.125rem';
+  @Input() prefixIconSize: CpsIconSizeType = '1.125rem';
 
   /**
    * When enabled, a loading bar is displayed.

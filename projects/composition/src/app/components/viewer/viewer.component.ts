@@ -3,7 +3,8 @@ import {
   Component,
   DestroyRef,
   OnInit,
-  inject
+  inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, Scroll } from '@angular/router';
@@ -12,6 +13,7 @@ import { DOCUMENT } from '@angular/common';
 
 @Component({
   template: '',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export abstract class ViewerComponent implements OnInit, AfterViewInit {

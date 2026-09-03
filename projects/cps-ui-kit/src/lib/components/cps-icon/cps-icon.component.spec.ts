@@ -1,6 +1,6 @@
 import { SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CpsIconComponent, ICONS_PATH } from './cps-icon.component';
+import { CpsIconComponent, CPS_ICONS_PATH } from './cps-icon.component';
 import { CommonModule } from '@angular/common';
 
 describe('CpsIconComponent', () => {
@@ -41,6 +41,7 @@ describe('CpsIconComponent', () => {
       expect(host.getAttribute('role')).toBe('img');
       expect(host.getAttribute('aria-label')).toBe('Warning icon');
       expect(host.getAttribute('aria-hidden')).toBeNull();
+      expect(component.ariaLabel).toBe('Warning icon');
     });
 
     it('should restore decorative state when ariaLabel is cleared', () => {
@@ -84,13 +85,13 @@ describe('CpsIconComponent', () => {
   });
 
   describe('Test assets path injection', () => {
-    it('should use default path when no ICONS_PATH is provided', () => {
+    it('should use default path when no CPS_ICONS_PATH is provided', () => {
       createComponent();
       expect(component.url).toBe('assets/');
     });
 
-    it('should use injected ICONS_PATH value', () => {
-      TestBed.overrideProvider(ICONS_PATH, {
+    it('should use injected CPS_ICONS_PATH value', () => {
+      TestBed.overrideProvider(CPS_ICONS_PATH, {
         useValue: 'test-assets/'
       });
       createComponent();

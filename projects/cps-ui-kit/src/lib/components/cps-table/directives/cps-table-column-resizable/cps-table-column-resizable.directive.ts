@@ -1,5 +1,5 @@
 import { Directive, Input, inject } from '@angular/core';
-import { ResizableColumn } from 'primeng/table';
+import { ResizableColumn } from '../../../../primeng-temp/table/public_api';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../../../services/cps-root-font-size/cps-root-font-size.service';
 
 /**
@@ -32,6 +32,11 @@ export class CpsTableColumnResizableDirective extends ResizableColumn {
     super.onAfterViewInit();
     if (this.isEnabled() && this.resizer) {
       this.renderer.setAttribute(this.resizer, 'tabindex', '0');
+      this.renderer.setAttribute(
+        this.resizer,
+        'data-testid',
+        'cps-table-col-resizer'
+      );
       this.renderer.setAttribute(this.resizer, 'role', 'separator');
       this.renderer.setAttribute(this.resizer, 'aria-orientation', 'vertical');
       this.renderer.setAttribute(this.resizer, 'aria-label', 'Column resizer');

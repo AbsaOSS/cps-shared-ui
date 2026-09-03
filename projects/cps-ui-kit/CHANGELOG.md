@@ -1,5 +1,62 @@
 # Changelog
 
+## [22.0.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.30.0...v22.0.0) (2026-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* v22 major update ([#849](https://github.com/AbsaOSS/cps-shared-ui/issues/849))
+
+### Features
+
+* change default date format in the CpsDatepickerComponent to DD/MM/YYYY ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* delete box-sizing global override ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* make icon type a restricted string union ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* remove dead prefixIconClicked output from CpsTextareaComponent ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* remove primeng/@primeuix/* dependencies and vendor MIT-licensed source ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* replace CpsDialogConfig class with interface + InjectionToken ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+* v22 major update ([#849](https://github.com/AbsaOSS/cps-shared-ui/issues/849)) ([8922e07](https://github.com/AbsaOSS/cps-shared-ui/commit/8922e077fc3090702b8218ccb7c9496b866fa192))
+
+## [21.30.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.3...v21.30.0) (2026-08-20)
+
+
+### Features
+
+* add test id to icon component ([6b38984](https://github.com/AbsaOSS/cps-shared-ui/commit/6b38984934a973e36f2e9ee444a82ad2bbddb1cd))
+* add test id to info circle component ([11d9d3f](https://github.com/AbsaOSS/cps-shared-ui/commit/11d9d3f78c44a802b9503d73ec0030967f873a04))
+* add test id to progress circular component ([3d0baff](https://github.com/AbsaOSS/cps-shared-ui/commit/3d0baff9bde5f9c3eb9c7c42fcf66bbb797fb4a3))
+* add test ids to autocomplete component and fix openOnClear prop ([2bc4fa0](https://github.com/AbsaOSS/cps-shared-ui/commit/2bc4fa0f1d38b9df39d148d3977855b144942e91))
+* add test ids to button component ([b467b7f](https://github.com/AbsaOSS/cps-shared-ui/commit/b467b7faa810d7e1aa023ea13d53a70812a89824))
+* add test ids to button toggle component ([94d71d7](https://github.com/AbsaOSS/cps-shared-ui/commit/94d71d7029d1f615896a9333d673dadd904b4afc))
+* add test ids to checkbox component ([3e80458](https://github.com/AbsaOSS/cps-shared-ui/commit/3e804580fc901a6585120a6c64ab75ecd657ed3a))
+* add test ids to chip component ([aafeead](https://github.com/AbsaOSS/cps-shared-ui/commit/aafeead0ea3a93e65a8eec45a041a46a13f78056))
+* add test ids to datepicker component ([73354b7](https://github.com/AbsaOSS/cps-shared-ui/commit/73354b79b7bea8b694b592105218e47dce881d25))
+* add test ids to dialog component ([4b05dc1](https://github.com/AbsaOSS/cps-shared-ui/commit/4b05dc1605537db397ccd3e18b3d39e5fd57cb32))
+* add test ids to divider component ([b87cf12](https://github.com/AbsaOSS/cps-shared-ui/commit/b87cf120a1e177defaed8ff489c1a8a5194d78a7))
+* add test ids to expansion panel component and fix header bottom border radius ([423a38d](https://github.com/AbsaOSS/cps-shared-ui/commit/423a38dd3dd4154b22b371218606f1b0dbdceb69))
+* add test ids to file upload component ([03fef05](https://github.com/AbsaOSS/cps-shared-ui/commit/03fef0571680cec5862ffc7e3ac239cac663a0e4))
+* add test ids to input component ([78a7767](https://github.com/AbsaOSS/cps-shared-ui/commit/78a776787ccb40efe2257fa163dbc161e3394345))
+* add test ids to loader component ([c60f884](https://github.com/AbsaOSS/cps-shared-ui/commit/c60f884a8dbbed91ed3481128d47fb11f8b933fb))
+* add test ids to menu component ([2a749fa](https://github.com/AbsaOSS/cps-shared-ui/commit/2a749fa6078e2d1dd136d1ef46e7b6539934b498))
+* add test ids to notifications ([66ca38a](https://github.com/AbsaOSS/cps-shared-ui/commit/66ca38a1593c39ac86b91672008e084ee1584e2f))
+* add test ids to paginator component ([f8ef663](https://github.com/AbsaOSS/cps-shared-ui/commit/f8ef66361387745fab978a70056798c03e545eed))
+* add test ids to progress linear component ([67f069d](https://github.com/AbsaOSS/cps-shared-ui/commit/67f069d3a0a1ce11b0d5b9960b8d9c25ef73621a))
+* add test ids to radio group and fix cps-radio forward focus/blur state to its parent cps-radio-group ([b66ab0c](https://github.com/AbsaOSS/cps-shared-ui/commit/b66ab0c63183d650e3bc7c92830bc9754f2d416b))
+* add test ids to scheduler component ([42c227a](https://github.com/AbsaOSS/cps-shared-ui/commit/42c227ac2106379d88d25815e0b10bfb67ebd93a))
+* add test ids to select component and fix openOnClear prop ([a37528b](https://github.com/AbsaOSS/cps-shared-ui/commit/a37528bd74bc40c1537ed1d4dfaf751fe65db52a))
+* add test ids to sidebar menu component and fix target and submenu opening ([84eb94c](https://github.com/AbsaOSS/cps-shared-ui/commit/84eb94c58909260a00387ed8a12705f120201a41))
+* add test ids to switch component and fix non-clickable label text and checked state flash on mount ([a8518b1](https://github.com/AbsaOSS/cps-shared-ui/commit/a8518b136c89fcf6fe0d3cf25f9a1c703d80436c))
+* add test ids to table component and fix mobile-viewport keyboard-accessibility gap in the table's scroll container, checked-checkbox icon color flicker on hover, unchecked checkbox border staying "active"-colored after a mouse click ([ba50ca1](https://github.com/AbsaOSS/cps-shared-ui/commit/ba50ca1790eab2b44dc110d8188bd938913cc6c7))
+* add test ids to tabs and fix icon-only tabs height and afterTabChange behavior in prefersReducedMotion case ([2398f11](https://github.com/AbsaOSS/cps-shared-ui/commit/2398f11c3f28f9f5ff62788599e5d81aa81bb346))
+* add test ids to tag component and fix unselected style winning over disabled ([dcbcd38](https://github.com/AbsaOSS/cps-shared-ui/commit/dcbcd38cdb849e18db7233f65b8257385f14f828))
+* add test ids to textarea component ([b2d30ec](https://github.com/AbsaOSS/cps-shared-ui/commit/b2d30ec924f72f99897f410398ae6506dd157b87))
+* add test ids to timepicker component ([00e90bc](https://github.com/AbsaOSS/cps-shared-ui/commit/00e90bc4abb293b3a0393dc0217abfede91dcce5))
+* add test ids to tooltip directive ([824e092](https://github.com/AbsaOSS/cps-shared-ui/commit/824e092d2f38bfd4d4dc6e1f07b77171a450bcae))
+* add test ids to tree autocomplete component and fix openOnClear behavior ([a4d48a4](https://github.com/AbsaOSS/cps-shared-ui/commit/a4d48a42e44da04c78989a0f93e391f8910f2f1a))
+* add test ids to tree select component and fix expandAll()/collapseAll() re-render ([8e4e6da](https://github.com/AbsaOSS/cps-shared-ui/commit/8e4e6da2374712b4c4dcc3785dec1ac732a2fd3b))
+* add test ids to tree table component and fix hardcoded subtab height limitation, checked-checkbox icon color flicker on hover, unchecked checkbox border staying "active"-colored after a mouse click, shadow-DOM measurement leak in the auto-layout column-sizing logic. ([6fb2c42](https://github.com/AbsaOSS/cps-shared-ui/commit/6fb2c42e2a8b795addbef0bdc6468a1c8487a3f9))
+* fix track by identity warning in cps-select, cps-tree-select and cps-tree-autocomplete ([62d46fa](https://github.com/AbsaOSS/cps-shared-ui/commit/62d46faf83013b0e9fa88d992c1be6fc4b920bf3))
+
 ## [21.29.3](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.29.2...v21.29.3) (2026-07-29)
 
 

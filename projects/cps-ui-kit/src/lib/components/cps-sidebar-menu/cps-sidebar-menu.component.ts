@@ -9,12 +9,16 @@ import {
   ViewChildren,
   computed,
   inject,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CpsMenuComponent, CpsMenuItem } from '../cps-menu/cps-menu.component';
-import { CpsIconComponent } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { convertSize } from '../../utils/internal/size-utils/size-utils';
 import {
   animate,
@@ -34,7 +38,7 @@ import {
  */
 export type CpsSidebarMenuItem = {
   title: string;
-  icon: string;
+  icon: CpsIconType;
   url?: string;
   target?: string;
   disabled?: boolean;
@@ -50,6 +54,7 @@ export type CpsSidebarMenuItem = {
   imports: [CommonModule, CpsMenuComponent, CpsIconComponent, RouterModule],
   templateUrl: './cps-sidebar-menu.component.html',
   styleUrls: ['./cps-sidebar-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('onExpand', [
       state(
@@ -125,6 +130,10 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
 
   private _pendingTouch = false;
 
+  // A click always fires mouseenter/focusin first, which would open the
+  // menu right before toggleMenu immediately closes it again. Consumed once.
+  private _openedByHoverOrFocus = false;
+
   onMenuItemTouchStart(): void {
     this._pendingTouch = true;
   }
@@ -156,6 +165,7 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
     }
     this.allMenus?.forEach((m) => m.hide());
     menu.show(null, event.currentTarget, 'tr');
+    this._openedByHoverOrFocus = true;
   }
 
   toggleMenu(
@@ -169,8 +179,13 @@ export class CpsSidebarMenuComponent implements AfterViewInit {
 
     this.focusedItemWithMenu = item;
     if (menu.isVisible()) {
-      menu.hide();
+      if (this._openedByHoverOrFocus) {
+        this._openedByHoverOrFocus = false;
+      } else {
+        menu.hide();
+      }
     } else {
+      this._openedByHoverOrFocus = false;
       this.allMenus?.forEach((m) => m.hide());
       menu.show(null, event.currentTarget as HTMLElement, 'tr');
     }

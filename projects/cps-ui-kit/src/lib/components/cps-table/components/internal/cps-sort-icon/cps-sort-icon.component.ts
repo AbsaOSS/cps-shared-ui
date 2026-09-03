@@ -7,8 +7,8 @@ import {
   OnInit,
   Optional
 } from '@angular/core';
-import { Table } from 'primeng/table';
-import { TreeTable } from 'primeng/treetable';
+import { Table } from '../../../../../primeng-temp/table/public_api';
+import { TreeTable } from '../../../../../primeng-temp/treetable/public_api';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,6 +21,7 @@ import { Subscription } from 'rxjs';
     tabindex: '0',
     role: 'button',
     '[attr.aria-label]': 'sortAriaLabel',
+    '[attr.data-testid]': "'cps-table-sort-icon-' + field",
     '(keydown.enter)': 'onKeydown($event)',
     '(keydown.space)': 'onKeydown($event)'
   }

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
 import {
   CpsMenuComponent,
@@ -12,6 +19,7 @@ import {
   selector: 'table-row-menu',
   imports: [CpsIconComponent, CpsMenuComponent],
   templateUrl: './table-row-menu.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./table-row-menu.component.scss']
 })
 export class TableRowMenuComponent implements OnInit {

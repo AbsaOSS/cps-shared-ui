@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CpsTagComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-tag.json';
@@ -17,10 +17,16 @@ import { tagExamples } from './tag-page.examples';
   selector: 'app-tag-page',
   templateUrl: './tag-page.component.html',
   styleUrls: ['./tag-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TagPageComponent {
   syncVal = true;
+  lastValueChanged = false;
   componentData = ComponentData;
   readonly examples = tagExamples;
+
+  onValueChanged(value: boolean) {
+    this.lastValueChanged = value;
+  }
 }

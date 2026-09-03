@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -6,7 +6,7 @@ import {
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
-import { CpsTreeSelectComponent } from 'cps-ui-kit';
+import { CpsButtonComponent, CpsTreeSelectComponent } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-tree-select.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
 import { CodeExampleComponent } from '../../components/code-example/code-example.component';
@@ -15,6 +15,7 @@ import { treeSelectExamples } from './tree-select-page.examples';
 @Component({
   imports: [
     CpsTreeSelectComponent,
+    CpsButtonComponent,
     FormsModule,
     ReactiveFormsModule,
     ComponentDocsViewerComponent,
@@ -23,6 +24,7 @@ import { treeSelectExamples } from './tree-select-page.examples';
   selector: 'app-tree-select-page',
   templateUrl: './tree-select-page.component.html',
   styleUrls: ['./tree-select-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TreeSelectPageComponent implements OnInit {

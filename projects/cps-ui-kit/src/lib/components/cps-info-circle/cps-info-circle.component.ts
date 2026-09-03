@@ -1,8 +1,11 @@
-import { Component, Input } from '@angular/core';
-import { CpsIconComponent, iconSizeType } from '../cps-icon/cps-icon.component';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  CpsIconComponent,
+  type CpsIconSizeType
+} from '../cps-icon/cps-icon.component';
 import {
   CpsTooltipDirective,
-  CpsTooltipPosition
+  type CpsTooltipPosition
 } from '../../directives/cps-tooltip/cps-tooltip.directive';
 
 /**
@@ -13,6 +16,7 @@ import {
   selector: 'cps-info-circle',
   imports: [CpsIconComponent, CpsTooltipDirective],
   templateUrl: './cps-info-circle.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-info-circle.component.scss']
 })
 export class CpsInfoCircleComponent {
@@ -20,7 +24,7 @@ export class CpsInfoCircleComponent {
    * Size of the icon, it can be of type number denoting pixels, string or 'fill', 'xsmall', 'small', 'normal' or 'large'.
    * @group Props
    */
-  @Input() size: iconSizeType = 'small';
+  @Input() size: CpsIconSizeType = 'small';
 
   /**
    * Tooltip text to provide more info.

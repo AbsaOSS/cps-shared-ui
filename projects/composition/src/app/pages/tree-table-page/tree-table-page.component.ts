@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   CpsTreeTableComponent,
@@ -14,7 +20,9 @@ import {
   CpsTreeTableSize,
   CpsMenuItem,
   CpsTreeTableColumnResizableDirective,
-  CpsIconComponent
+  CpsIconComponent,
+  CpsNotificationService,
+  CpsSwitchComponent
 } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-tree-table.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -37,14 +45,18 @@ import { DatePipe } from '@angular/common';
     CpsTabComponent,
     CpsButtonToggleComponent,
     CpsIconComponent,
+    CpsSwitchComponent,
     ComponentDocsViewerComponent,
     CodeExampleComponent
   ],
   templateUrl: './tree-table-page.component.html',
   styleUrls: ['./tree-table-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
-export class TreeTablePageComponent implements OnInit {
+export class TreeTablePageComponent implements OnInit, OnDestroy {
+  private readonly _notifService = inject(CpsNotificationService);
+
   readonly examples = treeTableExamples;
 
   selectedTabIndex = 0;
@@ -488,6 +500,8 @@ export class TreeTablePageComponent implements OnInit {
     }
   ];
 
+  initialColumnsVirtual = this.colsVirtual.slice(0, 3);
+
   colsHTML = [
     { field: 'a', header: 'Header A' },
     { field: 'b', header: 'Header B' },
@@ -538,9 +552,43 @@ export class TreeTablePageComponent implements OnInit {
     }
   ];
 
+  customSortData = [
+    { data: { name: 'Andrei', city: 'Tyumen' } },
+    { data: { name: 'Oleksandra', city: 'Kharkiv' } },
+    { data: { name: 'Lukas', city: 'Kosice' } },
+    { data: { name: 'Terrance', city: 'Johannesburg' } },
+    { data: { name: 'Michael', city: 'Nairobi' } }
+  ];
+
+  customSortCols = [
+    { field: 'name', header: 'Name' },
+    { field: 'city', header: 'City' }
+  ];
+
+  lazyData: any[] = [];
+  lazyTotalRecords = 0;
+  lazyLoading = false;
+  lazyRows = 10;
+  private _lazyLoadTimeout?: ReturnType<typeof setTimeout>;
+  private _lastLazyFirst = -1;
+  private _lastLazyRows = -1;
+
+  manyRecordsForPaginator = false;
+  private readonly _fewRecordsForPaginator = this.data.slice(0, 3);
+
+  get paginatorDemoData(): any[] {
+    return this.manyRecordsForPaginator
+      ? this.data
+      : this._fewRecordsForPaginator;
+  }
+
   ngOnInit(): void {
     this.selCols = this.colsWithFilterType;
     this._genVirtualData();
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this._lazyLoadTimeout);
   }
 
   private _genVirtualData() {
@@ -590,15 +638,15 @@ export class TreeTablePageComponent implements OnInit {
   onActionBtnClicked() {
     this.isRemoveBtnVisible = !this.isRemoveBtnVisible;
     const visibilityStatus = this.isRemoveBtnVisible ? 'visible' : 'hidden';
-    alert(`'Remove' buttons are now ${visibilityStatus}`);
+    this._notifService.info(`'Remove' buttons are now ${visibilityStatus}`);
   }
 
   onReloadBtnClicked() {
-    alert('Data reload button clicked');
+    this._notifService.info('Data reload button clicked');
   }
 
   onEditRowButtonClicked() {
-    alert('Edit row button clicked');
+    this._notifService.info('Edit row button clicked');
   }
 
   onRowsToRemove(rows: any) {
@@ -621,6 +669,40 @@ export class TreeTablePageComponent implements OnInit {
 
   onRowsSelectionChanged(rows: any) {
     console.log(rows);
+  }
+
+  onLazyLoad(event: { first?: number; rows?: number }) {
+    const first = event.first ?? 0;
+    const rows = event.rows ?? this.lazyRows;
+
+    if (first === this._lastLazyFirst && rows === this._lastLazyRows) return;
+    this._lastLazyFirst = first;
+    this._lastLazyRows = rows;
+
+    Promise.resolve().then(() => {
+      this.lazyLoading = true;
+      clearTimeout(this._lazyLoadTimeout);
+      this._lazyLoadTimeout = setTimeout(() => {
+        this.lazyTotalRecords = this.dataVirtual.length;
+        this.lazyData = this.dataVirtual.slice(first, first + rows);
+        this.lazyLoading = false;
+      }, 600);
+    });
+  }
+
+  onAdditionalBtnOnSelectClicked(rows: any[]) {
+    this._notifService.success(`Archive clicked for ${rows.length} row(s)`);
+  }
+
+  onCustomSort(event: { data: any[]; field?: string; order?: number }) {
+    const { data, field, order } = event;
+    if (!field) return;
+    data.sort((a, b) => {
+      const v1 = String(a.data[field] ?? '');
+      const v2 = String(b.data[field] ?? '');
+      const result = v1.length - v2.length || v1.localeCompare(v2);
+      return (order ?? 1) * result;
+    });
   }
 
   changeTab({ newIndex }: CpsTabChangeEvent) {

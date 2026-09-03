@@ -1,4 +1,4 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -10,12 +10,16 @@ import {
   Optional,
   Output,
   Self,
-  ViewChild
+  ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CpsInfoCircleComponent } from '../cps-info-circle/cps-info-circle.component';
 import { CpsTooltipPosition } from '../../directives/cps-tooltip/cps-tooltip.directive';
-import { CpsIconComponent, IconType } from '../cps-icon/cps-icon.component';
+import {
+  CpsIconComponent,
+  type CpsIconType
+} from '../cps-icon/cps-icon.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { logMissingAriaLabelError } from '../../utils/internal/accessibility-utils/accessibility-utils';
 
@@ -24,9 +28,10 @@ import { logMissingAriaLabelError } from '../../utils/internal/accessibility-uti
  * @group Components
  */
 @Component({
-  imports: [CommonModule, CpsInfoCircleComponent, CpsIconComponent],
+  imports: [CpsInfoCircleComponent, CpsIconComponent],
   selector: 'cps-checkbox',
   templateUrl: './cps-checkbox.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./cps-checkbox.component.scss']
 })
 export class CpsCheckboxComponent
@@ -84,7 +89,7 @@ export class CpsCheckboxComponent
    * Name of the icon.
    * @group Props
    */
-  @Input() icon: IconType = '';
+  @Input() icon: CpsIconType = '';
 
   /**
    * Color of the icon.

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CpsButtonComponent, CpsExpansionPanelComponent } from 'cps-ui-kit';
 
 import ComponentData from '../../api-data/cps-expansion-panel.json';
@@ -16,6 +16,7 @@ import { expansionPanelExamples } from './expansion-panel-page.examples';
   selector: 'app-expansion-panel-page',
   templateUrl: './expansion-panel-page.component.html',
   styleUrls: ['./expansion-panel-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class ExpansionPanelPageComponent {

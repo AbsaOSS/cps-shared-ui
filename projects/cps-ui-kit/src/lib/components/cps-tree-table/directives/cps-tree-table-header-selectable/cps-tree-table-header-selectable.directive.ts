@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewContainerRef
 } from '@angular/core';
-import { TTHeaderCheckbox } from 'primeng/treetable';
+import { TTHeaderCheckbox } from '../../../../primeng-temp/treetable/public_api';
 
 /**
  * CpsTreeTableHeaderSelectableDirective is a directive used to apply a checkbox to a header cell.
@@ -35,9 +35,12 @@ export class CpsTreeTableHeaderSelectableDirective
     this.checkboxCompRef.setInput('pt', {
       pcHeaderCheckbox: { input: { 'aria-label': 'Select all rows' } }
     });
-    this.elementRef.nativeElement.appendChild(
-      this.checkboxCompRef.location.nativeElement
+    const checkboxEl = this.checkboxCompRef.location.nativeElement;
+    checkboxEl.setAttribute(
+      'data-testid',
+      'cps-treetable-header-selectable-checkbox'
     );
+    this.elementRef.nativeElement.appendChild(checkboxEl);
   }
 
   ngOnDestroy(): void {

@@ -1,12 +1,14 @@
-<div class="cps-timepicker">
+<div class="cps-timepicker" data-testid="cps-timepicker">
   @if (label) {
     <div
       class="cps-timepicker-label"
-      [ngClass]="{ 'cps-timepicker-label-disabled': disabled }">
-      <label>{{ label }}</label>
+      data-testid="cps-timepicker-label"
+      [class.cps-timepicker-label-disabled]="disabled">
+      <label data-testid="cps-timepicker-label-text">{{ label }}</label>
       @if (infoTooltip) {
         <cps-info-circle
           class="cps-timepicker-label-info-circle"
+          data-testid="cps-timepicker-info-circle"
           size="xsmall"
           [tooltipPosition]="infoTooltipPosition"
           [tooltipContentClass]="infoTooltipClass"
@@ -19,11 +21,13 @@
   }
   <div
     class="cps-timepicker-body"
+    data-testid="cps-timepicker-body"
     role="group"
     [attr.aria-describedby]="describedBy"
     [attr.aria-label]="ariaLabel || label || null">
     <cps-autocomplete
       #hoursField
+      data-testid="cps-timepicker-hours"
       ariaLabel="Hours"
       (keypress)="numberOnly($event)"
       width="3.75rem"
@@ -38,13 +42,19 @@
       (focused)="onFieldFocus()"
       (blurred)="onFieldBlur()"
       [returnObject]="false"
-      [value]="value?.hours"
+      [value]="$safeNavigationMigration(value?.hours)"
       (valueChanged)="updateHours($event)"
       [externalError]="hoursError"
       placeholder="HH"></cps-autocomplete>
-    <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
+    <span
+      aria-hidden="true"
+      class="cps-timepicker-delimiter"
+      data-testid="cps-timepicker-delimiter-hm"
+      >:
+    </span>
     <cps-autocomplete
       #minutesField
+      data-testid="cps-timepicker-minutes"
       ariaLabel="Minutes"
       (keypress)="numberOnly($event)"
       width="3.75rem"
@@ -57,14 +67,20 @@
       (focused)="onFieldFocus()"
       (blurred)="onFieldBlur()"
       [returnObject]="false"
-      [value]="value?.minutes"
+      [value]="$safeNavigationMigration(value?.minutes)"
       (valueChanged)="updateMinutes($event)"
       [externalError]="minutesError"
       placeholder="MM"></cps-autocomplete>
     @if (withSeconds) {
-      <span aria-hidden="true" class="cps-timepicker-delimiter">:</span>
+      <span
+        aria-hidden="true"
+        class="cps-timepicker-delimiter"
+        data-testid="cps-timepicker-delimiter-ms"
+        >:
+      </span>
       <cps-autocomplete
         #secondsField
+        data-testid="cps-timepicker-seconds"
         ariaLabel="Seconds"
         (keypress)="numberOnly($event)"
         width="3.75rem"
@@ -77,7 +93,7 @@
         (focused)="onFieldFocus()"
         (blurred)="onFieldBlur()"
         [returnObject]="false"
-        [value]="value?.seconds"
+        [value]="$safeNavigationMigration(value?.seconds)"
         (valueChanged)="updateSeconds($event)"
         [externalError]="secondsError"
         placeholder="SS"></cps-autocomplete>
@@ -85,6 +101,7 @@
     @if (!use24HourTime) {
       <cps-button-toggle
         class="cps-timepicker-am-pm-selector"
+        data-testid="cps-timepicker-am-pm-selector"
         ariaLabel="Day period"
         [options]="dayPeriodOptions"
         [disabled]="disabled"
@@ -94,7 +111,10 @@
     }
   </div>
   @if (!error && !hideDetails) {
-    <div [id]="hintId" class="cps-timepicker-hint">
+    <div
+      [id]="hintId"
+      class="cps-timepicker-hint"
+      data-testid="cps-timepicker-hint">
       {{ hint }}
     </div>
   }
@@ -102,6 +122,7 @@
     <div
       [id]="errorId"
       class="cps-timepicker-error"
+      data-testid="cps-timepicker-error"
       aria-live="polite"
       aria-atomic="true">
       {{ error }}

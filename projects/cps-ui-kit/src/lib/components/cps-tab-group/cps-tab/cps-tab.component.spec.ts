@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsTabComponent } from './cps-tab.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [CpsTabComponent],
   template: `
@@ -156,10 +157,9 @@ describe('CpsTabComponent', () => {
     expect(component.content).toBeTruthy();
   });
 
-  it('should project content into the template', () => {
+  it('should not self-render projected content (only cps-tab-group renders the active tab content, via the captured TemplateRef)', () => {
     const projected = hostFixture.nativeElement.querySelector('.projected');
-    expect(projected).toBeTruthy();
-    expect(projected.textContent).toBe('Projected content');
+    expect(projected).toBeFalsy();
   });
 
   it('should log an error when both label and ariaLabel are empty', () => {

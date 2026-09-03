@@ -71,6 +71,66 @@ private _removeElementsByName(dataArray: any[], namesArray: string[]) {
   });
 }`;
 
+const notifServiceTs = `private readonly _notifService = inject(CpsNotificationService);`;
+
+const virtualColsAndDataTs = `
+colsVirtual = [
+  { field: 'name', header: 'Name' },
+  { field: 'size', header: 'Size' },
+  { field: 'tag', header: 'Tag' },
+  { field: 'type', header: 'String (only 5 distinct values)' },
+  { field: 'date', header: 'Date', dateFormat: 'dd. MM. yyyy' },
+  { field: 'sizeEven', header: 'Boolean' },
+  {
+    field: 'date2',
+    header: 'Date but with category filter',
+    filterType: 'category',
+    dateFormat: 'yyyy/MM/dd HH:mm:ss'
+  }
+];
+
+dataVirtual: any[] = [];
+
+ngOnInit(): void {
+  for (let i = 0; i <= 1000; i++) {
+    this.dataVirtual.push({
+      data: {
+        name: \`Folder\${i}\`,
+        size: i,
+        tag: i * 3,
+        type: \`Type-\${i % 5}\`,
+        date: new Date(2020, 1, i),
+        sizeEven: i % 2 === 0,
+        date2: new Date(2020, 1, i, 12, 30, 0)
+      },
+      children: [
+        {
+          data: {
+            name: 'primefaces.mkv',
+            size: 1000,
+            tag: 7,
+            type: \`Type-\${i % 5}\`,
+            date: new Date(2020, 1, i),
+            sizeEven: i % 2 === 0,
+            date2: new Date(2020, 1, i, 12, 30, 0)
+          }
+        },
+        {
+          data: {
+            name: 'intro.avi',
+            size: 500,
+            tag: 9,
+            type: \`Type-\${i % 5}\`,
+            date: new Date(2020, 1, i),
+            sizeEven: i % 2 === 0,
+            date2: new Date(2020, 1, i, 12, 30, 0)
+          }
+        }
+      ]
+    });
+  }
+}`;
+
 export const treeTableExamples: Record<string, { html: string; ts?: string }> =
   {
     treeTable1: {
@@ -169,62 +229,7 @@ export const treeTableExamples: Record<string, { html: string; ts?: string }> =
   </ng-template>
 </cps-tree-table>`,
       ts: `
-colsVirtual = [
-  { field: 'name', header: 'Name' },
-  { field: 'size', header: 'Size' },
-  { field: 'tag', header: 'Tag' },
-  { field: 'type', header: 'String (only 5 distinct values)' },
-  { field: 'date', header: 'Date', dateFormat: 'dd. MM. yyyy' },
-  { field: 'sizeEven', header: 'Boolean' },
-  {
-    field: 'date2',
-    header: 'Date but with category filter',
-    filterType: 'category',
-    dateFormat: 'yyyy/MM/dd HH:mm:ss'
-  }
-];
-
-dataVirtual: any[] = [];
-
-ngOnInit(): void {
-  for (let i = 0; i <= 1000; i++) {
-    this.dataVirtual.push({
-      data: {
-        name: \`Folder\${i}\`,
-        size: i,
-        tag: i * 3,
-        type: \`Type-\${i % 5}\`,
-        date: new Date(2020, 1, i),
-        sizeEven: i % 2 === 0,
-        date2: new Date(2020, 1, i, 12, 30, 0)
-      },
-      children: [
-        {
-          data: {
-            name: 'primefaces.mkv',
-            size: 1000,
-            tag: 7,
-            type: \`Type-\${i % 5}\`,
-            date: new Date(2020, 1, i),
-            sizeEven: i % 2 === 0,
-            date2: new Date(2020, 1, i, 12, 30, 0)
-          }
-        },
-        {
-          data: {
-            name: 'intro.avi',
-            size: 500,
-            tag: 9,
-            type: \`Type-\${i % 5}\`,
-            date: new Date(2020, 1, i),
-            sizeEven: i % 2 === 0,
-            date2: new Date(2020, 1, i, 12, 30, 0)
-          }
-        }
-      ]
-    });
-  }
-}`
+${virtualColsAndDataTs.trim()}`
     },
 
     treeTable3: {
@@ -278,22 +283,24 @@ ngOnInit(): void {
       ts: `
 ${treeDataTs.trim()}
 
+${notifServiceTs}
+
 isRemoveBtnVisible = false;
 
 ${removeElementsByNameTs.trim()}
 
 onEditRowButtonClicked() {
-  alert('Edit row button clicked');
+  this._notifService.info('Edit row button clicked');
 }
 
 onActionBtnClicked() {
   this.isRemoveBtnVisible = !this.isRemoveBtnVisible;
   const visibilityStatus = this.isRemoveBtnVisible ? 'visible' : 'hidden';
-  alert(\`'Remove' buttons are now \${visibilityStatus}\`);
+  this._notifService.info(\`'Remove' buttons are now \${visibilityStatus}\`);
 }
 
 onReloadBtnClicked() {
-  alert('Data reload button clicked');
+  this._notifService.info('Data reload button clicked');
 }`
     },
 
@@ -365,6 +372,8 @@ onReloadBtnClicked() {
       ts: `
 ${treeDataTs.trim()}
 
+${notifServiceTs}
+
 colsWithFilterType = [
   { field: 'name', header: 'Name', filterType: 'text' },
   { field: 'size', header: 'Size', filterType: 'number' },
@@ -382,7 +391,7 @@ onColumnsSelected(columns: any) {
 }
 
 onEditRowButtonClicked() {
-  alert('Edit row button clicked');
+  this._notifService.info('Edit row button clicked');
 }
 
 onRowsSelectionChanged(rows: any) {
@@ -506,6 +515,8 @@ ${removeElementsByNameTs.trim()}`
       ts: `
 ${treeDataTs.trim()}
 
+${notifServiceTs}
+
 cols = [
   { field: 'name', header: 'Name' },
   { field: 'size', header: 'Size' },
@@ -532,7 +543,7 @@ customRowMenuItems: CpsMenuItem[] = [
 ];
 
 onEditRowButtonClicked() {
-  alert('Edit row button clicked');
+  this._notifService.info('Edit row button clicked');
 }`
     },
 
@@ -678,5 +689,167 @@ colsHTML = [
   { field: 'b', header: 'Header B' },
   { field: 'c', header: 'Header C' }
 ];`
+    },
+
+    treeTable11: {
+      html: `
+<cps-tree-table
+  [data]="lazyData"
+  [columns]="colsVirtual"
+  [lazy]="true"
+  [lazyLoadOnInit]="true"
+  [loading]="lazyLoading"
+  loadingLabel="Fetching..."
+  [paginator]="true"
+  [rows]="lazyRows"
+  [totalRecords]="lazyTotalRecords"
+  (lazyLoaded)="onLazyLoad($event)"
+  toolbarTitle="Tree table with lazy/server-side loading, driven by a simulated 600ms fetch delay">
+</cps-tree-table>`,
+      ts: `
+lazyData: any[] = [];
+lazyTotalRecords = 0;
+lazyLoading = false;
+lazyRows = 10;
+private _lazyLoadTimeout?: ReturnType<typeof setTimeout>;
+private _lastLazyFirst = -1;
+private _lastLazyRows = -1;
+
+onLazyLoad(event: { first?: number; rows?: number }) {
+  const first = event.first ?? 0;
+  const rows = event.rows ?? this.lazyRows;
+
+  if (first === this._lastLazyFirst && rows === this._lastLazyRows) return;
+  this._lastLazyFirst = first;
+  this._lastLazyRows = rows;
+
+  Promise.resolve().then(() => {
+    this.lazyLoading = true;
+    clearTimeout(this._lazyLoadTimeout);
+    this._lazyLoadTimeout = setTimeout(() => {
+      this.lazyTotalRecords = this.dataVirtual.length;
+      this.lazyData = this.dataVirtual.slice(first, first + rows);
+      this.lazyLoading = false;
+    }, 600);
+  });
+}`
+    },
+
+    treeTable12: {
+      html: `
+<cps-tree-table
+  [data]="paginatorDemoData"
+  [columns]="cols"
+  [paginator]="true"
+  [rows]="5"
+  [alwaysShowPaginator]="false"
+  toolbarTitle="Tree table whose paginator hides when everything fits on one page">
+</cps-tree-table>
+<cps-switch
+  [(ngModel)]="manyRecordsForPaginator"
+  label="Load enough records for multiple pages">
+</cps-switch>`,
+      ts: `
+${treeDataTs.trim()}
+
+cols = [
+  { field: 'name', header: 'Name' },
+  { field: 'size', header: 'Size' },
+  { field: 'modified', header: 'Modified' },
+  { field: 'encrypted', header: 'Encrypted' },
+  { field: 'importance', header: 'Importance' }
+];
+
+manyRecordsForPaginator = false;
+private readonly _fewRecordsForPaginator = this.data.slice(0, 3);
+
+get paginatorDemoData(): any[] {
+  return this.manyRecordsForPaginator
+    ? this.data
+    : this._fewRecordsForPaginator;
+}`
+    },
+
+    treeTable13: {
+      html: `
+<cps-tree-table
+  [data]="data"
+  [columns]="cols"
+  [selectable]="true"
+  [showAdditionalBtnOnSelect]="true"
+  additionalBtnOnSelectTitle="Archive"
+  additionalBtnOnSelectIcon="star"
+  (additionalBtnOnSelectClicked)="onAdditionalBtnOnSelectClicked($event)"
+  toolbarTitle="Selectable tree table with an additional toolbar action shown alongside Remove when rows are selected">
+</cps-tree-table>`,
+      ts: `
+${treeDataTs.trim()}
+
+${notifServiceTs}
+
+cols = [
+  { field: 'name', header: 'Name' },
+  { field: 'size', header: 'Size' },
+  { field: 'modified', header: 'Modified' },
+  { field: 'encrypted', header: 'Encrypted' },
+  { field: 'importance', header: 'Importance' }
+];
+
+onAdditionalBtnOnSelectClicked(rows: any[]) {
+  this._notifService.success(\`Archive clicked for \${rows.length} row(s)\`);
+}`
+    },
+
+    treeTable14: {
+      html: `
+<cps-tree-table
+  [data]="customSortData"
+  [columns]="customSortCols"
+  [sortable]="true"
+  [customSort]="true"
+  (customSortFunction)="onCustomSort($event)"
+  toolbarTitle="Tree table with a custom sort function (sorts by string length instead of alphabetically)">
+</cps-tree-table>`,
+      ts: `
+customSortData = [
+  { data: { name: 'Andrei', city: 'Tyumen' } },
+  { data: { name: 'Oleksandra', city: 'Kharkiv' } },
+  { data: { name: 'Lukas', city: 'Kosice' } },
+  { data: { name: 'Terrance', city: 'Johannesburg' } },
+  { data: { name: 'Michael', city: 'Nairobi' } }
+];
+
+customSortCols = [
+  { field: 'name', header: 'Name' },
+  { field: 'city', header: 'City' }
+];
+
+onCustomSort(event: { data: any[]; field?: string; order?: number }) {
+  const { data, field, order } = event;
+  if (!field) return;
+  data.sort((a, b) => {
+    const v1 = String(a.data[field] ?? '');
+    const v2 = String(b.data[field] ?? '');
+    const result = v1.length - v2.length || v1.localeCompare(v2);
+    return (order ?? 1) * result;
+  });
+}`
+    },
+
+    treeTable15: {
+      html: `
+<cps-tree-table
+  [data]="dataVirtual"
+  [columns]="colsVirtual"
+  [initialColumns]="initialColumnsVirtual"
+  [virtualScroll]="true"
+  scrollHeight="26rem"
+  [showColumnsToggleBtn]="true"
+  toolbarTitle="Tree table that initially shows only a subset of columns. Use the columns button to reveal the rest">
+</cps-tree-table>`,
+      ts: `
+${virtualColsAndDataTs.trim()}
+
+initialColumnsVirtual = this.colsVirtual.slice(0, 3);`
     }
   };

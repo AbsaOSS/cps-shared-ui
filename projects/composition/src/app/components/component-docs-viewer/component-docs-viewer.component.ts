@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
   ComponentAPI,
   EnumsAPI,
   InterfaceAPI,
   TypesAPI
 } from '../../models/component-api.model';
-import { ServiceAPI } from '../../models/service-api.model';
+import { ServiceAPI, TokensAPI } from '../../models/service-api.model';
 import {
   CpsTabComponent,
   CpsTabGroupComponent,
@@ -22,6 +22,7 @@ import { ApiTypeComponent } from '../shared/api-type/api-type.component';
   selector: 'app-component-docs-viewer',
   templateUrl: './component-docs-viewer.component.html',
   styleUrl: './component-docs-viewer.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CpsTabComponent,
     CpsTabGroupComponent,
@@ -37,6 +38,7 @@ export class ComponentDocsViewerComponent extends ViewerComponent {
     types?: TypesAPI;
     interfaces?: InterfaceAPI;
     enums?: EnumsAPI;
+    tokens?: TokensAPI;
   };
 
   @Input() services?: ServiceAPI[];

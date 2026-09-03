@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   CpsButtonComponent,
   CpsMenuComponent,
@@ -19,6 +19,7 @@ import { menuExamples } from './menu-page.examples';
   ],
   templateUrl: './menu-page.component.html',
   styleUrls: ['./menu-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class MenuPageComponent {

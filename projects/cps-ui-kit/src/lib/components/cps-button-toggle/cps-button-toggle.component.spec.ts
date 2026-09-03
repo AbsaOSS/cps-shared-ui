@@ -1,5 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { signal, SimpleChange } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  signal,
+  SimpleChange
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import {
   CpsButtonToggleComponent,
   CpsButtonToggleOption
@@ -282,6 +288,98 @@ describe('CpsButtonToggleComponent', () => {
 
     it('should not throw on setDisabledState', () => {
       expect(() => component.setDisabledState(true)).not.toThrow();
+    });
+
+    it('should call onChange when value is set via the value setter', () => {
+      const fn = jest.fn();
+      component.registerOnChange(fn);
+      component.value = 'a';
+      expect(component.value).toBe('a');
+      expect(fn).toHaveBeenCalledWith('a');
+    });
+  });
+
+  describe('with NgControl (ngModel)', () => {
+    @Component({
+      changeDetection: ChangeDetectionStrategy.Eager,
+      imports: [CpsButtonToggleComponent, FormsModule],
+      template: `<cps-button-toggle
+        [(ngModel)]="value"
+        [options]="options"
+        ariaLabel="Toggle group"></cps-button-toggle>`
+    })
+    class HostComponent {
+      value = 'a';
+      options = OPTIONS;
+    }
+
+    let hostFixture: ComponentFixture<HostComponent>;
+    let host: HostComponent;
+    let toggle: CpsButtonToggleComponent;
+
+    beforeEach(async () => {
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [HostComponent],
+        providers: [
+          {
+            provide: CPS_ROOT_FONT_SIZE_SERVICE,
+            useValue: mockRootFontSizeService
+          }
+        ]
+      }).compileComponents();
+
+      hostFixture = TestBed.createComponent(HostComponent);
+      host = hostFixture.componentInstance;
+      hostFixture.detectChanges();
+      toggle = hostFixture.debugElement.children[0].componentInstance;
+    });
+
+    it('should register itself as the valueAccessor on the NgControl', () => {
+      toggle.updateValueOnClick('b');
+      hostFixture.detectChanges();
+      expect(host.value).toBe('b');
+    });
+  });
+
+  describe('fonts ready effect', () => {
+    let originalFonts: PropertyDescriptor | undefined;
+
+    beforeEach(() => {
+      originalFonts = Object.getOwnPropertyDescriptor(document, 'fonts');
+    });
+
+    afterEach(() => {
+      if (originalFonts) {
+        Object.defineProperty(document, 'fonts', originalFonts);
+      }
+    });
+
+    it('should recompute equal widths once document fonts are ready', async () => {
+      let resolveFontsReady: () => void = () => {};
+      const fontsReady = new Promise<void>((resolve) => {
+        resolveFontsReady = resolve;
+      });
+      Object.defineProperty(document, 'fonts', {
+        value: { ready: fontsReady },
+        configurable: true
+      });
+
+      const f = TestBed.createComponent(CpsButtonToggleComponent);
+      const c = f.componentInstance;
+      const setEqualSpy = jest.spyOn(c as any, '_setEqualWidths');
+      f.componentRef.setInput('ariaLabel', 'Toggle group');
+      f.componentRef.setInput('options', OPTIONS);
+      f.detectChanges();
+
+      expect(setEqualSpy).not.toHaveBeenCalled();
+      resolveFontsReady();
+
+      await Promise.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+
+      expect(setEqualSpy).toHaveBeenCalled();
     });
   });
 

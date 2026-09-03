@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   CpsTabGroupComponent,
   CpsTabComponent,
   CpsTabChangeEvent,
-  CpsCheckboxComponent
+  CpsCheckboxComponent,
+  type CpsIconType
 } from 'cps-ui-kit';
 import ComponentData from '../../api-data/cps-tab-group.json';
 import { ComponentDocsViewerComponent } from '../../components/component-docs-viewer/component-docs-viewer.component';
@@ -23,6 +24,7 @@ import { tabGroupExamples } from './tab-group-page.examples';
   selector: 'app-tab-group-page',
   templateUrl: './tab-group-page.component.html',
   styleUrls: ['./tab-group-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   host: { class: 'composition-page' }
 })
 export class TabGroupPageComponent {
@@ -32,6 +34,10 @@ export class TabGroupPageComponent {
 
   changeTab({ newIndex }: CpsTabChangeEvent) {
     console.log('Tab changed to: ' + newIndex);
+  }
+
+  onBeforeTabChanged({ newIndex }: CpsTabChangeEvent) {
+    console.log('Tab about to change to: ' + newIndex);
   }
 
   centerAlignedTabs = [
@@ -56,13 +62,20 @@ export class TabGroupPageComponent {
     tooltipText: `Tooltip of tab ${i + 1}`
   }));
 
-  rightAlignedTabs = [
-    { label: 'Tab 1', icon: 'survivorship', id: 'tab1' },
-    { label: 'Tab 2', icon: 'kris', id: null },
-    { label: 'Tab 3', icon: 'dq', id: null }
-  ];
+  rightAlignedTabs: { label: string; icon: CpsIconType; id: string | null }[] =
+    [
+      { label: 'Tab 1', icon: 'survivorship', id: 'tab1' },
+      { label: 'Tab 2', icon: 'kris', id: null },
+      { label: 'Tab 3', icon: 'dq', id: null }
+    ];
 
   stretchedTabs = [{ label: 'Tab 1' }, { label: 'Tab 2' }, { label: 'Tab 3' }];
+
+  iconOnlyTabs = [
+    { ariaLabel: 'Survivorship', icon: 'survivorship' },
+    { ariaLabel: 'Kris', icon: 'kris' },
+    { ariaLabel: 'DQ', icon: 'dq' }
+  ];
 
   subTabs = [
     { label: 'Tab 1', icon: 'avatar', id: 'tab1' },
