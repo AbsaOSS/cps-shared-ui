@@ -237,6 +237,10 @@ describe('CpsScenario (direct construction)', () => {
     });
 
     it('should redact metadata using the supplied redact config, not the library default', () => {
+      const consoleWarn = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
       const { deps } = createDeps({
         redact: { ...CPS_DEFAULT_REDACT_CONFIG, maxKeys: 1 }
       });
@@ -246,6 +250,8 @@ describe('CpsScenario (direct construction)', () => {
       );
 
       expect(Object.keys(scenario.toRecord().metadata ?? {})).toHaveLength(1);
+
+      consoleWarn.mockRestore();
     });
   });
 });

@@ -373,6 +373,10 @@ describe('AppTelemetryService', () => {
     });
 
     it('should not throw when the telemetry sink is broken', () => {
+      const consoleError = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -401,6 +405,12 @@ describe('AppTelemetryService', () => {
 
       const isolated = TestBed.inject(AppTelemetryService);
       expect(() => isolated.trackClick('export_clicked')).not.toThrow();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('failed'),
+        expect.any(Error)
+      );
+
+      consoleError.mockRestore();
     });
   });
 });

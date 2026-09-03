@@ -637,12 +637,24 @@ describe('CpsRumTelemetrySink', () => {
     });
 
     it('should not throw when the client throws', async () => {
+      const consoleError = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       await sink.init();
       awsRumInstance.recordEvent.mockImplementationOnce(() => {
         throw new Error('sdk exploded');
       });
 
       expect(() => sink.record('a', {})).not.toThrow();
+      // Reported, not silently dropped — see cpsSafe's dev-mode reporting
+      // contract, tested in cps-telemetry-safe.util.spec.ts.
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('rum.record failed'),
+        expect.any(Error)
+      );
+
+      consoleError.mockRestore();
     });
   });
 
@@ -797,6 +809,7 @@ describe('CpsRumTelemetrySink', () => {
     });
 
     it('should retry a failed refresh instead of the chain dying permanently', () => {
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
       let calls = 0;
       configure({
         loadImpl: async () => {
@@ -814,10 +827,19 @@ describe('CpsRumTelemetrySink', () => {
         await jest.advanceTimersByTimeAsync(60 * 1000);
         expect(calls).toBe(2);
         expect(awsRumInstance.setAwsCredentials).toHaveBeenCalledTimes(1);
+        expect(warn).toHaveBeenCalledWith(
+          '[cps-telemetry] RUM credential refresh failed',
+          expect.objectContaining({
+            name: 'Error',
+            message: 'transient broker blip'
+          })
+        );
 
         await jest.advanceTimersByTimeAsync(30 * 1000);
         expect(calls).toBe(3);
         expect(awsRumInstance.setAwsCredentials).toHaveBeenCalledTimes(2);
+
+        warn.mockRestore();
       });
     });
 

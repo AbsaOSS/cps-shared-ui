@@ -575,9 +575,23 @@ describe('CpsBiTelemetryService', () => {
   });
 
   describe('failure isolation', () => {
+    let consoleError: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      consoleError.mockRestore();
+    });
+
     it('should never let a broken sink reach application code', () => {
       configure(ThrowingSink);
       expect(() => service.track('export_clicked')).not.toThrow();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('failed'),
+        expect.any(Error)
+      );
     });
   });
 });

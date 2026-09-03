@@ -730,6 +730,16 @@ describe('CpsLoggerService', () => {
   });
 
   describe('failure isolation', () => {
+    let consoleError: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      consoleError.mockRestore();
+    });
+
     it('should not propagate a throwing transport', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
@@ -747,6 +757,10 @@ describe('CpsLoggerService', () => {
 
       const isolated = TestBed.inject(CpsLoggerService);
       expect(() => isolated.log('still fine')).not.toThrow();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('logger.deliver failed'),
+        expect.any(Error)
+      );
     });
 
     it('should not propagate a throwing sink while mirroring errors', () => {
@@ -766,6 +780,10 @@ describe('CpsLoggerService', () => {
 
       const isolated = TestBed.inject(CpsLoggerService);
       expect(() => isolated.error('still fine')).not.toThrow();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('failed'),
+        expect.any(Error)
+      );
     });
   });
 

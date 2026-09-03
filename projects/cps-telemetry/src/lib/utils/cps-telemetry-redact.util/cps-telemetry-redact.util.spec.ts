@@ -270,31 +270,51 @@ describe('cpsScrubString', () => {
       ).toBe('start-a-b');
     });
 
-    it('should skip a throwing transform and keep the value from before it', () => {
-      expect(
-        cpsScrubString('unchanged', {
-          ...CPS_DEFAULT_REDACT_CONFIG,
-          extraValueTransforms: [
-            () => {
-              throw new Error('broken transform');
-            }
-          ]
-        })
-      ).toBe('unchanged');
-    });
+    describe('a throwing transform', () => {
+      let consoleWarn: jest.SpyInstance;
 
-    it('should still apply subsequent transforms after one throws', () => {
-      expect(
-        cpsScrubString('start', {
-          ...CPS_DEFAULT_REDACT_CONFIG,
-          extraValueTransforms: [
-            () => {
-              throw new Error('broken transform');
-            },
-            (value) => `${value}-ok`
-          ]
-        })
-      ).toBe('start-ok');
+      beforeEach(() => {
+        consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      });
+
+      afterEach(() => {
+        consoleWarn.mockRestore();
+      });
+
+      it('should skip it and keep the value from before it, reporting why', () => {
+        expect(
+          cpsScrubString('unchanged', {
+            ...CPS_DEFAULT_REDACT_CONFIG,
+            extraValueTransforms: [
+              () => {
+                throw new Error('broken transform');
+              }
+            ]
+          })
+        ).toBe('unchanged');
+        expect(consoleWarn).toHaveBeenCalledWith(
+          expect.stringContaining('extraValueTransforms'),
+          expect.any(Error)
+        );
+      });
+
+      it('should still apply subsequent transforms after it', () => {
+        expect(
+          cpsScrubString('start', {
+            ...CPS_DEFAULT_REDACT_CONFIG,
+            extraValueTransforms: [
+              () => {
+                throw new Error('broken transform');
+              },
+              (value) => `${value}-ok`
+            ]
+          })
+        ).toBe('start-ok');
+        expect(consoleWarn).toHaveBeenCalledWith(
+          expect.stringContaining('extraValueTransforms'),
+          expect.any(Error)
+        );
+      });
     });
 
     it('should still cap length after custom transforms run', () => {
@@ -389,6 +409,10 @@ describe('cpsRedactMetadata', () => {
   });
 
   it('should cap the number of retained keys', () => {
+    const consoleWarn = jest
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
+
     const input: Record<string, number> = {};
     for (let i = 0; i < 100; i++) {
       input[`k${i}`] = i;
@@ -398,6 +422,8 @@ describe('cpsRedactMetadata', () => {
       maxKeys: 5
     });
     expect(Object.keys(result ?? {})).toHaveLength(5);
+
+    consoleWarn.mockRestore();
   });
 
   describe('truncation warning', () => {

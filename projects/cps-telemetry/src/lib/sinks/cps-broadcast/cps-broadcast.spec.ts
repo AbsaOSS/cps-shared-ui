@@ -608,10 +608,17 @@ describe('broadcast telemetry across realms', () => {
   });
 
   describe('leader election', () => {
-    // These tests build their own hosts, after the stub is installed,
-    // rather than relying on the outer `host` (built before the stub).
-    beforeEach(() => LockManagerStub.install());
-    afterEach(() => LockManagerStub.uninstall());
+    let consoleWarn: jest.SpyInstance;
+
+    beforeEach(() => {
+      LockManagerStub.install();
+      consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      LockManagerStub.uninstall();
+      consoleWarn.mockRestore();
+    });
 
     function createHost(): {
       host: CpsTelemetryBroadcastHost;

@@ -92,6 +92,10 @@ describe('traceScenario operator', () => {
   });
 
   it('should still settle the scenario when the outcome mapper throws', (done) => {
+    const consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     of('value')
       .pipe(
         traceScenario(scenario, () => {
@@ -102,6 +106,11 @@ describe('traceScenario operator', () => {
         complete: () => {
           expect(scenario.complete).toHaveBeenCalledWith(undefined);
           expect(scenario.fail).not.toHaveBeenCalled();
+          expect(consoleError).toHaveBeenCalledWith(
+            expect.stringContaining('failed'),
+            expect.any(Error)
+          );
+          consoleError.mockRestore();
           done();
         }
       });

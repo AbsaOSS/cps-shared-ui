@@ -1892,7 +1892,11 @@ describe('CpsScenarioTelemetryService', () => {
   });
 
   describe('failure isolation', () => {
+    let consoleError: jest.SpyInstance;
+
     beforeEach(() => {
+      consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -1909,12 +1913,21 @@ describe('CpsScenarioTelemetryService', () => {
       service = TestBed.inject(CpsScenarioTelemetryService);
     });
 
+    afterEach(() => {
+      configure();
+      consoleError.mockRestore();
+    });
+
     it('should never let a broken sink reach application code', () => {
       expect(() => {
         const scenario = service.start({ name: 'load' });
         scenario.step('one');
         scenario.complete();
       }).not.toThrow();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('failed'),
+        expect.any(Error)
+      );
     });
 
     it('should still expose a usable scenario when the sink is broken', () => {
@@ -1934,6 +1947,10 @@ describe('CpsScenarioTelemetryService', () => {
       });
 
       expect(() => service.start({ name: 'load', metadata })).not.toThrow();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('failed'),
+        expect.any(Error)
+      );
     });
 
     it('should never let a throwing logger.child reach application code', () => {
@@ -1949,8 +1966,14 @@ describe('CpsScenarioTelemetryService', () => {
       const scenario = service.start({ name: 'load', logger: throwingLogger });
       expect(() => scenario.logger).not.toThrow();
       expect(scenario.logger).toBeUndefined();
+      expect(consoleError).toHaveBeenCalledWith(
+        expect.stringContaining('failed'),
+        expect.any(Error)
+      );
     });
+  });
 
+  describe('active scenario registry', () => {
     it('should warn in dev mode when active scenarios exceed the threshold', () => {
       const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
 

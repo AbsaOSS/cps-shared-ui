@@ -286,18 +286,36 @@ describe('provideCpsTelemetrySink', () => {
     ).toBeNull();
   });
 
-  it.each(['rum', 'broadcast', 'noop'] as CpsTelemetrySinkMode[])(
-    'should leave application code unchanged in %s mode',
-    (mode) => {
-      configure(mode);
-      const scenario = TestBed.inject(CpsScenarioTelemetryService).start({
-        name: 'add-to-cart'
-      });
+  describe('leaves application code unchanged across modes', () => {
+    let consoleWarn: jest.SpyInstance;
 
-      expect(() => scenario.step('one').complete()).not.toThrow();
-      expect(scenario.status).toBe('success');
-    }
-  );
+    beforeAll(() => {
+      consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterAll(() => {
+      consoleWarn.mockRestore();
+    });
+
+    it.each(['rum', 'broadcast', 'noop'] as CpsTelemetrySinkMode[])(
+      'should leave application code unchanged in %s mode',
+      (mode) => {
+        configure(mode);
+        const scenario = TestBed.inject(CpsScenarioTelemetryService).start({
+          name: 'add-to-cart'
+        });
+
+        expect(() => scenario.step('one').complete()).not.toThrow();
+        expect(scenario.status).toBe('success');
+      }
+    );
+
+    it('should report the rum-mode scenario above as lost, not silently dropped', () => {
+      expect(consoleWarn).toHaveBeenCalledWith(
+        expect.stringContaining('RUM event(s) lost')
+      );
+    });
+  });
 });
 
 describe('provideCpsTelemetryBroadcastHost', () => {
