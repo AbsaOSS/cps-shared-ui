@@ -1294,7 +1294,11 @@ security hole — so it cannot.
 wrapped in `cpsSafe`/`cpsSafeVoid`, which never rethrows. It does not,
 however, _silently_ swallow errors: in development (`isDevMode()`) the suppressed
 error is reported to `console.error`, so bugs in this library still surface
-during development and in tests. In production it stays silent. Tests
+during development and in tests. In production it stays silent. The
+console report is itself wrapped in a try/catch — an application that has
+patched or otherwise broken `console.error` cannot turn a suppressed
+telemetry failure into a rethrow, in `cpsSafe`, or into a fresh unhandled
+rejection, in `cpsSafeVoidMaybeAsync`'s async path. Tests
 assert both halves, and assert that a sink or transport throwing on every
 call leaves application code unaffected.
 
@@ -1320,8 +1324,10 @@ call leaves application code unaffected.
   signal on `CpsRumCredentialsProvider.load()` — tears the client down and
   stops scheduling further refreshes, instead of retrying forever against
   an already-disabled sink still holding a stale, capped event buffer.
-- A bounded 100-event pre-init buffer preserves bootstrap telemetry without
-  growing without limit if init never completes.
+- A bounded 100-item pre-init buffer preserves bootstrap telemetry —
+  events, page views, and errors alike, replayed through the same code
+  path once the client is ready — without growing without limit if init
+  never completes.
 
 ---
 
@@ -1574,6 +1580,15 @@ host behaviour), and a lock _request_ that itself rejects — document not
 fully active, a Permissions-Policy blocking Web Locks — also elects
 immediately rather than leaving a host silently non-leader, and therefore
 permanently inert, for the rest of the session.
+
+A host destroyed while its own request is still queued — never granted —
+is also handled correctly: `cpsElectBroadcastHostLeader` tracks that a
+release was requested even though there was nothing to release yet, so
+when the lock is eventually granted to that (now-destroyed) request, it
+resolves immediately without electing instead of holding the lock open.
+Without this, the lock would never be released again — the returned
+`release` closure only ever fires once, before the grant reassigns it —
+permanently starving every host still queued behind it.
 
 ### Known limits
 

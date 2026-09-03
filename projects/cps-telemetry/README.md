@@ -104,7 +104,8 @@ Supply AWS details by implementing `CpsRumCredentialsProvider`:
 @Injectable({ providedIn: 'root' })
 export class AppRumCredentialsProvider implements CpsRumCredentialsProvider {
   async load(): Promise<CpsRumBootstrap | null> {
-    const res = await fetch('/rum/init');
+    // no-store: this response carries live, temporary AWS credentials.
+    const res = await fetch('/rum/init', { cache: 'no-store' });
     if (!res.ok) return null;
 
     const { enabled, config, credentials } = await res.json();
@@ -378,6 +379,10 @@ scenarioTelemetry.settled$
   .pipe(filter((r) => r.status === 'failure'))
   .subscribe((r) => this.notifications.warn(`${r.scenarioName} failed`));
 ```
+
+Each emission is an independent copy, not the record shipped to the sink —
+mutating it in a subscriber can never change what was already (or is about
+to be) sent.
 
 ### Seeing scenarios in DevTools
 

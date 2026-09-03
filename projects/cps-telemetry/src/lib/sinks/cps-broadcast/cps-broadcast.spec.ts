@@ -687,6 +687,31 @@ describe('broadcast telemetry across realms', () => {
 
       expect(onElected).toHaveBeenCalledTimes(1);
     });
+
+    it('should not elect a requester released while still queued, and should let the next requester through', async () => {
+      LockManagerStub.install();
+      const onElectedHolder = jest.fn();
+      const onElectedA = jest.fn();
+      const onElectedB = jest.fn();
+
+      const releaseHolder = cpsElectBroadcastHostLeader(
+        'cps-telemetry',
+        onElectedHolder
+      );
+      const releaseA = cpsElectBroadcastHostLeader('cps-telemetry', onElectedA);
+      cpsElectBroadcastHostLeader('cps-telemetry', onElectedB);
+
+      // A is released before ever being granted the lock.
+      releaseA();
+      // The current holder releases, so the lock passes down the queue.
+      releaseHolder();
+      for (let i = 0; i < 6; i++) {
+        await Promise.resolve();
+      }
+
+      expect(onElectedA).not.toHaveBeenCalled();
+      expect(onElectedB).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('cpsIsBroadcastMessage', () => {

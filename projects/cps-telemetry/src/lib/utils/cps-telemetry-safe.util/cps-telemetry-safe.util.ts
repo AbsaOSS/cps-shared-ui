@@ -74,10 +74,30 @@ export function cpsIsBrowser(): boolean {
   return isPlatformBrowser(inject(PLATFORM_ID));
 }
 
+/**
+ * Deep-clones a plain-data value. Prefers `structuredClone`; falls back to
+ * a JSON round-trip where it's unavailable (e.g. under jsdom) or throws.
+ */
+export function cpsDeepClone<T>(value: T): T {
+  if (typeof structuredClone === 'function') {
+    try {
+      return structuredClone(value);
+    } catch {
+      // fall through to the JSON fallback
+    }
+  }
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 function reportSuppressed(operation: string, error: unknown): void {
-  if (cpsIsDevMode()) {
+  if (!cpsIsDevMode()) {
+    return;
+  }
+  try {
     // eslint-disable-next-line no-console
     console.error(`[cps-telemetry] ${operation} failed`, error);
+  } catch {
+    // A patched/throwing console must never escape telemetry suppression.
   }
 }
 

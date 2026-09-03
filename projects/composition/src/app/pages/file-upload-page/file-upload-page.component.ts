@@ -160,6 +160,11 @@ export class FileUploadPageComponent implements OnDestroy {
     this._cancel(this.disabledUploadScenarios, fileName, 'user-cancelled');
   }
 
+  onFailingFileProcessingCancelled(): void {
+    this.failingUploadScenario?.cancel({ reason: 'user-cancelled' });
+    this.failingUploadScenario = undefined;
+  }
+
   private _cancel(
     scenarios: Map<string, CpsScenario>,
     fileName: string,

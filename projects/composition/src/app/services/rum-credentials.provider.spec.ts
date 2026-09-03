@@ -26,7 +26,7 @@ function mockFetch(status: number, body: unknown): jest.Mock {
     ok: status >= 200 && status < 300,
     json: () => Promise.resolve(body)
   });
-  global.fetch = fetchMock as unknown as typeof fetch;
+  globalThis.fetch = fetchMock as unknown as typeof fetch;
   return fetchMock;
 }
 
@@ -35,22 +35,23 @@ describe('AppRumCredentialsProvider', () => {
   let originalFetch: typeof fetch;
 
   beforeEach(() => {
-    originalFetch = global.fetch;
+    originalFetch = globalThis.fetch;
     TestBed.configureTestingModule({});
     provider = TestBed.inject(AppRumCredentialsProvider);
   });
 
   afterEach(() => {
-    global.fetch = originalFetch;
+    globalThis.fetch = originalFetch;
   });
 
-  it('should request /rum/init, asking for a JSON response', async () => {
+  it('should request /rum/init, asking for a JSON response and bypassing the HTTP cache', async () => {
     const fetchMock = mockFetch(200, initResponse());
 
     await provider.load();
 
     expect(fetchMock).toHaveBeenCalledWith('/rum/init', {
-      headers: { Accept: 'application/json' }
+      headers: { Accept: 'application/json' },
+      cache: 'no-store'
     });
   });
 

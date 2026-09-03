@@ -37,7 +37,8 @@ export class AppRumCredentialsProvider implements CpsRumCredentialsProvider {
    */
   async load(): Promise<CpsRumBootstrap | null> {
     const response = await fetch('/rum/init', {
-      headers: { Accept: 'application/json' }
+      headers: { Accept: 'application/json' },
+      cache: 'no-store'
     });
 
     if (!response.ok) {

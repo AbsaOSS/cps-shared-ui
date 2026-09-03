@@ -1,5 +1,6 @@
 import { isDevMode } from '@angular/core';
 import {
+  cpsDeepClone,
   cpsEpochToPerf,
   cpsNow,
   cpsSafe,
@@ -79,6 +80,17 @@ describe('cpsSafe', () => {
       })
     ).not.toThrow();
   });
+
+  it('should not rethrow when console.error itself throws', () => {
+    consoleError.mockImplementation(() => {
+      throw new Error('console is patched and broken');
+    });
+    expect(() =>
+      cpsSafeVoid('op', () => {
+        throw new Error('boom');
+      })
+    ).not.toThrow();
+  });
 });
 
 describe('cpsSafeVoidMaybeAsync', () => {
@@ -146,6 +158,81 @@ describe('cpsSafeVoidMaybeAsync', () => {
     await Promise.resolve();
 
     expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  it('should not produce a new unhandled rejection when console.error itself throws', async () => {
+    const nodeProcess = (
+      globalThis as unknown as {
+        process: {
+          on(
+            event: 'unhandledRejection',
+            listener: (reason: unknown) => void
+          ): void;
+          off(
+            event: 'unhandledRejection',
+            listener: (reason: unknown) => void
+          ): void;
+        };
+      }
+    ).process;
+
+    const unhandled = jest.fn();
+    nodeProcess.on('unhandledRejection', unhandled);
+    consoleError.mockImplementation(() => {
+      throw new Error('console is patched and broken');
+    });
+    const asyncFn = (async () => {
+      throw new Error('async boom');
+    }) as () => void;
+
+    cpsSafeVoidMaybeAsync('op', asyncFn);
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    nodeProcess.off('unhandledRejection', unhandled);
+    expect(unhandled).not.toHaveBeenCalled();
+  });
+});
+
+describe('cpsDeepClone', () => {
+  it('should produce a deep copy that mutation of the original does not affect', () => {
+    const original = { a: 1, nested: { b: [1, 2, 3] } };
+    const clone = cpsDeepClone(original);
+
+    original.nested.b.push(4);
+
+    expect(clone).toEqual({ a: 1, nested: { b: [1, 2, 3] } });
+    expect(clone).not.toBe(original);
+    expect(clone.nested).not.toBe(original.nested);
+  });
+
+  it('should fall back to a JSON round-trip when structuredClone is unavailable', () => {
+    const realStructuredClone = globalThis.structuredClone;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any).structuredClone = undefined;
+
+    try {
+      expect(cpsDeepClone({ a: 1, nested: { b: 2 } })).toEqual({
+        a: 1,
+        nested: { b: 2 }
+      });
+    } finally {
+      globalThis.structuredClone = realStructuredClone;
+    }
+  });
+
+  it('should fall back to a JSON round-trip when structuredClone throws', () => {
+    const realStructuredClone = globalThis.structuredClone;
+    globalThis.structuredClone = () => {
+      throw new Error('cannot clone');
+    };
+
+    try {
+      expect(cpsDeepClone({ a: 1 })).toEqual({ a: 1 });
+    } finally {
+      globalThis.structuredClone = realStructuredClone;
+    }
   });
 });
 

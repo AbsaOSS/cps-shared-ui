@@ -60,8 +60,14 @@ interface BufferedPageView {
   pageId: string;
 }
 
+interface BufferedError {
+  kind: 'error';
+  error: CpsTelemetryError;
+  metadata?: CpsTelemetryMetadata;
+}
+
 /** Anything the pre-init buffer holds. */
-type BufferedItem = BufferedEvent | BufferedPageView;
+type BufferedItem = BufferedEvent | BufferedPageView | BufferedError;
 
 /**
  * Drops every key whose value is `undefined`.
@@ -180,33 +186,54 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
     }
   }
 
+  /**
+   * Shared shape behind {@link record}, {@link recordError} and
+   * {@link recordPageView}: kicks off init, then either buffers `item`
+   * (pre-init) or hands the live client to `dispatch`, all inside the same
+   * fail-open guard.
+   */
+  private recordOrBuffer(
+    operation: string,
+    item: BufferedItem,
+    dispatch: (awsRum: AwsRum) => void
+  ): void {
+    this.ensureInitialized();
+    cpsSafeVoid(operation, () => {
+      if (!this.isBrowser || this.disabled) {
+        return;
+      }
+
+      const awsRum = this.awsRum;
+      if (!awsRum) {
+        this.bufferItem(item);
+        return;
+      }
+
+      dispatch(awsRum);
+    });
+  }
+
   /** @inheritdoc */
   record(
     eventType: string,
     payload: object,
     metadata?: CpsTelemetryMetadata
   ): void {
-    this.ensureInitialized();
-    cpsSafeVoid('rum.record', () => {
-      if (!this.isBrowser || this.disabled) {
-        return;
-      }
-
-      if (!this.awsRum) {
-        this.bufferItem({ kind: 'event', eventType, payload, metadata });
-        return;
-      }
-
-      this.awsRum.recordEvent(eventType, payload, this.sanitize(metadata));
-    });
+    this.recordOrBuffer(
+      'rum.record',
+      { kind: 'event', eventType, payload, metadata },
+      (awsRum) =>
+        awsRum.recordEvent(eventType, payload, this.sanitize(metadata))
+    );
   }
 
   /** @inheritdoc */
   recordError(error: CpsTelemetryError, metadata?: CpsTelemetryMetadata): void {
-    this.ensureInitialized();
-    cpsSafeVoid('rum.recordError', () => {
-      this.awsRum?.recordError(this.withOrigin(error, metadata));
-    });
+    this.recordOrBuffer(
+      'rum.recordError',
+      { kind: 'error', error, metadata },
+      (awsRum) => awsRum.recordError(this.withOrigin(error, metadata))
+    );
   }
 
   /** @inheritdoc */
@@ -281,19 +308,11 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
    * @param pageId the page identity, e.g. `/customers/:id`
    */
   recordPageView(pageId: string): void {
-    this.ensureInitialized();
-    cpsSafeVoid('rum.recordPageView', () => {
-      if (!this.isBrowser || this.disabled) {
-        return;
-      }
-
-      if (!this.awsRum) {
-        this.bufferItem({ kind: 'pageView', pageId });
-        return;
-      }
-
-      this.awsRum.recordPageView(pageId);
-    });
+    this.recordOrBuffer(
+      'rum.recordPageView',
+      { kind: 'pageView', pageId },
+      (awsRum) => awsRum.recordPageView(pageId)
+    );
   }
 
   /** @inheritdoc */
@@ -521,8 +540,10 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
             item.payload,
             this.sanitize(item.metadata)
           );
-        } else {
+        } else if (item.kind === 'pageView') {
           this.awsRum?.recordPageView(item.pageId);
+        } else {
+          this.awsRum?.recordError(this.withOrigin(item.error, item.metadata));
         }
       });
     }

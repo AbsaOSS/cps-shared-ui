@@ -12,6 +12,7 @@ import {
 } from '../../models/cps-scenario.models/cps-scenario.models';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import {
+  cpsDeepClone,
   cpsIsBrowser,
   cpsIsDevMode,
   cpsSafeVoid
@@ -106,8 +107,13 @@ export class CpsScenarioTelemetryService implements OnDestroy {
       sink: this.sink,
       onSettled: (scenarioId, record) => {
         this.active.delete(scenarioId);
+        if (!this._settled$.observed) {
+          return;
+        }
+        // Cloned so a settled$ subscriber can't mutate the same object
+        // that's about to be (or already was) shipped to the sink.
         cpsSafeVoid('scenarioTelemetry.notify', () =>
-          this._settled$.next(record)
+          this._settled$.next(cpsDeepClone(record))
         );
       }
     });

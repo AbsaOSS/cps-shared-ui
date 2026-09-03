@@ -1876,6 +1876,19 @@ describe('CpsScenarioTelemetryService', () => {
 
       expect(() => service.start({ name: 'a' }).complete()).not.toThrow();
     });
+
+    it("should not let a subscriber's mutation affect what the sink receives", () => {
+      service.settled$.subscribe((r) => {
+        (r as { status: string }).status = 'tampered';
+        r.metadata = { tampered: true };
+      });
+
+      service.start({ name: 'a' }).complete({ metadata: { real: true } });
+
+      expect(
+        sink.ofType(CPS_TELEMETRY_EVENT_TYPE.scenario)[0].payload
+      ).toMatchObject({ status: 'success', metadata: { real: true } });
+    });
   });
 
   describe('failure isolation', () => {

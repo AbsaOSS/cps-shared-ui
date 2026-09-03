@@ -580,6 +580,33 @@ describe('CpsRumTelemetrySink', () => {
       });
     });
 
+    it('should buffer an error recorded before init and replay it once ready', async () => {
+      sink.recordError({ name: 'TypeError', message: 'boom' });
+
+      expect(awsRumInstance.recordError).not.toHaveBeenCalled();
+
+      await sink.init();
+
+      expect(awsRumInstance.recordError).toHaveBeenCalledWith({
+        name: 'TypeError',
+        message: 'boom'
+      });
+    });
+
+    it('should fold origin into a buffered error at replay time, same as an immediate one', async () => {
+      sink.recordError(
+        { name: 'TypeError', message: 'boom' },
+        { application: 'fragment-app' }
+      );
+
+      await sink.init();
+
+      expect(awsRumInstance.recordError).toHaveBeenCalledWith({
+        name: '[fragment-app] TypeError',
+        message: 'boom'
+      });
+    });
+
     it('should forward page views', async () => {
       await sink.init();
       sink.recordPageView('/customers');

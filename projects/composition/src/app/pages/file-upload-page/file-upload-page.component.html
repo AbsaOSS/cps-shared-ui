@@ -58,6 +58,7 @@
       width="31.25rem"
       [fileProcessingCallback]="processFailingUploadedFile"
       (fileProcessingFailed)="onFileProcessingFailed($event)"
+      (fileProcessingCancelled)="onFailingFileProcessingCancelled()"
       (fileUploaded)="onFileUploaded($event)">
     </cps-file-upload>
   </app-code-example>

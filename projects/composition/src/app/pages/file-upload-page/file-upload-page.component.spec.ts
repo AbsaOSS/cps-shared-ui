@@ -107,6 +107,33 @@ describe('FileUploadPageComponent', () => {
     });
   });
 
+  describe('onFailingFileProcessingCancelled', () => {
+    it('should cancel the failing-widget scenario, not leave it open until its timeout', () => {
+      component.processFailingUploadedFile().subscribe();
+      expect(scenarioTelemetry.getActive()).toHaveLength(1);
+
+      component.onFailingFileProcessingCancelled();
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+    });
+
+    it('should settle it as abandoned, not let it self-settle as a timeout', () => {
+      const settled = jest.fn();
+      scenarioTelemetry.settled$.subscribe(settled);
+
+      component.processFailingUploadedFile().subscribe();
+      component.onFailingFileProcessingCancelled();
+
+      expect(settled).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 'abandoned' })
+      );
+    });
+
+    it('should tolerate a cancel with nothing in flight', () => {
+      expect(() => component.onFailingFileProcessingCancelled()).not.toThrow();
+    });
+  });
+
   describe('ngOnDestroy', () => {
     it('should cancel every widget still processing when the page is destroyed', () => {
       component.processExtraInfoUploadedFile(makeFile('a.txt')).subscribe();
