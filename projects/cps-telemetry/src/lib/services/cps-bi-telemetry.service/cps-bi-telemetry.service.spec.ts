@@ -397,6 +397,13 @@ describe('CpsBiTelemetryService', () => {
       expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(2);
     });
 
+    it('should not collapse two events whose eventType/feature only collide under naive delimiter joining', () => {
+      service.track('checkout', undefined, { eventType: 'x|y', feature: 'z' });
+      service.track('checkout', undefined, { eventType: 'x', feature: 'y|z' });
+
+      expect(sink.events).toHaveLength(2);
+    });
+
     it('should sweep stale entries once the key cap is reached, freeing them for reuse', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({

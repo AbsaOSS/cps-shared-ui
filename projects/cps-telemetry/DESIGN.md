@@ -415,7 +415,14 @@ contextual details (which modal action triggered the cancel, for example).
 (HTTP fetches, dialog results), the pipeable `traceScenario` operator wires
 Angular reactive pipelines directly into scenario lifecycle, with no manual
 `tap`/`catchError` boilerplate — it settles on `complete` with optional
-derived outcome metadata, and fails with the caught error on `error`.
+derived outcome metadata, and fails with the caught error on `error`. A
+teardown that reaches neither — a superseding `switchMap`, `takeUntilDestroyed()`,
+a manual unsubscribe — cancels the scenario instead, guarded by `isSettled`
+so it never re-cancels one that already completed or failed (`tap`'s own
+`unsubscribe` hook fires after every teardown, settled or not). Without
+this, a cancelled-by-unsubscription scenario would sit active until its own
+timeout and record as `timeout` rather than the caller-driven abandonment
+it actually was.
 
 **Active registry leak detection.** In long-lived single-page applications
 or kiosks, scenarios with `timeoutMs: 0` that get forgotten because of a

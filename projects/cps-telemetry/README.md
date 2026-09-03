@@ -244,7 +244,10 @@ apart the same way. All of them end up on the record.
 
 For Observable-driven journeys (an `HttpClient` request, for example), use the
 pipeable `traceScenario` operator. It completes or fails the scenario
-automatically based on how the stream ends:
+automatically based on how the stream ends — and if it's torn down some
+other way (a superseding `switchMap`, `takeUntilDestroyed()`, a manual
+unsubscribe) before that, it cancels the scenario instead of leaving it to
+self-settle as a `timeout`.
 
 ```ts
 import { traceScenario } from 'cps-telemetry';

@@ -59,7 +59,7 @@ describe('AppLogApiProvider', () => {
       provider.send(
         record({
           correlationId: 'c-1',
-          logger: 'checkout',
+          logger: 'file-upload',
           level: 'log',
           timestamp: '2024-01-01T00:00:00.000Z'
         })
@@ -67,7 +67,7 @@ describe('AppLogApiProvider', () => {
       provider.send(
         record({
           correlationId: 'c-2',
-          logger: 'checkout',
+          logger: 'file-upload',
           level: 'warn',
           timestamp: '2024-01-02T00:00:00.000Z'
         })
@@ -75,7 +75,7 @@ describe('AppLogApiProvider', () => {
       provider.send(
         record({
           correlationId: 'c-1',
-          logger: 'admin',
+          logger: 'autocomplete',
           level: 'error',
           timestamp: '2024-01-03T00:00:00.000Z'
         })
@@ -84,11 +84,14 @@ describe('AppLogApiProvider', () => {
 
     it('should filter by correlationId', async () => {
       const found = await provider.query({ correlationId: 'c-1' });
-      expect(found.map((r) => r.logger)).toEqual(['checkout', 'admin']);
+      expect(found.map((r) => r.logger)).toEqual([
+        'file-upload',
+        'autocomplete'
+      ]);
     });
 
     it('should filter by logger', async () => {
-      const found = await provider.query({ logger: 'admin' });
+      const found = await provider.query({ logger: 'autocomplete' });
       expect(found).toHaveLength(1);
       expect(found[0].correlationId).toBe('c-1');
     });
@@ -115,10 +118,10 @@ describe('AppLogApiProvider', () => {
     it('should combine filters with AND', async () => {
       const found = await provider.query({
         correlationId: 'c-1',
-        logger: 'checkout'
+        logger: 'file-upload'
       });
       expect(found).toHaveLength(1);
-      expect(found[0].logger).toBe('checkout');
+      expect(found[0].logger).toBe('file-upload');
     });
 
     it('should return everything when the filter is empty', async () => {
@@ -180,6 +183,7 @@ describe('AppLogApiProvider', () => {
       provider.send(record());
       expect(() => provider.download()).toThrow('blocked by browser');
       expect(URL.revokeObjectURL).toHaveBeenCalled();
+      expect(document.querySelector('a[download]')).toBeNull();
     });
   });
 });

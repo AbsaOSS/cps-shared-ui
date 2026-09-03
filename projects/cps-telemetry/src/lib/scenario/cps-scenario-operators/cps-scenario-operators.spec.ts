@@ -1,4 +1,4 @@
-import { defer, EMPTY, of, throwError } from 'rxjs';
+import { defer, EMPTY, of, Subject, switchMap, throwError } from 'rxjs';
 import { CpsScenario } from '../cps-scenario/cps-scenario';
 import { traceScenario } from './cps-scenario-operators';
 
@@ -8,7 +8,9 @@ describe('traceScenario operator', () => {
   beforeEach(() => {
     scenario = {
       complete: jest.fn(),
-      fail: jest.fn()
+      fail: jest.fn(),
+      cancel: jest.fn(),
+      isSettled: false
     } as unknown as jest.Mocked<CpsScenario>;
   });
 
@@ -140,6 +142,74 @@ describe('traceScenario operator', () => {
           }
         });
       }
+    });
+  });
+
+  describe('teardown without a source complete/error', () => {
+    it('should cancel the scenario on a manual unsubscribe', () => {
+      const source = new Subject<string>();
+      const subscription = source.pipe(traceScenario(scenario)).subscribe();
+
+      subscription.unsubscribe();
+
+      expect(scenario.cancel).toHaveBeenCalledTimes(1);
+      expect(scenario.complete).not.toHaveBeenCalled();
+      expect(scenario.fail).not.toHaveBeenCalled();
+    });
+
+    it('should cancel a superseded scenario when switchMap moves to the next inner observable', () => {
+      const supersededScenario = {
+        complete: jest.fn(),
+        fail: jest.fn(),
+        cancel: jest.fn(),
+        isSettled: false
+      } as unknown as jest.Mocked<CpsScenario>;
+      const pendingFirstRequest = new Subject<string>();
+      const secondRequest = of('b');
+      const trigger = new Subject<number>();
+
+      trigger
+        .pipe(
+          switchMap((n) =>
+            (n === 1 ? pendingFirstRequest : secondRequest).pipe(
+              traceScenario(n === 1 ? supersededScenario : scenario)
+            )
+          )
+        )
+        .subscribe();
+
+      trigger.next(1); // subscribes traceScenario(supersededScenario), still pending
+      trigger.next(2); // switchMap unsubscribes it before it ever settles
+
+      expect(supersededScenario.cancel).toHaveBeenCalledTimes(1);
+      expect(supersededScenario.complete).not.toHaveBeenCalled();
+      expect(supersededScenario.fail).not.toHaveBeenCalled();
+      expect(scenario.complete).toHaveBeenCalledWith(undefined);
+    });
+
+    it('should not cancel a scenario that already completed normally', (done) => {
+      of('value')
+        .pipe(traceScenario(scenario))
+        .subscribe({
+          complete: () => {
+            (scenario as unknown as { isSettled: boolean }).isSettled = true;
+            expect(scenario.cancel).not.toHaveBeenCalled();
+            done();
+          }
+        });
+    });
+
+    it('should not cancel a scenario that already failed', (done) => {
+      const error = new Error('boom');
+      throwError(() => error)
+        .pipe(traceScenario(scenario))
+        .subscribe({
+          error: () => {
+            (scenario as unknown as { isSettled: boolean }).isSettled = true;
+            expect(scenario.cancel).not.toHaveBeenCalled();
+            done();
+          }
+        });
     });
   });
 });

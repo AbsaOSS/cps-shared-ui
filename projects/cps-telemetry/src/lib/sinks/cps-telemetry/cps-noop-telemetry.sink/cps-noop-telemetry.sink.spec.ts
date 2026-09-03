@@ -26,8 +26,14 @@ describe('CpsNoopTelemetrySink', () => {
     expect(() => sink.setUserId('user-1')).not.toThrow();
   });
 
-  it('should report no user id, even after setUserId()', () => {
+  it('should report the user id last given to setUserId(), even though telemetry itself is discarded', () => {
     sink.setUserId('user-1');
+    expect(sink.getUserId()).toBe('user-1');
+  });
+
+  it('should report no user id again after signing out', () => {
+    sink.setUserId('user-1');
+    sink.setUserId(undefined);
     expect(sink.getUserId()).toBeUndefined();
   });
 

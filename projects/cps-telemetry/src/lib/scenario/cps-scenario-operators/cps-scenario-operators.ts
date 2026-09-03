@@ -70,6 +70,11 @@ export function traceScenario<T>(
           },
           error: (error: unknown) => {
             scenario.fail({ error });
+          },
+          unsubscribe: () => {
+            if (!scenario.isSettled) {
+              scenario.cancel();
+            }
           }
         })
       );

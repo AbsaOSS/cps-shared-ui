@@ -16,6 +16,8 @@ import { CpsTelemetrySink } from '../cps-telemetry-abstract.sink/cps-telemetry-a
  */
 @Injectable()
 export class CpsNoopTelemetrySink extends CpsTelemetrySink {
+  private userId?: string;
+
   /** @inheritdoc */
   record(
     _eventType: string,
@@ -35,11 +37,13 @@ export class CpsNoopTelemetrySink extends CpsTelemetrySink {
   }
 
   /** @inheritdoc */
-  setUserId(_userId: string | undefined): void {}
+  setUserId(userId: string | undefined): void {
+    this.userId = userId;
+  }
 
   /** @inheritdoc */
   getUserId(): string | undefined {
-    return undefined;
+    return this.userId;
   }
 
   /** @inheritdoc */
