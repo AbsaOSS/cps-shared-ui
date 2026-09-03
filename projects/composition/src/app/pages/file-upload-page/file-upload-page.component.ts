@@ -15,8 +15,7 @@ import { Observable, catchError, delay, from, map, of } from 'rxjs';
 import {
   CpsLoggerService,
   CpsScenario,
-  CpsScenarioTelemetryService,
-  traceScenario
+  CpsScenarioTelemetryService
 } from 'cps-telemetry';
 import '../../services/telemetry.schema';
 
@@ -89,15 +88,14 @@ export class FileUploadPageComponent implements OnDestroy {
 
     return from(file.text()).pipe(
       delay(3000),
-      traceScenario(scenario, () => ({
-        metadata: { fileSize: file.size }
-      })),
       map((fileContentsAsText) => {
         console.log(fileContentsAsText);
+        scenario.complete({ metadata: { fileSize: file.size } });
         scenarios.delete(file.name);
         return true;
       }),
       catchError((error) => {
+        scenario.fail({ error });
         this.logger.error('Error reading file', {
           error,
           context: 'FileUpload',

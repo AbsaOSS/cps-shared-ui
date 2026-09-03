@@ -34,4 +34,14 @@ describe('CpsNoopTelemetrySink', () => {
   it('should discard flush() without throwing', () => {
     expect(() => sink.flush(true)).not.toThrow();
   });
+
+  it('should accept the full sink API when typed as the concrete class itself, not just through CpsTelemetrySink', () => {
+    const concrete = new CpsNoopTelemetrySink();
+    expect(() => {
+      concrete.record('com.cps.bi', { x: 1 }, { a: 1 });
+      concrete.recordError({ name: 'Error', message: 'boom' }, { a: 1 });
+      concrete.setUserId('user-1');
+      concrete.flush(true);
+    }).not.toThrow();
+  });
 });

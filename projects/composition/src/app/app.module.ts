@@ -20,6 +20,7 @@ import { NavigationSidebarComponent } from './components/navigation-sidebar/navi
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
 import { AppLogApiProvider } from './services/app-log-api.provider';
 import { AppRumCredentialsProvider } from './services/rum-credentials.provider';
+import { resolveDeploymentEnvironment } from './deployment-environment';
 import './services/telemetry.schema';
 
 @NgModule({
@@ -36,7 +37,7 @@ import './services/telemetry.schema';
     { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
     provideCpsTelemetry({
       application: 'composition',
-      environment: 'production',
+      environment: resolveDeploymentEnvironment(),
       version: packageJson.version
     }),
     provideCpsTelemetrySink('rum'),

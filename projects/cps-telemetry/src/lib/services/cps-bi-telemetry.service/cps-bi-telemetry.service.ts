@@ -142,6 +142,7 @@ export class CpsBiTelemetryService {
       }
     }
 
+    this.lastEmittedAt.delete(key);
     this.lastEmittedAt.set(key, now);
     return false;
   }

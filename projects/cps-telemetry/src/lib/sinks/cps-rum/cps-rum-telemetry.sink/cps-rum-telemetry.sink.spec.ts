@@ -222,6 +222,22 @@ describe('CpsRumTelemetrySink', () => {
       });
     });
 
+    it('should accept a real-shaped ClientBuilder for clientBuilder with no cast', async () => {
+      const clientBuilder = (
+        endpoint: URL,
+        region: string,
+        credentials?: { accessKeyId: string },
+        compressionStrategy?: { enabled: boolean }
+      ) => ({ endpoint, region, credentials, compressionStrategy });
+
+      configure({
+        loadImpl: async () => bootstrap({ clientBuilder })
+      });
+      await sink.init();
+
+      expect(AwsRumCtor.mock.calls[0][3]).toMatchObject({ clientBuilder });
+    });
+
     it('should pass through every SDK-default-mirroring field the representative-sample test above leaves uncovered', async () => {
       const fetchFunction = async () => new Response();
 

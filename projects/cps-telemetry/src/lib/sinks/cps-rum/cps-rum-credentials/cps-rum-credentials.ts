@@ -158,9 +158,10 @@ export interface CpsRumAppMonitorConfig {
   /**
    * Overrides how the SDK builds its data-plane HTTP client. An advanced
    * escape hatch — see `aws-rum-web`'s own `ClientBuilder` type for the exact
-   * signature. Default unset.
+   * signature (`(endpoint: URL, region: string, credentials?, compressionStrategy?) => DataPlaneClient`).
+   * Default unset.
    */
-  clientBuilder?: (...args: unknown[]) => unknown;
+  clientBuilder?: (endpoint: URL, region: string) => unknown;
 
   // ---- Cookies & privacy ----
 

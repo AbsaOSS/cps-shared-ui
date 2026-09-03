@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { take } from 'rxjs';
 import {
   CPS_LOG_API_PROVIDER,
   CpsNoopTelemetrySink,
@@ -103,6 +104,28 @@ describe('FileUploadPageComponent', () => {
 
       component.onDisabledFileProcessingCancelled('report.csv');
 
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+    });
+  });
+
+  describe('successful processing', () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    it('should settle the scenario as success, even wrapped in take(1) the way CpsFileUploadComponent consumes it', async () => {
+      const settled = jest.fn();
+      scenarioTelemetry.settled$.subscribe(settled);
+
+      component
+        .processExtraInfoUploadedFile(makeFile('a.txt'))
+        .pipe(take(1))
+        .subscribe();
+
+      await jest.advanceTimersByTimeAsync(3000);
+
+      expect(settled).toHaveBeenCalledWith(
+        expect.objectContaining({ status: 'success' })
+      );
       expect(scenarioTelemetry.getActive()).toHaveLength(0);
     });
   });

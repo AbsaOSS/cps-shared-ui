@@ -459,6 +459,50 @@ describe('CpsBiTelemetryService', () => {
       expect(cappedSink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(4);
     });
 
+    it('should not evict a just-refreshed key over a genuinely older one, purely because Map.set left it at its original insertion position', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideCpsTelemetry(
+            { application: 'test-app', environment: 'test', version: '1.0.0' },
+            withBiEvents({ dedupWindowMs: 1_000, dedupMaxKeys: 3 })
+          ),
+          RecordingLogApi,
+          { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
+          RecordingSink,
+          { provide: CpsTelemetrySink, useExisting: RecordingSink }
+        ]
+      });
+      const capped = TestBed.inject(CpsBiTelemetryService);
+      const cappedSink = TestBed.inject(RecordingSink);
+      const nowSpy = jest.spyOn(performance, 'now');
+
+      nowSpy.mockReturnValue(0);
+      capped.track('key_c');
+
+      nowSpy.mockReturnValue(500);
+      capped.track('key_d');
+
+      nowSpy.mockReturnValue(1_100);
+      capped.track('key_c');
+
+      nowSpy.mockReturnValue(1_150);
+      capped.track('key_e');
+
+      nowSpy.mockReturnValue(1_160);
+      capped.track('key_f');
+
+      nowSpy.mockReturnValue(1_170);
+      capped.track('key_c');
+
+      const keyCEvents = cappedSink
+        .ofType(CPS_TELEMETRY_EVENT_TYPE.bi)
+        .filter(
+          (e) => (e.payload as { eventName: string }).eventName === 'key_c'
+        );
+      expect(keyCEvents).toHaveLength(2);
+    });
+
     it('should not let a backwards Date.now jump affect dedup timing at all', () => {
       const dateSpy = jest.spyOn(Date, 'now');
       dateSpy.mockReturnValue(2_000_000_000);
