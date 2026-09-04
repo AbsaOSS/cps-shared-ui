@@ -801,9 +801,45 @@ describe('broadcast telemetry across realms', () => {
       { eventType: 'com.cps.bi' },
       { payload: {} },
       { eventType: 1, payload: {} },
-      { eventType: 'com.cps.bi', payload: 'not-an-object' }
+      { eventType: 'com.cps.bi', payload: 'not-an-object' },
+      {
+        eventType: 'com.cps.bi',
+        payload: {},
+        metadata: { nested: {} }
+      },
+      {
+        eventType: 'com.cps.bi',
+        payload: {},
+        metadata: { list: [1, 2] }
+      },
+      {
+        eventType: 'com.cps.bi',
+        payload: {},
+        metadata: 'not-an-object'
+      }
     ])('should reject a malformed event message %p', (fields) => {
       expect(cpsIsBroadcastMessage({ kind: 'event', ...fields })).toBe(false);
+    });
+
+    it('should accept an event message with flat-primitive metadata', () => {
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'event',
+          eventType: 'com.cps.bi',
+          payload: {},
+          metadata: { count: 3, ok: true, note: 'x', blank: null }
+        })
+      ).toBe(true);
+    });
+
+    it('should accept an event message with no metadata', () => {
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'event',
+          eventType: 'com.cps.bi',
+          payload: {}
+        })
+      ).toBe(true);
     });
 
     it('should accept a well-formed error message', () => {
@@ -820,9 +856,23 @@ describe('broadcast telemetry across realms', () => {
       { error: { name: 'Error' } },
       { error: { message: 'boom' } },
       { error: 'boom' },
-      { error: { name: 'Error', message: 'boom', stack: 42 } }
+      { error: { name: 'Error', message: 'boom', stack: 42 } },
+      {
+        error: { name: 'Error', message: 'boom' },
+        metadata: { nested: {} }
+      }
     ])('should reject a malformed error message %p', (fields) => {
       expect(cpsIsBroadcastMessage({ kind: 'error', ...fields })).toBe(false);
+    });
+
+    it('should accept an error message with flat-primitive metadata', () => {
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'error',
+          error: { name: 'Error', message: 'boom' },
+          metadata: { origin: 'checkout' }
+        })
+      ).toBe(true);
     });
 
     it('should accept an error message with a string stack', () => {

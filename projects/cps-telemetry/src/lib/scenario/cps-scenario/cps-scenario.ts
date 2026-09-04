@@ -755,6 +755,10 @@ export class CpsScenario {
     this.timeoutHandle = setTimeout(
       () => {
         this.timeoutHandle = undefined;
+        if (remainingMs > MAX_TIMEOUT_MS) {
+          this.scheduleTimeout();
+          return;
+        }
         this.settle('timeout', {
           message: `Scenario did not settle within ${timeoutMs}ms`
         });

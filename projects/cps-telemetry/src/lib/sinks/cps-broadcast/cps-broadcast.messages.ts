@@ -208,6 +208,31 @@ export function cpsConnectBroadcastChannel(
 }
 
 /**
+ * Whether `value` is a valid `metadata` field: absent, or a non-array
+ * object whose values are all finite numbers, strings, booleans, or null —
+ * the same flat-primitives contract `cpsRedactMetadata` enforces on the way
+ * out. Without this, a same-origin sender (not necessarily this library's
+ * own sink) could post a nested object on the channel that reaches a
+ * receiving sink's own sanitizer — e.g. `CpsRumTelemetrySink.sanitize()` —
+ * unchecked, since that step trusts the shape rather than re-validating it.
+ */
+function isValidBroadcastMetadata(value: unknown): boolean {
+  if (value === undefined) {
+    return true;
+  }
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return false;
+  }
+  return Object.values(value).every(
+    (v) =>
+      v === null ||
+      typeof v === 'string' ||
+      typeof v === 'boolean' ||
+      (typeof v === 'number' && Number.isFinite(v))
+  );
+}
+
+/**
  * Narrows an incoming `BroadcastChannel` payload to a telemetry message.
  *
  * Checks each kind's required fields, not just `kind`, so a same-named
@@ -231,7 +256,8 @@ export function cpsIsBroadcastMessage(
       return (
         typeof message.eventType === 'string' &&
         typeof message.payload === 'object' &&
-        message.payload !== null
+        message.payload !== null &&
+        isValidBroadcastMetadata(message.metadata)
       );
     case 'error': {
       const error = message.error as Record<string, unknown> | undefined;
@@ -240,7 +266,8 @@ export function cpsIsBroadcastMessage(
         error !== null &&
         typeof error.name === 'string' &&
         typeof error.message === 'string' &&
-        (error.stack === undefined || typeof error.stack === 'string')
+        (error.stack === undefined || typeof error.stack === 'string') &&
+        isValidBroadcastMetadata(message.metadata)
       );
     }
     case 'flush':

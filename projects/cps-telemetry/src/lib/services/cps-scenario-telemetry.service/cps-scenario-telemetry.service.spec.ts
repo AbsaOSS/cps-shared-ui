@@ -1001,6 +1001,17 @@ describe('CpsScenarioTelemetryService', () => {
       jest.advanceTimersByTime(1000);
       expect(scenario.status).toBeUndefined();
     });
+
+    it('should reschedule rather than settle early when a clamped timeout hop fires', () => {
+      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+      const scenario = service.start({ name: 'huge', timeoutMs: thirtyDaysMs });
+
+      jest.advanceTimersByTime(2_147_483_647);
+      expect(scenario.status).toBeUndefined();
+
+      jest.advanceTimersByTime(thirtyDaysMs - 2_147_483_647);
+      expect(scenario.status).toBe('timeout');
+    });
   });
 
   describe('correlation', () => {
