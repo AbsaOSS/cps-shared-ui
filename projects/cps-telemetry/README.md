@@ -284,6 +284,26 @@ this.api
   .subscribe();
 ```
 
+That cancellation carries no `reason` unless you supply `cancelOutcome`.
+This matters most for a `switchMap`-superseded scenario specifically: your
+own `scenario.cancel({ reason: 'superseded' })` called from the newer
+value's `switchMap` projector never works, because `switchMap` already
+unsubscribed — and thereby settled — the prior scenario before that
+projector runs. `cancelOutcome` is the only way to label it:
+
+```ts
+this.searchSubject$.pipe(
+  switchMap((query) => {
+    const scenario = this.scenarioTelemetry.start({ name: 'search' });
+    return this.api
+      .search(query)
+      .pipe(
+        traceScenario(scenario, { cancelOutcome: { reason: 'superseded' } })
+      );
+  })
+);
+```
+
 There are five statuses: `success`, `failure`, `abandoned`, `incomplete` and
 `timeout` — there is no "in progress" value. `scenario.status` stays
 `undefined` until it settles; use `scenario.isSettled` to check whether it is

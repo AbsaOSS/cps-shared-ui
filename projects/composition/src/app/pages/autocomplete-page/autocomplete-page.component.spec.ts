@@ -109,7 +109,7 @@ describe('AutocompletePageComponent', () => {
 
       expect(scenarioTelemetry.getActive()).toHaveLength(1);
       expect(settled).toHaveBeenCalledWith(
-        expect.objectContaining({ status: 'abandoned' })
+        expect.objectContaining({ status: 'abandoned', reason: 'superseded' })
       );
     });
 

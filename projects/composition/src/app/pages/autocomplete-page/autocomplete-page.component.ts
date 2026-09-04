@@ -267,8 +267,6 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
     return this._validateOptionSubject$
       .pipe(
         switchMap((option) => {
-          this.validateScenario?.cancel({ reason: 'superseded' });
-
           const scenario = this.scenarioTelemetry.start({
             name: 'autocomplete-validate',
             feature: 'autocomplete'
@@ -277,7 +275,9 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
           this.validateScenario = scenario;
 
           return this._validateOption(option).pipe(
-            traceScenario(scenario),
+            traceScenario(scenario, {
+              cancelOutcome: { reason: 'superseded' }
+            }),
             tap(() => this._clearValidateState()),
             catchError((error: unknown) => {
               // Handle errors and finalize validation state

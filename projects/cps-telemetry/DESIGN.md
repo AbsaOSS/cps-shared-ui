@@ -439,7 +439,12 @@ so it never re-cancels one that already completed or failed (`tap`'s own
 `unsubscribe` hook fires after every teardown, settled or not). Without
 this, a cancelled-by-unsubscription scenario would sit active until its own
 timeout and record as `timeout` rather than the caller-driven abandonment
-it actually was.
+it actually was. That cancellation carries no `reason` unless
+`CpsTraceScenarioOptions.cancelOutcome` is supplied — a caller cannot
+attach one itself by calling `scenario.cancel({ reason })` from a
+`switchMap` projector, since `switchMap` unsubscribes (and thereby settles)
+the prior inner Observable before the projector for the new value ever
+runs.
 
 **Active registry leak detection.** In long-lived single-page applications
 or kiosks, scenarios with `timeoutMs: 0` that get forgotten because of a

@@ -15,6 +15,12 @@ export interface CpsTraceScenarioOptions<T> {
    * based on the emitted value when the Observable completes successfully.
    */
   outcome?: (value: T) => CpsScenarioOutcome | void;
+
+  /**
+   * Outcome used when the stream is unsubscribed before completing or
+   * erroring — e.g. a `switchMap` moving on to a newer value.
+   */
+  cancelOutcome?: CpsScenarioOutcome | (() => CpsScenarioOutcome | void);
 }
 
 /**
@@ -45,6 +51,8 @@ export function traceScenario<T>(
 ): MonoTypeOperatorFunction<T> {
   const outcomeMapper =
     typeof options === 'function' ? options : options?.outcome;
+  const cancelOutcome =
+    typeof options === 'function' ? undefined : options?.cancelOutcome;
 
   return (source: Observable<T>): Observable<T> =>
     defer(() => {
@@ -73,7 +81,15 @@ export function traceScenario<T>(
           },
           unsubscribe: () => {
             if (!scenario.isSettled) {
-              scenario.cancel();
+              const resolved =
+                typeof cancelOutcome === 'function'
+                  ? cpsSafe(
+                      'scenario.traceCancelOutcome',
+                      cancelOutcome,
+                      undefined
+                    )
+                  : cancelOutcome;
+              scenario.cancel(resolved || undefined);
             }
           }
         })

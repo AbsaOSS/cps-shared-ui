@@ -187,6 +187,86 @@ describe('traceScenario operator', () => {
       expect(scenario.complete).toHaveBeenCalledWith(undefined);
     });
 
+    it('should cancel with the configured cancelOutcome on unsubscribe', () => {
+      const source = new Subject<string>();
+      const subscription = source
+        .pipe(
+          traceScenario(scenario, { cancelOutcome: { reason: 'superseded' } })
+        )
+        .subscribe();
+
+      subscription.unsubscribe();
+
+      expect(scenario.cancel).toHaveBeenCalledWith({ reason: 'superseded' });
+    });
+
+    it('should accept cancelOutcome as a function, evaluated at unsubscribe time', () => {
+      const source = new Subject<string>();
+      const subscription = source
+        .pipe(
+          traceScenario(scenario, {
+            cancelOutcome: () => ({ reason: 'superseded' })
+          })
+        )
+        .subscribe();
+
+      subscription.unsubscribe();
+
+      expect(scenario.cancel).toHaveBeenCalledWith({ reason: 'superseded' });
+    });
+
+    it('should still cancel, with no outcome, when cancelOutcome throws', () => {
+      const consoleError = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const source = new Subject<string>();
+      const subscription = source
+        .pipe(
+          traceScenario(scenario, {
+            cancelOutcome: () => {
+              throw new Error('cancelOutcome is broken');
+            }
+          })
+        )
+        .subscribe();
+
+      subscription.unsubscribe();
+
+      expect(scenario.cancel).toHaveBeenCalledWith(undefined);
+      consoleError.mockRestore();
+    });
+
+    it('should record a reason for a switchMap-superseded scenario, not just a bare cancel', () => {
+      const supersededScenario = {
+        complete: jest.fn(),
+        fail: jest.fn(),
+        cancel: jest.fn(),
+        isSettled: false
+      } as unknown as jest.Mocked<CpsScenario>;
+      const pendingFirstRequest = new Subject<string>();
+      const secondRequest = of('b');
+      const trigger = new Subject<number>();
+
+      trigger
+        .pipe(
+          switchMap((n) =>
+            (n === 1 ? pendingFirstRequest : secondRequest).pipe(
+              traceScenario(n === 1 ? supersededScenario : scenario, {
+                cancelOutcome: { reason: 'superseded' }
+              })
+            )
+          )
+        )
+        .subscribe();
+
+      trigger.next(1);
+      trigger.next(2);
+
+      expect(supersededScenario.cancel).toHaveBeenCalledWith({
+        reason: 'superseded'
+      });
+    });
+
     it('should not cancel a scenario that already completed normally', (done) => {
       of('value')
         .pipe(traceScenario(scenario))
