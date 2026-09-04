@@ -760,17 +760,68 @@ bootstrapApplication(FragmentRoot, {
 
 **What a fragment must not provide**
 
-| Do not                               | Why                                                                                                             |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid  |
-| `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                     |
-| `provideCpsTelemetryBroadcastHost()` | Only one realm should host — a second one just wins or loses a leader election and idles either way (see below) |
+| Do not                               | Why                                                                                                                                                                                                                           |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid                                                                                                                |
+| `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                                                                                                                                   |
+| `provideCpsTelemetryBroadcastHost()` | Only one realm should host — if a fragment provided it too, it would just win or lose a pointless leader election alongside the real host (this is separate from the _shell_ itself running in more than one tab — see below) |
 
-The shell itself can safely be open in more than one tab: `BroadcastChannel`
-is origin-wide, so every tab's host shares the same channel, but only one is
-elected leader (a Web Locks-based election) and actually records forwarded
-telemetry — the rest stay fully passive until the leader tab closes. See
-DESIGN.md §13 for the mechanism.
+The shell itself can safely be open in more than one tab without ever
+double-recording one event: `BroadcastChannel` is origin-wide, so every
+tab's host shares the same channel, but only one is elected leader (a Web
+Locks-based election) and actually records forwarded telemetry. "Passive"
+here means the losing tab's _host_ doesn't record or announce identity —
+it does **not** mean that tab's own fragments are harmless. They keep
+forwarding on the same origin-wide channel regardless of which tab wins,
+so their events get recorded through the _winning_ tab's AWS RUM client —
+attributed to a different tab's session and page than the one they
+actually came from. If the same composed page could realistically be open
+in more than one tab, see "Multiple tabs of the same composed page" below
+to avoid that. See DESIGN.md §13 for the full mechanism.
+
+### Multiple tabs of the same composed page
+
+The origin-wide leader election above stops one broadcast event from being
+recorded twice, but it does not stop a losing tab's own fragments from
+being recorded under a _different_ tab's session — their events still
+reach whichever tab won, since `BroadcastChannel` and the Web Locks
+election are both scoped to the whole origin, not to one tab. If your
+composed page could realistically be open in more than one tab at once,
+give each tab's own instance a unique channel name instead of relying on
+the shared default, so tabs never even share a channel:
+
+```ts
+// shell — generate once per page load, before composing any fragment
+const channelId = `cps-telemetry-${crypto.randomUUID()}`;
+
+providers: [
+  provideCpsTelemetry({ application: 'shell', environment: 'prod', version }),
+  provideCpsTelemetryRumSink(),
+  provideCpsTelemetryBroadcastHost(channelId)
+];
+```
+
+Pass `channelId` to each fragment you embed — typically as a query
+parameter on the fragment's own `src` URL, since a fragment runs in a
+separate realm and can't read a JavaScript variable the shell holds:
+
+```ts
+iframe.src = `https://fragment.example.com/?channel=${channelId}`;
+```
+
+```ts
+// fragment — reads the id the shell embedded in its own URL
+const channelId = new URLSearchParams(window.location.search).get('channel');
+
+providers: [
+  provideCpsTelemetry({ application: 'cart', environment: 'prod', version }),
+  provideCpsTelemetrySink('broadcast', { channelName: channelId ?? undefined })
+];
+```
+
+With unique channel names, each tab's leader election trivially resolves to
+itself — no cross-tab contention, and no cross-tab misattribution, since a
+tab's fragments are never even listening on another tab's channel.
 
 ### A fragment that also deploys standalone
 

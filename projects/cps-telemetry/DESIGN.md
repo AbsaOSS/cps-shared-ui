@@ -1610,6 +1610,14 @@ every other host stays fully passive until the leader is destroyed (its
 tab closes) and releases the lock, at which point the next queued host
 takes over.
 
+"Passive" describes the losing host only — not the fragments in its tab.
+`CpsBroadcastTelemetrySink` doesn't know or care about the election; a
+fragment in the losing tab keeps forwarding on the same origin-wide
+channel regardless, and the winning host — the only one actually
+processing messages — records it through its own AWS RUM client. The
+event isn't lost, but it is attributed to the winning tab's session and
+page, not the tab it actually came from. See "Known limits" below.
+
 Feature-detected and fail-open both ways: a browser without the Web Locks
 API elects immediately (matching this arrangement's pre-election, single-
 host behaviour), and a lock _request_ that fails — document not fully
@@ -1641,3 +1649,15 @@ permanently starving every host still queued behind it.
   forwarded messages included, but it is a page-lifecycle safety net for
   every app, not a fragment-specific fix, and it cannot rescue a message
   still in flight on the channel when the fragment's frame is torn down.
+- **The same composed page open in two tabs can cross-attribute
+  telemetry.** The leader election above stops one event from being
+  recorded twice, but the losing tab's own fragments are still forwarding
+  on the same origin-wide channel — their events reach the winning host
+  and get recorded under _its_ tab's session and page, not their own.
+  Nothing here is fragment-specific to that tab; `CpsBroadcastMessage`
+  carries no tab/window identifier at all, so the protocol has no way to
+  route a message back to its originating tab even in principle. If the
+  same composed page could realistically be open in more than one tab,
+  give each tab's own instance a unique channel name instead of the
+  shared default, so tabs never share a channel — see README.md
+  "Multiple tabs of the same composed page" for the pattern.
