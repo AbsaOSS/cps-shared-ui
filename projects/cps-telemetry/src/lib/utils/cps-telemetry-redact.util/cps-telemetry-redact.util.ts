@@ -346,6 +346,58 @@ export function cpsRedactMetadata(
 }
 
 /**
+ * Merges an already-redacted attribute bag into an existing one,
+ * re-applying `maxKeys` to the *combined* result. `cpsRedactMetadata` only
+ * bounds the bag passed to it in isolation — merging two independently
+ * capped bags without this can exceed the configured limit. A key already
+ * present in `target` is always updated (a replacement, not growth); only
+ * a genuinely new key counts against the cap, and is dropped once it's
+ * reached (warns once in dev mode, mirroring `cpsRedactMetadata`).
+ *
+ * Mutates and returns `target`.
+ *
+ * @param target the accumulator merged into, and returned
+ * @param incoming the bag being merged in, normally the output of {@link cpsRedactMetadata}
+ * @param config redaction settings
+ * @returns `target`, with `incoming` merged in
+ *
+ * @group Utils
+ */
+export function cpsMergeMetadata(
+  target: CpsTelemetryMetadata,
+  incoming: CpsTelemetryMetadata | undefined,
+  config: CpsRedactConfig = CPS_DEFAULT_REDACT_CONFIG
+): CpsTelemetryMetadata {
+  if (!incoming) {
+    return target;
+  }
+
+  let keyCount = Object.keys(target).length;
+  let truncated = false;
+
+  for (const [key, value] of Object.entries(incoming)) {
+    const isNewKey = !(key in target);
+    if (isNewKey && keyCount >= config.maxKeys) {
+      truncated = true;
+      continue;
+    }
+    if (isNewKey) {
+      keyCount++;
+    }
+    target[key] = value;
+  }
+
+  if (truncated && cpsIsDevMode()) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `[cps-telemetry] Combined metadata exceeded maxKeys (${config.maxKeys}) and was truncated. Attributes past the limit were dropped silently in production.`
+    );
+  }
+
+  return target;
+}
+
+/**
  * Converts a thrown value into a bounded, telemetry-safe shape — only the
  * constructor name, scrubbed message and (optionally) a capped stack; never
  * the raw error object.

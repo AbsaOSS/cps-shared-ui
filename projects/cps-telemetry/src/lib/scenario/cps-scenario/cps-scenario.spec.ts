@@ -232,6 +232,70 @@ describe('CpsScenario (direct construction)', () => {
     });
   });
 
+  describe('metadata cap across merges', () => {
+    it('should cap accumulated setData() calls at maxKeys, not double-count independently capped bags', () => {
+      const consoleWarn = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const { deps } = createDeps({
+        redact: { ...CPS_DEFAULT_REDACT_CONFIG, maxKeys: 1 }
+      });
+      const scenario = new CpsScenario({ name: 'checkout' }, deps);
+
+      scenario.setData({ a: 1 } as CpsTelemetryMetadata);
+      scenario.setData({ b: 2 } as CpsTelemetryMetadata);
+
+      const metadata = scenario.toRecord().metadata;
+      expect(Object.keys(metadata ?? {})).toHaveLength(1);
+      expect(metadata).toEqual({ a: 1 });
+
+      consoleWarn.mockRestore();
+    });
+
+    it("should cap settle()'s outcome metadata merged into existing scenario metadata", () => {
+      const consoleWarn = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const { deps } = createDeps({
+        redact: { ...CPS_DEFAULT_REDACT_CONFIG, maxKeys: 1 }
+      });
+      const scenario = new CpsScenario({ name: 'checkout' }, deps);
+
+      scenario.setData({ a: 1 } as CpsTelemetryMetadata);
+      scenario.complete({ metadata: { b: 2 } as CpsTelemetryMetadata });
+
+      const metadata = scenario.toRecord().metadata;
+      expect(Object.keys(metadata ?? {})).toHaveLength(1);
+      expect(metadata).toEqual({ a: 1 });
+
+      consoleWarn.mockRestore();
+    });
+
+    it("should cap a step's initial and closing metadata combined, not each independently", () => {
+      const consoleWarn = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+
+      const { deps } = createDeps({
+        redact: { ...CPS_DEFAULT_REDACT_CONFIG, maxKeys: 1 }
+      });
+      const scenario = new CpsScenario({ name: 'checkout' }, deps);
+
+      scenario.step('fetch', { a: 1 } as CpsTelemetryMetadata);
+      scenario.endStep({ metadata: { b: 2 } as CpsTelemetryMetadata });
+
+      const fetchStep = scenario
+        .toRecord()
+        .steps.find((s) => s.name === 'fetch');
+      expect(Object.keys(fetchStep?.metadata ?? {})).toHaveLength(1);
+      expect(fetchStep?.metadata).toEqual({ a: 1 });
+
+      consoleWarn.mockRestore();
+    });
+  });
+
   describe('CpsScenarioDeps contract', () => {
     it('should read identity from the supplied deps, not a default', () => {
       const { deps } = createDeps({

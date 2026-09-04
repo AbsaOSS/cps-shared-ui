@@ -22,6 +22,7 @@ import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstra
 import { cpsIsDebugEnabled } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
 import {
   CpsRedactConfig,
+  cpsMergeMetadata,
   cpsNormalizeError,
   cpsRedactMetadata,
   cpsScrubString
@@ -313,7 +314,7 @@ export class CpsScenario {
     return this.mutate('setData', () => {
       const safe = cpsRedactMetadata(metadata, this.deps.redact);
       if (safe) {
-        Object.assign(this.metadata, safe);
+        cpsMergeMetadata(this.metadata, safe, this.deps.redact);
       }
     });
   }
@@ -542,7 +543,7 @@ export class CpsScenario {
       this.settledReason = resolvedReason;
 
       if (resolvedMetadata) {
-        Object.assign(this.metadata, resolvedMetadata);
+        cpsMergeMetadata(this.metadata, resolvedMetadata, redact);
       }
 
       this.measureScenarioTiming();
@@ -637,12 +638,13 @@ export class CpsScenario {
         : cpsScrubString(detail.reason, redact);
     }
     if (detail?.metadata) {
-      step.metadata = {
-        ...step.metadata,
-        ...(alreadyRedacted
+      step.metadata = cpsMergeMetadata(
+        step.metadata ?? {},
+        alreadyRedacted
           ? detail.metadata
-          : cpsRedactMetadata(detail.metadata, redact))
-      };
+          : cpsRedactMetadata(detail.metadata, redact),
+        redact
+      );
     }
     if (status === 'failure' && error !== undefined) {
       step.error = cpsNormalizeError(error, redact);

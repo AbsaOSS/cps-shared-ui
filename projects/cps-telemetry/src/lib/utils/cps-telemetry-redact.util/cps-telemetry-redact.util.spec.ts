@@ -1,6 +1,7 @@
 import {
   CPS_DEFAULT_REDACT_CONFIG,
   CPS_REDACTED,
+  cpsMergeMetadata,
   cpsNormalizeError,
   cpsRedactConfigFor,
   cpsRedactMetadata,
@@ -474,6 +475,112 @@ describe('cpsRedactMetadata', () => {
 
   it('should return undefined when nothing survives redaction', () => {
     expect(cpsRedactMetadata({ nested: { a: 1 } })).toBeUndefined();
+  });
+});
+
+describe('cpsMergeMetadata', () => {
+  it('should return target unchanged when incoming is undefined', () => {
+    const target = { a: 1 };
+    expect(cpsMergeMetadata(target, undefined)).toBe(target);
+    expect(target).toEqual({ a: 1 });
+  });
+
+  it('should merge a disjoint bag in when under maxKeys', () => {
+    const target = { a: 1 };
+    const result = cpsMergeMetadata(
+      target,
+      { b: 2 },
+      {
+        ...CPS_DEFAULT_REDACT_CONFIG,
+        maxKeys: 5
+      }
+    );
+    expect(result).toEqual({ a: 1, b: 2 });
+  });
+
+  it('should drop a genuinely new key once the combined count reaches maxKeys', () => {
+    const target = { a: 1 };
+    const result = cpsMergeMetadata(
+      target,
+      { b: 2 },
+      {
+        ...CPS_DEFAULT_REDACT_CONFIG,
+        maxKeys: 1
+      }
+    );
+    expect(result).toEqual({ a: 1 });
+  });
+
+  it('should allow updating a key already present even when target is at maxKeys', () => {
+    const target = { a: 1 };
+    const result = cpsMergeMetadata(
+      target,
+      { a: 2 },
+      {
+        ...CPS_DEFAULT_REDACT_CONFIG,
+        maxKeys: 1
+      }
+    );
+    expect(result).toEqual({ a: 2 });
+  });
+
+  it('should mutate and return the same target reference', () => {
+    const target = { a: 1 };
+    expect(cpsMergeMetadata(target, { b: 2 })).toBe(target);
+  });
+
+  describe('truncation warning', () => {
+    let consoleWarn: jest.SpyInstance;
+
+    beforeEach(() => {
+      consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      consoleWarn.mockRestore();
+    });
+
+    it('should warn once when maxKeys actually truncates the combined result', () => {
+      cpsMergeMetadata(
+        { a: 1 },
+        { b: 2 },
+        {
+          ...CPS_DEFAULT_REDACT_CONFIG,
+          maxKeys: 1
+        }
+      );
+
+      expect(consoleWarn).toHaveBeenCalledTimes(1);
+      expect(consoleWarn).toHaveBeenCalledWith(
+        expect.stringContaining('maxKeys')
+      );
+    });
+
+    it('should stay silent when the combined bag fits under maxKeys', () => {
+      cpsMergeMetadata(
+        { a: 1 },
+        { b: 2 },
+        {
+          ...CPS_DEFAULT_REDACT_CONFIG,
+          maxKeys: 2
+        }
+      );
+
+      expect(consoleWarn).not.toHaveBeenCalled();
+    });
+
+    it('should stay silent when only existing keys are updated at maxKeys', () => {
+      cpsMergeMetadata(
+        { a: 1 },
+        { a: 2 },
+        {
+          ...CPS_DEFAULT_REDACT_CONFIG,
+          maxKeys: 1
+        }
+      );
+
+      expect(consoleWarn).not.toHaveBeenCalled();
+    });
   });
 });
 
