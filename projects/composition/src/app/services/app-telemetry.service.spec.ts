@@ -1,9 +1,11 @@
+import { PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
   NavigationCancel,
   NavigationCancellationCode,
   NavigationEnd,
   NavigationError,
+  NavigationSkipped,
   NavigationStart,
   Router
 } from '@angular/router';
@@ -130,6 +132,40 @@ describe('AppTelemetryService', () => {
     expect(scenarios()[0]).toMatchObject({
       status: 'abandoned',
       message: 'guard rejected'
+    });
+  });
+
+  describe('NavigationSkipped', () => {
+    it('should clear a stale intent so it cannot backdate an unrelated navigation', () => {
+      jest.useFakeTimers();
+
+      service.markNavigationIntent();
+      routerEvents.next(new NavigationSkipped(1, '/button', 'same url'));
+
+      jest.advanceTimersByTime(500);
+      routerEvents.next(new NavigationStart(2, '/select'));
+      routerEvents.next(new NavigationEnd(2, '/select', '/select'));
+
+      expect(scenarios()[0].delta).toBeLessThan(100);
+
+      jest.useRealTimers();
+    });
+
+    it('should settle a scenario NavigationStart already opened before the skip follows', () => {
+      routerEvents.next(new NavigationStart(1, '/button'));
+
+      const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+      expect(scenarioTelemetry.getActive()).toHaveLength(1);
+
+      routerEvents.next(new NavigationSkipped(1, '/button', 'same url'));
+
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+      expect(scenarios()[0]).toMatchObject({ status: 'abandoned' });
+    });
+
+    it('should ignore a skip for a navigation that never started', () => {
+      routerEvents.next(new NavigationSkipped(99, '/never-started', 'x'));
+      expect(events).toHaveLength(0);
     });
   });
 
@@ -426,6 +462,50 @@ describe('AppTelemetryService', () => {
       );
 
       consoleError.mockRestore();
+    });
+  });
+
+  describe('server-side rendering', () => {
+    it('should not throw, and should omit navigator-derived metadata, when running on the server', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideCpsTelemetry(
+            {
+              application: 'composition-test',
+              environment: 'test',
+              version: '0.0.0'
+            },
+            withScenarios({ defaultTimeoutMs: 0 })
+          ),
+          { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+          {
+            provide: CpsTelemetrySink,
+            useValue: {
+              record: (eventType: string, payload: Record<string, unknown>) =>
+                events.push({ eventType, payload }),
+              recordError: () => undefined,
+              getSessionId: () => 'session-1',
+              setUserId: () => undefined,
+              getUserId: () => undefined,
+              flush: () => undefined
+            }
+          },
+          {
+            provide: Router,
+            useValue: { events: routerEvents.asObservable() }
+          },
+          { provide: PLATFORM_ID, useValue: 'server' }
+        ]
+      });
+
+      const serverService = TestBed.inject(AppTelemetryService);
+      expect(() => serverService.start()).not.toThrow();
+
+      const logs = TestBed.inject(AppLogApiProvider).getRecords();
+      const started = logs.find((r) => r.message === 'Application started');
+      expect(started).toBeDefined();
+      expect(started?.metadata).toBeUndefined();
     });
   });
 });

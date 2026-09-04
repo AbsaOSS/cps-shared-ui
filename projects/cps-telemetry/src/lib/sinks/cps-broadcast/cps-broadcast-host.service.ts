@@ -134,10 +134,12 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
     const activeCount = hostsInThisRealm.get(channelName) ?? 0;
 
     if (activeCount > 0) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `[cps-telemetry] a second telemetry host is active on channel "${channelName}" in this document; only one realm should provide it`
-      );
+      cpsSafeVoid('broadcastHost.duplicateWarning', () => {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[cps-telemetry] a second telemetry host is active on channel "${channelName}" in this document; only one realm should provide it`
+        );
+      });
     }
 
     hostsInThisRealm.set(channelName, activeCount + 1);

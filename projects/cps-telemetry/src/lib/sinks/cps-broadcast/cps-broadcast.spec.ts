@@ -603,6 +603,42 @@ describe('broadcast telemetry across realms', () => {
       expect(warn).not.toHaveBeenCalled();
     });
 
+    it('should not let a throwing console.warn crash duplicate-host construction', () => {
+      const channel = 'duplicate-detection-throwing-warn-test';
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {
+        throw new Error('console is patched and broken');
+      });
+
+      const providers = [
+        RecordingSink,
+        { provide: CpsTelemetrySink, useExisting: RecordingSink },
+        { provide: CPS_BROADCAST_CHANNEL, useValue: channel }
+      ];
+      const first = createRealm([...providers, CpsTelemetryBroadcastHost]).get(
+        CpsTelemetryBroadcastHost
+      );
+
+      let second: CpsTelemetryBroadcastHost | undefined;
+      expect(() => {
+        second = createRealm([...providers, CpsTelemetryBroadcastHost]).get(
+          CpsTelemetryBroadcastHost
+        );
+      }).not.toThrow();
+
+      first.ngOnDestroy();
+      second?.ngOnDestroy();
+      warn.mockRestore();
+
+      const freshWarn = jest
+        .spyOn(console, 'warn')
+        .mockImplementation(() => {});
+      createRealm([...providers, CpsTelemetryBroadcastHost]).get(
+        CpsTelemetryBroadcastHost
+      );
+      expect(freshWarn).not.toHaveBeenCalled();
+      freshWarn.mockRestore();
+    });
+
     it('should stop delivering once the fragment is destroyed', async () => {
       const fragment = createFragment();
       const sink = fragment.get(CpsBroadcastTelemetrySink);

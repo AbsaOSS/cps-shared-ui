@@ -1,4 +1,5 @@
-import { DestroyRef, inject, Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Event as RouterEvent,
@@ -6,6 +7,7 @@ import {
   NavigationCancellationCode,
   NavigationEnd,
   NavigationError,
+  NavigationSkipped,
   NavigationStart,
   Router
 } from '@angular/router';
@@ -39,6 +41,7 @@ export class AppTelemetryService {
   private readonly biTelemetry = inject(CpsBiTelemetryService);
   private readonly logger = inject(CpsLoggerService).getLogger('app');
   private readonly destroyRef = inject(DestroyRef);
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   /**
    * Angular identifies concurrent navigations by id, so scenarios are keyed the
@@ -66,7 +69,7 @@ export class AppTelemetryService {
     // exists to bound the session rather than to carry them.
     this.logger.log('Application started', {
       context: 'AppTelemetry',
-      metadata: { language: navigator.language }
+      metadata: this.isBrowser ? { language: navigator.language } : undefined
     });
 
     this.router.events
@@ -150,6 +153,14 @@ export class AppTelemetryService {
 
       this.settle(event.id, (scenario) =>
         scenario.cancel({ message: event.reason || 'navigation-cancelled' })
+      );
+      return;
+    }
+
+    if (event instanceof NavigationSkipped) {
+      this.navigationIntentAt = undefined;
+      this.settle(event.id, (scenario) =>
+        scenario.cancel({ message: event.reason || 'navigation-skipped' })
       );
       return;
     }
