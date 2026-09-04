@@ -147,8 +147,9 @@ export interface CpsScenarioStep extends CpsScenarioStepDetail {
   stepDelta?: number;
 
   /**
-   * Milliseconds since this page loaded (`performance.timeOrigin`), at the
-   * moment this step closed — a timeline position, not a duration.
+   * Milliseconds since the host page loaded (`performance.timeOrigin`), at
+   * the moment this step closed — a timeline position, not a duration.
+   * Consistent across a composed page's realms; see `cpsElapsedNow`.
    */
   elapsed?: number;
 
@@ -304,8 +305,9 @@ export interface CpsScenarioRecord
   delta: number;
 
   /**
-   * Milliseconds since this page loaded (`performance.timeOrigin`), at the
-   * moment this record was built — a timeline position, not a duration. Not
+   * Milliseconds since the host page loaded (`performance.timeOrigin`), at
+   * the moment this record was built — a timeline position, not a duration.
+   * Consistent across a composed page's realms; see `cpsElapsedNow`. Not
    * exact for the RUM session itself, since the session cookie can survive a
    * reload that resets `performance.timeOrigin`.
    */

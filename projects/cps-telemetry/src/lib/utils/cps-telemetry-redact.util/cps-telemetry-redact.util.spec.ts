@@ -212,6 +212,41 @@ describe('cpsScrubString', () => {
       ).toBe(`ref ${CPS_REDACTED} and also ref ${CPS_REDACTED}`);
     });
 
+    it('should redact correctly across repeated calls reusing the same non-global pattern object', () => {
+      const pattern = /ACC-\d+/;
+      const config = {
+        ...CPS_DEFAULT_REDACT_CONFIG,
+        extraValuePatterns: [pattern]
+      };
+
+      expect(cpsScrubString('ref ACC-111 and also ACC-222', config)).toBe(
+        `ref ${CPS_REDACTED} and also ${CPS_REDACTED}`
+      );
+
+      expect(cpsScrubString('ref ACC-333 and also ACC-444', config)).toBe(
+        `ref ${CPS_REDACTED} and also ${CPS_REDACTED}`
+      );
+    });
+
+    it('should not recompile the same non-global pattern into a new RegExp on every call', () => {
+      const RegExpSpy = jest.spyOn(globalThis, 'RegExp');
+      const pattern = /ACC-\d+/;
+      const config = {
+        ...CPS_DEFAULT_REDACT_CONFIG,
+        extraValuePatterns: [pattern]
+      };
+
+      cpsScrubString('ref ACC-111', config);
+      const callsAfterFirst = RegExpSpy.mock.calls.length;
+      cpsScrubString('ref ACC-222', config);
+      const callsAfterSecond = RegExpSpy.mock.calls.length;
+
+      expect(callsAfterFirst).toBeGreaterThan(0);
+      expect(callsAfterSecond).toBe(callsAfterFirst);
+
+      RegExpSpy.mockRestore();
+    });
+
     it('should fully redact a credit card number regardless of scanValuePatterns order', () => {
       const value = 'card on file: 4111111111111111';
       expect(
@@ -590,6 +625,15 @@ describe('cpsNormalizeError', () => {
     expect(result?.name).toBe('TypeError');
     expect(result?.message).toBe('boom');
     expect(typeof result?.stack).toBe('string');
+  });
+
+  it.each([
+    ['empty', ''],
+    ['missing', undefined]
+  ])('should fall back to the generic label when name is %s', (_case, name) => {
+    const error = new Error('boom');
+    (error as { name: unknown }).name = name;
+    expect(cpsNormalizeError(error)?.name).toBe('Error');
   });
 
   it('should omit the stack when capture is disabled', () => {

@@ -239,7 +239,7 @@ interface CpsScenarioRecord {
   startTime: string; // ISO-8601
   endTime?: string; // ISO-8601; wall-clock position, not a duration
   delta: number; // ms — total duration, the headline latency measure
-  elapsed: number; // ms since this page loaded, at settle — a timeline position
+  elapsed: number; // ms since the host page loaded, at settle — a timeline position
   stepCount: number;
   steps: CpsScenarioStep[]; // forensics in a log query, not metric material (§7)
   exceededStepsLimit?: boolean; // steps[] truncated at maxSteps
@@ -297,7 +297,7 @@ interface CpsScenarioStep {
   startOffset: number; // ms from scenario start, not an epoch
   endOffset?: number;
   stepDelta?: number; // this step's own duration
-  elapsed?: number; // ms since page load, at step close — a timeline position
+  elapsed?: number; // ms since the host page loaded, at step close — a timeline position
   status?: CpsScenarioStepStatus; // same union as the scenario
   message?: string;
   reason?: string; // structured, low-cardinality — independent of message
@@ -722,13 +722,14 @@ Percentiles P50/P75/P95/P99 over either, computed AWS-side (§6).
 them is just `delta` under another name. The pair exists to place a journey
 on the wall clock — when it ran, and which journeys overlapped — not to
 measure how long it took. `elapsed`, unlike either, is not about this journey
-specifically at all — it is a timeline position (ms since the page loaded),
-the same idea a step's own `elapsed` carries, and it is there so events from
-one session can be lined up against each other without this library having
-a session start time to work from. That proxy is inexact across a hard
-reload: the RUM session cookie (`allowCookies` on by default, 30-minute
-default length) survives a reload that `performance.timeOrigin` does not, so
-a `sessionId` can span an `elapsed` reset.
+specifically at all — it is a timeline position (ms since the _host_ page
+loaded, `cpsElapsedNow` — see "Fields that behave correctly across realms"
+in §13), the same idea a step's own `elapsed` carries, and it is there so
+events from one session can be lined up against each other without this
+library having a session start time to work from. That proxy is inexact
+across a hard reload: the RUM session cookie (`allowCookies` on by default,
+30-minute default length) survives a reload that `performance.timeOrigin`
+does not, so a `sessionId` can span an `elapsed` reset.
 
 **Within-journey latency is payload, not a dashboard metric.**
 `steps[].stepDelta`, `aggregates[].elapsed` and `callCount` all ship on the
@@ -1554,6 +1555,12 @@ answer arrives.
   hidden inside each iframe. `cpsMarkName` prefixes every entry with the
   realm's own `application`, so several fragments landing in that one
   track stay distinguishable rather than colliding.
+- **`elapsed`.** Built from `top.performance.now()` (`cpsElapsedNow`), the
+  same reasoning as User Timings — a fragment's own `performance.now()`
+  runs from a later `timeOrigin` than the shell's, and `elapsed` exists
+  specifically so events from one session can be lined up against each
+  other; a per-realm value would silently defeat that. Falls back to the
+  local realm's own clock if `top` throws (cross-origin, sandboxed).
 
 ### What a follower realm must not provide
 

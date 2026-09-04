@@ -150,11 +150,27 @@ function scrubCreditCards(value: string): string {
   });
 }
 
+/**
+ * Memoizes the global copy `ensureGlobal` builds for a non-global pattern —
+ * config-level regexes are stable across many calls, so without this a
+ * fresh `RegExp` would be compiled on every scrubbed string, for the life
+ * of the page. Safe to reuse: every use is via `.replace()`, which resets
+ * `lastIndex` itself before scanning.
+ */
+const globalPatternCache = new WeakMap<RegExp, RegExp>();
+
 /** Ensures a pattern has the `g` flag, so `.replace()` catches every occurrence, not just the first. */
 function ensureGlobal(pattern: RegExp): RegExp {
-  return pattern.global
-    ? pattern
-    : new RegExp(pattern.source, `${pattern.flags}g`);
+  if (pattern.global) {
+    return pattern;
+  }
+
+  let global = globalPatternCache.get(pattern);
+  if (!global) {
+    global = new RegExp(pattern.source, `${pattern.flags}g`);
+    globalPatternCache.set(pattern, global);
+  }
+  return global;
 }
 
 /**

@@ -111,13 +111,6 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   /** Set once a refresh returns null/undefined; distinct from `!awsRum` alone. */
   private disabled = false;
   /**
-   * Set once real credentials have ever been applied to `awsRum`. The AWS
-   * RUM client has no API to clear already-applied credentials, so this
-   * distinguishes "never authenticated" from "was
-   * authenticated".
-   */
-  private hasAppliedCredentials = false;
-  /**
    * Memoized so every caller — `provideCpsTelemetrySink('rum')`'s
    * `APP_INITIALIZER`, {@link ensureInitialized}, and a caller awaiting
    * `init()` directly — awaits the same underlying work, regardless of who
@@ -463,7 +456,6 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
       secretAccessKey: credentials.secretAccessKey,
       sessionToken: credentials.sessionToken
     });
-    this.hasAppliedCredentials = true;
 
     this.scheduleRefresh(credentials.expiration);
   }
@@ -504,11 +496,9 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
         return;
       }
 
-      // Omitted credentials mean unauthenticated access, not a failure —
-      // but only for a session that was never authenticated.
       if (bootstrap.credentials) {
         this.applyCredentials(bootstrap.credentials);
-      } else if (this.hasAppliedCredentials) {
+      } else {
         this.scheduleRetry();
         this.reportFailure(
           'RUM credential refresh',

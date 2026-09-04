@@ -159,6 +159,27 @@ export function cpsNow(): number {
 }
 
 /**
+ * Milliseconds since the *host* page loaded — prefers `top.performance.now()`
+ * over the local realm's own, the same reasoning `cps-user-timings-internal.util.ts`
+ * applies to marks/measures: in a composed page, a fragment runs in its own
+ * same-origin iframe with a later `timeOrigin`, so a timeline position taken
+ * from its own `performance` doesn't line up against the shell's. Reading
+ * `top` always succeeds, even cross-origin; only touching a property on it
+ * can throw, in which case this falls back to {@link cpsNow}.
+ */
+export function cpsElapsedNow(): number {
+  try {
+    const top = globalThis.top;
+    if (typeof top?.performance?.now === 'function') {
+      return top.performance.now();
+    }
+  } catch {
+    // cross-origin, or sandboxed without `allow-same-origin`
+  }
+  return cpsNow();
+}
+
+/**
  * Converts an epoch timestamp into the `performance.now()` timeline.
  * Clamped to the current page's lifetime — a future timestamp, or one from
  * before the page loaded, yields `undefined`.

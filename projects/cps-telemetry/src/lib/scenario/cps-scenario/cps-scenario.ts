@@ -29,6 +29,7 @@ import {
 } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
 import {
   cpsDeepClone,
+  cpsElapsedNow,
   cpsEpochToPerf,
   cpsNow,
   cpsSafe,
@@ -61,6 +62,8 @@ export interface CpsScenarioDeps {
 /** Boundary names used for User Timing marks (see `timingMark`). */
 const START_MARK = 'start';
 const SETTLE_MARK = 'settle';
+
+const MAX_TIMEOUT_MS = 2_147_483_647;
 
 /**
  * A single in-flight user journey or feature execution.
@@ -172,7 +175,7 @@ export class CpsScenario {
       startOffset: 0,
       endOffset: 0,
       stepDelta: 0,
-      elapsed: Math.round(cpsNow()),
+      elapsed: Math.round(cpsElapsedNow()),
       status: 'success'
     });
 
@@ -439,7 +442,7 @@ export class CpsScenario {
         ? new Date(this._startTime + Math.round(this._elapsed)).toISOString()
         : undefined,
       delta: Math.round(this.delta),
-      elapsed: Math.round(cpsNow()),
+      elapsed: Math.round(cpsElapsedNow()),
       stepCount: this._stepCount,
       steps: cpsDeepClone(this.steps),
       previousStep: this.previousStep,
@@ -526,7 +529,7 @@ export class CpsScenario {
         startOffset: Math.round(this._elapsed),
         endOffset: Math.round(this._elapsed),
         stepDelta: 0,
-        elapsed: Math.round(cpsNow()),
+        elapsed: Math.round(cpsElapsedNow()),
         status,
         ...(resolvedMessage && { message: resolvedMessage }),
         ...(resolvedReason && { reason: resolvedReason }),
@@ -624,7 +627,7 @@ export class CpsScenario {
     const { redact } = this.deps;
     step.endOffset = Math.round(cpsNow() - this.startedAt);
     step.stepDelta = step.endOffset - step.startOffset;
-    step.elapsed = Math.round(cpsNow());
+    step.elapsed = Math.round(cpsElapsedNow());
     step.status = status;
 
     if (detail?.message) {
@@ -749,12 +752,15 @@ export class CpsScenario {
 
     const remainingMs = Math.max(0, timeoutMs - (cpsNow() - this.startedAt));
 
-    this.timeoutHandle = setTimeout(() => {
-      this.timeoutHandle = undefined;
-      this.settle('timeout', {
-        message: `Scenario did not settle within ${timeoutMs}ms`
-      });
-    }, remainingMs);
+    this.timeoutHandle = setTimeout(
+      () => {
+        this.timeoutHandle = undefined;
+        this.settle('timeout', {
+          message: `Scenario did not settle within ${timeoutMs}ms`
+        });
+      },
+      Math.min(remainingMs, MAX_TIMEOUT_MS)
+    );
   }
 
   private clearTimeout(): void {
@@ -779,11 +785,14 @@ export class CpsScenario {
       return;
     }
 
-    this.markCleanupTimer = setTimeout(() => {
-      this.markCleanupTimer = undefined;
-      cpsClearMarks(this.timingMarks);
-      this.timingMarks.length = 0;
-    }, fallbackMs);
+    this.markCleanupTimer = setTimeout(
+      () => {
+        this.markCleanupTimer = undefined;
+        cpsClearMarks(this.timingMarks);
+        this.timingMarks.length = 0;
+      },
+      Math.min(fallbackMs, MAX_TIMEOUT_MS)
+    );
   }
 
   private clearMarkCleanupTimer(): void {

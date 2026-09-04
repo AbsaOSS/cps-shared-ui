@@ -991,6 +991,16 @@ describe('CpsScenarioTelemetryService', () => {
       expect(scenario.status).toBeUndefined();
       expect(scenario.isSettled).toBe(false);
     });
+
+    it("should not fire near-instantly for a timeoutMs beyond setTimeout's 32-bit limit", () => {
+      const scenario = service.start({
+        name: 'huge',
+        timeoutMs: 30 * 24 * 60 * 60 * 1000
+      });
+
+      jest.advanceTimersByTime(1000);
+      expect(scenario.status).toBeUndefined();
+    });
   });
 
   describe('correlation', () => {
@@ -1824,6 +1834,25 @@ describe('CpsScenarioTelemetryService', () => {
       service.start({ name: 'load' }).step('fetch');
 
       jest.advanceTimersByTime(60 * 60 * 1000);
+
+      expect(perfApi.clearMarks).not.toHaveBeenCalled();
+
+      jest.useRealTimers();
+    });
+
+    it("should not fire near-instantly for a markCleanupFallbackMs beyond setTimeout's 32-bit limit", () => {
+      jest.useFakeTimers();
+
+      configure({
+        defaultTimeoutMs: 0,
+        userTimings: true,
+        markCleanupFallbackMs: 30 * 24 * 60 * 60 * 1000
+      });
+      installPerf();
+
+      service.start({ name: 'load' }).step('fetch');
+
+      jest.advanceTimersByTime(1000);
 
       expect(perfApi.clearMarks).not.toHaveBeenCalled();
 

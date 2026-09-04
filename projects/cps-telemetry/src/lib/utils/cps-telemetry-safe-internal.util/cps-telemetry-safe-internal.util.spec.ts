@@ -1,6 +1,7 @@
 import { isDevMode } from '@angular/core';
 import {
   cpsDeepClone,
+  cpsElapsedNow,
   cpsEpochToPerf,
   cpsNow,
   cpsSafe,
@@ -293,6 +294,19 @@ describe('cpsNow', () => {
     const second = cpsNow();
     expect(typeof first).toBe('number');
     expect(second).toBeGreaterThanOrEqual(first);
+  });
+});
+
+describe('cpsElapsedNow', () => {
+  it('should return a number that does not go backwards', () => {
+    const first = cpsElapsedNow();
+    const second = cpsElapsedNow();
+    expect(typeof first).toBe('number');
+    expect(second).toBeGreaterThanOrEqual(first);
+  });
+
+  it('should read the same object jsdom exposes as globalThis.top', () => {
+    expect(globalThis.top).toBe(globalThis);
   });
 });
 
