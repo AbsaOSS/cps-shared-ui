@@ -1639,6 +1639,25 @@ Without this, the lock would never be released again — the returned
 `release` closure only ever fires once, before the grant reassigns it —
 permanently starving every host still queued behind it.
 
+**Detecting a genuine duplicate provider is separate from the election
+above, deliberately.** `CpsTelemetryBroadcastHost` also keeps a
+module-scoped `Map<channelName, count>` — `hostsInThisRealm` — tracking
+how many of its own instances are alive **in this JS realm** at
+construction/destruction time. A second host on the same channel in the
+same realm (e.g. `provideCpsTelemetryBroadcastHost()` supplied in both a
+root and a lazy-loaded module) warns immediately:
+`a second telemetry host is active on channel "..." in this document`.
+This intentionally does **not** reuse the `identity` broadcast that used
+to drive this warning in an earlier version of this file (before the
+leader election existed) — `BroadcastChannel` is origin-wide, so a
+non-leader receiving another host's `identity` message can't tell a real
+same-document duplicate apart from a different, entirely legitimate tab
+of the same composed page (see "Multiple hosts on one channel" above);
+reusing it would make this warning fire constantly for the ordinary
+multi-tab case it must never fire for. A plain module-scoped map has no
+such ambiguity, since it is realm-local by construction — a different
+tab (or iframe) is a different realm and never touches it.
+
 ### Known limits
 
 - **Forwarding at unload is best-effort.** `BroadcastChannel` delivers on a

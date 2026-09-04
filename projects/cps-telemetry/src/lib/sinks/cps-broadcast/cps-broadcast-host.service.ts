@@ -12,6 +12,12 @@ import {
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 
 /**
+ * Active host count per channel, scoped to this JS realm — distinguishes a
+ * true duplicate provider from another tab sharing the same channel.
+ */
+const hostsInThisRealm = new Map<string, number>();
+
+/**
  * Receives telemetry forwarded by follower realms and records it through this
  * realm's sink.
  *
@@ -64,6 +70,7 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
         this.announceIdentity();
       }
     );
+    this.warnIfDuplicateInThisRealm();
   }
 
   /** How many follower messages have been accepted. */
@@ -73,6 +80,7 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
 
   /** @inheritdoc */
   ngOnDestroy(): void {
+    this.forgetInThisRealm();
     this.releaseLeadership();
     this.connection.close();
   }
@@ -108,13 +116,43 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
           this.announceIdentity();
           break;
         case 'identity':
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[cps-telemetry] a second telemetry host is active on channel "${this.connection.channelName}"; only one realm should provide it`
-          );
+          // Another realm's host on this origin-wide channel — expected,
+          // not a problem. Same-document duplicates are caught by
+          // warnIfDuplicateInThisRealm() instead.
           break;
       }
     });
+  }
+
+  /**
+   * Warns when another host is already active on the same channel in this
+   * realm — a real misconfiguration. Not based on the `identity` broadcast,
+   * which can't distinguish this from a different, legitimate tab.
+   */
+  private warnIfDuplicateInThisRealm(): void {
+    const channelName = this.connection.channelName;
+    const activeCount = hostsInThisRealm.get(channelName) ?? 0;
+
+    if (activeCount > 0) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[cps-telemetry] a second telemetry host is active on channel "${channelName}" in this document; only one realm should provide it`
+      );
+    }
+
+    hostsInThisRealm.set(channelName, activeCount + 1);
+  }
+
+  /** Releases this host's slot in {@link hostsInThisRealm}. */
+  private forgetInThisRealm(): void {
+    const channelName = this.connection.channelName;
+    const activeCount = hostsInThisRealm.get(channelName) ?? 0;
+
+    if (activeCount <= 1) {
+      hostsInThisRealm.delete(channelName);
+    } else {
+      hostsInThisRealm.set(channelName, activeCount - 1);
+    }
   }
 
   private announceIdentity(): void {

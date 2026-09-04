@@ -290,6 +290,7 @@ describe('broadcast telemetry across realms', () => {
   });
 
   afterEach(() => {
+    host.ngOnDestroy();
     CpsBroadcastChannelStub.uninstall();
     jest.restoreAllMocks();
   });
@@ -445,7 +446,7 @@ describe('broadcast telemetry across realms', () => {
         CpsTelemetryBroadcastHost
       ]);
       lateShell.get(RecordingSink).sessionId = 'late-session';
-      lateShell.get(CpsTelemetryBroadcastHost);
+      host = lateShell.get(CpsTelemetryBroadcastHost);
 
       await CpsBroadcastChannelStub.settle();
 
@@ -555,20 +556,51 @@ describe('broadcast telemetry across realms', () => {
       expect(host.received).toBe(0);
     });
 
-    it('should warn when a second host claims the same channel', async () => {
+    it('should warn when a second host claims the same channel in this realm', () => {
+      const channel = 'duplicate-detection-test';
       const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-      createRealm([
+      const providers = [
         RecordingSink,
         { provide: CpsTelemetrySink, useExisting: RecordingSink },
+        { provide: CPS_BROADCAST_CHANNEL, useValue: channel }
+      ];
+      const first = createRealm([...providers, CpsTelemetryBroadcastHost]).get(
         CpsTelemetryBroadcastHost
-      ]).get(CpsTelemetryBroadcastHost);
+      );
 
-      await CpsBroadcastChannelStub.settle();
+      expect(warn).not.toHaveBeenCalled();
+
+      createRealm([...providers, CpsTelemetryBroadcastHost]).get(
+        CpsTelemetryBroadcastHost
+      );
 
       expect(warn).toHaveBeenCalledWith(
         expect.stringContaining('a second telemetry host is active')
       );
+
+      first.ngOnDestroy();
+    });
+
+    it('should not warn again for a fresh host once the only prior one on that channel was destroyed', () => {
+      const channel = 'duplicate-detection-recreate-test';
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+      const providers = [
+        RecordingSink,
+        { provide: CpsTelemetrySink, useExisting: RecordingSink },
+        { provide: CPS_BROADCAST_CHANNEL, useValue: channel }
+      ];
+      const first = createRealm([...providers, CpsTelemetryBroadcastHost]).get(
+        CpsTelemetryBroadcastHost
+      );
+      first.ngOnDestroy();
+
+      createRealm([...providers, CpsTelemetryBroadcastHost]).get(
+        CpsTelemetryBroadcastHost
+      );
+
+      expect(warn).not.toHaveBeenCalled();
     });
 
     it('should stop delivering once the fragment is destroyed', async () => {
@@ -609,13 +641,17 @@ describe('broadcast telemetry across realms', () => {
 
   describe('leader election', () => {
     let consoleWarn: jest.SpyInstance;
+    let createdHosts: CpsTelemetryBroadcastHost[];
 
     beforeEach(() => {
+      host.ngOnDestroy();
       LockManagerStub.install();
       consoleWarn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      createdHosts = [];
     });
 
     afterEach(() => {
+      createdHosts.forEach((h) => h.ngOnDestroy());
       LockManagerStub.uninstall();
       consoleWarn.mockRestore();
     });
@@ -630,6 +666,7 @@ describe('broadcast telemetry across realms', () => {
         { provide: CpsTelemetrySink, useExisting: RecordingSink },
         CpsTelemetryBroadcastHost
       ]).get(CpsTelemetryBroadcastHost);
+      createdHosts.push(realmHost);
       return { host: realmHost, sink };
     }
 
