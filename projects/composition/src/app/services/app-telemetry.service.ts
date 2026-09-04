@@ -170,15 +170,6 @@ export class AppTelemetryService {
   }
 
   /**
-   * Consumes the pending navigation-intent timestamp, if one is fresh enough.
-   *
-   * A stale mark — the user clicked a link, then navigated by some other route
-   * entirely — would backdate an unrelated journey, so anything older than the
-   * window is discarded.
-   *
-   * @returns the click timestamp, or `undefined` to measure from now
-   */
-  /**
    * Reduces a router event's URL to a route template.
    *
    * `event.url` is the *resolved* URL — exactly what `cps-telemetry`'s own
@@ -201,6 +192,15 @@ export class AppTelemetryService {
       .join('/');
   }
 
+  /**
+   * Consumes the pending navigation-intent timestamp, if one is fresh enough.
+   *
+   * A stale mark — the user clicked a link, then navigated by some other route
+   * entirely — would backdate an unrelated journey, so anything older than the
+   * window is discarded.
+   *
+   * @returns the click timestamp, or `undefined` to measure from now
+   */
   private navigationStartedAt(): number | undefined {
     const at = this.navigationIntentAt;
     this.navigationIntentAt = undefined;

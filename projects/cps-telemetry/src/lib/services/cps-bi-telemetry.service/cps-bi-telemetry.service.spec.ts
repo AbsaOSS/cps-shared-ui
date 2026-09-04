@@ -390,6 +390,13 @@ describe('CpsBiTelemetryService', () => {
       expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(1);
     });
 
+    it('should build the dedup key from redacted metadata, not the raw values', () => {
+      service.track('login_attempted', { password: 'hunter2' });
+      service.track('login_attempted', { password: 'letmein' });
+
+      expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(1);
+    });
+
     it('should not collapse metadata that only collides under naive string joining', () => {
       service.track('order_placed', { a: '1&b=2' } as never);
       service.track('order_placed', { a: '1', b: '2' } as never);

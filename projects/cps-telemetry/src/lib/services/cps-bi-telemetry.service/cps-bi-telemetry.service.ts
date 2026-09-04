@@ -89,7 +89,17 @@ export class CpsBiTelemetryService {
         return;
       }
 
-      if (this.isDuplicate(eventName, metadata, detail)) {
+      const redactedFeature = detail?.feature
+        ? cpsScrubString(detail.feature, this.redact)
+        : undefined;
+      const redactedMetadata = cpsRedactMetadata(metadata, this.redact);
+
+      if (
+        this.isDuplicate(eventName, redactedMetadata, {
+          ...detail,
+          feature: redactedFeature
+        })
+      ) {
         return;
       }
 
@@ -97,10 +107,8 @@ export class CpsBiTelemetryService {
         eventName,
         eventTime: new Date().toISOString(),
         scenarioId: detail?.scenarioId,
-        feature: detail?.feature
-          ? cpsScrubString(detail.feature, this.redact)
-          : undefined,
-        metadata: cpsRedactMetadata(metadata, this.redact),
+        feature: redactedFeature,
+        metadata: redactedMetadata,
         application: this.identity.application
       };
 
@@ -159,8 +167,9 @@ export class CpsBiTelemetryService {
    * A stable string encoding a flat metadata object's content, for use in
    * the dedup key — otherwise two same-named events with different metadata
    * would collide and the second would be silently dropped. Keys are sorted
-   * so property order doesn't affect the result, and built from the raw
-   * metadata, before redaction runs.
+   * so property order doesn't affect the result. Callers pass already-
+   * redacted metadata — a caller's raw values must never end up as a `Map`
+   * key living in this root service's memory for the page lifetime.
    */
   private metadataKey(metadata: CpsTelemetryMetadata | undefined): string {
     if (!metadata) {
