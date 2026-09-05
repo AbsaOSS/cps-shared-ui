@@ -150,7 +150,11 @@ from any specific backend.
 - **`debugLogger` LocalStorage flag** mirrors records to the console
   (optionally scoped to specific logger names), independent of production
   configuration, so a deployed build can be inspected from DevTools without
-  a redeploy.
+  a redeploy. Console lines from all three concerns are prefixed
+  `[<application>][<concern>]` rather than with this library's own name —
+  the same application-first rule already used for User Timing entry names,
+  so that in a composed page the realm a line came from is visible at a
+  glance instead of every realm sharing one indistinguishable prefix.
 - **`CPS_LOG_LEVEL_ORDER`** is exported, so a consumer's own log-query
   filtering can compare levels without re-declaring the ordering.
 

@@ -1021,6 +1021,20 @@ area without the rest:
 localStorage.setItem('debugLogger', 'checkout,cart');
 ```
 
+Every line is prefixed with the emitting application, then the concern:
+
+```
+[my-app][AppTelemetry] Application started
+[my-app][scenario] load-customer-data success in 68ms -> com.cps.scenario
+[my-app][bi] export_clicked -> com.cps.bi
+```
+
+The application rather than this library's own name, for the same reason
+User Timing entries are named that way: in a composed page every realm logs
+to the one console, so `[shell]` versus `[cart]` is the distinction actually
+worth having. The second console argument is always the literal object handed
+to the sink or the log transport, so what you read is what ships.
+
 ## Privacy
 
 Telemetry attributes are typed

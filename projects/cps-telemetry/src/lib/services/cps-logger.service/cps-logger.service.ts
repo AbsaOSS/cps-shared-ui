@@ -329,9 +329,16 @@ function merge(bindings: CpsLogBindings, detail?: CpsLogDetail): CpsLogDetail {
   };
 }
 
-/** Prints the record exactly as the transport receives it. */
+/**
+ * Prints the record exactly as the transport receives it.
+ *
+ * Prefixed with the application - in a composed
+ * page every realm writes to the one console.
+ */
 function writeToConsole(record: CpsLogRecord): void {
-  const prefix = record.context ? `[cps][${record.context}]` : '[cps]';
+  const prefix = record.context
+    ? `[${record.application}][${record.context}]`
+    : `[${record.application}]`;
   const suffix = record.correlationId ? ` (${record.correlationId})` : '';
 
   // eslint-disable-next-line no-console

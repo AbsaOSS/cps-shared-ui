@@ -1151,16 +1151,16 @@ describe('CpsScenarioTelemetryService', () => {
         service.start({ name: 'load' }).step('one').complete();
 
         expect(consoleLog).toHaveBeenCalledWith(
-          '[cps][scenario] load started',
+          '[test-app][scenario] load started',
           expect.any(Object)
         );
         expect(consoleLog).toHaveBeenCalledWith(
-          '[cps][scenario] load step one',
+          '[test-app][scenario] load step one',
           expect.any(Object)
         );
         expect(consoleLog).toHaveBeenCalledWith(
           expect.stringMatching(
-            /^\[cps]\[scenario] load success in \d+ms -> com\.cps\.scenario$/
+            /^\[test-app]\[scenario] load success in \d+ms -> com\.cps\.scenario$/
           ),
           expect.any(Object)
         );
@@ -1174,7 +1174,7 @@ describe('CpsScenarioTelemetryService', () => {
       scenario.step('two');
 
       const stepTwoCall = consoleLog.mock.calls.find(
-        ([label]: [string]) => label === '[cps][scenario] load step two'
+        ([label]: [string]) => label === '[test-app][scenario] load step two'
       );
 
       expect(stepTwoCall?.[1]).toMatchObject({
@@ -1206,7 +1206,7 @@ describe('CpsScenarioTelemetryService', () => {
       scenario.step('late');
 
       expect(consoleLog).toHaveBeenCalledWith(
-        '[cps][scenario] load ignored step — already success',
+        '[test-app][scenario] load ignored step — already success',
         expect.any(Object)
       );
     });

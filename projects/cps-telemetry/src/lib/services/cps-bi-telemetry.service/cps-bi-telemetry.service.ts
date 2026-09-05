@@ -183,11 +183,15 @@ export class CpsBiTelemetryService {
   }
 }
 
+/**
+ * Prefixed with the application - in a composed
+ * page every realm writes to the one console.
+ */
 function writeToConsole(
   eventName: string,
   eventType: string,
   event: CpsBiEvent
 ): void {
   // eslint-disable-next-line no-console
-  console.log(`[cps][bi] ${eventName} -> ${eventType}`, event);
+  console.log(`[${event.application}][bi] ${eventName} -> ${eventType}`, event);
 }

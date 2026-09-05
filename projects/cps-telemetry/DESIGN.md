@@ -1450,6 +1450,15 @@ All three are off by default, accept only `'true'` and `'1'`, work in every
 environment, and are read on each emit — so a DevTools toggle takes effect
 without a reload. No production configuration switch is involved.
 
+Console lines are prefixed `[<application>][<concern>]` — the same
+application-first rule as the User Timing entry names above, and for the
+same reason: a composed page's realms all write to one console, so which
+application emitted a line is the question being asked, and a single
+library-wide prefix could not answer it. Each line's second argument is the
+literal payload handed to the sink or the log transport, which is what makes
+a console capture a faithful record of what ships rather than a summary of
+it.
+
 ---
 
 ## 13. Multiple realms — micro-frontends and web fragments

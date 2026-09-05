@@ -378,7 +378,7 @@ describe('CpsLoggerService', () => {
       localStorage.setItem('debugLogger', 'true');
       logger.log('loud');
       expect(consoleLog).toHaveBeenCalledWith(
-        '[cps] loud',
+        '[test-app] loud',
         expect.objectContaining({ message: 'loud' })
       );
     });
@@ -389,7 +389,7 @@ describe('CpsLoggerService', () => {
 
       const [label, logged] = consoleLog.mock.calls[0];
 
-      expect(label).toBe('[cps] loud');
+      expect(label).toBe('[test-app] loud');
       expect(logged).toBe(transport.records[0]);
     });
 
@@ -401,7 +401,7 @@ describe('CpsLoggerService', () => {
 
       expect(consoleLog).toHaveBeenCalledTimes(1);
       expect(consoleLog).toHaveBeenCalledWith(
-        '[cps] loud',
+        '[test-app] loud',
         expect.objectContaining({ logger: 'checkout' })
       );
     });
@@ -449,7 +449,7 @@ describe('CpsLoggerService', () => {
         correlationId: 'abc-123'
       });
       expect(consoleLog).toHaveBeenCalledWith(
-        '[cps][Loader] working (abc-123)',
+        '[test-app][Loader] working (abc-123)',
         expect.objectContaining({ correlationId: 'abc-123' })
       );
     });

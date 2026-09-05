@@ -863,7 +863,7 @@ export class CpsScenario {
     this.logIfDebugging(() =>
       // eslint-disable-next-line no-console
       console.log(
-        `[cps][scenario] ${this.options.name} ${summary} -> ${eventType}`,
+        `[${this.deps.identity.application}][scenario] ${this.options.name} ${summary} -> ${eventType}`,
         payload
       )
     );
@@ -874,7 +874,7 @@ export class CpsScenario {
     this.logIfDebugging(() =>
       // eslint-disable-next-line no-console
       console.log(
-        `[cps][scenario] ${this.options.name} ${message}`,
+        `[${this.deps.identity.application}][scenario] ${this.options.name} ${message}`,
         this.debugSnapshot()
       )
     );

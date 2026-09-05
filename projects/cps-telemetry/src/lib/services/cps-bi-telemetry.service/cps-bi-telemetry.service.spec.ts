@@ -590,7 +590,7 @@ describe('CpsBiTelemetryService', () => {
         service.track('export_clicked', { exportType: 'csv' });
 
         expect(consoleLog).toHaveBeenCalledWith(
-          '[cps][bi] export_clicked -> com.cps.bi',
+          '[test-app][bi] export_clicked -> com.cps.bi',
           expect.objectContaining({ eventName: 'export_clicked' })
         );
       }
@@ -618,7 +618,7 @@ describe('CpsBiTelemetryService', () => {
       service.track('sign_in', { password: 'hunter2' });
 
       expect(consoleLog).toHaveBeenCalledWith(
-        '[cps][bi] sign_in -> com.cps.bi',
+        '[test-app][bi] sign_in -> com.cps.bi',
         expect.objectContaining({ metadata: { password: CPS_REDACTED } })
       );
     });
