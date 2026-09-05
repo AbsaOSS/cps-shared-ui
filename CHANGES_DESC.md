@@ -519,6 +519,14 @@ integrations below build on it:
 - **`README.md`** — setup, scenario/logging/BI usage, redaction
   configuration, advanced RUM configuration, debugging flags, and testing
   guidance for consumers of the library.
+- **`INTEGRATION-DATA-GATEWAY.md`** — a self-contained guide for wiring the
+  library into the `data-gateway` shell, written to be executed against that
+  repository without access to this one: landing the package and the
+  contract that keeps the later npm swap a config-only change, shell
+  provider wiring, adapting its existing credential broker, retiring its
+  `RumService` without changing what reaches CloudWatch, the scenario and BI
+  catalogue to implement, and a fragment-side contract to hand to the teams
+  owning the embedded fragments.
 - **`telemetry-trace.capture.spec.ts`** (`projects/composition/src/app/`)
   — drives `composition`'s real services with
   `debugScenario`/`debugLogger`/`debugBI` enabled and captures the exact

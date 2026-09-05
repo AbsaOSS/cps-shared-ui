@@ -821,27 +821,105 @@ providers: [
 ];
 ```
 
-Pass `channelId` to each fragment you embed — typically as a query
-parameter on the fragment's own `src` URL, since a fragment runs in a
-separate realm and can't read a JavaScript variable the shell holds:
+`channelId` then has to reach each fragment. Publish it as a global on the
+top-level window. Every fragment is same-origin with its shell — a
+`BroadcastChannel` between them would not work otherwise — so `window.top`
+is reachable from inside any of them, plain iframe and
+[Web Fragment](https://web-fragments.dev) alike:
 
 ```ts
-iframe.src = `https://fragment.example.com/?channel=${channelId}`;
+declare global {
+  interface Window {
+    __cpsTelemetryChannel?: string;
+  }
+}
+
+// shell — at module scope, before any fragment can read it. Browser-only,
+// so the same module stays safe to evaluate under SSR.
+if (typeof window !== 'undefined') {
+  window.__cpsTelemetryChannel = channelId;
+}
 ```
 
+Under SSR, generate the id inside that same browser check rather than at
+module scope — `crypto` is only a global from Node 19, so an unguarded
+`crypto.randomUUID()` can fail a server render outright. Nothing on the
+server needs an id: the broadcast host no-ops there, and
+`provideCpsTelemetryBroadcastHost` accepts `undefined`, simply omitting the
+channel override.
+
 ```ts
-// fragment — reads the id the shell embedded in its own URL
-const channelId = new URLSearchParams(window.location.search).get('channel');
+// fragment
+function shellChannelName(): string | undefined {
+  if (typeof window === 'undefined') {
+    return undefined; // server render
+  }
+  try {
+    return window.top?.__cpsTelemetryChannel;
+  } catch {
+    return undefined; // cross-origin `top`
+  }
+}
 
 providers: [
   provideCpsTelemetry({ application: 'cart', environment: 'prod', version }),
-  provideCpsTelemetrySink('broadcast', { channelName: channelId ?? undefined })
+  provideCpsTelemetrySink('broadcast'),
+  { provide: CPS_BROADCAST_CHANNEL, useFactory: shellChannelName }
 ];
 ```
 
+Bind it through `CPS_BROADCAST_CHANNEL` with `useFactory` rather than
+passing `channelName` to `provideCpsTelemetrySink`: the option binds
+`useValue`, read when the providers array is built, while a factory is
+resolved when the sink is first constructed — late enough that a fragment
+booting before the shell publishes the id still picks it up. Either way,
+`undefined` falls back to the default channel, so a fragment running with no
+shell behaves exactly as it does without any of this.
+
+Reframing does not get in the way of that read: it virtualizes the DOM and
+navigation — `document` queries, `history`, `location`, `navigator`, event
+retargeting — so that a fragment's DOM work lands in its shadow root. It
+does not intercept `top`, `parent`, `BroadcastChannel` or storage. That last
+one is the point: if it did, nothing in this section would work at all.
+
+**Where the shell owns the fragment's URL, a query parameter does the same
+job.** That is the plain iframe case: the shell sets `src` itself, so the id
+can ride on it and the fragment reads its own `location.search`.
+
+```ts
+// shell
+iframe.src = `https://fragment.example.com/?channel=${channelId}`;
+
+// fragment
+const channelId = new URLSearchParams(window.location.search).get('channel');
+provideCpsTelemetrySink('broadcast', { channelName: channelId ?? undefined });
+```
+
+**Under Web Fragments the shell does not own that URL**, so the option isn't
+available there: a fragment is embedded by id
+(`<web-fragment fragment-id="cart">`) and routed to by a gateway, leaving the
+shell nothing to append a parameter to. Reading one inside the fragment
+wouldn't help either — a fragment is _bound_ by default, sharing
+`window.location` with the host, so `location.search` yields the shell's
+query string rather than a fragment-specific one.
+
+The `window.top` global above needs neither of those things, which is why it
+is the one to reach for.
+
 With unique channel names, each tab's leader election trivially resolves to
 itself — no cross-tab contention, and no cross-tab misattribution, since a
-tab's fragments are never even listening on another tab's channel.
+tab's fragments are never even listening on another tab's channel. A
+duplicated tab is covered too: it loads a fresh document, so the id is
+regenerated. That is worth knowing if you were reaching for `sessionStorage`
+to carry the id instead — Chrome copies it into a duplicated tab, so both
+would end up sharing a channel.
+
+Note what this does and does not buy. A per-tab channel keeps each tab's
+fragments recording through _that tab's_ client, with that tab's page
+context. It does not give each tab its own `sessionId` — the RUM session is
+a cookie (`allowCookies` defaults to `true`), so it is shared across tabs on
+the origin, and deliberately so: RUM models a session as a user's, not a
+tab's.
 
 ### A fragment that also deploys standalone
 

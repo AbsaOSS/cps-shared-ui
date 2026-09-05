@@ -1461,8 +1461,19 @@ and evaluate all of the scripts of the application" — the iframe itself is
 never rendered; its DOM output is reprojected into a Shadow Root in the
 host document, so what the user sees is ordinary Shadow DOM content in the
 host page, not a visibly embedded frame. The iframe's `window.location` is
-kept in sync with the host's, and `BroadcastChannel` is the sanctioned
-channel between realms.
+kept in sync with the host's — a fragment is _bound_ by default, sharing
+location and history with the container application, and only an explicit
+`src` attribute makes it _unbound_ with a location of its own — and
+`BroadcastChannel` is the sanctioned channel between realms.
+
+That binding has a consequence for configuration. A bound fragment is
+embedded by id and routed to by a gateway, so the shell never sets its URL,
+and reading `location.search` inside one returns the host's query string
+rather than a fragment-specific one. A shell therefore cannot hand
+per-fragment configuration down on a URL; it publishes it on the top-level
+window instead, which every fragment can read because they all share the
+shell's origin. See README.md "Multiple tabs of the same composed page" for
+the pattern, applied there to a per-tab channel name.
 
 A separate realm means a separate Angular injector, which means **every
 realm builds its own copy of every telemetry service** — including its own
