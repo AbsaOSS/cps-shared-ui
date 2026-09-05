@@ -30,9 +30,11 @@ const hostsInThisRealm = new Map<string, number>();
  *
  * @example
  * ```typescript
+ * import { provideCpsTelemetryRumSink } from 'cps-telemetry/rum';
+ *
  * providers: [
  *   provideCpsTelemetry({ application: 'shell', environment: 'prod', version: '1.0.0' }),
- *   provideCpsTelemetrySink('rum'),
+ *   provideCpsTelemetryRumSink(),
  *   provideCpsTelemetryBroadcastHost()
  * ]
  * ```

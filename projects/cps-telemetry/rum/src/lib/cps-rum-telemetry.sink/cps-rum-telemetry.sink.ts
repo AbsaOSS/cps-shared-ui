@@ -111,7 +111,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   /** Set once a refresh returns null/undefined; distinct from `!awsRum` alone. */
   private disabled = false;
   /**
-   * Memoized so every caller — `provideCpsTelemetrySink('rum')`'s
+   * Memoized so every caller — `provideCpsTelemetryRumSink()`'s
    * `APP_INITIALIZER`, {@link ensureInitialized}, and a caller awaiting
    * `init()` directly — awaits the same underlying work, regardless of who
    * triggered it first.
@@ -177,7 +177,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
   /**
    * Kicks off `init()` on first real use, for a sink bound directly (e.g.
    * `{ provide: CpsTelemetrySink, useClass: CpsRumTelemetrySink }`) rather
-   * than through `provideCpsTelemetrySink('rum')`, which is what normally
+   * than through `provideCpsTelemetryRumSink()`, which is what normally
    * calls `init()` via `APP_INITIALIZER`. `init()` is idempotent and
    * memoized, so this is a no-op once already initialized or already in
    * flight, and never races with a caller awaiting `init()` directly.

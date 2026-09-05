@@ -20,7 +20,7 @@ import { CpsRumTelemetrySink } from '../cps-rum-telemetry.sink/cps-rum-telemetry
  * build time regardless of whether that branch ever runs, so a static
  * import of the RUM sink anywhere in the common providers module would
  * force every consumer to have `aws-rum-web` resolvable, not just the ones
- * that select `'rum'`. See DESIGN.md §3, "Entry points".
+ * that import this entry point. See DESIGN.md §3, "Entry points".
  *
  * @example
  * ```typescript

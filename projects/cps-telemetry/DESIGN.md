@@ -25,7 +25,8 @@ on a shared internal abstraction, with an AWS CloudWatch RUM sink.
   being produced, in any environment, just by setting a LocalStorage flag —
   no rebuild, no config change, no production switch.
 - **Reusability.** Ship as a library another Angular application can install
-  and configure, with no trace of the Composition application inside it.
+  and configure, with no trace of the application it was extracted from
+  inside it.
 - **Safety.** Telemetry can never break the application, and it never
   quietly leaks sensitive data.
 
@@ -979,9 +980,9 @@ its own, so both halves of that pairing are the application's to provide.
 
 Anyone deriving a route template should know the trap to avoid: a route
 declared with `matcher` has no `path` at all, so walking
-`routeConfig.path` reports every such route as `/` — for composition, where
-33 of 35 routes use a matcher, that is the entire site collapsing into one
-page. The template has to come from the segments the match actually
+`routeConfig.path` reports every such route as `/` — in an application
+where most routes are declared that way, that is the entire site collapsing
+into one page. The template has to come from the segments the match actually
 consumed, with anything bound as a parameter put back as `:name` so the
 value cannot escape.
 
@@ -1105,7 +1106,7 @@ provideCpsTelemetry(
   // 'staging' for its scenarios, so this is one shared fact, not one per
   // concern.
   {
-    application: 'composition', // required
+    application: 'my-app', // required
     environment: 'production', // required
     version: '22.0.0', // required
 
@@ -1378,7 +1379,7 @@ import {
 
 providers: [
   provideCpsTelemetry({
-    application: 'composition',
+    application: 'my-app',
     environment: 'production',
     version: packageJson.version
   }),
@@ -1604,7 +1605,7 @@ throws; the telemetry is simply not shipped, and starts being shipped the
 moment a host appears.
 
 That is deliberate: a fragment has to be developable and testable on its
-own, and failing loudly just because the composition it will eventually
+own, and failing loudly just because the composed page it will eventually
 live in is absent would be the wrong trade. It is the same fail-open posture
 the RUM sink takes when the credentials broker is unreachable.
 
