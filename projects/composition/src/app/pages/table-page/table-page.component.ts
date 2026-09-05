@@ -30,6 +30,8 @@ import { tableExamples } from './table-page.examples';
 
 import ComponentData from '../../api-data/cps-table.json';
 import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
+import { CpsScenario, CpsScenarioTelemetryService } from 'cps-telemetry';
+import '../../services/telemetry.schema';
 
 @Component({
   selector: 'app-table-page',
@@ -415,6 +417,10 @@ export class TablePageComponent implements OnInit, OnDestroy {
   private _lazyLoadTimeout?: ReturnType<typeof setTimeout>;
   private _lastLazyFirst = -1;
   private _lastLazyRows = -1;
+  private readonly _scenarioTelemetry = inject(CpsScenarioTelemetryService);
+  private _lazyLoadScenario?: CpsScenario;
+  /** Checked in the queued callbacks below, past `ngOnDestroy`'s clearTimeout. */
+  private _destroyed = false;
 
   manyRecordsForPaginator = false;
 
@@ -443,7 +449,9 @@ export class TablePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this._destroyed = true;
     clearTimeout(this._lazyLoadTimeout);
+    this._lazyLoadScenario?.cancel({ reason: 'component-destroyed' });
   }
 
   private _genVirtualData() {
@@ -506,13 +514,36 @@ export class TablePageComponent implements OnInit, OnDestroy {
     this._lastLazyFirst = first;
     this._lastLazyRows = rows;
 
+    this._lazyLoadScenario?.cancel({ reason: 'superseded' });
+    const scenario = this._scenarioTelemetry.start({
+      name: 'table-page-load',
+      feature: 'table'
+    });
+    scenario.step('fetch');
+    this._lazyLoadScenario = scenario;
+
     Promise.resolve().then(() => {
+      if (this._destroyed) return;
       this.lazyLoading = true;
       clearTimeout(this._lazyLoadTimeout);
       this._lazyLoadTimeout = setTimeout(() => {
+        if (this._destroyed) return;
         this.lazyTotalRecords = this.dataVirtual.length;
-        this.lazyData = this.dataVirtual.slice(first, first + rows);
+
+        this.lazyData = this.dataVirtual
+          .slice(first, first + rows)
+          .map((row) => {
+            scenario.aggregateStart('format-row');
+            const formatted = { ...row };
+            scenario.aggregateEnd('format-row');
+            return formatted;
+          });
+
         this.lazyLoading = false;
+        scenario.complete({
+          metadata: { first, rows, totalRecords: this.lazyTotalRecords }
+        });
+        this._lazyLoadScenario = undefined;
       }, 600);
     });
   }

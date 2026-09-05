@@ -9,6 +9,13 @@ import {
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CpsThemeService } from 'cps-ui-kit';
+import {
+  CPS_LOG_API_PROVIDER,
+  CpsNoopTelemetrySink,
+  CpsTelemetrySink,
+  provideCpsTelemetry
+} from 'cps-telemetry';
+import { AppLogApiProvider } from './services/app-log-api.provider';
 import { AppComponent } from './app.component';
 
 jest.mock('../../../cps-ui-kit/package.json', () => ({ version: '1.0.0' }), {
@@ -64,7 +71,14 @@ describe('AppComponent', () => {
             firstChild: { snapshot: { routeConfig: { title: 'Button' } } }
           }
         },
-        { provide: CpsThemeService, useValue: { isDark: signal(false) } }
+        { provide: CpsThemeService, useValue: { isDark: signal(false) } },
+        provideCpsTelemetry({
+          application: 'composition-test',
+          environment: 'test',
+          version: '0.0.0'
+        }),
+        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
       ]
     }).compileComponents();
 

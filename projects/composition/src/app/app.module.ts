@@ -6,11 +6,21 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleStrategy } from '@angular/router';
 import { CpsIconComponent } from 'cps-ui-kit';
+import { CPS_LOG_API_PROVIDER, provideCpsTelemetry } from 'cps-telemetry';
+import {
+  CPS_RUM_CREDENTIALS_PROVIDER,
+  provideCpsTelemetryRumSink
+} from 'cps-telemetry/rum';
+import packageJson from '../../../cps-ui-kit/package.json';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.component';
+import { AppLogApiProvider } from './services/app-log-api.provider';
+import { AppRumCredentialsProvider } from './services/rum-credentials.provider';
+import { resolveDeploymentEnvironment } from './deployment-environment';
+import './services/telemetry.schema';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +33,18 @@ import { ThemeToggleComponent } from './components/theme-toggle/theme-toggle.com
     ThemeToggleComponent
   ],
   providers: [
-    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy }
+    { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
+    provideCpsTelemetry({
+      application: 'composition',
+      environment: resolveDeploymentEnvironment(),
+      version: packageJson.version
+    }),
+    provideCpsTelemetryRumSink(),
+    {
+      provide: CPS_RUM_CREDENTIALS_PROVIDER,
+      useExisting: AppRumCredentialsProvider
+    },
+    { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider }
     // provideClientHydration()
   ],
   bootstrap: [AppComponent]

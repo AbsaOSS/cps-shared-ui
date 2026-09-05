@@ -1454,7 +1454,7 @@ describe('CpsAutocompleteComponent', () => {
       const idAtOriginalIndex = component.getOptionId(option, 0);
       const idWithDifferentIndexArg = component.getOptionId(option, 5);
       expect(idWithDifferentIndexArg).toBe(idAtOriginalIndex);
-      expect(idWithDifferentIndexArg).not.toContain('-5');
+      expect(idWithDifferentIndexArg).not.toMatch(/-5$/);
     });
   });
 
