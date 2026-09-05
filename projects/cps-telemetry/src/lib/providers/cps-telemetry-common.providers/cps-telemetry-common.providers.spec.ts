@@ -350,11 +350,11 @@ describe('with*() features', () => {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({ ...identity, eventNamespace: 'com.data-gateway' })
+        provideCpsTelemetry({ ...identity, eventNamespace: 'com.test-app' })
       ]
     });
     expect(TestBed.inject(CPS_TELEMETRY_IDENTITY).eventNamespace).toBe(
-      'com.data-gateway'
+      'com.test-app'
     );
   });
 

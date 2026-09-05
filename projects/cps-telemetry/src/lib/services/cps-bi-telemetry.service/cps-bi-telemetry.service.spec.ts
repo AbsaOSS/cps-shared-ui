@@ -638,7 +638,7 @@ describe('CpsBiTelemetryService', () => {
             application: 'test-app',
             environment: 'test',
             version: '1.0.0',
-            eventNamespace: 'com.data-gateway'
+            eventNamespace: 'com.test-app'
           }),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -651,7 +651,7 @@ describe('CpsBiTelemetryService', () => {
       const namespacedSink = TestBed.inject(RecordingSink);
       namespaced.track('export_clicked');
 
-      expect(namespacedSink.events[0].eventType).toBe('com.data-gateway.bi');
+      expect(namespacedSink.events[0].eventType).toBe('com.test-app.bi');
     });
 
     it('should let one event override the type, for a legacy dashboard', () => {
@@ -659,11 +659,11 @@ describe('CpsBiTelemetryService', () => {
         'click',
         { source: 'toolbar' },
         {
-          eventType: 'com.data-gateway.click'
+          eventType: 'com.test-app.click'
         }
       );
 
-      expect(sink.events[0].eventType).toBe('com.data-gateway.click');
+      expect(sink.events[0].eventType).toBe('com.test-app.click');
       expect(sink.events[0].payload.eventName).toBe('click');
     });
 

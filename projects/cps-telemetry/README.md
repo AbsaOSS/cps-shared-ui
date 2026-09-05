@@ -473,7 +473,7 @@ biTelemetry.track(
   'click',
   { source: 'toolbar' },
   {
-    eventType: 'com.data-gateway.click'
+    eventType: 'com.my-app.click'
   }
 );
 ```

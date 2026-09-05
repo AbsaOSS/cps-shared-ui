@@ -14,10 +14,10 @@ describe('cpsEventTypes', () => {
   });
 
   it('should let an application keep its own namespace', () => {
-    expect(cpsEventTypes('com.data-gateway')).toEqual({
-      scenario: 'com.data-gateway.scenario',
-      scenarioStep: 'com.data-gateway.scenario.step',
-      bi: 'com.data-gateway.bi'
+    expect(cpsEventTypes('com.test-app')).toEqual({
+      scenario: 'com.test-app.scenario',
+      scenarioStep: 'com.test-app.scenario.step',
+      bi: 'com.test-app.bi'
     });
   });
 

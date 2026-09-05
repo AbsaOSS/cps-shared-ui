@@ -1643,15 +1643,15 @@ describe('CpsScenarioTelemetryService', () => {
     });
 
     it('should emit scenario and step events under a configured namespace', () => {
-      configure({ emitLifecycleEvents: true }, 'com.data-gateway');
+      configure({ emitLifecycleEvents: true }, 'com.test-app');
 
       const scenario = service.start({ name: 'load' });
       scenario.step('one');
       scenario.complete();
 
       expect(sink.events.map((e) => e.eventType)).toEqual([
-        'com.data-gateway.scenario.step',
-        'com.data-gateway.scenario'
+        'com.test-app.scenario.step',
+        'com.test-app.scenario'
       ]);
     });
   });

@@ -623,8 +623,8 @@ migrating onto this library keeps its own namespace, and none of that has to
 be rewritten:
 
 ```ts
-provideCpsTelemetry({ ..., eventNamespace: 'com.data-gateway' });
-// -> com.data-gateway.scenario / .scenario.step / .bi
+provideCpsTelemetry({ ..., eventNamespace: 'com.my-app' });
+// -> com.my-app.scenario / .scenario.step / .bi
 ```
 
 If a dashboard is keyed on one specific legacy type rather than a
@@ -635,7 +635,7 @@ biTelemetry.track(
   'click',
   { source: 'toolbar' },
   {
-    eventType: 'com.data-gateway.click'
+    eventType: 'com.my-app.click'
   }
 );
 ```
