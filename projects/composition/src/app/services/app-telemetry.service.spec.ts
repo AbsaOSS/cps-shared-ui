@@ -167,6 +167,37 @@ describe('AppTelemetryService', () => {
       routerEvents.next(new NavigationSkipped(99, '/never-started', 'x'));
       expect(events).toHaveLength(0);
     });
+
+    it('should settle a scenario stashed by a redirect-to-current-URL, instead of leaving it for a later navigation to wrongly reuse', () => {
+      routerEvents.next(new NavigationStart(1, '/checkbox'));
+      routerEvents.next(
+        new NavigationCancel(
+          1,
+          '/checkbox',
+          'Redirecting to "/checkbox/examples"',
+          NavigationCancellationCode.Redirect
+        )
+      );
+      routerEvents.next(
+        new NavigationSkipped(2, '/checkbox/examples', 'same url')
+      );
+
+      const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+      expect(scenarioTelemetry.getActive()).toHaveLength(0);
+      expect(scenarios()[0]).toMatchObject({
+        route: '/checkbox',
+        status: 'abandoned'
+      });
+
+      routerEvents.next(new NavigationStart(3, '/select'));
+      routerEvents.next(new NavigationEnd(3, '/select', '/select'));
+
+      expect(scenarios()).toHaveLength(2);
+      expect(scenarios()[1]).toMatchObject({
+        route: '/select',
+        status: 'success'
+      });
+    });
   });
 
   it('should fail the scenario on NavigationError', () => {

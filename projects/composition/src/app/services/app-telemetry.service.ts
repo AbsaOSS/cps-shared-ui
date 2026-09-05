@@ -159,6 +159,9 @@ export class AppTelemetryService {
 
     if (event instanceof NavigationSkipped) {
       this.navigationIntentAt = undefined;
+      this.consumePendingRedirectScenario()?.cancel({
+        message: event.reason || 'navigation-skipped'
+      });
       this.settle(event.id, (scenario) =>
         scenario.cancel({ message: event.reason || 'navigation-skipped' })
       );
