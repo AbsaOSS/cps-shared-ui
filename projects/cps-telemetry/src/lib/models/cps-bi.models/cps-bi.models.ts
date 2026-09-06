@@ -1,4 +1,42 @@
-import { CpsTelemetryMetadata } from '../cps-telemetry-common.models/cps-telemetry-common.models';
+import {
+  CpsRegistered,
+  CpsTelemetryMetadata
+} from '../cps-telemetry-common.models/cps-telemetry-common.models';
+
+/**
+ * Registry of this application's business event names.
+ *
+ * An event name is a metric dimension: a typo does not produce a wrong
+ * figure, it silently starts a second, incomplete series alongside the one
+ * the dashboard reads. Declaring the vocabulary turns that into a compile
+ * error.
+ *
+ * @example
+ * ```typescript
+ * // src/app/telemetry.schema.ts
+ * declare module 'cps-telemetry' {
+ *   interface CpsBiEventNames {
+ *     export_clicked: true;
+ *     theme_changed: true;
+ *   }
+ * }
+ * export {};
+ * ```
+ *
+ * @group Interfaces
+ */
+// Empty by design — see CpsScenarioNames in cps-scenario.models.ts.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface CpsBiEventNames {}
+
+/**
+ * Every business event name this application declares.
+ *
+ * Resolves to `string` until {@link CpsBiEventNames} is augmented.
+ *
+ * @group Types
+ */
+export type CpsBiEventName = CpsRegistered<CpsBiEventNames>;
 
 /**
  * Correlation fields carried through unchanged onto the emitted
@@ -41,10 +79,11 @@ export interface CpsBiEventDetail extends CpsBiEventCorrelation {
  */
 export interface CpsBiEvent extends CpsBiEventCorrelation {
   /**
-   * Event name, e.g. `export_clicked`. Supplied by the application — this
-   * library never hardcodes business event names.
+   * Event name, e.g. `export_clicked`. Declared by the application in
+   * {@link CpsBiEventNames} — this library never hardcodes business event
+   * names.
    */
-  eventName: string;
+  eventName: CpsBiEventName;
 
   /** ISO-8601 timestamp. */
   eventTime: string;

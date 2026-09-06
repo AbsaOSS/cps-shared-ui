@@ -46,7 +46,9 @@ export {
 // Models
 export {
   CpsBiEvent,
-  CpsBiEventDetail
+  CpsBiEventDetail,
+  CpsBiEventName,
+  CpsBiEventNames
 } from './lib/models/cps-bi.models/cps-bi.models';
 export {
   CPS_LOG_LEVEL_ORDER,

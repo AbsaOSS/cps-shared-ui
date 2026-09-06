@@ -406,10 +406,10 @@ CpsTelemetrySink`, but it would make the _concrete_ `CpsNoopTelemetrySink`
   `provideCpsTelemetryBroadcastHost()` select the transport explicitly —
   there is no default destination, so an app can never look wired up while
   silently shipping nothing.
-- Scenario, step, and logger names are typed as a closed vocabulary via
-  TypeScript module augmentation (`declare module 'cps-telemetry'`), so a
-  typo in a name is a compile error instead of a second, silently
-  incomplete metric series.
+- Scenario, step, logger, and BI event names are typed as a closed
+  vocabulary via TypeScript module augmentation
+  (`declare module 'cps-telemetry'`), so a typo in a name is a compile error
+  instead of a second, silently incomplete metric series.
 
 ---
 

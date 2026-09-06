@@ -174,24 +174,25 @@ own.
 
 ### The name vocabulary
 
-Scenario names, step names, aggregate names, and logger names are all finite
-types, not plain `string`:
+Scenario names, step names, aggregate names, logger names, and business event
+names are all finite types, not plain `string`:
 
 ```ts
 // declared by the library, empty
 interface CpsScenarioNames {}
 interface CpsScenarioSteps {}
 interface CpsLoggerNames {}
+interface CpsBiEventNames {}
 
 type CpsScenarioName = keyof CpsScenarioNames extends never
   ? string
   : keyof CpsScenarioNames;
 ```
 
-Scenario, step, and aggregate names are metric dimensions. A misspelled one
-does not produce a wrong figure — it silently starts a second, incomplete
-series, and the alarm built on the first one keeps reading healthy. An
-interpolated id causes the exact same problem, just with unlimited possible
+Scenario, step, aggregate, and BI event names are metric dimensions. A
+misspelled one does not produce a wrong figure — it silently starts a second,
+incomplete series, and the alarm built on the first one keeps reading healthy.
+An interpolated id causes the exact same problem, just with unlimited possible
 values. Both are now compile errors instead.
 
 A logger name fails differently, but no better: it is the key every record
@@ -342,7 +343,7 @@ one entry (just `scenario-start`).
 
 ```ts
 interface CpsBiEvent {
-  eventName: string; // supplied by the application
+  eventName: CpsBiEventName; // declared by the application
   eventTime: string;
   scenarioId?: string; // optional correlation to a journey
   feature?: string;

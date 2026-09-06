@@ -6,7 +6,8 @@ import {
 import { CPS_BI_CONFIG } from '../../config/cps-bi.config/cps-bi.config';
 import {
   CpsBiEvent,
-  CpsBiEventDetail
+  CpsBiEventDetail,
+  CpsBiEventName
 } from '../../models/cps-bi.models/cps-bi.models';
 import {
   cpsEventTypes,
@@ -73,14 +74,14 @@ export class CpsBiTelemetryService {
   /**
    * Records a business or UX event.
    *
-   * @param eventName the application's own event name, e.g. `export_clicked`.
-   *   Treat it as a metric dimension: keep the cardinality low and never
-   *   interpolate an identifier into it.
+   * @param eventName the application's own event name, e.g. `export_clicked`,
+   *   as declared in {@link CpsBiEventNames}. Treat it as a metric dimension:
+   *   keep the cardinality low and never interpolate an identifier into it.
    * @param metadata flat attributes describing the interaction
    * @param detail optional scenario correlation, feature and event-type override
    */
   track(
-    eventName: string,
+    eventName: CpsBiEventName,
     metadata?: CpsTelemetryMetadata,
     detail?: CpsBiEventDetail
   ): void {

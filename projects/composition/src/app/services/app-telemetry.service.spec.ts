@@ -127,12 +127,31 @@ describe('AppTelemetryService', () => {
 
   it('should cancel the scenario on NavigationCancel', () => {
     routerEvents.next(new NavigationStart(1, '/button'));
-    routerEvents.next(new NavigationCancel(1, '/button', 'guard rejected'));
+    routerEvents.next(
+      new NavigationCancel(
+        1,
+        '/button',
+        'guard rejected',
+        NavigationCancellationCode.GuardRejected
+      )
+    );
 
     expect(scenarios()[0]).toMatchObject({
       status: 'abandoned',
+      reason: 'guard-rejected',
       message: 'guard rejected'
     });
+  });
+
+  it('should still name a cause when the router supplies no cancellation code', () => {
+    routerEvents.next(new NavigationStart(1, '/button'));
+    routerEvents.next(new NavigationCancel(1, '/button', ''));
+
+    expect(scenarios()[0]).toMatchObject({
+      status: 'abandoned',
+      reason: 'navigation-cancelled'
+    });
+    expect(scenarios()[0].message).toBeUndefined();
   });
 
   describe('NavigationSkipped', () => {
@@ -280,12 +299,23 @@ describe('AppTelemetryService', () => {
     const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
     expect(scenarioTelemetry.getActive()).toHaveLength(2);
 
-    routerEvents.next(new NavigationCancel(1, '/button', 'superseded'));
+    routerEvents.next(
+      new NavigationCancel(
+        1,
+        '/button',
+        'superseded',
+        NavigationCancellationCode.SupersededByNewNavigation
+      )
+    );
     routerEvents.next(new NavigationEnd(2, '/select', '/select'));
 
     const records = scenarios();
     expect(records).toHaveLength(2);
-    expect(records[0]).toMatchObject({ route: '/button', status: 'abandoned' });
+    expect(records[0]).toMatchObject({
+      route: '/button',
+      status: 'abandoned',
+      reason: 'superseded'
+    });
     expect(records[1]).toMatchObject({ route: '/select', status: 'success' });
     expect(records[0].scenarioId).not.toBe(records[1].scenarioId);
   });
@@ -423,33 +453,33 @@ describe('AppTelemetryService', () => {
     }
 
     it('should use the action as the BI event name', () => {
-      service.trackClick('export_clicked');
+      service.trackClick('code_copied');
 
       expect(biEvents()).toHaveLength(1);
-      expect(biEvents()[0]).toMatchObject({ eventName: 'export_clicked' });
+      expect(biEvents()[0]).toMatchObject({ eventName: 'code_copied' });
     });
 
     it('should forward metadata describing the interaction', () => {
-      service.trackClick('tab_selected', {
-        tabName: 'api',
-        index: 2,
-        isDefault: false
+      service.trackClick('sidebar_searched', {
+        queryLength: 4,
+        resultCount: 2,
+        hasResults: true
       });
 
       expect(biEvents()[0]).toMatchObject({
-        eventName: 'tab_selected',
-        metadata: { tabName: 'api', index: 2, isDefault: false }
+        eventName: 'sidebar_searched',
+        metadata: { queryLength: 4, resultCount: 2, hasResults: true }
       });
     });
 
     it('should work without metadata', () => {
-      service.trackClick('modal_opened');
+      service.trackClick('sidebar_toggled');
       expect(biEvents()[0].metadata).toBeUndefined();
     });
 
     it('should collapse a double-fired click', () => {
-      service.trackClick('export_clicked');
-      service.trackClick('export_clicked');
+      service.trackClick('code_copied');
+      service.trackClick('code_copied');
 
       expect(biEvents()).toHaveLength(1);
     });
@@ -486,7 +516,7 @@ describe('AppTelemetryService', () => {
       });
 
       const isolated = TestBed.inject(AppTelemetryService);
-      expect(() => isolated.trackClick('export_clicked')).not.toThrow();
+      expect(() => isolated.trackClick('code_copied')).not.toThrow();
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('failed'),
         expect.any(Error)

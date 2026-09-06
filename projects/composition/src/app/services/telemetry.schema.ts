@@ -1,9 +1,9 @@
 /**
- * This application's scenario vocabulary.
+ * This application's telemetry vocabulary.
  *
- * Scenario and step names are metric dimensions, declared once here rather
- * than as free text at each call site. Anything not listed below is a
- * compile error.
+ * Scenario, step, logger and business event names are metric dimensions,
+ * declared once here rather than as free text at each call site. Anything not
+ * listed below is a compile error.
  */
 declare module 'cps-telemetry' {
   interface CpsScenarioNames {
@@ -65,6 +65,23 @@ declare module 'cps-telemetry' {
 
     /** The autocomplete demo page. */
     autocomplete: true;
+  }
+
+  interface CpsBiEventNames {
+    /** The user switched between light and dark theme. */
+    theme_changed: true;
+
+    /** The user changed one theme dimension, e.g. color or radius. */
+    theme_option_changed: true;
+
+    /** The user expanded or collapsed the navigation sidebar. */
+    sidebar_toggled: true;
+
+    /** The user typed a query into the sidebar's component search. */
+    sidebar_searched: true;
+
+    /** The user copied a component's code example. */
+    code_copied: true;
   }
 }
 

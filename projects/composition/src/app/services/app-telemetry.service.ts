@@ -8,18 +8,20 @@ import {
   NavigationEnd,
   NavigationError,
   NavigationSkipped,
+  NavigationSkippedCode,
   NavigationStart,
   Router
 } from '@angular/router';
 import {
+  CpsBiEventName,
   CpsBiTelemetryService,
   CpsLoggerService,
   CpsScenario,
   CpsScenarioTelemetryService,
   CpsTelemetryMetadata
 } from 'cps-telemetry';
-// Side-effect import for the module augmentation declaring the scenario and
-// step vocabulary used below.
+// Side-effect import for the module augmentation declaring the scenario, step
+// and business event vocabulary used below.
 import './telemetry.schema';
 
 /** Name shared by every route-navigation scenario. */
@@ -27,6 +29,31 @@ const NAVIGATION_SCENARIO = 'route-navigation';
 
 /** Beyond this, a recorded click is assumed not to have caused the navigation. */
 const INTENT_MAX_AGE_MS = 2_000;
+
+const CANCEL_REASON: Partial<Record<NavigationCancellationCode, string>> = {
+  [NavigationCancellationCode.Redirect]: 'redirect',
+  [NavigationCancellationCode.SupersededByNewNavigation]: 'superseded',
+  [NavigationCancellationCode.NoDataFromResolver]: 'no-data-from-resolver',
+  [NavigationCancellationCode.GuardRejected]: 'guard-rejected',
+  [NavigationCancellationCode.Aborted]: 'aborted'
+};
+
+/** As {@link CANCEL_REASON}, for a navigation the router never ran. */
+const SKIP_REASON: Partial<Record<NavigationSkippedCode, string>> = {
+  [NavigationSkippedCode.IgnoredSameUrlNavigation]: 'same-url',
+  [NavigationSkippedCode.IgnoredByUrlHandlingStrategy]: 'url-handling-strategy'
+};
+
+/**
+ * Names the cause behind a router code.
+ */
+function causeOf<TCode extends number>(
+  causes: Partial<Record<TCode, string>>,
+  code: TCode | undefined,
+  fallback: string
+): string {
+  return (code === undefined ? undefined : causes[code]) ?? fallback;
+}
 
 /**
  * Wires the documentation app's own telemetry: tracks route navigations as
@@ -104,11 +131,12 @@ export class AppTelemetryService {
    * Repeat clicks within a short window are collapsed by the telemetry layer,
    * so no throttling is needed here.
    *
-   * @param action the interaction name, e.g. `export_clicked`
+   * @param action the interaction name, e.g. `code_copied`, as declared in
+   *   `telemetry.schema.ts`
    * @param metadata attributes describing the interaction — ids, route names
    *   and tab names only, never emails, usernames or account numbers
    */
-  trackClick(action: string, metadata?: CpsTelemetryMetadata): void {
+  trackClick(action: CpsBiEventName, metadata?: CpsTelemetryMetadata): void {
     this.biTelemetry.track(action, metadata);
   }
 
@@ -152,18 +180,23 @@ export class AppTelemetryService {
       }
 
       this.settle(event.id, (scenario) =>
-        scenario.cancel({ message: event.reason || 'navigation-cancelled' })
+        scenario.cancel({
+          reason: causeOf(CANCEL_REASON, event.code, 'navigation-cancelled'),
+          message: event.reason || undefined
+        })
       );
       return;
     }
 
     if (event instanceof NavigationSkipped) {
       this.navigationIntentAt = undefined;
+      const reason = causeOf(SKIP_REASON, event.code, 'navigation-skipped');
       this.consumePendingRedirectScenario()?.cancel({
-        message: event.reason || 'navigation-skipped'
+        reason,
+        message: event.reason || undefined
       });
       this.settle(event.id, (scenario) =>
-        scenario.cancel({ message: event.reason || 'navigation-skipped' })
+        scenario.cancel({ reason, message: event.reason || undefined })
       );
       return;
     }

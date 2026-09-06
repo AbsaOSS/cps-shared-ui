@@ -38,7 +38,7 @@ export interface CpsTelemetryError {
  * unconstrained until the first augmentation, then checked against it.
  *
  * Shared by every closed-vocabulary name type in this library (scenario,
- * step and logger names).
+ * step, logger and business event names).
  */
 export type CpsRegistered<TRegistry> = keyof TRegistry extends never
   ? string

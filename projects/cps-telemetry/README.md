@@ -464,6 +464,34 @@ Identical events within 400ms are collapsed into one — "identical" meaning
 the same name, scenario correlation, event type, feature, and metadata
 content; differing in any one of those is a distinct event.
 
+### Declaring the vocabulary
+
+Event names are metric dimensions, so they are a closed vocabulary in the
+same way scenario and step names are. Declare yours once:
+
+```ts
+// src/app/telemetry.schema.ts
+declare module 'cps-telemetry' {
+  interface CpsBiEventNames {
+    export_clicked: true;
+    theme_changed: true;
+  }
+}
+export {};
+```
+
+From then on a typo is a compile error rather than a second, silently
+incomplete series:
+
+```ts
+biTelemetry.track('export_clickd'); // error TS2345
+```
+
+`CpsBiEventName` falls back to `string` until the registry is augmented, so
+adoption is incremental. If you wrap `track()` in your own service, type the
+wrapper's parameter as `CpsBiEventName` — a plain `string` will no longer be
+assignable once you declare a vocabulary.
+
 All BI events share a single event type, with `eventName` carried as a field
 — one schema to query, one extended-metric definition. If an existing
 dashboard is keyed on a specific legacy type, a single event can override it:
