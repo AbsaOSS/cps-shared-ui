@@ -7,6 +7,7 @@ import {
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import { CPS_SCENARIO_CONFIG } from '../../config/cps-scenario.config/cps-scenario.config';
 import {
+  CpsScenarioName,
   CpsScenarioOptions,
   CpsScenarioRecord
 } from '../../models/cps-scenario.models/cps-scenario.models';
@@ -139,6 +140,42 @@ export class CpsScenarioTelemetryService implements OnDestroy {
    */
   find(scenarioId: string): CpsScenario | undefined {
     return this.active.get(scenarioId);
+  }
+
+  /**
+   * Every active scenario with the given name.
+   *
+   * `name` is a metric dimension, not a concurrency key - any number of
+   * scenarios can legitimately share one (two tabs, two dashboard panels,
+   * two independently-edited rows). Use this to inspect what's currently
+   * running under a name and decide for yourself, e.g. before starting
+   * another one.
+   *
+   * @param name the scenario name to match
+   * @returns matching active scenarios, in start order
+   */
+  findByName(name: CpsScenarioName): CpsScenario[] {
+    return this.getActive().filter((scenario) => scenario.name === name);
+  }
+
+  /**
+   * Looks up an active scenario by id, asserting it has the expected name.
+   *
+   * The same lookup as {@link find}, with an extra check that its `name`
+   * matches - a defensive assertion for a caller that already expects a
+   * specific scenario name at this id, rather than a bare id lookup.
+   *
+   * @param name the expected scenario name
+   * @param scenarioId the id to look up
+   * @returns the scenario, or `undefined` if not active or its name
+   *   doesn't match
+   */
+  findByNameAndId(
+    name: CpsScenarioName,
+    scenarioId: string
+  ): CpsScenario | undefined {
+    const scenario = this.find(scenarioId);
+    return scenario?.name === name ? scenario : undefined;
   }
 
   /**

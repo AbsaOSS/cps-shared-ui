@@ -429,6 +429,28 @@ Each emission is an independent copy, not the record shipped to the sink —
 mutating it in a subscriber can never change what was already (or is about
 to be) sent.
 
+### Inspecting what's active
+
+Any number of scenarios can share a `name` and run at once — a name is a
+metric dimension, not a lock (two tabs, two dashboard panels, two rows being
+edited independently are all legitimately concurrent). If you need to know
+what's already running before starting more, `CpsScenarioTelemetryService`
+gives you a plain read of it:
+
+```ts
+scenarioTelemetry.find(scenarioId); // one scenario, by id
+scenarioTelemetry.findByName('load-widget'); // every active scenario with that name
+scenarioTelemetry.findByNameAndId('load-widget', scenarioId); // an id lookup, asserting the name
+scenarioTelemetry.getActive(); // everything in flight, in start order
+```
+
+This is deliberately just a read — the library doesn't decide for you
+whether a second `start()` for the same name should be blocked, ignored, or
+left to run alongside the first. If you know two calls really are the same
+logical action (a search box re-querying, a table page reloading), track
+that scenario yourself and cancel it before starting the next one — see the
+`switchMap` + `cancelOutcome` pattern above.
+
 ### Seeing scenarios in DevTools
 
 Set `scenario.userTimings: true` — or just turn on the `debugScenario` flag —

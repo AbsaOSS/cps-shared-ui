@@ -349,6 +349,63 @@ describe('CpsScenarioTelemetryService', () => {
     });
   });
 
+  describe('findByName', () => {
+    it('should return every active scenario sharing a name, and none of a different name', () => {
+      const a1 = service.start({ name: 'load-widget' });
+      const b = service.start({ name: 'load-report' });
+      const a2 = service.start({ name: 'load-widget' });
+
+      expect(service.findByName('load-widget')).toEqual([a1, a2]);
+      expect(service.findByName('load-report')).toEqual([b]);
+    });
+
+    it('should exclude a scenario once it has settled', () => {
+      const a1 = service.start({ name: 'load-widget' });
+      const a2 = service.start({ name: 'load-widget' });
+
+      a1.complete();
+
+      expect(service.findByName('load-widget')).toEqual([a2]);
+    });
+
+    it('should return an empty array when nothing is active under that name', () => {
+      expect(service.findByName('load-widget')).toEqual([]);
+    });
+  });
+
+  describe('findByNameAndId', () => {
+    it('should return the scenario when the id is active and the name matches', () => {
+      const scenario = service.start({ name: 'load-widget' });
+
+      expect(service.findByNameAndId('load-widget', scenario.id)).toBe(
+        scenario
+      );
+    });
+
+    it('should return undefined when the id is active but under a different name', () => {
+      const scenario = service.start({ name: 'load-widget' });
+
+      expect(
+        service.findByNameAndId('load-report', scenario.id)
+      ).toBeUndefined();
+    });
+
+    it('should return undefined for an unknown id', () => {
+      expect(
+        service.findByNameAndId('load-widget', 'no-such-id')
+      ).toBeUndefined();
+    });
+
+    it('should return undefined once the scenario has settled', () => {
+      const scenario = service.start({ name: 'load-widget' });
+      scenario.complete();
+
+      expect(
+        service.findByNameAndId('load-widget', scenario.id)
+      ).toBeUndefined();
+    });
+  });
+
   describe('steps', () => {
     it('should close the previous step when the next one opens', () => {
       const nowSpy = jest.spyOn(performance, 'now');

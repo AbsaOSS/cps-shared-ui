@@ -519,6 +519,31 @@ spans app backgrounding, and pause handling — tracking paused duration,
 adjusting every mark/step/settle path to consult it — is real complexity not
 worth carrying for a capability nothing here actually uses.
 
+**Concurrency is per-instance, not per-name.** Each `start()` call returns
+an independent `CpsScenario` with its own id; nothing checks whether
+another scenario of the same `name` is already running, and nothing stops
+one. This is deliberate, not an oversight: `name` is a metric dimension
+(above), not an identity or a lock. Two browser tabs, two dashboard panels
+loading at once, or two rows being edited independently can all
+legitimately share a name while being genuinely unrelated journeys — the
+library has no way to tell that apart from a caller starting the same
+logical action twice, and guessing wrong in either direction would be
+worse than not guessing.
+
+Where a caller _does_ know two `start()` calls are the same logical
+action — a search box re-querying before the last query resolved, a
+lazy-loaded table page reloading — the existing pattern is to track that
+scenario locally and cancel it before starting the next one
+(`scenario.cancel({ reason: 'superseded' })`, or `cancelOutcome` on
+`traceScenario` for a `switchMap`-driven case where the direct call would
+be a no-op — see Usage below). The library's role is to make that decision
+inspectable, not to make it: `CpsScenarioTelemetryService` exposes
+`find(scenarioId)`, `findByName(name)` (every active scenario sharing a
+name), `findByNameAndId(name, scenarioId)` (an id lookup with a name
+assertion), `getActive()`, and the `settled$` stream, so an application can
+build whatever policy it needs — supersede, ignore, warn — on top of a
+plain read of what's currently running.
+
 ---
 
 ## 6. AWS mapping
