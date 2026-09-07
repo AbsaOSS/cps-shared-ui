@@ -37,6 +37,35 @@
         }
       }
     },
+    "cps-telemetry": {
+      "projectType": "library",
+      "root": "projects/cps-telemetry",
+      "sourceRoot": "projects/cps-telemetry/src",
+      "prefix": "cps",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "options": {
+            "project": "projects/cps-telemetry/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/cps-telemetry/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/cps-telemetry/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "zoneless": false
+          }
+        }
+      }
+    },
     "composition": {
       "projectType": "application",
       "schematics": {
@@ -73,6 +102,7 @@
             ],
             "styles": ["projects/composition/src/styles.scss"],
             "scripts": [],
+            "allowedCommonJsDependencies": ["shimmer"],
             "browser": "projects/composition/src/main.ts"
           },
           "configurations": {

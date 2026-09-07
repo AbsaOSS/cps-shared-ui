@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import { defaultTabRedirectGuard } from './guards/default-tab-redirect.guard';
 
 const pathMatcher: (path: string) => UrlMatcher = (path: string) => (url) => {
   if (url.length === 1) {
@@ -23,7 +24,7 @@ const pathMatcher: (path: string) => UrlMatcher = (path: string) => (url) => {
   return null;
 };
 
-const routes: Routes = [
+const routeDefs: Routes = [
   {
     path: 'colors',
     title: 'Color pack',
@@ -298,6 +299,10 @@ const routes: Routes = [
   },
   { path: '**', redirectTo: 'colors' }
 ];
+
+const routes: Routes = routeDefs.map((route) =>
+  route.matcher ? { ...route, canMatch: [defaultTabRedirectGuard] } : route
+);
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

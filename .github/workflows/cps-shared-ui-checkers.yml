@@ -27,6 +27,12 @@ jobs:
       - name: Build app
         run: npm run build
 
+      - name: Build telemetry library
+        run: npm run build:telemetry
+
+      - name: Build composition
+        run: npm run build:documentation
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +53,9 @@ jobs:
 
       - name: Run library unit tests with coverage
         run: npm run test:coverage:cps-ui-kit
+
+      - name: Run telemetry library unit tests
+        run: npm run test:cps-telemetry
 
       - name: Comment coverage on PR
         uses: ArtiomTr/jest-coverage-report-action@v2
