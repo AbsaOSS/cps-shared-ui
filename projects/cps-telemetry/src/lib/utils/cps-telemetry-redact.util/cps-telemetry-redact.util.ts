@@ -2,7 +2,7 @@ import {
   CpsTelemetryError,
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
-import { cpsIsDevMode } from '../cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
+import { cpsIsDevMode } from '../cps-telemetry-safe.util/cps-telemetry-safe.util';
 
 /**
  * Named, built-in value-content PII shapes {@link CpsRedactConfig.scanValuePatterns}
@@ -11,7 +11,11 @@ import { cpsIsDevMode } from '../cps-telemetry-safe-internal.util/cps-telemetry-
  * @group Types
  */
 export type CpsPiiValuePattern =
-  'email' | 'creditCard' | 'ssn' | 'ipv4' | 'phone';
+  | 'email'
+  | 'creditCard'
+  | 'ssn'
+  | 'ipv4'
+  | 'phone';
 
 /**
  * Tunables governing what telemetry is allowed to carry off the device.

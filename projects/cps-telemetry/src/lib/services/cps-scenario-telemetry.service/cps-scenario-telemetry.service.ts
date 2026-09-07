@@ -17,7 +17,7 @@ import {
   cpsIsBrowser,
   cpsIsDevMode,
   cpsSafeVoid
-} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
+} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import { cpsRedactConfigFor } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
 import { CpsScenario } from '../../scenario/cps-scenario/cps-scenario';
 

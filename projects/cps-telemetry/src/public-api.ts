@@ -110,6 +110,7 @@ export {
   CpsDebugFlag,
   cpsIsDebugEnabled
 } from './lib/utils/cps-debug-flag.util/cps-debug-flag.util';
+export { cpsUuid } from './lib/utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 export {
   CPS_DEFAULT_REDACT_CONFIG,
   CPS_REDACTED,

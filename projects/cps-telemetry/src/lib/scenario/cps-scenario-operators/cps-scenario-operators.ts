@@ -2,7 +2,7 @@ import { defer, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { CpsScenarioOutcome } from '../../models/cps-scenario.models/cps-scenario.models';
 import { CpsScenario } from '../cps-scenario/cps-scenario';
-import { cpsSafe } from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
+import { cpsSafe } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 
 /**
  * Options for configuring scenario completion within an RxJS stream.
@@ -47,7 +47,8 @@ export interface CpsTraceScenarioOptions<T> {
 export function traceScenario<T>(
   scenario: CpsScenario,
   options?:
-    CpsTraceScenarioOptions<T> | ((value: T) => CpsScenarioOutcome | void)
+    | CpsTraceScenarioOptions<T>
+    | ((value: T) => CpsScenarioOutcome | void)
 ): MonoTypeOperatorFunction<T> {
   const outcomeMapper =
     typeof options === 'function' ? options : options?.outcome;

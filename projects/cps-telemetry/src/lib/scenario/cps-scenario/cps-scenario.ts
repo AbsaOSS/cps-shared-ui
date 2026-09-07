@@ -35,7 +35,7 @@ import {
   cpsSafe,
   cpsSafeVoid,
   cpsUuid
-} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
+} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import {
   cpsClearMarks,
   cpsMark,

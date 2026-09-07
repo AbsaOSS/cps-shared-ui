@@ -2,7 +2,7 @@ import { inject, Injectable, OnDestroy } from '@angular/core';
 import {
   cpsSafe,
   cpsSafeVoid
-} from '../../utils/cps-telemetry-safe-internal.util/cps-telemetry-safe-internal.util';
+} from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import {
   CpsBroadcastConnection,
   cpsConnectBroadcastChannel,
