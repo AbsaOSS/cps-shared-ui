@@ -347,7 +347,7 @@ describe('CpsBiTelemetryService', () => {
       expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(2);
     });
 
-    it('should read the dedup window from CPS_BI_CONFIG, not a hardcoded value', () => {
+    it('should read the dedup window from CPS_BI_TELEMETRY_CONFIG, not a hardcoded value', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [

@@ -1,16 +1,16 @@
 import { InjectionToken } from '@angular/core';
 import {
-  CpsBiConfig,
-  CPS_DEFAULT_BI_CONFIG
-} from '../cps-bi.config/cps-bi.config';
+  CpsBiTelemetryConfig,
+  CPS_DEFAULT_BI_TELEMETRY_CONFIG
+} from '../cps-bi-telemetry.config/cps-bi-telemetry.config';
 import {
   CpsLogConfig,
   CPS_DEFAULT_LOG_CONFIG
 } from '../cps-log.config/cps-log.config';
 import {
-  CpsScenarioConfig,
-  CPS_DEFAULT_SCENARIO_CONFIG
-} from '../cps-scenario.config/cps-scenario.config';
+  CpsScenarioTelemetryConfig,
+  CPS_DEFAULT_SCENARIO_TELEMETRY_CONFIG
+} from '../cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import { CPS_DEFAULT_EVENT_NAMESPACE } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import {
   CPS_DEFAULT_REDACT_CONFIG,
@@ -51,15 +51,15 @@ export interface CpsTelemetryIdentity {
  */
 export const CPS_DEFAULT_TELEMETRY_CONFIG: {
   eventNamespace: string;
-  scenario: CpsScenarioConfig;
+  scenario: CpsScenarioTelemetryConfig;
   logs: CpsLogConfig;
-  bi: CpsBiConfig;
+  bi: CpsBiTelemetryConfig;
   redact: CpsRedactConfig;
 } = {
   eventNamespace: CPS_DEFAULT_EVENT_NAMESPACE,
-  scenario: CPS_DEFAULT_SCENARIO_CONFIG,
+  scenario: CPS_DEFAULT_SCENARIO_TELEMETRY_CONFIG,
   logs: CPS_DEFAULT_LOG_CONFIG,
-  bi: CPS_DEFAULT_BI_CONFIG,
+  bi: CPS_DEFAULT_BI_TELEMETRY_CONFIG,
   redact: CPS_DEFAULT_REDACT_CONFIG
 };
 

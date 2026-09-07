@@ -5,7 +5,7 @@ import { InjectionToken } from '@angular/core';
  *
  * @group Interfaces
  */
-export interface CpsScenarioConfig {
+export interface CpsScenarioTelemetryConfig {
   /**
    * Milliseconds after which an unsettled scenario auto-settles as `timeout`.
    * `0` disables the default; individual scenarios can still opt in.
@@ -58,14 +58,15 @@ export interface CpsScenarioConfig {
 }
 
 /** Default scenario telemetry settings. */
-export const CPS_DEFAULT_SCENARIO_CONFIG: CpsScenarioConfig = {
-  defaultTimeoutMs: 30_000,
-  emitLifecycleEvents: false,
-  maxSteps: 50,
-  userTimings: false,
-  markCleanupFallbackMs: 300_000,
-  redact: true
-};
+export const CPS_DEFAULT_SCENARIO_TELEMETRY_CONFIG: CpsScenarioTelemetryConfig =
+  {
+    defaultTimeoutMs: 30_000,
+    emitLifecycleEvents: false,
+    maxSteps: 50,
+    userTimings: false,
+    markCleanupFallbackMs: 300_000,
+    redact: true
+  };
 
 /**
  * Resolved scenario telemetry configuration. Provided by
@@ -73,6 +74,7 @@ export const CPS_DEFAULT_SCENARIO_CONFIG: CpsScenarioConfig = {
  *
  * @group Tokens
  */
-export const CPS_SCENARIO_CONFIG = new InjectionToken<CpsScenarioConfig>(
-  'CPS_SCENARIO_CONFIG'
-);
+export const CPS_SCENARIO_TELEMETRY_CONFIG =
+  new InjectionToken<CpsScenarioTelemetryConfig>(
+    'CPS_SCENARIO_TELEMETRY_CONFIG'
+  );

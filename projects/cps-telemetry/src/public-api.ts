@@ -13,17 +13,17 @@ export {
   CpsTelemetryIdentity
 } from './lib/config/cps-telemetry-common.config/cps-telemetry-common.config';
 export {
-  CPS_BI_CONFIG,
-  CpsBiConfig
-} from './lib/config/cps-bi.config/cps-bi.config';
+  CPS_BI_TELEMETRY_CONFIG,
+  CpsBiTelemetryConfig
+} from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 export {
   CPS_LOG_CONFIG,
   CpsLogConfig
 } from './lib/config/cps-log.config/cps-log.config';
 export {
-  CPS_SCENARIO_CONFIG,
-  CpsScenarioConfig
-} from './lib/config/cps-scenario.config/cps-scenario.config';
+  CPS_SCENARIO_TELEMETRY_CONFIG,
+  CpsScenarioTelemetryConfig
+} from './lib/config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 
 // Providers
 export {

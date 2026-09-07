@@ -94,7 +94,7 @@ flowchart TD
 ### Shared infrastructure
 
 `CpsTelemetryIdentity` + `CPS_TELEMETRY_IDENTITY` (identity, shared by every
-concern), `CPS_LOG_CONFIG` / `CPS_SCENARIO_CONFIG` / `CPS_BI_CONFIG` /
+concern), `CPS_LOG_CONFIG` / `CPS_SCENARIO_TELEMETRY_CONFIG` / `CPS_BI_TELEMETRY_CONFIG` /
 `CPS_REDACT_CONFIG` (one per concern), `CpsTelemetryMetadata`,
 `cpsIsDebugEnabled`, `cpsRedactMetadata` / `cpsNormalizeError` /
 `cpsScrubString` / `cpsRedactConfigFor`, `cpsSafe` / `cpsSafeVoid` /
@@ -1194,7 +1194,7 @@ environment, version, maxSteps, ... })`) would mean either restating
   identity provider underneath, which is real DI-ordering ceremony for a
   capability composable features already give for free.
 - Each concern still gets its own DI token (`CPS_LOG_CONFIG`,
-  `CPS_SCENARIO_CONFIG`, `CPS_BI_CONFIG`, `CPS_REDACT_CONFIG`), so a
+  `CPS_SCENARIO_TELEMETRY_CONFIG`, `CPS_BI_TELEMETRY_CONFIG`, `CPS_REDACT_CONFIG`), so a
   consumer overriding one directly through DI substitution — a test, a
   runtime-computed value — can target that token alone, without
   reconstructing the whole identity or touching unrelated concerns. A
@@ -1309,7 +1309,7 @@ convention, for an application that wants the pre-fallback behavior back.
 ### Turning redaction off per concern
 
 `redact: boolean` (default `true`) lives on each of `CpsLogConfig`,
-`CpsScenarioConfig` and `CpsBiConfig` — not on `CpsRedactConfig` itself —
+`CpsScenarioTelemetryConfig` and `CpsBiTelemetryConfig` — not on `CpsRedactConfig` itself —
 so `withLogging`/`withScenarios`/`withBiEvents` can each opt a concern out
 independently, matching every other field in this section being configured
 per concern through its own `with*()` call rather than centrally.

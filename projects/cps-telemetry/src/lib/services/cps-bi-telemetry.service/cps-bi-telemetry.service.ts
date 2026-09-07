@@ -3,7 +3,7 @@ import {
   CPS_REDACT_CONFIG,
   CPS_TELEMETRY_IDENTITY
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
-import { CPS_BI_CONFIG } from '../../config/cps-bi.config/cps-bi.config';
+import { CPS_BI_TELEMETRY_CONFIG } from '../../config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 import {
   CpsBiEvent,
   CpsBiEventDetail,
@@ -61,7 +61,7 @@ import {
 @Injectable({ providedIn: 'root' })
 export class CpsBiTelemetryService {
   private readonly identity = inject(CPS_TELEMETRY_IDENTITY);
-  private readonly biConfig = inject(CPS_BI_CONFIG);
+  private readonly biConfig = inject(CPS_BI_TELEMETRY_CONFIG);
   private readonly redact = cpsRedactConfigFor(
     inject(CPS_REDACT_CONFIG),
     this.biConfig.redact

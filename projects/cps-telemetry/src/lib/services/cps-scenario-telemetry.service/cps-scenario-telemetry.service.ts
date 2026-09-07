@@ -5,7 +5,7 @@ import {
   CPS_REDACT_CONFIG,
   CPS_TELEMETRY_IDENTITY
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
-import { CPS_SCENARIO_CONFIG } from '../../config/cps-scenario.config/cps-scenario.config';
+import { CPS_SCENARIO_TELEMETRY_CONFIG } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import {
   CpsScenarioName,
   CpsScenarioOptions,
@@ -46,7 +46,7 @@ import { CpsScenario } from '../../scenario/cps-scenario/cps-scenario';
 @Injectable({ providedIn: 'root' })
 export class CpsScenarioTelemetryService implements OnDestroy {
   private readonly identity = inject(CPS_TELEMETRY_IDENTITY);
-  private readonly scenarioConfig = inject(CPS_SCENARIO_CONFIG);
+  private readonly scenarioConfig = inject(CPS_SCENARIO_TELEMETRY_CONFIG);
   private readonly redact = cpsRedactConfigFor(
     inject(CPS_REDACT_CONFIG),
     this.scenarioConfig.redact

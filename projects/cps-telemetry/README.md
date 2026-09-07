@@ -87,7 +87,7 @@ Each concern is independently optional. An app that only configures logging
 never has to think about scenarios, BI events, or redaction. If you want to
 override one concern directly through Angular's DI — in a test, or with a
 value computed at runtime — each has its own token: `CPS_LOG_CONFIG`,
-`CPS_SCENARIO_CONFIG`, `CPS_BI_CONFIG`, `CPS_REDACT_CONFIG`. You target that
+`CPS_SCENARIO_TELEMETRY_CONFIG`, `CPS_BI_TELEMETRY_CONFIG`, `CPS_REDACT_CONFIG`. You target that
 token directly, with no need to rebuild the whole identity object. See
 [DESIGN.md](./DESIGN.md) for why identity is required and shared while every
 other concern gets its own token.

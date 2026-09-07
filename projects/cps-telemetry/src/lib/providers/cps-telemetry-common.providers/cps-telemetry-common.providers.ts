@@ -18,17 +18,17 @@ import {
   CpsTelemetryIdentity
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import {
-  CPS_BI_CONFIG,
-  CpsBiConfig
-} from '../../config/cps-bi.config/cps-bi.config';
+  CPS_BI_TELEMETRY_CONFIG,
+  CpsBiTelemetryConfig
+} from '../../config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 import {
   CPS_LOG_CONFIG,
   CpsLogConfig
 } from '../../config/cps-log.config/cps-log.config';
 import {
-  CPS_SCENARIO_CONFIG,
-  CpsScenarioConfig
-} from '../../config/cps-scenario.config/cps-scenario.config';
+  CPS_SCENARIO_TELEMETRY_CONFIG,
+  CpsScenarioTelemetryConfig
+} from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 
 /**
  * One optional concern's providers, composed onto {@link provideCpsTelemetry}.
@@ -72,12 +72,12 @@ export function withLogging(
  * @group Utils
  */
 export function withScenarios(
-  config: Partial<CpsScenarioConfig> = {}
+  config: Partial<CpsScenarioTelemetryConfig> = {}
 ): CpsTelemetryFeature {
   return {
     providers: [
       {
-        provide: CPS_SCENARIO_CONFIG,
+        provide: CPS_SCENARIO_TELEMETRY_CONFIG,
         useValue: { ...CPS_DEFAULT_TELEMETRY_CONFIG.scenario, ...config }
       }
     ]
@@ -93,12 +93,12 @@ export function withScenarios(
  * @group Utils
  */
 export function withBiEvents(
-  config: Partial<CpsBiConfig> = {}
+  config: Partial<CpsBiTelemetryConfig> = {}
 ): CpsTelemetryFeature {
   return {
     providers: [
       {
-        provide: CPS_BI_CONFIG,
+        provide: CPS_BI_TELEMETRY_CONFIG,
         useValue: { ...CPS_DEFAULT_TELEMETRY_CONFIG.bi, ...config }
       }
     ]

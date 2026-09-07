@@ -14,7 +14,7 @@ import {
   CPS_TELEMETRY_IDENTITY
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import { CPS_LOG_CONFIG } from '../../config/cps-log.config/cps-log.config';
-import { CPS_SCENARIO_CONFIG } from '../../config/cps-scenario.config/cps-scenario.config';
+import { CPS_SCENARIO_TELEMETRY_CONFIG } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import { CpsScenarioTelemetryService } from '../../services/cps-scenario-telemetry.service/cps-scenario-telemetry.service';
 import {
   CPS_LOG_API_PROVIDER,
@@ -50,7 +50,7 @@ function createRealm(providers: unknown[]): Injector {
         }
       },
       {
-        provide: CPS_SCENARIO_CONFIG,
+        provide: CPS_SCENARIO_TELEMETRY_CONFIG,
         useValue: {
           ...CPS_DEFAULT_TELEMETRY_CONFIG.scenario,
           defaultTimeoutMs: 0

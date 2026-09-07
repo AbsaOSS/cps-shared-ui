@@ -1,5 +1,5 @@
 import { CpsTelemetryIdentity } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
-import { CpsScenarioConfig } from '../../config/cps-scenario.config/cps-scenario.config';
+import { CpsScenarioTelemetryConfig } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import {
   CpsScenarioAggregate,
   CpsScenarioName,
@@ -51,7 +51,7 @@ export interface CpsScenarioDeps {
   /** The application's identity, shared by every telemetry concern. */
   identity: CpsTelemetryIdentity;
   /** Scenario-specific tuning — timeouts, step cap, User Timing marks. */
-  scenarioConfig: CpsScenarioConfig;
+  scenarioConfig: CpsScenarioTelemetryConfig;
   /** Redaction settings, shared by every telemetry concern. */
   redact: CpsRedactConfig;
   sink: CpsTelemetrySink;
@@ -106,7 +106,7 @@ export class CpsScenario {
   private _status?: CpsScenarioStatus;
   private _stepCount = 0;
   private openStep?: CpsScenarioStep;
-  /** Whether the open step counted against {@link CpsScenarioConfig.maxSteps}. */
+  /** Whether the open step counted against {@link CpsScenarioTelemetryConfig.maxSteps}. */
   private openStepIncluded = false;
   private previousStep?: CpsStepName;
   private lastTimingMark: string;
@@ -773,7 +773,7 @@ export class CpsScenario {
 
   /**
    * Defensive backstop for a scenario with no business timeout: clears its
-   * User Timing marks after {@link CpsScenarioConfig.markCleanupFallbackMs},
+   * User Timing marks after {@link CpsScenarioTelemetryConfig.markCleanupFallbackMs},
    * independent of whether the scenario ever settles.
    *
    * A no-op when `userTimings` is off or `markCleanupFallbackMs` is `0`.

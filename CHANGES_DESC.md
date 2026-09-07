@@ -395,8 +395,8 @@ CpsTelemetrySink`, but it would make the _concrete_ `CpsNoopTelemetrySink`
   omittable `withLogging(...)`, `withScenarios(...)`, `withBiEvents(...)`,
   `withRedaction(...)` features — mirroring Angular's own
   `provideHttpClient(withInterceptors(...))` convention. Each concern gets
-  its own DI token (`CPS_LOG_CONFIG`, `CPS_SCENARIO_CONFIG`,
-  `CPS_BI_CONFIG`, `CPS_REDACT_CONFIG`, plus `CPS_TELEMETRY_IDENTITY` for
+  its own DI token (`CPS_LOG_CONFIG`, `CPS_SCENARIO_TELEMETRY_CONFIG`,
+  `CPS_BI_TELEMETRY_CONFIG`, `CPS_REDACT_CONFIG`, plus `CPS_TELEMETRY_IDENTITY` for
   identity), so a consumer can override one concern through plain DI
   substitution without touching the others. BI event tracking (dedup
   window and key cap) is configurable via `withBiEvents(...)` rather than

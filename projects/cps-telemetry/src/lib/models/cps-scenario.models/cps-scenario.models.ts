@@ -223,7 +223,7 @@ export interface CpsScenarioOptions extends CpsScenarioIdentityDetail {
 
   /**
    * Milliseconds after which the scenario auto-settles as `timeout`. Defaults
-   * to {@link CpsScenarioConfig.defaultTimeoutMs}. Pass `0` to disable.
+   * to {@link CpsScenarioTelemetryConfig.defaultTimeoutMs}. Pass `0` to disable.
    */
   timeoutMs?: number;
 

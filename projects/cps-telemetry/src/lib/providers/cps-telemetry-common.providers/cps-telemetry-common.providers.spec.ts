@@ -15,9 +15,9 @@ import {
   CPS_REDACT_CONFIG,
   CPS_TELEMETRY_IDENTITY
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
-import { CPS_BI_CONFIG } from '../../config/cps-bi.config/cps-bi.config';
+import { CPS_BI_TELEMETRY_CONFIG } from '../../config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 import { CPS_LOG_CONFIG } from '../../config/cps-log.config/cps-log.config';
-import { CPS_SCENARIO_CONFIG } from '../../config/cps-scenario.config/cps-scenario.config';
+import { CPS_SCENARIO_TELEMETRY_CONFIG } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
 import {
@@ -120,10 +120,10 @@ describe('provideCpsTelemetry', () => {
 
   it('should default every concern not given a with*() feature', () => {
     configureAlone();
-    expect(TestBed.inject(CPS_SCENARIO_CONFIG)).toEqual(
+    expect(TestBed.inject(CPS_SCENARIO_TELEMETRY_CONFIG)).toEqual(
       CPS_DEFAULT_TELEMETRY_CONFIG.scenario
     );
-    expect(TestBed.inject(CPS_BI_CONFIG)).toEqual(
+    expect(TestBed.inject(CPS_BI_TELEMETRY_CONFIG)).toEqual(
       CPS_DEFAULT_TELEMETRY_CONFIG.bi
     );
     expect(TestBed.inject(CPS_REDACT_CONFIG)).toEqual(
@@ -369,7 +369,7 @@ describe('with*() features', () => {
 
   it('should merge withScenarios over the library default', () => {
     configure(withScenarios({ maxSteps: 10 }));
-    const scenario = TestBed.inject(CPS_SCENARIO_CONFIG);
+    const scenario = TestBed.inject(CPS_SCENARIO_TELEMETRY_CONFIG);
     expect(scenario.maxSteps).toBe(10);
     expect(scenario.defaultTimeoutMs).toBe(
       CPS_DEFAULT_TELEMETRY_CONFIG.scenario.defaultTimeoutMs
@@ -378,7 +378,7 @@ describe('with*() features', () => {
 
   it('should merge withBiEvents over the library default', () => {
     configure(withBiEvents({ dedupWindowMs: 1_000 }));
-    const bi = TestBed.inject(CPS_BI_CONFIG);
+    const bi = TestBed.inject(CPS_BI_TELEMETRY_CONFIG);
     expect(bi.dedupWindowMs).toBe(1_000);
     expect(bi.dedupMaxKeys).toBe(CPS_DEFAULT_TELEMETRY_CONFIG.bi.dedupMaxKeys);
   });

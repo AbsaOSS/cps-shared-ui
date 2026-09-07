@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { CpsScenarioConfig } from '../../config/cps-scenario.config/cps-scenario.config';
+import { CpsScenarioTelemetryConfig } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import {
   provideCpsTelemetry,
   withRedaction,
@@ -137,7 +137,7 @@ describe('CpsScenarioTelemetryService', () => {
   let sink: RecordingSink;
 
   function configure(
-    scenarioOverrides?: Partial<CpsScenarioConfig>,
+    scenarioOverrides?: Partial<CpsScenarioTelemetryConfig>,
     eventNamespace?: string
   ): void {
     TestBed.resetTestingModule();
