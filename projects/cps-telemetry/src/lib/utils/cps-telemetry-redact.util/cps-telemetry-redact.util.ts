@@ -11,11 +11,7 @@ import { cpsIsDevMode } from '../cps-telemetry-safe.util/cps-telemetry-safe.util
  * @group Types
  */
 export type CpsPiiValuePattern =
-  | 'email'
-  | 'creditCard'
-  | 'ssn'
-  | 'ipv4'
-  | 'phone';
+  'email' | 'creditCard' | 'ssn' | 'ipv4' | 'phone';
 
 /**
  * Tunables governing what telemetry is allowed to carry off the device.

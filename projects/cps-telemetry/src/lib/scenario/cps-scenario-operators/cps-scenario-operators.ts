@@ -47,8 +47,7 @@ export interface CpsTraceScenarioOptions<T> {
 export function traceScenario<T>(
   scenario: CpsScenario,
   options?:
-    | CpsTraceScenarioOptions<T>
-    | ((value: T) => CpsScenarioOutcome | void)
+    CpsTraceScenarioOptions<T> | ((value: T) => CpsScenarioOutcome | void)
 ): MonoTypeOperatorFunction<T> {
   const outcomeMapper =
     typeof options === 'function' ? options : options?.outcome;
