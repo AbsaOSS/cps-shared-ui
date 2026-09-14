@@ -6,9 +6,7 @@ const fs = require('fs');
 
 const reportPath = process.argv[2];
 if (!reportPath) {
-  console.error(
-    'Usage: node playwright/print-accessibility-warnings.js <report.json>'
-  );
+  console.error('Usage: node playwright/print-a11y-warnings.js <report.json>');
   process.exit(1);
 }
 
