@@ -31,7 +31,7 @@ async function runFullPageScan(
     contentType: 'application/json'
   });
   annotateIncomplete(testInfo, results.incomplete);
-  // Composition's incompletes were already  fixed, so unlike cps-ui-kit, assert none regress
+  // Composition's incompletes were already fixed, so unlike cps-ui-kit, assert none regress
   expectNoViolations(results.incomplete);
   expectNoViolations(results.violations);
 }
