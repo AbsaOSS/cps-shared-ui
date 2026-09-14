@@ -7,6 +7,7 @@ import {
 import {
   test,
   expectNoViolations,
+  annotateIncomplete,
   waitForAnimationsToFinish
 } from '../fixtures/axe-helpers';
 
@@ -90,6 +91,7 @@ async function runScan(
     body: JSON.stringify(results, null, 2),
     contentType: 'application/json'
   });
+  annotateIncomplete(testInfo, results.incomplete);
   expectNoViolations(results.violations);
 }
 

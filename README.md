@@ -9,7 +9,7 @@ This repository consists of two projects:
 
 #### Accessibility
 
-This library's components and the composition app are tested for WCAG 2.2 AA compliance both with automated tooling ([axe-core](https://github.com/dequelabs/axe-core), via a Playwright test suite and pa11y-ci) and manual accessibility review. See [Run accessibility tests](#run-accessibility-tests) for how to run the automated checks yourself.
+This library's components and the composition app are tested for WCAG 2.2 AA compliance both with automated tooling ([axe-core](https://github.com/dequelabs/axe-core), via a Playwright test suite) and manual accessibility review. See [Run accessibility tests](#run-accessibility-tests) for how to run the automated checks yourself.
 
 #### Available components
 
@@ -144,8 +144,6 @@ The current released version is tracked in [`.release-please-manifest.json`](.re
 
 #### Run accessibility tests
 
-Accessibility is covered by two complementary tools, run separately and by different CI jobs:
-
 **Playwright + axe-core** — scans individual `cps-ui-kit` components (in isolation) and the full `composition` app (pages, shell, interactive states) against WCAG 2.0/2.1/2.2 A/AA + best-practice rules.
 
 ```bash
@@ -156,40 +154,7 @@ npm run test:playwright:composition:accessibility   # composition app only
 
 These run as part of the `playwright` CI job. See [playwright/README.md](playwright/README.md) for full details, including how component/page entries are structured.
 
-**pa11y-ci** — scans all 33 composition demo pages (one per component) against WCAG 2.0 AA, using axe-core as its underlying test engine. This is a separate, independent check from the Playwright one above and runs as its own `pa11y` CI job.
-
-To run it manually:
-
-1. Start the development server:
-
-   ```bash
-   npm run start
-   ```
-
-2. In a separate terminal, run the accessibility tests:
-   ```bash
-   npm run test:pa11y
-   ```
-
-Alternatively, use the combined script that starts the server and shows a colorful summary with statistics:
-
-```bash
-npm run test:pa11y:local
-```
-
-`npm run test:pa11y:summary` produces that same summary, but assumes the server is already running.
-
-`npm run test:pa11y:ci` is the CI equivalent of `test:pa11y:local` — it starts the server and runs the plain `test:pa11y` reporter (full per-URL violation output) instead of the summary. This is what the `pa11y` CI job runs.
-
-The summary variants display:
-
-- Total URLs tested with pass/fail ratio
-- Total accessibility errors found
-- Accessibility standard (WCAG 2.0 AA)
-- Test engine (axe-core via pa11y-ci)
-- Top 10 components with the most issues
-
-Both `test:pa11y` and `test:pa11y:ci` fail (non-zero exit code) if any accessibility error is found on any page.
+axe-core's `violations` fail the test; `incomplete` results (issues axe couldn't fully confirm without human judgement, e.g. combobox `aria-controls` patterns) are non-blocking and instead surfaced as a `warning` annotation on the test, visible in the HTML report and the attached scan JSON. Run `npm run test:playwright:accessibility:warnings` to print every test carrying such a warning without opening the HTML report. The `composition` scan is stricter: its `incomplete` results were already resolved, so it asserts there are none, unlike the `cps-ui-kit` scan where they're only warnings.
 
 #### Third-party notices
 

@@ -23,7 +23,7 @@ playwright/
 
 Tests run against the composition app (`ng serve`) which showcases every component.
 
-Accessibility coverage is split from functional coverage by filename: any spec file with `accessibility` in its name is routed to the dedicated `accessibility` project (see [Browser projects](#browser-projects)); everything else runs under `chromium`/`webkit`. See the root [README's "Run accessibility tests" section](../README.md#run-accessibility-tests) for how this relates to the separate `pa11y-ci` check.
+Accessibility coverage is split from functional coverage by filename: any spec file with `accessibility` in its name is routed to the dedicated `accessibility` project (see [Browser projects](#browser-projects)); everything else runs under `chromium`/`webkit`.
 
 ## Running Tests
 
@@ -143,7 +143,7 @@ Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/i
 
 ## CI
 
-Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). On failure, the HTML report and test artifacts (screenshots, videos) are uploaded as workflow artifacts. This is a separate job from the `pa11y` one, which runs `pa11y-ci` independently — see the root [README](../README.md#run-accessibility-tests) for how the two relate.
+Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). On failure, the HTML report and test artifacts (screenshots, videos) are uploaded as workflow artifacts.
 
 ## Writing Tests
 
