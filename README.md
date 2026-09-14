@@ -154,7 +154,7 @@ npm run test:playwright:composition:accessibility   # composition app only
 
 These run as part of the `playwright` CI job. See [playwright/README.md](playwright/README.md) for full details, including how component/page entries are structured.
 
-axe-core's `violations` fail the test; `incomplete` results (issues axe couldn't fully confirm without human judgement, e.g. combobox `aria-controls` patterns) are non-blocking and instead surfaced as a `warning` annotation on the test, visible in the HTML report and the attached scan JSON. Run `npm run test:playwright:accessibility:warnings` to print every test carrying such a warning without opening the HTML report. The `composition` scan is stricter: its `incomplete` results were already resolved, so it asserts there are none, unlike the `cps-ui-kit` scan where they're only warnings.
+axe-core's `violations` fail the test; `incomplete` results (issues axe couldn't fully confirm without human judgement, e.g. combobox `aria-controls` patterns) are non-blocking and instead surfaced as a `warning` annotation on the test, visible in the HTML report and the attached scan JSON. Run `npm run test:playwright:accessibility:incomplete` (or the scoped `test:playwright:composition:accessibility:incomplete` / `test:playwright:cps-ui-kit:accessibility:incomplete`) to print every test carrying such a warning without opening the HTML report. The `composition` scan is stricter: its `incomplete` results were already resolved, so it asserts there are none, unlike the `cps-ui-kit` scan where they're only warnings.
 
 #### Third-party notices
 
