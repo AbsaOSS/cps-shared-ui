@@ -27,6 +27,7 @@ import {
 } from '../../../utils/internal/accessibility-utils/accessibility-utils';
 import { Subscription } from 'rxjs';
 import { isEqual } from 'lodash-es';
+import { getOptionProp, OptionKey } from '../../../utils/internal/option-utils';
 import type {
   CpsIconType,
   CpsIconSizeType
@@ -112,16 +113,16 @@ export class CpsBaseTreeDropdownComponent
   @Input() openOnClear = true;
 
   /**
-   * Name of the label field of an option.
+   * Name of the label field of an option, or a function that receives the option and returns the label.
    * @group Props
    */
-  @Input() optionLabel = 'label';
+  @Input() optionLabel: OptionKey = 'label';
 
   /**
-   * Name of the info field of an option, shows the additional information text.
+   * Name of the info field of an option, or a function that receives the option and returns the info text.
    * @group Props
    */
-  @Input() optionInfo = 'info';
+  @Input() optionInfo: OptionKey = 'info';
 
   /**
    * Options for hiding details.
@@ -902,15 +903,15 @@ export class CpsBaseTreeDropdownComponent
   private _toInnerOptions(_options: any[]): TreeNode[] {
     const mapOption = (
       o: any,
-      optionLabel: string,
-      optionInfo: string,
+      optionLabel: OptionKey,
+      optionInfo: OptionKey,
       key: string,
       originalOptionsMap: any
     ) => {
       const inner = {
         inner: true,
-        label: o[optionLabel],
-        info: o[optionInfo],
+        label: getOptionProp(o, optionLabel),
+        info: getOptionProp(o, optionInfo),
         key,
         styleClass: 'key-' + key
       } as TreeNode;
