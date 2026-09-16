@@ -33,7 +33,6 @@ yarn-error.log
 /libpeerconnection.log
 testem.log
 /typings
-.pa11y-temp.json
 
 # System files
 .DS_Store

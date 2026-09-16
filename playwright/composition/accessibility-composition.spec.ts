@@ -4,6 +4,7 @@ import { pageRoutes } from '../fixtures/composition-components';
 import {
   test,
   expectNoViolations,
+  annotateIncomplete,
   waitForAnimationsToFinish
 } from '../fixtures/axe-helpers';
 
@@ -29,6 +30,9 @@ async function runFullPageScan(
     body: JSON.stringify(results, null, 2),
     contentType: 'application/json'
   });
+  annotateIncomplete(testInfo, results.incomplete);
+  // Composition's incompletes were already fixed, so unlike cps-ui-kit, assert none regress
+  expectNoViolations(results.incomplete);
   expectNoViolations(results.violations);
 }
 
