@@ -52,4 +52,6 @@ jobs:
         working-directory: dist/cps-ui-kit
         # Trusted publishing: token is intentionally empty, auth comes from OIDC.
         # No --tag on master keeps default npm behavior (publishes to "latest").
-        run: NODE_AUTH_TOKEN="" npm publish ${{ github.ref_name != 'master' && format('--tag {0}', github.ref_name) || '' }}
+        # Release branches get a "-support" suffix: npm rejects a dist-tag that is a
+        # valid semver range, and e.g. "v21" parses as one (>=21.0.0 <22.0.0-0).
+        run: NODE_AUTH_TOKEN="" npm publish ${{ github.ref_name != 'master' && format('--tag {0}-support', github.ref_name) || '' }}
