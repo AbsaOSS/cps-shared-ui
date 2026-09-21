@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - v21
 
 permissions: {}
 
@@ -21,6 +22,7 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
+          target-branch: ${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
@@ -49,4 +51,5 @@ jobs:
       - name: Publish to NPM registry
         working-directory: dist/cps-ui-kit
         # Trusted publishing: token is intentionally empty, auth comes from OIDC.
-        run: NODE_AUTH_TOKEN="" npm publish
+        # No --tag on master keeps default npm behavior (publishes to "latest").
+        run: NODE_AUTH_TOKEN="" npm publish ${{ github.ref_name != 'master' && format('--tag {0}', github.ref_name) || '' }}
