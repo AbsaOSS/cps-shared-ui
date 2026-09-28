@@ -17,9 +17,11 @@ import {
   CpsTelemetryEventTypes,
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
-import type { CpsLogger } from '../../services/cps-logger.service/cps-logger.service';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
-import { cpsIsDebugEnabled } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
+import {
+  cpsDebugWrite,
+  cpsIsDebugEnabled
+} from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
 import {
   CpsRedactConfig,
   cpsMergeMetadata,
@@ -58,6 +60,16 @@ export interface CpsScenarioDeps {
   /** Called once with the scenario's id when it reaches a terminal state. */
   onSettled: (scenarioId: string, record: CpsScenarioRecord) => void;
 }
+
+/**
+ * The identity fields carried by both payloads a scenario emits - the
+ * settled record and the per-step event. Enough to label a console line
+ * from the object being sent; see `writeToConsole`.
+ */
+type CpsScenarioEmitted = {
+  application: string;
+  scenarioName: CpsScenarioName;
+};
 
 /** Boundary names used for User Timing marks (see `timingMark`). */
 const START_MARK = 'start';
@@ -115,7 +127,6 @@ export class CpsScenario {
   private markCleanupTimer?: ReturnType<typeof setTimeout>;
 
   private _elapsed = 0;
-  private _logger?: CpsLogger;
   private settleOutcome?: CpsScenarioOutcome;
   private settleError?: unknown;
   /** Scrubbed once in {@link settle}, reused by {@link toRecord} — see that method's doc comment. */
@@ -181,7 +192,6 @@ export class CpsScenario {
 
     this.lastTimingMark = this.timingMark(START_MARK);
     this.scheduleTimeout();
-    this.debug('started');
   }
 
   /**
@@ -224,27 +234,6 @@ export class CpsScenario {
   }
 
   /**
-   * The logger passed to {@link CpsScenarioTelemetryService.start}, with this
-   * scenario's id bound as the correlation id.
-   *
-   * `undefined` unless a logger was supplied.
-   */
-  get logger(): CpsLogger | undefined {
-    if (!this._logger && this.options.logger) {
-      this._logger = cpsSafe(
-        'scenario.logger',
-        () =>
-          this.options.logger?.child({
-            context: this.options.name,
-            correlationId: this._id
-          }),
-        undefined
-      );
-    }
-    return this._logger;
-  }
-
-  /**
    * Opens a step, implicitly closing the previous one as completed.
    *
    * @param name the step name, declared in {@link CpsScenarioSteps}
@@ -255,22 +244,22 @@ export class CpsScenario {
     return this.mutate('step', () => {
       this.closeOpenStep('success');
 
+      this._stepCount++;
+      this.openStepIncluded =
+        this._stepCount <= this.deps.scenarioConfig.maxSteps;
+
       const step: CpsScenarioStep = {
         name,
         startOffset: Math.round(cpsNow() - this.startedAt),
-        metadata: cpsRedactMetadata(metadata, this.deps.redact)
+        metadata: this.openStepIncluded
+          ? cpsRedactMetadata(metadata, this.deps.redact)
+          : undefined
       };
 
       this.openStep = step;
-      this._stepCount++;
-
-      this.openStepIncluded =
-        this._stepCount <= this.deps.scenarioConfig.maxSteps;
       if (this.openStepIncluded) {
         this.steps.push(step);
       }
-
-      this.debug(`step ${name}`);
     });
   }
 
@@ -493,7 +482,7 @@ export class CpsScenario {
     error?: unknown
   ): void {
     cpsSafeVoid(`scenario.${status}`, () => {
-      if (this.guardSettled(status)) {
+      if (this.isSettled) {
         return;
       }
 
@@ -552,13 +541,12 @@ export class CpsScenario {
       this.measureScenarioTiming();
 
       const record = this.toRecord();
-      this.debugEmit(
+      this.deps.onSettled(this._id, record);
+      this.emit(
         this.eventTypes.scenario,
         record,
         `${status} in ${Math.round(this._elapsed)}ms`
       );
-      this.deps.onSettled(this._id, record);
-      this.emitScenarioEvent(record);
     });
   }
 
@@ -577,14 +565,6 @@ export class CpsScenario {
       'scenario.getUserId',
       () => this.deps.sink.getUserId(),
       undefined
-    );
-  }
-
-  /** Emits the settled record. */
-  private emitScenarioEvent(record: CpsScenarioRecord): void {
-    this.deps.sink.record(
-      this.eventTypes.scenario,
-      record as unknown as object
     );
   }
 
@@ -668,12 +648,7 @@ export class CpsScenario {
         userId: this.userId(),
         ...step
       };
-      this.debugEmit(
-        this.eventTypes.scenarioStep,
-        stepEvent,
-        `step ${step.name}`
-      );
-      this.deps.sink.record(this.eventTypes.scenarioStep, stepEvent);
+      this.emit(this.eventTypes.scenarioStep, stepEvent, `step ${step.name}`);
     }
   }
 
@@ -825,13 +800,13 @@ export class CpsScenario {
    *
    * Settling methods do not use it — they end the scenario, not mutate it.
    *
-   * @param operation the method name, for debug output and error reports
+   * @param operation the method name, for error reports
    * @param apply the mutation, run only while the scenario is open
    * @returns this scenario
    */
   private mutate(operation: string, apply: () => void): this {
     cpsSafeVoid(`scenario.${operation}`, () => {
-      if (this.guardSettled(operation)) {
+      if (this.isSettled) {
         return;
       }
       apply();
@@ -840,69 +815,45 @@ export class CpsScenario {
   }
 
   /**
-   * Returns `true` when the operation should be skipped because the
-   * scenario has already settled.
-   */
-  private guardSettled(operation: string): boolean {
-    if (!this.isSettled) {
-      return false;
-    }
-    this.debug(`ignored ${operation} — already ${this._status}`);
-    return true;
-  }
-
-  /**
-   * Logs the exact payload handed to the sink, with the event type it is
-   * sent under.
+   * Sends a payload to the sink and, first, logs that exact same object if
+   * `debugScenario` is on.
+   *
+   * The only place either happens — console output and sink output can
+   * never drift apart, since there is one object and one call site that
+   * decides what happens to it, rather than two separate calls a future
+   * edit could update out of step.
    *
    * @param eventType the type the payload is recorded under
-   * @param payload the object passed to {@link CpsTelemetrySink.record}
-   * @param summary a short human-readable prefix
+   * @param payload the object handed to {@link CpsTelemetrySink.record}
+   * @param summary a short human-readable prefix for the console line
    */
-  private debugEmit(eventType: string, payload: object, summary: string): void {
-    this.logIfDebugging(() =>
-      // eslint-disable-next-line no-console
-      console.log(
-        `[${this.deps.identity.application}][scenario] ${this.options.name} ${summary} -> ${eventType}`,
-        payload
-      )
+  private emit(
+    eventType: string,
+    payload: CpsScenarioEmitted,
+    summary: string
+  ): void {
+    cpsDebugWrite('debugScenario', () =>
+      writeToConsole(summary, eventType, payload)
     );
+    this.deps.sink.record(eventType, payload);
   }
+}
 
-  /** Progress trace for things that are never sent anywhere. */
-  private debug(message: string): void {
-    this.logIfDebugging(() =>
-      // eslint-disable-next-line no-console
-      console.log(
-        `[${this.deps.identity.application}][scenario] ${this.options.name} ${message}`,
-        this.debugSnapshot()
-      )
-    );
-  }
-
-  /**
-   * The object attached to a {@link debug} line — enough to follow what a
-   * scenario is doing and to tell concurrent scenarios of the same name
-   * apart.
-   */
-  private debugSnapshot(): Record<string, unknown> {
-    return {
-      scenarioId: this._id,
-      stepCount: this._stepCount,
-      previousStep: this.previousStep,
-      delta: Math.round(this.delta)
-    };
-  }
-
-  /**
-   * Shared guard and fail-open wrapper for {@link debug} and {@link
-   * debugEmit} — both gate on the same flag and must not let a broken
-   * console take the caller down.
-   */
-  private logIfDebugging(log: () => void): void {
-    if (!cpsIsDebugEnabled('debugScenario')) {
-      return;
-    }
-    cpsSafeVoid('scenario.debug', log);
-  }
+/**
+ * Prints the payload exactly as the sink receives it.
+ *
+ * Prefixed with the application - in a composed page every realm writes to
+ * the one console - then the concern and the scenario's name, the same
+ * shape the logger and BI writers use.
+ */
+function writeToConsole(
+  summary: string,
+  eventType: string,
+  payload: CpsScenarioEmitted
+): void {
+  // eslint-disable-next-line no-console
+  console.log(
+    `[${payload.application}][scenario] ${payload.scenarioName} ${summary} -> ${eventType}`,
+    payload
+  );
 }

@@ -7,6 +7,7 @@ import {
 import { CPS_LOG_CONFIG } from '../../config/cps-log.config/cps-log.config';
 import {
   CPS_LOG_LEVEL_ORDER,
+  CpsLogger,
   CpsLoggerName,
   CpsLogDetail,
   CpsLogLevel,
@@ -17,7 +18,7 @@ import {
   CPS_LOG_API_PROVIDER,
   CpsLogQuery
 } from '../../providers/cps-log-api.provider/cps-log-api.provider';
-import { cpsIsDebugEnabled } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
+import { cpsDebugWrite } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
 import {
   cpsNormalizeError,
   cpsRedactConfigFor,
@@ -30,34 +31,6 @@ import {
   cpsSafeVoid,
   cpsSafeVoidMaybeAsync
 } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
-
-/**
- * Detail pre-bound onto a child logger by {@link CpsLogger.child}.
- *
- * @group Types
- */
-export type CpsLogBindings = Pick<
-  CpsLogDetail,
-  'logger' | 'context' | 'correlationId' | 'metadata'
->;
-
-/**
- * The application-facing logging API.
- *
- * @group Interfaces
- */
-export interface CpsLogger {
-  log(message: string, detail?: CpsLogDetail): void;
-  warn(message: string, detail?: CpsLogDetail): void;
-  error(message: string, detail?: CpsLogDetail): void;
-
-  /**
-   * Returns a logger that pre-applies the given detail to every call.
-   *
-   * @param bindings detail merged into every record from the child
-   */
-  child(bindings: CpsLogBindings): CpsLogger;
-}
 
 /**
  * Structured application logging.
@@ -73,9 +46,12 @@ export interface CpsLogger {
  * localStorage.setItem('debugLogger', 'true');
  * ```
  *
+ * Every record carries a logger name, so the service itself writes
+ * nothing — {@link getLogger} hands back the {@link CpsLogger} you call.
+ *
  * @example
  * ```typescript
- * private logger = inject(CpsLoggerService);
+ * private readonly logger = inject(CpsLoggerService).getLogger('checkout');
  *
  * this.logger.error('Failed to load customer data', {
  *   error,
@@ -86,7 +62,7 @@ export interface CpsLogger {
  * @group Services
  */
 @Injectable({ providedIn: 'root' })
-export class CpsLoggerService implements CpsLogger, OnDestroy {
+export class CpsLoggerService implements OnDestroy {
   private readonly identity = inject(CPS_TELEMETRY_IDENTITY);
   private readonly logsConfig = inject(CPS_LOG_CONFIG);
   private readonly redact = cpsRedactConfigFor(
@@ -106,6 +82,15 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
       this.flushProvider();
     }
   };
+
+  /**
+   * One logger per name, so {@link getLogger} is idempotent.
+   *
+   * Unbounded growth is not a concern the way it is for active scenarios:
+   * names come from the closed {@link CpsLoggerNames} vocabulary, so this
+   * map is bounded by what the application declared at build time.
+   */
+  private readonly loggers = new Map<CpsLoggerName, CpsLogger>();
 
   constructor() {
     if (this.isBrowser) {
@@ -134,51 +119,6 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
   }
 
   /**
-   * Records an informational message.
-   *
-   * @param message the message; URL query strings are stripped from it
-   * @param detail optional context, metadata, error and correlation id
-   */
-  log(message: string, detail?: CpsLogDetail): void {
-    this.emit('log', message, detail);
-  }
-
-  /**
-   * Records a warning.
-   *
-   * @param message the message
-   * @param detail optional context, metadata, error and correlation id
-   */
-  warn(message: string, detail?: CpsLogDetail): void {
-    this.emit('warn', message, detail);
-  }
-
-  /**
-   * Records an error.
-   *
-   * @param message the message
-   * @param detail optional context, metadata, error and correlation id
-   */
-  error(message: string, detail?: CpsLogDetail): void {
-    this.emit('error', message, detail);
-  }
-
-  /**
-   * Returns a logger that stamps the given detail onto every record.
-   *
-   * @param bindings detail merged into every record from the child
-   * @returns a bound logger
-   */
-  child(bindings: CpsLogBindings): CpsLogger {
-    return {
-      log: (message, detail) => this.log(message, merge(bindings, detail)),
-      warn: (message, detail) => this.warn(message, merge(bindings, detail)),
-      error: (message, detail) => this.error(message, merge(bindings, detail)),
-      child: (nested) => this.child(merge(bindings, nested) as CpsLogBindings)
-    };
-  }
-
-  /**
    * Reads records back from the application's log backend. Useful for
    * pulling one journey together — every line written during a scenario
    * shares its id as the correlation id:
@@ -204,10 +144,18 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
   }
 
   /**
-   * Returns the named logger for one part of the application. The name
-   * lands on every record as `logger`, and is what
-   * {@link CpsLogConfig.levels} and the `debugLogger` flag target. Declare
-   * the name in {@link CpsLoggerNames} first, and bind it once as a field:
+   * Returns the named logger for one part of the application — the only
+   * way to write a log record.
+   *
+   * The name lands on every record as `logger`, and four things key off
+   * it: {@link CpsLogConfig.levels} per-logger severity floors, the
+   * `debugLogger` flag's comma-separated filter, `query({ logger })`
+   * against the log backend, and the console line's prefix. A record
+   * without one is reachable by none of them, which is why the service
+   * exposes no unnamed `log`/`warn`/`error` of its own.
+   *
+   * Declare the name in {@link CpsLoggerNames} first, and bind it once as
+   * a field:
    *
    * @example
    * ```typescript
@@ -220,41 +168,69 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
    * }
    * ```
    *
+   * The name is identity, not a label: asking twice returns the very same
+   * logger, the way a file name always refers to one file.
+   *
    * @param name the logger name, declared in {@link CpsLoggerNames}
-   * @param bindings further detail stamped onto every record from this logger
+   * @returns the logger for that name, created once and reused
+   */
+  getLogger(name: CpsLoggerName): CpsLogger {
+    const cached = cpsSafe(
+      'logger.getLogger',
+      () => this.loggers.get(name),
+      undefined
+    );
+    if (cached) {
+      return cached;
+    }
+
+    const logger = this.createLogger(name);
+    cpsSafeVoid('logger.register', () => this.loggers.set(name, logger));
+    return logger;
+  }
+
+  /**
+   * Builds the logger for one name.
+   *
+   * Private, and reached only through {@link getLogger}, so every logger
+   * handed out is registered and named. The name is captured here rather
+   * than read from each call's detail, which is why a record's `logger`
+   * cannot disagree with the logger that wrote it.
+   *
+   * @param name the logger name stamped onto every record it writes
    * @returns a logger bound to that name
    */
-  getLogger(
-    name: CpsLoggerName,
-    bindings?: Omit<CpsLogBindings, 'logger'>
-  ): CpsLogger {
-    return this.child({ ...bindings, logger: name });
+  private createLogger(name: CpsLoggerName): CpsLogger {
+    return {
+      log: (message, detail) => this.emit('log', name, message, detail),
+      warn: (message, detail) => this.emit('warn', name, message, detail),
+      error: (message, detail) => this.emit('error', name, message, detail)
+    };
   }
 
   /** Severity floor for one logger — its own override, or the global one. */
-  private minLevelFor(logger?: CpsLoggerName): CpsLogLevel {
+  private minLevelFor(logger: CpsLoggerName): CpsLogLevel {
     const { levels, minLevel } = this.logsConfig;
-    return (logger ? levels?.[logger] : undefined) ?? minLevel;
+    return levels?.[logger] ?? minLevel;
   }
 
   private emit(
     level: CpsLogLevel,
+    logger: CpsLoggerName,
     message: string,
     detail?: CpsLogDetail
   ): void {
     cpsSafeVoid(`logger.${level}`, () => {
       if (
         CPS_LOG_LEVEL_ORDER[level] <
-        CPS_LOG_LEVEL_ORDER[this.minLevelFor(detail?.logger)]
+        CPS_LOG_LEVEL_ORDER[this.minLevelFor(logger)]
       ) {
         return;
       }
 
-      const record = this.buildRecord(level, message, detail);
+      const record = this.buildRecord(level, logger, message, detail);
 
-      if (cpsIsDebugEnabled('debugLogger', record.logger)) {
-        writeToConsole(record);
-      }
+      cpsDebugWrite('debugLogger', () => writeToConsole(record), record.logger);
 
       this.deliver(record);
 
@@ -285,6 +261,7 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
 
   private buildRecord(
     level: CpsLogLevel,
+    logger: CpsLoggerName,
     message: string,
     detail?: CpsLogDetail
   ): CpsLogRecord {
@@ -296,7 +273,7 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
       timestamp: new Date().toISOString(),
       level,
       message: cpsScrubString(String(message ?? ''), redact),
-      logger: detail?.logger,
+      logger,
       context: detail?.context
         ? cpsScrubString(detail.context, redact)
         : undefined,
@@ -316,31 +293,23 @@ export class CpsLoggerService implements CpsLogger, OnDestroy {
   }
 }
 
-function merge(bindings: CpsLogBindings, detail?: CpsLogDetail): CpsLogDetail {
-  return {
-    ...detail,
-    logger: detail?.logger ?? bindings.logger,
-    context: detail?.context ?? bindings.context,
-    correlationId: detail?.correlationId ?? bindings.correlationId,
-    metadata:
-      bindings.metadata || detail?.metadata
-        ? { ...bindings.metadata, ...detail?.metadata }
-        : undefined
-  };
-}
-
 /**
  * Prints the record exactly as the transport receives it.
  *
  * Prefixed with the application - in a composed
- * page every realm writes to the one console.
+ * page every realm writes to the one console - then the logger name and
+ * the context, each when present.
  */
 function writeToConsole(record: CpsLogRecord): void {
-  const prefix = record.context
-    ? `[${record.application}][${record.context}]`
-    : `[${record.application}]`;
+  const scope = [record.logger, record.context]
+    .filter(Boolean)
+    .map((part) => `[${part}]`)
+    .join('');
   const suffix = record.correlationId ? ` (${record.correlationId})` : '';
 
   // eslint-disable-next-line no-console
-  console[record.level](`${prefix} ${record.message}${suffix}`, record);
+  console[record.level](
+    `[${record.application}]${scope} ${record.message}${suffix}`,
+    record
+  );
 }

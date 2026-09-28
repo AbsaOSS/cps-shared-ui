@@ -532,30 +532,26 @@ Use that only for migration — not to give every event its own type.
 
 ## Logging
 
+Bind a named logger once as a field — `getLogger` is the only way in, and
+the name is what `levels`, the `debugLogger` filter, `query({ logger })`
+and the console prefix all target:
+
 ```ts
-logger.log('Cache warmed');
-logger.warn('Falling back to defaults', { context: 'ConfigService' });
-logger.error('Failed to load customer data', {
+private readonly logger = inject(CpsLoggerService).getLogger('checkout');
+
+this.logger.log('Cache warmed');
+this.logger.warn('Falling back to defaults', { context: 'ConfigService' });
+this.logger.error('Failed to load customer data', {
   error,
   correlationId: scenario.id
 });
 ```
 
-Alternatively, hand the scenario a logger and let it bind the id for you:
-
-```ts
-const scenario = telemetry.start({
-  name: 'load-customer-data',
-  logger: this.logger
-});
-
-scenario.logger?.error('Failed to load customer data');
-// -> correlationId === scenario.id, and the logger keeps its own name
-```
-
-`logger` is optional and supplied rather than injected. Scenarios and logging
-stay independent this way: an application can use either one without
-configuring the other, and a scenario never logs anything on its own.
+`correlationId` is how a log line joins the rest of a journey's telemetry —
+pass `scenario.id` and the same id reaches
+[`query({ correlationId })`](#reading-logs-back) later. Scenarios and
+logging stay independent: a scenario never logs anything on its own, and
+either can be used without configuring the other.
 
 `withLogging({ mirrorErrorsToRum: true })` also reports every
 `logger.error(...)` call to the RUM sink as an error. This is off by
@@ -655,12 +651,15 @@ the library only calls it when it is there.
 ### Reading logs back
 
 ```ts
-const lines = await this.logger.query({ correlationId: scenario.id });
+private readonly loggers = inject(CpsLoggerService);
+
+const lines = await this.loggers.query({ correlationId: scenario.id });
 ```
 
-`CpsLoggerService.query` just calls your backend, so the same service that
-wrote a line fetches it back — you never touch `CPS_LOG_API_PROVIDER`
-directly. Filter by `correlationId`, `logger`, `minLevel`, a time range, or
+`query` is on the service rather than on a logger, deliberately: one journey
+usually spans several loggers, so filtering by `correlationId` has to reach
+across all of them. Asking a single named logger could only ever return its
+own share. You never touch `CPS_LOG_API_PROVIDER` directly. Filter by `correlationId`, `logger`, `minLevel`, a time range, or
 `limit`.
 
 It fails open, like everything else: with no backend bound, or one that
@@ -705,7 +704,12 @@ stays free text describing what the individual line is about — `logger` says
 _where the record came from_, `context` says _what it is about_, and only the
 first one gets routed on.
 
-Records written through the bare `CpsLoggerService` are simply unnamed.
+There is no unnamed alternative: `CpsLoggerService` exposes `getLogger` and
+`query`, not `log`/`warn`/`error`, so a record without a `logger` cannot be
+produced. An unnamed record would be invisible to per-logger `levels`, to a
+name-scoped `debugLogger` filter, and to `query({ logger })`, while looking
+identical at the call site — so the API removes the option rather than
+letting it be chosen by accident.
 
 ### Sending loggers to different destinations
 
@@ -1071,10 +1075,13 @@ area without the rest:
 localStorage.setItem('debugLogger', 'checkout,cart');
 ```
 
-Every line is prefixed with the emitting application, then the concern:
+Every line is prefixed with the emitting application, then the concern —
+for logs, the logger name you filtered on, and the context after it when
+one is given:
 
 ```
-[my-app][AppTelemetry] Application started
+[my-app][checkout] Submitting order
+[my-app][checkout][CartLoader] Fetching cart (a1b2c3)
 [my-app][scenario] load-customer-data success in 68ms -> com.cps.scenario
 [my-app][bi] export_clicked -> com.cps.bi
 ```
@@ -1084,6 +1091,14 @@ User Timing entries are named that way: in a composed page every realm logs
 to the one console, so `[shell]` versus `[cart]` is the distinction actually
 worth having. The second console argument is always the literal object handed
 to the sink or the log transport, so what you read is what ships.
+
+Scenarios print one line per event actually sent, and nothing else — so a
+scenario with three steps shows a single settle line by default, not a
+running commentary. Starting a scenario, opening a step, and calling a
+mutator after settlement all transmit nothing, and so print nothing. To see
+each step as its own line, turn on `scenario.emitLifecycleEvents`, which
+makes those steps real events; the console follows because it only ever
+mirrors the wire.
 
 ## Privacy
 

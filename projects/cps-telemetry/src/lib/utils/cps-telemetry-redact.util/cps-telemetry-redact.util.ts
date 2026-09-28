@@ -117,8 +117,22 @@ const VALUE_PATTERN_ORDER: CpsPiiValuePattern[] = [
   'phone'
 ];
 
-/** Candidate digit runs, allowing the separators people actually type. */
-const CREDIT_CARD_CANDIDATE = /\b(?:\d[ -]?){13,19}\b/g;
+/**
+ * Payment card number length, per ISO/IEC 7812 — 13 digits at the short
+ * end (older Visa) through 19 at the long (Maestro and co.).
+ */
+const CARD_MIN_DIGITS = 13;
+const CARD_MAX_DIGITS = 19;
+
+/**
+ * Candidate digit runs, allowing the separators people actually type.
+ * Built from the bounds above so the pattern and the length check below
+ * cannot drift apart.
+ */
+const CREDIT_CARD_CANDIDATE = new RegExp(
+  `\\b(?:\\d[ -]?){${CARD_MIN_DIGITS},${CARD_MAX_DIGITS}}\\b`,
+  'g'
+);
 
 /** The standard Luhn checksum — tells a real card number from an unrelated digit run of the same length. */
 function isLuhnValid(digits: string): boolean {
@@ -144,7 +158,9 @@ function isLuhnValid(digits: string): boolean {
 function scrubCreditCards(value: string): string {
   return value.replace(CREDIT_CARD_CANDIDATE, (match) => {
     const digits = match.replace(/\D/g, '');
-    return digits.length >= 13 && digits.length <= 19 && isLuhnValid(digits)
+    return digits.length >= CARD_MIN_DIGITS &&
+      digits.length <= CARD_MAX_DIGITS &&
+      isLuhnValid(digits)
       ? CPS_REDACTED
       : match;
   });

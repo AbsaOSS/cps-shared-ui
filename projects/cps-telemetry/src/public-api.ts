@@ -52,6 +52,7 @@ export {
 } from './lib/models/cps-bi.models/cps-bi.models';
 export {
   CPS_LOG_LEVEL_ORDER,
+  CpsLogger,
   CpsLoggerName,
   CpsLoggerNames,
   CpsLogDetail,
@@ -83,11 +84,7 @@ export {
 
 // Services
 export { CpsBiTelemetryService } from './lib/services/cps-bi-telemetry.service/cps-bi-telemetry.service';
-export {
-  CpsLogBindings,
-  CpsLogger,
-  CpsLoggerService
-} from './lib/services/cps-logger.service/cps-logger.service';
+export { CpsLoggerService } from './lib/services/cps-logger.service/cps-logger.service';
 export { CpsScenario } from './lib/scenario/cps-scenario/cps-scenario';
 export { CpsScenarioTelemetryService } from './lib/services/cps-scenario-telemetry.service/cps-scenario-telemetry.service';
 

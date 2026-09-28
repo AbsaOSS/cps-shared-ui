@@ -14,7 +14,7 @@ import {
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
-import { cpsIsDebugEnabled } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
+import { cpsDebugWrite } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
 import {
   cpsRedactConfigFor,
   cpsRedactMetadata,
@@ -115,11 +115,11 @@ export class CpsBiTelemetryService {
 
       const eventType = detail?.eventType || this.eventTypes.bi;
 
-      if (cpsIsDebugEnabled('debugBI')) {
-        writeToConsole(eventName, eventType, event);
-      }
+      cpsDebugWrite('debugBI', () =>
+        writeToConsole(eventName, eventType, event)
+      );
 
-      this.sink.record(eventType, event as unknown as object);
+      this.sink.record(eventType, event);
     });
   }
 

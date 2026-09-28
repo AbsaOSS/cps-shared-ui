@@ -22,6 +22,18 @@ import { cpsRedactConfigFor } from '../../utils/cps-telemetry-redact.util/cps-te
 import { CpsScenario } from '../../scenario/cps-scenario/cps-scenario';
 
 /**
+ * How many scenarios may be in flight before a development-mode warning
+ * suggests a leak.
+ *
+ * Concurrent scenarios are legitimate — several journeys, tabs or panels
+ * can run at once — so this is a smell threshold, not a limit: nothing is
+ * dropped or rejected when it is crossed. Set well above any plausible
+ * real concurrency, so crossing it means scenarios with `timeoutMs: 0` or
+ * long lifecycles are being started and never settled.
+ */
+const ACTIVE_SCENARIO_WARN_THRESHOLD = 50;
+
+/**
  * Creates and tracks scenarios — user journeys whose health this telemetry
  * layer measures.
  *
@@ -121,7 +133,7 @@ export class CpsScenarioTelemetryService implements OnDestroy {
 
     cpsSafeVoid('scenarioTelemetry.register', () => {
       this.active.set(scenario.id, scenario);
-      if (cpsIsDevMode() && this.active.size > 50) {
+      if (cpsIsDevMode() && this.active.size > ACTIVE_SCENARIO_WARN_THRESHOLD) {
         // eslint-disable-next-line no-console
         console.warn(
           `[cps-telemetry] High number of active scenarios (${this.active.size}). Ensure scenarios with timeoutMs: 0 or long lifecycles are settled on destroy.`

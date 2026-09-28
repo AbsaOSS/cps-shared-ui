@@ -318,7 +318,7 @@ describe('custom implementations', () => {
     });
 
     const api = TestBed.inject(RecordingLogApi);
-    TestBed.inject(CpsLoggerService).log('hello');
+    TestBed.inject(CpsLoggerService).getLogger('test').log('hello');
 
     expect(api.records).toHaveLength(1);
     expect(api.records[0].message).toBe('hello');

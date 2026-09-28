@@ -17,10 +17,6 @@ import {
   CpsLogQuery
 } from '../../providers/cps-log-api.provider/cps-log-api.provider';
 import { CPS_REDACTED } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
-import {
-  CpsLogger,
-  CpsLoggerService
-} from '../cps-logger.service/cps-logger.service';
 import { CpsScenarioTelemetryService } from './cps-scenario-telemetry.service';
 import {
   CPS_TELEMETRY_EVENT_TYPE,
@@ -664,6 +660,65 @@ describe('CpsScenarioTelemetryService', () => {
       expect(record.exceededStepsLimit).toBe(true);
     });
 
+    it('should not redact metadata for a step dropped by the limit', () => {
+      const scrubbed: string[] = [];
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          provideCpsTelemetry(
+            {
+              application: 'test-app',
+              environment: 'test',
+              version: '1.0.0'
+            },
+            withScenarios({ defaultTimeoutMs: 0, maxSteps: 2 }),
+            withRedaction({
+              extraValueTransforms: [
+                (value) => {
+                  scrubbed.push(value);
+                  return value;
+                }
+              ]
+            })
+          ),
+          RecordingLogApi,
+          { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
+          RecordingSink,
+          { provide: CpsTelemetrySink, useExisting: RecordingSink }
+        ]
+      });
+      const scoped = TestBed.inject(CpsScenarioTelemetryService);
+
+      scoped
+        .start({ name: 'loop' })
+        .step('a', { tag: 'kept-a' })
+        .step('b', { tag: 'kept-b' })
+        .step('c', { tag: 'dropped-c' })
+        .step('d', { tag: 'dropped-d' })
+        .complete();
+
+      expect(scrubbed).toEqual(['kept-a', 'kept-b']);
+    });
+
+    it('should still count and name a dropped step, and close it normally', () => {
+      configure({ defaultTimeoutMs: 0, maxSteps: 2 });
+
+      const scenario = service.start({ name: 'loop' });
+      scenario.step('a').step('b').step('c', { tag: 'dropped' });
+      scenario.complete();
+
+      const record = onlyScenarioRecord();
+      expect(record.stepCount).toBe(3);
+      expect(record.previousStep).toBe('c');
+      expect(record.exceededStepsLimit).toBe(true);
+      expect(record.steps.map((s) => s.name)).toEqual([
+        'scenario-start',
+        'a',
+        'b',
+        'scenario-end'
+      ]);
+    });
+
     it('should retain no real steps and flag the limit immediately when maxSteps is 0', () => {
       configure({ defaultTimeoutMs: 0, maxSteps: 0 });
 
@@ -1072,26 +1127,6 @@ describe('CpsScenarioTelemetryService', () => {
   });
 
   describe('correlation', () => {
-    it('should expose no logger unless one is supplied', () => {
-      const scenario = service.start({ name: 'load' });
-
-      expect(scenario.logger).toBeUndefined();
-    });
-
-    it('should bind its id onto a supplied logger', () => {
-      const logger = TestBed.inject(CpsLoggerService);
-      const scenario = service.start({ name: 'load-customer-data', logger });
-
-      scenario.logger?.error('Failed to load customer data');
-
-      expect(TestBed.inject(RecordingLogApi).records[0]).toMatchObject({
-        level: 'error',
-        message: 'Failed to load customer data',
-        correlationId: scenario.id,
-        context: 'load-customer-data'
-      });
-    });
-
     it('should not require any logging to be wired', () => {
       expect(() => service.start({ name: 'load' }).complete()).not.toThrow();
     });
@@ -1201,47 +1236,74 @@ describe('CpsScenarioTelemetryService', () => {
     });
 
     it.each(['true', '1'])(
-      'should log every operation when debugScenario is "%s"',
+      'should log only what it sends when debugScenario is "%s"',
       (value) => {
         localStorage.setItem('debugScenario', value);
 
         service.start({ name: 'load' }).step('one').complete();
 
         expect(consoleLog).toHaveBeenCalledWith(
-          '[test-app][scenario] load started',
-          expect.any(Object)
-        );
-        expect(consoleLog).toHaveBeenCalledWith(
-          '[test-app][scenario] load step one',
-          expect.any(Object)
-        );
-        expect(consoleLog).toHaveBeenCalledWith(
           expect.stringMatching(
             /^\[test-app]\[scenario] load success in \d+ms -> com\.cps\.scenario$/
           ),
           expect.any(Object)
         );
+
+        expect(consoleLog).not.toHaveBeenCalledWith(
+          '[test-app][scenario] load started',
+          expect.anything()
+        );
+        expect(consoleLog).not.toHaveBeenCalledWith(
+          '[test-app][scenario] load step one',
+          expect.anything()
+        );
       }
     );
 
-    it('should carry a lightweight progress snapshot on debug lines, not a record', () => {
+    it('should never log a step-open line, even when emitLifecycleEvents is on', () => {
+      configure({ emitLifecycleEvents: true });
       localStorage.setItem('debugScenario', 'true');
-      const scenario = service.start({ name: 'load' });
-      scenario.step('one');
-      scenario.step('two');
 
-      const stepTwoCall = consoleLog.mock.calls.find(
-        ([label]: [string]) => label === '[test-app][scenario] load step two'
+      service.start({ name: 'load' }).step('one').complete();
+
+      expect(consoleLog).not.toHaveBeenCalledWith(
+        '[test-app][scenario] load step one',
+        expect.anything()
       );
+    });
 
-      expect(stepTwoCall?.[1]).toMatchObject({
-        scenarioId: scenario.id,
-        stepCount: 2,
-        previousStep: 'one'
-      });
-      expect(stepTwoCall?.[1]).toHaveProperty('delta');
-      expect(stepTwoCall?.[1]).not.toHaveProperty('status');
-      expect(stepTwoCall?.[1]).not.toHaveProperty('steps');
+    it('should log the step-close line, carrying the exact payload sent, when emitLifecycleEvents is on', () => {
+      configure({ emitLifecycleEvents: true });
+      localStorage.setItem('debugScenario', 'true');
+
+      service.start({ name: 'load' }).step('one').step('two').complete();
+
+      const closeOneCall = consoleLog.mock.calls.find(
+        ([label]: [string]) =>
+          label ===
+          '[test-app][scenario] load step one -> com.cps.scenario.step'
+      );
+      const sentStepOne = sink
+        .ofType(CPS_TELEMETRY_EVENT_TYPE.scenarioStep)
+        .find((e) => (e.payload as Record<string, unknown>).name === 'one');
+
+      expect(closeOneCall?.[1]).toBe(sentStepOne?.payload);
+    });
+
+    it('should log one line per sink event — same payloads, same order, nothing extra', () => {
+      configure({ emitLifecycleEvents: true });
+      localStorage.setItem('debugScenario', 'true');
+
+      const scenario = service.start({ name: 'load' });
+      scenario.step('one').step('two').step('three');
+      scenario.complete();
+      scenario.step('after-settle');
+
+      const logged = consoleLog.mock.calls.map(([, payload]) => payload);
+      const sent = sink.events.map((event) => event.payload);
+
+      expect(logged).toHaveLength(sent.length);
+      logged.forEach((payload, i) => expect(payload).toBe(sent[i]));
     });
 
     it('should log the very record handed to the sink', () => {
@@ -1256,16 +1318,27 @@ describe('CpsScenarioTelemetryService', () => {
       expect(settleCall?.[1]).toBe(sent.payload);
     });
 
-    it('should report ignored operations after settling', () => {
+    it('should stay silent for an operation ignored after settling', () => {
       localStorage.setItem('debugScenario', 'true');
       const scenario = service.start({ name: 'load' });
       scenario.complete();
+
+      const afterSettle = consoleLog.mock.calls.length;
       scenario.step('late');
 
-      expect(consoleLog).toHaveBeenCalledWith(
-        '[test-app][scenario] load ignored step — already success',
-        expect.any(Object)
-      );
+      expect(consoleLog.mock.calls).toHaveLength(afterSettle);
+    });
+
+    it('should still record the scenario when the console itself throws', () => {
+      localStorage.setItem('debugScenario', 'true');
+      consoleLog.mockImplementation(() => {
+        throw new Error('console is patched and broken');
+      });
+
+      expect(() =>
+        service.start({ name: 'load' }).step('one').complete()
+      ).not.toThrow();
+      expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.scenario)).toHaveLength(1);
     });
 
     it('should stay silent for an invalid debugScenario value', () => {
@@ -2065,25 +2138,6 @@ describe('CpsScenarioTelemetryService', () => {
       });
 
       expect(() => service.start({ name: 'load', metadata })).not.toThrow();
-      expect(consoleError).toHaveBeenCalledWith(
-        expect.stringContaining('failed'),
-        expect.any(Error)
-      );
-    });
-
-    it('should never let a throwing logger.child reach application code', () => {
-      const throwingLogger: CpsLogger = {
-        log: () => undefined,
-        warn: () => undefined,
-        error: () => undefined,
-        child: () => {
-          throw new Error('logger.child exploded');
-        }
-      };
-
-      const scenario = service.start({ name: 'load', logger: throwingLogger });
-      expect(() => scenario.logger).not.toThrow();
-      expect(scenario.logger).toBeUndefined();
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('failed'),
         expect.any(Error)

@@ -81,7 +81,7 @@ flowchart TD
 
 | Component                     | Responsibility                                                                                   |
 | ----------------------------- | ------------------------------------------------------------------------------------------------ |
-| `CpsLoggerService`            | Structured `log`/`warn`/`error`, plus child loggers with a bound correlation id                  |
+| `CpsLoggerService`            | Factory for named loggers, one per name, plus reading records back                               |
 | `CpsScenarioTelemetryService` | Creates scenarios; flushes any still-running ones at page unload                                 |
 | `CpsScenario`                 | One independent journey — its steps, aggregates, and outcome                                     |
 | `CpsBiTelemetryService`       | Discrete business/UX events, deduplicated within a short window                                  |
@@ -168,9 +168,13 @@ interface CpsLogRecord {
 }
 ```
 
-Only `timestamp`, `level`, `message`, and the application identity are
-always present. `logger.log('message')` is a complete, valid call on its
-own.
+Only `timestamp`, `level`, `message`, the application identity and the
+`logger` name are always present. The _detail_ argument is optional —
+`this.logger.log('message')` is a complete, valid call on its own — but the
+logger name is not: records are only ever written through a
+`getLogger(name)` result, and the name is captured by the logger rather
+than read from each call, so `logger` is never absent and never disagrees
+with the logger that wrote it. See §10's "Why the name is identity".
 
 ### The name vocabulary
 
@@ -198,6 +202,37 @@ values. Both are now compile errors instead.
 A logger name fails differently, but no better: it is the key every record
 carries to the backend, so a typo means a whole stream quietly lands in the
 wrong place.
+
+**Why the name is identity.** `CpsLoggerService` is a factory, not a
+logger: it exposes `getLogger(name)` and `query()`, nothing that writes.
+A name addresses exactly one logger — asking twice returns the same
+instance, the way a file name always refers to one file — and that logger
+captures its name once, so no call can restate or contradict it.
+`CpsLogDetail` accordingly has no `logger` field.
+
+Four separate capabilities key off `logger`, and a record without one is
+reachable by none of them:
+
+| Capability                    | Resolves through                                 |
+| ----------------------------- | ------------------------------------------------ |
+| Per-logger severity floors    | `minLevelFor()` → `levels?.[logger] ?? minLevel` |
+| Name-scoped console filtering | `cpsIsDebugEnabled('debugLogger', name)`         |
+| Reading records back by area  | `query({ logger })`                              |
+| Attributing a console line    | the `[app][logger]` prefix                       |
+
+The trap is that none of that is visible where it is lost. An unnamed call
+reads identically to a named one, compiles, ships, and only reveals itself
+later when turning a noisy area down or filtering the console does nothing.
+So the unnamed path is not documented-against — it is absent, and writing
+one is a compile error.
+
+An earlier design let a logger derive further loggers with pre-bound detail
+(`child(bindings)`), which is how a scenario used to stamp its correlation
+id. It was removed: the one runtime binding it served has no users, a
+per-instance binding cannot live in a name-keyed registry anyway, and
+"which logger am I actually holding" stopped having a single answer.
+Correlation is now passed per call as `correlationId`, which is what
+application code was already doing.
 
 A published package cannot know the names an application will use in
 advance, so the registries above start out empty, and the **consuming
@@ -460,7 +495,8 @@ settles, and nothing is emitted until then either, so a "running" value
 would just sit unread between the two moments that actually matter.
 
 **Terminal states stay terminal.** Calling `complete()` on a scenario that
-already failed is a no-op, logged when `debugScenario` is on. This matters
+already failed is a silent no-op — nothing is sent, so nothing is
+logged, even with `debugScenario` on (see §12). This matters
 in real code: a `catch` block calls `fail()` and a `finally` block calls
 `complete()`, and the scenario has to record the failure, not the last call
 made.
@@ -845,13 +881,14 @@ something to remember:
 ```ts
 const scenario = scenarioTelemetry.start({ name: 'load-customer-data' });
 
-logger.error('Failed to load customer data', { correlationId: scenario.id });
+this.logger.error('Failed to load customer data', {
+  correlationId: scenario.id
+});
 ```
 
-Alternatively, pass a `logger` to `start()` and the scenario binds the id
-for you: `scenario.logger?.error('…')`. It is supplied rather than injected,
-so scenario telemetry never requires the logging stack to already be
-configured.
+The scenario never logs anything itself and holds no logger, so scenario
+telemetry never requires the logging stack to be configured at all — the
+two concerns meet only through this id.
 
 **Backend correlation is by convention, not magic.** AWS performs no
 automatic cross-system correlation. Send `scenario.id` to the backend as a
@@ -1459,7 +1496,9 @@ biTelemetry.track(
 ### Logging
 
 ```ts
-logger.error('Failed to load customer data', {
+private readonly logger = inject(CpsLoggerService).getLogger('checkout');
+
+this.logger.error('Failed to load customer data', {
   correlationId: scenario.id
 });
 ```
@@ -1480,10 +1519,23 @@ Console lines are prefixed `[<application>][<concern>]` — the same
 application-first rule as the User Timing entry names above, and for the
 same reason: a composed page's realms all write to one console, so which
 application emitted a line is the question being asked, and a single
-library-wide prefix could not answer it. Each line's second argument is the
+library-wide prefix could not answer it. For logs the concern segment is
+the logger name, followed by `[<context>]` when the record carries one:
+`debugLogger` filters by logger name, so a line that omitted it would
+leave a multi-logger filter interleaving output with no way to attribute
+it. Each line's second argument is the
 literal payload handed to the sink or the log transport, which is what makes
 a console capture a faithful record of what ships rather than a summary of
 it.
+
+For scenarios this is structural, not a convention to be maintained. A
+single private `emit()` both logs and records, and it is the only method
+in `CpsScenario` that touches the console — so the console shows one line
+per event sent, carrying that very object, and there is no code path that
+could print a step, a start, or a progress note that never went anywhere.
+Opening a step, starting a scenario, and calling a mutator after
+settlement all send nothing, and so print nothing. What a developer reads
+in DevTools is the wire, not a narration of it.
 
 ---
 

@@ -1,3 +1,5 @@
+import { cpsSafeVoid } from '../cps-telemetry-safe.util/cps-telemetry-safe.util';
+
 /**
  * LocalStorage keys recognised as telemetry debug switches.
  *
@@ -44,4 +46,33 @@ export function cpsIsDebugEnabled(flag: CpsDebugFlag, name?: string): boolean {
   } catch {
     return false;
   }
+}
+
+/**
+ * Writes a debug line to the console, but only when `flag` is on, and
+ * never at the caller's expense.
+ *
+ * The write is isolated in its own {@link cpsSafeVoid} rather than left to
+ * whatever wrapper the caller already sits inside. That isolation is the
+ * point: every caller prints a debug line immediately *before* handing the
+ * same payload to a sink or transport, so a patched or broken `console`
+ * must not be able to abort the send. Writing the line and shipping the
+ * data are independent failures.
+ *
+ * @param flag the debug switch that has to be on
+ * @param write performs the console call; never runs when the flag is off
+ * @param name the name to test against a list-valued flag, e.g. a logger
+ *   name for `debugLogger`
+ *
+ * @group Utils
+ */
+export function cpsDebugWrite(
+  flag: CpsDebugFlag,
+  write: () => void,
+  name?: string
+): void {
+  if (!cpsIsDebugEnabled(flag, name)) {
+    return;
+  }
+  cpsSafeVoid(`${flag}.write`, write);
 }

@@ -65,13 +65,6 @@ export const CPS_LOG_LEVEL_ORDER: Record<CpsLogLevel, number> = {
  */
 export interface CpsLogDetail {
   /**
-   * Which named logger this record belongs to, declared in
-   * {@link CpsLoggerNames}. Bind it once with {@link CpsLoggerService.getLogger}
-   * instead of passing it per call.
-   */
-  logger?: CpsLoggerName;
-
-  /**
    * Free-form subsystem label, e.g. a service or component name, for
    * filtering logs without parsing the message. Scrubbed like `message`.
    */
@@ -85,8 +78,9 @@ export interface CpsLogDetail {
 
   /**
    * Identifier joining this log line to other telemetry. Pass a
-   * {@link CpsScenario.id} to correlate with scenario telemetry, or use
-   * {@link CpsLoggerService.child} to bind it once.
+   * {@link CpsScenario.id} here to tie this line to a scenario, and the
+   * same id reaches {@link CpsLoggerService.query} to read the journey
+   * back across every logger that wrote during it.
    */
   correlationId?: string;
 }
@@ -135,4 +129,21 @@ export interface CpsLogRecord {
 
   /** Session identifier reported by the sink, when available. */
   sessionId?: string;
+}
+
+/**
+ * The application-facing logging API — what
+ * {@link CpsLoggerService.getLogger} hands back, so application code holds
+ * this contract without naming the service.
+ *
+ * An instance *is* its name. The name is fixed when the logger is created
+ * and stamped on every record it writes, so a record's `logger` can never
+ * disagree with the logger that produced it.
+ *
+ * @group Interfaces
+ */
+export interface CpsLogger {
+  log(message: string, detail?: CpsLogDetail): void;
+  warn(message: string, detail?: CpsLogDetail): void;
+  error(message: string, detail?: CpsLogDetail): void;
 }

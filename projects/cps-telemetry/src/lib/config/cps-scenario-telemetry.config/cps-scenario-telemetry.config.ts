@@ -18,6 +18,11 @@ export interface CpsScenarioTelemetryConfig {
    *
    * Counts against the RUM session's shared `sessionEventLimit` (200 by
    * default). Suited to local debugging, not production traffic.
+   *
+   * Also governs per-step `debugScenario` console output, because the
+   * console prints one line per event actually sent and nothing else.
+   * With this off, a scenario prints a single line at settlement — the
+   * one record it sends.
    */
   emitLifecycleEvents: boolean;
 

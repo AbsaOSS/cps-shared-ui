@@ -19,7 +19,11 @@ import {
   CpsTelemetryError,
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
-import { CpsLogRecord } from '../../models/cps-log.models/cps-log.models';
+import {
+  CpsLogDetail,
+  CpsLogger,
+  CpsLogRecord
+} from '../../models/cps-log.models/cps-log.models';
 
 /** Captures what the library emitted, so a test can assert on it. */
 @Injectable()
@@ -152,7 +156,10 @@ class ThrowingLogApi implements CpsLogApiProvider {
 }
 
 describe('CpsLoggerService', () => {
-  let logger: CpsLoggerService;
+  /** The service itself — for `getLogger` and `query`. */
+  let service: CpsLoggerService;
+  /** What most tests exercise: a named logger, the only way records are written. */
+  let logger: CpsLogger;
   let transport: RecordingLogApi;
   let sink: RecordingSink;
 
@@ -170,7 +177,8 @@ describe('CpsLoggerService', () => {
         { provide: CpsTelemetrySink, useExisting: RecordingSink }
       ]
     });
-    logger = TestBed.inject(CpsLoggerService);
+    service = TestBed.inject(CpsLoggerService);
+    logger = service.getLogger('test');
     transport = TestBed.inject(RecordingLogApi);
     sink = TestBed.inject(RecordingSink);
   }
@@ -273,7 +281,7 @@ describe('CpsLoggerService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const capped = TestBed.inject(CpsLoggerService);
+      const capped = TestBed.inject(CpsLoggerService).getLogger('test');
       const cappedTransport = TestBed.inject(RecordingLogApi);
 
       capped.warn('careful', { context: 'CustomerService' });
@@ -338,7 +346,8 @@ describe('CpsLoggerService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const unredactedLogger = TestBed.inject(CpsLoggerService);
+      const unredactedLogger =
+        TestBed.inject(CpsLoggerService).getLogger('test');
       const unredactedTransport = TestBed.inject(RecordingLogApi);
 
       unredactedLogger.error('GET https://api.dev/me?access_token=xyz failed', {
@@ -378,7 +387,7 @@ describe('CpsLoggerService', () => {
       localStorage.setItem('debugLogger', 'true');
       logger.log('loud');
       expect(consoleLog).toHaveBeenCalledWith(
-        '[test-app] loud',
+        '[test-app][test] loud',
         expect.objectContaining({ message: 'loud' })
       );
     });
@@ -389,35 +398,67 @@ describe('CpsLoggerService', () => {
 
       const [label, logged] = consoleLog.mock.calls[0];
 
-      expect(label).toBe('[test-app] loud');
+      expect(label).toBe('[test-app][test] loud');
       expect(logged).toBe(transport.records[0]);
+    });
+
+    it('should still deliver the record when the console itself throws', () => {
+      localStorage.setItem('debugLogger', 'true');
+      consoleLog.mockImplementation(() => {
+        throw new Error('console is patched and broken');
+      });
+
+      expect(() => logger.log('loud')).not.toThrow();
+      expect(transport.records).toHaveLength(1);
+      expect(transport.records[0]).toMatchObject({ message: 'loud' });
     });
 
     it('should write only the named logger when debugLogger names it', () => {
       localStorage.setItem('debugLogger', 'checkout');
-      logger.getLogger('checkout').log('loud');
-      logger.getLogger('admin').log('quiet');
+      service.getLogger('checkout').log('loud');
+      service.getLogger('admin').log('quiet');
       logger.log('quiet too');
 
       expect(consoleLog).toHaveBeenCalledTimes(1);
       expect(consoleLog).toHaveBeenCalledWith(
-        '[test-app] loud',
+        '[test-app][checkout] loud',
         expect.objectContaining({ logger: 'checkout' })
       );
     });
 
     it('should accept a comma-separated list of logger names', () => {
       localStorage.setItem('debugLogger', 'checkout, admin');
-      logger.getLogger('checkout').log('a');
-      logger.getLogger('admin').log('b');
-      logger.getLogger('reports').log('c');
+      service.getLogger('checkout').log('a');
+      service.getLogger('admin').log('b');
+      service.getLogger('reports').log('c');
 
       expect(consoleLog).toHaveBeenCalledTimes(2);
     });
 
+    it('should name each logger when several are filtered in at once', () => {
+      localStorage.setItem('debugLogger', 'checkout, admin');
+      service.getLogger('checkout').log('a');
+      service.getLogger('admin').log('b');
+
+      expect(consoleLog.mock.calls.map(([label]: [string]) => label)).toEqual([
+        '[test-app][checkout] a',
+        '[test-app][admin] b'
+      ]);
+    });
+
+    it('should show the logger and the context together, coarse first', () => {
+      localStorage.setItem('debugLogger', 'true');
+      service.getLogger('checkout').log('working', { context: 'Loader' });
+
+      expect(consoleLog).toHaveBeenCalledWith(
+        '[test-app][checkout][Loader] working',
+        expect.objectContaining({ logger: 'checkout', context: 'Loader' })
+      );
+    });
+
     it('should still write every logger when debugLogger is "true"', () => {
       localStorage.setItem('debugLogger', 'true');
-      logger.getLogger('checkout').log('a');
+      service.getLogger('checkout').log('a');
       logger.log('b');
 
       expect(consoleLog).toHaveBeenCalledTimes(2);
@@ -449,7 +490,7 @@ describe('CpsLoggerService', () => {
         correlationId: 'abc-123'
       });
       expect(consoleLog).toHaveBeenCalledWith(
-        '[test-app][Loader] working (abc-123)',
+        '[test-app][test][Loader] working (abc-123)',
         expect.objectContaining({ correlationId: 'abc-123' })
       );
     });
@@ -461,62 +502,19 @@ describe('CpsLoggerService', () => {
     });
   });
 
-  describe('child loggers', () => {
-    it('should pre-bind the correlation id onto every call', () => {
-      const child = logger.child({ correlationId: 'scenario-9' });
-
-      child.log('one');
-      child.error('two');
-
-      expect(transport.records.map((r) => r.correlationId)).toEqual([
-        'scenario-9',
-        'scenario-9'
-      ]);
-    });
-
-    it('should let a per-call value override a binding', () => {
-      const child = logger.child({ correlationId: 'bound' });
-      child.log('one', { correlationId: 'explicit' });
-      expect(transport.records[0].correlationId).toBe('explicit');
-    });
-
-    it('should merge bound metadata with per-call metadata', () => {
-      const child = logger.child({ metadata: { feature: 'customers' } });
-      child.log('one', { metadata: { attempt: 1 } });
-
-      expect(transport.records[0].metadata).toEqual({
-        feature: 'customers',
-        attempt: 1
-      });
-    });
-
-    it('should support nesting', () => {
-      const nested = logger
-        .child({ context: 'Outer' })
-        .child({ correlationId: 'inner-id' });
-
-      nested.log('deep');
-
-      expect(transport.records[0]).toMatchObject({
-        context: 'Outer',
-        correlationId: 'inner-id'
-      });
-    });
-  });
-
   describe('named loggers', () => {
     it('should stamp the name onto every record', () => {
       configure();
-      logger.getLogger('checkout').log('submitting');
+      service.getLogger('checkout').log('submitting');
 
       expect(transport.records[0].logger).toBe('checkout');
     });
 
     it('should keep context free-form alongside the name', () => {
       configure();
-      logger
-        .getLogger('checkout', { context: 'OrderService' })
-        .log('submitting');
+      service.getLogger('checkout').log('submitting', {
+        context: 'OrderService'
+      });
 
       expect(transport.records[0]).toMatchObject({
         logger: 'checkout',
@@ -524,31 +522,56 @@ describe('CpsLoggerService', () => {
       });
     });
 
-    it('should let a per-call logger override the bound one', () => {
+    it('should return the very same logger for a name asked for twice', () => {
+      // A name is identity, not a label: it addresses one logger the way
+      // a file name addresses one file.
       configure();
-      logger.getLogger('checkout').log('elsewhere', { logger: 'admin' });
 
-      expect(transport.records[0].logger).toBe('admin');
+      expect(service.getLogger('checkout')).toBe(service.getLogger('checkout'));
     });
 
-    it('should carry the name through a nested child', () => {
+    it('should give different names different loggers', () => {
       configure();
-      logger
+
+      expect(service.getLogger('checkout')).not.toBe(
+        service.getLogger('admin')
+      );
+    });
+
+    it('should keep returning the same logger across many lookups', () => {
+      configure();
+      const first = service.getLogger('checkout');
+      service.getLogger('admin');
+      service.getLogger('reports');
+
+      expect(service.getLogger('checkout')).toBe(first);
+    });
+
+    it('should ignore a stray logger key in per-call detail', () => {
+      // `CpsLogDetail` has no `logger` field, so this cannot be written in
+      // TypeScript — the cast proves the runtime honours the logger's own
+      // name too, rather than relying on the type alone.
+      configure();
+      service
         .getLogger('checkout')
-        .child({ correlationId: 'abc' })
-        .log('nested');
+        .log('elsewhere', { logger: 'admin' } as unknown as CpsLogDetail);
 
-      expect(transport.records[0]).toMatchObject({
-        logger: 'checkout',
-        correlationId: 'abc'
-      });
+      expect(transport.records[0].logger).toBe('checkout');
     });
 
-    it('should leave records from the bare service unnamed', () => {
+    it('should name every record, there being no unnamed way in', () => {
+      // getLogger is the service's only writing entry point, so a record
+      // without a `logger` cannot be produced — the four things that key
+      // off the name (levels, the debugLogger filter, query({ logger })
+      // and the console prefix) always have something to target.
       configure();
-      logger.log('no name');
+      logger.log('always named');
+      service.getLogger('checkout').log('named too');
 
-      expect(transport.records[0].logger).toBeUndefined();
+      expect(transport.records.map((r) => r.logger)).toEqual([
+        'test',
+        'checkout'
+      ]);
     });
   });
 
@@ -556,8 +579,8 @@ describe('CpsLoggerService', () => {
     it('should let one logger run below the global floor', () => {
       configure({ minLevel: 'warn', levels: { checkout: 'log' } });
 
-      logger.getLogger('checkout').log('kept');
-      logger.getLogger('admin').log('dropped');
+      service.getLogger('checkout').log('kept');
+      service.getLogger('admin').log('dropped');
       logger.log('dropped too');
 
       expect(transport.records.map((r) => r.message)).toEqual(['kept']);
@@ -566,9 +589,9 @@ describe('CpsLoggerService', () => {
     it('should let one logger be quieter than the global floor', () => {
       configure({ minLevel: 'log', levels: { checkout: 'error' } });
 
-      logger.getLogger('checkout').warn('dropped');
-      logger.getLogger('checkout').error('kept');
-      logger.getLogger('admin').warn('kept too');
+      service.getLogger('checkout').warn('dropped');
+      service.getLogger('checkout').error('kept');
+      service.getLogger('admin').warn('kept too');
 
       expect(transport.records.map((r) => r.message)).toEqual([
         'kept',
@@ -579,7 +602,7 @@ describe('CpsLoggerService', () => {
     it('should fall back to the global floor for an unlisted logger', () => {
       configure({ minLevel: 'error', levels: { checkout: 'log' } });
 
-      logger.getLogger('admin').warn('dropped');
+      service.getLogger('admin').warn('dropped');
 
       expect(transport.records).toHaveLength(0);
     });
@@ -588,10 +611,10 @@ describe('CpsLoggerService', () => {
   describe('query', () => {
     it('should read records back from the backend', async () => {
       configure();
-      logger.getLogger('checkout').log('first');
+      service.getLogger('checkout').log('first');
       logger.log('second');
 
-      const all = await logger.query();
+      const all = await service.query();
 
       expect(all.map((r) => r.message)).toEqual(['first', 'second']);
     });
@@ -602,7 +625,7 @@ describe('CpsLoggerService', () => {
       logger.log('mine', { correlationId: scenarioId });
       logger.log('someone else');
 
-      const found = await logger.query({ correlationId: scenarioId });
+      const found = await service.query({ correlationId: scenarioId });
 
       expect(found.map((r) => r.message)).toEqual(['mine']);
     });
@@ -689,7 +712,8 @@ describe('CpsLoggerService', () => {
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi }
         ]
       });
-      logger = TestBed.inject(CpsLoggerService);
+      service = TestBed.inject(CpsLoggerService);
+      logger = service.getLogger('test');
       transport = TestBed.inject(RecordingLogApi);
     }
 
@@ -763,7 +787,7 @@ describe('CpsLoggerService', () => {
         ]
       });
 
-      const isolated = TestBed.inject(CpsLoggerService);
+      const isolated = TestBed.inject(CpsLoggerService).getLogger('test');
       expect(() => isolated.log('still fine')).not.toThrow();
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('logger.deliver failed'),
@@ -786,7 +810,7 @@ describe('CpsLoggerService', () => {
         ]
       });
 
-      const isolated = TestBed.inject(CpsLoggerService);
+      const isolated = TestBed.inject(CpsLoggerService).getLogger('test');
       expect(() => isolated.error('still fine')).not.toThrow();
       expect(consoleError).toHaveBeenCalledWith(
         expect.stringContaining('failed'),
@@ -814,12 +838,12 @@ describe('CpsLoggerService', () => {
     });
 
     it('should flush the provider on destroy', () => {
-      logger.ngOnDestroy();
+      service.ngOnDestroy();
       expect(transport.flushCount).toBe(1);
     });
 
     it('should stop listening once destroyed', () => {
-      logger.ngOnDestroy();
+      service.ngOnDestroy();
       transport.flushCount = 0;
 
       window.dispatchEvent(new Event('pagehide'));

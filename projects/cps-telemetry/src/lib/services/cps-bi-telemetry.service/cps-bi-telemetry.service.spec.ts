@@ -613,6 +613,16 @@ describe('CpsBiTelemetryService', () => {
       expect(consoleLog).not.toHaveBeenCalled();
     });
 
+    it('should still record the event when the console itself throws', () => {
+      localStorage.setItem('debugBI', 'true');
+      consoleLog.mockImplementation(() => {
+        throw new Error('console is patched and broken');
+      });
+
+      expect(() => service.track('export_clicked')).not.toThrow();
+      expect(sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi)).toHaveLength(1);
+    });
+
     it('should not log secrets even when debugging is on', () => {
       localStorage.setItem('debugBI', 'true');
       service.track('sign_in', { password: 'hunter2' });

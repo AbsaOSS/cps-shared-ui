@@ -1,4 +1,3 @@
-import type { CpsLogger } from '../../services/cps-logger.service/cps-logger.service';
 import {
   CpsRegistered,
   CpsTelemetryError,
@@ -237,13 +236,6 @@ export interface CpsScenarioOptions extends CpsScenarioIdentityDetail {
 
   /** Attributes applied to the scenario record and to every emitted event. */
   metadata?: CpsTelemetryMetadata;
-
-  /**
-   * Logger this scenario should bind its identity onto, exposed as
-   * {@link CpsScenario.logger}. Optional — the scenario itself never logs
-   * anything.
-   */
-  logger?: CpsLogger;
 }
 
 /**
