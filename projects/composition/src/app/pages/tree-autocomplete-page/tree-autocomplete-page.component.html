@@ -158,8 +158,78 @@
         optionInfo="attrType"
         optionLabel="label"
         [clearable]="true"
-        [(ngModel)]="syncVal"
-        [ngModelOptions]="{ standalone: true }">
+        [persistentClear]="true"
+        [virtualScroll]="true"
+        [multiple]="true">
+      </cps-tree-autocomplete>
+
+      <cps-tree-autocomplete
+        label="Multiple tree autocomplete with non-closable chips"
+        [options]="options"
+        optionInfo="attrType"
+        hint="This tree autocomplete doesn't have a chevron icon"
+        [showChevron]="false"
+        [clearable]="true"
+        [multiple]="true"
+        [value]="[options[1].children[0], options[2].children[0]]"
+        [closableChips]="false"></cps-tree-autocomplete>
+
+      <cps-tree-autocomplete
+        label="Multiple tree autocomplete with prefix icon"
+        [options]="options"
+        optionInfo="attrType"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        prefixIcon="search"
+        [value]="[options[2].children[0]]">
+      </cps-tree-autocomplete>
+
+      <div class="sync-val-example">
+        <cps-tree-autocomplete
+          [initialExpandDirectories]="true"
+          width="500"
+          label="Single tree autocomplete with two-way binding, enter something"
+          hint="This tree autocomplete has a fixed width of 500px"
+          [options]="options"
+          optionInfo="attrType"
+          optionLabel="label"
+          [clearable]="true"
+          [(ngModel)]="syncVal"
+          [ngModelOptions]="{ standalone: true }">
+        </cps-tree-autocomplete>
+        <span class="sync-val">{{ syncVal?.label }}</span>
+      </div>
+
+      <cps-tree-autocomplete
+        label="Tree autocomplete with function-based optionLabel (computed value)"
+        [options]="options"
+        [optionLabel]="getLabel"
+        optionInfo="attrType"
+        placeholder="Select element"
+        [clearable]="true"
+        hint="optionLabel uses a function: (option) => option.label + ' (' + option.attrType + ')'">
+      </cps-tree-autocomplete>
+      <cps-tree-autocomplete
+        label="Underlined tree autocomplete"
+        [options]="options"
+        optionInfo="attrType"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        appearance="underlined"
+        prefixIcon="search">
+      </cps-tree-autocomplete>
+
+      <cps-tree-autocomplete
+        label="Borderless tree autocomplete"
+        [options]="options"
+        optionInfo="attrType"
+        [clearable]="true"
+        [multiple]="true"
+        [chips]="false"
+        appearance="borderless"
+        prefixIcon="search">
       </cps-tree-autocomplete>
       <span
         class="sync-val"

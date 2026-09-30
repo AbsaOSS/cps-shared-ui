@@ -236,6 +236,23 @@ syncVal: string[] = [];`
     ts: citiesOptionsTs
   },
 
+  functionOptionKey: {
+    html: `
+<cps-autocomplete
+  label="Autocomplete with function-based optionLabel (nested property)"
+  [options]="options"
+  [optionLabel]="getCode"
+  optionInfo="name"
+  placeholder="Enter a city code"
+  hint="optionLabel uses a function: (option) => option.data.code"
+  [clearable]="true">
+</cps-autocomplete>`,
+    ts: `
+${citiesOptionsTs.trim()}
+
+getCode = (option: any): string => option.data.code;`
+  },
+
   asyncValidation: {
     html: `
 <cps-autocomplete
