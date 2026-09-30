@@ -13,6 +13,7 @@ import {
   CpsLogLevel,
   CpsLogRecord
 } from '../../models/cps-log.models/cps-log.models';
+import { CpsTelemetryMonitor } from '../cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import {
   CPS_LOG_API_PROVIDER,
@@ -73,6 +74,7 @@ export class CpsLoggerService implements OnDestroy {
   /** Enrichment only (`sessionId`/`userId`, optional RUM mirroring) — see DESIGN.md §10. */
   private readonly sink = inject(CpsTelemetrySink, { optional: true });
   private readonly apiProvider = inject(CPS_LOG_API_PROVIDER);
+  private readonly monitor = inject(CpsTelemetryMonitor);
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = cpsIsBrowser();
 
@@ -232,7 +234,7 @@ export class CpsLoggerService implements OnDestroy {
 
       cpsDebugWrite('debugLogger', () => writeToConsole(record), record.logger);
 
-      this.deliver(record);
+      const sequence = this.deliver(record);
 
       if (level === 'error' && this.logsConfig.mirrorErrorsToRum && this.sink) {
         const mirrored =
@@ -240,16 +242,39 @@ export class CpsLoggerService implements OnDestroy {
           cpsNormalizeError(new Error(record.message), this.redact);
         if (mirrored) {
           this.sink.recordError(mirrored);
+          this.monitor.publish({
+            kind: 'error',
+            payload: mirrored,
+            relatedSequence: sequence,
+            destination: 'sink',
+            origin: { forwarded: false }
+          });
         }
       }
     });
   }
 
-  /** Guards against a throwing or secretly-async, rejecting provider. */
-  private deliver(record: CpsLogRecord): void {
-    cpsSafeVoidMaybeAsync('logger.deliver', () =>
-      this.apiProvider.send(record)
-    );
+  /**
+   * Guards against a throwing or secretly-async, rejecting provider, and
+   * tells the monitor once the record has been handed over.
+   *
+   * @returns the monitor's sequence number for the record, when observed
+   */
+  private deliver(record: CpsLogRecord): number | undefined {
+    let sequence: number | undefined;
+    cpsSafeVoidMaybeAsync('logger.deliver', () => {
+      const pending = this.apiProvider.send(record);
+      // After send, so a provider that throws synchronously is not reported
+      // as handed over. An asynchronous rejection can't be seen here.
+      sequence = this.monitor.publish({
+        kind: 'log',
+        payload: record,
+        destination: 'log-provider',
+        origin: { forwarded: false }
+      });
+      return pending;
+    });
+    return sequence;
   }
 
   /** Gives the provider its chance to ship whatever it has queued itself. */

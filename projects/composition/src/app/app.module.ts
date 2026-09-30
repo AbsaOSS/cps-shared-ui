@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleStrategy } from '@angular/router';
 import { CpsIconComponent } from 'cps-ui-kit';
 import { CPS_LOG_API_PROVIDER, provideCpsTelemetry } from 'cps-telemetry';
+import { provideCpsTelemetryDiagnostics } from 'cps-telemetry/diagnostics';
 import {
   CPS_RUM_CREDENTIALS_PROVIDER,
   provideCpsTelemetryRumSink
@@ -44,7 +45,9 @@ import './services/telemetry.schema';
       provide: CPS_RUM_CREDENTIALS_PROVIDER,
       useExisting: AppRumCredentialsProvider
     },
-    { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider }
+    { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+    // Telemetry diagnostics popup: ⇧⌥⌘8 on macOS, Ctrl+Alt+Shift+8 elsewhere.
+    provideCpsTelemetryDiagnostics()
     // provideClientHydration()
   ],
   bootstrap: [AppComponent]

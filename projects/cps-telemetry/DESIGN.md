@@ -105,7 +105,8 @@ swapped out in production and stubbed in tests.
 
 ### Entry points
 
-Two: `cps-telemetry` and `cps-telemetry/rum`. Both barrels list their
+Three: `cps-telemetry`, `cps-telemetry/rum` and `cps-telemetry/diagnostics`.
+All barrels list their
 exports one by one rather than re-exporting whole modules — this is a
 published package, so every exported name is a permanent compatibility
 promise. Id generation, the clock, the fail-open wrappers, user timings,
@@ -125,11 +126,29 @@ what keeps `aws-rum-web` resolvable only for code that imports
 `cps-telemetry/rum`. An app calling only
 `provideCpsTelemetrySink('broadcast' | 'noop')` never needs it.
 
+`cps-telemetry/diagnostics` — the in-app diagnostics popup (§12) — is split
+out for the same reason with a different dependency: it is the only UI in
+the package, built from cps-ui-kit components, and cps-ui-kit is an
+optional peer dependency (with `@angular/forms` and `@angular/animations`,
+which the kit needs). Nothing in the main entry imports it; the built main
+bundle and its `.d.ts` contain no reference to cps-ui-kit, and an app that
+never imports `cps-telemetry/diagnostics` never needs cps-ui-kit installed.
+The popup reads events through `CpsTelemetryMonitor`, which lives in the
+main entry because the hand-off sites that publish to it do.
+
+Building the package resolves cps-ui-kit from its own built output
+(`dist/cps-ui-kit`, a `paths` entry in `tsconfig.lib.json`) rather than its
+source, so the kit is referenced as the external package it is at runtime
+and never compiled into this one. `npm run build:telemetry` therefore builds
+cps-ui-kit first. The application and the unit tests still resolve both
+libraries from source.
+
 `cps-telemetry/rum` carries its own private copy of
 `cpsSafe`/`cpsSafeVoid`/`cpsIsBrowser`/`cpsIsDevMode`/`cpsUuid`. ng-packagr
 fixes every entry point's `rootDir` to its own `src` directory (see its own
 `tsconfig.js`), so `cps-telemetry/rum` cannot reach the main entry point's
-internal utilities by relative import.
+internal utilities by relative import. `cps-telemetry/diagnostics` keeps
+its own copy of the few it needs, for the same reason.
 
 **Test doubles are not shipped, and do not get their own folder or file.** A
 `RecordingSink` or `ThrowingSink` is declared inline, at the top of whichever
@@ -1158,6 +1177,24 @@ their session's logs to a ticket.
 For logs that have already been shipped, retrieval stays a backend concern
 — the same authorized API described above.
 
+### The diagnostics popup
+
+The popup is available in every environment and shows **exactly what is
+sent, after redaction** — no further redaction of its own, since a popup
+that hid fields would misreport what leaves the browser, which is its only
+job. That is acceptable in production because it exposes nothing new: the
+data belongs to the current user's own session, already sits in their
+browser, and is equally visible in the network panel and through the debug
+flags. The popup stores nothing, sends nothing, and grants no remote
+access.
+
+What remains is ordinary care, stated in the popup's own footer: session
+and user ids are on screen (avoid screen-sharing), and downloads contain
+the same redacted data as the view — no more, no less — with filenames that
+carry only the application name and a timestamp. The keyboard shortcut
+only prevents accidental opening; it is not access control. An application
+that must not show even redacted telemetry to its users can pass
+`enabled: () => …` to limit access, or leave the provider out.
 ---
 
 ## 10. Configuration
@@ -1427,6 +1464,12 @@ call leaves application code unaffected.
   events, page views, and errors alike, replayed through the same code
   path once the client is ready — without growing without limit if init
   never completes.
+- **The diagnostics monitor costs one check per event while unobserved.**
+  Every hand-off site calls `CpsTelemetryMonitor.publish()` after the
+  hand-off; with no subscriber it returns before copying anything. The
+  diagnostics popup subscribes only while it is open, keeps at most 500
+  events per section, batches screen updates to one every 250 ms, and
+  releases everything when it closes.
 
 ---
 
@@ -1536,6 +1579,58 @@ could print a step, a start, or a progress note that never went anywhere.
 Opening a step, starting a scenario, and calling a mutator after
 settlement all send nothing, and so print nothing. What a developer reads
 in DevTools is the wire, not a narration of it.
+
+### Diagnostics popup
+
+```ts
+import { provideCpsTelemetryDiagnostics } from 'cps-telemetry/diagnostics';
+
+providers: [provideCpsTelemetryDiagnostics()];
+```
+
+⇧⌥⌘8 on macOS, Ctrl+Alt+Shift+8 on Windows and Linux, in every environment.
+It shows the same thing the debug flags print — every event as handed
+over — but without DevTools, in three sections. Each section filters by any
+field and downloads as JSON on its own; pause and clear apply to all three.
+
+A download holds one section, not the whole capture: `section` names it,
+`events` lists every event that section captured (oldest first, regardless
+of its filters), and `activeFilters` records the filters that were showing.
+Ordering across sections is kept by each event's `sequence` and
+`capturedAt`, so two downloads from one session can still be interleaved.
+
+**It observes; it never sends.** Each hand-off site publishes the object it
+just sent to `CpsTelemetryMonitor` (main entry) _after_ the hand-off, in
+the same fail-open block, so a hand-off that throws is not shown and
+nothing is ever sent twice. Five sites publish:
+`CpsScenario.emit()` (records and step events), `CpsBiTelemetryService`,
+`CpsLoggerService` delivery to the log provider, its `mirrorErrorsToRum`
+error, and `CpsTelemetryBroadcastHost` forwarding a fragment's events. A
+subscriber gets a deep copy, because the step event shares objects with the
+live scenario and the RUM sink buffers by reference. Alternatives were
+rejected: decorating `CpsTelemetrySink` in DI would fight the
+`useExisting` ordering of the sink providers and still miss logs, which go
+to the log provider; `settled$` covers only settled scenarios.
+
+**Why the shortcut is what it is.** Four keys, ending in a digit, matched
+on `KeyboardEvent.code` — Option rewrites `KeyboardEvent.key` on macOS
+(⇧⌥8 is `°`) and layouts move digits, while `code` names the physical key.
+Every modifier must match exactly, held-down repeats are ignored, and AltGr
+is rejected: on many European Windows layouts it reports as Ctrl+Alt, and
+typing an AltGr character must never open the popup. ⌥⌘8 alone is macOS
+Accessibility Zoom, so Shift is part of it. The listener sits on `document`
+in the capture phase, outside Angular's zone.
+
+**Non-modal on purpose.** The point is to watch events while using the app,
+so the popup docks right at half the screen and leaves the app clickable;
+it is draggable, resizable and maximizable. With the popup open, the
+shortcut returns focus to it from the app and closes it from inside —
+that is how a keyboard user moves between a non-modal window and the page.
+
+**Light theme only, for now.** The popup is designed and tested in the
+light theme. cps-dialog, which frames it, is light-only, and the kit's dark
+theme is not yet complete for the components inside it, so dark mode is
+not supported.
 
 ---
 

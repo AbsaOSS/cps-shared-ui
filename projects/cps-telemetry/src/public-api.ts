@@ -69,6 +69,7 @@ export {
   CpsScenarioStatus,
   CpsScenarioStep,
   CpsScenarioStepDetail,
+  CpsScenarioStepEvent,
   CpsScenarioStepStatus,
   CpsScenarioSteps,
   CpsStepName
@@ -81,11 +82,21 @@ export {
   CpsTelemetryEventTypes,
   CpsTelemetryMetadata
 } from './lib/models/cps-telemetry-common.models/cps-telemetry-common.models';
+export {
+  CpsJsonObject,
+  CpsJsonValue,
+  CpsTelemetryDestination,
+  CpsTelemetryEventKind,
+  CpsTelemetryEventOrigin,
+  CpsTelemetryObservedEvent,
+  CpsTelemetryPublishInput
+} from './lib/models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
 
 // Services
 export { CpsBiTelemetryService } from './lib/services/cps-bi-telemetry.service/cps-bi-telemetry.service';
 export { CpsLoggerService } from './lib/services/cps-logger.service/cps-logger.service';
 export { CpsScenario } from './lib/scenario/cps-scenario/cps-scenario';
+export { CpsTelemetryMonitor } from './lib/services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 export { CpsScenarioTelemetryService } from './lib/services/cps-scenario-telemetry.service/cps-scenario-telemetry.service';
 
 // Sinks

@@ -9,6 +9,7 @@ import {
   CpsScenarioStatus,
   CpsScenarioStep,
   CpsScenarioStepDetail,
+  CpsScenarioStepEvent,
   CpsScenarioStepStatus,
   CpsStepName
 } from '../../models/cps-scenario.models/cps-scenario.models';
@@ -17,6 +18,7 @@ import {
   CpsTelemetryEventTypes,
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
+import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import {
   cpsDebugWrite,
@@ -59,17 +61,14 @@ export interface CpsScenarioDeps {
   sink: CpsTelemetrySink;
   /** Called once with the scenario's id when it reaches a terminal state. */
   onSettled: (scenarioId: string, record: CpsScenarioRecord) => void;
+  /** Told about every event right after it is handed to the sink. */
+  monitor: CpsTelemetryMonitor;
 }
 
-/**
- * The identity fields carried by both payloads a scenario emits - the
- * settled record and the per-step event. Enough to label a console line
- * from the object being sent; see `writeToConsole`.
- */
-type CpsScenarioEmitted = {
-  application: string;
-  scenarioName: CpsScenarioName;
-};
+/** The two events a scenario sends: its settled record, and a closed step. */
+type CpsScenarioEmission =
+  | { kind: 'scenario'; payload: CpsScenarioRecord }
+  | { kind: 'scenario-step'; payload: CpsScenarioStepEvent };
 
 /** Boundary names used for User Timing marks (see `timingMark`). */
 const START_MARK = 'start';
@@ -543,8 +542,7 @@ export class CpsScenario {
       const record = this.toRecord();
       this.deps.onSettled(this._id, record);
       this.emit(
-        this.eventTypes.scenario,
-        record,
+        { kind: 'scenario', payload: record },
         `${status} in ${Math.round(this._elapsed)}ms`
       );
     });
@@ -640,7 +638,7 @@ export class CpsScenario {
     this.previousStep = realStepName;
 
     if (this.deps.scenarioConfig.emitLifecycleEvents && this.openStepIncluded) {
-      const stepEvent = {
+      const stepEvent: CpsScenarioStepEvent = {
         scenarioId: this._id,
         scenarioName: this.options.name,
         application: this.deps.identity.application,
@@ -648,7 +646,10 @@ export class CpsScenario {
         userId: this.userId(),
         ...step
       };
-      this.emit(this.eventTypes.scenarioStep, stepEvent, `step ${step.name}`);
+      this.emit(
+        { kind: 'scenario-step', payload: stepEvent },
+        `step ${step.name}`
+      );
     }
   }
 
@@ -815,27 +816,33 @@ export class CpsScenario {
   }
 
   /**
-   * Sends a payload to the sink and, first, logs that exact same object if
-   * `debugScenario` is on.
+   * Sends a payload to the sink, first logging that exact same object if
+   * `debugScenario` is on, then telling the monitor it was handed over.
    *
-   * The only place either happens — console output and sink output can
-   * never drift apart, since there is one object and one call site that
-   * decides what happens to it, rather than two separate calls a future
-   * edit could update out of step.
+   * The only place any of the three happens, so console output, sink output
+   * and what an observer sees can never drift apart: one object, one call
+   * site. A sink that throws leaves the monitor untold, since nothing was
+   * handed over.
    *
-   * @param eventType the type the payload is recorded under
-   * @param payload the object handed to {@link CpsTelemetrySink.record}
+   * @param emission the payload and which of the two events it is
    * @param summary a short human-readable prefix for the console line
    */
-  private emit(
-    eventType: string,
-    payload: CpsScenarioEmitted,
-    summary: string
-  ): void {
+  private emit(emission: CpsScenarioEmission, summary: string): void {
+    const eventType =
+      emission.kind === 'scenario'
+        ? this.eventTypes.scenario
+        : this.eventTypes.scenarioStep;
+
     cpsDebugWrite('debugScenario', () =>
-      writeToConsole(summary, eventType, payload)
+      writeToConsole(summary, eventType, emission.payload)
     );
-    this.deps.sink.record(eventType, payload);
+    this.deps.sink.record(eventType, emission.payload);
+    this.deps.monitor.publish({
+      ...emission,
+      eventType,
+      destination: 'sink',
+      origin: { forwarded: false }
+    });
   }
 }
 
@@ -849,7 +856,7 @@ export class CpsScenario {
 function writeToConsole(
   summary: string,
   eventType: string,
-  payload: CpsScenarioEmitted
+  payload: CpsScenarioEmission['payload']
 ): void {
   // eslint-disable-next-line no-console
   console.log(

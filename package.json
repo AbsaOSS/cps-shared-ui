@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --configuration=production --project=cps-ui-kit",
-    "build:telemetry": "ng build --configuration=production --project=cps-telemetry",
+    "build:telemetry": "npm run build && ng build --configuration=production --project=cps-telemetry",
     "build:documentation": "ng build --configuration=production --project=composition --base-href '/cps-shared-ui/'",
     "watch": "ng build cps-ui-kit --watch --configuration development",
     "test": "ng test",

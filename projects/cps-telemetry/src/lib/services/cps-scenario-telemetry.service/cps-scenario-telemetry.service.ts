@@ -20,6 +20,7 @@ import {
 } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import { cpsRedactConfigFor } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
 import { CpsScenario } from '../../scenario/cps-scenario/cps-scenario';
+import { CpsTelemetryMonitor } from '../cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 
 /**
  * How many scenarios may be in flight before a development-mode warning
@@ -65,6 +66,7 @@ export class CpsScenarioTelemetryService implements OnDestroy {
   );
 
   private readonly sink = inject(CpsTelemetrySink);
+  private readonly monitor = inject(CpsTelemetryMonitor);
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = cpsIsBrowser();
 
@@ -118,6 +120,7 @@ export class CpsScenarioTelemetryService implements OnDestroy {
       scenarioConfig: this.scenarioConfig,
       redact: this.redact,
       sink: this.sink,
+      monitor: this.monitor,
       onSettled: (scenarioId, record) => {
         this.active.delete(scenarioId);
         if (!this._settled$.observed) {

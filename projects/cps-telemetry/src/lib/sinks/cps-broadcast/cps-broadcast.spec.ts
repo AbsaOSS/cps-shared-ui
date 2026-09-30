@@ -31,6 +31,8 @@ import {
   cpsIsBroadcastMessage
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
+import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
+import { CpsTelemetryObservedEvent } from '../../models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
 
 /**
  * Each realm gets its own injector — the shell and every fragment run in a
@@ -39,6 +41,7 @@ import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/c
 function createRealm(providers: unknown[]): Injector {
   return Injector.create({
     providers: [
+      CpsTelemetryMonitor,
       { provide: PLATFORM_ID, useValue: 'browser' },
       { provide: DOCUMENT, useValue: document },
       {
@@ -344,6 +347,69 @@ describe('broadcast telemetry across realms', () => {
       await CpsBroadcastChannelStub.settle();
 
       expect(shellSink.events[0].metadata).toMatchObject({ feature: 'cart' });
+    });
+
+    it('should show a forwarded event to the shell monitor, marked with its realm', async () => {
+      const observed: CpsTelemetryObservedEvent[] = [];
+      shell.get(CpsTelemetryMonitor).events$.subscribe((e) => observed.push(e));
+      const fragment = createFragment();
+
+      fragment
+        .get(CpsTelemetrySink)
+        .record('com.cps.scenario.step', { scenarioName: 'load' });
+      fragment.get(CpsTelemetrySink).record('com.cps.bi', { eventName: 'x' });
+      fragment.get(CpsTelemetrySink).record('custom.type', { a: 1 });
+      fragment
+        .get(CpsTelemetrySink)
+        .recordError({ name: 'TypeError', message: 'boom' });
+      await CpsBroadcastChannelStub.settle();
+
+      expect(observed.map((e) => e.kind)).toEqual([
+        'scenario-step',
+        'bi',
+        'unknown',
+        'error'
+      ]);
+      for (const e of observed) {
+        expect(e.origin).toEqual({ forwarded: true, application: 'realm' });
+        expect(e.destination).toBe('sink');
+      }
+      expect(shellSink.events).toHaveLength(3);
+      expect(shellSink.errors).toHaveLength(1);
+    });
+
+    it('should show a fragment scenario once per monitor — local in the fragment, forwarded in the shell', async () => {
+      const fragment = createFragment();
+      const inShell: CpsTelemetryObservedEvent[] = [];
+      const inFragment: CpsTelemetryObservedEvent[] = [];
+      shell.get(CpsTelemetryMonitor).events$.subscribe((e) => inShell.push(e));
+      fragment
+        .get(CpsTelemetryMonitor)
+        .events$.subscribe((e) => inFragment.push(e));
+
+      fragment
+        .get(CpsScenarioTelemetryService)
+        .start({ name: 'load' })
+        .complete();
+      await CpsBroadcastChannelStub.settle();
+
+      expect(fragment.get(CpsTelemetryMonitor)).not.toBe(
+        shell.get(CpsTelemetryMonitor)
+      );
+      expect(inFragment).toHaveLength(1);
+      expect(inFragment[0]).toMatchObject({
+        kind: 'scenario',
+        origin: { forwarded: false }
+      });
+      expect(inShell).toHaveLength(1);
+      expect(inShell[0]).toMatchObject({
+        kind: 'scenario',
+        origin: { forwarded: true, application: 'realm' }
+      });
+
+      expect(
+        shellSink.events.filter((e) => e.eventType === 'com.cps.scenario')
+      ).toHaveLength(1);
     });
 
     it('should forward handled errors', async () => {

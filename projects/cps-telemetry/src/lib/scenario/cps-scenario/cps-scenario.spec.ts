@@ -4,6 +4,7 @@ import { CpsTelemetryMetadata } from '../../models/cps-telemetry-common.models/c
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import { CPS_DEFAULT_REDACT_CONFIG } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
 import { CpsScenario, CpsScenarioDeps } from './cps-scenario';
+import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 
 /** Captures what the scenario emitted, so a test can assert on it. */
 class RecordingSink extends CpsTelemetrySink {
@@ -54,6 +55,7 @@ function createDeps(overrides: Partial<CpsScenarioDeps> = {}): {
     redact: CPS_DEFAULT_REDACT_CONFIG,
     sink,
     onSettled: (_id, record) => settled.push(record),
+    monitor: new CpsTelemetryMonitor(),
     ...overrides
   };
   return { deps, sink, settled };

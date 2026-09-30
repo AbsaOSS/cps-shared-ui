@@ -10,6 +10,12 @@ import {
   cpsIsBroadcastMessage
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
+import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
+import {
+  CpsJsonObject,
+  CpsTelemetryEventOrigin
+} from '../../models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
+import { CpsTelemetryMetadata } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 
 /**
  * Active host count per channel, scoped to this JS realm — distinguishes a
@@ -44,6 +50,7 @@ const hostsInThisRealm = new Map<string, number>();
 @Injectable()
 export class CpsTelemetryBroadcastHost implements OnDestroy {
   private readonly sink = inject(CpsTelemetrySink);
+  private readonly monitor = inject(CpsTelemetryMonitor);
   private readonly connection: CpsBroadcastConnection =
     cpsConnectBroadcastChannel('broadcastHost');
 
@@ -100,10 +107,23 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
       switch (data.kind) {
         case 'event':
           this.sink.record(data.eventType, data.payload, data.metadata);
+          this.monitor.publish({
+            ...classifyForwarded(data.eventType),
+            eventType: data.eventType,
+            payload: data.payload as CpsJsonObject,
+            destination: 'sink',
+            origin: forwardedFrom(data.metadata)
+          });
           this.reannounceIfIdentityChanged();
           break;
         case 'error':
           this.sink.recordError(data.error, data.metadata);
+          this.monitor.publish({
+            kind: 'error',
+            payload: data.error,
+            destination: 'sink',
+            origin: forwardedFrom(data.metadata)
+          });
           this.reannounceIfIdentityChanged();
           break;
         case 'user':
@@ -195,4 +215,34 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
       undefined
     );
   }
+}
+
+/**
+ * Which kind a forwarded event is, from its type's suffix. Matched on the
+ * suffix rather than this realm's namespace, since each realm configures
+ * its own `eventNamespace`.
+ */
+function classifyForwarded(eventType: string): {
+  kind: 'scenario-step' | 'scenario' | 'bi' | 'unknown';
+} {
+  if (eventType.endsWith('.scenario.step')) {
+    return { kind: 'scenario-step' };
+  }
+  if (eventType.endsWith('.scenario')) {
+    return { kind: 'scenario' };
+  }
+  if (eventType.endsWith('.bi')) {
+    return { kind: 'bi' };
+  }
+  return { kind: 'unknown' };
+}
+
+/** The forwarding realm, read from the origin a follower sink stamps on. */
+function forwardedFrom(
+  metadata: CpsTelemetryMetadata | undefined
+): CpsTelemetryEventOrigin {
+  const application = metadata?.application;
+  return typeof application === 'string'
+    ? { forwarded: true, application }
+    : { forwarded: true };
 }

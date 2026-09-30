@@ -13,6 +13,7 @@ import {
   cpsEventTypes,
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
+import { CpsTelemetryMonitor } from '../cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import { cpsDebugWrite } from '../../utils/cps-debug-flag.util/cps-debug-flag.util';
 import {
@@ -68,6 +69,7 @@ export class CpsBiTelemetryService {
   );
 
   private readonly sink = inject(CpsTelemetrySink);
+  private readonly monitor = inject(CpsTelemetryMonitor);
   private readonly eventTypes = cpsEventTypes(this.identity.eventNamespace);
   private readonly lastEmittedAt = new Map<string, number>();
 
@@ -120,6 +122,13 @@ export class CpsBiTelemetryService {
       );
 
       this.sink.record(eventType, event);
+      this.monitor.publish({
+        kind: 'bi',
+        eventType,
+        payload: event,
+        destination: 'sink',
+        origin: { forwarded: false }
+      });
     });
   }
 

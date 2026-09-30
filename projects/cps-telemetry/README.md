@@ -72,14 +72,18 @@ providers: [
 ];
 ```
 
-### Two entry points
+### Three entry points
 
 `CpsRumTelemetrySink`, `provideCpsTelemetryRumSink`, and everything
 `CpsRumCredentialsProvider`-shaped live in a separate secondary entry point,
 `cps-telemetry/rum`, not the main `cps-telemetry` barrel. That's so an app
 using only `'broadcast'`/`'noop'` never needs `aws-rum-web` (an optional peer
 dependency) resolvable at build time — importing anything from
-`cps-telemetry/rum` is what opts an app into that requirement. See
+`cps-telemetry/rum` is what opts an app into that requirement.
+
+The [diagnostics popup](#diagnostics-popup) lives in `cps-telemetry/diagnostics`
+for the same reason: it is built from cps-ui-kit, an optional peer dependency
+that the rest of the library never touches. See
 [DESIGN.md §3, "Entry points"](./DESIGN.md#entry-points) for the full
 reasoning.
 
@@ -1099,6 +1103,123 @@ mutator after settlement all transmit nothing, and so print nothing. To see
 each step as its own line, turn on `scenario.emitLifecycleEvents`, which
 makes those steps real events; the console follows because it only ever
 mirrors the wire.
+
+## Diagnostics popup
+
+An in-app window showing, live, every BI event, scenario event and log
+record your app hands to its telemetry destinations — no DevTools, no
+backend access. Add it next to your telemetry setup:
+
+```ts
+import { provideCpsTelemetryDiagnostics } from 'cps-telemetry/diagnostics';
+
+providers: [
+  provideCpsTelemetry({ application: 'my-app', environment, version }),
+  provideCpsTelemetryDiagnostics()
+];
+```
+
+It is built from cps-ui-kit, so the app needs cps-ui-kit set up as for any
+cps-ui-kit dialog (styles, icons, animations). It supports the light theme only, for now.
+
+### Opening it
+
+| Platform          | Shortcut                   |
+| ----------------- | -------------------------- |
+| macOS             | **⇧ ⌥ ⌘ 8**                |
+| Windows and Linux | **Ctrl + Alt + Shift + 8** |
+
+Four keys, so it never opens by accident. Both combinations work everywhere,
+which covers external keyboards and remote desktops. The keys are matched by
+physical position, so they work on any keyboard layout, and typing an AltGr
+character never triggers it.
+
+With the popup open, the shortcut brings focus back to it from the app, and
+closes it when focus is already inside. Escape closes it too.
+
+It works in every environment. To change the keys, turn the shortcut off, or
+limit who can open it:
+
+```ts
+provideCpsTelemetryDiagnostics({
+  // Your own combination — replaces the defaults.
+  shortcuts: [
+    {
+      code: 'KeyD',
+      ctrl: true,
+      alt: true,
+      shift: true,
+      label: 'Ctrl+Alt+Shift+D'
+    }
+  ],
+
+  // Or no keyboard at all, opening it from your own UI instead:
+  // shortcuts: [],   then   inject(CpsTelemetryDiagnosticsService).open();
+
+  // Read once at startup.
+  enabled: () => inject(AuthService).isSupportStaff()
+});
+```
+
+### What it shows
+
+Three sections — BI telemetry, scenario telemetry, and logging — listing
+events newest first, from the moment the popup opens. Expand a row for the
+full payload as JSON. The popup is not modal: keep using the app beside it
+and watch events arrive.
+
+Each section has its own tools, which never affect the other two:
+
+- **Search** matches any field's value or name. **Add filter** compares one
+  field — `metadata.theme`, `status`, or `steps[].name` for any item of a
+  list. Field suggestions come from the events that section has seen.
+- **Download JSON** saves every event that section captured, whatever its
+  filters, with those filters recorded in the file. **Copy JSON** puts the
+  same JSON on the clipboard, for when a browser blocks downloads.
+
+Two controls at the top apply to all three sections, because they are about
+capturing rather than viewing:
+
+- **Pause live updates** freezes the view while you read; events are still
+  captured.
+- **Clear** empties the history; capturing continues.
+
+Each section keeps the latest 500 events (`maxEventsPerSection`). History is
+discarded when the popup closes.
+
+What it does **not** show:
+
+- Anything before the popup opened.
+- RUM's own automatic events — page views, web vitals, HTTP and JS errors —
+  which never pass through this library.
+- Whether the server accepted an event. It shows what was handed to the
+  sink or log provider; RUM can still drop events, for example when it
+  samples a session out or reaches its event limit.
+- In a composed page, fragments' log records: logs don't cross realms. Their
+  BI and scenario events do, marked with `↪` and the fragment's name.
+
+### Privacy
+
+The popup shows exactly what is sent, after redaction — including session
+and user ids. It adds nothing a user couldn't already see in their own
+browser's network tab, and sends nothing anywhere. Avoid sharing your screen
+while it is open, and treat downloads as you would any file with ids in it.
+The shortcut prevents accidental opening; it is not access control — use
+`enabled` for that.
+
+### Reading events from code
+
+The popup is built on `CpsTelemetryMonitor`, from the main entry point, which
+anyone can observe — a test, or your own overlay:
+
+```ts
+inject(CpsTelemetryMonitor)
+  .events$.pipe(filter((e) => e.kind === 'scenario'))
+  .subscribe((e) => console.table(e.payload));
+```
+
+Each event is a deep copy of what was sent, so observers can't change it.
+While nothing subscribes, it costs one check per event.
 
 ## Privacy
 

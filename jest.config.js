@@ -55,7 +55,9 @@ module.exports = {
     '^cps-ui-kit$': '<rootDir>/projects/cps-ui-kit/src/public-api.ts',
     '^cps-telemetry$': '<rootDir>/projects/cps-telemetry/src/public-api.ts',
     '^cps-telemetry/rum$':
-      '<rootDir>/projects/cps-telemetry/rum/src/public-api.ts'
+      '<rootDir>/projects/cps-telemetry/rum/src/public-api.ts',
+    '^cps-telemetry/diagnostics$':
+      '<rootDir>/projects/cps-telemetry/diagnostics/src/public-api.ts'
   },
   transformIgnorePatterns: [
     'node_modules/(?!(.*.mjs$|@angular/common/locales/.*.js$))'

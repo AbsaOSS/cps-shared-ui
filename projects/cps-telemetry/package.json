@@ -5,11 +5,23 @@
   "peerDependencies": {
     "@angular/common": "^22.1.3",
     "@angular/core": "^22.1.3",
+    "@angular/animations": "^22.1.3",
+    "@angular/forms": "^22.1.3",
     "aws-rum-web": "^3.2.1",
+    "cps-ui-kit": "^22.0.0",
     "rxjs": "^7.8.2"
   },
   "peerDependenciesMeta": {
+    "@angular/animations": {
+      "optional": true
+    },
+    "@angular/forms": {
+      "optional": true
+    },
     "aws-rum-web": {
+      "optional": true
+    },
+    "cps-ui-kit": {
       "optional": true
     }
   },

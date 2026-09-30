@@ -160,6 +160,32 @@ export interface CpsScenarioStep extends CpsScenarioStepDetail {
 }
 
 /**
+ * The per-step event, sent under `{namespace}.scenario.step` when
+ * {@link CpsScenarioTelemetryConfig.emitLifecycleEvents} is on.
+ *
+ * One closed step, plus enough of its scenario's identity to stand alone —
+ * the packed {@link CpsScenarioRecord} carries the same step inside `steps`.
+ *
+ * @group Interfaces
+ */
+export interface CpsScenarioStepEvent extends CpsScenarioStep {
+  /** The owning scenario's id. */
+  scenarioId: string;
+
+  /** The owning scenario's name. */
+  scenarioName: CpsScenarioName;
+
+  /** The emitting application. */
+  application: string;
+
+  /** Session identifier reported by the sink, when available. */
+  sessionId?: string;
+
+  /** User identifier reported by the sink, when available. */
+  userId?: string;
+}
+
+/**
  * Total time spent across repeated calls of one operation — a formatter
  * called per row, a validator called per field — where the total matters
  * more than a hundred individual steps.
