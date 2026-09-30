@@ -1,0 +1,78 @@
+<div class="cps-diagnostics-dialog">
+  <div class="cps-diagnostics-dialog__toolbar">
+    <p class="cps-diagnostics-dialog__status">
+      <span
+        class="cps-diagnostics-dialog__dot"
+        [class.cps-diagnostics-dialog__dot--paused]="store.paused()"
+        aria-hidden="true"></span>
+      {{ store.paused() ? 'Paused' : 'Capturing' }} since {{ since() }} ·
+      {{ store.total() }} event{{ store.total() === 1 ? '' : 's' }}
+    </p>
+    <div class="cps-diagnostics-dialog__actions">
+      <cps-switch
+        label="Pause live updates"
+        [value]="store.paused()"
+        (valueChanged)="setPaused($event)">
+      </cps-switch>
+      <cps-button
+        type="outlined"
+        size="small"
+        icon="delete"
+        label="Clear"
+        ariaLabel="Clear captured events"
+        (clicked)="clear()">
+      </cps-button>
+    </div>
+  </div>
+
+  @if (store.paused() && store.newWhilePaused() > 0) {
+    <div class="cps-diagnostics-dialog__paused" role="status">
+      <span
+        >{{ store.newWhilePaused() }} new event{{
+          store.newWhilePaused() === 1 ? '' : 's'
+        }}
+        held back while paused.</span
+      >
+      <cps-button
+        type="borderless"
+        size="xsmall"
+        label="Resume"
+        (clicked)="setPaused(false)">
+      </cps-button>
+    </div>
+  }
+
+  @if (store.total() === 0 && !store.paused()) {
+    <p class="cps-diagnostics-dialog__hint">
+      Capturing from now. Use the app to generate events; they appear here as
+      they are sent.
+    </p>
+  }
+
+  <div class="cps-diagnostics-dialog__sections">
+    @for (section of sections; track section) {
+      <cps-diagnostics-section
+        [section]="section"
+        [maxPayloadChars]="maxPayloadChars">
+      </cps-diagnostics-section>
+    }
+  </div>
+
+  <footer class="cps-diagnostics-dialog__footer">
+    <p>
+      Shows what this app hands to its telemetry destinations, after redaction.
+      A destination can still drop an event, for example when RUM samples a
+      session out. RUM's own page views, errors and performance events aren't
+      shown.
+    </p>
+    <p>
+      Contains your session and user ids: avoid sharing your screen while it's
+      open, and share downloads only with your team. History is discarded when
+      this window closes.
+      @if (shortcut) {
+        Shortcut: <kbd>{{ shortcut }}</kbd
+        >.
+      }
+    </p>
+  </footer>
+</div>

@@ -1,0 +1,37 @@
+<div class="cps-diagnostics-json">
+  <div class="cps-diagnostics-json__actions">
+    <cps-button
+      type="borderless"
+      size="xsmall"
+      icon="copy"
+      [label]="
+        copied() === 'copied'
+          ? 'Copied'
+          : copied() === 'failed'
+            ? 'Copy failed'
+            : 'Copy JSON'
+      "
+      ariaLabel="Copy this payload as JSON"
+      (clicked)="copy()">
+    </cps-button>
+    <span role="status" class="cps-sr-only">{{
+      copied() === 'copied'
+        ? 'Payload copied'
+        : copied() === 'failed'
+          ? 'Copying failed'
+          : ''
+    }}</span>
+  </div>
+  @if (truncated()) {
+    <p class="cps-diagnostics-json__notice">
+      Large payload: showing the first {{ shownChars }} characters. The download
+      contains all of it.
+    </p>
+  }
+  <pre
+    class="cps-diagnostics-json__code"
+    tabindex="0"
+    role="region"
+    [attr.aria-label]="label()"
+    >{{ shown() }}</pre>
+</div>

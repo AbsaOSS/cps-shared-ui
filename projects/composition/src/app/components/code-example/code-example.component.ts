@@ -15,6 +15,9 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CpsButtonComponent } from 'cps-ui-kit';
+import { CpsLoggerService } from 'cps-telemetry';
+import '../../services/telemetry.schema';
+import { AppTelemetryService } from '../../services/app-telemetry.service';
 import hljs from 'highlight.js/lib/core';
 import xml from 'highlight.js/lib/languages/xml';
 import typescript from 'highlight.js/lib/languages/typescript';
@@ -41,6 +44,8 @@ export class CodeExampleComponent {
 
   private sanitizer = inject(DomSanitizer);
   private platformId = inject(PLATFORM_ID);
+  private logger = inject(CpsLoggerService).getLogger('docs');
+  private appTelemetry = inject(AppTelemetryService);
 
   instanceId = `code-example-${++CodeExampleComponent.instanceCount}`;
   activeTab = signal<TabId>('preview');
@@ -71,8 +76,12 @@ export class CodeExampleComponent {
       const tsCode = this.tsCode();
 
       if (!htmlCode && !tsCode) {
-        console.warn(
-          'CodeExampleComponent: At least one of htmlCode or tsCode must be provided'
+        this.logger.warn(
+          'At least one of htmlCode or tsCode must be provided',
+          {
+            context: 'CodeExampleComponent',
+            metadata: { instanceId: this.instanceId, label: this.label() }
+          }
         );
       }
 
@@ -140,9 +149,16 @@ export class CodeExampleComponent {
     try {
       await navigator.clipboard.writeText(textToCopy);
       this.copied.set(true);
+      this.appTelemetry.trackClick('code_copied', {
+        language: this.activeTab()
+      });
       setTimeout(() => this.copied.set(false), 2000);
-    } catch {
+    } catch (error) {
       this.copyFailed.set(true);
+      this.logger.warn('Failed to copy code to clipboard', {
+        context: 'CodeExample',
+        error
+      });
       setTimeout(() => this.copyFailed.set(false), 2000);
     }
   }

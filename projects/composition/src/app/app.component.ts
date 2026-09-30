@@ -14,6 +14,7 @@ import packageJson from '../../../cps-ui-kit/package.json';
 import { NavigationSidebarComponent } from './components/navigation-sidebar/navigation-sidebar.component';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { CpsThemeService } from 'cps-ui-kit';
+import { AppTelemetryService } from './services/app-telemetry.service';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ export class AppComponent {
   private readonly _platformId = inject(PLATFORM_ID);
   private readonly _document = inject(DOCUMENT);
   private readonly _themeService = inject(CpsThemeService);
+  private readonly _appTelemetry = inject(AppTelemetryService);
 
   componentTitle = '';
 
@@ -48,6 +50,8 @@ export class AppComponent {
     private _router: Router,
     private _activatedRoute: ActivatedRoute
   ) {
+    this._appTelemetry.start();
+
     if (isPlatformBrowser(this._platformId)) {
       this._mobileQuery = this._document.defaultView!.matchMedia(
         '(max-width: 37.5rem)'
@@ -104,9 +108,13 @@ export class AppComponent {
 
   toggleSidebar() {
     this.sidebarExpanded = !this.sidebarExpanded;
+    this._appTelemetry.trackClick('sidebar_toggled', {
+      expanded: this.sidebarExpanded
+    });
   }
 
   onNavLinkClicked() {
+    this._appTelemetry.markNavigationIntent();
     if (this.isMobile) this.sidebarExpanded = false;
     this.focusMainContent();
   }

@@ -1,0 +1,33 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "rootDir": "./src",
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "skipLibCheck": true,
+    "types": [],
+    // The package build resolves cps-ui-kit (used only by the
+    // cps-telemetry/diagnostics entry) as the external package it is at
+    // runtime, from its built output — never compiling the kit's source into
+    // this package. Build cps-ui-kit first. ng-packagr maps cps-telemetry's
+    // own entry points itself.
+    "paths": {
+      "cps-ui-kit": ["../../dist/cps-ui-kit"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/*.spec.ts"],
+  "angularCompilerOptions": {
+    "extendedDiagnostics": {
+      "checks": {
+        "nullishCoalescingNotNullable": "suppress",
+        "optionalChainNotNullable": "suppress"
+      }
+    }
+  }
+}

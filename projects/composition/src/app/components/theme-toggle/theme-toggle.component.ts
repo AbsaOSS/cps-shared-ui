@@ -6,6 +6,7 @@ import {
   CpsRadiusTheme,
   CpsThemeService
 } from 'cps-ui-kit';
+import { AppTelemetryService } from '../../services/app-telemetry.service';
 
 @Component({
   selector: 'app-theme-toggle',
@@ -19,6 +20,7 @@ import {
 })
 export class ThemeToggleComponent {
   private themeService = inject(CpsThemeService);
+  private appTelemetry = inject(AppTelemetryService);
 
   isDark = this.themeService.isDark;
   colorTheme = this.themeService.colorTheme;
@@ -28,6 +30,9 @@ export class ThemeToggleComponent {
 
   toggleTheme(): void {
     this.themeService.toggleTheme();
+    this.appTelemetry.trackThemeChanged(
+      this.themeService.isDark() ? 'dark' : 'light'
+    );
   }
 
   toggleMenu(): void {
@@ -45,14 +50,26 @@ export class ThemeToggleComponent {
   }
 
   setColorTheme(value: CpsColorTheme): void {
-    this.themeService.setColorTheme(value);
+    this._applyTheme('color', value, (v) => this.themeService.setColorTheme(v));
   }
 
   setRadiusTheme(value: CpsRadiusTheme): void {
-    this.themeService.setRadiusTheme(value);
+    this._applyTheme('radius', value, (v) =>
+      this.themeService.setRadiusTheme(v)
+    );
   }
 
   setBaseTheme(value: CpsBaseTheme): void {
-    this.themeService.setBaseTheme(value);
+    this._applyTheme('base', value, (v) => this.themeService.setBaseTheme(v));
+  }
+
+  /** Applies one theme dimension and reports it. */
+  private _applyTheme<T extends string | number | boolean | null>(
+    dimension: string,
+    value: T,
+    setter: (value: T) => void
+  ): void {
+    setter(value);
+    this.appTelemetry.trackClick('theme_option_changed', { dimension, value });
   }
 }

@@ -1,7 +1,26 @@
 import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import {
+  CPS_LOG_API_PROVIDER,
+  CpsLogRecord,
+  CpsNoopTelemetrySink,
+  CpsTelemetrySink,
+  provideCpsTelemetry
+} from 'cps-telemetry';
+import { AppLogApiProvider } from '../../services/app-log-api.provider';
 import { CodeExampleComponent } from './code-example.component';
+
+/** Telemetry wired to run for real, with nowhere to send anything. */
+const telemetryProviders = [
+  provideCpsTelemetry({
+    application: 'composition-test',
+    environment: 'test',
+    version: '0.0.0'
+  }),
+  { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+  { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+];
 
 describe('CodeExampleComponent', () => {
   let component: CodeExampleComponent;
@@ -9,7 +28,8 @@ describe('CodeExampleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CodeExampleComponent]
+      imports: [CodeExampleComponent],
+      providers: [...telemetryProviders]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CodeExampleComponent);
@@ -18,6 +38,43 @@ describe('CodeExampleComponent', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+  });
+
+  describe('authoring diagnostics', () => {
+    function logs(): CpsLogRecord[] {
+      return TestBed.inject(AppLogApiProvider).getRecords();
+    }
+
+    it('should warn when neither htmlCode nor tsCode is provided', () => {
+      fixture.detectChanges();
+
+      expect(logs()).toHaveLength(1);
+      expect(logs()[0]).toMatchObject({
+        level: 'warn',
+        message: 'At least one of htmlCode or tsCode must be provided',
+        context: 'CodeExampleComponent'
+      });
+    });
+
+    it('should identify which example is misconfigured', () => {
+      fixture.componentRef.setInput('label', 'Basic usage');
+      fixture.detectChanges();
+
+      expect(logs()[0].metadata).toMatchObject({
+        instanceId: component.instanceId,
+        label: 'Basic usage'
+      });
+    });
+
+    it.each([
+      ['htmlCode', '<div></div>'],
+      ['tsCode', 'const a = 1;']
+    ])('should stay quiet when %s is provided', (input, value) => {
+      fixture.componentRef.setInput(input, value);
+      fixture.detectChanges();
+
+      expect(logs()).toHaveLength(0);
+    });
   });
 
   describe('initialisation', () => {
@@ -371,7 +428,10 @@ describe('CodeExampleComponent', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         imports: [CodeExampleComponent],
-        providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
+        providers: [
+          ...telemetryProviders,
+          { provide: PLATFORM_ID, useValue: 'server' }
+        ]
       });
       fixture = TestBed.createComponent(CodeExampleComponent);
       component = fixture.componentInstance;

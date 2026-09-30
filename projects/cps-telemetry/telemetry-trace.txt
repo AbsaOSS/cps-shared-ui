@@ -1,0 +1,2051 @@
+Generated 2026-09-04T20:59:21.008Z by `npm run trace:telemetry` (telemetry-trace.capture.spec.ts).
+34 entries recorded through the AWS RUM sink, 5 through CpsLoggerService.
+
+----------------------------------------------------------------------
+[1/34] SCENARIO  route-navigation  status=success  delta=180ms
+trigger: NavigationStart -> NavigationEnd settles as success
+
+{
+  "scenarioId": "459be100-3ae7-4e35-ad4a-9c1e805b003f",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/table",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.709Z",
+  "endTime": "2026-09-04T20:59:20.889Z",
+  "delta": 180,
+  "elapsed": 180,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 180,
+      "stepDelta": 180,
+      "elapsed": 180,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 180,
+      "metadata": {
+        "finalUrl": "/table"
+      },
+      "endOffset": 180,
+      "stepDelta": 0,
+      "elapsed": 180,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 180,
+      "endOffset": 180,
+      "stepDelta": 0,
+      "elapsed": 180,
+      "status": "success",
+      "metadata": {
+        "finalUrl": "/table"
+      }
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/table"
+  },
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[2/34] SCENARIO  route-navigation  status=abandoned  delta=60ms
+trigger: NavigationStart -> NavigationCancel settles as abandoned
+
+{
+  "scenarioId": "7e67624b-e177-4e83-ab0f-c264c0847236",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/file-upload",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.717Z",
+  "endTime": "2026-09-04T20:59:20.777Z",
+  "delta": 60,
+  "elapsed": 60,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 60,
+      "stepDelta": 60,
+      "elapsed": 60,
+      "status": "abandoned",
+      "message": "guard rejected"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 60,
+      "endOffset": 60,
+      "stepDelta": 0,
+      "elapsed": 60,
+      "status": "abandoned",
+      "message": "guard rejected",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "resolve-route",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "message": "guard rejected"
+}
+
+----------------------------------------------------------------------
+[3/34] SCENARIO  route-navigation  status=abandoned  delta=50ms
+trigger: a second NavigationStart supersedes the first (abandoned)
+
+{
+  "scenarioId": "118ca028-2208-485b-aefb-88916bd3f8c9",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/autocomplete",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.720Z",
+  "endTime": "2026-09-04T20:59:20.770Z",
+  "delta": 50,
+  "elapsed": 50,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 50,
+      "stepDelta": 50,
+      "elapsed": 50,
+      "status": "abandoned",
+      "message": "superseded by navigation"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 50,
+      "endOffset": 50,
+      "stepDelta": 0,
+      "elapsed": 50,
+      "status": "abandoned",
+      "message": "superseded by navigation",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "resolve-route",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "message": "superseded by navigation"
+}
+
+----------------------------------------------------------------------
+[4/34] SCENARIO  route-navigation  status=success  delta=160ms
+trigger: a second NavigationStart supersedes the first (abandoned)
+
+{
+  "scenarioId": "2ac41018-ae65-44dc-9770-dff7ac6adcac",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/autocomplete",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.770Z",
+  "endTime": "2026-09-04T20:59:20.930Z",
+  "delta": 160,
+  "elapsed": 210,
+  "stepCount": 2,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 50,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 160,
+      "stepDelta": 160,
+      "elapsed": 210,
+      "status": "success"
+    },
+    {
+      "name": "activate",
+      "startOffset": 160,
+      "metadata": {
+        "finalUrl": "/autocomplete"
+      },
+      "endOffset": 160,
+      "stepDelta": 0,
+      "elapsed": 210,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 160,
+      "endOffset": 160,
+      "stepDelta": 0,
+      "elapsed": 210,
+      "status": "success",
+      "metadata": {
+        "finalUrl": "/autocomplete"
+      }
+    }
+  ],
+  "previousStep": "activate",
+  "metadata": {
+    "finalUrl": "/autocomplete"
+  },
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[5/34] SCENARIO  route-navigation  status=failure  delta=220ms
+trigger: NavigationStart -> NavigationError settles as failure, correlated to a log line
+
+{
+  "scenarioId": "6b050bf3-bbb6-4993-a544-7c033702b841",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/broken-chunk",
+  "status": "failure",
+  "startTime": "2026-09-04T20:59:20.723Z",
+  "endTime": "2026-09-04T20:59:20.943Z",
+  "delta": 220,
+  "elapsed": 220,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 220,
+      "stepDelta": 220,
+      "elapsed": 220,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "ChunkLoadError: Loading chunk 12 failed."
+      }
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 220,
+      "endOffset": 220,
+      "stepDelta": 0,
+      "elapsed": 220,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "ChunkLoadError: Loading chunk 12 failed."
+      }
+    }
+  ],
+  "previousStep": "resolve-route",
+  "application": "composition",
+  "sessionId": "audit-session",
+  "error": {
+    "name": "Error",
+    "message": "ChunkLoadError: Loading chunk 12 failed."
+  }
+}
+
+----------------------------------------------------------------------
+[6/34] SCENARIO  route-navigation  status=timeout  delta=30000ms
+trigger: never settling times out after 30s
+
+{
+  "scenarioId": "4dace8de-c3a7-4ebc-98b9-0adca6dac75e",
+  "scenarioName": "route-navigation",
+  "operation": "lazy-route-load",
+  "route": "/stuck-chunk",
+  "status": "timeout",
+  "startTime": "2026-09-04T20:59:20.730Z",
+  "endTime": "2026-09-04T20:59:50.730Z",
+  "delta": 30000,
+  "elapsed": 30000,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "resolve-route",
+      "startOffset": 0,
+      "endOffset": 30000,
+      "stepDelta": 30000,
+      "elapsed": 30000,
+      "status": "timeout",
+      "message": "Scenario did not settle within 30000ms"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 30000,
+      "endOffset": 30000,
+      "stepDelta": 0,
+      "elapsed": 30000,
+      "status": "timeout",
+      "message": "Scenario did not settle within 30000ms"
+    }
+  ],
+  "previousStep": "resolve-route",
+  "application": "composition",
+  "sessionId": "audit-session",
+  "message": "Scenario did not settle within 30000ms"
+}
+
+----------------------------------------------------------------------
+[7/34] SCENARIO  table-page-load  status=success  delta=600ms
+trigger: lazy load settles as success, with the format-row aggregate
+
+{
+  "scenarioId": "de1f3c48-c37e-4052-8ecd-79f9427ba077",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.736Z",
+  "endTime": "2026-09-04T20:59:21.336Z",
+  "delta": 600,
+  "elapsed": 600,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "metadata": {
+        "first": 0,
+        "rows": 10,
+        "totalRecords": 20
+      },
+      "endOffset": 600,
+      "stepDelta": 600,
+      "elapsed": 600,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 600,
+      "endOffset": 600,
+      "stepDelta": 0,
+      "elapsed": 600,
+      "status": "success",
+      "metadata": {
+        "first": 0,
+        "rows": 10,
+        "totalRecords": 20
+      }
+    }
+  ],
+  "previousStep": "fetch",
+  "aggregates": [
+    {
+      "name": "format-row",
+      "elapsed": 0,
+      "callCount": 10
+    }
+  ],
+  "metadata": {
+    "first": 0,
+    "rows": 10,
+    "totalRecords": 20
+  },
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[8/34] SCENARIO  table-page-load  status=abandoned  delta=250ms
+trigger: a second lazy load supersedes the first (abandoned)
+
+{
+  "scenarioId": "81cf626b-520a-4cca-bded-36896c4b1903",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.746Z",
+  "endTime": "2026-09-04T20:59:20.996Z",
+  "delta": 250,
+  "elapsed": 250,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 250,
+      "stepDelta": 250,
+      "elapsed": 250,
+      "status": "abandoned",
+      "reason": "superseded"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 250,
+      "endOffset": 250,
+      "stepDelta": 0,
+      "elapsed": 250,
+      "status": "abandoned",
+      "reason": "superseded",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "fetch",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "superseded"
+}
+
+----------------------------------------------------------------------
+[9/34] SCENARIO  table-page-load  status=success  delta=600ms
+trigger: a second lazy load supersedes the first (abandoned)
+
+{
+  "scenarioId": "c7faf133-3b3a-479d-aee4-0be57fc8f7a8",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.996Z",
+  "endTime": "2026-09-04T20:59:21.596Z",
+  "delta": 600,
+  "elapsed": 850,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 250,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "metadata": {
+        "first": 10,
+        "rows": 10,
+        "totalRecords": 20
+      },
+      "endOffset": 600,
+      "stepDelta": 600,
+      "elapsed": 850,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 600,
+      "endOffset": 600,
+      "stepDelta": 0,
+      "elapsed": 850,
+      "status": "success",
+      "metadata": {
+        "first": 10,
+        "rows": 10,
+        "totalRecords": 20
+      }
+    }
+  ],
+  "previousStep": "fetch",
+  "aggregates": [
+    {
+      "name": "format-row",
+      "elapsed": 0,
+      "callCount": 10
+    }
+  ],
+  "metadata": {
+    "first": 10,
+    "rows": 10,
+    "totalRecords": 20
+  },
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[10/34] SCENARIO  table-page-load  status=abandoned  delta=300ms
+trigger: component destroyed mid-flight settles as abandoned
+
+{
+  "scenarioId": "1e3f49df-e871-47fb-a6b3-fac3b8f7628c",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.848Z",
+  "endTime": "2026-09-04T20:59:21.148Z",
+  "delta": 300,
+  "elapsed": 300,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 300,
+      "stepDelta": 300,
+      "elapsed": 300,
+      "status": "abandoned",
+      "reason": "component-destroyed"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 300,
+      "endOffset": 300,
+      "stepDelta": 0,
+      "elapsed": 300,
+      "status": "abandoned",
+      "reason": "component-destroyed",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "fetch",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "component-destroyed"
+}
+
+----------------------------------------------------------------------
+[11/34] SCENARIO  file-upload  status=success  delta=3000ms
+trigger: processExtraInfoUploadedFile settles as success
+
+{
+  "scenarioId": "5d3c3bc4-d518-4c2a-8b06-0eaf7f6de3af",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.875Z",
+  "endTime": "2026-09-04T20:59:23.875Z",
+  "delta": 3000,
+  "elapsed": 3000,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "endOffset": 3000,
+      "stepDelta": 3000,
+      "elapsed": 3000,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 3000,
+      "endOffset": 3000,
+      "stepDelta": 0,
+      "elapsed": 3000,
+      "status": "success"
+    }
+  ],
+  "previousStep": "process",
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[12/34] SCENARIO  file-upload  status=failure  delta=500ms
+trigger: processFailingUploadedFile settles as failure with no error object
+
+{
+  "scenarioId": "a00e912d-cabf-4700-b8ac-9561c368a84a",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process-failing",
+  "status": "failure",
+  "startTime": "2026-09-04T20:59:20.915Z",
+  "endTime": "2026-09-04T20:59:21.415Z",
+  "delta": 500,
+  "elapsed": 500,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "endOffset": 500,
+      "stepDelta": 500,
+      "elapsed": 500,
+      "status": "failure"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 500,
+      "endOffset": 500,
+      "stepDelta": 0,
+      "elapsed": 500,
+      "status": "failure"
+    }
+  ],
+  "previousStep": "process",
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[13/34] SCENARIO  file-upload  status=abandoned  delta=1200ms
+trigger: onExtraInfoFileProcessingCancelled settles as abandoned
+
+{
+  "scenarioId": "88dcfa3e-2633-431b-a1d4-7a45d2fc0b19",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.935Z",
+  "endTime": "2026-09-04T20:59:22.135Z",
+  "delta": 1200,
+  "elapsed": 1200,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 1200,
+      "stepDelta": 1200,
+      "elapsed": 1200,
+      "status": "abandoned",
+      "reason": "user-cancelled"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1200,
+      "endOffset": 1200,
+      "stepDelta": 0,
+      "elapsed": 1200,
+      "status": "abandoned",
+      "reason": "user-cancelled",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "process",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "user-cancelled"
+}
+
+----------------------------------------------------------------------
+[14/34] SCENARIO  file-upload  status=abandoned  delta=800ms
+trigger: ngOnDestroy mid-flight settles as abandoned
+
+{
+  "scenarioId": "46e5d731-12f0-4ae0-9639-68ff29f48e7a",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.937Z",
+  "endTime": "2026-09-04T20:59:21.737Z",
+  "delta": 800,
+  "elapsed": 800,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 800,
+      "stepDelta": 800,
+      "elapsed": 800,
+      "status": "abandoned",
+      "reason": "component-destroyed"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 800,
+      "endOffset": 800,
+      "stepDelta": 0,
+      "elapsed": 800,
+      "status": "abandoned",
+      "reason": "component-destroyed",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "process",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "component-destroyed"
+}
+
+----------------------------------------------------------------------
+[15/34] SCENARIO  file-upload  status=failure  delta=0ms
+trigger: a rejecting file read logs "Error reading file"
+
+{
+  "scenarioId": "87fdd6e4-0e7d-4b06-8984-693b9f83727b",
+  "scenarioName": "file-upload",
+  "feature": "file-upload",
+  "operation": "process",
+  "status": "failure",
+  "startTime": "2026-09-04T20:59:20.939Z",
+  "endTime": "2026-09-04T20:59:20.939Z",
+  "delta": 0,
+  "elapsed": 0,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "process",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "Read permission denied by the OS",
+        "stack": "Error: Read permission denied by the OS\n    at Object.text (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:387:28)\n    at FileUploadPageComponent._processUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:89:22)\n    at FileUploadPageComponent.processExtraInfoUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:77:10)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:471:8\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:168)\n    at _ProxyZoneSpec.onInvoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:1079:43)\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:56)\n    at _ZoneImpl.run (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:162:47)\n    at Object.wrappedFunc (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:407:38)\n    at Promise.finally.completed (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1561:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1501:10)\n    at _callCircusTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1011:40)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at _runTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:951:3)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:853:7"
+      }
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "Read permission denied by the OS",
+        "stack": "Error: Read permission denied by the OS\n    at Object.text (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:387:28)\n    at FileUploadPageComponent._processUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:89:22)\n    at FileUploadPageComponent.processExtraInfoUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:77:10)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:471:8\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:168)\n    at _ProxyZoneSpec.onInvoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:1079:43)\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:56)\n    at _ZoneImpl.run (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:162:47)\n    at Object.wrappedFunc (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:407:38)\n    at Promise.finally.completed (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1561:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1501:10)\n    at _callCircusTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1011:40)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at _runTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:951:3)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:853:7"
+      }
+    }
+  ],
+  "previousStep": "process",
+  "application": "composition",
+  "sessionId": "audit-session",
+  "error": {
+    "name": "Error",
+    "message": "Read permission denied by the OS",
+    "stack": "Error: Read permission denied by the OS\n    at Object.text (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:387:28)\n    at FileUploadPageComponent._processUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:89:22)\n    at FileUploadPageComponent.processExtraInfoUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:77:10)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:471:8\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:168)\n    at _ProxyZoneSpec.onInvoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:1079:43)\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:56)\n    at _ZoneImpl.run (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:162:47)\n    at Object.wrappedFunc (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:407:38)\n    at Promise.finally.completed (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1561:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1501:10)\n    at _callCircusTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1011:40)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at _runTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:951:3)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:853:7"
+  }
+}
+
+----------------------------------------------------------------------
+[16/34] SCENARIO  autocomplete-search  status=success  delta=1000ms
+trigger: a search settles as success
+
+{
+  "scenarioId": "7521f15b-aff6-488e-8e84-270ed51c7e68",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.954Z",
+  "endTime": "2026-09-04T20:59:21.954Z",
+  "delta": 1000,
+  "elapsed": 1000,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "metadata": {
+        "resultCount": 1
+      },
+      "endOffset": 1000,
+      "stepDelta": 1000,
+      "elapsed": 1000,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1000,
+      "endOffset": 1000,
+      "stepDelta": 0,
+      "elapsed": 1000,
+      "status": "success",
+      "metadata": {
+        "resultCount": 1
+      }
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "resultCount": 1
+  },
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[17/34] SCENARIO  autocomplete-search  status=failure  delta=1000ms
+trigger: a search settles as failure (backend stubbed down, same pattern the existing spec uses)
+
+{
+  "scenarioId": "6ddfa627-199b-4cec-b650-dc93196490d8",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "failure",
+  "startTime": "2026-09-04T20:59:20.959Z",
+  "endTime": "2026-09-04T20:59:21.959Z",
+  "delta": 1000,
+  "elapsed": 1000,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "endOffset": 1000,
+      "stepDelta": 1000,
+      "elapsed": 1000,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "backend down",
+        "stack": "Error: backend down\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:543:44\n    at Observable.init [as _subscribe] (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/throwError.ts:123:68)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/switchMap.ts:108:49\n    at OperatorSubscriber._this._next (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/OperatorSubscriber.ts:70:13)\n    at OperatorSubscriber.Subscriber.next (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Subscriber.ts:71:12)\n    at AsyncAction.work (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/timer.ts:173:20)\n    at AsyncAction._execute (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncAction.ts:119:12)\n    at AsyncAction.execute (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncAction.ts:94:24)\n    at AsyncScheduler.flush (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncScheduler.ts:38:27)\n    at callTimer (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:1525:24)\n    at runTimersInRange (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2223:25)\n    at doTickInner (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-s…"
+      }
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1000,
+      "endOffset": 1000,
+      "stepDelta": 0,
+      "elapsed": 1000,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "backend down",
+        "stack": "Error: backend down\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:543:44\n    at Observable.init [as _subscribe] (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/throwError.ts:123:68)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/switchMap.ts:108:49\n    at OperatorSubscriber._this._next (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/OperatorSubscriber.ts:70:13)\n    at OperatorSubscriber.Subscriber.next (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Subscriber.ts:71:12)\n    at AsyncAction.work (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/timer.ts:173:20)\n    at AsyncAction._execute (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncAction.ts:119:12)\n    at AsyncAction.execute (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncAction.ts:94:24)\n    at AsyncScheduler.flush (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncScheduler.ts:38:27)\n    at callTimer (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:1525:24)\n    at runTimersInRange (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2223:25)\n    at doTickInner (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-s…"
+      }
+    }
+  ],
+  "previousStep": "query",
+  "application": "composition",
+  "sessionId": "audit-session",
+  "error": {
+    "name": "Error",
+    "message": "backend down",
+    "stack": "Error: backend down\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:543:44\n    at Observable.init [as _subscribe] (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/throwError.ts:123:68)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/switchMap.ts:108:49\n    at OperatorSubscriber._this._next (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/OperatorSubscriber.ts:70:13)\n    at OperatorSubscriber.Subscriber.next (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Subscriber.ts:71:12)\n    at AsyncAction.work (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/timer.ts:173:20)\n    at AsyncAction._execute (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncAction.ts:119:12)\n    at AsyncAction.execute (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncAction.ts:94:24)\n    at AsyncScheduler.flush (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/scheduler/AsyncScheduler.ts:38:27)\n    at callTimer (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:1525:24)\n    at runTimersInRange (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2223:25)\n    at doTickInner (/Users/madfamily/Documents/cps-shared-ui/node_modules/@sinonjs/fake-timers/src/fake-timers-s…"
+  }
+}
+
+----------------------------------------------------------------------
+[18/34] SCENARIO  autocomplete-search  status=abandoned  delta=220ms
+trigger: a second keystroke supersedes the first search (abandoned)
+
+{
+  "scenarioId": "17895192-fe43-4557-a0fa-2d674850e20d",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.974Z",
+  "endTime": "2026-09-04T20:59:21.194Z",
+  "delta": 220,
+  "elapsed": 220,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 220,
+      "stepDelta": 220,
+      "elapsed": 220,
+      "status": "abandoned",
+      "reason": "superseded"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 220,
+      "endOffset": 220,
+      "stepDelta": 0,
+      "elapsed": 220,
+      "status": "abandoned",
+      "reason": "superseded",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "superseded"
+}
+
+----------------------------------------------------------------------
+[19/34] SCENARIO  autocomplete-search  status=success  delta=1000ms
+trigger: a second keystroke supersedes the first search (abandoned)
+
+{
+  "scenarioId": "b0a0be13-8e1f-4652-8f7c-60c442e56f46",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:21.194Z",
+  "endTime": "2026-09-04T20:59:22.194Z",
+  "delta": 1000,
+  "elapsed": 1220,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 220,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "metadata": {
+        "resultCount": 1
+      },
+      "endOffset": 1000,
+      "stepDelta": 1000,
+      "elapsed": 1220,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 1000,
+      "endOffset": 1000,
+      "stepDelta": 0,
+      "elapsed": 1220,
+      "status": "success",
+      "metadata": {
+        "resultCount": 1
+      }
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "resultCount": 1
+  },
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[20/34] SCENARIO  autocomplete-validate  status=success  delta=3000ms
+trigger: selecting an option settles validation as success
+
+{
+  "scenarioId": "8e069b4e-6755-43bb-8c8d-b1052e5327bf",
+  "scenarioName": "autocomplete-validate",
+  "feature": "autocomplete",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.977Z",
+  "endTime": "2026-09-04T20:59:23.977Z",
+  "delta": 3000,
+  "elapsed": 3000,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "validate",
+      "startOffset": 0,
+      "endOffset": 3000,
+      "stepDelta": 3000,
+      "elapsed": 3000,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 3000,
+      "endOffset": 3000,
+      "stepDelta": 0,
+      "elapsed": 3000,
+      "status": "success"
+    }
+  ],
+  "previousStep": "validate",
+  "application": "composition",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[21/34] SCENARIO  autocomplete-search  status=abandoned  delta=400ms
+trigger: destroying the component mid-flight settles every open scenario as abandoned
+
+{
+  "scenarioId": "faa5eb71-9273-4989-8677-927ff1d8f5a6",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "single",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.979Z",
+  "endTime": "2026-09-04T20:59:21.379Z",
+  "delta": 400,
+  "elapsed": 400,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 400,
+      "stepDelta": 400,
+      "elapsed": 400,
+      "status": "abandoned",
+      "reason": "component-destroyed"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 400,
+      "endOffset": 400,
+      "stepDelta": 0,
+      "elapsed": 400,
+      "status": "abandoned",
+      "reason": "component-destroyed",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "component-destroyed"
+}
+
+----------------------------------------------------------------------
+[22/34] SCENARIO  autocomplete-search  status=abandoned  delta=400ms
+trigger: destroying the component mid-flight settles every open scenario as abandoned
+
+{
+  "scenarioId": "2752480c-0615-4fb6-9ea7-23f83c95122d",
+  "scenarioName": "autocomplete-search",
+  "feature": "autocomplete",
+  "operation": "multi",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.979Z",
+  "endTime": "2026-09-04T20:59:21.379Z",
+  "delta": 400,
+  "elapsed": 400,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "query",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 400,
+      "stepDelta": 400,
+      "elapsed": 400,
+      "status": "abandoned",
+      "reason": "component-destroyed"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 400,
+      "endOffset": 400,
+      "stepDelta": 0,
+      "elapsed": 400,
+      "status": "abandoned",
+      "reason": "component-destroyed",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "query",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "component-destroyed"
+}
+
+----------------------------------------------------------------------
+[23/34] SCENARIO  autocomplete-validate  status=abandoned  delta=400ms
+trigger: destroying the component mid-flight settles every open scenario as abandoned
+
+{
+  "scenarioId": "705ec651-0c56-4c51-bc57-cbf4288e9f9d",
+  "scenarioName": "autocomplete-validate",
+  "feature": "autocomplete",
+  "status": "abandoned",
+  "startTime": "2026-09-04T20:59:20.979Z",
+  "endTime": "2026-09-04T20:59:21.379Z",
+  "delta": 400,
+  "elapsed": 400,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 0,
+      "status": "success"
+    },
+    {
+      "name": "validate",
+      "startOffset": 0,
+      "metadata": {
+        "abandonedBy": "caller"
+      },
+      "endOffset": 400,
+      "stepDelta": 400,
+      "elapsed": 400,
+      "status": "abandoned",
+      "reason": "component-destroyed"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 400,
+      "endOffset": 400,
+      "stepDelta": 0,
+      "elapsed": 400,
+      "status": "abandoned",
+      "reason": "component-destroyed",
+      "metadata": {
+        "abandonedBy": "caller"
+      }
+    }
+  ],
+  "previousStep": "validate",
+  "metadata": {
+    "abandonedBy": "caller"
+  },
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "component-destroyed"
+}
+
+----------------------------------------------------------------------
+[24/34] BI  theme_changed
+trigger: trackThemeChanged records theme_changed
+
+{
+  "eventName": "theme_changed",
+  "eventTime": "2026-09-04T20:59:20.989Z",
+  "metadata": {
+    "theme": "dark"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[25/34] BI  sidebar_toggled
+trigger: trackClick records sidebar_toggled
+
+{
+  "eventName": "sidebar_toggled",
+  "eventTime": "2026-09-04T20:59:20.992Z",
+  "metadata": {
+    "expanded": true
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[26/34] BI  theme_option_changed
+trigger: trackClick records theme_option_changed
+
+{
+  "eventName": "theme_option_changed",
+  "eventTime": "2026-09-04T20:59:20.994Z",
+  "metadata": {
+    "dimension": "color",
+    "value": "blue"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[27/34] BI  code_copied
+trigger: the first click of the pair is recorded
+
+{
+  "eventName": "code_copied",
+  "eventTime": "2026-09-04T20:59:20.995Z",
+  "metadata": {
+    "componentName": "cps-table"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[28/34] OBSERVATION  {"firstCallRecorded":true}
+trigger: an identical click within the dedup window is suppressed
+
+{
+  "firstCallRecorded": true
+}
+
+----------------------------------------------------------------------
+[29/34] BI  code_copied
+trigger: the same click after the dedup window elapses is recorded again
+
+{
+  "eventName": "code_copied",
+  "eventTime": "2026-09-04T20:59:20.997Z",
+  "metadata": {
+    "componentName": "cps-select"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[30/34] BI  code_copied
+trigger: the same click after the dedup window elapses is recorded again
+
+{
+  "eventName": "code_copied",
+  "eventTime": "2026-09-04T20:59:21.398Z",
+  "metadata": {
+    "componentName": "cps-select"
+  },
+  "application": "composition"
+}
+
+----------------------------------------------------------------------
+[31/34] SCENARIO  table-page-load  status=incomplete  delta=0ms
+trigger: `incomplete` — no composition page ever calls .incomplete()
+
+{
+  "scenarioId": "d9dabd59-e830-4042-9444-b1cc807c8cad",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "incomplete",
+  "startTime": "2026-09-04T20:59:20.998Z",
+  "endTime": "2026-09-04T20:59:20.998Z",
+  "delta": 0,
+  "elapsed": 2831,
+  "stepCount": 0,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2831,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2831,
+      "status": "incomplete",
+      "reason": "no-results"
+    }
+  ],
+  "application": "composition",
+  "sessionId": "audit-session",
+  "reason": "no-results"
+}
+
+----------------------------------------------------------------------
+[32/34] SCENARIO  table-page-load  status=success  delta=0ms
+trigger: `exceededStepsLimit` — no composition scenario ever opens 50+ steps
+
+{
+  "scenarioId": "90a53fdb-ac9f-46eb-a0af-53996d86a308",
+  "scenarioName": "table-page-load",
+  "feature": "table",
+  "status": "success",
+  "startTime": "2026-09-04T20:59:20.999Z",
+  "endTime": "2026-09-04T20:59:20.999Z",
+  "delta": 0,
+  "elapsed": 2833,
+  "stepCount": 55,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2832,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2833,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2833,
+      "status": "success"
+    },
+    {
+      "name": "fetch",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2833,
+      "status": "success"
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2833,
+      "status": "success"
+    }
+  ],
+  "previousStep": "fetch",
+  "application": "composition",
+  "sessionId": "audit-session",
+  "exceededStepsLimit": true
+}
+
+----------------------------------------------------------------------
+[33/34] SCENARIO  autocomplete-validate  status=failure  delta=0ms
+trigger: autocomplete-validate failure — onOptionSelected has no stubbable network seam
+
+{
+  "scenarioId": "f344d9fa-d90d-472d-81b3-6d0fc47865b0",
+  "scenarioName": "autocomplete-validate",
+  "feature": "autocomplete",
+  "status": "failure",
+  "startTime": "2026-09-04T20:59:21.001Z",
+  "endTime": "2026-09-04T20:59:21.001Z",
+  "delta": 0,
+  "elapsed": 2835,
+  "stepCount": 1,
+  "steps": [
+    {
+      "name": "scenario-start",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2834,
+      "status": "success"
+    },
+    {
+      "name": "validate",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2834,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "Selected option failed remote validation",
+        "stack": "Error: Selected option failed remote validation\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:729:22\n    at Observable.init [as _subscribe] (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/throwError.ts:123:68)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/tap.ts:185:16\n    at SafeSubscriber.<anonymous> (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/lift.ts:24:18)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:217:22\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at Observable._subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/defer.ts:54:36)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/te…"
+      }
+    },
+    {
+      "name": "scenario-end",
+      "startOffset": 0,
+      "endOffset": 0,
+      "stepDelta": 0,
+      "elapsed": 2835,
+      "status": "failure",
+      "error": {
+        "name": "Error",
+        "message": "Selected option failed remote validation",
+        "stack": "Error: Selected option failed remote validation\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:729:22\n    at Observable.init [as _subscribe] (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/throwError.ts:123:68)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/tap.ts:185:16\n    at SafeSubscriber.<anonymous> (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/lift.ts:24:18)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:217:22\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at Observable._subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/defer.ts:54:36)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/te…"
+      }
+    }
+  ],
+  "previousStep": "validate",
+  "application": "composition",
+  "sessionId": "audit-session",
+  "error": {
+    "name": "Error",
+    "message": "Selected option failed remote validation",
+    "stack": "Error: Selected option failed remote validation\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:729:22\n    at Observable.init [as _subscribe] (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/throwError.ts:123:68)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/operators/tap.ts:185:16\n    at SafeSubscriber.<anonymous> (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/lift.ts:24:18)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:217:22\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at Observable._subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/observable/defer.ts:54:36)\n    at Observable._trySubscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:235:19)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:225:18\n    at Object.errorContext (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/util/errorContext.ts:29:5)\n    at Observable.subscribe (/Users/madfamily/Documents/cps-shared-ui/node_modules/rxjs/src/internal/Observable.ts:211:5)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/te…"
+  }
+}
+
+----------------------------------------------------------------------
+[34/34] ERROR  recordError(Error: Simulated unexpected failure)
+trigger: an error-level log is also mirrored to AWS RUM when the config is turned on
+
+{
+  "name": "Error",
+  "message": "Simulated unexpected failure",
+  "stack": "Error: Simulated unexpected failure\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:762:14\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:168)\n    at _ProxyZoneSpec.onInvoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:1079:43)\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:56)\n    at _ZoneImpl.run (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:162:47)\n    at Object.wrappedFunc (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:407:38)\n    at Promise.finally.completed (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1561:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1501:10)\n    at _callCircusTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1011:40)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at _runTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:951:3)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:853:7"
+}
+
+
+======================================================================
+-> Log API  (CpsLoggerService)
+======================================================================
+LOG entries are the literal CpsLogRecord handed to CpsLogBatcher; the
+OBSERVATION entry is a synthetic assertion about redaction/minLevel
+behavior rather than a payload the library itself emits.
+
+----------------------------------------------------------------------
+[1/5] LOG  Application started  status=log
+trigger: logs "Application started" at boot
+
+{
+  "timestamp": "2026-09-04T20:59:19.569Z",
+  "level": "log",
+  "message": "Application started",
+  "logger": "app",
+  "context": "AppTelemetry",
+  "metadata": {
+    "language": "en-US"
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "1.0.0",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[2/5] LOG  Navigation failed  status=error
+trigger: NavigationStart -> NavigationError settles as failure, correlated to a log line
+
+{
+  "timestamp": "2026-09-04T20:59:20.943Z",
+  "level": "error",
+  "message": "Navigation failed",
+  "logger": "app",
+  "context": "route-navigation",
+  "metadata": {
+    "url": "/broken-chunk"
+  },
+  "error": {
+    "name": "Error",
+    "message": "ChunkLoadError: Loading chunk 12 failed."
+  },
+  "correlationId": "6b050bf3-bbb6-4993-a544-7c033702b841",
+  "application": "composition",
+  "environment": "production",
+  "version": "1.0.0",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[3/5] LOG  Error reading file  status=error
+trigger: a rejecting file read logs "Error reading file"
+
+{
+  "timestamp": "2026-09-04T20:59:20.939Z",
+  "level": "error",
+  "message": "Error reading file",
+  "logger": "file-upload",
+  "context": "FileUpload",
+  "error": {
+    "name": "Error",
+    "message": "Read permission denied by the OS",
+    "stack": "Error: Read permission denied by the OS\n    at Object.text (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:387:28)\n    at FileUploadPageComponent._processUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:89:22)\n    at FileUploadPageComponent.processExtraInfoUploadedFile (/Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/pages/file-upload-page/file-upload-page.component.ts:77:10)\n    at /Users/madfamily/Documents/cps-shared-ui/projects/composition/src/app/telemetry-trace.capture.spec.ts:471:8\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:168)\n    at _ProxyZoneSpec.onInvoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:1079:43)\n    at _ZoneDelegate.invoke (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:407:56)\n    at _ZoneImpl.run (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone.umd.js:162:47)\n    at Object.wrappedFunc (/Users/madfamily/Documents/cps-shared-ui/node_modules/zone.js/bundles/zone-testing.umd.js:407:38)\n    at Promise.finally.completed (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1561:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1501:10)\n    at _callCircusTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:1011:40)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at _runTest (/Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:951:3)\n    at /Users/madfamily/Documents/cps-shared-ui/node_modules/jest-circus/build/jestAdapterInit.js:853:7"
+  },
+  "correlationId": "87fdd6e4-0e7d-4b06-8984-693b9f83727b",
+  "application": "composition",
+  "environment": "production",
+  "version": "1.0.0",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[4/5] LOG  User submitted contact form  status=log
+trigger: the key denylist and value-pattern scan both redact, when scanValuePatterns is turned on
+
+{
+  "timestamp": "2026-09-04T20:59:21.005Z",
+  "level": "log",
+  "message": "User submitted contact form",
+  "logger": "app",
+  "metadata": {
+    "email": "[redacted]",
+    "password": "[redacted]",
+    "notes": "Card ending in [redacted], please call back."
+  },
+  "application": "composition",
+  "environment": "production",
+  "version": "1.0.0",
+  "sessionId": "audit-session"
+}
+
+----------------------------------------------------------------------
+[5/5] OBSERVATION  {"droppedCallRecorded":false,"warnCallRecorded":true}
+trigger: a log-level call is dropped once minLevel is raised to "warn"
+
+{
+  "droppedCallRecorded": false,
+  "warnCallRecorded": true
+}
+

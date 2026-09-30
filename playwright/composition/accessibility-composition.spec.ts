@@ -223,3 +223,75 @@ test.describe('Composition app shell - sidebar & focus flows', () => {
     });
   });
 });
+
+// ============================================================================
+// Telemetry diagnostics popup (cps-telemetry/diagnostics)
+// ============================================================================
+
+test.describe('Accessibility - telemetry diagnostics popup', () => {
+  async function openWithContent(page: Page) {
+    await page.goto('/');
+    await page.waitForSelector('#main-content');
+    await page.keyboard.press('Control+Alt+Shift+Digit8');
+    await page.locator('cps-diagnostics-dialog').waitFor();
+    // Generate an event, then open everything the popup can show.
+    await toggle(page).click();
+    const expand = page
+      .locator('cps-diagnostics-section')
+      .getByRole('button', { name: 'Expand row' })
+      .first();
+    await expand.click();
+    await page
+      .getByRole('button', { name: 'Add a filter to BI telemetry' })
+      .click();
+    await waitForAnimationsToFinish(page);
+  }
+
+  test('open popup, with a row expanded and the filter builder, has no violations', async ({
+    page,
+    makeAxeBuilder
+  }, testInfo) => {
+    await openWithContent(page);
+    const results = await makeAxeBuilder().include('.cps-dialog').analyze();
+    await testInfo.attach('diagnostics-popup-accessibility-scan', {
+      body: JSON.stringify(results, null, 2),
+      contentType: 'application/json'
+    });
+    expectNoViolations(results.violations);
+  });
+
+  test('open popup has no violations at mobile width', async ({
+    page,
+    makeAxeBuilder
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto('/');
+    await page.waitForSelector('#main-content');
+    await page.keyboard.press('Control+Alt+Shift+Digit8');
+    await page.locator('cps-diagnostics-dialog').waitFor();
+    await waitForAnimationsToFinish(page);
+    const results = await makeAxeBuilder().include('.cps-dialog').analyze();
+    expectNoViolations(results.violations);
+  });
+
+  test('the popup is named, and focus returns to the app when it closes', async ({
+    page
+  }) => {
+    await page.goto('/');
+    await page.waitForSelector('#main-content');
+    const link = page.locator('a[href="/button"]').first();
+    await link.focus();
+
+    await page.keyboard.press('Control+Alt+Shift+Digit8');
+    await expect(
+      page.getByRole('dialog', { name: 'Telemetry diagnostics' })
+    ).toBeVisible();
+    await expect(
+      page.getByRole('textbox', { name: 'Search BI telemetry events' })
+    ).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(page.locator('cps-diagnostics-dialog')).toHaveCount(0);
+    await expect(link).toBeFocused();
+  });
+});

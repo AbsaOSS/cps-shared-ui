@@ -37,9 +37,9 @@
       ariaLabel="Upload pictures or PDFs"
       width="31.25rem"
       fileNameTooltipOffset="0.9375rem"
-      [fileProcessingCallback]="processUploadedFile"
+      [fileProcessingCallback]="processExtraInfoUploadedFile"
       (fileProcessingFailed)="onFileProcessingFailed($event)"
-      (fileProcessingCancelled)="onFileProcessingCancelled($event)"
+      (fileProcessingCancelled)="onExtraInfoFileProcessingCancelled($event)"
       (fileUploadFailed)="onFileUploadFailed($event)"
       (fileUploaded)="onFileUploaded($event)"
       (fileProcessed)="onFileProcessed($event)"
@@ -58,6 +58,7 @@
       width="31.25rem"
       [fileProcessingCallback]="processFailingUploadedFile"
       (fileProcessingFailed)="onFileProcessingFailed($event)"
+      (fileProcessingCancelled)="onFailingFileProcessingCancelled()"
       (fileUploaded)="onFileUploaded($event)">
     </cps-file-upload>
   </app-code-example>
@@ -75,9 +76,9 @@
         width="31.25rem"
         fileNameTooltipOffset="0.9375rem"
         [disabled]="isDisabled"
-        [fileProcessingCallback]="processUploadedFile"
+        [fileProcessingCallback]="processDisabledUploadedFile"
         (fileProcessingFailed)="onFileProcessingFailed($event)"
-        (fileProcessingCancelled)="onFileProcessingCancelled($event)"
+        (fileProcessingCancelled)="onDisabledFileProcessingCancelled($event)"
         (fileUploadFailed)="onFileUploadFailed($event)"
         (fileUploaded)="onFileUploaded($event)"
         (fileProcessed)="onFileProcessed($event)"
