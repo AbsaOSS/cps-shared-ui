@@ -753,6 +753,9 @@ export class CpsScenario {
    * independent of whether the scenario ever settles.
    *
    * A no-op when `userTimings` is off or `markCleanupFallbackMs` is `0`.
+   * Measured from the scenario's start and, like {@link scheduleTimeout},
+   * rescheduled in hops of at most `setTimeout`'s 32-bit limit, so a longer
+   * fallback is honoured rather than firing after about 24.8 days.
    *
    * This clears marks only — it does not settle the scenario. A scenario
    * left unsettled this way never fires {@link CpsScenarioDeps.onSettled},
@@ -765,13 +768,19 @@ export class CpsScenario {
       return;
     }
 
+    const remainingMs = Math.max(0, fallbackMs - (cpsNow() - this.startedAt));
+
     this.markCleanupTimer = setTimeout(
       () => {
         this.markCleanupTimer = undefined;
+        if (remainingMs > MAX_TIMEOUT_MS) {
+          this.scheduleMarkCleanupFallback();
+          return;
+        }
         cpsClearMarks(this.timingMarks);
         this.timingMarks.length = 0;
       },
-      Math.min(fallbackMs, MAX_TIMEOUT_MS)
+      Math.min(remainingMs, MAX_TIMEOUT_MS)
     );
   }
 

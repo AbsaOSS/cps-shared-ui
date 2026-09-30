@@ -1820,8 +1820,13 @@ describe('CpsScenarioTelemetryService', () => {
     };
     const realPerformance = globalThis.performance;
 
-    /** jsdom has no mark/measure, so the API is installed for these tests. */
+    /**
+     * jsdom has no mark/measure, so the API is installed for these tests.
+     * The clock is whichever `performance` is current — Jest's fake one
+     * after `useFakeTimers()` — so time advanced by the test is time seen.
+     */
     function installPerf(): void {
+      const clock = globalThis.performance;
       perfApi = {
         mark: jest.fn(),
         measure: jest.fn(),
@@ -1831,8 +1836,8 @@ describe('CpsScenarioTelemetryService', () => {
       Object.defineProperty(globalThis, 'performance', {
         value: {
           ...perfApi,
-          now: () => realPerformance.now(),
-          timeOrigin: realPerformance.timeOrigin,
+          now: () => clock.now(),
+          timeOrigin: clock.timeOrigin,
           getEntriesByName: () => []
         },
         // required so later tests can still redefine window.performance
@@ -1996,6 +2001,30 @@ describe('CpsScenarioTelemetryService', () => {
       jest.advanceTimersByTime(1000);
 
       expect(perfApi.clearMarks).not.toHaveBeenCalled();
+
+      jest.useRealTimers();
+    });
+
+    it('should reschedule rather than clear early when a clamped fallback hop fires', () => {
+      jest.useFakeTimers();
+      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+      configure({
+        defaultTimeoutMs: 0,
+        userTimings: true,
+        markCleanupFallbackMs: thirtyDaysMs
+      });
+      installPerf();
+
+      service.start({ name: 'load' }).step('fetch');
+
+      jest.advanceTimersByTime(2_147_483_647);
+      expect(perfApi.clearMarks).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(thirtyDaysMs - 2_147_483_647 - 1);
+      expect(perfApi.clearMarks).not.toHaveBeenCalled();
+
+      jest.advanceTimersByTime(1);
+      expect(perfApi.clearMarks).toHaveBeenCalled();
 
       jest.useRealTimers();
     });
