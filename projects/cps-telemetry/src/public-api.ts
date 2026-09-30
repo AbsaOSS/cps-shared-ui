@@ -43,6 +43,7 @@ export {
   CpsLogQuery
 } from './lib/providers/cps-log-api.provider/cps-log-api.provider';
 export { CpsNoopLogApiProvider } from './lib/providers/cps-noop-log-api.provider/cps-noop-log-api.provider';
+export { CpsBroadcastLogApiProvider } from './lib/providers/cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 
 // Models
 export {
@@ -103,7 +104,6 @@ export { CpsScenarioTelemetryService } from './lib/services/cps-scenario-telemet
 // Sinks
 export { CpsTelemetryBroadcastHost } from './lib/sinks/cps-broadcast/cps-broadcast-host.service';
 export { CpsBroadcastTelemetrySink } from './lib/sinks/cps-broadcast/cps-broadcast-telemetry.sink';
-export { CpsBroadcastLogApiProvider } from './lib/sinks/cps-broadcast/cps-broadcast-log-api.provider';
 export {
   CPS_BROADCAST_CHANNEL,
   CPS_DEFAULT_BROADCAST_CHANNEL

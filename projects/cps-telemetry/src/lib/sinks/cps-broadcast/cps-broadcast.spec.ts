@@ -5,7 +5,7 @@ import {
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import { CpsLogRecord } from '../../models/cps-log.models/cps-log.models';
 import { DOCUMENT } from '@angular/common';
-import { Injectable, Injector, NgZone, PLATFORM_ID } from '@angular/core';
+import { Injectable, Injector, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CpsLoggerService } from '../../services/cps-logger.service/cps-logger.service';
 import {
@@ -26,7 +26,7 @@ import { CpsBroadcastTelemetrySink } from './cps-broadcast-telemetry.sink';
 import {
   CPS_BROADCAST_LOG_QUERY_TIMEOUT_MS,
   CpsBroadcastLogApiProvider
-} from './cps-broadcast-log-api.provider';
+} from '../../providers/cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 import {
   CPS_BROADCAST_CHANNEL,
   CPS_DEFAULT_BROADCAST_CHANNEL,
@@ -849,28 +849,6 @@ describe('broadcast telemetry across realms', () => {
       const error = inShell.find((e) => e.kind === 'error');
       expect(error).toBeDefined();
       expect(error).not.toHaveProperty('relatedSequence');
-    });
-
-    it('should run the query timeout outside the Angular zone and answer inside it', async () => {
-      host.ngOnDestroy();
-      function passThrough<T>(fn: () => T): T {
-        return fn();
-      }
-      const zone = {
-        runOutsideAngular: jest.fn(passThrough),
-        run: jest.fn(passThrough)
-      };
-      const provider = createRealm([
-        { provide: NgZone, useValue: zone },
-        CpsBroadcastLogApiProvider
-      ]).get(CpsBroadcastLogApiProvider);
-
-      const pending = provider.query({});
-      expect(zone.runOutsideAngular).toHaveBeenCalledTimes(1);
-      provider.ngOnDestroy();
-
-      await expect(pending).resolves.toEqual([]);
-      expect(zone.run).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -12,7 +12,7 @@ import {
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import { CpsBroadcastTelemetrySink } from './cps-broadcast-telemetry.sink';
-import { CpsBroadcastLogApiProvider } from './cps-broadcast-log-api.provider';
+import { CpsBroadcastLogApiProvider } from '../../providers/cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 import {
   CpsJsonObject,

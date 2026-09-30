@@ -3,7 +3,7 @@ import { CpsLogRecord } from '../../models/cps-log.models/cps-log.models';
 import {
   CpsLogApiProvider,
   CpsLogQuery
-} from '../../providers/cps-log-api.provider/cps-log-api.provider';
+} from '../cps-log-api.provider/cps-log-api.provider';
 import {
   cpsSafeVoid,
   cpsUuid
@@ -13,7 +13,7 @@ import {
   cpsConnectBroadcastChannel,
   cpsIsBroadcastLogRecord,
   cpsIsBroadcastMessage
-} from './cps-broadcast.messages';
+} from '../../sinks/cps-broadcast/cps-broadcast.messages';
 
 /**
  * How long a follower waits for the host to answer a log query before

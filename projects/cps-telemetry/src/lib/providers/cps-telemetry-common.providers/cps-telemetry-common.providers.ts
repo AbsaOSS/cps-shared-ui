@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { CpsTelemetryBroadcastHost } from '../../sinks/cps-broadcast/cps-broadcast-host.service';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
-import { CpsBroadcastLogApiProvider } from '../../sinks/cps-broadcast/cps-broadcast-log-api.provider';
+import { CpsBroadcastLogApiProvider } from '../cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
 import { CpsNoopTelemetrySink } from '../../sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';

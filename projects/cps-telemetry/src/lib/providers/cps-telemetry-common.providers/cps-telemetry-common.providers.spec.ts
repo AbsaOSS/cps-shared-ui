@@ -19,7 +19,7 @@ import { CPS_BI_TELEMETRY_CONFIG } from '../../config/cps-bi-telemetry.config/cp
 import { CPS_LOG_CONFIG } from '../../config/cps-log.config/cps-log.config';
 import { CPS_SCENARIO_TELEMETRY_CONFIG } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
-import { CpsBroadcastLogApiProvider } from '../../sinks/cps-broadcast/cps-broadcast-log-api.provider';
+import { CpsBroadcastLogApiProvider } from '../cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 import { CpsNoopLogApiProvider } from '../cps-noop-log-api.provider/cps-noop-log-api.provider';
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
 import {
