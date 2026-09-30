@@ -591,6 +591,21 @@ describe('broadcast telemetry across realms', () => {
       expect(b.get(CpsTelemetrySink).getUserId()).toBeUndefined();
     });
 
+    it("should sign out every realm when a fragment sets ''", async () => {
+      const a = createFragment();
+      const b = createFragment();
+      await CpsBroadcastChannelStub.settle();
+
+      a.get(CpsTelemetrySink).setUserId('user-42');
+      await CpsBroadcastChannelStub.settle();
+
+      a.get(CpsTelemetrySink).setUserId('');
+      await CpsBroadcastChannelStub.settle();
+
+      expect(shellSink.userId).toBe('');
+      expect(b.get(CpsTelemetrySink).getUserId()).toBe('');
+    });
+
     it('should announce a user id set directly on the shell, not only one relayed from a fragment', async () => {
       const fragment = createFragment();
       await CpsBroadcastChannelStub.settle();

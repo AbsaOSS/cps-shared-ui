@@ -891,7 +891,9 @@ logger reads them from there whenever it stamps a record, so a log line and
 a RUM event can never disagree about who is signed in or which session this
 is. There is no separate context service holding its own copy of `userId` —
 a second place for the same value to live would only ever drift out of sync
-with the sink's own. Sign-out is `setUserId(undefined)`, and correlation
+with the sink's own. Sign-out is `setUserId(undefined)` — or `''`, which
+identifies nobody and is never pinned as an id that every such user would
+share — and correlation
 runs only through `getSessionId()`/`setUserId()`.
 
 The API makes correlation the path of least resistance rather than

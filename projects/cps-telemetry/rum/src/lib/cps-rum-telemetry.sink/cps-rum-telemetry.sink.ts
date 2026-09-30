@@ -255,8 +255,8 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
    * has no inverse), which emits a `session_start` event and re-rolls
    * sampling.
    *
-   * @param userId the application's own user identifier, or `undefined` on
-   *   sign-out
+   * @param userId the application's own user identifier, or `undefined`
+   *   (or `''`) on sign-out
    */
   setUserId(userId: string | undefined): void {
     cpsSafeVoid('rum.setUserId', () => {

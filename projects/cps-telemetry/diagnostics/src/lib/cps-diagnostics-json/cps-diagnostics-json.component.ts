@@ -7,9 +7,20 @@ import {
 } from '@angular/core';
 import { CpsButtonComponent } from 'cps-ui-kit';
 import { cpsSafeStringify } from '../cps-diagnostics-export/cps-diagnostics-export';
+import { CPS_DEFAULT_DIAGNOSTICS_CONFIG } from '../cps-diagnostics-store/cps-diagnostics-store';
 
 /** Characters shown of a payload too large to show in full. */
 const TRUNCATED_VIEW_CHARS = 64 * 1024;
+
+/**
+ * The first `length` characters of `text`, one fewer if the cut would split
+ * a surrogate pair — half an emoji renders as a replacement character.
+ */
+function cutAt(text: string, length: number): string {
+  const last = text.charCodeAt(length - 1);
+  const isHighSurrogate = last >= 0xd800 && last <= 0xdbff;
+  return text.slice(0, isHighSurrogate ? length - 1 : length);
+}
 
 /**
  * A payload as indented JSON, with a copy button.
@@ -31,8 +42,13 @@ export class CpsDiagnosticsJsonComponent {
   /** Accessible name of the scrollable block. */
   readonly label = input('Event payload');
 
-  /** Serialized size above which the view is truncated. */
-  readonly maxChars = input(256 * 1024);
+  /** JSON length, in characters, above which the view is truncated. */
+  readonly maxChars = input(
+    CPS_DEFAULT_DIAGNOSTICS_CONFIG.maxPayloadCharsInView
+  );
+
+  /** How much a truncated view shows, as the notice words it. */
+  protected readonly shownChars = TRUNCATED_VIEW_CHARS.toLocaleString('en-US');
 
   protected readonly copied = signal<'idle' | 'copied' | 'failed'>('idle');
 
@@ -51,7 +67,7 @@ export class CpsDiagnosticsJsonComponent {
   );
 
   protected readonly shown = computed(() =>
-    this.truncated() ? this.full().slice(0, TRUNCATED_VIEW_CHARS) : this.full()
+    this.truncated() ? cutAt(this.full(), TRUNCATED_VIEW_CHARS) : this.full()
   );
 
   protected async copy(): Promise<void> {

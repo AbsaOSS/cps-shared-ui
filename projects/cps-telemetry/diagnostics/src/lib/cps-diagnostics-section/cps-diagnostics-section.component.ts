@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   input,
+  linkedSignal,
   signal
 } from '@angular/core';
 import {
@@ -14,7 +15,10 @@ import {
   CpsTableComponent
 } from 'cps-ui-kit';
 import { CpsDiagnosticsSectionId } from '../cps-diagnostics.models/cps-diagnostics.models';
-import { CpsDiagnosticsStore } from '../cps-diagnostics-store/cps-diagnostics-store';
+import {
+  CPS_DEFAULT_DIAGNOSTICS_CONFIG,
+  CpsDiagnosticsStore
+} from '../cps-diagnostics-store/cps-diagnostics-store';
 import { CpsDiagnosticsJsonComponent } from '../cps-diagnostics-json/cps-diagnostics-json.component';
 import { CpsDiagnosticsFilterBarComponent } from '../cps-diagnostics-filter-bar/cps-diagnostics-filter-bar.component';
 import { CpsDiagnosticsExporter } from '../cps-diagnostics-export/cps-diagnostics-exporter';
@@ -68,10 +72,11 @@ export class CpsDiagnosticsSectionComponent {
   private readonly exporter = inject(CpsDiagnosticsExporter);
 
   readonly section = input.required<CpsDiagnosticsSectionId>();
-  /** Serialized size above which a payload is shown truncated. */
-  readonly maxPayloadChars = input(256 * 1024);
+  /** JSON length, in characters, above which a payload is shown truncated. */
+  readonly maxPayloadChars = input(
+    CPS_DEFAULT_DIAGNOSTICS_CONFIG.maxPayloadCharsInView
+  );
 
-  protected readonly first = signal(0);
   protected readonly copyState = signal<'idle' | 'copied' | 'failed'>('idle');
 
   protected readonly text = computed(() => SECTION_TEXT[this.section()]);
@@ -84,6 +89,19 @@ export class CpsDiagnosticsSectionComponent {
     return this.store
       .filtered()
       [this.section()].map((entry) => cpsDiagnosticsRow(entry, columns));
+  });
+
+  /**
+   * The paginator's offset. Kept while it still lands on a row; otherwise —
+   * a filter or a clear shrinking the rows past it — back to the first page,
+   * where the newest events are. The table won't do this itself: PrimeNG
+   * steps back one page at most, so page four filtered down to one page
+   * would show an empty table.
+   */
+  protected readonly first = linkedSignal<readonly unknown[], number>({
+    source: this.rows,
+    computation: (rows, previous) =>
+      previous && previous.value < rows.length ? previous.value : 0
   });
 
   private readonly captured = computed(

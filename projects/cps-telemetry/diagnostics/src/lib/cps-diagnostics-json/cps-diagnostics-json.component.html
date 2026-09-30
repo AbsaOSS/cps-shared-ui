@@ -24,7 +24,8 @@
   </div>
   @if (truncated()) {
     <p class="cps-diagnostics-json__notice">
-      Large payload: showing the first 64 KB. The download contains all of it.
+      Large payload: showing the first {{ shownChars }} characters. The download
+      contains all of it.
     </p>
   }
   <pre

@@ -72,7 +72,7 @@ export class CpsDiagnosticsDialogComponent {
   };
 
   protected readonly sections = CPS_DIAGNOSTICS_SECTIONS;
-  protected readonly maxPayloadChars = this.config.maxPayloadBytesInView;
+  protected readonly maxPayloadChars = this.config.maxPayloadCharsInView;
 
   protected readonly since = computed(() =>
     cpsDiagnosticsTime(this.store.startedAt()).slice(0, 8)

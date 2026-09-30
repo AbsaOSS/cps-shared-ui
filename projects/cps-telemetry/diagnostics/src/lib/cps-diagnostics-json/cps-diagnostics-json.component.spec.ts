@@ -33,8 +33,36 @@ describe('CpsDiagnosticsJsonComponent', () => {
 
     expect(pre().textContent!.length).toBe(64 * 1024);
     expect(fixture.nativeElement.textContent).toContain(
+      'showing the first 65,536 characters'
+    );
+    expect(fixture.nativeElement.textContent).toContain(
       'The download contains all of it.'
     );
+  });
+
+  it('should measure the limit in characters, not bytes', () => {
+    // 600 Cyrillic letters: about 600 characters of JSON, but 1,200+ bytes.
+    fixture.componentRef.setInput('value', { text: 'ж'.repeat(600) });
+    fixture.componentRef.setInput('maxChars', 1000);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.textContent).not.toContain('Large payload');
+    expect(pre().textContent).toContain('ж'.repeat(600));
+  });
+
+  it('should not cut a truncated view through the middle of a surrogate pair', () => {
+    const before = '{\n  "big": "';
+    // Lines the first emoji up so the cut would fall inside it.
+    const padding = 'x'.repeat(64 * 1024 - 1 - before.length);
+    fixture.componentRef.setInput('value', {
+      big: padding + '😀'.repeat(10)
+    });
+    fixture.componentRef.setInput('maxChars', 1000);
+    fixture.detectChanges();
+
+    const shown = pre().textContent!;
+    expect(shown.length).toBe(64 * 1024 - 1);
+    expect(shown.endsWith('x')).toBe(true);
   });
 
   it('should render a circular value instead of failing', () => {

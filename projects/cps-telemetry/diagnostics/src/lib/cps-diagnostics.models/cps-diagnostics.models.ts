@@ -51,10 +51,13 @@ export interface CpsTelemetryDiagnosticsConfig {
   maxEventsPerSection: number;
 
   /**
-   * Payloads larger than this, serialized, are shown truncated. The
-   * download always contains them in full.
+   * Payloads whose JSON is longer than this many characters are shown
+   * truncated. The download always contains them in full.
+   *
+   * Characters (UTF-16 code units, JavaScript's `length`), not bytes: the
+   * limit protects rendering, which costs by the length of the text.
    */
-  maxPayloadBytesInView: number;
+  maxPayloadCharsInView: number;
 }
 
 /** @group Tokens */
@@ -80,8 +83,8 @@ export interface CpsDiagnosticsEntry {
   event: CpsTelemetryObservedEvent;
   section: CpsDiagnosticsSectionId;
   fields: readonly CpsDiagnosticsField[];
-  /** Serialized size of the payload, in characters. */
-  sizeBytes: number;
+  /** Length of the payload's JSON, in characters (UTF-16 code units). */
+  sizeChars: number;
   /** Set when the event could not be prepared for display. */
   renderError?: string;
 }

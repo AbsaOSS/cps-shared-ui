@@ -47,10 +47,13 @@ export abstract class CpsTelemetrySink {
 
   /**
    * Associates subsequent telemetry with an application user identifier, or
-   * with nobody. `undefined` means signed out.
+   * with nobody. `undefined` means signed out, and so does `''`: an empty
+   * string identifies nobody, and treating it as sign-out means an
+   * application clearing the id with `''` really stops attributing
+   * telemetry to the previous user.
    *
-   * @param userId the application's own user identifier, or `undefined` to
-   *   stop attributing telemetry to the previous one
+   * @param userId the application's own user identifier, or `undefined`
+   *   (or `''`) to stop attributing telemetry to the previous one
    */
   abstract setUserId(userId: string | undefined): void;
 

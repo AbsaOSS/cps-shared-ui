@@ -29,7 +29,7 @@ export const CPS_DEFAULT_DIAGNOSTICS_CONFIG: Omit<
 > = {
   enabled: true,
   maxEventsPerSection: 500,
-  maxPayloadBytesInView: 256 * 1024
+  maxPayloadCharsInView: 256 * 1024
 };
 
 /** How often arriving events reach the screen, in milliseconds. */
@@ -250,14 +250,14 @@ export class CpsDiagnosticsStore {
         event,
         section,
         fields: cpsFlattenEvent(event),
-        sizeBytes: cpsSafeStringify(event.payload).length
+        sizeChars: cpsSafeStringify(event.payload).length
       };
     } catch (error) {
       return {
         event,
         section,
         fields: [],
-        sizeBytes: 0,
+        sizeChars: 0,
         renderError: error instanceof Error ? error.message : String(error)
       };
     }

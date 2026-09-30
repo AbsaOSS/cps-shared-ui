@@ -778,6 +778,9 @@ export class AuthService {
 }
 ```
 
+`setUserId('')` signs out too: an empty string identifies nobody, so it is
+never pinned as an id.
+
 Sign-out is not just cosmetic. `pinUserId` has no inverse, so the RUM sink
 starts a fresh session with a fresh anonymous id — otherwise the client would
 keep attributing everything to the person who just left, which matters most

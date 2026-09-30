@@ -834,6 +834,27 @@ describe('CpsRumTelemetrySink', () => {
       expect(awsRumInstance.pinUserId).not.toHaveBeenCalled();
     });
 
+    it("should treat '' as sign-out, not as a user id", async () => {
+      await sink.init();
+      sink.setUserId('user-42');
+      awsRumInstance.pinUserId.mockClear();
+
+      sink.setUserId('');
+
+      expect(awsRumInstance.pinUserId).not.toHaveBeenCalled();
+      expect(awsRumInstance.startSession).toHaveBeenCalledWith({
+        userId: expect.any(String)
+      });
+    });
+
+    it("should not pin '' when the client starts later", async () => {
+      sink.setUserId('');
+
+      await sink.init();
+
+      expect(awsRumInstance.pinUserId).not.toHaveBeenCalled();
+    });
+
     it('should pin a user id set before init once the client exists', async () => {
       sink.setUserId('user-42');
       expect(awsRumInstance.pinUserId).not.toHaveBeenCalled();
