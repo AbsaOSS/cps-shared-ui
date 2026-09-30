@@ -106,9 +106,12 @@ nothing, say so explicitly:
 ```ts
 providers: [
   provideCpsTelemetrySink('noop'),
-  { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend }
+  { provide: CPS_LOG_API_PROVIDER, useClass: CpsNoopLogApiProvider }
 ];
 ```
+
+`CpsNoopLogApiProvider` is the log counterpart of `'noop'`: records are
+discarded and `query()` finds none.
 
 `CpsLoggerService` is the one exception to the sink rule above. Its actual
 destination is the log API provider, and a sink is only there to enrich it —
@@ -793,14 +796,15 @@ its own slice of the event budget and its own copy of the SDK.
 Instead, one realm hosts and the rest forward to it over `BroadcastChannel`:
 
 ```ts
-// shell — owns the only AWS client
+// shell — owns the only AWS client and the only log backend
 providers: [
   provideCpsTelemetry({ application: 'shell', environment: 'prod', version }),
   provideCpsTelemetryRumSink(),
+  { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend },
   provideCpsTelemetryBroadcastHost()
 ];
 
-// fragment — no AWS client, no SDK bundle, no broker call
+// fragment — no AWS client, no SDK bundle, no broker call, no log backend
 providers: [
   provideCpsTelemetry({ application: 'cart', environment: 'prod', version }),
   provideCpsTelemetrySink('broadcast')
@@ -809,6 +813,27 @@ providers: [
 
 Code inside a fragment does not change: same services, same calls. One
 session, one budget, one bundle.
+
+Log records go the same way. `'broadcast'` mode also binds
+`CPS_LOG_API_PROVIDER` to `CpsBroadcastLogApiProvider`, which posts each
+record to the shell; the shell's own log provider ships it. `flush()` is
+forwarded too, and `query()` is answered by the shell's provider — or
+resolves `[]` if no shell answers within 10 seconds. The shell therefore
+needs a log provider of its own: `provideCpsTelemetryBroadcastHost()`
+without one fails at bootstrap (`NG0201`) rather than silently dropping its
+fragments' logs. A composed page with no logging at all says so explicitly:
+
+```ts
+// shell — hosts fragments, keeps no logs
+providers: [
+  provideCpsTelemetryRumSink(),
+  { provide: CPS_LOG_API_PROVIDER, useClass: CpsNoopLogApiProvider },
+  provideCpsTelemetryBroadcastHost()
+];
+```
+
+Fragments' log records are then discarded in the shell too. A fragment that
+never injects `CpsLoggerService` sends none in the first place.
 
 ### Connecting a fragment
 
@@ -838,11 +863,12 @@ bootstrapApplication(FragmentRoot, {
 
 **What a fragment must not provide**
 
-| Do not                               | Why                                                                                                                                                                                                                                                                                                                                                                                         |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid                                                                                                                                                                                                                                                                              |
-| `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                                                                                                                                                                                                                                                                                                 |
-| `provideCpsTelemetryBroadcastHost()` | Only one realm should host — a fragment providing it too logs a console warning (`a second telemetry host is active on channel "..." in this document`) and then just wins or loses a pointless leader election alongside the real host. That warning is same-document detection only — it never fires for the _shell_ itself running in more than one tab, which is legitimate (see below) |
+| Do not                               | Why                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions, exactly what this arrangement is meant to avoid                                                                                                                                                                                                                                                                                                                                                                                             |
+| `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `CPS_LOG_API_PROVIDER`               | `'broadcast'` mode already binds it to the forwarding provider. One bound after it wins, and the fragment then ships its own logs — the shell, and its diagnostics popup, never see them                                                                                                                                                                                                                                                                                                                   |
+| `provideCpsTelemetryBroadcastHost()` | Only one realm should host. Beside `'broadcast'` mode it would receive its own realm's messages and forward them again, forever — so it detects that, logs a console warning (`... so it cannot also host it; the host stays inactive ...`) and does nothing. Two hosts in one realm log `a second telemetry host is active on channel "..." in this document`; that is same-document detection only — it never fires for the _shell_ itself running in more than one tab, which is legitimate (see below) |
 
 The shell itself can safely be open in more than one tab without ever
 double-recording one event: `BroadcastChannel` is origin-wide, so every
@@ -982,9 +1008,10 @@ tab's.
 ### A fragment that also deploys standalone
 
 Embedded, a fragment has to forward so the composed page keeps a single
-session. Deployed on its own, there is no shell to forward to, so it needs its
-own client. Which one applies is a fact about the deployment, so read it from
-configuration instead of trying to detect it:
+session and a single log backend. Deployed on its own, there is no shell to
+forward to, so it needs its own client and its own log backend. Which one
+applies is a fact about the deployment, so read it from configuration instead
+of trying to detect it:
 
 ```ts
 providers: [
@@ -995,20 +1022,29 @@ providers: [
     eventNamespace: 'com.my-app'
   }),
 
-  environment.embedded
-    ? provideCpsTelemetrySink('broadcast')
-    : provideCpsTelemetryRumSink(),
+  ...(environment.embedded
+    ? // Events and log records both go to the shell.
+      [provideCpsTelemetrySink('broadcast')]
+    : [
+        provideCpsTelemetryRumSink(),
+        { provide: CPS_LOG_API_PROVIDER, useExisting: CartLogBackend }
+      ]),
 
   // Used only when standalone; harmless when embedded.
   { provide: CPS_RUM_CREDENTIALS_PROVIDER, useExisting: CartRumCredentials }
 ];
 ```
 
-| Mode          | Sends to                                                        | Needs                                                |
-| ------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
-| `'broadcast'` | The shell's host, over `BroadcastChannel`                       | A shell running `provideCpsTelemetryBroadcastHost()` |
-| RUM           | AWS CloudWatch RUM directly, via `provideCpsTelemetryRumSink()` | `CPS_RUM_CREDENTIALS_PROVIDER`                       |
-| `'noop'`      | Nowhere — everything runs, nothing ships                        | Nothing. Useful for local development                |
+Keep the log provider inside the standalone branch. `'broadcast'` mode binds
+`CPS_LOG_API_PROVIDER` itself, and one listed after it wins: bound
+unconditionally, the fragment would ship its own logs even when embedded,
+and the shell — its diagnostics popup included — would never see them.
+
+| Mode          | Events go to                                                    | Log records go to                          | Needs                                                |
+| ------------- | --------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------------------- |
+| `'broadcast'` | The shell's host, over `BroadcastChannel`                       | The shell's log provider, through its host | A shell running `provideCpsTelemetryBroadcastHost()` |
+| RUM           | AWS CloudWatch RUM directly, via `provideCpsTelemetryRumSink()` | The fragment's own `CPS_LOG_API_PROVIDER`  | `CPS_RUM_CREDENTIALS_PROVIDER`, a log provider       |
+| `'noop'`      | Nowhere — everything runs, nothing ships                        | The fragment's own `CPS_LOG_API_PROVIDER`  | A log provider. Useful for local development         |
 
 Use `provideCpsTelemetrySink('broadcast', { channelName })` if the shell uses
 a custom channel.
@@ -1195,8 +1231,10 @@ What it does **not** show:
 - Whether the server accepted an event. It shows what was handed to the
   sink or log provider; RUM can still drop events, for example when it
   samples a session out or reaches its event limit.
-- In a composed page, fragments' log records: logs don't cross realms. Their
-  BI and scenario events do, marked with `↪` and the fragment's name.
+
+In a composed page, the shell's popup also shows what its fragments send —
+BI and scenario events and log records alike, since the shell delivers them
+— each marked with `↪` and the fragment's name.
 
 ### Privacy
 

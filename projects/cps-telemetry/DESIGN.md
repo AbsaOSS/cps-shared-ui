@@ -1605,7 +1605,8 @@ the same fail-open block, so a hand-off that throws is not shown and
 nothing is ever sent twice. Five sites publish:
 `CpsScenario.emit()` (records and step events), `CpsBiTelemetryService`,
 `CpsLoggerService` delivery to the log provider, its `mirrorErrorsToRum`
-error, and `CpsTelemetryBroadcastHost` forwarding a fragment's events. A
+error, and `CpsTelemetryBroadcastHost` forwarding a fragment's events and
+log records. A
 subscriber gets a deep copy, because the step event shares objects with the
 live scenario and the RUM sink buffers by reference. Alternatives were
 rejected: decorating `CpsTelemetrySink` in DI would fight the
@@ -1679,16 +1680,22 @@ flowchart LR
       S[provideCpsTelemetryRumSink] --> R[AwsRum]
       H[provideCpsTelemetryBroadcastHost]
       H --> S
+      H --> L[CPS_LOG_API_PROVIDER]
     end
     subgraph f1 [Fragment realm]
       A[CpsBroadcastTelemetrySink]
+      AL[CpsBroadcastLogApiProvider]
     end
     subgraph f2 [Fragment realm]
       B[CpsBroadcastTelemetrySink]
+      BL[CpsBroadcastLogApiProvider]
     end
     A -- BroadcastChannel --> H
+    AL -- BroadcastChannel --> H
     B -- BroadcastChannel --> H
+    BL -- BroadcastChannel --> H
     R --> AWS[AWS RUM]
+    L --> LOGS[Log backend]
 ```
 
 ```ts
@@ -1696,6 +1703,7 @@ flowchart LR
 providers: [
   provideCpsTelemetry({ application: 'shell', environment: 'prod', version }),
   provideCpsTelemetryRumSink(),
+  { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend },
   provideCpsTelemetryBroadcastHost()
 ];
 
@@ -1726,6 +1734,70 @@ learned the session id would carry a stale user id (or the reverse) until
 something else happened to trigger a full re-announce. `getSessionId()`/
 `getUserId()` in a follower return `undefined` for the one task before the
 answer arrives.
+
+### Log records
+
+Logs take the same route as events. `provideCpsTelemetrySink('broadcast')`
+binds `CPS_LOG_API_PROVIDER` to `CpsBroadcastLogApiProvider` along with the
+sink, so a fragment needs no log backend, no credentials for one, and no
+provider of its own. Each record is built and redacted in the fragment by
+`CpsLoggerService`, exactly as in any realm, then posted as a `log`
+message; the host hands it to _its_ `CPS_LOG_API_PROVIDER` and tells its
+`CpsTelemetryMonitor`, marked as forwarded. One backend receives every
+realm's records, the same way one RUM client receives every realm's events,
+and the shell's diagnostics popup sees fragment logs because the shell is
+what delivers them.
+
+The provider's other two calls cross too:
+
+- **`flush()`** posts `log-flush`; the host calls its provider's `flush`.
+- **`query()`** is a request and an answer. The fragment posts
+  `log-query` with a fresh id, the leader host runs its provider's `query`
+  and posts `log-query-result` with the same id, and the fragment resolves
+  the matching promise. Every follower hears every answer and ignores ids it
+  did not ask. The host always answers — `[]` when it has no provider or
+  the provider throws or rejects — so a follower waits for its timeout
+  (`CPS_BROADCAST_LOG_QUERY_TIMEOUT_MS`, 10 s) only when no host is
+  listening at all, and resolves `[]` at once when no channel could be
+  opened. Records in an answer come from the host's backend, not this
+  library, so the fragment keeps only those that pass
+  `cpsIsBroadcastLogRecord`. The timeout runs outside Angular's zone, so a
+  query nobody answers doesn't hold the application unstable — and so
+  `whenStable`, hydration and `registerWhenStable` waiting — for its whole
+  length; the result is delivered back inside the zone.
+
+The host requires `CPS_LOG_API_PROVIDER`, like `CpsLoggerService` does
+(§10): a shell hosting fragments without one fails at injection. Dropping
+forwarded records with a console warning was the alternative, and it is
+exactly the failure mode that section rejects — a composed page running
+perfectly while its fragments' logs go nowhere, noticed only when someone
+goes looking for them. The price is that a shell hosting fragments binds a
+log provider even if it never logs itself — for a page with no logging at
+all, `CpsNoopLogApiProvider`, which states that the way `'noop'` does for
+the sink.
+
+A fragment with `mirrorErrorsToRum` sends each error-level record twice:
+the record through the log provider, then its mirror through the sink —
+two messages, with no id in common. The host links them for its monitor
+anyway, so the shell's diagnostics popup shows the mirror against its
+record as the fragment's own does: an `error` arriving straight after an
+error-level record from the same realm, with the name and message the
+logger mirrors for it, gets that record's sequence as `relatedSequence`.
+Both are posted in the same task, so nothing can arrive between them. A
+mirror that doesn't match exactly is shown unlinked, never linked wrongly.
+
+### A realm that both forwards and hosts
+
+A host receives every message on its channel from any other
+`BroadcastChannel` object — including those its own realm opened. In a
+realm that forwards (`provideCpsTelemetrySink('broadcast')`) the host would
+receive its realm's own messages and hand them to the forwarding sink or
+log provider, which posts them again: one log line becomes an endless
+stream. So a host whose sink is `CpsBroadcastTelemetrySink`, or whose log
+provider is `CpsBroadcastLogApiProvider`, warns once, closes its channel,
+and never joins the leader election. Detecting it is exact — the classes
+are the library's own — where letting it run would flood the channel from
+the first message.
 
 ### Fields that behave correctly across realms
 
@@ -1758,15 +1830,14 @@ answer arrives.
 
 ### What a follower realm must not provide
 
-Three of these are really the same mistake — recreating in a fragment
-something that belongs to the shell — and the fourth is the one people get
-wrong by symmetry:
+Each of these recreates in a fragment something that belongs to the shell:
 
-| Not in a fragment                    | Why                                                                                                  |
-| ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetryRumSink()`       | A second AWS client, which is exactly the situation this whole arrangement exists to prevent         |
-| `CPS_RUM_CREDENTIALS_PROVIDER`       | Without a RUM sink there is nothing to authenticate                                                  |
-| `provideCpsTelemetryBroadcastHost()` | Two hosts elect one leader and idle the other (§13) — still wasted setup, not a reason to rely on it |
+| Not in a fragment                    | Why                                                                                                                                                                              |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `provideCpsTelemetryRumSink()`       | A second AWS client, which is exactly the situation this whole arrangement exists to prevent                                                                                     |
+| `CPS_RUM_CREDENTIALS_PROVIDER`       | Without a RUM sink there is nothing to authenticate                                                                                                                              |
+| `provideCpsTelemetryBroadcastHost()` | Beside the forwarding sink it would loop, so it stays inactive with a warning ("A realm that both forwards and hosts") — wasted setup, and a sign the realm is misconfigured     |
+| `CPS_LOG_API_PROVIDER`               | `'broadcast'` mode already binds it to the forwarding provider. Bound after that, it wins: the fragment ships its own logs, and the shell — its popup included — never sees them |
 
 ### Fragments that also deploy standalone
 
@@ -1774,8 +1845,11 @@ A fragment shipped both ways needs a different sink in each: forwarding
 when embedded, its own client when it is the whole page.
 `provideCpsTelemetrySink('broadcast')` covers forwarding;
 `provideCpsTelemetryRumSink()`, from the separate `cps-telemetry/rum` entry
-point, covers a standalone deployment's own client. Which one applies is
-read from the deployment's own configuration.
+point, covers a standalone deployment's own client. Logs follow the same
+switch: `'broadcast'` binds the forwarding log provider itself, so the
+standalone branch is the only one that binds `CPS_LOG_API_PROVIDER` — bound
+in both, the fragment's own would win and bypass the shell. Which one
+applies is read from the deployment's own configuration.
 
 Runtime detection was considered and rejected. A realm cannot tell
 synchronously whether a shell is listening; the identity handshake takes a
@@ -1793,9 +1867,9 @@ Application code is unchanged either way.
 
 A follower whose messages reach nobody — no shell yet, a browser with no
 `BroadcastChannel`, a server-side render — degrades to a no-op sink.
-Scenarios run and settle, logs are written to the transport, nothing
-throws; the telemetry is simply not shipped, and starts being shipped the
-moment a host appears.
+Scenarios run and settle, loggers write, nothing throws; the telemetry and
+the log records are simply not shipped, and start being shipped the moment
+a host appears. `query()` resolves `[]`.
 
 That is deliberate: a fragment has to be developable and testable on its
 own, and failing loudly just because the composed page it will eventually
@@ -1877,8 +1951,9 @@ tab (or iframe) is a different realm and never touches it.
 - **The same composed page open in two tabs can cross-attribute
   telemetry.** The leader election above stops one event from being
   recorded twice, but the losing tab's own fragments are still forwarding
-  on the same origin-wide channel — their events reach the winning host
-  and get recorded under _its_ tab's session and page, not their own.
+  on the same origin-wide channel — their events and log records reach the
+  winning host and get recorded under _its_ tab's session and page, not
+  their own.
   Nothing here is fragment-specific to that tab; `CpsBroadcastMessage`
   carries no tab/window identifier at all, so the protocol has no way to
   route a message back to its originating tab even in principle. If the

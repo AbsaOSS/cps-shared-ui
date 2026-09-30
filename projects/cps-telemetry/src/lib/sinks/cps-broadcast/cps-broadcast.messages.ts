@@ -4,6 +4,11 @@ import {
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import {
+  CPS_LOG_LEVEL_ORDER,
+  CpsLogRecord
+} from '../../models/cps-log.models/cps-log.models';
+import { CpsLogQuery } from '../../providers/cps-log-api.provider/cps-log-api.provider';
+import {
   cpsIsBrowser,
   cpsSafeVoid
 } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
@@ -49,7 +54,19 @@ export type CpsBroadcastMessage =
   | { kind: 'flush'; beacon: boolean }
   | { kind: 'identity-request' }
   /** The host announcing shared identity. Always sends both fields, even when only one changed. */
-  | { kind: 'identity'; sessionId?: string; userId?: string };
+  | { kind: 'identity'; sessionId?: string; userId?: string }
+  /** A follower's log record, for the host to hand to its log API provider. */
+  | { kind: 'log'; record: CpsLogRecord }
+  /** A follower asking the host to flush its log API provider. */
+  | { kind: 'log-flush' }
+  /** A follower reading records back through the host's log API provider. */
+  | { kind: 'log-query'; id: string; filter: CpsLogQuery }
+  /**
+   * The host's answer to one `log-query`, matched by `id`. The records come
+   * from the host's backend unchecked; the asking follower keeps only those
+   * that pass {@link cpsIsBroadcastLogRecord}.
+   */
+  | { kind: 'log-query-result'; id: string; records: unknown[] };
 
 /** Every `kind` the union above accepts, for {@link cpsIsBroadcastMessage}. */
 const MESSAGE_KINDS: ReadonlySet<CpsBroadcastMessage['kind']> = new Set([
@@ -58,8 +75,16 @@ const MESSAGE_KINDS: ReadonlySet<CpsBroadcastMessage['kind']> = new Set([
   'user',
   'flush',
   'identity-request',
-  'identity'
+  'identity',
+  'log',
+  'log-flush',
+  'log-query',
+  'log-query-result'
 ] as const);
+
+const LOG_LEVELS: ReadonlySet<string> = new Set(
+  Object.keys(CPS_LOG_LEVEL_ORDER)
+);
 
 /** Minimal `BroadcastChannel` surface this library relies on. */
 export interface CpsBroadcastChannelLike {
@@ -160,6 +185,9 @@ export interface CpsBroadcastConnection {
   /** The channel name actually in use — the injected override, or the default. */
   readonly channelName: string;
 
+  /** Whether a channel is open — false without `BroadcastChannel`, on the server, and once closed. */
+  isOpen(): boolean;
+
   /** Sends a message to every other realm on this channel. No-op if unavailable. */
   post(message: CpsBroadcastMessage): void;
 
@@ -190,6 +218,9 @@ export function cpsConnectBroadcastChannel(
 
   return {
     channelName,
+    isOpen() {
+      return channel !== undefined;
+    },
     post(message) {
       cpsSafeVoid(`${operation}.post`, () => channel?.postMessage(message));
     },
@@ -232,6 +263,65 @@ function isValidBroadcastMetadata(value: unknown): boolean {
   );
 }
 
+function isOptionalString(value: unknown): boolean {
+  return value === undefined || typeof value === 'string';
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function isValidTelemetryError(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    typeof value.name === 'string' &&
+    typeof value.message === 'string' &&
+    isOptionalString(value.stack)
+  );
+}
+
+function isLogLevel(value: unknown): boolean {
+  return typeof value === 'string' && LOG_LEVELS.has(value);
+}
+
+/**
+ * Whether `value` has the shape of a {@link CpsLogRecord}: the required
+ * strings, a known level, optional strings where the record has them, and
+ * metadata and error held to the same rules as on an `event` or `error`
+ * message.
+ */
+export function cpsIsBroadcastLogRecord(value: unknown): value is CpsLogRecord {
+  return (
+    isRecord(value) &&
+    typeof value.timestamp === 'string' &&
+    isLogLevel(value.level) &&
+    typeof value.message === 'string' &&
+    typeof value.application === 'string' &&
+    typeof value.environment === 'string' &&
+    typeof value.version === 'string' &&
+    isOptionalString(value.logger) &&
+    isOptionalString(value.context) &&
+    isOptionalString(value.correlationId) &&
+    isOptionalString(value.userId) &&
+    isOptionalString(value.sessionId) &&
+    isValidBroadcastMetadata(value.metadata) &&
+    (value.error === undefined || isValidTelemetryError(value.error))
+  );
+}
+
+function isValidLogQuery(value: unknown): boolean {
+  return (
+    isRecord(value) &&
+    isOptionalString(value.correlationId) &&
+    isOptionalString(value.logger) &&
+    (value.minLevel === undefined || isLogLevel(value.minLevel)) &&
+    isOptionalString(value.from) &&
+    isOptionalString(value.to) &&
+    (value.limit === undefined ||
+      (typeof value.limit === 'number' && Number.isFinite(value.limit)))
+  );
+}
+
 /**
  * Narrows an incoming `BroadcastChannel` payload to a telemetry message.
  *
@@ -259,17 +349,11 @@ export function cpsIsBroadcastMessage(
         message.payload !== null &&
         isValidBroadcastMetadata(message.metadata)
       );
-    case 'error': {
-      const error = message.error as Record<string, unknown> | undefined;
+    case 'error':
       return (
-        typeof error === 'object' &&
-        error !== null &&
-        typeof error.name === 'string' &&
-        typeof error.message === 'string' &&
-        (error.stack === undefined || typeof error.stack === 'string') &&
+        isValidTelemetryError(message.error) &&
         isValidBroadcastMetadata(message.metadata)
       );
-    }
     case 'flush':
       return typeof message.beacon === 'boolean';
     case 'user':
@@ -282,6 +366,21 @@ export function cpsIsBroadcastMessage(
         (message.userId === undefined || typeof message.userId === 'string')
       );
     case 'identity-request':
+    case 'log-flush':
       return true;
+    case 'log':
+      return cpsIsBroadcastLogRecord(message.record);
+    case 'log-query':
+      return (
+        typeof message.id === 'string' &&
+        message.id !== '' &&
+        isValidLogQuery(message.filter)
+      );
+    case 'log-query-result':
+      return (
+        typeof message.id === 'string' &&
+        message.id !== '' &&
+        Array.isArray(message.records)
+      );
   }
 }

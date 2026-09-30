@@ -19,6 +19,8 @@ import { CPS_BI_TELEMETRY_CONFIG } from '../../config/cps-bi-telemetry.config/cp
 import { CPS_LOG_CONFIG } from '../../config/cps-log.config/cps-log.config';
 import { CPS_SCENARIO_TELEMETRY_CONFIG } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
+import { CpsBroadcastLogApiProvider } from '../../sinks/cps-broadcast/cps-broadcast-log-api.provider';
+import { CpsNoopLogApiProvider } from '../cps-noop-log-api.provider/cps-noop-log-api.provider';
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
 import {
   CpsTelemetryFeature,
@@ -200,6 +202,25 @@ describe('provideCpsTelemetrySink', () => {
     );
   });
 
+  it('should send log records to the shell in broadcast mode, needing no log provider of its own', () => {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        provideCpsTelemetry({
+          application: 'cart',
+          environment: 'prod',
+          version: '1.0.0'
+        }),
+        provideCpsTelemetrySink('broadcast')
+      ]
+    });
+
+    expect(TestBed.inject(CPS_LOG_API_PROVIDER)).toBeInstanceOf(
+      CpsBroadcastLogApiProvider
+    );
+    expect(TestBed.inject(CpsLoggerService)).toBeTruthy();
+  });
+
   it('should wire a discarding sink when telemetry is switched off', () => {
     configure('noop');
     expect(TestBed.inject(CpsTelemetrySink)).toBeInstanceOf(
@@ -251,6 +272,54 @@ describe('provideCpsTelemetryBroadcastHost', () => {
           version: '1.0.0'
         }),
         provideCpsTelemetrySink('noop'),
+        RecordingLogApi,
+        { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
+        provideCpsTelemetryBroadcastHost()
+      ]
+    });
+
+    await TestBed.inject(ApplicationInitStatus).donePromise;
+
+    expect(RecordingChannelStub.posted).toContainEqual(
+      expect.objectContaining({ kind: 'identity' })
+    );
+  });
+
+  it('should fail at bootstrap when the shell binds no log provider', () => {
+    RecordingChannelStub.install();
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        provideCpsTelemetry({
+          application: 'shell',
+          environment: 'prod',
+          version: '1.0.0'
+        }),
+        provideCpsTelemetrySink('noop'),
+        provideCpsTelemetryBroadcastHost()
+      ]
+    });
+    expect(() => TestBed.inject(ApplicationInitStatus)).toThrow(
+      /CPS_LOG_API_PROVIDER/
+    );
+  });
+
+  it('should bootstrap a shell that states it has no log backend', async () => {
+    RecordingChannelStub.install();
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        provideCpsTelemetry({
+          application: 'shell',
+          environment: 'prod',
+          version: '1.0.0'
+        }),
+        provideCpsTelemetrySink('noop'),
+        { provide: CPS_LOG_API_PROVIDER, useClass: CpsNoopLogApiProvider },
         provideCpsTelemetryBroadcastHost()
       ]
     });
@@ -273,6 +342,8 @@ describe('provideCpsTelemetryBroadcastHost', () => {
           version: '1.0.0'
         }),
         provideCpsTelemetrySink('noop'),
+        RecordingLogApi,
+        { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
         provideCpsTelemetryBroadcastHost('my-channel')
       ]
     });
@@ -291,6 +362,8 @@ describe('provideCpsTelemetryBroadcastHost', () => {
           version: '1.0.0'
         }),
         provideCpsTelemetrySink('noop'),
+        RecordingLogApi,
+        { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
         provideCpsTelemetryBroadcastHost()
       ]
     });

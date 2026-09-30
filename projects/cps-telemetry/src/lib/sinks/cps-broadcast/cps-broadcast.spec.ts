@@ -5,7 +5,7 @@ import {
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import { CpsLogRecord } from '../../models/cps-log.models/cps-log.models';
 import { DOCUMENT } from '@angular/common';
-import { Injectable, Injector, PLATFORM_ID } from '@angular/core';
+import { Injectable, Injector, NgZone, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CpsLoggerService } from '../../services/cps-logger.service/cps-logger.service';
 import {
@@ -23,6 +23,10 @@ import {
 } from '../../providers/cps-log-api.provider/cps-log-api.provider';
 import { CpsTelemetryBroadcastHost } from './cps-broadcast-host.service';
 import { CpsBroadcastTelemetrySink } from './cps-broadcast-telemetry.sink';
+import {
+  CPS_BROADCAST_LOG_QUERY_TIMEOUT_MS,
+  CpsBroadcastLogApiProvider
+} from './cps-broadcast-log-api.provider';
 import {
   CPS_BROADCAST_CHANNEL,
   CPS_DEFAULT_BROADCAST_CHANNEL,
@@ -254,6 +258,11 @@ class RecordingSink extends CpsTelemetrySink {
 @Injectable()
 class RecordingLogApi implements CpsLogApiProvider {
   readonly records: CpsLogRecord[] = [];
+  flushes = 0;
+
+  flush(): void {
+    this.flushes++;
+  }
 
   send(record: CpsLogRecord): void {
     this.records.push(record);
@@ -298,16 +307,35 @@ describe('broadcast telemetry across realms', () => {
     jest.restoreAllMocks();
   });
 
-  /** Builds a follower realm with a forwarding sink. */
+  /**
+   * Builds a follower realm wired as `provideCpsTelemetrySink('broadcast')`
+   * wires one: a forwarding sink and a forwarding log provider.
+   */
   function createFragment(): Injector {
     const realm = createRealm([
       CpsBroadcastTelemetrySink,
-      { provide: CpsTelemetrySink, useExisting: CpsBroadcastTelemetrySink }
+      { provide: CpsTelemetrySink, useExisting: CpsBroadcastTelemetrySink },
+      CpsBroadcastLogApiProvider,
+      { provide: CPS_LOG_API_PROVIDER, useExisting: CpsBroadcastLogApiProvider }
     ]);
     // Resolve eagerly: Injector.create is lazy, and the sink's constructor
     // opens the channel and requests identity.
     realm.get(CpsTelemetrySink);
+    realm.get(CPS_LOG_API_PROVIDER);
     return realm;
+  }
+
+  /** A record as a log backend would hand it back. */
+  function storedRecord(fields: Partial<CpsLogRecord> = {}): CpsLogRecord {
+    return {
+      timestamp: '2026-01-01T00:00:00.000Z',
+      level: 'log',
+      message: 'stored',
+      application: 'realm',
+      environment: 'test',
+      version: '1.0.0',
+      ...fields
+    };
   }
 
   describe('forwarding', () => {
@@ -610,7 +638,279 @@ describe('broadcast telemetry across realms', () => {
     });
   });
 
+  describe('logs from a fragment', () => {
+    it('should ship a fragment log record through the shell log provider, and only there', async () => {
+      const fragment = createFragment();
+      fragment
+        .get(CpsLoggerService)
+        .getLogger('cart')
+        .warn('Careful now', { correlationId: 'c-1' });
+
+      await CpsBroadcastChannelStub.settle();
+
+      expect(shell.get(RecordingLogApi).records).toEqual([
+        expect.objectContaining({
+          level: 'warn',
+          message: 'Careful now',
+          logger: 'cart',
+          correlationId: 'c-1',
+          application: 'realm'
+        })
+      ]);
+      // The fragment's realm has a backend bound too; it must stay unused.
+      expect(fragment.get(RecordingLogApi).records).toHaveLength(0);
+    });
+
+    it('should show a forwarded record once per monitor — local in the fragment, forwarded in the shell', async () => {
+      const fragment = createFragment();
+      const inShell: CpsTelemetryObservedEvent[] = [];
+      const inFragment: CpsTelemetryObservedEvent[] = [];
+      shell.get(CpsTelemetryMonitor).events$.subscribe((e) => inShell.push(e));
+      fragment
+        .get(CpsTelemetryMonitor)
+        .events$.subscribe((e) => inFragment.push(e));
+
+      fragment.get(CpsLoggerService).getLogger('cart').log('Hello');
+      await CpsBroadcastChannelStub.settle();
+
+      expect(inFragment).toEqual([
+        expect.objectContaining({
+          kind: 'log',
+          destination: 'log-provider',
+          origin: { forwarded: false }
+        })
+      ]);
+      expect(inShell).toEqual([
+        expect.objectContaining({
+          kind: 'log',
+          destination: 'log-provider',
+          origin: { forwarded: true, application: 'realm' },
+          payload: expect.objectContaining({ message: 'Hello' })
+        })
+      ]);
+    });
+
+    it('should forward a flush to the shell log provider', async () => {
+      const fragment = createFragment();
+      fragment.get(CPS_LOG_API_PROVIDER).flush?.();
+
+      await CpsBroadcastChannelStub.settle();
+
+      expect(shell.get(RecordingLogApi).flushes).toBe(1);
+    });
+
+    it('should answer a fragment query from the shell log provider', async () => {
+      const shellLogs = shell.get(RecordingLogApi);
+      shellLogs.send(storedRecord({ correlationId: 'c-9', message: 'mine' }));
+      shellLogs.send(storedRecord({ correlationId: 'c-other' }));
+      const fragment = createFragment();
+
+      const pending = fragment
+        .get(CpsLoggerService)
+        .query({ correlationId: 'c-9' });
+      await CpsBroadcastChannelStub.settle();
+
+      await expect(pending).resolves.toEqual([
+        expect.objectContaining({ correlationId: 'c-9', message: 'mine' })
+      ]);
+    });
+
+    it('should resolve a query to [] when the shell provider rejects', async () => {
+      jest
+        .spyOn(shell.get(RecordingLogApi), 'query')
+        .mockRejectedValue(new Error('backend down'));
+      const fragment = createFragment();
+
+      const pending = fragment.get(CpsLoggerService).query({});
+      await CpsBroadcastChannelStub.settle();
+
+      await expect(pending).resolves.toEqual([]);
+    });
+
+    it('should keep only well-formed records from the answer', async () => {
+      jest
+        .spyOn(shell.get(RecordingLogApi), 'query')
+        .mockResolvedValue([
+          storedRecord({ message: 'good' }),
+          { junk: true } as unknown as CpsLogRecord
+        ]);
+      const fragment = createFragment();
+
+      const pending = fragment.get(CpsLoggerService).query({});
+      await CpsBroadcastChannelStub.settle();
+
+      await expect(pending).resolves.toEqual([
+        expect.objectContaining({ message: 'good' })
+      ]);
+    });
+
+    it('should resolve a query to [] once no host has answered in time', async () => {
+      jest.useFakeTimers();
+      try {
+        host.ngOnDestroy();
+        const fragment = createFragment();
+        let result: CpsLogRecord[] | undefined;
+        fragment
+          .get(CpsLoggerService)
+          .query({})
+          .then((records) => (result = records));
+
+        await jest.advanceTimersByTimeAsync(
+          CPS_BROADCAST_LOG_QUERY_TIMEOUT_MS - 1
+        );
+        expect(result).toBeUndefined();
+
+        await jest.advanceTimersByTimeAsync(1);
+        expect(result).toEqual([]);
+      } finally {
+        jest.useRealTimers();
+      }
+    });
+
+    it('should resolve unanswered queries to [] when the provider is destroyed', async () => {
+      host.ngOnDestroy();
+      const provider = createFragment().get(CpsBroadcastLogApiProvider);
+
+      const pending = provider.query({});
+      provider.ngOnDestroy();
+
+      await expect(pending).resolves.toEqual([]);
+    });
+
+    it('should fail at injection when the shell binds no log provider', () => {
+      const bareShell = Injector.create({
+        providers: [
+          CpsTelemetryMonitor,
+          { provide: PLATFORM_ID, useValue: 'browser' },
+          RecordingSink,
+          { provide: CpsTelemetrySink, useExisting: RecordingSink },
+          CpsTelemetryBroadcastHost
+        ]
+      });
+
+      expect(() => bareShell.get(CpsTelemetryBroadcastHost)).toThrow(
+        /CPS_LOG_API_PROVIDER/
+      );
+    });
+
+    it('should link a mirrored error to its forwarded log record in the shell monitor', async () => {
+      const fragment = createRealm([
+        CpsBroadcastTelemetrySink,
+        { provide: CpsTelemetrySink, useExisting: CpsBroadcastTelemetrySink },
+        CpsBroadcastLogApiProvider,
+        {
+          provide: CPS_LOG_API_PROVIDER,
+          useExisting: CpsBroadcastLogApiProvider
+        },
+        {
+          provide: CPS_LOG_CONFIG,
+          useValue: {
+            ...CPS_DEFAULT_TELEMETRY_CONFIG.logs,
+            mirrorErrorsToRum: true
+          }
+        }
+      ]);
+      const inShell: CpsTelemetryObservedEvent[] = [];
+      shell.get(CpsTelemetryMonitor).events$.subscribe((e) => inShell.push(e));
+
+      const logger = fragment.get(CpsLoggerService).getLogger('cart');
+      logger.error('Payment failed');
+      logger.error('Card declined', { error: new TypeError('declined') });
+      await CpsBroadcastChannelStub.settle();
+
+      expect(inShell.map((e) => e.kind)).toEqual([
+        'log',
+        'error',
+        'log',
+        'error'
+      ]);
+      const [firstLog, firstMirror, secondLog, secondMirror] = inShell;
+      expect(firstMirror).toMatchObject({
+        payload: { name: 'Error', message: 'Payment failed' },
+        relatedSequence: firstLog.sequence
+      });
+      expect(secondMirror).toMatchObject({
+        payload: { name: 'TypeError', message: 'declined' },
+        relatedSequence: secondLog.sequence
+      });
+    });
+
+    it('should not link an error that is not the mirror of the record before it', async () => {
+      const fragment = createFragment();
+      const inShell: CpsTelemetryObservedEvent[] = [];
+      shell.get(CpsTelemetryMonitor).events$.subscribe((e) => inShell.push(e));
+
+      fragment.get(CpsLoggerService).getLogger('cart').error('Payment failed');
+      fragment
+        .get(CpsTelemetrySink)
+        .recordError({ name: 'Error', message: 'Something else' });
+      await CpsBroadcastChannelStub.settle();
+
+      const error = inShell.find((e) => e.kind === 'error');
+      expect(error).toBeDefined();
+      expect(error).not.toHaveProperty('relatedSequence');
+    });
+
+    it('should run the query timeout outside the Angular zone and answer inside it', async () => {
+      host.ngOnDestroy();
+      function passThrough<T>(fn: () => T): T {
+        return fn();
+      }
+      const zone = {
+        runOutsideAngular: jest.fn(passThrough),
+        run: jest.fn(passThrough)
+      };
+      const provider = createRealm([
+        { provide: NgZone, useValue: zone },
+        CpsBroadcastLogApiProvider
+      ]).get(CpsBroadcastLogApiProvider);
+
+      const pending = provider.query({});
+      expect(zone.runOutsideAngular).toHaveBeenCalledTimes(1);
+      provider.ngOnDestroy();
+
+      await expect(pending).resolves.toEqual([]);
+      expect(zone.run).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('robustness', () => {
+    it('should keep a host inactive in a realm that forwards its own telemetry, instead of looping', async () => {
+      host.ngOnDestroy();
+      const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+      const posts = jest.spyOn(
+        CpsBroadcastChannelStub.prototype,
+        'postMessage'
+      );
+      const misconfigured = createRealm([
+        CpsBroadcastTelemetrySink,
+        { provide: CpsTelemetrySink, useExisting: CpsBroadcastTelemetrySink },
+        CpsBroadcastLogApiProvider,
+        {
+          provide: CPS_LOG_API_PROVIDER,
+          useExisting: CpsBroadcastLogApiProvider
+        },
+        CpsTelemetryBroadcastHost
+      ]);
+      host = misconfigured.get(CpsTelemetryBroadcastHost);
+
+      misconfigured.get(CpsLoggerService).getLogger('cart').log('once');
+      misconfigured
+        .get(CpsTelemetrySink)
+        .record('com.cps.bi', { eventName: 'once' });
+      await CpsBroadcastChannelStub.settle(10);
+
+      const kinds = posts.mock.calls.map(
+        ([message]) => (message as { kind: string }).kind
+      );
+      expect(kinds.filter((k) => k === 'log')).toHaveLength(1);
+      expect(kinds.filter((k) => k === 'event')).toHaveLength(1);
+      expect(host.received).toBe(0);
+      expect(warn).toHaveBeenCalledWith(
+        expect.stringContaining('cannot also host it')
+      );
+    });
+
     it('should ignore unrelated traffic on the channel', async () => {
       createFragment();
       const noise = new CpsBroadcastChannelStub('cps-telemetry');
@@ -761,15 +1061,17 @@ describe('broadcast telemetry across realms', () => {
     function createHost(): {
       host: CpsTelemetryBroadcastHost;
       sink: RecordingSink;
+      logs: RecordingLogApi;
     } {
       const sink = new RecordingSink();
-      const realmHost = createRealm([
+      const realm = createRealm([
         { provide: RecordingSink, useValue: sink },
         { provide: CpsTelemetrySink, useExisting: RecordingSink },
         CpsTelemetryBroadcastHost
-      ]).get(CpsTelemetryBroadcastHost);
+      ]);
+      const realmHost = realm.get(CpsTelemetryBroadcastHost);
       createdHosts.push(realmHost);
-      return { host: realmHost, sink };
+      return { host: realmHost, sink, logs: realm.get(RecordingLogApi) };
     }
 
     it('should keep a second host passive while the first is still leader', async () => {
@@ -783,6 +1085,21 @@ describe('broadcast telemetry across realms', () => {
       expect(first.sink.events).toHaveLength(1);
       expect(second.sink.events).toHaveLength(0);
       expect(second.host.received).toBe(0);
+    });
+
+    it('should leave log records and queries to the leader', async () => {
+      const first = createHost();
+      const second = createHost();
+      const fragment = createFragment();
+
+      fragment.get(CpsLoggerService).getLogger('cart').log('Hello');
+      const pending = fragment.get(CpsLoggerService).query({});
+      await CpsBroadcastChannelStub.settle();
+
+      expect(first.logs.records).toHaveLength(1);
+      expect(second.logs.records).toHaveLength(0);
+      expect(second.host.received).toBe(0);
+      await expect(pending).resolves.toHaveLength(1);
     });
 
     it('should hand off leadership once the leader is destroyed', async () => {
@@ -1007,6 +1324,92 @@ describe('broadcast telemetry across realms', () => {
       expect(cpsIsBroadcastMessage({ kind: 'user', userId: 42 })).toBe(false);
     });
 
+    const logRecord = {
+      timestamp: '2026-01-01T00:00:00.000Z',
+      level: 'warn',
+      message: 'Careful',
+      application: 'cart',
+      environment: 'test',
+      version: '1.0.0'
+    };
+
+    it('should accept a well-formed log message', () => {
+      expect(cpsIsBroadcastMessage({ kind: 'log', record: logRecord })).toBe(
+        true
+      );
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'log',
+          record: {
+            ...logRecord,
+            logger: 'checkout',
+            context: 'Cart',
+            correlationId: 'c-1',
+            sessionId: 's',
+            userId: 'u',
+            metadata: { count: 1 },
+            error: { name: 'Error', message: 'boom' }
+          }
+        })
+      ).toBe(true);
+    });
+
+    it.each([
+      { level: 'debug' },
+      { level: 'toString' },
+      { application: undefined },
+      { message: 42 },
+      { logger: 7 },
+      { metadata: { nested: {} } },
+      { error: { name: 'Error' } }
+    ])('should reject a log message whose record has %p', (fields) => {
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'log',
+          record: { ...logRecord, ...fields }
+        })
+      ).toBe(false);
+    });
+
+    it('should accept log-flush, log-query and log-query-result messages', () => {
+      expect(cpsIsBroadcastMessage({ kind: 'log-flush' })).toBe(true);
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'log-query',
+          id: 'q-1',
+          filter: { correlationId: 'c-1', minLevel: 'warn', limit: 5 }
+        })
+      ).toBe(true);
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'log-query-result',
+          id: 'q-1',
+          records: []
+        })
+      ).toBe(true);
+    });
+
+    it.each([
+      { id: '', filter: {} },
+      { id: 'q-1', filter: null },
+      { id: 'q-1', filter: { limit: 'ten' } },
+      { id: 'q-1', filter: { minLevel: 'verbose' } }
+    ])('should reject a malformed log-query message %p', (fields) => {
+      expect(cpsIsBroadcastMessage({ kind: 'log-query', ...fields })).toBe(
+        false
+      );
+    });
+
+    it('should reject a log-query-result without a records array', () => {
+      expect(
+        cpsIsBroadcastMessage({
+          kind: 'log-query-result',
+          id: 'q-1',
+          records: 'none'
+        })
+      ).toBe(false);
+    });
+
     it('should accept an identity-request message with no other fields', () => {
       expect(cpsIsBroadcastMessage({ kind: 'identity-request' })).toBe(true);
     });
@@ -1071,7 +1474,9 @@ describe('broadcast telemetry across realms', () => {
       );
       const received: unknown[] = [];
       connection.onMessage((data) => received.push(data));
+      expect(connection.isOpen()).toBe(true);
       connection.close();
+      expect(connection.isOpen()).toBe(false);
 
       const peer = new CpsBroadcastChannelStub(CPS_DEFAULT_BROADCAST_CHANNEL);
       peer.postMessage({ kind: 'flush', beacon: true });
@@ -1091,6 +1496,7 @@ describe('broadcast telemetry across realms', () => {
         connection.onMessage(() => undefined);
         connection.close();
       }).not.toThrow();
+      expect(connection.isOpen()).toBe(false);
     });
   });
 
@@ -1108,6 +1514,13 @@ describe('broadcast telemetry across realms', () => {
         sink.flush(true);
       }).not.toThrow();
       expect(sink.getSessionId()).toBeUndefined();
+    });
+
+    it('should resolve a fragment log query to [] at once', async () => {
+      const fragment = createFragment();
+      await expect(fragment.get(CpsLoggerService).query({})).resolves.toEqual(
+        []
+      );
     });
 
     it('should let a scenario run to completion in the fragment', () => {

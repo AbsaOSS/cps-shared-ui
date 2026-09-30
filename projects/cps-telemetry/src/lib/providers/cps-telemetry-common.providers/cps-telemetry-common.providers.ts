@@ -7,10 +7,12 @@ import {
 } from '@angular/core';
 import { CpsTelemetryBroadcastHost } from '../../sinks/cps-broadcast/cps-broadcast-host.service';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
+import { CpsBroadcastLogApiProvider } from '../../sinks/cps-broadcast/cps-broadcast-log-api.provider';
 import { CPS_BROADCAST_CHANNEL } from '../../sinks/cps-broadcast/cps-broadcast.messages';
 import { CpsNoopTelemetrySink } from '../../sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import { CpsRedactConfig } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
+import { CPS_LOG_API_PROVIDER } from '../cps-log-api.provider/cps-log-api.provider';
 import {
   CPS_REDACT_CONFIG,
   CPS_TELEMETRY_IDENTITY,
@@ -223,7 +225,9 @@ export type CpsTelemetryLocalSinkMode =
  *
  * - `'broadcast'` forwards to a shell realm running
  *   {@link provideCpsTelemetryBroadcastHost}, on a channel both sides name
- *   identically.
+ *   identically. Log records go there too: this mode also binds
+ *   {@link CPS_LOG_API_PROVIDER} to {@link CpsBroadcastLogApiProvider}, so
+ *   the shell's log provider ships them and answers `query()`.
  * - `'noop'` discards everything.
  *
  * Sending straight to AWS CloudWatch RUM is `provideCpsTelemetryRumSink()`,
@@ -255,6 +259,11 @@ export function provideCpsTelemetrySink(
       return makeEnvironmentProviders([
         CpsBroadcastTelemetrySink,
         { provide: CpsTelemetrySink, useExisting: CpsBroadcastTelemetrySink },
+        CpsBroadcastLogApiProvider,
+        {
+          provide: CPS_LOG_API_PROVIDER,
+          useExisting: CpsBroadcastLogApiProvider
+        },
         ...(options?.channelName
           ? [{ provide: CPS_BROADCAST_CHANNEL, useValue: options.channelName }]
           : [])

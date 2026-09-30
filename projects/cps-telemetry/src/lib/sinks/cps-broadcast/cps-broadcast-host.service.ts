@@ -1,7 +1,8 @@
 import { inject, Injectable, OnDestroy } from '@angular/core';
 import {
   cpsSafe,
-  cpsSafeVoid
+  cpsSafeVoid,
+  cpsSafeVoidMaybeAsync
 } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import {
   CpsBroadcastConnection,
@@ -10,12 +11,22 @@ import {
   cpsIsBroadcastMessage
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
+import { CpsBroadcastTelemetrySink } from './cps-broadcast-telemetry.sink';
+import { CpsBroadcastLogApiProvider } from './cps-broadcast-log-api.provider';
 import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 import {
   CpsJsonObject,
   CpsTelemetryEventOrigin
 } from '../../models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
-import { CpsTelemetryMetadata } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
+import { CpsLogRecord } from '../../models/cps-log.models/cps-log.models';
+import {
+  CpsTelemetryError,
+  CpsTelemetryMetadata
+} from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
+import {
+  CPS_LOG_API_PROVIDER,
+  CpsLogQuery
+} from '../../providers/cps-log-api.provider/cps-log-api.provider';
 
 /**
  * Active host count per channel, scoped to this JS realm — distinguishes a
@@ -24,12 +35,32 @@ import { CpsTelemetryMetadata } from '../../models/cps-telemetry-common.models/c
 const hostsInThisRealm = new Map<string, number>();
 
 /**
+ * A forwarded error-level log record, kept for exactly one message in case
+ * the next is its `mirrorErrorsToRum` copy.
+ */
+interface CpsForwardedErrorLog {
+  application: string;
+  expected: CpsTelemetryError;
+  sequence: number;
+}
+
+/**
  * Receives telemetry forwarded by follower realms and records it through this
  * realm's sink.
  *
  * Runs in the shell, the realm with the real sink. Fragments using
  * {@link CpsBroadcastTelemetrySink} post their events here, so one AWS client,
  * one session and one event budget serve the whole composed page.
+ *
+ * Fragments' log records arrive the same way, from
+ * {@link CpsBroadcastLogApiProvider}, and go to this realm's
+ * {@link CPS_LOG_API_PROVIDER} — which also answers their `query()` calls.
+ * The provider is required: a shell hosting fragments without one fails at
+ * injection, rather than silently discarding their logs.
+ *
+ * A realm that forwards its own telemetry — `provideCpsTelemetrySink('broadcast')`
+ * — cannot also host it: the host would receive its own realm's messages
+ * and forward them again, forever. Such a host warns and stays inactive.
  *
  * A Web Locks-based election ({@link cpsElectBroadcastHostLeader}) keeps
  * exactly one host active per channel; others stay passive.
@@ -41,6 +72,7 @@ const hostsInThisRealm = new Map<string, number>();
  * providers: [
  *   provideCpsTelemetry({ application: 'shell', environment: 'prod', version: '1.0.0' }),
  *   provideCpsTelemetryRumSink(),
+ *   { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend },
  *   provideCpsTelemetryBroadcastHost()
  * ]
  * ```
@@ -51,6 +83,7 @@ const hostsInThisRealm = new Map<string, number>();
 export class CpsTelemetryBroadcastHost implements OnDestroy {
   private readonly sink = inject(CpsTelemetrySink);
   private readonly monitor = inject(CpsTelemetryMonitor);
+  private readonly logApi = inject(CPS_LOG_API_PROVIDER);
   private readonly connection: CpsBroadcastConnection =
     cpsConnectBroadcastChannel('broadcastHost');
 
@@ -70,7 +103,16 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
   private isLeader = false;
   private releaseLeadership: () => void = () => undefined;
 
+  /** The last message, when it was an error-level log record. */
+  private lastErrorLog?: CpsForwardedErrorLog;
+
   constructor() {
+    this.warnIfDuplicateInThisRealm();
+    if (this.forwardsItsOwnRealm()) {
+      this.connection.close();
+      return;
+    }
+
     this.connection.onMessage((data) => this.onMessage(data));
     this.releaseLeadership = cpsElectBroadcastHostLeader(
       this.connection.channelName,
@@ -79,7 +121,6 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
         this.announceIdentity();
       }
     );
-    this.warnIfDuplicateInThisRealm();
   }
 
   /** How many follower messages have been accepted. */
@@ -100,9 +141,18 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
         return;
       }
 
-      if (data.kind !== 'identity' && data.kind !== 'identity-request') {
+      if (
+        data.kind !== 'identity' &&
+        data.kind !== 'identity-request' &&
+        data.kind !== 'log-query-result'
+      ) {
         this._received++;
       }
+
+      // A mirror arrives straight after its log record, so the candidate
+      // lives for one message only.
+      const errorLog = this.lastErrorLog;
+      this.lastErrorLog = undefined;
 
       switch (data.kind) {
         case 'event':
@@ -112,7 +162,7 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
             eventType: data.eventType,
             payload: data.payload as CpsJsonObject,
             destination: 'sink',
-            origin: forwardedFrom(data.metadata)
+            origin: forwardedFrom(data.metadata?.application)
           });
           this.reannounceIfIdentityChanged();
           break;
@@ -121,8 +171,12 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
           this.monitor.publish({
             kind: 'error',
             payload: data.error,
+            ...(errorLog &&
+              isMirrorOf(errorLog, data.error, data.metadata) && {
+                relatedSequence: errorLog.sequence
+              }),
             destination: 'sink',
-            origin: forwardedFrom(data.metadata)
+            origin: forwardedFrom(data.metadata?.application)
           });
           this.reannounceIfIdentityChanged();
           break;
@@ -142,8 +196,97 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
           // not a problem. Same-document duplicates are caught by
           // warnIfDuplicateInThisRealm() instead.
           break;
+        case 'log':
+          this.deliverLog(data.record);
+          this.reannounceIfIdentityChanged();
+          break;
+        case 'log-flush':
+          cpsSafeVoidMaybeAsync('broadcastHost.logFlush', () =>
+            this.logApi?.flush?.()
+          );
+          break;
+        case 'log-query':
+          this.answerLogQuery(data.id, data.filter);
+          break;
+        case 'log-query-result':
+          // Hosts answer queries; they never ask them.
+          break;
       }
     });
+  }
+
+  /**
+   * Hands a follower's record to this realm's log API provider, and tells
+   * the monitor once it has — as {@link CpsLoggerService} does for its own.
+   */
+  private deliverLog(record: CpsLogRecord): void {
+    cpsSafeVoidMaybeAsync('broadcastHost.log', () => {
+      const pending = this.logApi.send(record);
+      const sequence = this.monitor.publish({
+        kind: 'log',
+        payload: record,
+        destination: 'log-provider',
+        origin: forwardedFrom(record.application)
+      });
+      if (record.level === 'error' && sequence !== undefined) {
+        this.lastErrorLog = {
+          application: record.application,
+          // What CpsLoggerService mirrors to RUM for this record.
+          expected: record.error ?? { name: 'Error', message: record.message },
+          sequence
+        };
+      }
+      return pending;
+    });
+  }
+
+  /**
+   * Answers a follower's query from this realm's log API provider. Always
+   * answers — `[]` when there is no provider or it fails — so the follower
+   * isn't left waiting for its timeout.
+   */
+  private answerLogQuery(id: string, filter: CpsLogQuery): void {
+    const reply = (records: unknown) =>
+      this.connection.post({
+        kind: 'log-query-result',
+        id,
+        records: Array.isArray(records) ? records : []
+      });
+
+    const pending = cpsSafe(
+      'broadcastHost.logQuery',
+      () => this.logApi.query(filter),
+      undefined
+    );
+
+    if (!pending) {
+      reply([]);
+      return;
+    }
+    // Promise.resolve: a provider breaking its contract with a plain value
+    // still gets an answer out.
+    Promise.resolve(pending).then(reply, () => reply([]));
+  }
+
+  /**
+   * Whether this realm's own sink or log provider forwards over the
+   * channel. Hosting then would loop: the host receives its own realm's
+   * messages and hands them straight back to the channel.
+   */
+  private forwardsItsOwnRealm(): boolean {
+    const forwards =
+      this.sink instanceof CpsBroadcastTelemetrySink ||
+      this.logApi instanceof CpsBroadcastLogApiProvider;
+
+    if (forwards) {
+      cpsSafeVoid('broadcastHost.forwardingRealmWarning', () => {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[cps-telemetry] this realm forwards its own telemetry on channel "${this.connection.channelName}", so it cannot also host it; the host stays inactive. Provide the host only in the realm with the real sink and log provider`
+        );
+      });
+    }
+    return forwards;
   }
 
   /**
@@ -237,11 +380,30 @@ function classifyForwarded(eventType: string): {
   return { kind: 'unknown' };
 }
 
-/** The forwarding realm, read from the origin a follower sink stamps on. */
-function forwardedFrom(
+/**
+ * Whether a forwarded error is the `mirrorErrorsToRum` copy of the error-level
+ * log record just before it: same realm, same name and message. A mirror
+ * the logger had to rewrite simply goes unlinked.
+ */
+function isMirrorOf(
+  errorLog: CpsForwardedErrorLog,
+  error: CpsTelemetryError,
   metadata: CpsTelemetryMetadata | undefined
+): boolean {
+  return (
+    metadata?.application === errorLog.application &&
+    error.name === errorLog.expected.name &&
+    error.message === errorLog.expected.message
+  );
+}
+
+/**
+ * The forwarding realm: the `application` a follower sink stamps onto
+ * metadata, or a log record's own.
+ */
+function forwardedFrom(
+  application: CpsTelemetryMetadata[string] | undefined
 ): CpsTelemetryEventOrigin {
-  const application = metadata?.application;
   return typeof application === 'string'
     ? { forwarded: true, application }
     : { forwarded: true };

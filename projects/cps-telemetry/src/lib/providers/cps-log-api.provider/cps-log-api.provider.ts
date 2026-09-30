@@ -95,7 +95,8 @@ export interface CpsLogApiProvider {
  *
  * Bound by the application; `provideCpsTelemetry` wires everything else.
  * Has no default — an unbound provider fails at injection rather than
- * silently discarding logs.
+ * silently discarding logs. To keep no logs, say so with
+ * {@link CpsNoopLogApiProvider}.
  *
  * @group Tokens
  */
