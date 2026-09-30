@@ -1,5 +1,12 @@
 # Changelog
 
+## [22.0.1](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.0.0...v22.0.1) (2026-09-21)
+
+
+### Bug Fixes
+
+* remove background from autocomplete label/hint ([#860](https://github.com/AbsaOSS/cps-shared-ui/issues/860)) ([4409d0a](https://github.com/AbsaOSS/cps-shared-ui/commit/4409d0a9a6ff72a61541807654a2fa5cadf7ba1e))
+
 ## [22.0.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.30.0...v22.0.0) (2026-08-24)
 
 

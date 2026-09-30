@@ -90,7 +90,6 @@ $hover-transition-duration: 0.2s;
       display: inline-flex;
       margin-bottom: 0.2rem;
       color: $autocomplete-label-color;
-      background-color: var(--cps-surface-body);
       font-size: 0.875rem;
       font-weight: 600;
       .cps-autocomplete-label-info-circle {
@@ -284,7 +283,6 @@ $hover-transition-duration: 0.2s;
 
     .cps-autocomplete-hint {
       color: $autocomplete-hint-color;
-      background-color: var(--cps-surface-body);
       font-size: 0.75rem;
       min-height: 1.125rem;
       line-height: 1.125rem;
