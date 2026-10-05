@@ -94,7 +94,6 @@ function reportSuppressed(operation: string, error: unknown): void {
     return;
   }
   try {
-    // eslint-disable-next-line no-console
     console.error(`[cps-telemetry] ${operation} failed`, error);
   } catch {
     // A patched/throwing console must never escape telemetry suppression.

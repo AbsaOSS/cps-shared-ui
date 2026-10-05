@@ -9,7 +9,9 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "sourceMap": true,
     "skipLibCheck": true,
+    "isolatedModules": false,
     "types": [],
     // The package build resolves cps-ui-kit (used only by the
     // cps-telemetry/diagnostics entry) as the external package it is at

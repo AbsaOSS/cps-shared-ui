@@ -369,7 +369,12 @@ describe('cpsRedactMetadata', () => {
   it('should keep primitive values', () => {
     expect(
       cpsRedactMetadata({ count: 3, name: 'csv', ok: true, empty: null })
-    ).toEqual({ count: 3, name: 'csv', ok: true, empty: null });
+    ).toEqual({
+      count: 3,
+      name: 'csv',
+      ok: true,
+      empty: null
+    });
   });
 
   it.each([
@@ -534,16 +539,26 @@ describe('cpsMergeMetadata', () => {
   });
 
   it('should drop a genuinely new key once the combined count reaches maxKeys', () => {
+    const consoleWarn = jest
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
     const target = { a: 1 };
-    const result = cpsMergeMetadata(
-      target,
-      { b: 2 },
-      {
-        ...CPS_DEFAULT_REDACT_CONFIG,
-        maxKeys: 1
-      }
-    );
-    expect(result).toEqual({ a: 1 });
+    try {
+      const result = cpsMergeMetadata(
+        target,
+        { b: 2 },
+        {
+          ...CPS_DEFAULT_REDACT_CONFIG,
+          maxKeys: 1
+        }
+      );
+      expect(result).toEqual({ a: 1 });
+      expect(consoleWarn).toHaveBeenCalledWith(
+        expect.stringContaining('maxKeys')
+      );
+    } finally {
+      consoleWarn.mockRestore();
+    }
   });
 
   it('should allow updating a key already present even when target is at maxKeys', () => {
@@ -701,7 +716,10 @@ describe('cpsNormalizeError', () => {
   it('should not treat an arbitrary object with a status-shaped key as an HTTP error', () => {
     expect(
       cpsNormalizeError({ status: 404, message: 'unrelated object' })
-    ).toEqual({ name: 'UnknownError', message: CPS_REDACTED });
+    ).toEqual({
+      name: 'UnknownError',
+      message: CPS_REDACTED
+    });
   });
 
   it('should report the type of a thrown object without serializing it', () => {

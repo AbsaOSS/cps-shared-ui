@@ -9,21 +9,15 @@
 export {
   CPS_DEFAULT_TELEMETRY_CONFIG,
   CPS_REDACT_CONFIG,
-  CPS_TELEMETRY_IDENTITY,
-  CpsTelemetryIdentity
+  CPS_TELEMETRY_IDENTITY
 } from './lib/config/cps-telemetry-common.config/cps-telemetry-common.config';
-export {
-  CPS_BI_TELEMETRY_CONFIG,
-  CpsBiTelemetryConfig
-} from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
-export {
-  CPS_LOG_CONFIG,
-  CpsLogConfig
-} from './lib/config/cps-log.config/cps-log.config';
-export {
-  CPS_SCENARIO_TELEMETRY_CONFIG,
-  CpsScenarioTelemetryConfig
-} from './lib/config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
+export type { CpsTelemetryIdentity } from './lib/config/cps-telemetry-common.config/cps-telemetry-common.config';
+export { CPS_BI_TELEMETRY_CONFIG } from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
+export type { CpsBiTelemetryConfig } from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
+export { CPS_LOG_CONFIG } from './lib/config/cps-log.config/cps-log.config';
+export type { CpsLogConfig } from './lib/config/cps-log.config/cps-log.config';
+export { CPS_SCENARIO_TELEMETRY_CONFIG } from './lib/config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
+export type { CpsScenarioTelemetryConfig } from './lib/config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 
 // Providers
 export {
@@ -46,14 +40,13 @@ export { CpsNoopLogApiProvider } from './lib/providers/cps-noop-log-api.provider
 export { CpsBroadcastLogApiProvider } from './lib/providers/cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 
 // Models
-export {
+export type {
   CpsBiEvent,
   CpsBiEventDetail,
   CpsBiEventName,
   CpsBiEventNames
 } from './lib/models/cps-bi.models/cps-bi.models';
-export {
-  CPS_LOG_LEVEL_ORDER,
+export type {
   CpsLogger,
   CpsLoggerName,
   CpsLoggerNames,
@@ -61,7 +54,8 @@ export {
   CpsLogLevel,
   CpsLogRecord
 } from './lib/models/cps-log.models/cps-log.models';
-export {
+export { CPS_LOG_LEVEL_ORDER } from './lib/models/cps-log.models/cps-log.models';
+export type {
   CpsScenarioAggregate,
   CpsScenarioName,
   CpsScenarioNames,
@@ -79,7 +73,9 @@ export {
 export {
   CPS_DEFAULT_EVENT_NAMESPACE,
   CPS_TELEMETRY_EVENT_TYPE,
-  cpsEventTypes,
+  cpsEventTypes
+} from './lib/models/cps-telemetry-common.models/cps-telemetry-common.models';
+export type {
   CpsTelemetryError,
   CpsTelemetryEventTypes,
   CpsTelemetryMetadata
@@ -112,14 +108,10 @@ export { CpsTelemetrySink } from './lib/sinks/cps-telemetry/cps-telemetry-abstra
 export { CpsNoopTelemetrySink } from './lib/sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 
 // Utilities an application or a custom sink needs
-export {
-  CpsTraceScenarioOptions,
-  traceScenario
-} from './lib/scenario/cps-scenario-operators/cps-scenario-operators';
-export {
-  CpsDebugFlag,
-  cpsIsDebugEnabled
-} from './lib/utils/cps-debug-flag.util/cps-debug-flag.util';
+export { traceScenario } from './lib/scenario/cps-scenario-operators/cps-scenario-operators';
+export type { CpsTraceScenarioOptions } from './lib/scenario/cps-scenario-operators/cps-scenario-operators';
+export { cpsIsDebugEnabled } from './lib/utils/cps-debug-flag.util/cps-debug-flag.util';
+export type { CpsDebugFlag } from './lib/utils/cps-debug-flag.util/cps-debug-flag.util';
 export { cpsUuid } from './lib/utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 export {
   CPS_DEFAULT_REDACT_CONFIG,

@@ -165,7 +165,7 @@ export class CpsBroadcastChannelStub {
 /** Minimal Web Locks API stub: grants each named lock to one requester at a time. */
 class LockManagerStub {
   private readonly held = new Set<string>();
-  private readonly queues = new Map<string, Array<() => void>>();
+  private readonly queues = new Map<string, (() => void)[]>();
 
   request(name: string, callback: () => Promise<void>): Promise<void> {
     return new Promise((resolve) => {
@@ -649,7 +649,9 @@ describe('broadcast telemetry across realms', () => {
 
       expect(
         shellSink.ofType(CPS_TELEMETRY_EVENT_TYPE.scenario)[0].payload
-      ).toMatchObject({ parentScenarioId: 'shell-scenario-1' });
+      ).toMatchObject({
+        parentScenarioId: 'shell-scenario-1'
+      });
     });
   });
 

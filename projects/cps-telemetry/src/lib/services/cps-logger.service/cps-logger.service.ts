@@ -7,11 +7,11 @@ import {
 import { CPS_LOG_CONFIG } from '../../config/cps-log.config/cps-log.config';
 import {
   CPS_LOG_LEVEL_ORDER,
-  CpsLogger,
-  CpsLoggerName,
-  CpsLogDetail,
-  CpsLogLevel,
-  CpsLogRecord
+  type CpsLogger,
+  type CpsLoggerName,
+  type CpsLogDetail,
+  type CpsLogLevel,
+  type CpsLogRecord
 } from '../../models/cps-log.models/cps-log.models';
 import { CpsTelemetryMonitor } from '../cps-telemetry-monitor.service/cps-telemetry-monitor.service';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
@@ -127,7 +127,9 @@ export class CpsLoggerService implements OnDestroy {
    *
    * @example
    * ```typescript
-   * const lines = await this.logger.query({ correlationId: scenario.id });
+   * private readonly loggers = inject(CpsLoggerService);
+   *
+   * const lines = await this.loggers.query({ correlationId: scenario.id });
    * ```
    *
    * Fail-open: a provider that throws or rejects resolves to `[]`.
@@ -332,7 +334,6 @@ function writeToConsole(record: CpsLogRecord): void {
     .join('');
   const suffix = record.correlationId ? ` (${record.correlationId})` : '';
 
-  // eslint-disable-next-line no-console
   console[record.level](
     `[${record.application}]${scope} ${record.message}${suffix}`,
     record

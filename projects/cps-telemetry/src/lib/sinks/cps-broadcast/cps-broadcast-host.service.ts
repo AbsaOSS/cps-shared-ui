@@ -280,7 +280,6 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
 
     if (forwards) {
       cpsSafeVoid('broadcastHost.forwardingRealmWarning', () => {
-        // eslint-disable-next-line no-console
         console.warn(
           `[cps-telemetry] this realm forwards its own telemetry on channel "${this.connection.channelName}", so it cannot also host it; the host stays inactive. Provide the host only in the realm with the real sink and log provider`
         );
@@ -300,7 +299,6 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
 
     if (activeCount > 0) {
       cpsSafeVoid('broadcastHost.duplicateWarning', () => {
-        // eslint-disable-next-line no-console
         console.warn(
           `[cps-telemetry] a second telemetry host is active on channel "${channelName}" in this document; only one realm should provide it`
         );

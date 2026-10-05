@@ -19,7 +19,7 @@ import {
   CpsTelemetryError,
   CpsTelemetryMetadata
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
-import {
+import type {
   CpsLogDetail,
   CpsLogger,
   CpsLogRecord
@@ -156,9 +156,7 @@ class ThrowingLogApi implements CpsLogApiProvider {
 }
 
 describe('CpsLoggerService', () => {
-  /** The service itself — for `getLogger` and `query`. */
   let service: CpsLoggerService;
-  /** What most tests exercise: a named logger, the only way records are written. */
   let logger: CpsLogger;
   let transport: RecordingLogApi;
   let sink: RecordingSink;
@@ -523,8 +521,6 @@ describe('CpsLoggerService', () => {
     });
 
     it('should return the very same logger for a name asked for twice', () => {
-      // A name is identity, not a label: it addresses one logger the way
-      // a file name addresses one file.
       configure();
 
       expect(service.getLogger('checkout')).toBe(service.getLogger('checkout'));
@@ -548,9 +544,6 @@ describe('CpsLoggerService', () => {
     });
 
     it('should ignore a stray logger key in per-call detail', () => {
-      // `CpsLogDetail` has no `logger` field, so this cannot be written in
-      // TypeScript — the cast proves the runtime honours the logger's own
-      // name too, rather than relying on the type alone.
       configure();
       service
         .getLogger('checkout')
@@ -560,10 +553,6 @@ describe('CpsLoggerService', () => {
     });
 
     it('should name every record, there being no unnamed way in', () => {
-      // getLogger is the service's only writing entry point, so a record
-      // without a `logger` cannot be produced — the four things that key
-      // off the name (levels, the debugLogger filter, query({ logger })
-      // and the console prefix) always have something to target.
       configure();
       logger.log('always named');
       service.getLogger('checkout').log('named too');

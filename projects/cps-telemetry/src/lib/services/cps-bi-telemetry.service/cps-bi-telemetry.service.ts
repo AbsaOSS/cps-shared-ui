@@ -4,7 +4,7 @@ import {
   CPS_TELEMETRY_IDENTITY
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import { CPS_BI_TELEMETRY_CONFIG } from '../../config/cps-bi-telemetry.config/cps-bi-telemetry.config';
-import {
+import type {
   CpsBiEvent,
   CpsBiEventDetail,
   CpsBiEventName
@@ -202,6 +202,5 @@ function writeToConsole(
   eventType: string,
   event: CpsBiEvent
 ): void {
-  // eslint-disable-next-line no-console
   console.log(`[${event.application}][bi] ${eventName} -> ${eventType}`, event);
 }

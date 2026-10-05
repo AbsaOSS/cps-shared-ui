@@ -9,7 +9,9 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "sourceMap": true,
     "skipLibCheck": true,
+    "isolatedModules": false,
     "types": []
   },
   "include": ["src/**/*.ts"],

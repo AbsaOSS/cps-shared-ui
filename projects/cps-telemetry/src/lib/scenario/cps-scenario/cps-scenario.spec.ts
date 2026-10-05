@@ -51,7 +51,7 @@ function createDeps(overrides: Partial<CpsScenarioDeps> = {}): {
       environment: 'test',
       version: '1.0.0'
     },
-    scenarioConfig: { ...CPS_DEFAULT_TELEMETRY_CONFIG.scenario },
+    scenarioTelemetryConfig: { ...CPS_DEFAULT_TELEMETRY_CONFIG.scenario },
     redact: CPS_DEFAULT_REDACT_CONFIG,
     sink,
     onSettled: (_id, record) => settled.push(record),

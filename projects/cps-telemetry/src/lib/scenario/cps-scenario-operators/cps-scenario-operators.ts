@@ -1,7 +1,8 @@
-import { defer, MonoTypeOperatorFunction, Observable } from 'rxjs';
+import { defer } from 'rxjs';
+import type { MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { CpsScenarioOutcome } from '../../models/cps-scenario.models/cps-scenario.models';
-import { CpsScenario } from '../cps-scenario/cps-scenario';
+import type { CpsScenarioOutcome } from '../../models/cps-scenario.models/cps-scenario.models';
+import type { CpsScenario } from '../cps-scenario/cps-scenario';
 import { cpsSafe } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 
 /**

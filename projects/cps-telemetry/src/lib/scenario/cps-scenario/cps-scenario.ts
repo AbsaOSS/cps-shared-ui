@@ -55,10 +55,12 @@ export interface CpsScenarioDeps {
   /** The application's identity, shared by every telemetry concern. */
   identity: CpsTelemetryIdentity;
   /** Scenario-specific tuning — timeouts, step cap, User Timing marks. */
-  scenarioConfig: CpsScenarioTelemetryConfig;
+  scenarioTelemetryConfig: CpsScenarioTelemetryConfig;
   /** Redaction settings, shared by every telemetry concern. */
   redact: CpsRedactConfig;
   sink: CpsTelemetrySink;
+  /** Schedules timers outside Angular's zone when the host provides one. */
+  runOutsideAngular?: <T>(callback: () => T) => T;
   /** Called once with the scenario's id when it reaches a terminal state. */
   onSettled: (scenarioId: string, record: CpsScenarioRecord) => void;
   /** Told about every event right after it is handed to the sink. */
@@ -156,7 +158,8 @@ export class CpsScenario {
   ) {
     this.eventTypes = cpsEventTypes(deps.identity.eventNamespace);
     this.userTimingsEnabled =
-      deps.scenarioConfig.userTimings || cpsIsDebugEnabled('debugScenario');
+      deps.scenarioTelemetryConfig.userTimings ||
+      cpsIsDebugEnabled('debugScenario');
     this.metadata = cpsSafe(
       'scenario.construct',
       () => cpsRedactMetadata(options.metadata, deps.redact) ?? {},
@@ -245,7 +248,7 @@ export class CpsScenario {
 
       this._stepCount++;
       this.openStepIncluded =
-        this._stepCount <= this.deps.scenarioConfig.maxSteps;
+        this._stepCount <= this.deps.scenarioTelemetryConfig.maxSteps;
 
       const step: CpsScenarioStep = {
         name,
@@ -443,7 +446,7 @@ export class CpsScenario {
       userId: this.userId()
     };
 
-    if (this._stepCount > this.deps.scenarioConfig.maxSteps) {
+    if (this._stepCount > this.deps.scenarioTelemetryConfig.maxSteps) {
       record.exceededStepsLimit = true;
     }
 
@@ -637,7 +640,10 @@ export class CpsScenario {
     this.measureStepTiming(realStepName);
     this.previousStep = realStepName;
 
-    if (this.deps.scenarioConfig.emitLifecycleEvents && this.openStepIncluded) {
+    if (
+      this.deps.scenarioTelemetryConfig.emitLifecycleEvents &&
+      this.openStepIncluded
+    ) {
       const stepEvent: CpsScenarioStepEvent = {
         scenarioId: this._id,
         scenarioName: this.options.name,
@@ -719,7 +725,8 @@ export class CpsScenario {
 
   private scheduleTimeout(): void {
     const timeoutMs =
-      this.options.timeoutMs ?? this.deps.scenarioConfig.defaultTimeoutMs;
+      this.options.timeoutMs ??
+      this.deps.scenarioTelemetryConfig.defaultTimeoutMs;
 
     if (!timeoutMs || timeoutMs <= 0) {
       this.scheduleMarkCleanupFallback();
@@ -728,18 +735,20 @@ export class CpsScenario {
 
     const remainingMs = Math.max(0, timeoutMs - (cpsNow() - this.startedAt));
 
-    this.timeoutHandle = setTimeout(
-      () => {
-        this.timeoutHandle = undefined;
-        if (remainingMs > MAX_TIMEOUT_MS) {
-          this.scheduleTimeout();
-          return;
-        }
-        this.settle('timeout', {
-          message: `Scenario did not settle within ${timeoutMs}ms`
-        });
-      },
-      Math.min(remainingMs, MAX_TIMEOUT_MS)
+    this.timeoutHandle = this.runOutsideAngular(() =>
+      setTimeout(
+        () => {
+          this.timeoutHandle = undefined;
+          if (remainingMs > MAX_TIMEOUT_MS) {
+            this.scheduleTimeout();
+            return;
+          }
+          this.settle('timeout', {
+            message: `Scenario did not settle within ${timeoutMs}ms`
+          });
+        },
+        Math.min(remainingMs, MAX_TIMEOUT_MS)
+      )
     );
   }
 
@@ -753,9 +762,6 @@ export class CpsScenario {
    * independent of whether the scenario ever settles.
    *
    * A no-op when `userTimings` is off or `markCleanupFallbackMs` is `0`.
-   * Measured from the scenario's start and, like {@link scheduleTimeout},
-   * rescheduled in hops of at most `setTimeout`'s 32-bit limit, so a longer
-   * fallback is honoured rather than firing after about 24.8 days.
    *
    * This clears marks only — it does not settle the scenario. A scenario
    * left unsettled this way never fires {@link CpsScenarioDeps.onSettled},
@@ -763,29 +769,29 @@ export class CpsScenario {
    * the life of the page.
    */
   private scheduleMarkCleanupFallback(): void {
-    const fallbackMs = this.deps.scenarioConfig.markCleanupFallbackMs;
+    const fallbackMs = this.deps.scenarioTelemetryConfig.markCleanupFallbackMs;
     if (!this.userTimingsEnabled || !fallbackMs || fallbackMs <= 0) {
       return;
     }
 
-    const remainingMs = Math.max(0, fallbackMs - (cpsNow() - this.startedAt));
-
-    this.markCleanupTimer = setTimeout(
-      () => {
-        this.markCleanupTimer = undefined;
-        if (remainingMs > MAX_TIMEOUT_MS) {
-          this.scheduleMarkCleanupFallback();
-          return;
-        }
-        cpsClearMarks(this.timingMarks);
-        this.timingMarks.length = 0;
-      },
-      Math.min(remainingMs, MAX_TIMEOUT_MS)
+    this.markCleanupTimer = this.runOutsideAngular(() =>
+      setTimeout(
+        () => {
+          this.markCleanupTimer = undefined;
+          cpsClearMarks(this.timingMarks);
+          this.timingMarks.length = 0;
+        },
+        Math.min(fallbackMs, MAX_TIMEOUT_MS)
+      )
     );
   }
 
   private clearMarkCleanupTimer(): void {
     this.markCleanupTimer = CpsScenario.clearHandle(this.markCleanupTimer);
+  }
+
+  private runOutsideAngular<T>(callback: () => T): T {
+    return this.deps.runOutsideAngular?.(callback) ?? callback();
   }
 
   /**
@@ -830,8 +836,7 @@ export class CpsScenario {
    *
    * The only place any of the three happens, so console output, sink output
    * and what an observer sees can never drift apart: one object, one call
-   * site. A sink that throws leaves the monitor untold, since nothing was
-   * handed over.
+   * site.
    *
    * @param emission the payload and which of the two events it is
    * @param summary a short human-readable prefix for the console line
@@ -867,7 +872,6 @@ function writeToConsole(
   eventType: string,
   payload: CpsScenarioEmission['payload']
 ): void {
-  // eslint-disable-next-line no-console
   console.log(
     `[${payload.application}][scenario] ${payload.scenarioName} ${summary} -> ${eventType}`,
     payload

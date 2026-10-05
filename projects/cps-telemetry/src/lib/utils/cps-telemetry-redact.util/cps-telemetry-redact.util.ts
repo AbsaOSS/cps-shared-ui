@@ -59,7 +59,7 @@ export interface CpsRedactConfig {
    * express. Runs independently of `scanValuePatterns`/`extraValuePatterns`.
    * A throwing function is skipped (logged in dev mode), not fatal.
    */
-  extraValueTransforms: Array<(value: string) => string>;
+  extraValueTransforms: ((value: string) => string)[];
 }
 
 /** Keys whose values never leave the browser, matched case-insensitively (`Authorization`, `access_token`, `apiKey`, …). */
@@ -300,7 +300,6 @@ export function cpsScrubString(value: string, config: CpsRedactConfig): string {
       result = transform(result);
     } catch (error) {
       if (cpsIsDevMode()) {
-        // eslint-disable-next-line no-console
         console.warn(
           '[cps-telemetry] An extraValueTransforms function threw and was skipped',
           error
@@ -368,7 +367,6 @@ export function cpsRedactMetadata(
   }
 
   if (truncated && cpsIsDevMode()) {
-    // eslint-disable-next-line no-console
     console.warn(
       `[cps-telemetry] Metadata exceeded maxKeys (${config.maxKeys}) and was truncated. Attributes past the limit were dropped silently in production.`
     );
@@ -420,7 +418,6 @@ export function cpsMergeMetadata(
   }
 
   if (truncated && cpsIsDevMode()) {
-    // eslint-disable-next-line no-console
     console.warn(
       `[cps-telemetry] Combined metadata exceeded maxKeys (${config.maxKeys}) and was truncated. Attributes past the limit were dropped silently in production.`
     );

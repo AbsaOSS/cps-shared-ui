@@ -5,7 +5,8 @@
     "outDir": "../../../out-tsc/spec-rum",
     "rootDir": "..",
     "types": ["jest"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "isolatedModules": false
   },
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
 }

@@ -9,8 +9,8 @@
  */
 
 export { provideCpsTelemetryRumSink } from './lib/cps-rum.providers/cps-rum.providers';
-export {
-  CPS_RUM_CREDENTIALS_PROVIDER,
+export { CPS_RUM_CREDENTIALS_PROVIDER } from './lib/cps-rum-credentials/cps-rum-credentials';
+export type {
   CpsRumAppMonitorConfig,
   CpsRumBootstrap,
   CpsRumCredentials,

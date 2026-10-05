@@ -62,7 +62,7 @@ export function cpsIsDebugEnabled(flag: CpsDebugFlag, name?: string): boolean {
  * @param flag the debug switch that has to be on
  * @param write performs the console call; never runs when the flag is off
  * @param name the name to test against a list-valued flag, e.g. a logger
- *   name for `debugLogger`
+ * name for `debugLogger`
  *
  * @group Utils
  */

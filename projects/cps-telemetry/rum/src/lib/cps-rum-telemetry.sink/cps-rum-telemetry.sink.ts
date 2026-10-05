@@ -256,7 +256,7 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
    * sampling.
    *
    * @param userId the application's own user identifier, or `undefined`
-   *   (or `''`) on sign-out
+   * (or `''`) on sign-out
    */
   setUserId(userId: string | undefined): void {
     cpsSafeVoid('rum.setUserId', () => {
@@ -281,7 +281,6 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
     cpsSafeVoid('rum.flush', () => {
       if (!this.awsRum) {
         if (this.buffer.length > 0 && cpsIsDevMode()) {
-          // eslint-disable-next-line no-console
           console.warn(
             `[cps-telemetry] ${this.buffer.length} RUM event(s) lost: page unloaded before RUM finished initializing`
           );
@@ -539,7 +538,6 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
       return;
     }
     cpsSafeVoid('rum.reportFailure', () => {
-      // eslint-disable-next-line no-console
       console.warn(
         `[cps-telemetry] ${operation}`,
         cpsNormalizeError(error, this.redact)
@@ -607,7 +605,9 @@ export class CpsRumTelemetrySink extends CpsTelemetrySink implements OnDestroy {
     error: CpsTelemetryError,
     metadata?: CpsTelemetryMetadata
   ): CpsTelemetryError {
-    const origin = metadata?.application;
+    const origin = metadata
+      ? (metadata as Record<string, unknown>).application
+      : undefined;
     if (typeof origin !== 'string' || origin === this.config.application) {
       return error;
     }

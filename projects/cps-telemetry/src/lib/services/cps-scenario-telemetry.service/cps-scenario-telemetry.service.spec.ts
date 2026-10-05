@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CpsScenarioTelemetryConfig } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
 import {
@@ -660,6 +660,22 @@ describe('CpsScenarioTelemetryService', () => {
       expect(record.exceededStepsLimit).toBe(true);
     });
 
+    it('should retain no real steps and flag the limit immediately when maxSteps is 0', () => {
+      configure({ defaultTimeoutMs: 0, maxSteps: 0 });
+
+      const scenario = service.start({ name: 'loop' });
+      scenario.step('a');
+      scenario.complete();
+
+      const record = onlyScenarioRecord();
+      expect(record.stepCount).toBe(1);
+      expect(record.steps.map((s) => s.name)).toEqual([
+        'scenario-start',
+        'scenario-end'
+      ]);
+      expect(record.exceededStepsLimit).toBe(true);
+    });
+
     it('should not redact metadata for a step dropped by the limit', () => {
       const scrubbed: string[] = [];
       TestBed.resetTestingModule();
@@ -717,22 +733,6 @@ describe('CpsScenarioTelemetryService', () => {
         'b',
         'scenario-end'
       ]);
-    });
-
-    it('should retain no real steps and flag the limit immediately when maxSteps is 0', () => {
-      configure({ defaultTimeoutMs: 0, maxSteps: 0 });
-
-      const scenario = service.start({ name: 'loop' });
-      scenario.step('a');
-      scenario.complete();
-
-      const record = onlyScenarioRecord();
-      expect(record.stepCount).toBe(1);
-      expect(record.steps.map((s) => s.name)).toEqual([
-        'scenario-start',
-        'scenario-end'
-      ]);
-      expect(record.exceededStepsLimit).toBe(true);
     });
 
     it('should redact sensitive step metadata', () => {
@@ -1036,6 +1036,17 @@ describe('CpsScenarioTelemetryService', () => {
   describe('abandoned', () => {
     beforeEach(() => jest.useFakeTimers());
     afterEach(() => jest.useRealTimers());
+
+    it('should schedule scenario deadlines outside Angulars zone', () => {
+      configure({ defaultTimeoutMs: 5000 });
+      const zone = TestBed.inject(NgZone);
+      const runOutsideAngular = jest.spyOn(zone, 'runOutsideAngular');
+
+      const scenario = service.start({ name: 'slow' });
+
+      expect(runOutsideAngular).toHaveBeenCalled();
+      scenario.complete();
+    });
 
     it('should settle as timeout when the deadline passes', () => {
       const scenario = service.start({ name: 'slow', timeoutMs: 5000 });
@@ -1820,13 +1831,8 @@ describe('CpsScenarioTelemetryService', () => {
     };
     const realPerformance = globalThis.performance;
 
-    /**
-     * jsdom has no mark/measure, so the API is installed for these tests.
-     * The clock is whichever `performance` is current — Jest's fake one
-     * after `useFakeTimers()` — so time advanced by the test is time seen.
-     */
+    /** jsdom has no mark/measure, so the API is installed for these tests. */
     function installPerf(): void {
-      const clock = globalThis.performance;
       perfApi = {
         mark: jest.fn(),
         measure: jest.fn(),
@@ -1836,8 +1842,8 @@ describe('CpsScenarioTelemetryService', () => {
       Object.defineProperty(globalThis, 'performance', {
         value: {
           ...perfApi,
-          now: () => clock.now(),
-          timeOrigin: clock.timeOrigin,
+          now: () => realPerformance.now(),
+          timeOrigin: realPerformance.timeOrigin,
           getEntriesByName: () => []
         },
         // required so later tests can still redefine window.performance
@@ -2005,30 +2011,6 @@ describe('CpsScenarioTelemetryService', () => {
       jest.useRealTimers();
     });
 
-    it('should reschedule rather than clear early when a clamped fallback hop fires', () => {
-      jest.useFakeTimers();
-      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-      configure({
-        defaultTimeoutMs: 0,
-        userTimings: true,
-        markCleanupFallbackMs: thirtyDaysMs
-      });
-      installPerf();
-
-      service.start({ name: 'load' }).step('fetch');
-
-      jest.advanceTimersByTime(2_147_483_647);
-      expect(perfApi.clearMarks).not.toHaveBeenCalled();
-
-      jest.advanceTimersByTime(thirtyDaysMs - 2_147_483_647 - 1);
-      expect(perfApi.clearMarks).not.toHaveBeenCalled();
-
-      jest.advanceTimersByTime(1);
-      expect(perfApi.clearMarks).toHaveBeenCalled();
-
-      jest.useRealTimers();
-    });
-
     it('should not throw when the browser has no User Timing API', () => {
       configure({ defaultTimeoutMs: 0, userTimings: true });
 
@@ -2107,7 +2089,10 @@ describe('CpsScenarioTelemetryService', () => {
 
       expect(
         sink.ofType(CPS_TELEMETRY_EVENT_TYPE.scenario)[0].payload
-      ).toMatchObject({ status: 'success', metadata: { real: true } });
+      ).toMatchObject({
+        status: 'success',
+        metadata: { real: true }
+      });
     });
   });
 

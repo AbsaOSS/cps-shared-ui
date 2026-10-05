@@ -1,12 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable, OnDestroy } from '@angular/core';
+import { inject, Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
   CPS_REDACT_CONFIG,
   CPS_TELEMETRY_IDENTITY
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import { CPS_SCENARIO_TELEMETRY_CONFIG } from '../../config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
-import {
+import type {
   CpsScenarioName,
   CpsScenarioOptions,
   CpsScenarioRecord
@@ -29,7 +29,7 @@ import { CpsTelemetryMonitor } from '../cps-telemetry-monitor.service/cps-teleme
  * Concurrent scenarios are legitimate — several journeys, tabs or panels
  * can run at once — so this is a smell threshold, not a limit: nothing is
  * dropped or rejected when it is crossed. Set well above any plausible
- * real concurrency, so crossing it means scenarios with `timeoutMs: 0` or
+ * real concurrency, so crossing it might mean scenarios with `timeoutMs: 0` or
  * long lifecycles are being started and never settled.
  */
 const ACTIVE_SCENARIO_WARN_THRESHOLD = 50;
@@ -59,16 +59,20 @@ const ACTIVE_SCENARIO_WARN_THRESHOLD = 50;
 @Injectable({ providedIn: 'root' })
 export class CpsScenarioTelemetryService implements OnDestroy {
   private readonly identity = inject(CPS_TELEMETRY_IDENTITY);
-  private readonly scenarioConfig = inject(CPS_SCENARIO_TELEMETRY_CONFIG);
+  private readonly scenarioTelemetryConfig = inject(
+    CPS_SCENARIO_TELEMETRY_CONFIG
+  );
+
   private readonly redact = cpsRedactConfigFor(
     inject(CPS_REDACT_CONFIG),
-    this.scenarioConfig.redact
+    this.scenarioTelemetryConfig.redact
   );
 
   private readonly sink = inject(CpsTelemetrySink);
   private readonly monitor = inject(CpsTelemetryMonitor);
   private readonly document = inject(DOCUMENT);
   private readonly isBrowser = cpsIsBrowser();
+  private readonly zone = inject(NgZone, { optional: true });
 
   private readonly active = new Map<string, CpsScenario>();
   private readonly onPageHide = () => this.flushActive();
@@ -117,10 +121,12 @@ export class CpsScenarioTelemetryService implements OnDestroy {
   start(options: CpsScenarioOptions): CpsScenario {
     const scenario = new CpsScenario(options, {
       identity: this.identity,
-      scenarioConfig: this.scenarioConfig,
+      scenarioTelemetryConfig: this.scenarioTelemetryConfig,
       redact: this.redact,
       sink: this.sink,
       monitor: this.monitor,
+      runOutsideAngular: (callback) =>
+        this.zone?.runOutsideAngular(callback) ?? callback(),
       onSettled: (scenarioId, record) => {
         this.active.delete(scenarioId);
         if (!this._settled$.observed) {
@@ -137,7 +143,6 @@ export class CpsScenarioTelemetryService implements OnDestroy {
     cpsSafeVoid('scenarioTelemetry.register', () => {
       this.active.set(scenario.id, scenario);
       if (cpsIsDevMode() && this.active.size > ACTIVE_SCENARIO_WARN_THRESHOLD) {
-        // eslint-disable-next-line no-console
         console.warn(
           `[cps-telemetry] High number of active scenarios (${this.active.size}). Ensure scenarios with timeoutMs: 0 or long lifecycles are settled on destroy.`
         );
