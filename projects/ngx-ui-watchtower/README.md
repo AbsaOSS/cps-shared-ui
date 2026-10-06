@@ -8,6 +8,9 @@ Telemetry for Angular apps, in three parts:
 
 Events go to AWS CloudWatch RUM. Logs go to a backend you provide.
 
+The library's names are prefixed `Uwt`, short for UI WatchTower —
+`UwtLoggerService`, `provideUwtTelemetry`, `UWT_LOG_API_PROVIDER`.
+
 ## Install
 
 ```bash
