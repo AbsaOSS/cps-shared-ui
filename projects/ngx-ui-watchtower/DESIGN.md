@@ -2483,7 +2483,7 @@ more than one tab, give each tab its own channel:
 
 ```ts
 // shell — generate once per page load, before composing any fragment
-const channelId = `uwt-telemetry-${crypto.randomUUID()}`;
+const channelId = `ngx-ui-watchtower-${crypto.randomUUID()}`;
 
 providers: [
   provideUwtTelemetry({ application: 'shell', environment: 'prod', version }),
@@ -2589,7 +2589,7 @@ whatever the destination.
 
 ### How to connect OTel
 
-1. **Create an entry point** `ngx-ui-watchtower/otel`, set up like
+1. **Create an entry point** `@absaoss-cps/ngx-ui-watchtower/otel`, set up like
    `@absaoss-cps/ngx-ui-watchtower/rum`, depending only on `@opentelemetry/api` and
    `@opentelemetry/api-logs` (optional peers). The application brings the
    OTel SDK and exporters.

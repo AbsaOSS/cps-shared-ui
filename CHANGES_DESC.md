@@ -1,8 +1,8 @@
-# Add `cps-telemetry`: a reusable Angular telemetry library, wired into `composition`
+# Add `@absaoss-cps/ngx-ui-watchtower`: a reusable Angular telemetry library, wired into `composition`
 
 ## Summary
 
-Adds `cps-telemetry`, a new Angular library providing application logging,
+Adds `@absaoss-cps/ngx-ui-watchtower`, a new Angular library providing application logging,
 scenario (user-journey) health telemetry, business/UX event tracking, and
 PII redaction, with pluggable transport sinks — AWS CloudWatch RUM,
 cross-realm broadcast (for micro-frontend compositions), and a no-op sink
@@ -10,31 +10,41 @@ for local development. Nothing in the library is specific to any one
 application: event names, configuration, and AWS credentials are all
 supplied by the host app.
 
+Each app sends to exactly one destination, registered with
+`provideUwtTelemetryDestination`; swapping it — for a future OpenTelemetry
+exporter, say — is one provider line, with no change to application code.
+An optional in-app diagnostics popup shows, live, everything the app hands
+to its destinations. The package is published publicly on npm as
+`@absaoss-cps/ngx-ui-watchtower`.
+
 The library has a single real runtime dependency, `tslib`. `aws-rum-web`
 is an optional peer dependency, needed only when the RUM sink is used, so
 an application using only the broadcast or no-op sink never pulls in the
 AWS SDK. This is enforced structurally, not just by convention: the RUM
 sink and its providers live in a separate secondary entry point,
-`cps-telemetry/rum` (see "Two entry points" under Sinks below), so an
+`@absaoss-cps/ngx-ui-watchtower/rum` (see "Two entry points" under Sinks below), so an
 application that never imports from it never needs `aws-rum-web`
-resolvable at build time either.
+resolvable at build time either. The diagnostics popup is split out the same
+way, into `@absaoss-cps/ngx-ui-watchtower/diagnostics`: it is built from
+cps-ui-kit, an optional peer dependency nothing else in the library touches.
 
 This PR also wires the library end-to-end into `composition`, the
 component-library documentation/demo app, so every major capability
 (scenarios, logs, BI events, redaction) is exercised by real, running
 code rather than only by unit tests.
 
-Architecture, design rationale, and a line-by-line verification of every
-AWS RUM SDK capability claim (checked against the installed
-`aws-rum-web@3.2.1` source, not just its docs) live in
-`projects/cps-telemetry/DESIGN.md`. Usage documentation lives in
-`projects/cps-telemetry/README.md`.
+`projects/ngx-ui-watchtower/README.md` is a short quick guide.
+`projects/ngx-ui-watchtower/DESIGN.md` is the full development design:
+architecture, the reasoning behind each decision, a line-by-line verification
+of every AWS RUM SDK capability claim (checked against the installed
+`aws-rum-web@3.2.1` source, not just its docs), and how a future
+OpenTelemetry destination would be connected.
 
 ---
 
 ## Scenario telemetry
 
-`CpsScenario` / `CpsScenarioTelemetryService` model one user journey — load
+`UwtScenario` / `UwtScenarioTelemetryService` model one user journey — load
 customer data, submit a form, run a search — as an object with steps,
 aggregates, and a terminal outcome.
 
@@ -66,13 +76,18 @@ aggregates, and a terminal outcome.
   timeout explicitly disabled and no navigation to clean it up is still
   guarded by an independent mark-cleanup fallback, so marks can't
   accumulate in the Performance buffer for the life of the page.
+- **Timers stay out of Angular's zone.** A scenario's timeout and the
+  mark-cleanup fallback are scheduled outside the zone, so a running
+  scenario never holds the application unstable (`whenStable`, hydration)
+  for the length of its timeout. A configured duration longer than
+  `setTimeout`'s 32-bit limit is honoured by rescheduling, for both.
 - **`elapsed` (the scenario and step timeline-position field) is built from
   the _host_ page's clock, not the local realm's.** It exists specifically
   so events from one session can be lined up against each other — but a
   fragment's own `performance.now()` runs from a later `timeOrigin` than
   the shell's, so a per-realm value would silently put shell- and
   fragment-originated records on two different, non-comparable timelines
-  despite sharing one session id. `cpsElapsedNow()` prefers
+  despite sharing one session id. `uwtElapsedNow()` prefers
   `top.performance.now()`, mirroring the same fix already applied to User
   Timing marks above, falling back to the local realm's clock if `top`
   throws (cross-origin, sandboxed).
@@ -90,7 +105,7 @@ aggregates, and a terminal outcome.
   snapshot (including a nested step's own `metadata`) can never change
   what's later emitted at settlement.
 - **`complete()`/`fail()`/`incomplete()`/`cancel()` share one signature** —
-  `(outcome?: CpsScenarioOutcome)` — so custom metadata, status codes, a
+  `(outcome?: UwtScenarioOutcome)` — so custom metadata, status codes, a
   `reason`/`message`, and (for `fail()`) the thrown `error` are all
   available identically regardless of which one is called.
 - **`traceScenario()`** RxJS pipeable operator bridges Observable streams
@@ -105,7 +120,7 @@ aggregates, and a terminal outcome.
   caller's own `scenario.cancel({ reason })` from a `switchMap` projector
   is always too late, since `switchMap` unsubscribes (and thereby settles)
   the prior inner Observable before the new projector ever runs.
-- **`CpsScenarioTelemetryService.settled$`** is a public `Observable` of
+- **`UwtScenarioTelemetryService.settled$`** is a public `Observable` of
   every scenario as it settles, plus `.find(scenarioId)` and
   `.getActive()` for introspecting in-flight scenarios — a debug overlay,
   a retry prompt, or a test harness can all build on this directly. Each
@@ -116,19 +131,19 @@ aggregates, and a terminal outcome.
 
 ## Logging
 
-`CpsLoggerService` provides structured, leveled application logs, decoupled
+`UwtLoggerService` provides structured, leveled application logs, decoupled
 from any specific backend.
 
 - **No hard dependency on a sink**: logging's actual destination is the
-  application's `CpsLogApiProvider`, not `CpsTelemetrySink` — a sink is
+  application's `UwtLogApiProvider`, not `UwtTelemetrySink` — a sink is
   only an optional enrichment source (session/user id correlation,
   RUM error mirroring). An application that wants only structured logging,
   with no scenarios, BI events, or RUM at all, is not required to configure
-  any sink to use it, unlike `CpsScenarioTelemetryService`/
-  `CpsBITelemetryService`, which still fail at bootstrap without one.
+  any sink to use it, unlike `UwtScenarioTelemetryService`/
+  `UwtBITelemetryService`, which still fail at bootstrap without one.
 - **Per-logger minimum levels**, overridable per named logger, so one noisy
   area can run verbose while the rest of the app stays quiet.
-- **Delivery is entirely the application's `CpsLogApiProvider` policy**: the
+- **Delivery is entirely the application's `UwtLogApiProvider` policy**: the
   library does no batching of its own — `send()` is called once per record,
   as it is written. A provider that wants to batch, retry, or authenticate
   does so on its own terms, with full knowledge of what its endpoint
@@ -139,9 +154,15 @@ from any specific backend.
   without ever firing `pagehide`), and on teardown — so a provider that
   chooses to queue its own records doesn't lose the last, still-pending
   ones when the tab closes.
-- **Correlation**: passing a scenario's `logger` binds its id as
-  `correlationId` on every line that logger writes, so frontend logs,
-  frontend telemetry, and backend logs can be reassembled into one journey.
+- **Named loggers only.** `UwtLoggerService` is a factory: `getLogger(name)`
+  returns the one logger for that name — asking twice returns the same
+  instance — and the service has no unnamed `log`/`warn`/`error`. Every
+  record therefore carries the logger name that per-logger levels, the
+  `debugLogger` filter, `query({ logger })` and the console prefix key off.
+- **Correlation**: pass `correlationId: scenario.id` on a log call, and
+  frontend logs, frontend telemetry and backend logs can be reassembled into
+  one journey; `query({ correlationId })` reads the lines back across every
+  logger.
   `correlationId` is scrubbed the same way every other string field on a
   log record is — normally a plain scenario uuid, unaffected either way,
   but nothing enforces that at runtime, so a caller accidentally binding
@@ -155,12 +176,14 @@ from any specific backend.
   the same application-first rule already used for User Timing entry names,
   so that in a composed page the realm a line came from is visible at a
   glance instead of every realm sharing one indistinguishable prefix.
-- **`CPS_LOG_LEVEL_ORDER`** is exported, so a consumer's own log-query
+- **`UwtNoopLogApiProvider`** is the explicit "no log backend": records are
+  discarded and `query()` finds none.
+- **`UWT_LOG_LEVEL_ORDER`** is exported, so a consumer's own log-query
   filtering can compare levels without re-declaring the ordering.
 
 ## Business/UX events
 
-`CpsBITelemetryService.track()` records discrete, durationless events —
+`UwtBITelemetryService.track()` records discrete, durationless events —
 feature adoption, interaction analysis, funnel steps — supplied entirely by
 the application (the library defines no business vocabulary of its own).
 
@@ -199,7 +222,7 @@ the application (the library defines no business vocabulary of its own).
 
 ## PII redaction
 
-`cps-telemetry-redact.util.ts` provides the shallow, synchronous redaction
+`uwt-telemetry-redact.util.ts` provides the shallow, synchronous redaction
 pass every metadata object, log message, and normalized error goes through
 before reaching a sink.
 
@@ -219,7 +242,7 @@ before reaching a sink.
 - **URL scrubbing** strips query strings and fragments wherever a URL
   appears in a string, including one embedded inside a longer message, not
   only when the whole string is a bare path.
-- **Error normalization** (`cpsNormalizeError`) redacts stack traces and
+- **Error normalization** (`uwtNormalizeError`) redacts stack traces and
   messages, and specifically recognizes `HttpErrorResponse`-shaped objects
   (structurally, without importing `@angular/common/http`) so an HTTP
   failure's name/message survive normalization instead of being flattened
@@ -235,46 +258,57 @@ string` functions run on every string value after all pattern-based
   (`extraKeyPatterns`, value-pattern scanning, URL-query stripping) for
   that concern — the built-in credential denylist, size caps, error
   normalization, and `extraValueTransforms` are a safety floor and stay on
-  regardless, via `cpsRedactConfigFor()`.
+  regardless, via `uwtRedactConfigFor()`.
 - **Per-resolved-config isolation**: `extraKeyPatterns`/`extraValuePatterns`/`extraValueTransforms`
-  arrays are always copied fresh per `provideCpsTelemetry()` call, so
+  arrays are always copied fresh per `provideUwtTelemetry()` call, so
   mutating one application's array can never leak into another's.
 
 ## Sinks
 
-`CpsTelemetrySink` is the six-method abstraction every sink implements;
+`UwtTelemetrySink` is the six-method abstraction every sink implements;
 applications inject the same services regardless of which is active.
 
-- **RUM sink** (`CpsRumTelemetrySink`) wraps `aws-rum-web`, lazy-loaded so
+- **Exactly one destination, swappable.** Every destination — RUM,
+  broadcast, no-op, or one an application writes — is registered with
+  `provideUwtTelemetryDestination(SinkClass, { init? })`, which binds the
+  sink and runs its optional startup hook once, fail-open. Registering two
+  different destinations fails at bootstrap instead of silently keeping the
+  last. `uwtClassifyTelemetryEvent(eventType, payload)` tells a sink whether
+  it received a scenario record, a step event, a BI event or something
+  else, for any event namespace.
+- **Sign-out**: `setUserId(undefined)` or `setUserId('')` — an empty string
+  identifies nobody.
+
+- **RUM sink** (`UwtRumTelemetrySink`) wraps `aws-rum-web`, lazy-loaded so
   the SDK is never in an application's bundle unless the RUM sink is
   actually selected.
-  - **Two entry points.** `CpsRumTelemetrySink`, `provideCpsTelemetryRumSink`,
-    and everything `CpsRumCredentialsProvider`-shaped are exported from a
-    separate secondary entry point, `cps-telemetry/rum`, not the main
-    `cps-telemetry` barrel. Lazy-loading `aws-rum-web` at runtime prevents
+  - **Two entry points.** `UwtRumTelemetrySink`, `provideUwtTelemetryRumSink`,
+    and everything `UwtRumCredentialsProvider`-shaped are exported from a
+    separate secondary entry point, `@absaoss-cps/ngx-ui-watchtower/rum`, not the main
+    `@absaoss-cps/ngx-ui-watchtower` barrel. Lazy-loading `aws-rum-web` at runtime prevents
     it from being _bundled_ unless reached, but does not prevent it from
     being _resolved_ — a static `import` is parsed as part of building the
     module graph before any dead-code elimination runs, and a bundler must
     resolve a dynamic `import()`'s specifier at build time to construct its
     lazy chunk regardless of whether that branch ever executes. So keeping
-    `CpsRumTelemetrySink` out of the main entry point's module graph
+    `UwtRumTelemetrySink` out of the main entry point's module graph
     entirely — not just tree-shaking it — is what lets an application
-    using only `provideCpsTelemetrySink('broadcast' | 'noop')` skip
+    using only `provideUwtTelemetrySink('broadcast' | 'noop')` skip
     installing `aws-rum-web` altogether. The cost: ng-packagr hardcodes
     each entry point's TypeScript `rootDir` to that entry's own directory,
-    so `cps-telemetry/rum` cannot reach the main entry's internal
-    `cpsSafe`/`cpsIsBrowser`/`cpsUuid`-style helpers by relative import;
+    so `@absaoss-cps/ngx-ui-watchtower/rum` cannot reach the main entry's internal
+    `uwtSafe`/`uwtIsBrowser`/`uwtUuid`-style helpers by relative import;
     rather than exporting them publicly just to satisfy that constraint, it
     carries a small verbatim private copy of its own. See DESIGN.md §3,
     "Entry points", for the full reasoning.
   - Exposes the library's near-complete `aws-rum-web` configuration
     surface (sampling, session behavior, dispatch/buffering, cookies,
-    page tracking, tracing) through `CpsRumAppMonitorConfig`, hand-typed so
+    page tracking, tracing) through `UwtRumAppMonitorConfig`, hand-typed so
     no SDK types leak into the public API; every field with a real SDK
     default is left unset unless the application overrides it, so the
     library's defaults never drift from the SDK's own.
   - Credentials come from an application-supplied
-    `CpsRumCredentialsProvider`; a failed or unreachable broker degrades to
+    `UwtRumCredentialsProvider`; a failed or unreachable broker degrades to
     a disabled-but-non-throwing sink rather than breaking the app.
   - Credential refresh retries on failure instead of the refresh chain
     dying permanently after one transient error, and is safe against the
@@ -285,7 +319,7 @@ applications inject the same services regardless of which is active.
     delay instead of scheduling an immediate refresh, so a broker stuck
     returning bad credentials can't tight-loop the sink.
   - A credential refresh returning `null` disables RUM for the session, as
-    documented on `CpsRumCredentialsProvider.load()`: the client is torn
+    documented on `UwtRumCredentialsProvider.load()`: the client is torn
     down — the SDK's own `disable()` is called on the live instance, not
     just the reference dropped, so its listeners, plugins, and dispatch
     timer actually stop — rather than continuing to collect with now-stale
@@ -311,11 +345,11 @@ applications inject the same services regardless of which is active.
     declined or failed to initialize, which is a deliberate silent
     discard, not an unload-mid-init loss. `record()`,
     `recordPageView(pageId)`, and `recordError(error)` all buffer and
-    replay identically — an error mirrored from `CpsLoggerService` (or
+    replay identically — an error mirrored from `UwtLoggerService` (or
     reported directly) before the SDK loads is preserved, not dropped.
     The three record/buffer/dispatch call sites share one internal
     helper, so the guard can't drift between them.
-  - `CpsRumAppMonitorConfig.clientBuilder` is typed on `aws-rum-web`'s own
+  - `UwtRumAppMonitorConfig.clientBuilder` is typed on `aws-rum-web`'s own
     `ClientBuilder` parameter shape in full (`endpoint: URL, region:
 string, credentials?: ClientBuilderCredentials, compressionStrategy?:
 { enabled: boolean }`) rather than `(...args: unknown[]) => unknown` —
@@ -324,15 +358,15 @@ string, credentials?: ClientBuilderCredentials, compressionStrategy?:
     parameters contravariantly, so a real, concretely-typed `ClientBuilder`
     is not assignable to a parameter typed `unknown`, and the escape hatch
     could never be used without a cast.
-- **Broadcast sink/host** (`CpsBroadcastTelemetrySink` /
-  `CpsTelemetryBroadcastHost`) let a micro-frontend fragment forward its
+- **Broadcast sink/host** (`UwtBroadcastTelemetrySink` /
+  `UwtTelemetryBroadcastHost`) let a micro-frontend fragment forward its
   telemetry to the shell that owns the real RUM client, so a composed page
   gets one AWS session and one event budget instead of one per fragment.
   Session id **and** user id are synced two-way across every realm on the
   channel — a user id set in one fragment is visible to a sibling
   fragment's own logs, not just to the shell.
   - The shell can safely run in more than one tab without double-recording
-    one event: `CpsTelemetryBroadcastHost` holds a Web Locks-based leader
+    one event: `UwtTelemetryBroadcastHost` holds a Web Locks-based leader
     election per channel, so only the elected tab records forwarded
     telemetry. "Passive" describes the losing tab's _host_ only, not its
     fragments — they keep forwarding on the same origin-wide channel
@@ -353,7 +387,7 @@ string, credentials?: ClientBuilderCredentials, compressionStrategy?:
     recognized as released the moment it is granted, and the lock passes
     straight to the next queued tab instead of being held forever by one
     that already closed.
-  - A genuine duplicate host provider (e.g. `provideCpsTelemetryBroadcastHost()`
+  - A genuine duplicate host provider (e.g. `provideUwtTelemetryBroadcastHost()`
     supplied in both a root and a lazy-loaded module) is detected and warned
     about via a small same-realm registry, not the `identity` broadcast —
     the broadcast is origin-wide and can't tell a real duplicate apart from
@@ -365,7 +399,7 @@ string, credentials?: ClientBuilderCredentials, compressionStrategy?:
     just passed through: any same-origin code can post to a
     `BroadcastChannel` by name, and without this a payload with a nested
     object/array value would reach a receiving sink's own sanitizer (e.g.
-    `CpsRumTelemetrySink.sanitize()`, which trusts the shape rather than
+    `UwtRumTelemetrySink.sanitize()`, which trusts the shape rather than
     re-checking it) unvalidated.
   - A forwarded error carries the originating fragment's identity through
     the wire protocol; since the underlying AWS RUM client's `recordError`
@@ -373,42 +407,70 @@ string, credentials?: ClientBuilderCredentials, compressionStrategy?:
     cross-realm origin into the error's `name` (e.g. `[fragment-app]
 TypeError`) rather than losing it and attributing every fragment error
     to the shell.
+  - **Fragment logs go to the shell too.** `provideUwtTelemetrySink('broadcast')`
+    also binds `UWT_LOG_API_PROVIDER` to `UwtBroadcastLogApiProvider`, so a
+    fragment needs no log backend: records, `flush()` and `query()` — a
+    request answered by the shell's provider, or `[]` after a 10-second
+    timeout when no shell answers — all go through the shell. The host
+    requires a log provider of its own and fails at bootstrap without one;
+    in a realm that itself forwards, it warns and stays inactive rather than
+    looping; and it links a fragment's mirrored error to that fragment's log
+    record for the diagnostics popup.
 - **No-op sink** for local development and testing — telemetry calls
   succeed and do nothing, so a fragment developed standalone never breaks
   for lack of a shell to compose into. Every override keeps the abstract
-  `CpsTelemetrySink` method's full parameter list rather than narrowing to
+  `UwtTelemetrySink` method's full parameter list rather than narrowing to
   zero arguments — TypeScript's bivariant method-override checking would
   have allowed the narrower form to still satisfy `extends
-CpsTelemetrySink`, but it would make the _concrete_ `CpsNoopTelemetrySink`
+UwtTelemetrySink`, but it would make the _concrete_ `UwtNoopTelemetrySink`
   type itself reject a normal call like `.record(type, payload)`.
   `getUserId()` retains what `setUserId()` was last given, rather than
   always reporting `undefined` — the one piece of state this sink can't
-  just discard along with everything else, since `CpsLoggerService` reads
+  just discard along with everything else, since `UwtLoggerService` reads
   it for user correlation on every log record, and logs still reach a real
-  `CPS_LOG_API_PROVIDER` even in noop mode.
+  `UWT_LOG_API_PROVIDER` even in noop mode.
+
+## Diagnostics popup
+
+`@absaoss-cps/ngx-ui-watchtower/diagnostics` adds an in-app window that
+lists, live, every BI event, scenario event and log record the app hands to
+its destinations — without DevTools, in every environment.
+
+- Opened with ⇧⌥⌘8 on macOS or Ctrl+Alt+Shift+8 elsewhere. The keys are
+  configurable, or can be switched off in favour of `open()` from the app's
+  own UI; `enabled` limits who can open it at all.
+- Three sections — BI, scenario, logging — each with its own search, field
+  filters and JSON download or copy; pause and clear apply to all three. At
+  most 500 events per section, discarded when the popup closes.
+- Built from cps-ui-kit components, non-modal so the app stays usable
+  beside it, light theme only for now.
+- Fed by `UwtTelemetryMonitor` (main entry): every hand-off site publishes
+  the object it just sent, after the hand-off, deep-copied, and only while
+  something is subscribed — otherwise it costs one check per event. It never
+  sends anything itself.
 
 ## Configuration & providers
 
-- `provideCpsTelemetry(identity, ...features)` takes the application's
+- `provideUwtTelemetry(identity, ...features)` takes the application's
   identity (`application`/`environment`/`version`, event namespace) as a
   mandatory first argument, composed with optional, independently
   omittable `withLogging(...)`, `withScenarios(...)`, `withBIEvents(...)`,
   `withRedaction(...)` features — mirroring Angular's own
   `provideHttpClient(withInterceptors(...))` convention. Each concern gets
-  its own DI token (`CPS_LOG_CONFIG`, `CPS_SCENARIO_TELEMETRY_CONFIG`,
-  `CPS_BI_TELEMETRY_CONFIG`, `CPS_REDACT_CONFIG`, plus `CPS_TELEMETRY_IDENTITY` for
+  its own DI token (`UWT_LOG_CONFIG`, `UWT_SCENARIO_TELEMETRY_CONFIG`,
+  `UWT_BI_TELEMETRY_CONFIG`, `UWT_REDACT_CONFIG`, plus `UWT_TELEMETRY_IDENTITY` for
   identity), so a consumer can override one concern through plain DI
   substitution without touching the others. BI event tracking (dedup
   window and key cap) is configurable via `withBIEvents(...)` rather than
   fixed at hardcoded constants.
-- `provideCpsTelemetrySink('broadcast' | 'noop')`,
-  `provideCpsTelemetryRumSink()` (from `cps-telemetry/rum`), and
-  `provideCpsTelemetryBroadcastHost()` select the transport explicitly —
+- `provideUwtTelemetrySink('broadcast' | 'noop')`,
+  `provideUwtTelemetryRumSink()` (from `@absaoss-cps/ngx-ui-watchtower/rum`), and
+  `provideUwtTelemetryBroadcastHost()` select the transport explicitly —
   there is no default destination, so an app can never look wired up while
-  silently shipping nothing.
+  silently shipping nothing, and there is never more than one.
 - Scenario, step, logger, and BI event names are typed as a closed
   vocabulary via TypeScript module augmentation
-  (`declare module 'cps-telemetry'`), so a typo in a name is a compile error
+  (`declare module '@absaoss-cps/ngx-ui-watchtower'`), so a typo in a name is a compile error
   instead of a second, silently incomplete metric series.
 
 ---
@@ -488,14 +550,14 @@ integrations below build on it:
 - **Bare `console.warn` calls replaced with the structured logger** in
   three places — a route missing a `<title>` (`routing` logger, offending
   URL as context), a code example missing both `htmlCode` and `tsCode`,
-  and a failed clipboard-copy — each now reports through `CpsLoggerService`
+  and a failed clipboard-copy — each now reports through `UwtLoggerService`
   instead of an unstructured console line.
 - Every component above cancels its own in-flight scenario(s) on
   `ngOnDestroy`, so navigating away mid-journey doesn't leave the scenario
   registry (or the RUM event budget) accumulating abandoned entries.
 - `resolveDeploymentEnvironment()` — this workspace has no
   `environment.ts`/`fileReplacements` build variant, so
-  `provideCpsTelemetry`'s `environment` is derived from
+  `provideUwtTelemetry`'s `environment` is derived from
   `window.location.hostname` at bootstrap instead of a hardcoded literal:
   recognized local-dev hostnames (`localhost`, `127.0.0.1`, `[::1]`,
   `0.0.0.0`) resolve to `'development'`, everything else to `'production'`.
@@ -513,16 +575,20 @@ integrations below build on it:
   from the browser's HTTP cache.
 - `telemetry.schema.ts` — this application's declared scenario/step/logger
   vocabulary.
+- **Diagnostics popup** — `provideUwtTelemetryDiagnostics()` in
+  `app.module.ts`, so the popup opens on every page with the shortcut.
 
 ## Documentation
 
-- **`DESIGN.md`** — the library's architecture, the reasoning behind each
-  design decision, and a capability-by-capability verification of what
-  `aws-rum-web` actually supports, checked against the installed SDK
-  source rather than assumed from its public documentation.
-- **`README.md`** — setup, scenario/logging/BI usage, redaction
-  configuration, advanced RUM configuration, debugging flags, and testing
-  guidance for consumers of the library.
+- **`README.md`** — a short quick guide: setup, scenarios, BI events,
+  logging, the signed-in user, privacy, micro-frontends, debugging and the
+  diagnostics popup, testing.
+- **`DESIGN.md`** — the full development design in 14 sections: goals,
+  architecture and public API, data model, lifecycle, AWS mapping (verified
+  against the installed `aws-rum-web` source rather than its public
+  documentation), metrics, correlation, privacy, configuration, error
+  handling, usage, micro-frontends, and how to connect an OpenTelemetry
+  destination later.
 - **`telemetry-trace.capture.spec.ts`** (`projects/composition/src/app/`)
   — drives `composition`'s real services with
   `debugScenario`/`debugLogger`/`debugBI` enabled and captures the exact
@@ -534,42 +600,52 @@ integrations below build on it:
 
 ## Workspace wiring
 
-- `angular.json` gains the `cps-telemetry` library project (ng-packagr
+- `angular.json` gains the `@absaoss-cps/ngx-ui-watchtower` library project (ng-packagr
   build, dev/production `tsconfig` split); `tsconfig.json` adds it to the
   workspace's project references.
-- `projects/cps-telemetry/rum/ng-package.json` declares the
-  `cps-telemetry/rum` secondary entry point (ng-packagr discovers it
+- `projects/ngx-ui-watchtower/rum/ng-package.json` and
+  `projects/ngx-ui-watchtower/diagnostics/ng-package.json` declare the
+  `/rum` and `/diagnostics` secondary entry points (ng-packagr discovers it
   automatically by scanning the primary package's directory for nested
   `ng-package.json` files — no separate `package.json` or `angular.json`
   project entry is needed for a secondary entry point).
-- `jest.config.js` maps both the `cps-telemetry` and `cps-telemetry/rum`
+- `jest.config.js` maps all three specifiers — `@absaoss-cps/ngx-ui-watchtower`,
+  `…/rum` and `…/diagnostics` —
   import specifiers to source, the same way `cps-ui-kit` already is, so
   tests and the IDE resolve them without a prior build; `tsconfig.json`'s
-  `"paths"` gets the matching pair of entries.
-- `projects/cps-telemetry/rum/tsconfig.lib.json` /
+  `"paths"` gets the matching
+  entries.
+- The package build resolves cps-ui-kit from its built output
+  (`dist/cps-ui-kit`, a `paths` entry in the library's `tsconfig.lib.json`),
+  so the kit stays an external dependency rather than being compiled in —
+  which is why `build:telemetry` builds cps-ui-kit first.
+- `projects/ngx-ui-watchtower/rum/tsconfig.lib.json` /
   `tsconfig.spec.json` (new) and their addition to the root `tsconfig.json`'s
   `"references"` — ng-packagr generates its own tsconfig per entry point
   internally and doesn't need these, but without them nothing covered the
   `rum/` directory as a TypeScript project, so `tsc --build` and the IDE's
-  language service couldn't resolve its `cps-telemetry` import at all.
+  language service couldn't resolve its `@absaoss-cps/ngx-ui-watchtower` import at all.
 - CI (`.github/workflows/cps-shared-ui-checkers.yml`) gains a
-  `build:telemetry` step and a `test:cps-telemetry` step alongside the
+  `build:telemetry` step and a `test:ngx-ui-watchtower` step alongside the
   existing `cps-ui-kit` ones, plus a `build:documentation` step building
   `composition` itself — the one thing in this repo that actually imports
-  `cps-telemetry`/`cps-telemetry/rum` and exercises the real, bundled
+  `@absaoss-cps/ngx-ui-watchtower`/`@absaoss-cps/ngx-ui-watchtower/rum` and exercises the real, bundled
   integration; without it, a secondary-entry-point resolution failure or
   other integration break could merge with every other check green.
-- Root `package.json` gains `build:telemetry`/`test:cps-telemetry` scripts
+- Root `package.json` gains `build:telemetry`/`test:ngx-ui-watchtower` scripts
   and `aws-rum-web` as a dependency (for `composition`'s real use of the RUM
-  sink); `projects/cps-telemetry/package.json` /
-  `projects/cps-telemetry/ng-package.json` declare the new library's own
-  metadata, peer dependencies, and ng-packagr output configuration.
+  sink); `projects/ngx-ui-watchtower/package.json` /
+  `projects/ngx-ui-watchtower/ng-package.json` declare the new library's own
+  metadata, peer dependencies (`cps-ui-kit`, `@angular/forms` and
+  `@angular/animations` optional, for the popup), `publishConfig: { access:
+"public" }` for the scoped npm package, and ng-packagr output
+  configuration.
 - `projects/composition/tsconfig.app.json` gains `skipLibCheck: true` —
   needed because `aws-rum-web` pulls in `rrweb` typings that don't compile
   under this workspace's TypeScript settings — and an explicit `rootDir:
 "../../"`, matching its sibling `tsconfig.spec.json`'s existing setting;
   without it, `composition`'s own path-mapped imports of `cps-ui-kit`/
-  `cps-telemetry` source (outside its own directory) violated TypeScript's
+  `@absaoss-cps/ngx-ui-watchtower` source (outside its own directory) violated TypeScript's
   rootDir check. `projects/composition/tsconfig.json` — the plain
   `tsconfig.json` VS Code's language service actually resolves first when a
   file is opened, separate from `tsconfig.app.json` — gets both the same
@@ -577,10 +653,13 @@ integrations below build on it:
 
 ## Testing
 
-- **636 tests** in `cps-telemetry`, **264 tests** in `composition`, all
-  passing.
+- **822 tests** in `@absaoss-cps/ngx-ui-watchtower`, **266 tests** in
+  `composition`, all passing.
+- **Playwright**: 8 end-to-end tests for the diagnostics popup
+  (`playwright/composition/telemetry-diagnostics.spec.ts`) and 3
+  accessibility tests for it in `accessibility-composition.spec.ts`.
 - Lint clean across the workspace.
-- Both production builds (`cps-telemetry` library build,
+- Both production builds (`@absaoss-cps/ngx-ui-watchtower` library build,
   `composition` documentation-site build) succeed with no compiler or CommonJS warnings.
 - The test suite includes mutation-checked coverage of every
   concurrency/lifecycle-sensitive path (destroy-time cancellation,
@@ -588,13 +667,12 @@ integrations below build on it:
   timeout rescheduling itself (rather than settling early) when a clamped
   32-bit-overflow-protection hop fires before the real configured deadline,
   the mark-cleanup fallback timer sharing that same overflow protection
-  (accepting an early fire there, since it's harmless cleanup hygiene, not
-  a status determination), `elapsed`'s host-page-relative clock, cross-realm identity sync, redaction ordering,
+  (rescheduling the same way rather than clearing marks early), `elapsed`'s host-page-relative clock, cross-realm identity sync, redaction ordering,
   dedup keying, RxJS operator stream settlement, the leader-election
   destroy-while-queued race, `settled$`'s copy-on-emit, the dedup key-cap
   eviction-ordering fix, a successful upload settling under `take(1)`,
   `traceScenario`'s cancel-on-unsubscribe path, the dedup key's
-  `JSON.stringify` collision fix, `CpsNoopTelemetrySink`'s `getUserId()`
+  `JSON.stringify` collision fix, `UwtNoopTelemetrySink`'s `getUserId()`
   retention, the download anchor surviving a throwing `click()`, the
   initial-load disable-flag parity, the dedup cache's hot-key eviction
   fix, the leader election's synchronous-throw fail-open, per-call
@@ -615,11 +693,11 @@ integrations below build on it:
   each such test
   was verified to actually fail when its corresponding guard is removed,
   not only to pass against the current implementation.
-  `CpsRumAppMonitorConfig.clientBuilder`'s completed parameter signature is
+  `UwtRumAppMonitorConfig.clientBuilder`'s completed parameter signature is
   verified two ways: a runtime test whose inline `clientBuilder`
   implementation leaves `credentials`/`compressionStrategy` unannotated,
   relying on the field's own type for contextual inference; and, like
-  `CpsNoopTelemetrySink`'s preserved method signatures, at the type level
+  `UwtNoopTelemetrySink`'s preserved method signatures, at the type level
   (`tsc --build`) — since ts-jest itself runs with `diagnostics: false`,
   neither jest nor this workspace's own `npm run typecheck` would catch a
   regression here on its own, see "Known gaps" below.
@@ -636,7 +714,7 @@ typecheck` still exited `0` with no output. `tsc --build` does catch it,
   but currently also reports roughly 100 pre-existing errors across the
   workspace unrelated to this PR (`aws-rum-web`'s bundled `rrweb` typings;
   ambient Node globals `@types/node` would otherwise supply, since this
-  workspace's `tsconfig`s deliberately omit it — see `cps-telemetry`'s own
+  workspace's `tsconfig`s deliberately omit it — see `@absaoss-cps/ngx-ui-watchtower`'s own
   `types: ["jest"]` convention). Pre-existing, not introduced by this PR;
   switching the script to `tsc --build` would immediately need triaging
   those separately. Left as-is here; flagging for a follow-up.

@@ -55,7 +55,7 @@ jobs:
         run: npm run test:coverage:cps-ui-kit
 
       - name: Run telemetry library unit tests
-        run: npm run test:cps-telemetry
+        run: npm run test:ngx-ui-watchtower
 
       - name: Comment coverage on PR
         uses: ArtiomTr/jest-coverage-report-action@v2
