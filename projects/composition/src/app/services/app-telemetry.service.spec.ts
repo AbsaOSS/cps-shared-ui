@@ -11,13 +11,13 @@ import {
 } from '@angular/router';
 import { Subject } from 'rxjs';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsLogRecord,
-  CpsScenarioTelemetryService,
-  CpsTelemetrySink,
-  provideCpsTelemetry,
+  UWT_LOG_API_PROVIDER,
+  UwtLogRecord,
+  UwtScenarioTelemetryService,
+  UwtTelemetrySink,
+  provideUwtTelemetry,
   withScenarios
-} from 'cps-telemetry';
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from '../services/app-log-api.provider';
 import { AppTelemetryService } from './app-telemetry.service';
 
@@ -37,7 +37,7 @@ describe('AppTelemetryService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry(
+        provideUwtTelemetry(
           {
             application: 'composition-test',
             environment: 'test',
@@ -45,9 +45,9 @@ describe('AppTelemetryService', () => {
           },
           withScenarios({ defaultTimeoutMs: 0 })
         ),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
         {
-          provide: CpsTelemetrySink,
+          provide: UwtTelemetrySink,
           useValue: {
             record: (eventType: string, payload: Record<string, unknown>) =>
               events.push({ eventType, payload }),
@@ -69,7 +69,7 @@ describe('AppTelemetryService', () => {
   /** The scenario records emitted so far. */
   function scenarios(): Record<string, unknown>[] {
     return events
-      .filter((e) => e.eventType === 'com.cps.scenario')
+      .filter((e) => e.eventType === 'com.uwt.scenario')
       .map((e) => e.payload);
   }
 
@@ -80,7 +80,7 @@ describe('AppTelemetryService', () => {
   it('should open a scenario on NavigationStart', () => {
     routerEvents.next(new NavigationStart(1, '/button'));
 
-    const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+    const scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
     expect(scenarioTelemetry.getActive()).toHaveLength(1);
     expect(scenarioTelemetry.getActive()[0].name).toBe('route-navigation');
     expect(events).toHaveLength(0);
@@ -173,7 +173,7 @@ describe('AppTelemetryService', () => {
     it('should settle a scenario NavigationStart already opened before the skip follows', () => {
       routerEvents.next(new NavigationStart(1, '/button'));
 
-      const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+      const scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
       expect(scenarioTelemetry.getActive()).toHaveLength(1);
 
       routerEvents.next(new NavigationSkipped(1, '/button', 'same url'));
@@ -201,7 +201,7 @@ describe('AppTelemetryService', () => {
         new NavigationSkipped(2, '/checkbox/examples', 'same url')
       );
 
-      const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+      const scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
       expect(scenarioTelemetry.getActive()).toHaveLength(0);
       expect(scenarios()[0]).toMatchObject({
         route: '/checkbox',
@@ -232,7 +232,7 @@ describe('AppTelemetryService', () => {
 
   describe('logging', () => {
     /** Log records captured by the default in-memory transport. */
-    function logs(): CpsLogRecord[] {
+    function logs(): UwtLogRecord[] {
       return TestBed.inject(AppLogApiProvider).getRecords();
     }
 
@@ -296,7 +296,7 @@ describe('AppTelemetryService', () => {
     routerEvents.next(new NavigationStart(1, '/button'));
     routerEvents.next(new NavigationStart(2, '/select'));
 
-    const scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+    const scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
     expect(scenarioTelemetry.getActive()).toHaveLength(2);
 
     routerEvents.next(
@@ -436,7 +436,7 @@ describe('AppTelemetryService', () => {
   it('should track a theme change as a BI event', () => {
     service.trackThemeChanged('dark');
 
-    const bi = events.filter((e) => e.eventType === 'com.cps.bi');
+    const bi = events.filter((e) => e.eventType === 'com.uwt.bi');
     expect(bi).toHaveLength(1);
     expect(bi[0].payload).toMatchObject({
       eventName: 'theme_changed',
@@ -448,7 +448,7 @@ describe('AppTelemetryService', () => {
     /** The BI events emitted so far. */
     function biEvents(): Record<string, unknown>[] {
       return events
-        .filter((e) => e.eventType === 'com.cps.bi')
+        .filter((e) => e.eventType === 'com.uwt.bi')
         .map((e) => e.payload);
     }
 
@@ -492,14 +492,14 @@ describe('AppTelemetryService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
-          provideCpsTelemetry({
+          provideUwtTelemetry({
             application: 'composition-test',
             environment: 'test',
             version: '0.0.0'
           }),
-          { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+          { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
           {
-            provide: CpsTelemetrySink,
+            provide: UwtTelemetrySink,
             useValue: {
               record: () => {
                 throw new Error('sink is broken');
@@ -531,7 +531,7 @@ describe('AppTelemetryService', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
-          provideCpsTelemetry(
+          provideUwtTelemetry(
             {
               application: 'composition-test',
               environment: 'test',
@@ -539,9 +539,9 @@ describe('AppTelemetryService', () => {
             },
             withScenarios({ defaultTimeoutMs: 0 })
           ),
-          { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+          { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
           {
-            provide: CpsTelemetrySink,
+            provide: UwtTelemetrySink,
             useValue: {
               record: (eventType: string, payload: Record<string, unknown>) =>
                 events.push({ eventType, payload }),

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import type {
-  CpsRumBootstrap,
-  CpsRumCredentialsProvider
-} from 'cps-telemetry/rum';
+  UwtRumBootstrap,
+  UwtRumCredentialsProvider
+} from '@absaoss-cps/ngx-ui-watchtower/rum';
 
 /**
  * Shape returned by the backend RUM broker.
@@ -31,14 +31,14 @@ interface RumInitResponse {
  * long-lived AWS identity.
  */
 @Injectable({ providedIn: 'root' })
-export class AppRumCredentialsProvider implements CpsRumCredentialsProvider {
+export class AppRumCredentialsProvider implements UwtRumCredentialsProvider {
   /**
    * Fetches the current app monitor settings and credentials.
    *
    * @returns the bootstrap payload, or `null` when RUM is switched off for this
    *   deployment or the broker is unreachable
    */
-  async load(): Promise<CpsRumBootstrap | null> {
+  async load(): Promise<UwtRumBootstrap | null> {
     let response: Response;
     try {
       response = await fetch('/rum/init', {

@@ -12,15 +12,15 @@ import * as path from 'path';
 import { Subject, throwError, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsLoggerService,
-  CpsScenarioTelemetryService,
-  CpsTelemetrySink,
-  provideCpsTelemetry,
+  UWT_LOG_API_PROVIDER,
+  UwtLoggerService,
+  UwtScenarioTelemetryService,
+  UwtTelemetrySink,
+  provideUwtTelemetry,
   traceScenario,
   withLogging,
   withRedaction
-} from 'cps-telemetry';
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from './services/app-log-api.provider';
 import { AppTelemetryService } from './services/app-telemetry.service';
 import { TablePageComponent } from './pages/table-page/table-page.component';
@@ -34,7 +34,7 @@ import './services/telemetry.schema';
  *
  * Drives `composition`'s real wiring with `debugScenario`/`debugLogger`/
  * `debugBI` on, and records two things per case: the exact payload handed
- * to `CpsTelemetrySink`/`AppLogApiProvider`, and the exact console line the
+ * to `UwtTelemetrySink`/`AppLogApiProvider`, and the exact console line the
  * library's debug flags print.
  *
  * Every `it()` appends to one shared `trace`/`consoleLines` pair; the final
@@ -92,7 +92,7 @@ function clone<T>(value: T): T {
 }
 
 /** Captures what a `RecordingSink`-style double is handed. */
-class CapturingSink extends CpsTelemetrySink {
+class CapturingSink extends UwtTelemetrySink {
   group = 'unlabeled';
   real = true;
 
@@ -182,13 +182,13 @@ describe('Real: route-navigation', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition',
           environment: 'production',
           version: '1.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink },
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink },
         { provide: Router, useValue: { events: routerEvents.asObservable() } }
       ]
     }).compileComponents();
@@ -323,13 +323,13 @@ describe('Real: table-page-load', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition',
           environment: 'production',
           version: '1.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink }
       ]
     }).compileComponents();
 
@@ -396,13 +396,13 @@ describe('Real: file-upload', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition',
           environment: 'production',
           version: '1.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink }
       ]
     }).compileComponents();
 
@@ -498,13 +498,13 @@ describe('Real: autocomplete', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition',
           environment: 'production',
           version: '1.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink },
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink },
         FormBuilder
       ]
     }).compileComponents();
@@ -593,13 +593,13 @@ describe('Real: BI events', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition',
           environment: 'production',
           version: '1.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink },
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink },
         { provide: Router, useValue: { events: new Subject().asObservable() } }
       ]
     }).compileComponents();
@@ -666,7 +666,7 @@ describe('Real: BI events', () => {
 
 describe('Synthetic: statuses and fields composition never triggers', () => {
   let sink: CapturingSink;
-  let scenarioTelemetry: CpsScenarioTelemetryService;
+  let scenarioTelemetry: UwtScenarioTelemetryService;
 
   beforeEach(async () => {
     sink = new CapturingSink();
@@ -675,17 +675,17 @@ describe('Synthetic: statuses and fields composition never triggers', () => {
 
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition',
           environment: 'production',
           version: '1.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink }
       ]
     }).compileComponents();
 
-    scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+    scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
   });
 
   it('`incomplete` — no composition page ever calls .incomplete()', () => {
@@ -744,7 +744,7 @@ describe('Synthetic: mirrorErrorsToRum (composition leaves this off)', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry(
+        provideUwtTelemetry(
           {
             application: 'composition',
             environment: 'production',
@@ -752,12 +752,12 @@ describe('Synthetic: mirrorErrorsToRum (composition leaves this off)', () => {
           },
           withLogging({ mirrorErrorsToRum: true })
         ),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink }
       ]
     });
 
-    const logger = TestBed.inject(CpsLoggerService).getLogger('app');
+    const logger = TestBed.inject(UwtLoggerService).getLogger('app');
     logger.error('Simulated unexpected failure', {
       error: new Error('Simulated unexpected failure')
     });
@@ -777,7 +777,7 @@ describe('Synthetic: redaction (composition never logs PII-shaped data)', () => 
 
     TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry(
+        provideUwtTelemetry(
           {
             application: 'composition',
             environment: 'production',
@@ -785,13 +785,13 @@ describe('Synthetic: redaction (composition never logs PII-shaped data)', () => 
           },
           withRedaction({ scanValuePatterns: ['email', 'creditCard'] })
         ),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink }
       ]
     });
 
     const logApi = TestBed.inject(AppLogApiProvider);
-    const logger = TestBed.inject(CpsLoggerService).getLogger('app');
+    const logger = TestBed.inject(UwtLoggerService).getLogger('app');
     logger.log('User submitted contact form', {
       metadata: {
         email: 'jane.doe@example.com',
@@ -824,7 +824,7 @@ describe('Synthetic: minLevel filtering (composition leaves minLevel at the defa
 
     TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry(
+        provideUwtTelemetry(
           {
             application: 'composition',
             environment: 'production',
@@ -832,13 +832,13 @@ describe('Synthetic: minLevel filtering (composition leaves minLevel at the defa
           },
           withLogging({ minLevel: 'warn' })
         ),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useValue: sink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useValue: sink }
       ]
     });
 
     const logApi = TestBed.inject(AppLogApiProvider);
-    const logger = TestBed.inject(CpsLoggerService).getLogger('app');
+    const logger = TestBed.inject(UwtLoggerService).getLogger('app');
     logger.log('This should be dropped by minLevel');
     logger.warn('This should still go through');
 

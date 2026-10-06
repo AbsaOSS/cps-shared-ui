@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.uwt-diagnostics-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.uwt-diagnostics-filter-bar__row,
+.uwt-diagnostics-filter-bar__builder,
+.uwt-diagnostics-filter-bar__active {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.uwt-diagnostics-filter-bar__active {
+  align-items: center;
+}
+
+.uwt-diagnostics-filter-bar__search {
+  flex: 1 1 18rem;
+}
+
+.uwt-diagnostics-filter-bar__path {
+  flex: 2 1 14rem;
+}
+
+.uwt-diagnostics-filter-bar__operator {
+  flex: 1 1 9rem;
+}
+
+.uwt-diagnostics-filter-bar__value {
+  flex: 2 1 12rem;
+}
+
+.uwt-diagnostics-filter-bar__label {
+  font-size: 0.8125rem;
+  color: var(--cps-text-secondary);
+}
+
+.uwt-diagnostics-filter-bar__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

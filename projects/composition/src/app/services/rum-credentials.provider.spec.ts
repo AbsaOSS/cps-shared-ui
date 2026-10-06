@@ -55,7 +55,7 @@ describe('AppRumCredentialsProvider', () => {
     });
   });
 
-  it('should map a well-formed response onto CpsRumBootstrap field-for-field', async () => {
+  it('should map a well-formed response onto UwtRumBootstrap field-for-field', async () => {
     mockFetch(200, initResponse());
 
     const bootstrap = await provider.load();

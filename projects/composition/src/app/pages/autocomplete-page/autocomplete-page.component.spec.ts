@@ -2,18 +2,18 @@ import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { throwError } from 'rxjs';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsNoopTelemetrySink,
-  CpsScenarioTelemetryService,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtNoopTelemetrySink,
+  UwtScenarioTelemetryService,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from '../../services/app-log-api.provider';
 import { AutocompletePageComponent } from './autocomplete-page.component';
 
 describe('AutocompletePageComponent', () => {
   let component: AutocompletePageComponent;
-  let scenarioTelemetry: CpsScenarioTelemetryService;
+  let scenarioTelemetry: UwtScenarioTelemetryService;
 
   function createComponent(): AutocompletePageComponent {
     return TestBed.runInInjectionContext(
@@ -24,13 +24,13 @@ describe('AutocompletePageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition-test',
           environment: 'test',
           version: '0.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink }
       ]
     }).compileComponents();
 
@@ -38,7 +38,7 @@ describe('AutocompletePageComponent', () => {
     component.ngOnInit();
     component.singleOptionsObservable$?.subscribe();
     component.multiOptionsObservable$?.subscribe();
-    scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+    scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
   });
 
   afterEach(() => jest.restoreAllMocks());

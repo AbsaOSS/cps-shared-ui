@@ -15,7 +15,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { CpsButtonComponent } from 'cps-ui-kit';
-import { CpsLoggerService } from 'cps-telemetry';
+import { UwtLoggerService } from '@absaoss-cps/ngx-ui-watchtower';
 import '../../services/telemetry.schema';
 import { AppTelemetryService } from '../../services/app-telemetry.service';
 import hljs from 'highlight.js/lib/core';
@@ -44,7 +44,7 @@ export class CodeExampleComponent {
 
   private sanitizer = inject(DomSanitizer);
   private platformId = inject(PLATFORM_ID);
-  private logger = inject(CpsLoggerService).getLogger('docs');
+  private logger = inject(UwtLoggerService).getLogger('docs');
   private appTelemetry = inject(AppTelemetryService);
 
   instanceId = `code-example-${++CodeExampleComponent.instanceCount}`;

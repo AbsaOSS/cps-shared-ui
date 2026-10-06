@@ -53,11 +53,12 @@ module.exports = {
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
     '^cps-ui-kit$': '<rootDir>/projects/cps-ui-kit/src/public-api.ts',
-    '^cps-telemetry$': '<rootDir>/projects/cps-telemetry/src/public-api.ts',
-    '^cps-telemetry/rum$':
-      '<rootDir>/projects/cps-telemetry/rum/src/public-api.ts',
-    '^cps-telemetry/diagnostics$':
-      '<rootDir>/projects/cps-telemetry/diagnostics/src/public-api.ts'
+    '^@absaoss-cps/ngx-ui-watchtower$':
+      '<rootDir>/projects/ngx-ui-watchtower/src/public-api.ts',
+    '^@absaoss-cps/ngx-ui-watchtower/rum$':
+      '<rootDir>/projects/ngx-ui-watchtower/rum/src/public-api.ts',
+    '^@absaoss-cps/ngx-ui-watchtower/diagnostics$':
+      '<rootDir>/projects/ngx-ui-watchtower/diagnostics/src/public-api.ts'
   },
   transformIgnorePatterns: [
     'node_modules/(?!(.*.mjs$|@angular/common/locales/.*.js$))'

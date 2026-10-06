@@ -6,12 +6,15 @@ import {
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TitleStrategy } from '@angular/router';
 import { CpsIconComponent } from 'cps-ui-kit';
-import { CPS_LOG_API_PROVIDER, provideCpsTelemetry } from 'cps-telemetry';
-import { provideCpsTelemetryDiagnostics } from 'cps-telemetry/diagnostics';
 import {
-  CPS_RUM_CREDENTIALS_PROVIDER,
-  provideCpsTelemetryRumSink
-} from 'cps-telemetry/rum';
+  UWT_LOG_API_PROVIDER,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
+import { provideUwtTelemetryDiagnostics } from '@absaoss-cps/ngx-ui-watchtower/diagnostics';
+import {
+  UWT_RUM_CREDENTIALS_PROVIDER,
+  provideUwtTelemetryRumSink
+} from '@absaoss-cps/ngx-ui-watchtower/rum';
 import packageJson from '../../../cps-ui-kit/package.json';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,19 +38,19 @@ import './services/telemetry.schema';
   ],
   providers: [
     { provide: TitleStrategy, useClass: AppPrefixTitleStrategy },
-    provideCpsTelemetry({
+    provideUwtTelemetry({
       application: 'composition',
       environment: resolveDeploymentEnvironment(),
       version: packageJson.version
     }),
-    provideCpsTelemetryRumSink(),
+    provideUwtTelemetryRumSink(),
     {
-      provide: CPS_RUM_CREDENTIALS_PROVIDER,
+      provide: UWT_RUM_CREDENTIALS_PROVIDER,
       useExisting: AppRumCredentialsProvider
     },
-    { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+    { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
     // Telemetry diagnostics popup: ⇧⌥⌘8 on macOS, Ctrl+Alt+Shift+8 elsewhere.
-    provideCpsTelemetryDiagnostics()
+    provideUwtTelemetryDiagnostics()
     // provideClientHydration()
   ],
   bootstrap: [AppComponent]

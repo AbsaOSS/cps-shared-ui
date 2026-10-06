@@ -1,0 +1,97 @@
+<div class="uwt-diagnostics-filter-bar">
+  <div class="uwt-diagnostics-filter-bar__row">
+    <cps-input
+      class="uwt-diagnostics-filter-bar__search uwt-diagnostics-search"
+      [ariaLabel]="'Search ' + sectionName() + ' events'"
+      placeholder="Search all fields"
+      prefixIcon="search"
+      [clearable]="true"
+      [hideDetails]="true"
+      [value]="filters().text"
+      (valueChanged)="onSearch($event)">
+    </cps-input>
+    <cps-button
+      type="outlined"
+      size="small"
+      icon="filter-funnel"
+      label="Add filter"
+      [ariaLabel]="'Add a filter to ' + sectionName()"
+      [ariaExpanded]="builderOpen()"
+      (clicked)="builderOpen.set(!builderOpen())">
+    </cps-button>
+    <cps-info-circle
+      tooltipText="Search matches any field's value or name, ignoring case. A filter compares one field, such as metadata.theme. Use steps[].name to match any item of a list, or steps[2].name for one. All filters must match. Filters apply to this section only; its download always contains everything it captured.">
+    </cps-info-circle>
+  </div>
+
+  @if (builderOpen()) {
+    <div
+      class="uwt-diagnostics-filter-bar__builder"
+      role="group"
+      [attr.aria-label]="'New filter for ' + sectionName()"
+      (keydown.enter)="add()">
+      <cps-autocomplete
+        class="uwt-diagnostics-filter-bar__path"
+        label="Field"
+        placeholder="Choose a field"
+        [options]="pathOptions()"
+        [returnObject]="false"
+        [hideDetails]="true"
+        [value]="path()"
+        (valueChanged)="onPath($event)">
+      </cps-autocomplete>
+      <cps-select
+        class="uwt-diagnostics-filter-bar__operator"
+        label="Condition"
+        [options]="operators"
+        [returnObject]="false"
+        [hideDetails]="true"
+        [value]="operator()"
+        (valueChanged)="onOperator($event)">
+      </cps-select>
+      @if (needsValue()) {
+        <cps-input
+          class="uwt-diagnostics-filter-bar__value"
+          label="Value"
+          placeholder="Text to compare"
+          [hideDetails]="true"
+          [value]="value()"
+          (valueChanged)="value.set($event ?? '')">
+        </cps-input>
+      }
+      <cps-button
+        size="small"
+        label="Add"
+        [disabled]="!canAdd()"
+        (clicked)="add()">
+      </cps-button>
+    </div>
+  }
+
+  @if (chips().length > 0 || anyActive()) {
+    <div class="uwt-diagnostics-filter-bar__active">
+      <span class="uwt-diagnostics-filter-bar__label">Filters:</span>
+      <ul
+        class="uwt-diagnostics-filter-bar__chips"
+        [attr.aria-label]="'Active filters for ' + sectionName()">
+        @for (chip of chips(); track chip.id) {
+          <li>
+            <cps-chip
+              [label]="chip.text"
+              [closable]="true"
+              [closeButtonAriaLabel]="'Remove filter ' + chip.text"
+              (closed)="store.removeFilter(section(), chip.id)">
+            </cps-chip>
+          </li>
+        }
+      </ul>
+      <cps-button
+        type="borderless"
+        size="xsmall"
+        label="Clear filters"
+        [ariaLabel]="'Clear filters for ' + sectionName()"
+        (clicked)="clearAll()">
+      </cps-button>
+    </div>
+  }
+</div>

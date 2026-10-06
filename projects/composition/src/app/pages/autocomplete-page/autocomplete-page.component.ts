@@ -21,11 +21,11 @@ import { Observable, Subject, Subscription, of, delay } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import {
-  CpsLoggerService,
-  CpsScenario,
-  CpsScenarioTelemetryService,
+  UwtLoggerService,
+  UwtScenario,
+  UwtScenarioTelemetryService,
   traceScenario
-} from 'cps-telemetry';
+} from '@absaoss-cps/ngx-ui-watchtower';
 import '../../services/telemetry.schema';
 
 @Component({
@@ -102,14 +102,14 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
   validating = false;
   selectedOption: any = null;
 
-  private readonly scenarioTelemetry = inject(CpsScenarioTelemetryService);
-  private readonly logger = inject(CpsLoggerService).getLogger('autocomplete');
+  private readonly scenarioTelemetry = inject(UwtScenarioTelemetryService);
+  private readonly logger = inject(UwtLoggerService).getLogger('autocomplete');
 
   /** The in-flight search per autocomplete, so a newer query can cancel it. */
-  private singleSearchScenario?: CpsScenario;
-  private multiSearchScenario?: CpsScenario;
+  private singleSearchScenario?: UwtScenario;
+  private multiSearchScenario?: UwtScenario;
   /** The in-flight selection validation, so a newer one can cancel it. */
-  private validateScenario?: CpsScenario;
+  private validateScenario?: UwtScenario;
 
   private readonly _validateOptionSubject$ = new Subject<any>();
   private _validateSubscription?: Subscription;
@@ -119,8 +119,8 @@ export class AutocompletePageComponent implements OnInit, OnDestroy {
     'single' | 'multi',
     {
       operation: 'single' | 'multi';
-      getScenario: () => CpsScenario | undefined;
-      setScenario: (scenario: CpsScenario | undefined) => void;
+      getScenario: () => UwtScenario | undefined;
+      setScenario: (scenario: UwtScenario | undefined) => void;
       setLoading: (loading: boolean) => void;
     }
   > = {

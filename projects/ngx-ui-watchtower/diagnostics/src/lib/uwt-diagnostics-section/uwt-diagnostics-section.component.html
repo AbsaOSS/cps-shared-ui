@@ -1,0 +1,161 @@
+<cps-expansion-panel
+  [headerTitle]="title()"
+  [prefixIcon]="text().icon"
+  [isExpanded]="true"
+  borderColor="line-mid">
+  <div class="uwt-diagnostics-section">
+    <div class="uwt-diagnostics-section__tools">
+      <uwt-diagnostics-filter-bar
+        class="uwt-diagnostics-section__filters"
+        [section]="section()"
+        [sectionName]="text().title">
+      </uwt-diagnostics-filter-bar>
+      <div class="uwt-diagnostics-section__actions">
+        <cps-button
+          type="outlined"
+          size="small"
+          icon="copy"
+          [label]="
+            copyState() === 'copied'
+              ? 'Copied'
+              : copyState() === 'failed'
+                ? 'Copy failed'
+                : 'Copy JSON'
+          "
+          [ariaLabel]="'Copy ' + text().title + ' events as JSON'"
+          (clicked)="copy()">
+        </cps-button>
+        <cps-button
+          size="small"
+          icon="download"
+          label="Download JSON"
+          [ariaLabel]="
+            'Download ' +
+            text().title +
+            ' events as JSON. Contains session and user ids.'
+          "
+          (clicked)="download()">
+        </cps-button>
+      </div>
+    </div>
+    @if (unseenNew() > 0) {
+      <div class="uwt-diagnostics-section__notice">
+        <span>{{ unseenNew() }} new on the first page.</span>
+        <cps-button
+          type="borderless"
+          size="xsmall"
+          label="Go to newest"
+          (clicked)="goToNewest()">
+        </cps-button>
+      </div>
+    }
+    <cps-table
+      [data]="rows()"
+      dataKey="sequence"
+      [hasToolbar]="false"
+      size="small"
+      [striped]="true"
+      [paginator]="true"
+      [rows]="25"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      [first]="first()"
+      (pageChanged)="onPage($event)"
+      [emptyMessage]="emptyMessage()">
+      <ng-template #header>
+        <th scope="col">Time</th>
+        @for (column of columns(); track column.key) {
+          <th
+            scope="col"
+            [class.uwt-diagnostics-section__secondary]="column.secondary">
+            {{ column.header }}
+          </th>
+        }
+      </ng-template>
+
+      <ng-template let-row #body>
+        <td class="uwt-diagnostics-section__time">
+          {{ row.time }}
+          @if (isFresh(row.sequence)) {
+            <cps-chip label="New"></cps-chip>
+          }
+        </td>
+        @for (column of columns(); track column.key) {
+          <td
+            [class.uwt-diagnostics-section__secondary]="column.secondary"
+            [class.uwt-diagnostics-section__level--warn]="
+              column.key === 'level' && row.cells['level'] === 'warn'
+            "
+            [class.uwt-diagnostics-section__level--error]="
+              column.key === 'level' && row.cells['level'].startsWith('error')
+            ">
+            @if (column.key === columns()[0].key && row.forwardedFrom) {
+              <span class="uwt-diagnostics-section__forwarded"
+                >↪ {{ row.forwardedFrom }}</span
+              >
+            }
+            <span class="uwt-diagnostics-section__cell">{{
+              row.cells[column.key]
+            }}</span>
+          </td>
+        }
+      </ng-template>
+
+      <ng-template let-row #rowexpansion>
+        <div class="uwt-diagnostics-section__detail">
+          <dl class="uwt-diagnostics-section__meta">
+            <div>
+              <dt>Handed to</dt>
+              <dd>
+                {{
+                  row.entry.event.destination === 'sink'
+                    ? 'telemetry sink'
+                    : 'log API provider'
+                }}
+              </dd>
+            </div>
+            <div>
+              <dt>From</dt>
+              <dd>
+                {{
+                  row.forwardedFrom
+                    ? 'forwarded by ' + row.forwardedFrom
+                    : 'this app'
+                }}
+              </dd>
+            </div>
+            @if ('eventType' in row.entry.event) {
+              <div>
+                <dt>Event type</dt>
+                <dd>{{ row.entry.event.eventType }}</dd>
+              </div>
+            }
+            @if (
+              row.entry.event.kind === 'error' &&
+              row.entry.event.relatedSequence
+            ) {
+              <div>
+                <dt>Mirrored from</dt>
+                <dd>log event #{{ row.entry.event.relatedSequence }}</dd>
+              </div>
+            }
+            <div>
+              <dt>Event</dt>
+              <dd>#{{ row.sequence }}, {{ row.entry.sizeChars }} characters</dd>
+            </div>
+          </dl>
+          @if (row.entry.renderError) {
+            <p class="uwt-diagnostics-section__error">
+              Couldn't prepare this event for display:
+              {{ row.entry.renderError }}
+            </p>
+          }
+          <uwt-diagnostics-json
+            [value]="row.entry.event.payload"
+            [label]="'Payload of event #' + row.sequence"
+            [maxChars]="maxPayloadChars()">
+          </uwt-diagnostics-json>
+        </div>
+      </ng-template>
+    </cps-table>
+  </div>
+</cps-expansion-panel>

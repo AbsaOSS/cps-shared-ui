@@ -37,23 +37,23 @@
         }
       }
     },
-    "cps-telemetry": {
+    "ngx-ui-watchtower": {
       "projectType": "library",
-      "root": "projects/cps-telemetry",
-      "sourceRoot": "projects/cps-telemetry/src",
-      "prefix": "cps",
+      "root": "projects/ngx-ui-watchtower",
+      "sourceRoot": "projects/ngx-ui-watchtower/src",
+      "prefix": "uwt",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",
           "options": {
-            "project": "projects/cps-telemetry/ng-package.json"
+            "project": "projects/ngx-ui-watchtower/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/cps-telemetry/tsconfig.lib.prod.json"
+              "tsConfig": "projects/ngx-ui-watchtower/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/cps-telemetry/tsconfig.lib.json"
+              "tsConfig": "projects/ngx-ui-watchtower/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"

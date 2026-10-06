@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsNoopTelemetrySink,
-  CpsScenarioTelemetryService,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtNoopTelemetrySink,
+  UwtScenarioTelemetryService,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from '../../services/app-log-api.provider';
 import { TablePageComponent } from './table-page.component';
 
 describe('TablePageComponent', () => {
   let component: TablePageComponent;
-  let scenarioTelemetry: CpsScenarioTelemetryService;
+  let scenarioTelemetry: UwtScenarioTelemetryService;
 
   beforeEach(async () => {
     jest.useFakeTimers();
@@ -19,18 +19,18 @@ describe('TablePageComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TablePageComponent],
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition-test',
           environment: 'test',
           version: '0.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink }
       ]
     }).compileComponents();
 
     component = TestBed.runInInjectionContext(() => new TablePageComponent());
-    scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+    scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
   });
 
   afterEach(() => jest.useRealTimers());

@@ -2,12 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { Title } from '@angular/platform-browser';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsLogRecord,
-  CpsNoopTelemetrySink,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtLogRecord,
+  UwtNoopTelemetrySink,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from './services/app-log-api.provider';
 import { AppPrefixTitleStrategy } from './app.prefix-title-strategy';
 
@@ -27,20 +27,20 @@ describe('AppPrefixTitleStrategy', () => {
     } as unknown as RouterStateSnapshot;
   }
 
-  function logs(): CpsLogRecord[] {
+  function logs(): UwtLogRecord[] {
     return TestBed.inject(AppLogApiProvider).getRecords();
   }
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition-test',
           environment: 'test',
           version: '0.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink },
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink },
         { provide: TitleStrategy, useClass: AppPrefixTitleStrategy }
       ]
     });

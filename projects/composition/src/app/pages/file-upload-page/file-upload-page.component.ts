@@ -13,10 +13,10 @@ import {
 } from 'cps-ui-kit';
 import { Observable, catchError, delay, from, map, of } from 'rxjs';
 import {
-  CpsLoggerService,
-  CpsScenario,
-  CpsScenarioTelemetryService
-} from 'cps-telemetry';
+  UwtLoggerService,
+  UwtScenario,
+  UwtScenarioTelemetryService
+} from '@absaoss-cps/ngx-ui-watchtower';
 import '../../services/telemetry.schema';
 
 import ComponentData from '../../api-data/cps-file-upload.json';
@@ -41,21 +41,21 @@ import { fileUploadExamples } from './file-upload-page.examples';
 export class FileUploadPageComponent implements OnDestroy {
   @ViewChild('fileUpload') fileUpload?: CpsFileUploadComponent;
 
-  private readonly scenarioTelemetry = inject(CpsScenarioTelemetryService);
-  private readonly logger = inject(CpsLoggerService).getLogger('file-upload');
+  private readonly scenarioTelemetry = inject(UwtScenarioTelemetryService);
+  private readonly logger = inject(UwtLoggerService).getLogger('file-upload');
 
   /** Processing scenarios in flight for the "extra info" widget, keyed by filename. */
-  private extraInfoUploadScenarios = new Map<string, CpsScenario>();
+  private extraInfoUploadScenarios = new Map<string, UwtScenario>();
 
   /** Same as {@link extraInfoUploadScenarios}, for the "disabled" widget. */
-  private disabledUploadScenarios = new Map<string, CpsScenario>();
+  private disabledUploadScenarios = new Map<string, UwtScenario>();
 
   /**
    * The processing scenario for the failing-upload demo widget, which has no
    * `fileProcessingCancelled` wiring of its own and whose callback receives
    * no `File` to key a map entry by.
    */
-  private failingUploadScenario?: CpsScenario;
+  private failingUploadScenario?: UwtScenario;
 
   componentData = ComponentData;
   readonly examples = fileUploadExamples;
@@ -81,7 +81,7 @@ export class FileUploadPageComponent implements OnDestroy {
 
   private _processUploadedFile(
     file: File,
-    scenarios: Map<string, CpsScenario>
+    scenarios: Map<string, UwtScenario>
   ): Observable<boolean> {
     const scenario = this._startUploadScenario('process');
     scenarios.set(file.name, scenario);
@@ -122,7 +122,7 @@ export class FileUploadPageComponent implements OnDestroy {
   };
 
   /** Starts a `file-upload` scenario and opens its `process` step. */
-  private _startUploadScenario(operation: string): CpsScenario {
+  private _startUploadScenario(operation: string): UwtScenario {
     const scenario = this.scenarioTelemetry.start({
       name: 'file-upload',
       feature: 'file-upload',
@@ -164,7 +164,7 @@ export class FileUploadPageComponent implements OnDestroy {
   }
 
   private _cancel(
-    scenarios: Map<string, CpsScenario>,
+    scenarios: Map<string, UwtScenario>,
     fileName: string,
     reason: string
   ): void {
@@ -178,7 +178,7 @@ export class FileUploadPageComponent implements OnDestroy {
     this.failingUploadScenario?.cancel({ reason: 'component-destroyed' });
   }
 
-  private _cancelAll(scenarios: Map<string, CpsScenario>): void {
+  private _cancelAll(scenarios: Map<string, UwtScenario>): void {
     for (const scenario of scenarios.values()) {
       scenario.cancel({ reason: 'component-destroyed' });
     }

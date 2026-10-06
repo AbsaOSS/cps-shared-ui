@@ -30,7 +30,10 @@ import { tableExamples } from './table-page.examples';
 
 import ComponentData from '../../api-data/cps-table.json';
 import { DatePipe, PercentPipe, UpperCasePipe } from '@angular/common';
-import { CpsScenario, CpsScenarioTelemetryService } from 'cps-telemetry';
+import {
+  UwtScenario,
+  UwtScenarioTelemetryService
+} from '@absaoss-cps/ngx-ui-watchtower';
 import '../../services/telemetry.schema';
 
 @Component({
@@ -417,8 +420,8 @@ export class TablePageComponent implements OnInit, OnDestroy {
   private _lazyLoadTimeout?: ReturnType<typeof setTimeout>;
   private _lastLazyFirst = -1;
   private _lastLazyRows = -1;
-  private readonly _scenarioTelemetry = inject(CpsScenarioTelemetryService);
-  private _lazyLoadScenario?: CpsScenario;
+  private readonly _scenarioTelemetry = inject(UwtScenarioTelemetryService);
+  private _lazyLoadScenario?: UwtScenario;
   /** Checked in the queued callbacks below, past `ngOnDestroy`'s clearTimeout. */
   private _destroyed = false;
 

@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { CpsLogRecord } from 'cps-telemetry';
+import { UwtLogRecord } from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from './app-log-api.provider';
 
-/** Builds a minimal, valid CpsLogRecord, overridable per test. */
-function record(overrides: Partial<CpsLogRecord> = {}): CpsLogRecord {
+/** Builds a minimal, valid UwtLogRecord, overridable per test. */
+function record(overrides: Partial<UwtLogRecord> = {}): UwtLogRecord {
   return {
     timestamp: '2024-01-01T00:00:00.000Z',
     level: 'log',

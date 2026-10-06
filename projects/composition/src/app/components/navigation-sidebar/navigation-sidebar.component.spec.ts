@@ -3,11 +3,11 @@ import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsNoopTelemetrySink,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtNoopTelemetrySink,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from '../../services/app-log-api.provider';
 import { AppTelemetryService } from '../../services/app-telemetry.service';
 import { NavigationSidebarComponent } from './navigation-sidebar.component';
@@ -22,13 +22,13 @@ describe('NavigationSidebarComponent', () => {
       providers: [
         provideRouter([]),
         provideNoopAnimations(),
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition-test',
           environment: 'test',
           version: '0.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink }
       ]
     }).compileComponents();
 

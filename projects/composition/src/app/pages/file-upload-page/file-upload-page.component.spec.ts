@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { take } from 'rxjs';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsNoopTelemetrySink,
-  CpsScenarioTelemetryService,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtNoopTelemetrySink,
+  UwtScenarioTelemetryService,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from '../../services/app-log-api.provider';
 import { FileUploadPageComponent } from './file-upload-page.component';
 
@@ -20,25 +20,25 @@ function makeFile(name: string): File {
 
 describe('FileUploadPageComponent', () => {
   let component: FileUploadPageComponent;
-  let scenarioTelemetry: CpsScenarioTelemetryService;
+  let scenarioTelemetry: UwtScenarioTelemetryService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       providers: [
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition-test',
           environment: 'test',
           version: '0.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink }
       ]
     }).compileComponents();
 
     component = TestBed.runInInjectionContext(
       () => new FileUploadPageComponent()
     );
-    scenarioTelemetry = TestBed.inject(CpsScenarioTelemetryService);
+    scenarioTelemetry = TestBed.inject(UwtScenarioTelemetryService);
   });
 
   describe('processing scenarios within one widget', () => {

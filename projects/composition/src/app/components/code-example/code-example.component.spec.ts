@@ -2,24 +2,24 @@ import { PLATFORM_ID } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsLogRecord,
-  CpsNoopTelemetrySink,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtLogRecord,
+  UwtNoopTelemetrySink,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from '../../services/app-log-api.provider';
 import { CodeExampleComponent } from './code-example.component';
 
 /** Telemetry wired to run for real, with nowhere to send anything. */
 const telemetryProviders = [
-  provideCpsTelemetry({
+  provideUwtTelemetry({
     application: 'composition-test',
     environment: 'test',
     version: '0.0.0'
   }),
-  { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-  { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+  { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+  { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink }
 ];
 
 describe('CodeExampleComponent', () => {
@@ -41,7 +41,7 @@ describe('CodeExampleComponent', () => {
   });
 
   describe('authoring diagnostics', () => {
-    function logs(): CpsLogRecord[] {
+    function logs(): UwtLogRecord[] {
       return TestBed.inject(AppLogApiProvider).getRecords();
     }
 

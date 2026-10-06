@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TitleStrategy, RouterStateSnapshot } from '@angular/router';
-import { CpsLoggerService } from 'cps-telemetry';
+import { UwtLoggerService } from '@absaoss-cps/ngx-ui-watchtower';
 import './services/telemetry.schema';
 
 @Injectable()
 export class AppPrefixTitleStrategy extends TitleStrategy {
-  private readonly logger = inject(CpsLoggerService).getLogger('routing');
+  private readonly logger = inject(UwtLoggerService).getLogger('routing');
 
   constructor(private readonly title: Title) {
     super();

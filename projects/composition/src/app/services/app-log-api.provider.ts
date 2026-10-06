@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CPS_LOG_LEVEL_ORDER } from 'cps-telemetry';
+import { UWT_LOG_LEVEL_ORDER } from '@absaoss-cps/ngx-ui-watchtower';
 import type {
-  CpsLogApiProvider,
-  CpsLogQuery,
-  CpsLogRecord
-} from 'cps-telemetry';
+  UwtLogApiProvider,
+  UwtLogQuery,
+  UwtLogRecord
+} from '@absaoss-cps/ngx-ui-watchtower';
 
 /** Records retained before the oldest are dropped. */
 const BUFFER_LIMIT = 500;
@@ -21,11 +21,11 @@ const BUFFER_LIMIT = 500;
  * `localStorage.debugLogger = 'true'` to watch them arrive.
  */
 @Injectable({ providedIn: 'root' })
-export class AppLogApiProvider implements CpsLogApiProvider {
-  private readonly buffer: CpsLogRecord[] = [];
+export class AppLogApiProvider implements UwtLogApiProvider {
+  private readonly buffer: UwtLogRecord[] = [];
 
   /** @inheritdoc */
-  send(record: CpsLogRecord): void {
+  send(record: UwtLogRecord): void {
     this.buffer.push(record);
     if (this.buffer.length > BUFFER_LIMIT) {
       this.buffer.splice(0, this.buffer.length - BUFFER_LIMIT);
@@ -33,7 +33,7 @@ export class AppLogApiProvider implements CpsLogApiProvider {
   }
 
   /** @inheritdoc */
-  query(filter: CpsLogQuery): Promise<CpsLogRecord[]> {
+  query(filter: UwtLogQuery): Promise<UwtLogRecord[]> {
     let found = [...this.buffer];
 
     if (filter.correlationId) {
@@ -43,8 +43,8 @@ export class AppLogApiProvider implements CpsLogApiProvider {
       found = found.filter((r) => r.logger === filter.logger);
     }
     if (filter.minLevel) {
-      const floor = CPS_LOG_LEVEL_ORDER[filter.minLevel];
-      found = found.filter((r) => CPS_LOG_LEVEL_ORDER[r.level] >= floor);
+      const floor = UWT_LOG_LEVEL_ORDER[filter.minLevel];
+      found = found.filter((r) => UWT_LOG_LEVEL_ORDER[r.level] >= floor);
     }
     if (filter.from) {
       const fromTime = new Date(filter.from).getTime();
@@ -67,7 +67,7 @@ export class AppLogApiProvider implements CpsLogApiProvider {
    *
    * @returns a copy of the buffer
    */
-  getRecords(): CpsLogRecord[] {
+  getRecords(): UwtLogRecord[] {
     return [...this.buffer];
   }
 

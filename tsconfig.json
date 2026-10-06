@@ -5,10 +5,14 @@
     "resolveJsonModule": true,
     "paths": {
       "cps-ui-kit": ["./projects/cps-ui-kit/src/public-api.ts"],
-      "cps-telemetry": ["./projects/cps-telemetry/src/public-api.ts"],
-      "cps-telemetry/rum": ["./projects/cps-telemetry/rum/src/public-api.ts"],
-      "cps-telemetry/diagnostics": [
-        "./projects/cps-telemetry/diagnostics/src/public-api.ts"
+      "@absaoss-cps/ngx-ui-watchtower": [
+        "./projects/ngx-ui-watchtower/src/public-api.ts"
+      ],
+      "@absaoss-cps/ngx-ui-watchtower/rum": [
+        "./projects/ngx-ui-watchtower/rum/src/public-api.ts"
+      ],
+      "@absaoss-cps/ngx-ui-watchtower/diagnostics": [
+        "./projects/ngx-ui-watchtower/diagnostics/src/public-api.ts"
       ]
     },
     "esModuleInterop": true,
@@ -40,12 +44,12 @@
   "references": [
     { "path": "./projects/cps-ui-kit/tsconfig.lib.json" },
     { "path": "./projects/cps-ui-kit/tsconfig.spec.json" },
-    { "path": "./projects/cps-telemetry/tsconfig.lib.json" },
-    { "path": "./projects/cps-telemetry/tsconfig.spec.json" },
-    { "path": "./projects/cps-telemetry/rum/tsconfig.lib.json" },
-    { "path": "./projects/cps-telemetry/rum/tsconfig.spec.json" },
-    { "path": "./projects/cps-telemetry/diagnostics/tsconfig.lib.json" },
-    { "path": "./projects/cps-telemetry/diagnostics/tsconfig.spec.json" },
+    { "path": "./projects/ngx-ui-watchtower/tsconfig.lib.json" },
+    { "path": "./projects/ngx-ui-watchtower/tsconfig.spec.json" },
+    { "path": "./projects/ngx-ui-watchtower/rum/tsconfig.lib.json" },
+    { "path": "./projects/ngx-ui-watchtower/rum/tsconfig.spec.json" },
+    { "path": "./projects/ngx-ui-watchtower/diagnostics/tsconfig.lib.json" },
+    { "path": "./projects/ngx-ui-watchtower/diagnostics/tsconfig.spec.json" },
     { "path": "./projects/composition/tsconfig.app.json" },
     { "path": "./projects/composition/tsconfig.spec.json" }
   ],

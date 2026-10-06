@@ -5,8 +5,8 @@
  * declared once here rather than as free text at each call site. Anything not
  * listed below is a compile error.
  */
-declare module 'cps-telemetry' {
-  interface CpsScenarioNames {
+declare module '@absaoss-cps/ngx-ui-watchtower' {
+  interface UwtScenarioNames {
     /** A router navigation, from click to activated route. */
     'route-navigation': true;
 
@@ -23,7 +23,7 @@ declare module 'cps-telemetry' {
     'table-page-load': true;
   }
 
-  interface CpsScenarioSteps {
+  interface UwtScenarioSteps {
     /** Resolving and loading the lazy route chunk. */
     'resolve-route': true;
 
@@ -44,13 +44,13 @@ declare module 'cps-telemetry' {
 
     /**
      * Formatting one fetched table row for display. Runs once per row, so
-     * it's timed as an {@link CpsScenario.aggregateStart}/
-     * {@link CpsScenario.aggregateEnd} total rather than as its own step.
+     * it's timed as an {@link UwtScenario.aggregateStart}/
+     * {@link UwtScenario.aggregateEnd} total rather than as its own step.
      */
     'format-row': true;
   }
 
-  interface CpsLoggerNames {
+  interface UwtLoggerNames {
     /** Application lifecycle and router navigation. */
     app: true;
 
@@ -67,7 +67,7 @@ declare module 'cps-telemetry' {
     autocomplete: true;
   }
 
-  interface CpsBIEventNames {
+  interface UwtBIEventNames {
     /** The user switched between light and dark theme. */
     theme_changed: true;
 

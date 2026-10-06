@@ -13,13 +13,13 @@ import {
   Router
 } from '@angular/router';
 import {
-  CpsBIEventName,
-  CpsBITelemetryService,
-  CpsLoggerService,
-  CpsScenario,
-  CpsScenarioTelemetryService,
-  CpsTelemetryMetadata
-} from 'cps-telemetry';
+  UwtBIEventName,
+  UwtBITelemetryService,
+  UwtLoggerService,
+  UwtScenario,
+  UwtScenarioTelemetryService,
+  UwtTelemetryMetadata
+} from '@absaoss-cps/ngx-ui-watchtower';
 // Side-effect import for the module augmentation declaring the scenario, step
 // and business event vocabulary used below.
 import './telemetry.schema';
@@ -64,9 +64,9 @@ function causeOf<TCode extends number>(
 @Injectable({ providedIn: 'root' })
 export class AppTelemetryService {
   private readonly router = inject(Router);
-  private readonly scenarioTelemetry = inject(CpsScenarioTelemetryService);
-  private readonly biTelemetry = inject(CpsBITelemetryService);
-  private readonly logger = inject(CpsLoggerService).getLogger('app');
+  private readonly scenarioTelemetry = inject(UwtScenarioTelemetryService);
+  private readonly biTelemetry = inject(UwtBITelemetryService);
+  private readonly logger = inject(UwtLoggerService).getLogger('app');
   private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
@@ -75,9 +75,9 @@ export class AppTelemetryService {
    * same way. A single "current navigation" field would attribute the wrong
    * duration whenever one navigation supersedes another.
    */
-  private readonly navigations = new Map<number, CpsScenario>();
+  private readonly navigations = new Map<number, UwtScenario>();
 
-  private pendingRedirectScenario?: CpsScenario;
+  private pendingRedirectScenario?: UwtScenario;
 
   /** When the user last did something that should start a navigation. */
   private navigationIntentAt?: number;
@@ -136,7 +136,7 @@ export class AppTelemetryService {
    * @param metadata attributes describing the interaction — ids, route names
    *   and tab names only, never emails, usernames or account numbers
    */
-  trackClick(action: CpsBIEventName, metadata?: CpsTelemetryMetadata): void {
+  trackClick(action: UwtBIEventName, metadata?: UwtTelemetryMetadata): void {
     this.biTelemetry.track(action, metadata);
   }
 
@@ -219,7 +219,7 @@ export class AppTelemetryService {
   /**
    * Reduces a router event's URL to a route template.
    *
-   * `event.url` is the *resolved* URL — exactly what `cps-telemetry`'s own
+   * `event.url` is the *resolved* URL — exactly what `@absaoss-cps/ngx-ui-watchtower`'s own
    * doc comment on `route` warns against passing directly: it wants a
    * template (`/customers/:id`), not `/customers/john@example.com`, so that
    * `route` stays one metric dimension per route rather than splitting into
@@ -258,7 +258,7 @@ export class AppTelemetryService {
     return at;
   }
 
-  private consumePendingRedirectScenario(): CpsScenario | undefined {
+  private consumePendingRedirectScenario(): UwtScenario | undefined {
     const scenario = this.pendingRedirectScenario;
     this.pendingRedirectScenario = undefined;
     return scenario;
@@ -266,7 +266,7 @@ export class AppTelemetryService {
 
   private settle(
     navigationId: number,
-    apply: (scenario: CpsScenario) => void
+    apply: (scenario: UwtScenario) => void
   ): void {
     const scenario = this.navigations.get(navigationId);
     if (!scenario) {

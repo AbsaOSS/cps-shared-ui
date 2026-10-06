@@ -225,7 +225,7 @@ test.describe('Composition app shell - sidebar & focus flows', () => {
 });
 
 // ============================================================================
-// Telemetry diagnostics popup (cps-telemetry/diagnostics)
+// Telemetry diagnostics popup (ngx-ui-watchtower/diagnostics)
 // ============================================================================
 
 test.describe('Accessibility - telemetry diagnostics popup', () => {
@@ -233,11 +233,11 @@ test.describe('Accessibility - telemetry diagnostics popup', () => {
     await page.goto('/');
     await page.waitForSelector('#main-content');
     await page.keyboard.press('Control+Alt+Shift+Digit8');
-    await page.locator('cps-diagnostics-dialog').waitFor();
+    await page.locator('uwt-diagnostics-dialog').waitFor();
     // Generate an event, then open everything the popup can show.
     await toggle(page).click();
     const expand = page
-      .locator('cps-diagnostics-section')
+      .locator('uwt-diagnostics-section')
       .getByRole('button', { name: 'Expand row' })
       .first();
     await expand.click();
@@ -268,7 +268,7 @@ test.describe('Accessibility - telemetry diagnostics popup', () => {
     await page.goto('/');
     await page.waitForSelector('#main-content');
     await page.keyboard.press('Control+Alt+Shift+Digit8');
-    await page.locator('cps-diagnostics-dialog').waitFor();
+    await page.locator('uwt-diagnostics-dialog').waitFor();
     await waitForAnimationsToFinish(page);
     const results = await makeAxeBuilder().include('.cps-dialog').analyze();
     expectNoViolations(results.violations);
@@ -291,7 +291,7 @@ test.describe('Accessibility - telemetry diagnostics popup', () => {
     ).toBeFocused();
 
     await page.keyboard.press('Escape');
-    await expect(page.locator('cps-diagnostics-dialog')).toHaveCount(0);
+    await expect(page.locator('uwt-diagnostics-dialog')).toHaveCount(0);
     await expect(link).toBeFocused();
   });
 });

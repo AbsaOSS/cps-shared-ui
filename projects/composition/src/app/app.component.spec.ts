@@ -10,11 +10,11 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CpsThemeService } from 'cps-ui-kit';
 import {
-  CPS_LOG_API_PROVIDER,
-  CpsNoopTelemetrySink,
-  CpsTelemetrySink,
-  provideCpsTelemetry
-} from 'cps-telemetry';
+  UWT_LOG_API_PROVIDER,
+  UwtNoopTelemetrySink,
+  UwtTelemetrySink,
+  provideUwtTelemetry
+} from '@absaoss-cps/ngx-ui-watchtower';
 import { AppLogApiProvider } from './services/app-log-api.provider';
 import { AppComponent } from './app.component';
 
@@ -72,13 +72,13 @@ describe('AppComponent', () => {
           }
         },
         { provide: CpsThemeService, useValue: { isDark: signal(false) } },
-        provideCpsTelemetry({
+        provideUwtTelemetry({
           application: 'composition-test',
           environment: 'test',
           version: '0.0.0'
         }),
-        { provide: CPS_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
+        { provide: UWT_LOG_API_PROVIDER, useExisting: AppLogApiProvider },
+        { provide: UwtTelemetrySink, useClass: UwtNoopTelemetrySink }
       ]
     }).compileComponents();
 

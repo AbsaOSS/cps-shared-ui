@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { type Page, expect, test } from '@playwright/test';
 
 /**
- * The telemetry diagnostics popup (cps-telemetry/diagnostics), driven the
+ * The telemetry diagnostics popup (ngx-ui-watchtower/diagnostics), driven the
  * way a developer uses it: the real shortcut, the real app generating
  * events beside the non-modal popup, then filter, download, clear, close.
  */
@@ -10,15 +10,15 @@ import { type Page, expect, test } from '@playwright/test';
 // Active on every platform, so one combination works in all browsers here.
 const SHORTCUT = 'Control+Alt+Shift+Digit8';
 
-const popup = (page: Page) => page.locator('cps-diagnostics-dialog');
+const popup = (page: Page) => page.locator('uwt-diagnostics-dialog');
 const section = (page: Page, title: string) =>
-  page.locator('cps-diagnostics-section', {
+  page.locator('uwt-diagnostics-section', {
     has: page.locator('[data-testid="cps-expansion-panel-title"]', {
       hasText: title
     })
   });
 const rows = (page: Page, title: string) =>
-  section(page, title).locator('td.cps-diagnostics-section__time');
+  section(page, title).locator('td.uwt-diagnostics-section__time');
 
 async function openPopup(page: Page) {
   await page.keyboard.press(SHORTCUT);
@@ -162,11 +162,11 @@ test.describe('Telemetry diagnostics popup', () => {
       .click();
     const file = await download;
     expect(file.suggestedFilename()).toMatch(
-      /^cps-telemetry-diagnostics-composition-bi-\d{8}-\d{6}\.json$/
+      /^ngx-ui-watchtower-diagnostics-composition-bi-\d{8}-\d{6}\.json$/
     );
 
     const doc = JSON.parse(readFileSync(await file.path(), 'utf8'));
-    expect(doc.format).toBe('cps-telemetry-diagnostics');
+    expect(doc.format).toBe('ngx-ui-watchtower-diagnostics');
     expect(doc.section).toBe('bi');
     expect(doc.app.application).toBe('composition');
     expect(doc.activeFilters.text).toBe('no event has this text');
