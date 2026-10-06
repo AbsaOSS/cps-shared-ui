@@ -208,7 +208,7 @@ export const CPS_DEFAULT_REDACT_CONFIG: CpsRedactConfig = {
 
 /**
  * Effective redact config for a concern's own `redact: boolean` toggle
- * (`CpsLogConfig.redact`, `CpsScenarioTelemetryConfig.redact`, `CpsBiTelemetryConfig.redact`).
+ * (`CpsLogConfig.redact`, `CpsScenarioTelemetryConfig.redact`, `CpsBITelemetryConfig.redact`).
  * Disabling it skips only the configurable scrubbing — the built-in
  * credential denylist, size caps, error normalization and
  * `extraValueTransforms` stay on regardless.

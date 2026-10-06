@@ -21,7 +21,7 @@ import {
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import {
   CPS_BI_TELEMETRY_CONFIG,
-  CpsBiTelemetryConfig
+  CpsBITelemetryConfig
 } from '../../config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 import {
   CPS_LOG_CONFIG,
@@ -36,7 +36,7 @@ import {
  * One optional concern's providers, composed onto {@link provideCpsTelemetry}.
  *
  * Applications never construct one directly — only through `withLogging`,
- * `withScenarios`, `withBiEvents` or `withRedaction`.
+ * `withScenarios`, `withBIEvents` or `withRedaction`.
  *
  * @group Types
  */
@@ -94,8 +94,8 @@ export function withScenarios(
  *
  * @group Utils
  */
-export function withBiEvents(
-  config: Partial<CpsBiTelemetryConfig> = {}
+export function withBIEvents(
+  config: Partial<CpsBITelemetryConfig> = {}
 ): CpsTelemetryFeature {
   return {
     providers: [
@@ -150,7 +150,7 @@ export function withRedaction(
  *
  * Identity — `application`/`environment`/`version` — is mandatory and stated
  * once; every other concern is an optional, individually named feature
- * (`withLogging`, `withScenarios`, `withBiEvents`, `withRedaction`). Each
+ * (`withLogging`, `withScenarios`, `withBIEvents`, `withRedaction`). Each
  * feature's token (e.g. {@link CPS_LOG_CONFIG}) can also be overridden
  * directly via plain DI substitution.
  *
@@ -199,7 +199,7 @@ export function provideCpsTelemetry(
     },
     ...withLogging().providers,
     ...withScenarios().providers,
-    ...withBiEvents().providers,
+    ...withBIEvents().providers,
     ...withRedaction().providers,
     ...features.flatMap((f) => f.providers)
   ]);

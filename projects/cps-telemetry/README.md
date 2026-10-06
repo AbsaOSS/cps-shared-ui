@@ -52,7 +52,7 @@ providers: [
 ```
 
 Optional settings are added with `withScenarios()`, `withLogging()`,
-`withBiEvents()` and `withRedaction()`:
+`withBIEvents()` and `withRedaction()`:
 
 ```ts
 provideCpsTelemetry(
@@ -118,7 +118,7 @@ declare module 'cps-telemetry' {
     fetch: true;
     render: true;
   }
-  interface CpsBiEventNames {
+  interface CpsBIEventNames {
     export_clicked: true;
   }
   interface CpsLoggerNames {
@@ -180,7 +180,7 @@ this.api.fetchCustomers().pipe(traceScenario(scenario)).subscribe();
 
 ```ts
 class ExportButton {
-  private readonly bi = inject(CpsBiTelemetryService);
+  private readonly bi = inject(CpsBITelemetryService);
 
   onClick() {
     this.bi.track('export_clicked', { format: 'csv' });

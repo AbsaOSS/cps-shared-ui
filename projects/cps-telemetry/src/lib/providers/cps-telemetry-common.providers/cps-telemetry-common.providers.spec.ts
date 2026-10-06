@@ -28,7 +28,7 @@ import {
   provideCpsTelemetry,
   provideCpsTelemetryBroadcastHost,
   provideCpsTelemetrySink,
-  withBiEvents,
+  withBIEvents,
   withLogging,
   withRedaction,
   withScenarios
@@ -449,8 +449,8 @@ describe('with*() features', () => {
     );
   });
 
-  it('should merge withBiEvents over the library default', () => {
-    configure(withBiEvents({ dedupWindowMs: 1_000 }));
+  it('should merge withBIEvents over the library default', () => {
+    configure(withBIEvents({ dedupWindowMs: 1_000 }));
     const bi = TestBed.inject(CPS_BI_TELEMETRY_CONFIG);
     expect(bi.dedupWindowMs).toBe(1_000);
     expect(bi.dedupMaxKeys).toBe(CPS_DEFAULT_TELEMETRY_CONFIG.bi.dedupMaxKeys);

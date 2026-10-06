@@ -125,7 +125,7 @@ from any specific backend.
   RUM error mirroring). An application that wants only structured logging,
   with no scenarios, BI events, or RUM at all, is not required to configure
   any sink to use it, unlike `CpsScenarioTelemetryService`/
-  `CpsBiTelemetryService`, which still fail at bootstrap without one.
+  `CpsBITelemetryService`, which still fail at bootstrap without one.
 - **Per-logger minimum levels**, overridable per named logger, so one noisy
   area can run verbose while the rest of the app stays quiet.
 - **Delivery is entirely the application's `CpsLogApiProvider` policy**: the
@@ -160,7 +160,7 @@ from any specific backend.
 
 ## Business/UX events
 
-`CpsBiTelemetryService.track()` records discrete, durationless events —
+`CpsBITelemetryService.track()` records discrete, durationless events —
 feature adoption, interaction analysis, funnel steps — supplied entirely by
 the application (the library defines no business vocabulary of its own).
 
@@ -230,7 +230,7 @@ string` functions run on every string value after all pattern-based
   throwing transform is skipped (logged in dev mode only), not fatal, and
   never blocks the rest of the pipeline.
 - **Per-concern redaction toggle**: `withLogging`, `withScenarios`, and
-  `withBiEvents` each accept a `redact: boolean` (default `true`). Turning
+  `withBIEvents` each accept a `redact: boolean` (default `true`). Turning
   it off for one concern disables only the _configurable_ PII scrubbing
   (`extraKeyPatterns`, value-pattern scanning, URL-query stripping) for
   that concern — the built-in credential denylist, size caps, error
@@ -392,14 +392,14 @@ CpsTelemetrySink`, but it would make the _concrete_ `CpsNoopTelemetrySink`
 - `provideCpsTelemetry(identity, ...features)` takes the application's
   identity (`application`/`environment`/`version`, event namespace) as a
   mandatory first argument, composed with optional, independently
-  omittable `withLogging(...)`, `withScenarios(...)`, `withBiEvents(...)`,
+  omittable `withLogging(...)`, `withScenarios(...)`, `withBIEvents(...)`,
   `withRedaction(...)` features — mirroring Angular's own
   `provideHttpClient(withInterceptors(...))` convention. Each concern gets
   its own DI token (`CPS_LOG_CONFIG`, `CPS_SCENARIO_TELEMETRY_CONFIG`,
   `CPS_BI_TELEMETRY_CONFIG`, `CPS_REDACT_CONFIG`, plus `CPS_TELEMETRY_IDENTITY` for
   identity), so a consumer can override one concern through plain DI
   substitution without touching the others. BI event tracking (dedup
-  window and key cap) is configurable via `withBiEvents(...)` rather than
+  window and key cap) is configurable via `withBIEvents(...)` rather than
   fixed at hardcoded constants.
 - `provideCpsTelemetrySink('broadcast' | 'noop')`,
   `provideCpsTelemetryRumSink()` (from `cps-telemetry/rum`), and

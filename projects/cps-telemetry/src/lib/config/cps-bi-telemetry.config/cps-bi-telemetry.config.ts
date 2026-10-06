@@ -5,7 +5,7 @@ import { InjectionToken } from '@angular/core';
  *
  * @group Interfaces
  */
-export interface CpsBiTelemetryConfig {
+export interface CpsBITelemetryConfig {
   /** Milliseconds within which an identical event is treated as a double-fire. */
   dedupWindowMs: number;
 
@@ -29,7 +29,7 @@ export interface CpsBiTelemetryConfig {
 }
 
 /** Default BI event tracking settings. */
-export const CPS_DEFAULT_BI_TELEMETRY_CONFIG: CpsBiTelemetryConfig = {
+export const CPS_DEFAULT_BI_TELEMETRY_CONFIG: CpsBITelemetryConfig = {
   dedupWindowMs: 400,
   dedupMaxKeys: 100,
   redact: true
@@ -37,10 +37,10 @@ export const CPS_DEFAULT_BI_TELEMETRY_CONFIG: CpsBiTelemetryConfig = {
 
 /**
  * Resolved BI event configuration. Provided by {@link provideCpsTelemetry},
- * overridden with `withBiEvents(...)`.
+ * overridden with `withBIEvents(...)`.
  *
  * @group Tokens
  */
-export const CPS_BI_TELEMETRY_CONFIG = new InjectionToken<CpsBiTelemetryConfig>(
+export const CPS_BI_TELEMETRY_CONFIG = new InjectionToken<CpsBITelemetryConfig>(
   'CPS_BI_TELEMETRY_CONFIG'
 );

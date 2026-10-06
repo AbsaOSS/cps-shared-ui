@@ -67,7 +67,7 @@ declare module 'cps-telemetry' {
     autocomplete: true;
   }
 
-  interface CpsBiEventNames {
+  interface CpsBIEventNames {
     /** The user switched between light and dark theme. */
     theme_changed: true;
 

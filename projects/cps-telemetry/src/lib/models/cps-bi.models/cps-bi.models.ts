@@ -16,7 +16,7 @@ import {
  * ```typescript
  * // src/app/telemetry.schema.ts
  * declare module 'cps-telemetry' {
- *   interface CpsBiEventNames {
+ *   interface CpsBIEventNames {
  *     export_clicked: true;
  *     theme_changed: true;
  *   }
@@ -28,25 +28,25 @@ import {
  */
 // Empty by design — see CpsScenarioNames in cps-scenario.models.ts.
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface CpsBiEventNames {}
+export interface CpsBIEventNames {}
 
 /**
  * Every business event name this application declares.
  *
- * Resolves to `string` until {@link CpsBiEventNames} is augmented.
+ * Resolves to `string` until {@link CpsBIEventNames} is augmented.
  *
  * @group Types
  */
-export type CpsBiEventName = CpsRegistered<CpsBiEventNames>;
+export type CpsBIEventName = CpsRegistered<CpsBIEventNames>;
 
 /**
  * Correlation fields carried through unchanged onto the emitted
- * {@link CpsBiEvent} — shared by {@link CpsBiEventDetail} and
- * {@link CpsBiEvent} so neither declares its own copy.
+ * {@link CpsBIEvent} — shared by {@link CpsBIEventDetail} and
+ * {@link CpsBIEvent} so neither declares its own copy.
  *
  * @group Interfaces
  */
-export interface CpsBiEventCorrelation {
+export interface CpsBIEventCorrelation {
   /** Scenario this event happened inside. Pass {@link CpsScenario.id}. */
   scenarioId?: string;
 
@@ -59,7 +59,7 @@ export interface CpsBiEventCorrelation {
  *
  * @group Interfaces
  */
-export interface CpsBiEventDetail extends CpsBiEventCorrelation {
+export interface CpsBIEventDetail extends CpsBIEventCorrelation {
   /**
    * Overrides the RUM event type for this one event. BI events normally
    * share one type, with `eventName` as a field. Use this only when an
@@ -78,14 +78,14 @@ export interface CpsBiEventDetail extends CpsBiEventCorrelation {
  *
  * @group Interfaces
  */
-export interface CpsBiEvent
-  extends CpsBiEventCorrelation, Pick<CpsTelemetryAttribution, 'application'> {
+export interface CpsBIEvent
+  extends CpsBIEventCorrelation, Pick<CpsTelemetryAttribution, 'application'> {
   /**
    * Event name, e.g. `export_clicked`. Declared by the application in
-   * {@link CpsBiEventNames} — this library never hardcodes business event
+   * {@link CpsBIEventNames} — this library never hardcodes business event
    * names.
    */
-  eventName: CpsBiEventName;
+  eventName: CpsBIEventName;
 
   /** ISO-8601 timestamp. */
   eventTime: string;

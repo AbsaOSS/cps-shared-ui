@@ -1,6 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import {
-  CpsBiTelemetryConfig,
+  CpsBITelemetryConfig,
   CPS_DEFAULT_BI_TELEMETRY_CONFIG
 } from '../cps-bi-telemetry.config/cps-bi-telemetry.config';
 import {
@@ -53,7 +53,7 @@ export const CPS_DEFAULT_TELEMETRY_CONFIG: {
   eventNamespace: string;
   scenario: CpsScenarioTelemetryConfig;
   logs: CpsLogConfig;
-  bi: CpsBiTelemetryConfig;
+  bi: CpsBITelemetryConfig;
   redact: CpsRedactConfig;
 } = {
   eventNamespace: CPS_DEFAULT_EVENT_NAMESPACE,

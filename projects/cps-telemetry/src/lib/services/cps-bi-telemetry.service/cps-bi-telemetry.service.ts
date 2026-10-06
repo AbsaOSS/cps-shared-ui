@@ -5,9 +5,9 @@ import {
 } from '../../config/cps-telemetry-common.config/cps-telemetry-common.config';
 import { CPS_BI_TELEMETRY_CONFIG } from '../../config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 import type {
-  CpsBiEvent,
-  CpsBiEventDetail,
-  CpsBiEventName
+  CpsBIEvent,
+  CpsBIEventDetail,
+  CpsBIEventName
 } from '../../models/cps-bi.models/cps-bi.models';
 import {
   cpsEventTypes,
@@ -46,7 +46,7 @@ import {
  * @example
  * ```typescript
  * class CustomerTableComponent {
- *   private biTelemetry = inject(CpsBiTelemetryService);
+ *   private biTelemetry = inject(CpsBITelemetryService);
  *
  *   onExport(format: string) {
  *     this.biTelemetry.track('export_clicked', {
@@ -60,7 +60,7 @@ import {
  * @group Services
  */
 @Injectable({ providedIn: 'root' })
-export class CpsBiTelemetryService {
+export class CpsBITelemetryService {
   private readonly identity = inject(CPS_TELEMETRY_IDENTITY);
   private readonly biConfig = inject(CPS_BI_TELEMETRY_CONFIG);
   private readonly redact = cpsRedactConfigFor(
@@ -77,15 +77,15 @@ export class CpsBiTelemetryService {
    * Records a business or UX event.
    *
    * @param eventName the application's own event name, e.g. `export_clicked`,
-   *   as declared in {@link CpsBiEventNames}. Treat it as a metric dimension:
+   *   as declared in {@link CpsBIEventNames}. Treat it as a metric dimension:
    *   keep the cardinality low and never interpolate an identifier into it.
    * @param metadata flat attributes describing the interaction
    * @param detail optional scenario correlation, feature and event-type override
    */
   track(
-    eventName: CpsBiEventName,
+    eventName: CpsBIEventName,
     metadata?: CpsTelemetryMetadata,
-    detail?: CpsBiEventDetail
+    detail?: CpsBIEventDetail
   ): void {
     cpsSafeVoid('biTelemetry.track', () => {
       if (!eventName) {
@@ -106,7 +106,7 @@ export class CpsBiTelemetryService {
         return;
       }
 
-      const event: CpsBiEvent = {
+      const event: CpsBIEvent = {
         eventName,
         eventTime: new Date().toISOString(),
         scenarioId: detail?.scenarioId,
@@ -135,7 +135,7 @@ export class CpsBiTelemetryService {
   private isDuplicate(
     eventName: string,
     metadata: CpsTelemetryMetadata | undefined,
-    detail?: CpsBiEventDetail
+    detail?: CpsBIEventDetail
   ): boolean {
     const key = JSON.stringify([
       eventName,
@@ -200,7 +200,7 @@ export class CpsBiTelemetryService {
 function writeToConsole(
   eventName: string,
   eventType: string,
-  event: CpsBiEvent
+  event: CpsBIEvent
 ): void {
   console.log(`[${event.application}][bi] ${eventName} -> ${eventType}`, event);
 }

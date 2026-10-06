@@ -16,7 +16,7 @@ import {
 } from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
 import { CpsTelemetryObservedEvent } from '../../models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
-import { CpsBiTelemetryService } from '../cps-bi-telemetry.service/cps-bi-telemetry.service';
+import { CpsBITelemetryService } from '../cps-bi-telemetry.service/cps-bi-telemetry.service';
 import { CpsLoggerService } from '../cps-logger.service/cps-logger.service';
 import { CpsScenarioTelemetryService } from '../cps-scenario-telemetry.service/cps-scenario-telemetry.service';
 import { CpsTelemetryMonitor } from './cps-telemetry-monitor.service';
@@ -100,7 +100,7 @@ describe('CpsTelemetryMonitor at the hand-off sites', () => {
   afterEach(() => jest.restoreAllMocks());
 
   it('should observe a BI event once, and send it once', () => {
-    TestBed.inject(CpsBiTelemetryService).track('export_clicked', {
+    TestBed.inject(CpsBITelemetryService).track('export_clicked', {
       format: 'csv'
     });
 
@@ -169,7 +169,7 @@ describe('CpsTelemetryMonitor at the hand-off sites', () => {
     sink.throwOnRecord = true;
     logApi.throwOnSend = true;
 
-    TestBed.inject(CpsBiTelemetryService).track('export_clicked');
+    TestBed.inject(CpsBITelemetryService).track('export_clicked');
     TestBed.inject(CpsLoggerService).getLogger('checkout').log('lost');
 
     expect(observed).toHaveLength(0);
@@ -177,7 +177,7 @@ describe('CpsTelemetryMonitor at the hand-off sites', () => {
 
   it('should send exactly the same number of events whether observed or not', () => {
     const run = () => {
-      TestBed.inject(CpsBiTelemetryService).track('a');
+      TestBed.inject(CpsBITelemetryService).track('a');
       TestBed.inject(CpsScenarioTelemetryService)
         .start({ name: 'load' })
         .step('one')

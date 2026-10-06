@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import {
   provideCpsTelemetry,
-  withBiEvents,
+  withBIEvents,
   withRedaction,
   withScenarios
 } from '../../providers/cps-telemetry-common.providers/cps-telemetry-common.providers';
-import { CpsBiEvent } from '../../models/cps-bi.models/cps-bi.models';
+import { CpsBIEvent } from '../../models/cps-bi.models/cps-bi.models';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import {
   CPS_LOG_API_PROVIDER,
@@ -14,7 +14,7 @@ import {
   CpsLogQuery
 } from '../../providers/cps-log-api.provider/cps-log-api.provider';
 import { CPS_REDACTED } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
-import { CpsBiTelemetryService } from './cps-bi-telemetry.service';
+import { CpsBITelemetryService } from './cps-bi-telemetry.service';
 import { CpsScenarioTelemetryService } from '../cps-scenario-telemetry.service/cps-scenario-telemetry.service';
 import {
   CPS_TELEMETRY_EVENT_TYPE,
@@ -126,8 +126,8 @@ class RecordingLogApi implements CpsLogApiProvider {
   }
 }
 
-describe('CpsBiTelemetryService', () => {
-  let service: CpsBiTelemetryService;
+describe('CpsBITelemetryService', () => {
+  let service: CpsBITelemetryService;
   let sink: RecordingSink;
 
   function configure(sinkClass: unknown = RecordingSink): void {
@@ -144,12 +144,12 @@ describe('CpsBiTelemetryService', () => {
         { provide: CpsTelemetrySink, useExisting: sinkClass as never }
       ]
     });
-    service = TestBed.inject(CpsBiTelemetryService);
+    service = TestBed.inject(CpsBITelemetryService);
   }
 
-  function lastEvent(): CpsBiEvent {
+  function lastEvent(): CpsBIEvent {
     const events = sink.ofType(CPS_TELEMETRY_EVENT_TYPE.bi);
-    return events[events.length - 1].payload as unknown as CpsBiEvent;
+    return events[events.length - 1].payload as unknown as CpsBIEvent;
   }
 
   beforeEach(() => {
@@ -223,14 +223,14 @@ describe('CpsBiTelemetryService', () => {
     });
   });
 
-  describe('withBiEvents({ redact: false })', () => {
+  describe('withBIEvents({ redact: false })', () => {
     it('should skip configurable PII scrubbing but keep the built-in credential denylist', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
           provideCpsTelemetry(
             { application: 'test-app', environment: 'test', version: '1.0.0' },
-            withBiEvents({ redact: false })
+            withBIEvents({ redact: false })
           ),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -238,7 +238,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const unredactedService = TestBed.inject(CpsBiTelemetryService);
+      const unredactedService = TestBed.inject(CpsBITelemetryService);
       const unredactedSink = TestBed.inject(RecordingSink);
 
       unredactedService.track('sign_in_submitted', {
@@ -285,7 +285,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const capped = TestBed.inject(CpsBiTelemetryService);
+      const capped = TestBed.inject(CpsBITelemetryService);
       const cappedSink = TestBed.inject(RecordingSink);
 
       capped.track('export_clicked', undefined, { feature: 'customers' });
@@ -353,7 +353,7 @@ describe('CpsBiTelemetryService', () => {
         providers: [
           provideCpsTelemetry(
             { application: 'test-app', environment: 'test', version: '1.0.0' },
-            withBiEvents({ dedupWindowMs: 5_000 })
+            withBIEvents({ dedupWindowMs: 5_000 })
           ),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -361,7 +361,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const configured = TestBed.inject(CpsBiTelemetryService);
+      const configured = TestBed.inject(CpsBITelemetryService);
       const configuredSink = TestBed.inject(RecordingSink);
 
       const nowSpy = jest.spyOn(performance, 'now');
@@ -417,7 +417,7 @@ describe('CpsBiTelemetryService', () => {
         providers: [
           provideCpsTelemetry(
             { application: 'test-app', environment: 'test', version: '1.0.0' },
-            withBiEvents({ dedupWindowMs: 50, dedupMaxKeys: 2 })
+            withBIEvents({ dedupWindowMs: 50, dedupMaxKeys: 2 })
           ),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -425,7 +425,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const capped = TestBed.inject(CpsBiTelemetryService);
+      const capped = TestBed.inject(CpsBITelemetryService);
       const cappedSink = TestBed.inject(RecordingSink);
       const nowSpy = jest.spyOn(performance, 'now');
 
@@ -447,7 +447,7 @@ describe('CpsBiTelemetryService', () => {
         providers: [
           provideCpsTelemetry(
             { application: 'test-app', environment: 'test', version: '1.0.0' },
-            withBiEvents({ dedupWindowMs: 100_000, dedupMaxKeys: 2 })
+            withBIEvents({ dedupWindowMs: 100_000, dedupMaxKeys: 2 })
           ),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -455,7 +455,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const capped = TestBed.inject(CpsBiTelemetryService);
+      const capped = TestBed.inject(CpsBITelemetryService);
       const cappedSink = TestBed.inject(RecordingSink);
       const nowSpy = jest.spyOn(performance, 'now');
 
@@ -479,7 +479,7 @@ describe('CpsBiTelemetryService', () => {
         providers: [
           provideCpsTelemetry(
             { application: 'test-app', environment: 'test', version: '1.0.0' },
-            withBiEvents({ dedupWindowMs: 1_000, dedupMaxKeys: 3 })
+            withBIEvents({ dedupWindowMs: 1_000, dedupMaxKeys: 3 })
           ),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -487,7 +487,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const capped = TestBed.inject(CpsBiTelemetryService);
+      const capped = TestBed.inject(CpsBITelemetryService);
       const cappedSink = TestBed.inject(RecordingSink);
       const nowSpy = jest.spyOn(performance, 'now');
 
@@ -523,7 +523,7 @@ describe('CpsBiTelemetryService', () => {
         providers: [
           provideCpsTelemetry(
             { application: 'test-app', environment: 'test', version: '1.0.0' },
-            withBiEvents({ dedupWindowMs: 1_000, dedupMaxKeys: 2 })
+            withBIEvents({ dedupWindowMs: 1_000, dedupMaxKeys: 2 })
           ),
           RecordingLogApi,
           { provide: CPS_LOG_API_PROVIDER, useExisting: RecordingLogApi },
@@ -531,7 +531,7 @@ describe('CpsBiTelemetryService', () => {
           { provide: CpsTelemetrySink, useExisting: RecordingSink }
         ]
       });
-      const capped = TestBed.inject(CpsBiTelemetryService);
+      const capped = TestBed.inject(CpsBITelemetryService);
       const cappedSink = TestBed.inject(RecordingSink);
       const nowSpy = jest.spyOn(performance, 'now');
 
@@ -657,7 +657,7 @@ describe('CpsBiTelemetryService', () => {
         ]
       });
 
-      const namespaced = TestBed.inject(CpsBiTelemetryService);
+      const namespaced = TestBed.inject(CpsBITelemetryService);
       const namespacedSink = TestBed.inject(RecordingSink);
       namespaced.track('export_clicked');
 

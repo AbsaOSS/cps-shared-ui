@@ -1,4 +1,4 @@
-import { CpsBiEvent } from '../cps-bi.models/cps-bi.models';
+import { CpsBIEvent } from '../cps-bi.models/cps-bi.models';
 import { CpsLogRecord } from '../cps-log.models/cps-log.models';
 import {
   CpsScenarioRecord,
@@ -82,7 +82,7 @@ export type CpsTelemetryObservedEvent =
   | (CpsTelemetryObservedBase & {
       kind: 'bi';
       eventType: string;
-      payload: CpsBiEvent | CpsJsonObject;
+      payload: CpsBIEvent | CpsJsonObject;
     })
   | (CpsTelemetryObservedBase & {
       kind: 'scenario';

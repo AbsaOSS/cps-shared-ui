@@ -1,5 +1,5 @@
 import { isDevMode } from '@angular/core';
-import { CpsBiEvent } from '../../models/cps-bi.models/cps-bi.models';
+import { CpsBIEvent } from '../../models/cps-bi.models/cps-bi.models';
 import { CpsTelemetryObservedEvent } from '../../models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
 import * as safeUtil from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import { CpsTelemetryMonitor } from './cps-telemetry-monitor.service';
@@ -9,7 +9,7 @@ jest.mock('@angular/core', () => ({
   isDevMode: jest.fn(() => false)
 }));
 
-function biEvent(): CpsBiEvent {
+function biEvent(): CpsBIEvent {
   return {
     eventName: 'export_clicked',
     eventTime: '2026-01-01T00:00:00.000Z',
@@ -32,7 +32,7 @@ describe('CpsTelemetryMonitor', () => {
     jest.restoreAllMocks();
   });
 
-  function publishBi(payload = biEvent()): number | undefined {
+  function publishBI(payload = biEvent()): number | undefined {
     return monitor.publish({
       kind: 'bi',
       eventType: 'com.cps.bi',
@@ -46,14 +46,14 @@ describe('CpsTelemetryMonitor', () => {
     const clone = jest.spyOn(safeUtil, 'cpsDeepClone');
 
     expect(monitor.observed).toBe(false);
-    expect(publishBi()).toBeUndefined();
+    expect(publishBI()).toBeUndefined();
     expect(clone).not.toHaveBeenCalled();
   });
 
   it('should deliver an event to a subscriber, with the envelope filled in', () => {
     monitor.events$.subscribe((e) => received.push(e));
 
-    const sequence = publishBi();
+    const sequence = publishBI();
 
     expect(received).toHaveLength(1);
     expect(received[0]).toMatchObject({
@@ -72,8 +72,8 @@ describe('CpsTelemetryMonitor', () => {
     monitor.events$.subscribe((e) => received.push(e));
     const sent = biEvent();
 
-    publishBi(sent);
-    const observed = received[0].payload as CpsBiEvent;
+    publishBI(sent);
+    const observed = received[0].payload as CpsBIEvent;
 
     expect(observed).toEqual(sent);
     expect(observed).not.toBe(sent);
@@ -87,9 +87,9 @@ describe('CpsTelemetryMonitor', () => {
   it('should number events in increasing order', () => {
     monitor.events$.subscribe((e) => received.push(e));
 
-    publishBi();
-    publishBi();
-    publishBi();
+    publishBI();
+    publishBI();
+    publishBI();
 
     const [a, b, c] = received.map((e) => e.sequence);
     expect(b).toBe(a + 1);
@@ -101,7 +101,7 @@ describe('CpsTelemetryMonitor', () => {
     subscription.unsubscribe();
 
     expect(monitor.observed).toBe(false);
-    expect(publishBi()).toBeUndefined();
+    expect(publishBI()).toBeUndefined();
     expect(received).toHaveLength(0);
   });
 
@@ -112,7 +112,7 @@ describe('CpsTelemetryMonitor', () => {
       throw new Error('clone failed');
     });
 
-    expect(() => publishBi()).not.toThrow();
+    expect(() => publishBI()).not.toThrow();
     expect(received).toHaveLength(0);
   });
 });

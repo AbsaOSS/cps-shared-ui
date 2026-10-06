@@ -13,8 +13,8 @@ import {
   Router
 } from '@angular/router';
 import {
-  CpsBiEventName,
-  CpsBiTelemetryService,
+  CpsBIEventName,
+  CpsBITelemetryService,
   CpsLoggerService,
   CpsScenario,
   CpsScenarioTelemetryService,
@@ -65,7 +65,7 @@ function causeOf<TCode extends number>(
 export class AppTelemetryService {
   private readonly router = inject(Router);
   private readonly scenarioTelemetry = inject(CpsScenarioTelemetryService);
-  private readonly biTelemetry = inject(CpsBiTelemetryService);
+  private readonly biTelemetry = inject(CpsBITelemetryService);
   private readonly logger = inject(CpsLoggerService).getLogger('app');
   private readonly destroyRef = inject(DestroyRef);
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
@@ -136,7 +136,7 @@ export class AppTelemetryService {
    * @param metadata attributes describing the interaction — ids, route names
    *   and tab names only, never emails, usernames or account numbers
    */
-  trackClick(action: CpsBiEventName, metadata?: CpsTelemetryMetadata): void {
+  trackClick(action: CpsBIEventName, metadata?: CpsTelemetryMetadata): void {
     this.biTelemetry.track(action, metadata);
   }
 

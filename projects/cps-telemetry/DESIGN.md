@@ -56,7 +56,7 @@ flowchart TD
 
     A --> B[CpsLoggerService]
     A --> C[CpsScenarioTelemetryService]
-    A --> D[CpsBiTelemetryService]
+    A --> D[CpsBITelemetryService]
 
     C -->|creates| C2[CpsScenario]
 
@@ -78,7 +78,7 @@ flowchart TD
 | `CpsLoggerService`            | Factory for named loggers, one per name, plus reading records back                  |
 | `CpsScenarioTelemetryService` | Creates scenarios; settles any still running at page unload                         |
 | `CpsScenario`                 | One independent journey — its steps, aggregates and outcome                         |
-| `CpsBiTelemetryService`       | Discrete business/UX events, deduplicated within a short window                     |
+| `CpsBITelemetryService`       | Discrete business/UX events, deduplicated within a short window                     |
 | `CpsTelemetrySink`            | Abstract destination for scenario and BI events                                     |
 | `CpsRumTelemetrySink`         | The AWS RUM adapter — lazy SDK load, credentials, a pre-init buffer, flushing       |
 | `CpsBroadcastTelemetrySink`   | Forwards a fragment's events to the shell                                           |
@@ -116,12 +116,12 @@ Everything each entry point exports, by role.
 
 | Role                        | Exports                                                                                                                                                                                                                                                                                                     |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Setup                       | `provideCpsTelemetry`, `withLogging`, `withScenarios`, `withBiEvents`, `withRedaction`, `CpsTelemetryFeature`, `provideCpsTelemetrySink`, `CpsTelemetryLocalSinkMode` (`'broadcast' \| 'noop'`), `provideCpsTelemetryBroadcastHost`                                                                         |
-| Configuration               | `CPS_TELEMETRY_IDENTITY` + `CpsTelemetryIdentity`; `CPS_LOG_CONFIG` + `CpsLogConfig`; `CPS_SCENARIO_TELEMETRY_CONFIG` + `CpsScenarioTelemetryConfig`; `CPS_BI_TELEMETRY_CONFIG` + `CpsBiTelemetryConfig`; `CPS_REDACT_CONFIG`; `CPS_DEFAULT_TELEMETRY_CONFIG` (every default)                               |
+| Setup                       | `provideCpsTelemetry`, `withLogging`, `withScenarios`, `withBIEvents`, `withRedaction`, `CpsTelemetryFeature`, `provideCpsTelemetrySink`, `CpsTelemetryLocalSinkMode` (`'broadcast' \| 'noop'`), `provideCpsTelemetryBroadcastHost`                                                                         |
+| Configuration               | `CPS_TELEMETRY_IDENTITY` + `CpsTelemetryIdentity`; `CPS_LOG_CONFIG` + `CpsLogConfig`; `CPS_SCENARIO_TELEMETRY_CONFIG` + `CpsScenarioTelemetryConfig`; `CPS_BI_TELEMETRY_CONFIG` + `CpsBITelemetryConfig`; `CPS_REDACT_CONFIG`; `CPS_DEFAULT_TELEMETRY_CONFIG` (every default)                               |
 | Scenarios                   | `CpsScenarioTelemetryService`, `CpsScenario`, `traceScenario` + `CpsTraceScenarioOptions`; models `CpsScenarioOptions`, `CpsScenarioOutcome`, `CpsScenarioStepDetail`, `CpsScenarioRecord`, `CpsScenarioStep`, `CpsScenarioStepEvent`, `CpsScenarioAggregate`, `CpsScenarioStatus`, `CpsScenarioStepStatus` |
-| BI events                   | `CpsBiTelemetryService`; `CpsBiEvent`, `CpsBiEventDetail` (`eventType` override, `scenarioId`, `feature`)                                                                                                                                                                                                   |
+| BI events                   | `CpsBITelemetryService`; `CpsBIEvent`, `CpsBIEventDetail` (`eventType` override, `scenarioId`, `feature`)                                                                                                                                                                                                   |
 | Logging                     | `CpsLoggerService`, `CpsLogger`; `CpsLogDetail`, `CpsLogRecord`, `CpsLogLevel`, `CPS_LOG_LEVEL_ORDER`; `CPS_LOG_API_PROVIDER`, `CpsLogApiProvider`, `CpsLogQuery`; `CpsNoopLogApiProvider`, `CpsBroadcastLogApiProvider`                                                                                    |
-| Name registries             | `CpsScenarioNames` / `CpsScenarioName`, `CpsScenarioSteps` / `CpsStepName`, `CpsBiEventNames` / `CpsBiEventName`, `CpsLoggerNames` / `CpsLoggerName`                                                                                                                                                        |
+| Name registries             | `CpsScenarioNames` / `CpsScenarioName`, `CpsScenarioSteps` / `CpsStepName`, `CpsBIEventNames` / `CpsBIEventName`, `CpsLoggerNames` / `CpsLoggerName`                                                                                                                                                        |
 | Sinks                       | `CpsTelemetrySink` (abstract), `CpsNoopTelemetrySink`, `CpsBroadcastTelemetrySink`, `CpsTelemetryBroadcastHost`, `CPS_BROADCAST_CHANNEL`, `CPS_DEFAULT_BROADCAST_CHANNEL` (`'cps-telemetry'`)                                                                                                               |
 | Shared models               | `CpsTelemetryMetadata`, `CpsTelemetryError`, `CpsTelemetryAttribution`; event types `CPS_DEFAULT_EVENT_NAMESPACE`, `CPS_TELEMETRY_EVENT_TYPE`, `cpsEventTypes()`, `CpsTelemetryEventTypes`                                                                                                                  |
 | Monitor                     | `CpsTelemetryMonitor`; `CpsTelemetryObservedEvent`, `CpsTelemetryPublishInput`, `CpsTelemetryEventKind`, `CpsTelemetryDestination`, `CpsTelemetryEventOrigin`, `CpsJsonValue`, `CpsJsonObject`                                                                                                              |
@@ -251,7 +251,7 @@ same way scenario and step names are:
 ```ts
 // src/app/telemetry.schema.ts
 declare module 'cps-telemetry' {
-  interface CpsBiEventNames {
+  interface CpsBIEventNames {
     export_clicked: true;
     theme_changed: true;
   }
@@ -263,9 +263,9 @@ export {};
 biTelemetry.track('export_clickd'); // error TS2345
 ```
 
-`CpsBiEventName` falls back to `string` until the registry is augmented. If
+`CpsBIEventName` falls back to `string` until the registry is augmented. If
 you wrap `track()` in your own service, type the wrapper's parameter as
-`CpsBiEventName` — a plain `string` stops being assignable once you declare a
+`CpsBIEventName` — a plain `string` stops being assignable once you declare a
 vocabulary.
 
 #### Logger names
@@ -431,8 +431,8 @@ the record's `scenarioId`, `scenarioName`, `application`, `sessionId` and
 ### BI event
 
 ```ts
-interface CpsBiEvent {
-  eventName: CpsBiEventName;
+interface CpsBIEvent {
+  eventName: CpsBIEventName;
   eventTime: string;
   scenarioId?: string;
   feature?: string;
@@ -1115,7 +1115,7 @@ versus where the page id says it ended.
 
 ### Turning redaction off per concern
 
-`withLogging`/`withScenarios`/`withBiEvents` each take `redact` (default
+`withLogging`/`withScenarios`/`withBIEvents` each take `redact` (default
 `true`):
 
 ```ts
@@ -1204,7 +1204,7 @@ provideCpsTelemetry(
     mirrorErrorsToRum: false,
     redact: true
   }),
-  withBiEvents({
+  withBIEvents({
     dedupWindowMs: 400,
     dedupMaxKeys: 100,
     redact: true
@@ -1246,7 +1246,7 @@ AWS account details never appear here; they arrive through
 ### There is no default destination
 
 `provideCpsTelemetry()` only registers configuration. Injecting
-`CpsScenarioTelemetryService` or `CpsBiTelemetryService` without a sink
+`CpsScenarioTelemetryService` or `CpsBITelemetryService` without a sink
 fails at bootstrap with `NG0201` — the same way a missing `provideRouter()`
 does — and `CpsLoggerService` likewise needs a log API provider. For local
 development, or a deployment that ships nothing, say so explicitly:
@@ -1494,7 +1494,7 @@ providers: [
     // library default for it.
     withLogging({ minLevel: 'warn' }),
     withScenarios({ maxSteps: 10 })
-    // withBiEvents({ ... }), withRedaction({ ... }) are also available.
+    // withBIEvents({ ... }), withRedaction({ ... }) are also available.
   ),
 
   // Required, and chosen explicitly: where events and log records go.

@@ -13,7 +13,7 @@ export {
 } from './lib/config/cps-telemetry-common.config/cps-telemetry-common.config';
 export type { CpsTelemetryIdentity } from './lib/config/cps-telemetry-common.config/cps-telemetry-common.config';
 export { CPS_BI_TELEMETRY_CONFIG } from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
-export type { CpsBiTelemetryConfig } from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
+export type { CpsBITelemetryConfig } from './lib/config/cps-bi-telemetry.config/cps-bi-telemetry.config';
 export { CPS_LOG_CONFIG } from './lib/config/cps-log.config/cps-log.config';
 export type { CpsLogConfig } from './lib/config/cps-log.config/cps-log.config';
 export { CPS_SCENARIO_TELEMETRY_CONFIG } from './lib/config/cps-scenario-telemetry.config/cps-scenario-telemetry.config';
@@ -26,7 +26,7 @@ export {
   provideCpsTelemetry,
   provideCpsTelemetryBroadcastHost,
   provideCpsTelemetrySink,
-  withBiEvents,
+  withBIEvents,
   withLogging,
   withRedaction,
   withScenarios
@@ -41,10 +41,10 @@ export { CpsBroadcastLogApiProvider } from './lib/providers/cps-broadcast-log-ap
 
 // Models
 export type {
-  CpsBiEvent,
-  CpsBiEventDetail,
-  CpsBiEventName,
-  CpsBiEventNames
+  CpsBIEvent,
+  CpsBIEventDetail,
+  CpsBIEventName,
+  CpsBIEventNames
 } from './lib/models/cps-bi.models/cps-bi.models';
 export type {
   CpsLogger,
@@ -92,7 +92,7 @@ export {
 } from './lib/models/cps-telemetry-monitor.models/cps-telemetry-monitor.models';
 
 // Services
-export { CpsBiTelemetryService } from './lib/services/cps-bi-telemetry.service/cps-bi-telemetry.service';
+export { CpsBITelemetryService } from './lib/services/cps-bi-telemetry.service/cps-bi-telemetry.service';
 export { CpsLoggerService } from './lib/services/cps-logger.service/cps-logger.service';
 export { CpsScenario } from './lib/scenario/cps-scenario/cps-scenario';
 export { CpsTelemetryMonitor } from './lib/services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
