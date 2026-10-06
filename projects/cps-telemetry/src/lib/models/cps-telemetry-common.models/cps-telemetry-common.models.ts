@@ -33,6 +33,30 @@ export interface CpsTelemetryError {
 }
 
 /**
+ * Who and where a record came from — the attribution every emitted record
+ * carries, read from the application's identity and the active sink.
+ *
+ * @group Interfaces
+ */
+export interface CpsTelemetryAttribution {
+  /** Application name, from {@link CpsTelemetryIdentity.application}. */
+  application: string;
+
+  /**
+   * Session identifier from the active telemetry sink, when it has one.
+   * `undefined` before the RUM client finishes initializing, and in a
+   * follower realm until the shell has answered.
+   */
+  sessionId?: string;
+
+  /**
+   * Application user identifier, when one is signed in. Never an email,
+   * username or account number — see {@link CpsTelemetrySink.setUserId}.
+   */
+  userId?: string;
+}
+
+/**
  * The keys of a registry, or `string` while it is still empty — so an
  * application with no schema yet gets `string`, not `never`. Names are
  * unconstrained until the first augmentation, then checked against it.

@@ -52,12 +52,20 @@ import {
  *
  * @example
  * ```typescript
- * private readonly logger = inject(CpsLoggerService).getLogger('checkout');
+ * class CheckoutService {
+ *   private readonly logger = inject(CpsLoggerService).getLogger('checkout');
  *
- * this.logger.error('Failed to load customer data', {
- *   error,
- *   correlationId: scenario.id
- * });
+ *   load(scenario: CpsScenario) {
+ *     try {
+ *       // …
+ *     } catch (error) {
+ *       this.logger.error('Failed to load customer data', {
+ *         error,
+ *         correlationId: scenario.id
+ *       });
+ *     }
+ *   }
+ * }
  * ```
  *
  * @group Services
@@ -71,7 +79,7 @@ export class CpsLoggerService implements OnDestroy {
     this.logsConfig.redact
   );
 
-  /** Enrichment only (`sessionId`/`userId`, optional RUM mirroring) — see DESIGN.md §10. */
+  /** Enrichment only (`sessionId`/`userId`, optional RUM mirroring). */
   private readonly sink = inject(CpsTelemetrySink, { optional: true });
   private readonly apiProvider = inject(CPS_LOG_API_PROVIDER);
   private readonly monitor = inject(CpsTelemetryMonitor);
@@ -127,9 +135,13 @@ export class CpsLoggerService implements OnDestroy {
    *
    * @example
    * ```typescript
-   * private readonly loggers = inject(CpsLoggerService);
+   * class JourneyService {
+   *   private readonly loggerService = inject(CpsLoggerService);
    *
-   * const lines = await this.loggers.query({ correlationId: scenario.id });
+   *   linesOf(scenario: CpsScenario): Promise<CpsLogRecord[]> {
+   *     return this.loggerService.query({ correlationId: scenario.id });
+   *   }
+   * }
    * ```
    *
    * Fail-open: a provider that throws or rejects resolves to `[]`.

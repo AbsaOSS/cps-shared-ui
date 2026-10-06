@@ -211,8 +211,7 @@ export const CPS_DEFAULT_REDACT_CONFIG: CpsRedactConfig = {
  * (`CpsLogConfig.redact`, `CpsScenarioTelemetryConfig.redact`, `CpsBiTelemetryConfig.redact`).
  * Disabling it skips only the configurable scrubbing — the built-in
  * credential denylist, size caps, error normalization and
- * `extraValueTransforms` stay on regardless. See DESIGN.md §10, "Turning
- * redaction off per concern", for why.
+ * `extraValueTransforms` stay on regardless.
  *
  * @param config the concern's resolved `CPS_REDACT_CONFIG`
  * @param enabled the concern's own `redact` setting

@@ -1,5 +1,6 @@
 import {
   CpsRegistered,
+  CpsTelemetryAttribution,
   CpsTelemetryMetadata
 } from '../cps-telemetry-common.models/cps-telemetry-common.models';
 
@@ -77,7 +78,8 @@ export interface CpsBiEventDetail extends CpsBiEventCorrelation {
  *
  * @group Interfaces
  */
-export interface CpsBiEvent extends CpsBiEventCorrelation {
+export interface CpsBiEvent
+  extends CpsBiEventCorrelation, Pick<CpsTelemetryAttribution, 'application'> {
   /**
    * Event name, e.g. `export_clicked`. Declared by the application in
    * {@link CpsBiEventNames} — this library never hardcodes business event
@@ -90,7 +92,4 @@ export interface CpsBiEvent extends CpsBiEventCorrelation {
 
   /** Redacted structured attributes. */
   metadata?: CpsTelemetryMetadata;
-
-  /** Application name, from {@link CpsTelemetryIdentity.application}. */
-  application: string;
 }

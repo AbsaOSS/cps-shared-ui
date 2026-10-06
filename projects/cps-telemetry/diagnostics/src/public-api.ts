@@ -2,7 +2,7 @@
  * Public API Surface of cps-telemetry/diagnostics
  *
  * An in-app popup showing, live, every event this app hands to its
- * telemetry destinations. Needs cps-ui-kit; see DESIGN.md §3.
+ * telemetry destinations. Needs cps-ui-kit.
  */
 
 export {

@@ -68,10 +68,7 @@ export interface CpsRumAppMonitorConfig {
   /** Session length before a new one begins, in seconds. Default `1800` (30 minutes). */
   sessionLengthSeconds?: number;
 
-  /**
-   * Hard cap on events recorded per session, across all telemetry. Default
-   * `200`. See DESIGN.md §7.
-   */
+  /** Hard cap on events recorded per session, across all telemetry. Default `200`. */
   sessionEventLimit?: number;
 
   /**

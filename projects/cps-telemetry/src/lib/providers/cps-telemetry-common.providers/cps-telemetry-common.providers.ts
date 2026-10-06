@@ -234,7 +234,7 @@ export type CpsTelemetryLocalSinkMode =
  * imported from `cps-telemetry/rum` — a separate entry point, not a third
  * mode here, so that an application using only `'broadcast'`/`'noop'` is
  * never required to have the optional `aws-rum-web` peer resolvable at
- * build time. See DESIGN.md §3, "Entry points".
+ * build time.
  *
  * @example
  * ```typescript

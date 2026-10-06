@@ -1,5 +1,6 @@
 import {
   CpsRegistered,
+  CpsTelemetryAttribution,
   CpsTelemetryError,
   CpsTelemetryMetadata
 } from '../cps-telemetry-common.models/cps-telemetry-common.models';
@@ -90,7 +91,8 @@ export interface CpsLogDetail {
  *
  * @group Interfaces
  */
-export interface CpsLogRecord {
+export interface CpsLogRecord
+  extends Omit<CpsLogDetail, 'error'>, CpsTelemetryAttribution {
   /** ISO-8601 timestamp of the moment the log call was made. */
   timestamp: string;
 
@@ -103,32 +105,14 @@ export interface CpsLogRecord {
   /** Named logger this record came from, when it came from one. */
   logger?: CpsLoggerName;
 
-  /** Subsystem label, when supplied. Redacted and length-capped, like `message`. */
-  context?: string;
-
-  /** Redacted structured attributes, when supplied. */
-  metadata?: CpsTelemetryMetadata;
-
   /** Normalized error, when supplied. */
   error?: CpsTelemetryError;
-
-  /** Correlation identifier, when supplied. */
-  correlationId?: string;
-
-  /** Application name. */
-  application: string;
 
   /** Deployment environment. */
   environment: string;
 
   /** Application version. */
   version: string;
-
-  /** Application-supplied user identifier, when known. */
-  userId?: string;
-
-  /** Session identifier reported by the sink, when available. */
-  sessionId?: string;
 }
 
 /**

@@ -76,6 +76,7 @@ export {
   cpsEventTypes
 } from './lib/models/cps-telemetry-common.models/cps-telemetry-common.models';
 export type {
+  CpsTelemetryAttribution,
   CpsTelemetryError,
   CpsTelemetryEventTypes,
   CpsTelemetryMetadata

@@ -1,5 +1,6 @@
 import {
   CpsRegistered,
+  CpsTelemetryAttribution,
   CpsTelemetryError,
   CpsTelemetryMetadata
 } from '../cps-telemetry-common.models/cps-telemetry-common.models';
@@ -160,32 +161,6 @@ export interface CpsScenarioStep extends CpsScenarioStepDetail {
 }
 
 /**
- * The per-step event, sent under `{namespace}.scenario.step` when
- * {@link CpsScenarioTelemetryConfig.emitLifecycleEvents} is on.
- *
- * One closed step, plus enough of its scenario's identity to stand alone —
- * the packed {@link CpsScenarioRecord} carries the same step inside `steps`.
- *
- * @group Interfaces
- */
-export interface CpsScenarioStepEvent extends CpsScenarioStep {
-  /** The owning scenario's id. */
-  scenarioId: string;
-
-  /** The owning scenario's name. */
-  scenarioName: CpsScenarioName;
-
-  /** The emitting application. */
-  application: string;
-
-  /** Session identifier reported by the sink, when available. */
-  sessionId?: string;
-
-  /** User identifier reported by the sink, when available. */
-  userId?: string;
-}
-
-/**
  * Total time spent across repeated calls of one operation — a formatter
  * called per row, a validator called per field — where the total matters
  * more than a hundred individual steps.
@@ -292,7 +267,10 @@ export interface CpsScenarioOutcome extends CpsScenarioStepDetail {
  * @group Interfaces
  */
 export interface CpsScenarioRecord
-  extends Omit<CpsScenarioOutcome, 'error'>, CpsScenarioIdentityDetail {
+  extends
+    Omit<CpsScenarioOutcome, 'error'>,
+    CpsScenarioIdentityDetail,
+    CpsTelemetryAttribution {
   /** Unique scenario identifier. Doubles as the correlation id. */
   scenarioId: string;
 
@@ -354,19 +332,22 @@ export interface CpsScenarioRecord
 
   /** Totals recorded via {@link CpsScenario.aggregateStart}. */
   aggregates?: CpsScenarioAggregate[];
-
-  /** Application name, from {@link CpsTelemetryIdentity.application}. */
-  application: string;
-
-  /**
-   * Session identifier from the active telemetry sink, when it has one.
-   * `undefined` before the RUM client finishes initializing.
-   */
-  sessionId?: string;
-
-  /**
-   * Application user identifier, when one is signed in. Never an email,
-   * username or account number — see {@link CpsTelemetrySink.setUserId}.
-   */
-  userId?: string;
 }
+
+/**
+ * The per-step event, sent under `{namespace}.scenario.step` when
+ * {@link CpsScenarioTelemetryConfig.emitLifecycleEvents} is on.
+ *
+ * One closed step, plus enough of its scenario's identity to stand alone —
+ * the packed {@link CpsScenarioRecord} carries the same step inside `steps`.
+ * The identity fields are the record's own, so the two can't drift apart.
+ *
+ * @group Interfaces
+ */
+export interface CpsScenarioStepEvent
+  extends
+    CpsScenarioStep,
+    Pick<
+      CpsScenarioRecord,
+      'scenarioId' | 'scenarioName' | 'application' | 'sessionId' | 'userId'
+    > {}

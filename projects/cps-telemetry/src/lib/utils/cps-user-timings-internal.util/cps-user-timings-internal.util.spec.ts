@@ -148,7 +148,7 @@ describe('cps-user-timings', () => {
     });
   });
 
-  describe('resolving the host performance object (see DESIGN.md §13)', () => {
+  describe('resolving the host performance object', () => {
     // jsdom's `globalThis.top` is a non-configurable accessor always equal
     // to `globalThis` itself, so a divergent `top` (a real fragment under a
     // different frame) can't be constructed here — every mark/measure/clear

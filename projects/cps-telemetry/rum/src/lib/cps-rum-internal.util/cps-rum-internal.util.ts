@@ -9,10 +9,10 @@ import { inject, isDevMode, PLATFORM_ID } from '@angular/core';
  * point's `rootDir` to its own `src` directory (unconditionally — see
  * `initializeTsConfig` in ng-packagr's own `tsconfig.js`), so a secondary
  * entry point cannot reach a file physically outside `rum/src` by relative
- * path. The main entry deliberately doesn't export these either — per
- * DESIGN.md §3, the fail-open wrappers and id generation stay internal so
- * they can change freely without a breaking release, and widening the
- * public API just to satisfy this entry point's own plumbing would trade
+ * path. The main entry deliberately doesn't export these either,
+ * "Maintaining this package", the fail-open wrappers and id generation stay
+ * internal so they can change freely without a breaking release, and widening
+ * the public API just to satisfy this entry point's own plumbing would trade
  * away that freedom for every consumer, not just this one. A small,
  * verbatim, unexported copy is the cheaper trade.
  */
