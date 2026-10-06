@@ -103,6 +103,28 @@ Batching, retries and authentication are up to your backend class. If it
 batches, add a `flush()` method — the library calls it when the page is
 hidden or closed.
 
+### Using a different destination
+
+RUM is one destination; a realm always has exactly one. To send somewhere
+else, swap it — application code doesn't change:
+
+```ts
+providers: [
+  provideCpsTelemetry({ application: 'my-app', environment, version }),
+
+  // Where events go — replaces provideCpsTelemetryRumSink() and
+  // CPS_RUM_CREDENTIALS_PROVIDER
+  provideCpsTelemetryDestination(MyBackendSink),
+
+  // Where logs go — unchanged
+  { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend }
+];
+```
+
+`MyBackendSink` extends `CpsTelemetrySink`; in its `record()`,
+`cpsClassifyTelemetryEvent(eventType, payload)` tells a scenario from a BI
+event. Providing two destinations fails at startup.
+
 ## Declare your names
 
 Scenario, step, event and logger names are typed, so a typo is a compile

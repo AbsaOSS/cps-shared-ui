@@ -1,9 +1,11 @@
 import {
   EnvironmentProviders,
   inject,
+  InjectionToken,
   makeEnvironmentProviders,
   Provider,
-  provideAppInitializer
+  provideAppInitializer,
+  Type
 } from '@angular/core';
 import { CpsTelemetryBroadcastHost } from '../../sinks/cps-broadcast/cps-broadcast-host.service';
 import { CpsBroadcastTelemetrySink } from '../../sinks/cps-broadcast/cps-broadcast-telemetry.sink';
@@ -13,6 +15,7 @@ import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstra
 import { CpsRedactConfig } from '../../utils/cps-telemetry-redact.util/cps-telemetry-redact.util';
 import { CpsBroadcastLogApiProvider } from '../cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 import { CPS_LOG_API_PROVIDER } from '../cps-log-api.provider/cps-log-api.provider';
+import { cpsSafeVoid } from '../../utils/cps-telemetry-safe.util/cps-telemetry-safe.util';
 import {
   CPS_REDACT_CONFIG,
   CPS_TELEMETRY_IDENTITY,
@@ -206,6 +209,100 @@ export function provideCpsTelemetry(
 }
 
 /**
+ * Every destination registered through {@link provideCpsTelemetryDestination},
+ * so bootstrap can insist on exactly one. Internal.
+ */
+const CPS_TELEMETRY_DESTINATIONS = new InjectionToken<Type<CpsTelemetrySink>[]>(
+  'CPS_TELEMETRY_DESTINATIONS'
+);
+
+/** Sinks whose `init` already ran — the same destination may be listed twice. */
+const initializedSinks = new WeakSet<CpsTelemetrySink>();
+
+/**
+ * Options for {@link provideCpsTelemetryDestination}.
+ *
+ * @group Interfaces
+ */
+export interface CpsTelemetryDestinationOptions<T extends CpsTelemetrySink> {
+  /**
+   * Runs once at startup, from an app initializer — for example to load
+   * credentials or start a client. Not awaited, so a slow destination never
+   * delays first paint. Fail-open, like every other call into a
+   * destination: a throw is reported in dev mode and never breaks bootstrap.
+   */
+  init?: (sink: T) => void;
+}
+
+/**
+ * Registers the realm's telemetry destination: the one sink every scenario,
+ * BI event and mirrored error is handed to.
+ *
+ * Every destination is registered this way — the RUM sink
+ * ({@link provideCpsTelemetryRumSink}), `'broadcast'` and `'noop'`
+ * ({@link provideCpsTelemetrySink}), and any sink an application or another
+ * package writes. Swapping destinations is swapping this one call;
+ * application code doesn't change.
+ *
+ * Exactly one destination is allowed. Registering two different ones fails
+ * at bootstrap, rather than silently keeping whichever came last.
+ *
+ * @example
+ * ```typescript
+ * providers: [
+ *   provideCpsTelemetry({ application: 'my-app', environment, version }),
+ *   provideCpsTelemetryDestination(MyBackendSink, { init: (sink) => sink.start() }),
+ *   { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend }
+ * ]
+ * ```
+ *
+ * @param sink the destination's class; it is provided here too
+ * @param options optional startup hook
+ * @returns providers binding {@link CpsTelemetrySink} to `sink`
+ *
+ * @group Utils
+ */
+export function provideCpsTelemetryDestination<T extends CpsTelemetrySink>(
+  sink: Type<T>,
+  options?: CpsTelemetryDestinationOptions<T>
+): EnvironmentProviders {
+  return makeEnvironmentProviders([
+    sink,
+    { provide: CpsTelemetrySink, useExisting: sink },
+    { provide: CPS_TELEMETRY_DESTINATIONS, useValue: sink, multi: true },
+    provideAppInitializer(() => {
+      assertOneDestination(inject(CPS_TELEMETRY_DESTINATIONS));
+
+      const init = options?.init;
+      if (!init) {
+        return;
+      }
+      const instance = inject(sink);
+      if (!initializedSinks.has(instance)) {
+        initializedSinks.add(instance);
+        cpsSafeVoid('destination.init', () => init(instance));
+      }
+    })
+  ]);
+}
+
+/**
+ * Fails bootstrap when more than one distinct destination is registered.
+ * A configuration error, so it throws in every environment — the same rule
+ * as a missing destination, which fails with `NG0201`.
+ */
+function assertOneDestination(destinations: Type<CpsTelemetrySink>[]): void {
+  const distinct = [...new Set(destinations)];
+  if (distinct.length > 1) {
+    throw new Error(
+      `[cps-telemetry] More than one telemetry destination is provided: ${distinct
+        .map((d) => d.name)
+        .join(', ')}. Provide exactly one.`
+    );
+  }
+}
+
+/**
  * Where a realm sends its telemetry, selectable via
  * {@link provideCpsTelemetrySink} without any optional peer dependency.
  * AWS RUM isn't one of these — it lives in its own entry point; see
@@ -220,8 +317,10 @@ export type CpsTelemetryLocalSinkMode =
   | 'noop';
 
 /**
- * Binds the telemetry destination. Every application needs exactly one call
- * — this one, or {@link provideCpsTelemetryRumSink} for the RUM sink.
+ * Binds one of the library's own local destinations, through
+ * {@link provideCpsTelemetryDestination}. Every application needs exactly
+ * one destination — this, {@link provideCpsTelemetryRumSink}, or a sink of
+ * its own.
  *
  * - `'broadcast'` forwards to a shell realm running
  *   {@link provideCpsTelemetryBroadcastHost}, on a channel both sides name
@@ -257,8 +356,7 @@ export function provideCpsTelemetrySink(
   switch (mode) {
     case 'broadcast':
       return makeEnvironmentProviders([
-        CpsBroadcastTelemetrySink,
-        { provide: CpsTelemetrySink, useExisting: CpsBroadcastTelemetrySink },
+        provideCpsTelemetryDestination(CpsBroadcastTelemetrySink),
         CpsBroadcastLogApiProvider,
         {
           provide: CPS_LOG_API_PROVIDER,
@@ -270,9 +368,7 @@ export function provideCpsTelemetrySink(
       ]);
 
     case 'noop':
-      return makeEnvironmentProviders([
-        { provide: CpsTelemetrySink, useClass: CpsNoopTelemetrySink }
-      ]);
+      return provideCpsTelemetryDestination(CpsNoopTelemetrySink);
 
     default:
       throw new Error(`[cps-telemetry] Unknown sink mode "${mode}".`);

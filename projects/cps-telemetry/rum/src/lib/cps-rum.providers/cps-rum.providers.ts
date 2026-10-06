@@ -1,10 +1,5 @@
-import {
-  EnvironmentProviders,
-  inject,
-  makeEnvironmentProviders,
-  provideAppInitializer
-} from '@angular/core';
-import { CpsTelemetrySink } from 'cps-telemetry';
+import { EnvironmentProviders } from '@angular/core';
+import { provideCpsTelemetryDestination } from 'cps-telemetry';
 import { CpsRumTelemetrySink } from '../cps-rum-telemetry.sink/cps-rum-telemetry.sink';
 
 /**
@@ -38,15 +33,11 @@ import { CpsRumTelemetrySink } from '../cps-rum-telemetry.sink/cps-rum-telemetry
  * @group Utils
  */
 export function provideCpsTelemetryRumSink(): EnvironmentProviders {
-  return makeEnvironmentProviders([
-    CpsRumTelemetrySink,
-    { provide: CpsTelemetrySink, useExisting: CpsRumTelemetrySink },
-    provideAppInitializer(() => {
-      // Not returned, so a slow or hung credential broker doesn't delay
-      // first paint.
-      inject(CpsRumTelemetrySink)
-        .init()
-        .catch(() => undefined);
-    })
-  ]);
+  return provideCpsTelemetryDestination(CpsRumTelemetrySink, {
+    // Not awaited, so a slow or hung credential broker doesn't delay first
+    // paint.
+    init: (sink) => {
+      sink.init().catch(() => undefined);
+    }
+  });
 }

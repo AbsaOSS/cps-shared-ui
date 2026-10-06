@@ -3,6 +3,15 @@ import { ApplicationInitStatus, Injectable, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { CpsLoggerService } from '../../services/cps-logger.service/cps-logger.service';
 import { CpsScenarioTelemetryService } from '../../services/cps-scenario-telemetry.service/cps-scenario-telemetry.service';
+import { CpsBITelemetryService } from '../../services/cps-bi-telemetry.service/cps-bi-telemetry.service';
+import {
+  CpsTelemetryError,
+  CpsTelemetryMetadata
+} from '../../models/cps-telemetry-common.models/cps-telemetry-common.models';
+import {
+  cpsClassifyTelemetryEvent,
+  CpsTelemetrySinkEvent
+} from '../../utils/cps-telemetry-event.util/cps-telemetry-event.util';
 import { CpsNoopTelemetrySink } from '../../sinks/cps-telemetry/cps-noop-telemetry.sink/cps-noop-telemetry.sink';
 import { CpsTelemetrySink } from '../../sinks/cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
 import {
@@ -27,6 +36,7 @@ import {
   CpsTelemetryLocalSinkMode,
   provideCpsTelemetry,
   provideCpsTelemetryBroadcastHost,
+  provideCpsTelemetryDestination,
   provideCpsTelemetrySink,
   withBIEvents,
   withLogging,
@@ -551,5 +561,190 @@ describe('with*() features', () => {
 
       expect(shared).toHaveLength(1);
     });
+  });
+});
+
+/**
+ * A destination the library has never seen, written against the public
+ * contract only.
+ */
+@Injectable()
+class BrandNewSink extends CpsTelemetrySink {
+  readonly events: CpsTelemetrySinkEvent[] = [];
+  readonly errors: CpsTelemetryError[] = [];
+  readonly flushes: boolean[] = [];
+  started = 0;
+  private userId?: string;
+
+  start(): void {
+    this.started++;
+  }
+
+  record(
+    eventType: string,
+    payload: object,
+    _metadata?: CpsTelemetryMetadata
+  ): void {
+    this.events.push(cpsClassifyTelemetryEvent(eventType, payload));
+  }
+
+  recordError(error: CpsTelemetryError): void {
+    this.errors.push(error);
+  }
+
+  getSessionId(): string | undefined {
+    return 'brand-new-session';
+  }
+
+  setUserId(userId: string | undefined): void {
+    this.userId = userId;
+  }
+
+  getUserId(): string | undefined {
+    return this.userId;
+  }
+
+  flush(beacon = false): void {
+    this.flushes.push(beacon);
+  }
+}
+
+/** The same, for log records. */
+@Injectable()
+class BrandNewLogApi implements CpsLogApiProvider {
+  readonly records: CpsLogRecord[] = [];
+
+  send(record: CpsLogRecord): void {
+    this.records.push(record);
+  }
+
+  query(): Promise<CpsLogRecord[]> {
+    return Promise.resolve(this.records);
+  }
+}
+
+describe('provideCpsTelemetryDestination', () => {
+  function configure(...destinations: unknown[]): void {
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        provideCpsTelemetry(
+          { application: 'my-app', environment: 'prod', version: '1.0.0' },
+          withLogging({ mirrorErrorsToRum: true })
+        ),
+        ...(destinations as never[]),
+        BrandNewLogApi,
+        { provide: CPS_LOG_API_PROVIDER, useExisting: BrandNewLogApi }
+      ]
+    });
+  }
+
+  it('should take a brand-new destination in place of the built-in ones, with no other change', () => {
+    configure(
+      provideCpsTelemetryDestination(BrandNewSink, {
+        init: (sink) => sink.start()
+      })
+    );
+    TestBed.inject(ApplicationInitStatus);
+    const sink = TestBed.inject(BrandNewSink);
+
+    // Application code, exactly as it is written against any destination.
+    const scenario = TestBed.inject(CpsScenarioTelemetryService).start({
+      name: 'checkout'
+    });
+    scenario.step('pay');
+    scenario.complete();
+    TestBed.inject(CpsBITelemetryService).track('export_clicked', {
+      format: 'csv'
+    });
+    TestBed.inject(CpsLoggerService)
+      .getLogger('checkout')
+      .error('Payment failed', { correlationId: scenario.id });
+    TestBed.inject(CpsTelemetrySink).setUserId('user-1');
+    TestBed.inject(CpsTelemetrySink).flush(true);
+
+    expect(TestBed.inject(CpsTelemetrySink)).toBe(sink);
+    expect(sink.started).toBe(1);
+    expect(sink.events.map((e) => e.kind)).toEqual(['scenario', 'bi']);
+    const [record, bi] = sink.events;
+    expect(record.kind === 'scenario' && record.payload.scenarioName).toBe(
+      'checkout'
+    );
+    expect(bi.kind === 'bi' && bi.payload.eventName).toBe('export_clicked');
+    expect(sink.errors).toEqual([
+      expect.objectContaining({ message: 'Payment failed' })
+    ]);
+    expect(sink.getUserId()).toBe('user-1');
+    expect(sink.flushes).toEqual([true]);
+
+    const [log] = TestBed.inject(BrandNewLogApi).records;
+    expect(log).toMatchObject({
+      message: 'Payment failed',
+      correlationId: scenario.id,
+      // Identity comes from whichever destination is bound.
+      sessionId: 'brand-new-session',
+      userId: undefined
+    });
+  });
+
+  it('should fail at bootstrap when two different destinations are provided', () => {
+    configure(
+      provideCpsTelemetrySink('noop'),
+      provideCpsTelemetryDestination(BrandNewSink)
+    );
+
+    expect(() => TestBed.inject(ApplicationInitStatus)).toThrow(
+      'More than one telemetry destination is provided: CpsNoopTelemetrySink, BrandNewSink. Provide exactly one.'
+    );
+  });
+
+  it('should accept the same destination listed twice, and start it once', () => {
+    configure(
+      provideCpsTelemetryDestination(BrandNewSink, {
+        init: (sink) => sink.start()
+      }),
+      provideCpsTelemetryDestination(BrandNewSink, {
+        init: (sink) => sink.start()
+      })
+    );
+
+    expect(() => TestBed.inject(ApplicationInitStatus)).not.toThrow();
+    expect(TestBed.inject(BrandNewSink).started).toBe(1);
+  });
+
+  it('should not let a throwing init break bootstrap', () => {
+    const consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    configure(
+      provideCpsTelemetryDestination(BrandNewSink, {
+        init: () => {
+          throw new Error('backend unreachable');
+        }
+      })
+    );
+
+    expect(() => TestBed.inject(ApplicationInitStatus)).not.toThrow();
+    TestBed.inject(CpsBITelemetryService).track('export_clicked');
+    expect(TestBed.inject(BrandNewSink).events).toHaveLength(1);
+    consoleError.mockRestore();
+  });
+
+  it('should leave a sink bound directly, without the helper, to work as before', () => {
+    configure(BrandNewSink, {
+      provide: CpsTelemetrySink,
+      useExisting: BrandNewSink
+    });
+
+    TestBed.inject(CpsBITelemetryService).track('export_clicked');
+
+    expect(TestBed.inject(BrandNewSink).events).toHaveLength(1);
+  });
+
+  it('should still fail when no destination is provided', () => {
+    configure();
+
+    expect(() => TestBed.inject(CpsBITelemetryService)).toThrow(/NG0201/);
   });
 });

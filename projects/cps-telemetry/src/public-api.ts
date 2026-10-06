@@ -21,10 +21,12 @@ export type { CpsScenarioTelemetryConfig } from './lib/config/cps-scenario-telem
 
 // Providers
 export {
+  CpsTelemetryDestinationOptions,
   CpsTelemetryFeature,
   CpsTelemetryLocalSinkMode,
   provideCpsTelemetry,
   provideCpsTelemetryBroadcastHost,
+  provideCpsTelemetryDestination,
   provideCpsTelemetrySink,
   withBIEvents,
   withLogging,
@@ -110,6 +112,8 @@ export { CpsNoopTelemetrySink } from './lib/sinks/cps-telemetry/cps-noop-telemet
 
 // Utilities an application or a custom sink needs
 export { traceScenario } from './lib/scenario/cps-scenario-operators/cps-scenario-operators';
+export { cpsClassifyTelemetryEvent } from './lib/utils/cps-telemetry-event.util/cps-telemetry-event.util';
+export type { CpsTelemetrySinkEvent } from './lib/utils/cps-telemetry-event.util/cps-telemetry-event.util';
 export type { CpsTraceScenarioOptions } from './lib/scenario/cps-scenario-operators/cps-scenario-operators';
 export { cpsIsDebugEnabled } from './lib/utils/cps-debug-flag.util/cps-debug-flag.util';
 export type { CpsDebugFlag } from './lib/utils/cps-debug-flag.util/cps-debug-flag.util';

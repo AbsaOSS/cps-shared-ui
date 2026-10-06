@@ -11,6 +11,7 @@ import {
   cpsIsBroadcastMessage
 } from './cps-broadcast.messages';
 import { CpsTelemetrySink } from '../cps-telemetry/cps-telemetry-abstract.sink/cps-telemetry-abstract.sink';
+import { cpsClassifyTelemetryEvent } from '../../utils/cps-telemetry-event.util/cps-telemetry-event.util';
 import { CpsBroadcastTelemetrySink } from './cps-broadcast-telemetry.sink';
 import { CpsBroadcastLogApiProvider } from '../../providers/cps-broadcast-log-api.provider/cps-broadcast-log-api.provider';
 import { CpsTelemetryMonitor } from '../../services/cps-telemetry-monitor.service/cps-telemetry-monitor.service';
@@ -158,7 +159,7 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
         case 'event':
           this.sink.record(data.eventType, data.payload, data.metadata);
           this.monitor.publish({
-            ...classifyForwarded(data.eventType),
+            kind: cpsClassifyTelemetryEvent(data.eventType, data.payload).kind,
             eventType: data.eventType,
             payload: data.payload as CpsJsonObject,
             destination: 'sink',
@@ -356,26 +357,6 @@ export class CpsTelemetryBroadcastHost implements OnDestroy {
       undefined
     );
   }
-}
-
-/**
- * Which kind a forwarded event is, from its type's suffix. Matched on the
- * suffix rather than this realm's namespace, since each realm configures
- * its own `eventNamespace`.
- */
-function classifyForwarded(eventType: string): {
-  kind: 'scenario-step' | 'scenario' | 'bi' | 'unknown';
-} {
-  if (eventType.endsWith('.scenario.step')) {
-    return { kind: 'scenario-step' };
-  }
-  if (eventType.endsWith('.scenario')) {
-    return { kind: 'scenario' };
-  }
-  if (eventType.endsWith('.bi')) {
-    return { kind: 'bi' };
-  }
-  return { kind: 'unknown' };
 }
 
 /**

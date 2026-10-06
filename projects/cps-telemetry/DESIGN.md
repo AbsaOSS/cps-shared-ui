@@ -116,13 +116,13 @@ Everything each entry point exports, by role.
 
 | Role                        | Exports                                                                                                                                                                                                                                                                                                     |
 | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Setup                       | `provideCpsTelemetry`, `withLogging`, `withScenarios`, `withBIEvents`, `withRedaction`, `CpsTelemetryFeature`, `provideCpsTelemetrySink`, `CpsTelemetryLocalSinkMode` (`'broadcast' \| 'noop'`), `provideCpsTelemetryBroadcastHost`                                                                         |
+| Setup                       | `provideCpsTelemetry`, `withLogging`, `withScenarios`, `withBIEvents`, `withRedaction`, `CpsTelemetryFeature`, `provideCpsTelemetrySink`, `CpsTelemetryLocalSinkMode` (`'broadcast' \| 'noop'`), `provideCpsTelemetryBroadcastHost`, `provideCpsTelemetryDestination` + `CpsTelemetryDestinationOptions`    |
 | Configuration               | `CPS_TELEMETRY_IDENTITY` + `CpsTelemetryIdentity`; `CPS_LOG_CONFIG` + `CpsLogConfig`; `CPS_SCENARIO_TELEMETRY_CONFIG` + `CpsScenarioTelemetryConfig`; `CPS_BI_TELEMETRY_CONFIG` + `CpsBITelemetryConfig`; `CPS_REDACT_CONFIG`; `CPS_DEFAULT_TELEMETRY_CONFIG` (every default)                               |
 | Scenarios                   | `CpsScenarioTelemetryService`, `CpsScenario`, `traceScenario` + `CpsTraceScenarioOptions`; models `CpsScenarioOptions`, `CpsScenarioOutcome`, `CpsScenarioStepDetail`, `CpsScenarioRecord`, `CpsScenarioStep`, `CpsScenarioStepEvent`, `CpsScenarioAggregate`, `CpsScenarioStatus`, `CpsScenarioStepStatus` |
 | BI events                   | `CpsBITelemetryService`; `CpsBIEvent`, `CpsBIEventDetail` (`eventType` override, `scenarioId`, `feature`)                                                                                                                                                                                                   |
 | Logging                     | `CpsLoggerService`, `CpsLogger`; `CpsLogDetail`, `CpsLogRecord`, `CpsLogLevel`, `CPS_LOG_LEVEL_ORDER`; `CPS_LOG_API_PROVIDER`, `CpsLogApiProvider`, `CpsLogQuery`; `CpsNoopLogApiProvider`, `CpsBroadcastLogApiProvider`                                                                                    |
 | Name registries             | `CpsScenarioNames` / `CpsScenarioName`, `CpsScenarioSteps` / `CpsStepName`, `CpsBIEventNames` / `CpsBIEventName`, `CpsLoggerNames` / `CpsLoggerName`                                                                                                                                                        |
-| Sinks                       | `CpsTelemetrySink` (abstract), `CpsNoopTelemetrySink`, `CpsBroadcastTelemetrySink`, `CpsTelemetryBroadcastHost`, `CPS_BROADCAST_CHANNEL`, `CPS_DEFAULT_BROADCAST_CHANNEL` (`'cps-telemetry'`)                                                                                                               |
+| Sinks                       | `CpsTelemetrySink` (abstract), `CpsNoopTelemetrySink`, `CpsBroadcastTelemetrySink`, `CpsTelemetryBroadcastHost`, `CPS_BROADCAST_CHANNEL`, `CPS_DEFAULT_BROADCAST_CHANNEL` (`'cps-telemetry'`); `cpsClassifyTelemetryEvent` + `CpsTelemetrySinkEvent`, for a sink to tell what it received                   |
 | Shared models               | `CpsTelemetryMetadata`, `CpsTelemetryError`, `CpsTelemetryAttribution`; event types `CPS_DEFAULT_EVENT_NAMESPACE`, `CPS_TELEMETRY_EVENT_TYPE`, `cpsEventTypes()`, `CpsTelemetryEventTypes`                                                                                                                  |
 | Monitor                     | `CpsTelemetryMonitor`; `CpsTelemetryObservedEvent`, `CpsTelemetryPublishInput`, `CpsTelemetryEventKind`, `CpsTelemetryDestination`, `CpsTelemetryEventOrigin`, `CpsJsonValue`, `CpsJsonObject`                                                                                                              |
 | Redaction, for custom sinks | `cpsRedactMetadata`, `cpsNormalizeError`, `cpsScrubString`, `cpsRedactConfigFor`, `CpsRedactConfig`, `CPS_DEFAULT_REDACT_CONFIG`, `CpsPiiValuePattern`, `CPS_REDACTED` (`'[redacted]'`, the replacement value)                                                                                              |
@@ -141,6 +141,66 @@ Everything each entry point exports, by role.
 `CpsDiagnosticsExport`, `CpsDiagnosticsSectionId`, and the filter types
 `CpsDiagnosticsFilterState`, `CpsDiagnosticsFieldFilter`,
 `CpsDiagnosticsFilterOperator` — see §12, "Diagnostics popup".
+
+### Destinations
+
+A realm has exactly **one telemetry destination**: the sink every scenario
+record, BI event and mirrored error is handed to. RUM is one destination
+among several — `'broadcast'` and `'noop'` are others, and any class that
+extends `CpsTelemetrySink` can be one. Changing the backend is swapping that
+one sink; application code — the services, the loggers, the scenario calls —
+never refers to a destination and doesn't change.
+
+**Registering one.** Every destination, the library's own included, is
+registered with `provideCpsTelemetryDestination(SinkClass, { init? })`. It
+binds `CpsTelemetrySink` to the class and runs the optional `init` once at
+startup from an app initializer, unawaited — the RUM sink uses it to load
+credentials. `provideCpsTelemetryRumSink()` and
+`provideCpsTelemetrySink('broadcast' | 'noop')` are this call with a class
+filled in.
+
+**Exactly one.** Two different destinations fail bootstrap —
+`[cps-telemetry] More than one telemetry destination is provided: …
+Provide exactly one.` — instead of silently keeping whichever was listed
+last. Listing the same one twice is fine, and starts it once. A sink bound
+directly (`{ provide: CpsTelemetrySink, useClass: … }`, as tests do) bypasses
+the helper and the check. No destination at all still fails with `NG0201`.
+
+**Writing one.** A destination implements the six methods of
+`CpsTelemetrySink`:
+
+| Method                                  | Receives                                                                                                          |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `record(eventType, payload, metadata?)` | Every scenario record, step event (with `emitLifecycleEvents`) and BI event, plus events forwarded from fragments |
+| `recordError(error, metadata?)`         | Errors mirrored from `logger.error` (`mirrorErrorsToRum`), and those forwarded from fragments                     |
+| `getSessionId()`                        | Asked for the session id stamped on records and log lines — the destination owns it, or returns `undefined`       |
+| `setUserId(userId)` / `getUserId()`     | Sign-in and sign-out (`undefined` or `''`) — the destination owns attribution                                     |
+| `flush(beacon?)`                        | `pagehide` (with `beacon`), `visibilitychange` to hidden, and teardown                                            |
+
+`cpsClassifyTelemetryEvent(eventType, payload)` tells `record` what it got,
+as a discriminated union — `scenario` (a `CpsScenarioRecord`),
+`scenario-step` (a `CpsScenarioStepEvent`), `bi` (a `CpsBIEvent`) or
+`unknown` (an event-type override). It matches on the event type's ending,
+so it works for any `eventNamespace` and for forwarded events; the broadcast
+host uses it too.
+
+What a destination does **not** need to do: redact (payloads arrive already
+redacted), deduplicate BI events, time anything, or guard the library's
+calls — every call the library makes into it, `init` included, is wrapped
+fail-open. The one exception is `setUserId`/`getUserId`, which the
+application calls on the sink directly; a destination should not throw
+there. The
+diagnostics monitor observes the hand-off, so the popup works with any
+destination. Log lines are not part of it: they go to the application's
+own log backend through `CPS_LOG_API_PROVIDER`, whatever the destination.
+
+```ts
+providers: [
+  provideCpsTelemetry({ application: 'my-app', environment, version }),
+  provideCpsTelemetryDestination(MyBackendSink, { init: (s) => s.start() }),
+  { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend }
+];
+```
 
 ### The telemetry monitor
 
@@ -1261,6 +1321,9 @@ providers: [
 `CpsNoopLogApiProvider` is the log counterpart of `'noop'`: records are
 discarded and `query()` finds none.
 
+There is also never more than one: two different destinations fail at
+bootstrap — see §3, "Destinations".
+
 Defaulting to a no-op sink and an in-memory log store would let an
 application forget to wire a destination and still run perfectly while
 shipping nothing — invisible until somebody asks why the dashboard is empty.
@@ -1280,6 +1343,7 @@ the sink entirely: the logger still works, without that correlation, and
 | `provideCpsTelemetryRumSink()`         | AWS CloudWatch RUM (`cps-telemetry/rum`)                                                      |
 | `provideCpsTelemetrySink('broadcast')` | A shell realm — see [Micro-frontends](#13-multiple-realms--micro-frontends-and-web-fragments) |
 | `provideCpsTelemetrySink('noop')`      | Nowhere — everything runs, nothing ships                                                      |
+| `provideCpsTelemetryDestination(X)`    | Your own sink `X` — see §3, "Destinations"                                                    |
 
 ### AWS credentials
 
@@ -2164,7 +2228,7 @@ error's name instead (`[cart] TypeError`).
 
 | Do not                               | Why                                                                                                                                                                                         |
 | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions                                                                                                                               |
+| `provideCpsTelemetryRumSink()`       | Builds a second AWS client — one visitor becomes two sessions. Listed next to `'broadcast'`, it is a second destination, so bootstrap fails                                                 |
 | `CPS_RUM_CREDENTIALS_PROVIDER`       | Nothing in a fragment needs AWS credentials                                                                                                                                                 |
 | `CPS_LOG_API_PROVIDER`               | `'broadcast'` mode already binds it to the forwarding provider. One bound after it wins, and the fragment ships its own logs — the shell, and its diagnostics popup, never see them         |
 | `provideCpsTelemetryBroadcastHost()` | A host receives its own realm's messages too, so beside the forwarding sink it would forward them again, forever. It detects this, warns (`... cannot also host it ...`) and stays inactive |
@@ -2511,3 +2575,151 @@ tabs, deliberately, since RUM models a session as a user's, not a tab's.
 - **Multiple tabs on one channel cross-attribute**, as above, until each tab
   has its own channel — the protocol carries no tab identifier to route
   back by.
+
+---
+
+## 14. OpenTelemetry
+
+The library does **NOT** send OpenTelemetry (OTel) today. However, it is built
+so that it can: an OTel exporter is just another destination
+(§3, "Destinations"), swapped in for RUM with one provider line. Application
+code doesn't change. OTel and RUM are never used together. Log lines are
+unaffected: they go to the application's own log backend (`CPS_LOG_API_PROVIDER`)
+whatever the destination.
+
+### How to connect OTel
+
+1. **Create an entry point** `cps-telemetry/otel`, set up like
+   `cps-telemetry/rum`, depending only on `@opentelemetry/api` and
+   `@opentelemetry/api-logs` (optional peers). The application brings the
+   OTel SDK and exporters.
+2. **Write the sink** — a `CpsTelemetrySink` that turns each record into
+   OTel data (see the table below):
+
+   ```ts
+   // abandoned and incomplete aren't errors: UNSET keeps them out of error rates.
+   const SPAN_STATUS: Record<CpsScenarioStatus, SpanStatusCode> = {
+     success: SpanStatusCode.OK,
+     failure: SpanStatusCode.ERROR,
+     timeout: SpanStatusCode.ERROR,
+     abandoned: SpanStatusCode.UNSET,
+     incomplete: SpanStatusCode.UNSET
+   };
+
+   @Injectable()
+   export class CpsOtelTelemetrySink extends CpsTelemetrySink {
+     private readonly tracer = trace.getTracer('cps-telemetry');
+     private readonly logger = logs.getLogger('cps-telemetry');
+     private sessionId = cpsUuid(); // OTel has no sessions, so the sink owns one
+     private userId?: string;
+
+     record(eventType: string, payload: object): void {
+       const event = cpsClassifyTelemetryEvent(eventType, payload);
+       if (event.kind === 'scenario') {
+         this.exportScenario(event.payload);
+       } else if (event.kind === 'bi') {
+         this.logger.emit({
+           eventName: eventType,
+           body: event.payload.eventName,
+           attributes: { ...event.payload.metadata }
+         });
+       }
+     }
+
+     private exportScenario(record: CpsScenarioRecord): void {
+       const start = Date.parse(record.startTime);
+       const root = this.tracer.startSpan(record.scenarioName, {
+         startTime: new Date(start),
+         attributes: {
+           'cps.scenario.id': record.scenarioId,
+           'cps.scenario.status': record.status
+         }
+       });
+       const parent = trace.setSpan(context.active(), root);
+       for (const step of record.steps) {
+         if (step.name === 'scenario-start' || step.name === 'scenario-end') {
+           continue; // the library's own boundary markers
+         }
+         const span = this.tracer.startSpan(
+           step.name,
+           { startTime: new Date(start + step.startOffset) },
+           parent
+         );
+         span.end(new Date(start + (step.endOffset ?? step.startOffset)));
+       }
+       root.setStatus({ code: SPAN_STATUS[record.status ?? 'abandoned'] });
+       root.end(new Date(start + record.delta));
+     }
+
+     recordError(error: CpsTelemetryError): void {
+       this.logger.emit({
+         eventName: 'exception',
+         severityNumber: SeverityNumber.ERROR,
+         body: error.message
+       });
+     }
+
+     getSessionId() {
+       return this.sessionId;
+     }
+     getUserId() {
+       return this.userId;
+     }
+     setUserId(userId: string | undefined) {
+       if (!userId) this.sessionId = cpsUuid(); // sign-out starts a new session
+       this.userId = userId;
+     }
+     flush() {
+       /* call forceFlush() on the application's OTel providers */
+     }
+   }
+   ```
+
+3. **In the application,** set up the OTel SDK at startup — tracer and
+   logger providers with OTLP/HTTP exporters, and `service.name`,
+   `service.version`, `deployment.environment.name` from the same values as
+   `provideCpsTelemetry` — and run an **OTel Collector** on the same origin.
+   The browser sends to the collector; the collector holds the backend's
+   credentials.
+4. **Swap the destination:**
+
+   ```ts
+   providers: [
+     provideCpsTelemetry({ application: 'my-app', environment, version }),
+     provideCpsTelemetryDestination(CpsOtelTelemetrySink), // was provideCpsTelemetryRumSink()
+     { provide: CPS_LOG_API_PROVIDER, useExisting: MyLogBackend } // unchanged
+   ];
+
+   `CPS_RUM_CREDENTIALS_PROVIDER` is no longer needed.
+   ```
+
+   Fragments keep `provideCpsTelemetrySink('broadcast')`; the shell's OTel
+   destination records what they forward.
+
+5. **Test it** with the SDK's in-memory exporters: one root span per
+   scenario, one child per step, all in the same trace.
+
+### What the sink writes
+
+| Our record               | What the OTel sink writes                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| Scenario                 | A span named after the scenario, from `startTime` to `startTime + delta`                                                         |
+| Its steps                | Child spans, timed from their offsets                                                                                            |
+| `status`                 | Span status: OK for success, ERROR for failure and timeout, unset otherwise; the exact status in attribute `cps.scenario.status` |
+| `scenarioId`             | Attribute `cps.scenario.id` — search by it to find a scenario                                                                    |
+| `metadata`, `feature`, … | Attributes `cps.metadata.<key>`, `cps.feature`, …                                                                                |
+| `error`                  | Attributes `exception.type`, `exception.message`, `exception.stacktrace`                                                         |
+| BI event                 | A log record named `{ns}.bi`                                                                                                     |
+| Mirrored error           | A log record named `exception`                                                                                                   |
+| `sessionId` / `userId`   | Attributes `session.id` / `user.id`                                                                                              |
+
+### Limits
+
+- **Logs and backend calls aren't joined to the scenario's trace.** Spans
+  are created when the scenario ends, so anything that happened during it is
+  linked by `cps.scenario.id` / `correlationId` — as it is with RUM today.
+  Joining them by trace id would need scenarios to start spans in
+  `start()`, which is a change to the core, not to the sink.
+- **The browser logs SDK is still experimental.** Pin exact versions and
+  re-run the tests after every upgrade: a mis-configured processor exports
+  nothing, without an error.
