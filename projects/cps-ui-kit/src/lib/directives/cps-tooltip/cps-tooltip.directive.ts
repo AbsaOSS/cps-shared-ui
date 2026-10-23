@@ -15,6 +15,7 @@ import {
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 /**
  * CpsTooltipPosition is used to define the position of the tooltip.
@@ -131,6 +132,7 @@ export class CpsTooltipDirective implements OnDestroy {
   private _document = inject(DOCUMENT);
   private _platformId = inject(PLATFORM_ID);
   private _domSanitizer = inject(DomSanitizer);
+  private _liveAnnouncer = inject(CPS_LIVE_ANNOUNCER_SERVICE);
 
   constructor() {
     this.window = this._document.defaultView as Window;
@@ -208,7 +210,12 @@ export class CpsTooltipDirective implements OnDestroy {
       clearTimeout(this._hideTimeout);
       this._createTooltip();
       this._positionAndShow();
-      this._announce(this._popup?.textContent ?? '');
+      this._liveAnnouncer?.announce(
+        this._popup?.textContent ?? '',
+        'assertive',
+        1000,
+        100
+      );
     }
   }
 
@@ -483,20 +490,5 @@ export class CpsTooltipDirective implements OnDestroy {
 
   private _resolveAriaTarget(): HTMLElement | undefined {
     return (this._document.activeElement as HTMLElement | null) ?? undefined;
-  }
-
-  // aria-describedby is not read by SR on click trigger.
-  // Use a self-removing live region. It must exist in DOM
-  // before content is set, hence the 100ms delay.
-  private _announce(text: string): void {
-    const el = this._document.createElement('div');
-    el.setAttribute('aria-live', 'assertive');
-    el.setAttribute('aria-atomic', 'true');
-    el.className = 'cps-sr-only';
-    this._document.body.appendChild(el);
-    setTimeout(() => {
-      el.textContent = text;
-      setTimeout(() => el.remove(), 1000);
-    }, 100);
   }
 }
