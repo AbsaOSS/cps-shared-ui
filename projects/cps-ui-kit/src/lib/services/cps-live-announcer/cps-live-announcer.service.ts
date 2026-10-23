@@ -44,14 +44,15 @@ export class CpsLiveAnnouncerService implements OnDestroy {
   /**
    * Announces a message through the appropriate live region. Clears any
    * existing text first so the same message can be re-announced, then writes
-   * the new text on the next tick so screen readers observe the content change.
-   * After `duration` ms the region is cleared automatically; pass `0` to keep
-   * the message indefinitely. Defaults to 5000ms.
+   * the new text after `delayMs` so screen readers observe the content change.
+   * After `durationMs` the region is cleared automatically; pass `0` to keep
+   * the message indefinitely. Defaults to a next-tick write and 5000ms duration.
    */
   announce(
     message: string,
     politeness: CpsLiveAnnouncerPoliteness = 'polite',
-    durationMs = 5000
+    durationMs = 5000,
+    delayMs = 0
   ): void {
     if (!this._isBrowser) return;
     this.clear(politeness);
@@ -66,7 +67,7 @@ export class CpsLiveAnnouncerService implements OnDestroy {
             region.el.textContent = '';
           }, durationMs);
         }
-      });
+      }, delayMs);
     });
   }
 

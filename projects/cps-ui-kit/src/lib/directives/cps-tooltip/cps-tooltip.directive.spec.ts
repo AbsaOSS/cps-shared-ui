@@ -11,6 +11,7 @@ import {
 import { Component, PLATFORM_ID } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 @Component({
   template: `<div cpsTooltip="<style onload='alert(420);'></style>"></div>`,
@@ -19,6 +20,9 @@ import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cp
 class MaliciousTooltipComponent {}
 const mockRootFontSizeService = {
   fontSize: () => 16
+};
+const mockLiveAnnouncer = {
+  announce: jest.fn()
 };
 
 @Component({
@@ -59,12 +63,17 @@ describe('CpsTooltipDirective', () => {
         {
           provide: CPS_ROOT_FONT_SIZE_SERVICE,
           useValue: mockRootFontSizeService
+        },
+        {
+          provide: CPS_LIVE_ANNOUNCER_SERVICE,
+          useValue: mockLiveAnnouncer
         }
       ]
     }).compileComponents();
   });
 
   beforeEach(() => {
+    mockLiveAnnouncer.announce.mockClear();
     legitComponentFixture = TestBed.createComponent(LegitTooltipComponent);
     legitComponent = legitComponentFixture.componentInstance;
     legitComponentFixture.detectChanges();
@@ -283,6 +292,12 @@ describe('CpsTooltipDirective', () => {
       divElement.triggerEventHandler('click', null);
       tick();
       expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      expect(mockLiveAnnouncer.announce).toHaveBeenCalledWith(
+        'Tooltip text',
+        'assertive',
+        1000,
+        100
+      );
     }));
 
     it('should not open on click when tooltipOpenOn is hover', fakeAsync(() => {
