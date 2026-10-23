@@ -61,17 +61,34 @@ export class CpsFocusService {
   }
 
   /**
-   * Focuses `el`, conditionally suppressing the focus-visible ring.
+   * Focuses `el`, optionally suppressing its focus ring and passing native
+   * focus options through to `HTMLElement.focus`.
    *
-   * When `showFocusRing` is `false`, adds the `suppress-focus-visible` CSS
-   * class to the element before focusing and removes it on the next `blur`
-   * event. This keeps the UI clean for pointer-initiated closes.
+   * @param el - The element to focus.
+   * @param showFocusRing - Whether the focus ring should be shown. When false, adds
+   * the suppress-focus-visible CSS class to the element before focusing and removes
+   * it on the next blur event to keep the UI clean for pointer-initiated closes.
+   * @param options - Native focus options, e.g. `{ preventScroll: true }`.
+   *
+   * @example
+   * ```ts
+   * focusService.focusElement(button, true, { preventScroll: true });
+   * ```
    */
-  focusElement(el: HTMLElement, showFocusRing: boolean): void {
+  focusElement(
+    el: HTMLElement,
+    showFocusRing: boolean,
+    options?: Parameters<HTMLElement['focus']>[0]
+  ): void {
     if (!showFocusRing) {
       this.suppressNextFocusRing(el);
     }
-    el.focus();
+
+    if (!options) {
+      el.focus();
+    } else {
+      el.focus(options);
+    }
   }
 
   /**

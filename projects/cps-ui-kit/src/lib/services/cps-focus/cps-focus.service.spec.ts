@@ -120,8 +120,13 @@ describe('CpsFocusService', () => {
     });
 
     it('should call focus() on the element', () => {
+      const suppressSpy = jest.spyOn(service, 'suppressNextFocusRing');
+
       service.focusElement(el, true);
-      expect(el.focus).toHaveBeenCalled();
+
+      expect(el.focus).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(el.focus).mock.calls[0]).toEqual([]);
+      expect(suppressSpy).not.toHaveBeenCalled();
     });
 
     it('should NOT add suppress-focus-visible when showFocusRing is true', () => {
@@ -132,6 +137,50 @@ describe('CpsFocusService', () => {
     it('should add suppress-focus-visible when showFocusRing is false', () => {
       service.focusElement(el, false);
       expect(el.classList.contains('suppress-focus-visible')).toBe(true);
+    });
+
+    it('should suppress the focus ring before focusing when showFocusRing is false', () => {
+      const suppressSpy = jest.spyOn(service, 'suppressNextFocusRing');
+      const focusSpy = jest.mocked(el.focus);
+
+      service.focusElement(el, false);
+
+      expect(suppressSpy).toHaveBeenCalledWith(el);
+      expect(suppressSpy.mock.invocationCallOrder[0]).toBeLessThan(
+        focusSpy.mock.invocationCallOrder[0]
+      );
+    });
+
+    it('should forward the exact focus options object without suppressing the ring', () => {
+      const options = Object.freeze({ preventScroll: true });
+      const suppressSpy = jest.spyOn(service, 'suppressNextFocusRing');
+
+      service.focusElement(el, true, options);
+
+      expect(jest.mocked(el.focus).mock.calls[0][0]).toBe(options);
+      expect(suppressSpy).not.toHaveBeenCalled();
+    });
+
+    it('should suppress the focus ring before forwarding focus options', () => {
+      const options = { preventScroll: true };
+      const suppressSpy = jest.spyOn(service, 'suppressNextFocusRing');
+      const focusSpy = jest.mocked(el.focus);
+
+      service.focusElement(el, false, options);
+
+      expect(suppressSpy).toHaveBeenCalledWith(el);
+      expect(suppressSpy.mock.invocationCallOrder[0]).toBeLessThan(
+        focusSpy.mock.invocationCallOrder[0]
+      );
+      expect(focusSpy.mock.calls[0][0]).toBe(options);
+    });
+
+    it('should forward preventScroll false without replacing it', () => {
+      const options = { preventScroll: false };
+
+      service.focusElement(el, true, options);
+
+      expect(jest.mocked(el.focus).mock.calls[0][0]).toBe(options);
     });
 
     it('should remove suppress-focus-visible on blur when showFocusRing is false', () => {
