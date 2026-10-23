@@ -1,5 +1,13 @@
 # Changelog
 
+## [22.1.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.0.1...v22.1.0) (2026-10-23)
+
+
+### Features
+
+* add FocusOptions support to CpsFocusService.focusElement ([#883](https://github.com/AbsaOSS/cps-shared-ui/issues/883)) ([b5397a1](https://github.com/AbsaOSS/cps-shared-ui/commit/b5397a1b3856636b4de21589573d5ee7258bc701))
+* support delayed live announcements ([#885](https://github.com/AbsaOSS/cps-shared-ui/issues/885)) ([a61147e](https://github.com/AbsaOSS/cps-shared-ui/commit/a61147e22bbad7112bc40b34bf293e9587500be2))
+
 ## [22.0.1](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.0.0...v22.0.1) (2026-09-21)
 
 
