@@ -64,6 +64,8 @@ export class SelectPageComponent implements OnInit {
   openOnClearValue = this.options[3];
   componentData = ComponentData;
 
+  getCode = (option: any): string => option.data.code;
+
   // eslint-disable-next-line no-useless-constructor
   constructor(private _formBuilder: UntypedFormBuilder) {}
 

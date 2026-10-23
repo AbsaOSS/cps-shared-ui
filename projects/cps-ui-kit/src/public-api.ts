@@ -66,3 +66,4 @@ export * from './lib/services/cps-cron-validation/cps-cron-validation.service';
 export * from './lib/services/cps-live-announcer/cps-live-announcer.service';
 
 export * from './lib/utils/colors-utils/colors-utils';
+export { OptionKey } from './lib/utils/internal/option-utils';
