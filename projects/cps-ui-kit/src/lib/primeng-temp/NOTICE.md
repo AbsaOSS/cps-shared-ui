@@ -69,9 +69,10 @@ THE SOFTWARE.
 Per the MIT license's own terms and Apache-2.0 §4(b) of this repository's own license
 (this repository is Apache-2.0 licensed; see the root [LICENSE](../../../../../LICENSE)),
 every file in this directory carries a header comment identifying its original upstream
-path and noting it was modified. None of the modifications below change runtime
-behavior — all are type-checking or module-resolution adjustments needed to compile
-unmodified upstream logic under this repository's stricter tooling:
+path and noting it was modified. Modifications 1–7 below don't change runtime behavior —
+they are type-checking or module-resolution adjustments needed to compile unmodified
+upstream logic under this repository's stricter tooling. Modification 8 is the only
+runtime change, an accessibility fix:
 
 1. **Import paths rewritten.** Every `primeng/<module>` import specifier is a relative
    path pointing at the corresponding vendored file (there is no `primeng` npm package
@@ -117,6 +118,15 @@ unmodified upstream logic under this repository's stricter tooling:
    deeper `popover?.x` chains were kept, since `popover`'s own type legitimately allows
    `undefined`), and `tree.ts`'s `$event.target?.value` (a native DOM event bound
    directly on a static element guarantees a non-null `target`).
+
+8. **`aria-disabled` on disabled date picker cells**, in `datepicker/datepicker.ts`. Upstream
+   greys out days, months and years that can't be picked (the `p-disabled` class) without
+   telling assistive technology, so screen readers announce them as available and axe
+   reports their grey text as a contrast failure (disabled controls are exempt from WCAG
+   1.4.3, but only if they are marked as disabled). Each day, month and year cell now gets
+   `aria-disabled="true"` under exactly the condition that sets its `p-disabled` class:
+   `$disabled() || !date.selectable` for days, `isMonthDisabled(i)` for months and
+   `isYearDisabled(y)` for years. Selection and keyboard logic are unchanged.
 
 No other changes were made. Component logic, styles, and public APIs are otherwise
 unmodified from PrimeNG 21.1.9.

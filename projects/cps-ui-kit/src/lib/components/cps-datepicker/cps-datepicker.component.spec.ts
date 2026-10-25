@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, ViewChild } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -9,6 +9,10 @@ import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CpsDatepickerComponent } from './cps-datepicker.component';
 import { CpsMenuHideReason } from '../cps-menu/cps-menu.component';
+import {
+  DatePicker,
+  DatePickerModule
+} from '../../primeng-temp/datepicker/public_api';
 
 function keyEvent(key: string, target: HTMLElement): KeyboardEvent {
   const event = new KeyboardEvent('keydown', {
@@ -1545,5 +1549,84 @@ describe('CpsDatepickerComponent', () => {
         tick();
       }).not.toThrow();
     }));
+  });
+});
+
+// The real (vendored) calendar, so the rendered cells themselves are checked rather than a mocked grid
+@Component({
+  imports: [DatePickerModule, FormsModule],
+  template: `<p-datepicker
+    [inline]="true"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    [(ngModel)]="value" />`
+})
+class InlineDatePickerHostComponent {
+  @ViewChild(DatePicker) datepicker!: DatePicker;
+  minDate = new Date(2026, 5, 10);
+  maxDate = new Date(2026, 5, 20);
+  value = new Date(2026, 5, 15);
+}
+
+describe('Date picker cells: aria-disabled', () => {
+  let fixture: ComponentFixture<InlineDatePickerHostComponent>;
+  let host: HTMLElement;
+
+  const cells = (selector: string) =>
+    Array.from(host.querySelectorAll<HTMLElement>(selector));
+
+  const showView = (view: 'month' | 'year') => {
+    fixture.componentInstance.datepicker.setCurrentView(view);
+    fixture.detectChanges();
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [InlineDatePickerHostComponent, NoopAnimationsModule]
+    }).compileComponents();
+    fixture = TestBed.createComponent(InlineDatePickerHostComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    host = fixture.nativeElement;
+  });
+
+  // Greyed-out cells are exempt from contrast rules (WCAG 1.4.3) only when they are marked as disabled
+  it('should mark every greyed-out day, and only those, as aria-disabled', () => {
+    const days = cells('span[data-date]');
+    const disabled = days.filter((d) => d.classList.contains('p-disabled'));
+    const enabled = days.filter((d) => !d.classList.contains('p-disabled'));
+
+    expect(disabled.length).toBeGreaterThan(0);
+    expect(enabled.map((d) => d.textContent?.trim())).toEqual(
+      Array.from({ length: 11 }, (_, i) => String(10 + i))
+    );
+    disabled.forEach((d) =>
+      expect(d.getAttribute('aria-disabled')).toBe('true')
+    );
+    enabled.forEach((d) => expect(d.hasAttribute('aria-disabled')).toBe(false));
+  });
+
+  it('should mark disabled months as aria-disabled in the month view', () => {
+    showView('month');
+    const months = cells('.p-datepicker-month');
+
+    expect(months).toHaveLength(12);
+    months.forEach((m, i) =>
+      expect(m.getAttribute('aria-disabled')).toBe(i === 5 ? null : 'true')
+    );
+  });
+
+  it('should mark disabled years as aria-disabled in the year view', () => {
+    showView('year');
+    const years = cells('.p-datepicker-year');
+
+    expect(years.length).toBeGreaterThan(1);
+    // The selected year also repeats its number in a hidden live region, so only its first text is compared
+    years.forEach((y) =>
+      expect(y.getAttribute('aria-disabled')).toBe(
+        y.firstChild?.textContent?.trim() === '2026' ? null : 'true'
+      )
+    );
   });
 });

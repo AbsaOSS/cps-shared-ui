@@ -65,6 +65,7 @@ test.describe('cps-datepicker', () => {
 
       const outOfRangeDay = dialog.locator('[data-date="2022-11-15"]');
       await expect(outOfRangeDay).toHaveClass(/p-disabled/);
+      await expect(outOfRangeDay).toHaveAttribute('aria-disabled', 'true');
       await expect(outOfRangeDay).toHaveCSS('pointer-events', 'none');
 
       await expect(input).toHaveValue(valueBefore);
