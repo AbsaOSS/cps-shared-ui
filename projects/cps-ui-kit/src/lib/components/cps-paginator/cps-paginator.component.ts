@@ -21,6 +21,7 @@ import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { FormsModule } from '@angular/forms';
 import { isEqual } from 'lodash-es';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
 
@@ -112,6 +113,7 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
 
   private readonly _document = inject(DOCUMENT);
   private readonly _elementRef = inject(ElementRef);
+  private readonly _liveAnnouncer = inject(CPS_LIVE_ANNOUNCER_SERVICE);
   private readonly _staticAriaLabel: string | null = inject(
     new HostAttributeToken('aria-label'),
     { optional: true }
@@ -182,6 +184,7 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     this.rows = event.rows;
     this.paginatorPt = this._buildPaginatorPt();
     this.pageChanged.emit(event);
+    this._announcePage();
 
     const activeEl = this._document.activeElement as HTMLElement | null;
     const atFirst = this.paginator.isFirstPage();
@@ -196,6 +199,17 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     ) {
       setTimeout(() => this._focusSelectedPageButton());
     }
+  }
+
+  private _announcePage(): void {
+    if (!this.totalRecords || !this.rows) return;
+    const page = Math.floor(this.first / this.rows) + 1;
+    const pageCount = Math.ceil(this.totalRecords / this.rows);
+    const firstItem = this.first + 1;
+    const lastItem = Math.min(this.first + this.rows, this.totalRecords);
+    this._liveAnnouncer?.announce(
+      `Page ${page} of ${pageCount}, items ${firstItem} to ${lastItem} of ${this.totalRecords}`
+    );
   }
 
   onKeydown(event: KeyboardEvent): void {

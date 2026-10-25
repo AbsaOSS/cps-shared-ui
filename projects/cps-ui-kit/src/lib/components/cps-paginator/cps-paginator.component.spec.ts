@@ -1,14 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsPaginatorComponent } from './cps-paginator.component';
 import { FormsModule } from '@angular/forms';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 describe('CpsPaginatorComponent', () => {
   let component: CpsPaginatorComponent;
   let fixture: ComponentFixture<CpsPaginatorComponent>;
+  let mockAnnouncer: { announce: jest.Mock };
 
   beforeEach(async () => {
+    mockAnnouncer = { announce: jest.fn() };
     await TestBed.configureTestingModule({
-      imports: [CpsPaginatorComponent, FormsModule]
+      imports: [CpsPaginatorComponent, FormsModule],
+      providers: [
+        { provide: CPS_LIVE_ANNOUNCER_SERVICE, useValue: mockAnnouncer }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CpsPaginatorComponent);
@@ -99,6 +105,44 @@ describe('CpsPaginatorComponent', () => {
     const event = { first: 20, rows: 10, page: 2, pageCount: 10 };
     component.onPageChange(event);
     expect(component.first).toBe(20);
+  });
+
+  describe('page change announcements', () => {
+    it('should announce the new page and its item range', () => {
+      component.onPageChange({ first: 20, rows: 10, page: 2, pageCount: 10 });
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 3 of 10, items 21 to 30 of 100'
+      );
+    });
+
+    it('should end the item range at the total on a partial last page', () => {
+      fixture.componentRef.setInput('totalRecords', 95);
+      fixture.detectChanges();
+      component.onPageChange({ first: 90, rows: 10, page: 9, pageCount: 10 });
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 10 of 10, items 91 to 95 of 95'
+      );
+    });
+
+    it('should announce the new range after the rows per page change', () => {
+      component.onPageChange({ first: 0, rows: 20, page: 0, pageCount: 5 });
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 1 of 5, items 1 to 20 of 100'
+      );
+    });
+
+    it('should not announce when there are no records', () => {
+      fixture.componentRef.setInput('totalRecords', 0);
+      fixture.detectChanges();
+      component.onPageChange({ first: 0, rows: 10, page: 0, pageCount: 0 });
+      expect(mockAnnouncer.announce).not.toHaveBeenCalled();
+    });
+
+    it('should not announce when only the inputs change', () => {
+      fixture.componentRef.setInput('first', 20);
+      fixture.detectChanges();
+      expect(mockAnnouncer.announce).not.toHaveBeenCalled();
+    });
   });
 
   describe('focus redirection when a boundary nav button becomes disabled', () => {
