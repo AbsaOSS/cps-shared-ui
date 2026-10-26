@@ -115,9 +115,10 @@ describe('CpsPaginatorComponent', () => {
       );
     });
 
-    it('should end the item range at the total on a partial last page', () => {
+    it('should end the item range at the total on a partial last page', async () => {
       fixture.componentRef.setInput('totalRecords', 95);
       fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve, 0));
       component.onPageChange({ first: 90, rows: 10, page: 9, pageCount: 10 });
       expect(mockAnnouncer.announce).toHaveBeenCalledWith(
         'Page 10 of 10, items 91 to 95 of 95'
@@ -125,10 +126,36 @@ describe('CpsPaginatorComponent', () => {
     });
 
     it('should announce the new range after the rows per page change', () => {
-      component.onPageChange({ first: 0, rows: 20, page: 0, pageCount: 5 });
+      // ngModel updates rows before valueChanged triggers onRowsPerPageChange
+      component.rows = 20;
+      component.onRowsPerPageChange(20);
       expect(mockAnnouncer.announce).toHaveBeenCalledWith(
         'Page 1 of 5, items 1 to 20 of 100'
       );
+    });
+
+    it('should announce the reset range after the rows per page change', () => {
+      fixture.componentRef.setInput('resetPageOnRowsChange', true);
+      fixture.componentRef.setInput('first', 20);
+      fixture.detectChanges();
+      component.rows = 20;
+      component.onRowsPerPageChange(20);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 1 of 5, items 1 to 20 of 100'
+      );
+    });
+
+    it('should not announce when the current page link is clicked again', () => {
+      const emitted: any[] = [];
+      component.pageChanged.subscribe((event) => emitted.push(event));
+      const currentPageBtn = fixture.nativeElement.querySelector(
+        '.p-paginator-page[aria-current="page"]'
+      ) as HTMLButtonElement;
+
+      currentPageBtn.click();
+
+      expect(emitted).toEqual([expect.objectContaining({ first: 0 })]);
+      expect(mockAnnouncer.announce).not.toHaveBeenCalled();
     });
 
     it('should not announce when there are no records', () => {
@@ -138,10 +165,29 @@ describe('CpsPaginatorComponent', () => {
       expect(mockAnnouncer.announce).not.toHaveBeenCalled();
     });
 
-    it('should not announce when only the inputs change', () => {
-      fixture.componentRef.setInput('first', 20);
+    it('should not announce the page correction caused by a totalRecords change', async () => {
+      const emitted: any[] = [];
+      component.pageChanged.subscribe((event) => emitted.push(event));
+      fixture.componentRef.setInput('first', 90);
       fixture.detectChanges();
+
+      fixture.componentRef.setInput('totalRecords', 85);
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(emitted).toEqual([expect.objectContaining({ first: 80 })]);
       expect(mockAnnouncer.announce).not.toHaveBeenCalled();
+    });
+
+    it('should announce user page changes after a totalRecords change', async () => {
+      fixture.componentRef.setInput('totalRecords', 85);
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      component.paginator.changePage(1);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 2 of 9, items 11 to 20 of 85'
+      );
     });
   });
 
