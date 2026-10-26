@@ -115,10 +115,21 @@ describe('CpsPaginatorComponent', () => {
       );
     });
 
-    it('should end the item range at the total on a partial last page', async () => {
+    it('should announce a page change made right after initial setup', () => {
+      const freshFixture = TestBed.createComponent(CpsPaginatorComponent);
+      freshFixture.componentRef.setInput('totalRecords', 100);
+      freshFixture.componentRef.setInput('rows', 10);
+      freshFixture.detectChanges();
+
+      freshFixture.componentInstance.paginator.changePage(2);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 3 of 10, items 21 to 30 of 100'
+      );
+    });
+
+    it('should end the item range at the total on a partial last page', () => {
       fixture.componentRef.setInput('totalRecords', 95);
       fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 0));
       component.onPageChange({ first: 90, rows: 10, page: 9, pageCount: 10 });
       expect(mockAnnouncer.announce).toHaveBeenCalledWith(
         'Page 10 of 10, items 91 to 95 of 95'

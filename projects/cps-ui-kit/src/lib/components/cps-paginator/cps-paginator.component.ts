@@ -113,6 +113,7 @@ export class CpsPaginatorComponent
 
   rowOptions: { label: string; value: number }[] = [];
   private _currentRowsPerPageOptions: number[] = [];
+  private _totalRecordsChanged = false;
   private _ignoreCorrectionAnnouncement = false;
   private _rowsPerPageChanging = false;
 
@@ -142,7 +143,7 @@ export class CpsPaginatorComponent
       this.paginatorPt = this._buildPaginatorPt();
     }
     if (changes.totalRecords) {
-      this._ignoreCorrectionAnnouncement = true;
+      this._totalRecordsChanged = true;
     }
     if (
       (changes.rows && !changes.rows.firstChange) ||
@@ -156,10 +157,21 @@ export class CpsPaginatorComponent
   }
 
   ngAfterViewChecked(): void {
-    if (this._ignoreCorrectionAnnouncement) {
+    if (!this._totalRecordsChanged) return;
+    this._totalRecordsChanged = false;
+    if (this._isPageCorrectionPending()) {
+      this._ignoreCorrectionAnnouncement = true;
       // Queued after Paginator's correction microtask, so it runs once that settles
       queueMicrotask(() => (this._ignoreCorrectionAnnouncement = false));
     }
+  }
+
+  // Same condition as Paginator.updateFirst(), which schedules the correction
+  private _isPageCorrectionPending(): boolean {
+    const { first, totalRecords } = this.paginator;
+    return (
+      this.paginator.getPage() > 0 && !!totalRecords && first >= totalRecords
+    );
   }
 
   private _syncRows(): void {
