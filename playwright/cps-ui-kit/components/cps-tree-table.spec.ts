@@ -354,17 +354,28 @@ test.describe('cps-tree-table', () => {
   });
 
   test.describe('Real reload button (Tree table 3)', () => {
-    test('shows a real cps-notification toast', async ({ page }) => {
+    test('keeps focus while reloading and shows a real cps-notification toast', async ({
+      page
+    }) => {
       await page
         .getByRole('tab', { name: 'Tree table 3', exact: true })
         .click();
       const wrapper = example(page, 'treetable-3-menu-actions');
+      const reloadBtn = wrapper
+        .getByTestId('cps-treetable-tbar-reload-btn')
+        .getByRole('button', { name: 'Reload data' });
 
-      await wrapper.getByTestId('cps-treetable-tbar-reload-btn').click();
+      await reloadBtn.focus();
+      await page.keyboard.press('Enter');
+
+      await expect(reloadBtn).toHaveAttribute('aria-busy', 'true');
+      await expect(reloadBtn).toBeFocused();
 
       await expect(page.getByTestId('cps-toast-message-header')).toHaveText(
-        'Data reload button clicked'
+        'Data reloaded'
       );
+      await expect(reloadBtn).not.toHaveAttribute('aria-busy');
+      await expect(reloadBtn).toBeFocused();
     });
   });
 

@@ -329,6 +329,30 @@ test.describe('cps-table', () => {
     });
   });
 
+  test.describe('Real reload button (Table 3)', () => {
+    test('keeps focus while reloading and shows a real cps-notification toast', async ({
+      page
+    }) => {
+      await page.getByRole('tab', { name: 'Table 3', exact: true }).click();
+      const wrapper = example(page, 'table-3-reorder-menu');
+      const reloadBtn = wrapper
+        .getByTestId('cps-table-tbar-reload-btn')
+        .getByRole('button', { name: 'Reload data' });
+
+      await reloadBtn.focus();
+      await page.keyboard.press('Enter');
+
+      await expect(reloadBtn).toHaveAttribute('aria-busy', 'true');
+      await expect(reloadBtn).toBeFocused();
+
+      await expect(page.getByTestId('cps-toast-message-header')).toHaveText(
+        'Data reloaded'
+      );
+      await expect(reloadBtn).not.toHaveAttribute('aria-busy');
+      await expect(reloadBtn).toBeFocused();
+    });
+  });
+
   test.describe('Real row reorder via keyboard (Table 3)', () => {
     test('Enter picks up, ArrowDown moves, Enter confirms a real position swap', async ({
       page
