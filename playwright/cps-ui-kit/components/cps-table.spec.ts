@@ -80,6 +80,9 @@ test.describe('cps-table', () => {
         'cps-table-col-filter-constraint-a-0'
       );
       await expect(constraint).toBeVisible();
+      await expect(
+        page.getByTestId('cps-menu-container').locator(':focus')
+      ).toHaveCount(1);
       await constraint.locator('input').first().fill('a13');
       await page
         .getByTestId('cps-table-col-filter-apply-btn')

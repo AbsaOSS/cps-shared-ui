@@ -820,15 +820,33 @@ describe.each([
       outside.remove();
     });
 
-    it('should not move focus to the filter button when clicking outside the menu', () => {
-      const outside = document.createElement('button');
-      document.body.appendChild(outside);
-      outside.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
-      outside.focus();
+    it.each([
+      ['Apply', 'cps-table-col-filter-apply-btn'],
+      ['Clear', 'cps-table-col-filter-clear-btn'],
+      ['Close', 'cps-table-col-filter-close-btn']
+    ])(
+      'should return focus to the filter button after %s when the click left focus on body',
+      (_label, testId) => {
+        focusService.lastInput.set('pointer');
+        (document.activeElement as HTMLElement | null)?.blur();
+        expect(document.activeElement).toBe(document.body);
 
-      expect(component.columnFilterMenu.isVisible()).toBe(false);
-      expect(document.activeElement).toBe(outside);
-      outside.remove();
+        getMenuEl(testId).click();
+
+        expect(component.columnFilterMenu.isVisible()).toBe(false);
+        expect(document.activeElement).toBe(getFilterBtn());
+        expect(getFilterBtn().classList).toContain('suppress-focus-visible');
+      }
+    );
+
+    it('should not move focus when hide is called while the menu is already closed', () => {
+      component.hide();
+      getFilterBtn().blur();
+      expect(document.activeElement).toBe(document.body);
+
+      component.hide();
+
+      expect(document.activeElement).toBe(document.body);
     });
 
     it('should still return focus to the filter button on Escape', () => {

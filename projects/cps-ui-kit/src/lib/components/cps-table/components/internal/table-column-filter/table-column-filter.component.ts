@@ -423,11 +423,15 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   hide() {
-    const focusWasInMenu = !!this.columnFilterMenu.container?.contains(
-      this._document.activeElement
-    );
-    this.columnFilterMenu.hide();
-    if (focusWasInMenu) this._focusFilterMenuButton();
+    const menu = this.columnFilterMenu;
+    const active = this._document.activeElement;
+    const shouldReturnFocus =
+      menu.isVisible() &&
+      (!active ||
+        active === this._document.body ||
+        !!menu.container?.contains(active));
+    menu.hide();
+    if (shouldReturnFocus) this._focusFilterMenuButton();
   }
 
   private _focusFilterMenuButton() {

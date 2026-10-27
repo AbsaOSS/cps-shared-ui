@@ -87,6 +87,9 @@ test.describe('cps-tree-table', () => {
         'cps-table-col-filter-constraint-name-0'
       );
       await expect(constraint).toBeVisible();
+      await expect(
+        page.getByTestId('cps-menu-container').locator(':focus')
+      ).toHaveCount(1);
       await constraint.locator('input').first().fill('Cloud');
       await page
         .getByTestId('cps-table-col-filter-apply-btn')
