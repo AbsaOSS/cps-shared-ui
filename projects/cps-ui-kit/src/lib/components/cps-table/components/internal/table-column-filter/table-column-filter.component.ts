@@ -425,6 +425,8 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   hide() {
     const menu = this.columnFilterMenu;
     const active = this._document.activeElement;
+    // <body> counts as inside the menu: Safari and Firefox on macOS don't
+    // focus clicked buttons, so clicking Apply, Clear or Close leaves focus there
     const shouldReturnFocus =
       menu.isVisible() &&
       (!active ||
