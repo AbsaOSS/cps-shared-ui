@@ -67,6 +67,51 @@ test.describe('cps-table', () => {
       await expect(wrapper.locator('tbody tr')).toHaveCount(1);
       await expect(wrapper.locator('tbody tr')).toHaveText(/A13/);
     });
+
+    test('Apply returns focus to the filter button with a focus ring after keyboard use', async ({
+      page
+    }) => {
+      const wrapper = example(page, 'table-1-paginated-filters');
+      const filterBtn = wrapper.getByTestId('cps-table-col-filter-btn-a');
+
+      await filterBtn.focus();
+      await page.keyboard.press('Enter');
+      const constraint = page.getByTestId(
+        'cps-table-col-filter-constraint-a-0'
+      );
+      await expect(constraint).toBeVisible();
+      await constraint.locator('input').first().fill('a13');
+      await page
+        .getByTestId('cps-table-col-filter-apply-btn')
+        .getByRole('button', { name: 'Apply' })
+        .focus();
+      await page.keyboard.press('Enter');
+
+      await expect(constraint).toBeHidden();
+      await expect(filterBtn).toBeFocused();
+      expect(
+        await filterBtn.evaluate((el) => el.matches(':focus-visible'))
+      ).toBe(true);
+    });
+
+    test('Apply returns focus to the filter button without a focus ring after a click', async ({
+      page
+    }) => {
+      const wrapper = example(page, 'table-1-paginated-filters');
+      const filterBtn = wrapper.getByTestId('cps-table-col-filter-btn-a');
+
+      await filterBtn.click();
+      const constraint = page.getByTestId(
+        'cps-table-col-filter-constraint-a-0'
+      );
+      await expect(constraint).toBeVisible();
+      await constraint.locator('input').first().fill('a13');
+      await page.getByTestId('cps-table-col-filter-apply-btn').click();
+
+      await expect(constraint).toBeHidden();
+      await expect(filterBtn).toBeFocused();
+      await expect(filterBtn).toHaveClass(/suppress-focus-visible/);
+    });
   });
 
   test.describe('Real empty state (Table 8)', () => {
