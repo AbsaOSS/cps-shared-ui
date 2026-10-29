@@ -1,5 +1,20 @@
 # Changelog
 
+## [22.2.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.1.0...v22.2.0) (2026-10-29)
+
+
+### Features
+
+* add dataReloadBtnLoading input to table and tree table ([#897](https://github.com/AbsaOSS/cps-shared-ui/issues/897)) ([dcdd259](https://github.com/AbsaOSS/cps-shared-ui/commit/dcdd259f2b17664b44fff7da9354ab215bda515e))
+
+
+### Bug Fixes
+
+* announce page changes in cps-paginator ([#894](https://github.com/AbsaOSS/cps-shared-ui/issues/894)) ([c5fb283](https://github.com/AbsaOSS/cps-shared-ui/commit/c5fb283a251e156097475a9d99148ad41cd59110))
+* mark disabled datepicker cells as aria-disabled ([#892](https://github.com/AbsaOSS/cps-shared-ui/issues/892)) ([6c24765](https://github.com/AbsaOSS/cps-shared-ui/commit/6c24765a40697ccd9f08d6f1dacae49560e2ad2a))
+* prevent horizontal scroll in collapsed sidebar menu ([#887](https://github.com/AbsaOSS/cps-shared-ui/issues/887)) ([e033b59](https://github.com/AbsaOSS/cps-shared-ui/commit/e033b59b0e582de7e3ffc5292d5121dd8e2e46e3))
+* return focus to column filter after popup closes ([#898](https://github.com/AbsaOSS/cps-shared-ui/issues/898)) ([e0f61f9](https://github.com/AbsaOSS/cps-shared-ui/commit/e0f61f99b4c612d17cda6703b6b9e0e8804b7955))
+
 ## [22.1.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.0.1...v22.1.0) (2026-10-23)
 
 
