@@ -95,6 +95,7 @@ test.describe('cps-table', () => {
       expect(
         await filterBtn.evaluate((el) => el.matches(':focus-visible'))
       ).toBe(true);
+      await expect(filterBtn).not.toHaveClass(/suppress-focus-visible/);
     });
 
     test('Apply returns focus to the filter button without a focus ring after a click', async ({
