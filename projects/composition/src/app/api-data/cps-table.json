@@ -533,6 +533,14 @@
                         "description": "Determines whether dataReloadBtn is disabled."
                     },
                     {
+                        "name": "dataReloadBtnLoading",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean",
+                        "default": "false",
+                        "description": "Determines whether dataReloadBtn is in loading state."
+                    },
+                    {
                         "name": "showColumnsToggleBtn",
                         "optional": false,
                         "readonly": false,

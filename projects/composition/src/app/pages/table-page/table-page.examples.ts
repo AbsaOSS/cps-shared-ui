@@ -204,6 +204,8 @@ ${virtualColsAndDataTs.trim()}`
   [showRowRemoveButton]="isRemoveBtnVisible"
   (rowsToRemove)="onRowsToRemove($event)"
   [showDataReloadBtn]="true"
+  [dataReloadBtnLoading]="isReloading"
+  [loading]="isReloading"
   (editRowBtnClicked)="onEditRowButtonClicked($event)"
   (actionBtnClicked)="onActionBtnClicked()"
   (dataReloadBtnClicked)="onReloadBtnClicked()"
@@ -247,6 +249,9 @@ ${tableDataTs.trim()}
 
 isRemoveBtnVisible = false;
 
+isReloading = false;
+private _reloadTimeout?: ReturnType<typeof setTimeout>;
+
 onRowsToRemove(rows: any[]) {
   this.data = this.data.filter((r) => !rows.includes(r));
 }
@@ -264,7 +269,12 @@ onActionBtnClicked() {
 }
 
 onReloadBtnClicked() {
-  this._notifService.info('Data reload button clicked');
+  this.isReloading = true;
+  clearTimeout(this._reloadTimeout);
+  this._reloadTimeout = setTimeout(() => {
+    this.isReloading = false;
+    this._notifService.info('Data reloaded');
+  }, 1500);
 }`
   },
 
