@@ -9,9 +9,10 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  inject
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   FilterMetadata,
@@ -30,6 +31,7 @@ import { CpsMenuComponent } from '../../../../cps-menu/cps-menu.component';
 import { CpsIconComponent } from '../../../../cps-icon/cps-icon.component';
 import { CpsSelectComponent } from '../../../../cps-select/cps-select.component';
 import { TableColumnFilterConstraintComponent } from '../table-column-filter-constraint/table-column-filter-constraint.component';
+import { CPS_FOCUS_SERVICE } from '../../../../../services/cps-focus/cps-focus.service';
 import { Subscription } from 'rxjs';
 
 /**
@@ -203,6 +205,12 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
 
   @ViewChild('columnFilterMenu')
   columnFilterMenu!: CpsMenuComponent;
+
+  @ViewChild('filterMenuButton')
+  filterMenuButton?: ElementRef<HTMLButtonElement>;
+
+  private readonly _document = inject(DOCUMENT);
+  private readonly _cpsFocusService = inject(CPS_FOCUS_SERVICE);
 
   private _tableInstance: Table | TreeTable;
   private _onFilterSub?: Subscription;
@@ -415,7 +423,30 @@ export class TableColumnFilterComponent implements OnInit, OnDestroy {
   }
 
   hide() {
-    this.columnFilterMenu.hide();
+    const menu = this.columnFilterMenu;
+    const active = this._document.activeElement;
+    // <body> counts as inside the menu: Safari and Firefox on macOS don't
+    // focus clicked buttons, so clicking Apply, Clear or Close leaves focus there
+    const shouldReturnFocus =
+      menu.isVisible() &&
+      (!active ||
+        active === this._document.body ||
+        !!menu.container?.contains(active));
+    menu.hide();
+    if (shouldReturnFocus) this._focusFilterMenuButton();
+  }
+
+  private _focusFilterMenuButton() {
+    const button = this.filterMenuButton?.nativeElement;
+    if (!button) return;
+    if (this._cpsFocusService) {
+      this._cpsFocusService.focusElement(
+        button,
+        this._cpsFocusService.isKeyboard()
+      );
+    } else {
+      button.focus();
+    }
   }
 
   clearFilter() {
