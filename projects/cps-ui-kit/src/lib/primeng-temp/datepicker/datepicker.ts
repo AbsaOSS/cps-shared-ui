@@ -4,7 +4,8 @@
  * Original file: packages/primeng/src/datepicker/datepicker.ts
  * Modified: import paths rewritten to resolve locally; // @ts-nocheck added because this
  * repository's TypeScript config is stricter than PrimeNG's own (strict, noImplicitOverride,
- * noUnusedLocals/Parameters, etc.). No runtime logic was changed. See ../NOTICE.md.
+ * noUnusedLocals/Parameters, etc.). One runtime change: day, month and year cells get role="button" and
+ * aria-disabled when disabled, plus aria-labels on month and year cells. See ../NOTICE.md.
  * Original license: MIT, Copyright (c) 2016-2026 PrimeTek.
  */
 import { CommonModule } from '@angular/common';
@@ -266,10 +267,12 @@ const DATEPICKER_INSTANCE = new InjectionToken<DatePicker>('DATEPICKER_INSTANCE'
                                                 {{ $any(month.weekNumbers)[j] }}
                                             </span>
                                         </td>
-                                        <td *ngFor="let date of $any(week)" [attr.aria-label]="date.day" [class]="cx('dayCell', { date })" [pBind]="ptm('dayCell')">
+                                        <td *ngFor="let date of $any(week)" [attr.aria-label]="date.day" [attr.aria-disabled]="(!date.otherMonth || showOtherMonths) && ($disabled() || !date.selectable) ? true : null" [class]="cx('dayCell', { date })" [pBind]="ptm('dayCell')">
                                             <ng-container *ngIf="date.otherMonth ? showOtherMonths : true">
                                                 <span
                                                     [ngClass]="dayClass(date)"
+                                                    role="button"
+                                                    [attr.aria-disabled]="$disabled() || !date.selectable ? true : null"
                                                     (click)="onDateSelect($event, date)"
                                                     draggable="false"
                                                     [attr.data-date]="formatDateKey(formatDateMetaToDate(date))"
@@ -296,7 +299,7 @@ const DATEPICKER_INSTANCE = new InjectionToken<DatePicker>('DATEPICKER_INSTANCE'
                         </div>
                     </div>
                     <div [class]="cx('monthView')" *ngIf="currentView === 'month'" [pBind]="ptm('monthView')">
-                        <span *ngFor="let m of monthPickerValues(); let i = index" (click)="onMonthSelect($event, i)" (keydown)="onMonthCellKeydown($event, i)" [class]="cx('month', { month: m, index: i })" pRipple [pBind]="ptm('month')">
+                        <span *ngFor="let m of monthPickerValues(); let i = index" (click)="onMonthSelect($event, i)" (keydown)="onMonthCellKeydown($event, i)" [class]="cx('month', { month: m, index: i })" role="button" [attr.aria-label]="m" [attr.aria-disabled]="isMonthDisabled(i) ? true : null" pRipple [pBind]="ptm('month')">
                             {{ m }}
                             <div *ngIf="isMonthSelected(i)" class="p-hidden-accessible" aria-live="polite">
                                 {{ m }}
@@ -304,7 +307,7 @@ const DATEPICKER_INSTANCE = new InjectionToken<DatePicker>('DATEPICKER_INSTANCE'
                         </span>
                     </div>
                     <div [class]="cx('yearView')" *ngIf="currentView === 'year'" [pBind]="ptm('yearView')">
-                        <span *ngFor="let y of yearPickerValues()" (click)="onYearSelect($event, y)" (keydown)="onYearCellKeydown($event, y)" [class]="cx('year', { year: y })" pRipple [pBind]="ptm('year')">
+                        <span *ngFor="let y of yearPickerValues()" (click)="onYearSelect($event, y)" (keydown)="onYearCellKeydown($event, y)" [class]="cx('year', { year: y })" role="button" [attr.aria-label]="y" [attr.aria-disabled]="isYearDisabled(y) ? true : null" pRipple [pBind]="ptm('year')">
                             {{ y }}
                             <div *ngIf="isYearSelected(y)" class="p-hidden-accessible" aria-live="polite">
                                 {{ y }}
