@@ -1,14 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CpsPaginatorComponent } from './cps-paginator.component';
 import { FormsModule } from '@angular/forms';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 describe('CpsPaginatorComponent', () => {
   let component: CpsPaginatorComponent;
   let fixture: ComponentFixture<CpsPaginatorComponent>;
+  let mockAnnouncer: { announce: jest.Mock };
 
   beforeEach(async () => {
+    mockAnnouncer = { announce: jest.fn() };
     await TestBed.configureTestingModule({
-      imports: [CpsPaginatorComponent, FormsModule]
+      imports: [CpsPaginatorComponent, FormsModule],
+      providers: [
+        { provide: CPS_LIVE_ANNOUNCER_SERVICE, useValue: mockAnnouncer }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CpsPaginatorComponent);
@@ -99,6 +105,101 @@ describe('CpsPaginatorComponent', () => {
     const event = { first: 20, rows: 10, page: 2, pageCount: 10 };
     component.onPageChange(event);
     expect(component.first).toBe(20);
+  });
+
+  describe('page change announcements', () => {
+    it('should announce the new page and its item range', () => {
+      component.onPageChange({ first: 20, rows: 10, page: 2, pageCount: 10 });
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 3 of 10, items 21 to 30 of 100'
+      );
+    });
+
+    it('should announce a page change made right after initial setup', () => {
+      const freshFixture = TestBed.createComponent(CpsPaginatorComponent);
+      freshFixture.componentRef.setInput('totalRecords', 100);
+      freshFixture.componentRef.setInput('rows', 10);
+      freshFixture.detectChanges();
+
+      freshFixture.componentInstance.paginator.changePage(2);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 3 of 10, items 21 to 30 of 100'
+      );
+    });
+
+    it('should end the item range at the total on a partial last page', () => {
+      fixture.componentRef.setInput('totalRecords', 95);
+      fixture.detectChanges();
+      component.onPageChange({ first: 90, rows: 10, page: 9, pageCount: 10 });
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 10 of 10, items 91 to 95 of 95'
+      );
+    });
+
+    it('should announce the new range after the rows per page change', () => {
+      // ngModel updates rows before valueChanged triggers onRowsPerPageChange
+      component.rows = 20;
+      component.onRowsPerPageChange(20);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 1 of 5, items 1 to 20 of 100'
+      );
+    });
+
+    it('should announce the reset range after the rows per page change', () => {
+      fixture.componentRef.setInput('resetPageOnRowsChange', true);
+      fixture.componentRef.setInput('first', 20);
+      fixture.detectChanges();
+      component.rows = 20;
+      component.onRowsPerPageChange(20);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 1 of 5, items 1 to 20 of 100'
+      );
+    });
+
+    it('should not announce when the current page link is clicked again', () => {
+      const emitted: any[] = [];
+      component.pageChanged.subscribe((event) => emitted.push(event));
+      const currentPageBtn = fixture.nativeElement.querySelector(
+        '.p-paginator-page[aria-current="page"]'
+      ) as HTMLButtonElement;
+
+      currentPageBtn.click();
+
+      expect(emitted).toEqual([expect.objectContaining({ first: 0 })]);
+      expect(mockAnnouncer.announce).not.toHaveBeenCalled();
+    });
+
+    it('should not announce when there are no records', () => {
+      fixture.componentRef.setInput('totalRecords', 0);
+      fixture.detectChanges();
+      component.onPageChange({ first: 0, rows: 10, page: 0, pageCount: 0 });
+      expect(mockAnnouncer.announce).not.toHaveBeenCalled();
+    });
+
+    it('should not announce the page correction caused by a totalRecords change', async () => {
+      const emitted: any[] = [];
+      component.pageChanged.subscribe((event) => emitted.push(event));
+      fixture.componentRef.setInput('first', 90);
+      fixture.detectChanges();
+
+      fixture.componentRef.setInput('totalRecords', 85);
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(emitted).toEqual([expect.objectContaining({ first: 80 })]);
+      expect(mockAnnouncer.announce).not.toHaveBeenCalled();
+    });
+
+    it('should announce user page changes after a totalRecords change', async () => {
+      fixture.componentRef.setInput('totalRecords', 85);
+      fixture.detectChanges();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      component.paginator.changePage(1);
+      expect(mockAnnouncer.announce).toHaveBeenCalledWith(
+        'Page 2 of 9, items 11 to 20 of 85'
+      );
+    });
   });
 
   describe('focus redirection when a boundary nav button becomes disabled', () => {
