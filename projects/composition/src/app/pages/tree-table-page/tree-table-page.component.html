@@ -120,6 +120,8 @@
           [showRowMenu]="true"
           [showRowRemoveButton]="isRemoveBtnVisible"
           [showDataReloadBtn]="true"
+          [dataReloadBtnLoading]="isReloading"
+          [loading]="isReloading"
           [showGlobalFilter]="true"
           (rowsToRemove)="onRowsToRemove($event)"
           (editRowBtnClicked)="onEditRowButtonClicked()"

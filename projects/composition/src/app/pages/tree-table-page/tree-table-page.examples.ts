@@ -240,6 +240,8 @@ ${virtualColsAndDataTs.trim()}`
   [showRowMenu]="true"
   [showRowRemoveButton]="isRemoveBtnVisible"
   [showDataReloadBtn]="true"
+  [dataReloadBtnLoading]="isReloading"
+  [loading]="isReloading"
   [showGlobalFilter]="true"
   (rowsToRemove)="onRowsToRemove($event)"
   (editRowBtnClicked)="onEditRowButtonClicked()"
@@ -287,6 +289,9 @@ ${notifServiceTs}
 
 isRemoveBtnVisible = false;
 
+isReloading = false;
+private _reloadTimeout?: ReturnType<typeof setTimeout>;
+
 ${removeElementsByNameTs.trim()}
 
 onEditRowButtonClicked() {
@@ -300,7 +305,12 @@ onActionBtnClicked() {
 }
 
 onReloadBtnClicked() {
-  this._notifService.info('Data reload button clicked');
+  this.isReloading = true;
+  clearTimeout(this._reloadTimeout);
+  this._reloadTimeout = setTimeout(() => {
+    this.isReloading = false;
+    this._notifService.info('Data reloaded');
+  }, 1500);
 }`
     },
 
