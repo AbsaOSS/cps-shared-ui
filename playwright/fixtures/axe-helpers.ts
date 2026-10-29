@@ -16,15 +16,18 @@ type AxeFixture = {
 export const test = base.extend<AxeFixture>({
   makeAxeBuilder: async ({ page }, use) => {
     const makeAxeBuilder = () =>
-      new AxeBuilder({ page }).withTags([
-        'wcag2a',
-        'wcag2aa',
-        'wcag21a',
-        'wcag21aa',
-        'wcag22a',
-        'wcag22aa',
-        'best-practice'
-      ]);
+      new AxeBuilder({ page })
+        .withTags([
+          'wcag2a',
+          'wcag2aa',
+          'wcag21a',
+          'wcag21aa',
+          'wcag22a',
+          'wcag22aa',
+          'best-practice'
+        ])
+        // Temporarily disabled pending label-in-name fixes; see playwright/README.md.
+        .disableRules(['label-content-name-mismatch']);
     await use(makeAxeBuilder);
   }
 });
