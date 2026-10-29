@@ -1,4 +1,4 @@
-import { Component, NO_ERRORS_SCHEMA, ViewChild } from '@angular/core';
+import { Component, Input, NO_ERRORS_SCHEMA, ViewChild } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -1559,10 +1559,12 @@ describe('CpsDatepickerComponent', () => {
     [inline]="true"
     [minDate]="minDate"
     [maxDate]="maxDate"
+    [showOtherMonths]="showOtherMonths"
     [(ngModel)]="value" />`
 })
 class InlineDatePickerHostComponent {
   @ViewChild(DatePicker) datepicker!: DatePicker;
+  @Input() showOtherMonths = true;
   minDate = new Date(2026, 5, 10);
   maxDate = new Date(2026, 5, 20);
   value = new Date(2026, 5, 15);
@@ -1591,42 +1593,76 @@ describe('Date picker cells: aria-disabled', () => {
     host = fixture.nativeElement;
   });
 
-  // Greyed-out cells are exempt from contrast rules (WCAG 1.4.3) only when they are marked as disabled
-  it('should mark every greyed-out day, and only those, as aria-disabled', () => {
+  // Greyed-out cells are exempt from contrast rules (WCAG 1.4.3) only when they are marked as disabled.
+  // aria-disabled needs a role that supports it: the focusable day <span> is a button, its <td> a gridcell
+  it('should mark every greyed-out day, and only those, as an aria-disabled button in an aria-disabled cell', () => {
     const days = cells('span[data-date]');
     const disabled = days.filter((d) => d.classList.contains('p-disabled'));
     const enabled = days.filter((d) => !d.classList.contains('p-disabled'));
+    const dayCell = (d: HTMLElement) => d.closest('td') as HTMLElement;
 
     expect(disabled.length).toBeGreaterThan(0);
     expect(enabled.map((d) => d.textContent?.trim())).toEqual(
       Array.from({ length: 11 }, (_, i) => String(10 + i))
     );
-    disabled.forEach((d) =>
-      expect(d.getAttribute('aria-disabled')).toBe('true')
+    expect(dayCell(days[0]).closest('table')?.getAttribute('role')).toBe(
+      'grid'
     );
-    enabled.forEach((d) => expect(d.hasAttribute('aria-disabled')).toBe(false));
+    days.forEach((d) => expect(d.getAttribute('role')).toBe('button'));
+    disabled.forEach((d) => {
+      expect(d.getAttribute('aria-disabled')).toBe('true');
+      expect(dayCell(d).getAttribute('aria-disabled')).toBe('true');
+    });
+    enabled.forEach((d) => {
+      expect(d.hasAttribute('aria-disabled')).toBe(false);
+      expect(dayCell(d).hasAttribute('aria-disabled')).toBe(false);
+    });
   });
 
-  it('should mark disabled months as aria-disabled in the month view', () => {
+  it('should not mark the empty cells of hidden other-month days as aria-disabled', () => {
+    fixture.componentRef.setInput('showOtherMonths', false);
+    fixture.detectChanges();
+    const otherMonthCells = cells('td.p-datepicker-other-month');
+
+    expect(otherMonthCells.length).toBeGreaterThan(0);
+    otherMonthCells.forEach((td) => {
+      expect(td.querySelector('span')).toBeNull();
+      expect(td.hasAttribute('aria-disabled')).toBe(false);
+    });
+    expect(
+      cells('td[aria-disabled="true"]').every((td) => td.querySelector('span'))
+    ).toBe(true);
+  });
+
+  const visibleText = (cell: HTMLElement) =>
+    cell.firstChild?.textContent?.trim();
+
+  it('should mark disabled months as aria-disabled buttons in the month view', () => {
     showView('month');
     const months = cells('.p-datepicker-month');
 
     expect(months).toHaveLength(12);
-    months.forEach((m, i) =>
-      expect(m.getAttribute('aria-disabled')).toBe(i === 5 ? null : 'true')
-    );
+    expect(months[5].textContent?.match(/Jun/g)).toHaveLength(2);
+    months.forEach((m, i) => {
+      expect(m.getAttribute('role')).toBe('button');
+      expect(m.getAttribute('aria-label')).toBe(visibleText(m));
+      expect(m.getAttribute('aria-disabled')).toBe(i === 5 ? null : 'true');
+    });
   });
 
-  it('should mark disabled years as aria-disabled in the year view', () => {
+  it('should mark disabled years as aria-disabled buttons in the year view', () => {
     showView('year');
     const years = cells('.p-datepicker-year');
+    const selected = years.find((y) => visibleText(y) === '2026');
 
     expect(years.length).toBeGreaterThan(1);
-    // The selected year also repeats its number in a hidden live region, so only its first text is compared
-    years.forEach((y) =>
+    expect(selected?.textContent?.match(/2026/g)).toHaveLength(2);
+    years.forEach((y) => {
+      expect(y.getAttribute('role')).toBe('button');
+      expect(y.getAttribute('aria-label')).toBe(visibleText(y));
       expect(y.getAttribute('aria-disabled')).toBe(
-        y.firstChild?.textContent?.trim() === '2026' ? null : 'true'
-      )
-    );
+        y === selected ? null : 'true'
+      );
+    });
   });
 });

@@ -126,7 +126,14 @@ runtime change, an accessibility fix:
    1.4.3, but only if they are marked as disabled). Each day, month and year cell now gets
    `aria-disabled="true"` under exactly the condition that sets its `p-disabled` class:
    `$disabled() || !date.selectable` for days, `isMonthDisabled(i)` for months and
-   `isYearDisabled(y)` for years. Selection and keyboard logic are unchanged.
+   `isYearDisabled(y)` for years. `aria-disabled` isn't supported on elements without a
+   role, so the day, month and year `<span>`s get `role="button"` — they are already
+   focusable and select on click, Enter and Space. The day's `<td>` (a `gridcell` inside
+   the `role="grid"` table) is marked too, unless it is an empty other-month cell
+   (`showOtherMonths` off). Month and year cells also get an `aria-label` with their
+   visible text, because the selected one contains a hidden live region repeating it,
+   which would otherwise double its accessible name ("Mar Mar"). Selection and keyboard
+   logic are unchanged.
 
 No other changes were made. Component logic, styles, and public APIs are otherwise
 unmodified from PrimeNG 21.1.9.
