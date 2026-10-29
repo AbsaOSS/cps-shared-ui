@@ -503,6 +503,12 @@ export class CpsTreeTableComponent
   @Input() dataReloadBtnDisabled = false;
 
   /**
+   * Determines whether dataReloadBtn is in loading state.
+   * @group Props
+   */
+  @Input() dataReloadBtnLoading = false;
+
+  /**
    * Determines whether the treetable should show columnsToggle menu, where you can choose which columns to be displayed. If external body template is provided, use columnsSelected event emitter.
    * @group Props
    */
@@ -1594,7 +1600,7 @@ export class CpsTreeTableComponent
   }
 
   onReloadData() {
-    if (this.dataReloadBtnDisabled) return;
+    if (this.dataReloadBtnDisabled || this.dataReloadBtnLoading) return;
     this.dataReloadBtnClicked.emit();
   }
 

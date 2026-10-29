@@ -26,6 +26,9 @@ test.describe('cps-paginator', () => {
       const page2 = paginator.getByRole('button', { name: '2', exact: true });
       await expect(page2).toBeFocused();
       await expect(reportText(paginator)).toHaveText('11 - 20 of 120');
+      await expect(
+        page.locator('.cps-polite-live-announcer-element')
+      ).toHaveText('Page 2 of 12, items 11 to 20 of 120');
     });
 
     test('ArrowLeft moves real focus to the previous page button and real-changes the page', async ({
