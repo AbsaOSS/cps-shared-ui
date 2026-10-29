@@ -25,6 +25,16 @@ Tests run against the composition app (`ng serve`) which showcases every compone
 
 Accessibility coverage is split from functional coverage by filename: any spec file with `accessibility` in its name is routed to the dedicated `accessibility` project (see [Browser projects](#browser-projects)); everything else runs under `chromium`/`webkit`.
 
+### Temporary accessibility rule exception
+
+The shared [axe fixture](./fixtures/axe-helpers.ts) temporarily disables
+`label-content-name-mismatch`, enabled by default in axe-core 4.14.0. All other
+configured rules remain active.
+
+This leaves WCAG 2.5.3 (Label in Name) unchecked by this rule. Follow-up work must
+address the reported file-upload, datepicker, tab badge, tree-autocomplete, and
+tree-select mismatches, add regression coverage, and remove the exception.
+
 ## Running Tests
 
 ```bash
