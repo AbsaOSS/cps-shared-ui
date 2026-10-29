@@ -1547,3 +1547,112 @@ describe('CpsDatepickerComponent', () => {
     }));
   });
 });
+
+// Uses the real calendar so the rendered cells themselves are checked
+describe('CpsDatepickerComponent disabled cells: aria-disabled', () => {
+  let fixture: ComponentFixture<CpsDatepickerComponent>;
+  let component: CpsDatepickerComponent;
+  let container: HTMLElement;
+
+  const cells = (selector: string) =>
+    Array.from(container.querySelectorAll<HTMLElement>(selector));
+
+  const settle = async () => {
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+  };
+
+  const showView = async (view: 'month' | 'year') => {
+    (component as any)._datepicker.setCurrentView(view);
+    await settle();
+  };
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [CpsDatepickerComponent, FormsModule, NoopAnimationsModule]
+    }).compileComponents();
+    fixture = TestBed.createComponent(CpsDatepickerComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('ariaLabel', 'Test datepicker');
+    fixture.componentRef.setInput('minDate', new Date(2026, 5, 10));
+    fixture.componentRef.setInput('maxDate', new Date(2026, 5, 20));
+    component.writeValue(new Date(2026, 5, 15));
+    fixture.detectChanges();
+    component.toggleCalendar(true);
+    await settle();
+    container = component.calendarMenu.container as HTMLElement;
+  });
+
+  afterEach(() => {
+    fixture.destroy();
+  });
+
+  it('should mark every greyed-out day, and only those, as an aria-disabled button in an aria-disabled cell', () => {
+    const days = cells('span[data-date]');
+    const disabled = days.filter((d) => d.classList.contains('p-disabled'));
+    const enabled = days.filter((d) => !d.classList.contains('p-disabled'));
+    const dayCell = (d: HTMLElement) => d.closest('td') as HTMLElement;
+
+    expect(disabled.length).toBeGreaterThan(0);
+    expect(enabled.map((d) => d.textContent?.trim())).toEqual(
+      Array.from({ length: 11 }, (_, i) => String(10 + i))
+    );
+    days.forEach((d) => expect(d.getAttribute('role')).toBe('button'));
+    disabled.forEach((d) => {
+      expect(d.getAttribute('aria-disabled')).toBe('true');
+      expect(dayCell(d).getAttribute('aria-disabled')).toBe('true');
+    });
+    enabled.forEach((d) => {
+      expect(d.hasAttribute('aria-disabled')).toBe(false);
+      expect(dayCell(d).hasAttribute('aria-disabled')).toBe(false);
+    });
+  });
+
+  it('should not mark cells without a day as aria-disabled', () => {
+    cells('td[aria-disabled="true"]').forEach((td) =>
+      expect(td.querySelector('span[data-date]')).not.toBeNull()
+    );
+  });
+
+  const visibleText = (cell: HTMLElement) =>
+    cell.firstChild?.textContent?.trim();
+
+  it('should mark disabled months as aria-disabled buttons in the month view', async () => {
+    await showView('month');
+    const months = cells('.p-datepicker-month');
+
+    expect(months).toHaveLength(12);
+    months.forEach((m, i) => {
+      expect(m.getAttribute('role')).toBe('button');
+      expect(m.getAttribute('aria-label')).toBe(visibleText(m));
+      expect(m.getAttribute('aria-disabled')).toBe(i === 5 ? null : 'true');
+    });
+  });
+
+  it('should mark disabled years as aria-disabled buttons in the year view', async () => {
+    await showView('year');
+    const years = cells('.p-datepicker-year');
+    const selected = years.find((y) => visibleText(y) === '2026');
+
+    expect(years.length).toBeGreaterThan(1);
+    years.forEach((y) => {
+      expect(y.getAttribute('role')).toBe('button');
+      expect(y.getAttribute('aria-label')).toBe(visibleText(y));
+      expect(y.getAttribute('aria-disabled')).toBe(
+        y === selected ? null : 'true'
+      );
+    });
+  });
+
+  it('should stop observing once the calendar is hidden', () => {
+    const observer = (component as any)._cellsObserver as MutationObserver;
+    const disconnect = jest.spyOn(observer, 'disconnect');
+
+    component.onBeforeCalendarHidden(CpsMenuHideReason.CLICK_OUTSIDE);
+
+    expect(disconnect).toHaveBeenCalled();
+    expect((component as any)._cellsObserver).toBeUndefined();
+  });
+});
