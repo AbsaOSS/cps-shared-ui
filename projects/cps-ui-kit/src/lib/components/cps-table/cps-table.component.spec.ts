@@ -398,6 +398,67 @@ describe('CpsTableComponent', () => {
       component.onReloadData();
       expect(component.dataReloadBtnClicked.emit).not.toHaveBeenCalled();
     });
+
+    it('should not emit when dataReloadBtnLoading is true', () => {
+      jest.spyOn(component.dataReloadBtnClicked, 'emit');
+      component.dataReloadBtnLoading = true;
+      component.onReloadData();
+      expect(component.dataReloadBtnClicked.emit).not.toHaveBeenCalled();
+    });
+
+    describe('reload button loading state', () => {
+      const getReloadBtn = (): HTMLButtonElement =>
+        fixture.nativeElement.querySelector(
+          '[data-testid="cps-table-tbar-reload-btn"] button'
+        );
+
+      beforeEach(() => {
+        fixture.componentRef.setInput('showDataReloadBtn', true);
+        fixture.detectChanges();
+      });
+
+      it('should default dataReloadBtnLoading to false', () => {
+        expect(component.dataReloadBtnLoading).toBe(false);
+        expect(getReloadBtn().getAttribute('aria-busy')).toBeNull();
+      });
+
+      it('should keep the button enabled and set aria-busy while loading', () => {
+        fixture.componentRef.setInput('dataReloadBtnLoading', true);
+        fixture.detectChanges();
+        const btn = getReloadBtn();
+        expect(btn.disabled).toBe(false);
+        expect(btn.getAttribute('aria-busy')).toBe('true');
+        expect(btn.classList).toContain('loading');
+      });
+
+      it('should keep focus on the button while loading and after it ends', () => {
+        getReloadBtn().focus();
+        expect(document.activeElement).toBe(getReloadBtn());
+
+        fixture.componentRef.setInput('dataReloadBtnLoading', true);
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(getReloadBtn());
+
+        fixture.componentRef.setInput('dataReloadBtnLoading', false);
+        fixture.detectChanges();
+        expect(document.activeElement).toBe(getReloadBtn());
+        expect(getReloadBtn().getAttribute('aria-busy')).toBeNull();
+      });
+
+      it('should ignore clicks while loading and handle them again after', () => {
+        jest.spyOn(component.dataReloadBtnClicked, 'emit');
+
+        fixture.componentRef.setInput('dataReloadBtnLoading', true);
+        fixture.detectChanges();
+        getReloadBtn().click();
+        expect(component.dataReloadBtnClicked.emit).not.toHaveBeenCalled();
+
+        fixture.componentRef.setInput('dataReloadBtnLoading', false);
+        fixture.detectChanges();
+        getReloadBtn().click();
+        expect(component.dataReloadBtnClicked.emit).toHaveBeenCalledTimes(1);
+      });
+    });
   });
 
   describe('removeSelected', () => {
