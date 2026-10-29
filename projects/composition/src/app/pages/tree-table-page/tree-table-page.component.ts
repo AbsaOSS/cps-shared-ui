@@ -514,6 +514,9 @@ export class TreeTablePageComponent implements OnInit, OnDestroy {
 
   isRemoveBtnVisible = false;
 
+  isReloading = false;
+  private _reloadTimeout?: ReturnType<typeof setTimeout>;
+
   componentData = ComponentData;
 
   treeDataWithHTML = [
@@ -589,6 +592,7 @@ export class TreeTablePageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     clearTimeout(this._lazyLoadTimeout);
+    clearTimeout(this._reloadTimeout);
   }
 
   private _genVirtualData() {
@@ -642,7 +646,12 @@ export class TreeTablePageComponent implements OnInit, OnDestroy {
   }
 
   onReloadBtnClicked() {
-    this._notifService.info('Data reload button clicked');
+    this.isReloading = true;
+    clearTimeout(this._reloadTimeout);
+    this._reloadTimeout = setTimeout(() => {
+      this.isReloading = false;
+      this._notifService.info('Data reloaded');
+    }, 1500);
   }
 
   onEditRowButtonClicked() {
