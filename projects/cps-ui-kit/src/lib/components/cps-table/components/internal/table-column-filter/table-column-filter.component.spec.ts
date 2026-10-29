@@ -2,10 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { EventEmitter } from '@angular/core';
 import { FilterMetadata, FilterOperator } from 'primeng/api';
+import { DomHandler } from 'primeng/dom';
 import { Table } from 'primeng/table';
 import { TreeTable } from 'primeng/treetable';
 import { TableColumnFilterComponent } from './table-column-filter.component';
 import { CpsColumnFilterMatchMode } from '../../../cps-column-filter-types';
+import { CpsFocusService } from '../../../../../services/cps-focus/cps-focus.service';
 
 describe('TableColumnFilterComponent', () => {
   let component: TableColumnFilterComponent;
@@ -702,3 +704,156 @@ describe('TableColumnFilterComponent (TreeTable field)', () => {
     ]);
   });
 });
+
+describe.each([
+  ['Table', Table],
+  ['TreeTable', TreeTable]
+] as const)(
+  'TableColumnFilterComponent focus return (%s)',
+  (_name, TableClass) => {
+    let component: TableColumnFilterComponent;
+    let fixture: ComponentFixture<TableColumnFilterComponent>;
+    let focusService: CpsFocusService;
+
+    const getFilterBtn = (): HTMLButtonElement =>
+      fixture.nativeElement.querySelector(
+        'button.cps-table-col-filter-menu-button'
+      );
+
+    const getMenuEl = (selector: string): HTMLElement =>
+      component.columnFilterMenu.container!.querySelector(
+        `[data-testid="${selector}"] button, button[data-testid="${selector}"]`
+      ) as HTMLElement;
+
+    const openMenu = async () => {
+      getFilterBtn().click();
+      fixture.detectChanges();
+      await fixture.whenStable();
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    };
+
+    beforeEach(async () => {
+      jest.spyOn(DomHandler, 'isTouchDevice').mockReturnValue(false);
+      const mockTable = Object.create(TableClass.prototype);
+      mockTable.ngOnDestroy = jest.fn();
+      mockTable.filters = {};
+      mockTable.onFilter = new EventEmitter();
+      mockTable.isFilterBlank = jest.fn().mockReturnValue(true);
+      mockTable._filter = jest.fn();
+
+      await TestBed.configureTestingModule({
+        imports: [TableColumnFilterComponent, NoopAnimationsModule],
+        providers: [{ provide: TableClass, useValue: mockTable }]
+      }).compileComponents();
+
+      focusService = TestBed.inject(CpsFocusService);
+      fixture = TestBed.createComponent(TableColumnFilterComponent);
+      component = fixture.componentInstance;
+      fixture.componentRef.setInput('field', 'name');
+      fixture.componentRef.setInput('showCloseButton', true);
+      fixture.componentRef.setInput('hideOnClear', true);
+      fixture.detectChanges();
+      await openMenu();
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+      document.body
+        .querySelectorAll('.cps-menu-container, .cps-overlay-panel')
+        .forEach((el) => el.remove());
+    });
+
+    it('should open the menu from the filter button', () => {
+      expect(component.columnFilterMenu.isVisible()).toBe(true);
+      expect(component.columnFilterMenu.container).toBeTruthy();
+    });
+
+    it.each([
+      ['Apply', 'cps-table-col-filter-apply-btn'],
+      ['Clear', 'cps-table-col-filter-clear-btn'],
+      ['Close', 'cps-table-col-filter-close-btn']
+    ])(
+      'should return focus to the filter button with a focus ring after %s from the keyboard',
+      (_label, testId) => {
+        focusService.lastInput.set('keyboard');
+        const btn = getMenuEl(testId);
+        btn.focus();
+        btn.click();
+
+        expect(component.columnFilterMenu.isVisible()).toBe(false);
+        expect(document.activeElement).toBe(getFilterBtn());
+        expect(getFilterBtn().classList).not.toContain(
+          'suppress-focus-visible'
+        );
+      }
+    );
+
+    it.each([
+      ['Apply', 'cps-table-col-filter-apply-btn'],
+      ['Clear', 'cps-table-col-filter-clear-btn'],
+      ['Close', 'cps-table-col-filter-close-btn']
+    ])(
+      'should return focus to the filter button without a focus ring after %s with the mouse',
+      (_label, testId) => {
+        focusService.lastInput.set('pointer');
+        const btn = getMenuEl(testId);
+        btn.focus();
+        btn.click();
+
+        expect(document.activeElement).toBe(getFilterBtn());
+        expect(getFilterBtn().classList).toContain('suppress-focus-visible');
+      }
+    );
+
+    it('should not move focus when the menu is hidden while focus is outside it', () => {
+      const outside = document.createElement('button');
+      document.body.appendChild(outside);
+      outside.focus();
+
+      component.hide();
+
+      expect(component.columnFilterMenu.isVisible()).toBe(false);
+      expect(document.activeElement).toBe(outside);
+      outside.remove();
+    });
+
+    it.each([
+      ['Apply', 'cps-table-col-filter-apply-btn'],
+      ['Clear', 'cps-table-col-filter-clear-btn'],
+      ['Close', 'cps-table-col-filter-close-btn']
+    ])(
+      'should return focus to the filter button after %s when the click left focus on body',
+      (_label, testId) => {
+        focusService.lastInput.set('pointer');
+        (document.activeElement as HTMLElement | null)?.blur();
+        expect(document.activeElement).toBe(document.body);
+
+        getMenuEl(testId).click();
+
+        expect(component.columnFilterMenu.isVisible()).toBe(false);
+        expect(document.activeElement).toBe(getFilterBtn());
+        expect(getFilterBtn().classList).toContain('suppress-focus-visible');
+      }
+    );
+
+    it('should not move focus when hide is called while the menu is already closed', () => {
+      component.hide();
+      getFilterBtn().blur();
+      expect(document.activeElement).toBe(document.body);
+
+      component.hide();
+
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    it('should still return focus to the filter button on Escape', () => {
+      getMenuEl('cps-table-col-filter-apply-btn').focus();
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+      );
+
+      expect(component.columnFilterMenu.isVisible()).toBe(false);
+      expect(document.activeElement).toBe(getFilterBtn());
+    });
+  }
+);
