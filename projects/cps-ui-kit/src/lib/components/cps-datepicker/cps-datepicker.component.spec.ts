@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgZone, NO_ERRORS_SCHEMA } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -1644,6 +1644,25 @@ describe('CpsDatepickerComponent disabled cells: aria-disabled', () => {
         y === selected ? null : 'true'
       );
     });
+  });
+
+  it('should disconnect the previous observer when the calendar is shown again', () => {
+    const previous = (component as any)._cellsObserver as MutationObserver;
+    const disconnect = jest.spyOn(previous, 'disconnect');
+
+    component.onCalendarMenuShown();
+
+    expect(disconnect).toHaveBeenCalled();
+    expect((component as any)._cellsObserver).not.toBe(previous);
+  });
+
+  it('should observe the calendar outside the Angular zone', () => {
+    const zone = TestBed.inject(NgZone);
+    const run = jest.spyOn(zone, 'runOutsideAngular');
+
+    component.onCalendarMenuShown();
+
+    expect(run).toHaveBeenCalled();
   });
 
   it('should stop observing once the calendar is hidden', () => {

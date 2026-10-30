@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -226,7 +227,10 @@ export class CpsDatepickerComponent
   private _calendarContainer: HTMLElement | null = null;
   private _cellsObserver?: MutationObserver;
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    private _zone: NgZone
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -624,15 +628,19 @@ export class CpsDatepickerComponent
     if (this._calendarContainer) {
       const container = this._calendarContainer;
       this._syncDisabledCells(container);
+      this._cellsObserver?.disconnect();
+      // Outside the zone: the callback only mutates the DOM, so no change detection is needed.
       // Only role/aria attributes are written back, so this cannot re-trigger itself.
-      this._cellsObserver = new MutationObserver(() =>
-        this._syncDisabledCells(container)
-      );
-      this._cellsObserver.observe(container, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['class']
+      this._zone.runOutsideAngular(() => {
+        this._cellsObserver = new MutationObserver(() =>
+          this._syncDisabledCells(container)
+        );
+        this._cellsObserver.observe(container, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class']
+        });
       });
     }
     if (!this._focusCalendarOnOpen) return;
