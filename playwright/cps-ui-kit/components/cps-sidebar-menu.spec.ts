@@ -189,6 +189,22 @@ test.describe('cps-sidebar-menu', () => {
       await btn.click();
       await expect(root).toHaveClass(/cps-sidebar-menu-collapsed/);
     });
+
+    test('the collapsed menubar is not horizontally scrollable', async ({
+      page
+    }) => {
+      const btn = wrapper(page).getByTestId('cps-sidebar-menu-expand-btn');
+      const root = wrapper(page).getByTestId('cps-sidebar-menu');
+      const nav = wrapper(page).getByTestId('cps-sidebar-menu-nav');
+
+      await btn.click();
+      await expect(root).toHaveClass(/cps-sidebar-menu-collapsed/);
+      await expect(nav).toHaveCSS('overflow-x', 'hidden');
+
+      await item(page, 0).hover();
+      await page.mouse.wheel(100, 0);
+      expect(await nav.evaluate((el) => el.scrollLeft)).toBe(0);
+    });
   });
 
   test.describe('Real computed-style background inheritance', () => {

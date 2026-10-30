@@ -84,6 +84,18 @@ describe('CpsLiveAnnouncerService', () => {
       ).toBe('Error occurred');
     }));
 
+    it('should delay writing the message when delayMs is provided', fakeAsync(() => {
+      service.announce('Delayed message', 'assertive', 1000, 100);
+      tick(99);
+      expect(
+        document.body.querySelector('[aria-live="assertive"]')?.textContent
+      ).toBe('');
+      tick(1);
+      expect(
+        document.body.querySelector('[aria-live="assertive"]')?.textContent
+      ).toBe('Delayed message');
+    }));
+
     it('should default to polite politeness', fakeAsync(() => {
       service.announce('Hello');
       tick(0);

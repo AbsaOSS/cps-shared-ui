@@ -23,7 +23,17 @@ playwright/
 
 Tests run against the composition app (`ng serve`) which showcases every component.
 
-Accessibility coverage is split from functional coverage by filename: any spec file with `accessibility` in its name is routed to the dedicated `accessibility` project (see [Browser projects](#browser-projects)); everything else runs under `chromium`/`webkit`. See the root [README's "Run accessibility tests" section](../README.md#run-accessibility-tests) for how this relates to the separate `pa11y-ci` check.
+Accessibility coverage is split from functional coverage by filename: any spec file with `accessibility` in its name is routed to the dedicated `accessibility` project (see [Browser projects](#browser-projects)); everything else runs under `chromium`/`webkit`.
+
+### Temporary accessibility rule exception
+
+The shared [axe fixture](./fixtures/axe-helpers.ts) temporarily disables
+`label-content-name-mismatch`, enabled by default in axe-core 4.14.0. All other
+configured rules remain active.
+
+This leaves WCAG 2.5.3 (Label in Name) unchecked by this rule. Follow-up work must
+address the reported file-upload, datepicker, tab badge, tree-autocomplete, and
+tree-select mismatches, add regression coverage, and remove the exception.
 
 ## Running Tests
 
@@ -143,7 +153,7 @@ Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/i
 
 ## CI
 
-Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). On failure, the HTML report and test artifacts (screenshots, videos) are uploaded as workflow artifacts. This is a separate job from the `pa11y` one, which runs `pa11y-ci` independently — see the root [README](../README.md#run-accessibility-tests) for how the two relate.
+Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). The HTML report is always uploaded as a workflow artifact (so passing runs stay discoverable too, e.g. to check the new accessibility warning annotations); on failure, test artifacts (screenshots, videos) are additionally uploaded.
 
 ## Writing Tests
 

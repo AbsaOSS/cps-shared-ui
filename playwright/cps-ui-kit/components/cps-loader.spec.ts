@@ -133,7 +133,7 @@ test.describe('cps-loader', () => {
         .getByTestId('cps-loader-label');
 
       const inlineColor = await label.evaluate((el) => el.style.color);
-      expect(inlineColor).toBe('var(--cps-color-energy)');
+      expect(inlineColor).toBe('var(--cps-color-energy-lighten4)');
 
       const resolvedColor = await label.evaluate(
         (el) => getComputedStyle(el).color

@@ -1,4 +1,5 @@
 import {
+  AfterViewChecked,
   Component,
   ElementRef,
   EventEmitter,
@@ -17,6 +18,7 @@ import { CpsSelectComponent } from '../cps-select/cps-select.component';
 import { getCSSColor } from '../../utils/colors-utils/colors-utils';
 import { FormsModule } from '@angular/forms';
 import { isEqual } from 'lodash-es';
+import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
 
 const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
 
@@ -35,7 +37,9 @@ const DEFAULT_ROWS_PER_PAGE = [5, 10, 25, 50];
     '(keydown)': 'onKeydown($event)'
   }
 })
-export class CpsPaginatorComponent implements OnInit, OnChanges {
+export class CpsPaginatorComponent
+  implements OnInit, OnChanges, AfterViewChecked
+{
   /**
    * Zero-relative number of the first row to be displayed.
    * @group Props
@@ -104,9 +108,13 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
 
   rowOptions: { label: string; value: number }[] = [];
   private _currentRowsPerPageOptions: number[] = [];
+  private _totalRecordsChanged = false;
+  private _ignoreCorrectionAnnouncement = false;
+  private _rowsPerPageChanging = false;
 
   private readonly _document = inject(DOCUMENT);
   private readonly _elementRef = inject(ElementRef);
+  private readonly _liveAnnouncer = inject(CPS_LIVE_ANNOUNCER_SERVICE);
   private readonly _staticAriaLabel: string | null = inject(
     new HostAttributeToken('aria-label'),
     { optional: true }
@@ -129,6 +137,9 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     if (changes.first || changes.totalRecords) {
       this.paginatorPt = this._buildPaginatorPt();
     }
+    if (changes.totalRecords) {
+      this._totalRecordsChanged = true;
+    }
     if (
       (changes.rows && !changes.rows.firstChange) ||
       (changes.rowsPerPageOptions && !changes.rowsPerPageOptions.firstChange)
@@ -138,6 +149,24 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     if (changes.ariaLabel && !changes.ariaLabel.firstChange) {
       this._updateAriaLabel();
     }
+  }
+
+  ngAfterViewChecked(): void {
+    if (!this._totalRecordsChanged) return;
+    this._totalRecordsChanged = false;
+    if (this._isPageCorrectionPending()) {
+      this._ignoreCorrectionAnnouncement = true;
+      // Queued after Paginator's correction microtask, so it runs once that settles
+      queueMicrotask(() => (this._ignoreCorrectionAnnouncement = false));
+    }
+  }
+
+  // Same condition as Paginator.updateFirst(), which schedules the correction
+  private _isPageCorrectionPending(): boolean {
+    const { first, totalRecords } = this.paginator;
+    return (
+      this.paginator.getPage() > 0 && !!totalRecords && first >= totalRecords
+    );
   }
 
   private _syncRows(): void {
@@ -173,10 +202,18 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
   }
 
   onPageChange(event: any) {
+    // Paginator also emits when the already selected page link is clicked
+    const isSamePage =
+      !this._rowsPerPageChanging &&
+      event.first === this.first &&
+      event.rows === this.rows;
     this.first = event.first;
     this.rows = event.rows;
     this.paginatorPt = this._buildPaginatorPt();
     this.pageChanged.emit(event);
+    if (!isSamePage && !this._ignoreCorrectionAnnouncement) {
+      this._announcePage();
+    }
 
     const activeEl = this._document.activeElement as HTMLElement | null;
     const atFirst = this.paginator.isFirstPage();
@@ -191,6 +228,17 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
     ) {
       setTimeout(() => this._focusSelectedPageButton());
     }
+  }
+
+  private _announcePage(): void {
+    if (!this.totalRecords || !this.rows) return;
+    const page = Math.floor(this.first / this.rows) + 1;
+    const pageCount = Math.ceil(this.totalRecords / this.rows);
+    const firstItem = this.first + 1;
+    const lastItem = Math.min(this.first + this.rows, this.totalRecords);
+    this._liveAnnouncer?.announce(
+      `Page ${page} of ${pageCount}, items ${firstItem} to ${lastItem} of ${this.totalRecords}`
+    );
   }
 
   onKeydown(event: KeyboardEvent): void {
@@ -242,6 +290,8 @@ export class CpsPaginatorComponent implements OnInit, OnChanges {
       this.paginatorPt = this._buildPaginatorPt();
     }
     this.paginator.rows = rows;
+    this._rowsPerPageChanging = true;
     this.paginator.changePage(this.paginator.getPage());
+    this._rowsPerPageChanging = false;
   }
 }

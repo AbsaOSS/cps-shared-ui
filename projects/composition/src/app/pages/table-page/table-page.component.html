@@ -87,6 +87,8 @@
           [showRowRemoveButton]="isRemoveBtnVisible"
           (rowsToRemove)="onRowsToRemove($event)"
           [showDataReloadBtn]="true"
+          [dataReloadBtnLoading]="isReloading"
+          [loading]="isReloading"
           (editRowBtnClicked)="onEditRowButtonClicked($event)"
           (actionBtnClicked)="onActionBtnClicked()"
           (dataReloadBtnClicked)="onReloadBtnClicked()"

@@ -74,6 +74,55 @@ test.describe('cps-tree-table', () => {
       await expect(wrapper.locator('tbody tr')).toHaveCount(1);
       await expect(wrapper.locator('tbody tr')).toHaveText(/Cloud/);
     });
+
+    test('Apply returns focus to the filter button with a focus ring after keyboard use', async ({
+      page
+    }) => {
+      const wrapper = example(page, 'treetable-1-paginated-filters');
+      const filterBtn = wrapper.getByTestId('cps-table-col-filter-btn-name');
+
+      await filterBtn.focus();
+      await page.keyboard.press('Enter');
+      const constraint = page.getByTestId(
+        'cps-table-col-filter-constraint-name-0'
+      );
+      await expect(constraint).toBeVisible();
+      await expect(
+        page.getByTestId('cps-menu-container').locator(':focus')
+      ).toHaveCount(1);
+      await constraint.locator('input').first().fill('Cloud');
+      await page
+        .getByTestId('cps-table-col-filter-apply-btn')
+        .getByRole('button', { name: 'Apply' })
+        .focus();
+      await page.keyboard.press('Enter');
+
+      await expect(constraint).toBeHidden();
+      await expect(filterBtn).toBeFocused();
+      expect(
+        await filterBtn.evaluate((el) => el.matches(':focus-visible'))
+      ).toBe(true);
+      await expect(filterBtn).not.toHaveClass(/suppress-focus-visible/);
+    });
+
+    test('Apply returns focus to the filter button without a focus ring after a click', async ({
+      page
+    }) => {
+      const wrapper = example(page, 'treetable-1-paginated-filters');
+      const filterBtn = wrapper.getByTestId('cps-table-col-filter-btn-name');
+
+      await filterBtn.click();
+      const constraint = page.getByTestId(
+        'cps-table-col-filter-constraint-name-0'
+      );
+      await expect(constraint).toBeVisible();
+      await constraint.locator('input').first().fill('Cloud');
+      await page.getByTestId('cps-table-col-filter-apply-btn').click();
+
+      await expect(constraint).toBeHidden();
+      await expect(filterBtn).toBeFocused();
+      await expect(filterBtn).toHaveClass(/suppress-focus-visible/);
+    });
   });
 
   test.describe('Real empty state (Tree table 8)', () => {
@@ -354,17 +403,28 @@ test.describe('cps-tree-table', () => {
   });
 
   test.describe('Real reload button (Tree table 3)', () => {
-    test('shows a real cps-notification toast', async ({ page }) => {
+    test('keeps focus while reloading and shows a real cps-notification toast', async ({
+      page
+    }) => {
       await page
         .getByRole('tab', { name: 'Tree table 3', exact: true })
         .click();
       const wrapper = example(page, 'treetable-3-menu-actions');
+      const reloadBtn = wrapper
+        .getByTestId('cps-treetable-tbar-reload-btn')
+        .getByRole('button', { name: 'Reload data' });
 
-      await wrapper.getByTestId('cps-treetable-tbar-reload-btn').click();
+      await reloadBtn.focus();
+      await page.keyboard.press('Enter');
+
+      await expect(reloadBtn).toHaveAttribute('aria-busy', 'true');
+      await expect(reloadBtn).toBeFocused();
 
       await expect(page.getByTestId('cps-toast-message-header')).toHaveText(
-        'Data reload button clicked'
+        'Data reloaded'
       );
+      await expect(reloadBtn).not.toHaveAttribute('aria-busy');
+      await expect(reloadBtn).toBeFocused();
     });
   });
 
