@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  NgZone,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -224,8 +225,12 @@ export class CpsDatepickerComponent
   private _suppressNextContentClick = false;
   private _captureKeydown = (e: KeyboardEvent) => this._onCaptureKeydown(e);
   private _calendarContainer: HTMLElement | null = null;
+  private _cellsObserver?: MutationObserver;
 
-  constructor(@Self() @Optional() private _control: NgControl) {
+  constructor(
+    @Self() @Optional() private _control: NgControl,
+    private _zone: NgZone
+  ) {
     if (this._control) {
       this._control.valueAccessor = this;
     }
@@ -274,6 +279,41 @@ export class CpsDatepickerComponent
       this._captureKeydown,
       true
     );
+    this._cellsObserver?.disconnect();
+    this._cellsObserver = undefined;
+  }
+
+  // PrimeNG greys out unavailable cells (p-disabled) without telling assistive
+  // technology, so axe reports their text as a contrast failure. aria-disabled
+  // needs a role that supports it, hence role="button" on the focusable spans.
+  private _syncDisabledCells(container: HTMLElement): void {
+    const setDisabled = (el: Element, disabled: boolean) => {
+      if (disabled) el.setAttribute('aria-disabled', 'true');
+      else el.removeAttribute('aria-disabled');
+    };
+
+    container
+      .querySelectorAll<HTMLElement>(
+        '.p-datepicker-calendar td span[data-date]'
+      )
+      .forEach((day) => {
+        const disabled = day.classList.contains('p-disabled');
+        day.setAttribute('role', 'button');
+        setDisabled(day, disabled);
+        const cell = day.closest('td');
+        if (cell) setDisabled(cell, disabled);
+      });
+
+    container
+      .querySelectorAll<HTMLElement>('.p-datepicker-month, .p-datepicker-year')
+      .forEach((cell) => {
+        cell.setAttribute('role', 'button');
+        // The selected cell holds a hidden live region repeating its text, which
+        // would double the accessible name ("Mar Mar").
+        const label = cell.firstChild?.textContent?.trim();
+        if (label) cell.setAttribute('aria-label', label);
+        setDisabled(cell, cell.classList.contains('p-disabled'));
+      });
   }
 
   // PrimeNG's own keyboard handler does not check whether the destination cell
@@ -585,6 +625,24 @@ export class CpsDatepickerComponent
       this._captureKeydown,
       true
     );
+    if (this._calendarContainer) {
+      const container = this._calendarContainer;
+      this._syncDisabledCells(container);
+      this._cellsObserver?.disconnect();
+      // Outside the zone: the callback only mutates the DOM, so no change detection is needed.
+      // Only role/aria attributes are written back, so this cannot re-trigger itself.
+      this._zone.runOutsideAngular(() => {
+        this._cellsObserver = new MutationObserver(() =>
+          this._syncDisabledCells(container)
+        );
+        this._cellsObserver.observe(container, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class']
+        });
+      });
+    }
     if (!this._focusCalendarOnOpen) return;
     this._focusCalendarOnOpen = false;
     // setTimeout fires after requestAnimationFrame, ensuring p-motion has
