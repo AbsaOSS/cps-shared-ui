@@ -1,5 +1,17 @@
 # Changelog
 
+## [21.31.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.30.1...v21.31.0) (2026-10-30)
+
+
+### Features
+
+* backport changes from v22.2.0 ([#903](https://github.com/AbsaOSS/cps-shared-ui/issues/903)) ([6bc0a34](https://github.com/AbsaOSS/cps-shared-ui/commit/6bc0a34a1ba266ad74e9c5f651c22f75fcad4517))
+
+
+### Bug Fixes
+
+* **v21:** mark disabled datepicker cells as aria-disabled ([#906](https://github.com/AbsaOSS/cps-shared-ui/issues/906)) ([4e73a46](https://github.com/AbsaOSS/cps-shared-ui/commit/4e73a4619427176316b4309949a16eaa9dd8c25f))
+
 ## [21.30.1](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.30.0...v21.30.1) (2026-09-22)
 
 
