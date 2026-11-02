@@ -681,12 +681,23 @@ describe('CpsTableComponent', () => {
         new KeyboardEvent('keydown', { key: 'ArrowDown' }),
         0
       );
-      component._onDragHandleKeydown(
-        new KeyboardEvent('keydown', { key: 'Escape' }),
-        0
-      );
+      const escape = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        cancelable: true
+      });
+      component._onDragHandleKeydown(escape, 0);
       expect(component.keyboardDragRowIndex).toBeNull();
       expect(component.data).toEqual(data);
+      expect(escape.defaultPrevented).toBe(true);
+    });
+
+    it('should leave Escape unhandled when no row is being moved', () => {
+      const escape = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        cancelable: true
+      });
+      component._onDragHandleKeydown(escape, 0);
+      expect(escape.defaultPrevented).toBe(false);
     });
 
     it('should move row up on ArrowUp when drag is active', () => {

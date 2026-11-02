@@ -645,6 +645,16 @@ describe('CpsMenuComponent', () => {
       );
     });
 
+    it('should mark Escape as handled, so notifications and dialogs below stay open', () => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true
+      });
+      document.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    });
+
     it('should focus the target on Escape via focusService', () => {
       document.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })

@@ -997,8 +997,9 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     }
 
     if (event.key === 'Escape') {
-      event.preventDefault();
+      // Only a cancelled move handles Esc; otherwise it can still close notifications
       if (this.keyboardDragRowIndex !== null) {
+        event.preventDefault();
         this._cancelKeyboardDrag();
       }
       return;
