@@ -106,6 +106,15 @@ $hover-transition-duration: 0.2s;
           background-color: transparent;
           pointer-events: none;
         }
+
+        &[type='search'] {
+          &::-webkit-search-decoration,
+          &::-webkit-search-cancel-button,
+          &::-webkit-search-results-button,
+          &::-webkit-search-results-decoration {
+            display: none;
+          }
+        }
       }
 
       &:has(.cps-input-prefix) input {

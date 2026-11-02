@@ -140,6 +140,26 @@ describe('CpsInputComponent', () => {
       const input = fixture.nativeElement.querySelector('input');
       expect(input.type).toBe('password');
     });
+
+    it.each([
+      'text',
+      'number',
+      'password',
+      'email',
+      'tel',
+      'url',
+      'search'
+    ] as const)(
+      'should support input type "%s" and update currentType on input change',
+      (inputType) => {
+        fixture.componentRef.setInput('type', inputType);
+        fixture.detectChanges();
+
+        expect(component.currentType).toBe(inputType);
+        const input = fixture.nativeElement.querySelector('input');
+        expect(input.type).toBe(inputType);
+      }
+    );
   });
 
   describe('Clear Functionality', () => {

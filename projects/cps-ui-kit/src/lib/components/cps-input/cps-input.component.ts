@@ -36,6 +36,19 @@ import {
 export type CpsInputAppearanceType = 'outlined' | 'underlined' | 'borderless';
 
 /**
+ * CpsInputType is used to define the type of the input field.
+ * @group Types
+ */
+export type CpsInputType =
+  | 'text'
+  | 'number'
+  | 'password'
+  | 'email'
+  | 'tel'
+  | 'url'
+  | 'search';
+
+/**
  * CpsInputComponent is used to enter values in a certain formats such as numeric, text or password.
  * @group Components
  */
@@ -133,10 +146,10 @@ export class CpsInputComponent
   @Input() width: number | string = '100%';
 
   /**
-   * Type of the input of type 'text', 'number' or 'password'.
+   * Type of the input, it can be 'text', 'number', 'password', 'email', 'tel', 'url' or 'search'.
    * @group Props
    */
-  @Input() type: 'text' | 'number' | 'password' = 'text';
+  @Input() type: CpsInputType = 'text';
 
   /**
    * When enabled, a loading bar is displayed.

@@ -113,9 +113,9 @@
                         "name": "type",
                         "optional": false,
                         "readonly": false,
-                        "type": "'text' | 'number' | 'password'",
+                        "type": "CpsInputType",
                         "default": "text",
-                        "description": "Type of the input of type 'text', 'number' or 'password'."
+                        "description": "Type of the input, it can be 'text', 'number', 'password', 'email', 'tel', 'url' or 'search'."
                     },
                     {
                         "name": "loading",
@@ -337,6 +337,11 @@
                 "name": "CpsInputAppearanceType",
                 "value": "\"outlined\" | \"underlined\" | \"borderless\"",
                 "description": "CpsInputAppearanceType is used to define the border of the input field."
+            },
+            {
+                "name": "CpsInputType",
+                "value": "\"text\" | \"number\" | \"password\" | \"email\" | \"tel\" | \"url\" | \"search\"",
+                "description": "CpsInputType is used to define the type of the input field."
             }
         ]
     }

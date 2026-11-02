@@ -19,6 +19,7 @@
     "CpsInfoCircleComponent": "info-circle",
     "CpsInputComponent": "input",
     "CpsInputAppearanceType": "input",
+    "CpsInputType": "input",
     "CpsLoaderComponent": "loader",
     "CpsMenuComponent": "menu",
     "CpsMenuItem": "menu",
