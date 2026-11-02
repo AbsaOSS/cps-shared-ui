@@ -804,6 +804,16 @@ describe('CpsTreeTableComponent', () => {
         component.data = [];
         expect(component.paginatorTotalRecords).toBe(0);
       });
+
+      it('should use the lazy-load offset after a filter resets to the first page', () => {
+        component.paginator = true;
+        component.first = 20;
+        component.onLazyLoaded({ first: 0, rows: 10 });
+        component.hasMore = false;
+        component.data = makeNodes(7);
+        expect(component.first).toBe(0);
+        expect(component.paginatorTotalRecords).toBe(7);
+      });
     });
 
     describe('pageReportTemplate', () => {

@@ -1207,6 +1207,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onLazyLoaded(event: any) {
+    // Filter/sort/reset can restart the lazy load at a different offset than the wrapper's `first`
+    if (typeof event?.first === 'number' && event.first !== this.first) {
+      this.first = event.first;
+      if (this.paginator) {
+        this.tablePassthrough = this._buildTablePassthrough();
+      }
+    }
     this.lazyLoaded.emit(event);
   }
 
