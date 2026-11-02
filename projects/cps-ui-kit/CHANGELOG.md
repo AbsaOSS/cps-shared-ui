@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.32.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.31.0...v21.32.0) (2026-11-02)
+
+
+### Features
+
+* **table, tree-table:** support pagination with hasMore flag instead of totalRecords ([#926](https://github.com/AbsaOSS/cps-shared-ui/issues/926)) ([4b84cb5](https://github.com/AbsaOSS/cps-shared-ui/commit/4b84cb5faec3d3f105f510e1c6a83e7a28e0b1ac))
+
 ## [21.31.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.30.1...v21.31.0) (2026-10-30)
 
 
