@@ -865,7 +865,8 @@ describe('CpsTreeTableComponent', () => {
     describe('paginator focus', () => {
       let nextBtn: HTMLButtonElement;
       let focusSpy: jest.SpyInstance;
-      const flushTimers = () => new Promise((r) => setTimeout(r, 0));
+      const flushTimers = () =>
+        new Promise((resolve) => setTimeout(resolve, 0));
 
       beforeEach(() => {
         nextBtn = document.createElement('button');
