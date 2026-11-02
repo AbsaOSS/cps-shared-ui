@@ -367,6 +367,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() totalRecords = 0;
 
   /**
+   * Use with lazy paginated tables when the total number of records is unknown.
+   * Indicates whether more records exist after the current page. When set (not null), totalRecords is ignored.
+   * @group Props
+   */
+  @Input() hasMore: boolean | null = null;
+
+  /**
    * Text to display when there is no data.
    * @group Props
    */
@@ -794,7 +801,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     }
     if (this.paginator) {
       const effectiveTotalRecords = this.lazy
-        ? this.totalRecords
+        ? this.paginatorTotalRecords
         : (this.data?.length ?? 0);
       const firstDisabled = this.first === 0 || effectiveTotalRecords === 0;
       const paginatorPt: PaginatorPassThrough = {
@@ -806,6 +813,23 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       pt.pcPaginator = paginatorPt;
     }
     return pt;
+  }
+
+  get isTotalUnknown(): boolean {
+    return this.lazy && this.hasMore !== null;
+  }
+
+  get paginatorTotalRecords(): number {
+    if (!this.isTotalUnknown) return this.totalRecords;
+    return (
+      this.first + (this.hasMore ? this.rows + 1 : (this.data?.length ?? 0))
+    );
+  }
+
+  get pageReportTemplate(): string {
+    return this.isTotalUnknown && this.hasMore
+      ? '{first} - {last}'
+      : '{first} - {last} of {totalRecords}';
   }
 
   get styleClass() {
@@ -864,9 +888,14 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       changes.scrollHeight ||
       changes.paginator ||
       changes.first ||
-      changes.totalRecords
+      changes.totalRecords ||
+      changes.hasMore
     ) {
       this.tablePassthrough = this._buildTablePassthrough();
+    }
+
+    if (changes.hasMore || changes.data) {
+      this._keepFocusWhenNextBecomesDisabled();
     }
   }
 
@@ -1027,7 +1056,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
     const activeEl = this._document.activeElement as HTMLElement | null;
     const atFirst = this.first === 0;
-    const atLast = this.first + this.rows >= this.primengTable.totalRecords;
+    // With unknown total, the last page is only known after data loads (see ngOnChanges)
+    const atLast =
+      !this.isTotalUnknown &&
+      this.first + this.rows >= this.primengTable.totalRecords;
     if (
       (atFirst &&
         (activeEl?.classList.contains('p-paginator-first') ||
@@ -1051,6 +1083,17 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       '.p-paginator-page[aria-current="page"]'
     ) as HTMLButtonElement | null;
     selected?.focus();
+  }
+
+  private _keepFocusWhenNextBecomesDisabled(): void {
+    if (!this.isTotalUnknown || this.hasMore) return;
+    const activeEl = this._document.activeElement as HTMLElement | null;
+    if (
+      activeEl?.classList.contains('p-paginator-next') &&
+      this._elementRef.nativeElement.contains(activeEl)
+    ) {
+      setTimeout(() => this._focusPaginatorSelectedPage());
+    }
   }
 
   private _cleanupDrag(): void {
@@ -1157,6 +1200,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   }
 
   onLazyLoaded(event: any) {
+    // Filter/sort/reset can restart the lazy load at a different offset than the wrapper's `first`
+    if (typeof event?.first === 'number' && event.first !== this.first) {
+      this.first = event.first;
+      if (this.paginator) {
+        this.tablePassthrough = this._buildTablePassthrough();
+      }
+    }
     this.lazyLoaded.emit(event);
   }
 

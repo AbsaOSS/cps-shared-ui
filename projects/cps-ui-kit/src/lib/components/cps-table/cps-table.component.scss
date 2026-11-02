@@ -827,6 +827,10 @@ $tbar-normal-height: 4.5rem;
       height: calc(100% - $tbar-normal-height);
     }
 
+    .cps-table-unknown-total .p-paginator-last {
+      display: none;
+    }
+
     .cps-table-loading {
       .p-datatable {
         min-height: 12.5rem;

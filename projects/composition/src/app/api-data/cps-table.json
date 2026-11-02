@@ -341,6 +341,14 @@
                         "description": "Number of total records."
                     },
                     {
+                        "name": "hasMore",
+                        "optional": false,
+                        "readonly": false,
+                        "type": "boolean | null",
+                        "default": "null",
+                        "description": "Use with lazy paginated tables when the total number of records is unknown.\nIndicates whether more records exist after the current page. When set (not null), totalRecords is ignored."
+                    },
+                    {
                         "name": "emptyMessage",
                         "optional": false,
                         "readonly": false,
