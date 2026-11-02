@@ -861,5 +861,51 @@ onCustomSort(event: { data: any[]; field?: string; order?: number }) {
 ${virtualColsAndDataTs.trim()}
 
 initialColumnsVirtual = this.colsVirtual.slice(0, 3);`
+    },
+
+    treeTable16: {
+      html: `
+<cps-tree-table
+  [data]="hasMoreData"
+  [columns]="colsVirtual"
+  [lazy]="true"
+  [lazyLoadOnInit]="true"
+  [loading]="hasMoreLoading"
+  [paginator]="true"
+  [rows]="hasMoreRows"
+  [hasMore]="hasMoreFlag"
+  (lazyLoaded)="onHasMoreLazyLoad($event)"
+  toolbarTitle="Lazy tree table with unknown total number of records, paginated using a 'hasMore' flag from the API">
+</cps-tree-table>`,
+      ts: `
+hasMoreData: any[] = [];
+hasMoreFlag = false;
+hasMoreLoading = false;
+hasMoreRows = 10;
+private _hasMoreTimeout?: ReturnType<typeof setTimeout>;
+private _lastHasMoreFirst = -1;
+private _lastHasMoreRows = -1;
+
+onHasMoreLazyLoad(event: { first?: number; rows?: number }) {
+  const first = event.first ?? 0;
+  const rows = event.rows ?? this.hasMoreRows;
+
+  if (first === this._lastHasMoreFirst && rows === this._lastHasMoreRows)
+    return;
+  this._lastHasMoreFirst = first;
+  this._lastHasMoreRows = rows;
+
+  Promise.resolve().then(() => {
+    this.hasMoreLoading = true;
+    clearTimeout(this._hasMoreTimeout);
+    this._hasMoreTimeout = setTimeout(() => {
+      // Simulated API: returns a page and a "hasMore" flag, but no total count
+      const source = this.dataVirtual.slice(0, 47);
+      this.hasMoreData = source.slice(first, first + rows);
+      this.hasMoreFlag = first + rows < source.length;
+      this.hasMoreLoading = false;
+    }, 600);
+  });
+}`
     }
   };

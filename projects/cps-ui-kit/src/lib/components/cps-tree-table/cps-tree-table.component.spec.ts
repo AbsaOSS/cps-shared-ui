@@ -735,6 +735,170 @@ describe('CpsTreeTableComponent', () => {
     });
   });
 
+  describe('hasMore (unknown total records)', () => {
+    const makeNodes = (n: number) =>
+      Array.from({ length: n }, (_, i) => ({ data: { id: i } }));
+
+    beforeEach(() => {
+      component.lazy = true;
+      component.paginator = true;
+      component.rows = 10;
+      component.totalRecords = 500;
+    });
+
+    it('should default hasMore to null', () => {
+      expect(
+        TestBed.createComponent(CpsTreeTableComponent).componentInstance.hasMore
+      ).toBeNull();
+    });
+
+    describe('isTotalUnknown', () => {
+      it('should be false when hasMore is null', () => {
+        component.hasMore = null;
+        expect(component.isTotalUnknown).toBe(false);
+      });
+
+      it('should be false when not lazy', () => {
+        component.lazy = false;
+        component.hasMore = true;
+        expect(component.isTotalUnknown).toBe(false);
+      });
+
+      it('should be true when lazy and hasMore is a boolean', () => {
+        component.hasMore = false;
+        expect(component.isTotalUnknown).toBe(true);
+        component.hasMore = true;
+        expect(component.isTotalUnknown).toBe(true);
+      });
+    });
+
+    describe('paginatorTotalRecords', () => {
+      it('should return totalRecords when hasMore is null', () => {
+        component.hasMore = null;
+        expect(component.paginatorTotalRecords).toBe(500);
+      });
+
+      it('should return totalRecords when not lazy', () => {
+        component.lazy = false;
+        component.hasMore = true;
+        expect(component.paginatorTotalRecords).toBe(500);
+      });
+
+      it('should allow one more page when hasMore is true', () => {
+        component.hasMore = true;
+        component.first = 20;
+        component.data = makeNodes(10);
+        expect(component.paginatorTotalRecords).toBe(31);
+      });
+
+      it('should equal first + data length when hasMore is false', () => {
+        component.hasMore = false;
+        component.first = 20;
+        component.data = makeNodes(7);
+        expect(component.paginatorTotalRecords).toBe(27);
+      });
+
+      it('should be 0 when hasMore is false and there is no data', () => {
+        component.hasMore = false;
+        component.first = 0;
+        component.data = [];
+        expect(component.paginatorTotalRecords).toBe(0);
+      });
+    });
+
+    describe('pageReportTemplate', () => {
+      it('should show total when hasMore is null', () => {
+        component.hasMore = null;
+        expect(component.pageReportTemplate).toBe(
+          '{first} - {last} of {totalRecords}'
+        );
+      });
+
+      it('should show "unknown" when hasMore is true', () => {
+        component.hasMore = true;
+        expect(component.pageReportTemplate).toBe(
+          '{first} - {last} of unknown'
+        );
+      });
+
+      it('should show total when hasMore is false', () => {
+        component.hasMore = false;
+        expect(component.pageReportTemplate).toBe(
+          '{first} - {last} of {totalRecords}'
+        );
+      });
+    });
+
+    describe('first button passthrough', () => {
+      it('should be disabled when there is no data on the first page', () => {
+        component.hasMore = false;
+        component.first = 0;
+        component.data = [];
+        component.ngOnChanges({
+          hasMore: new SimpleChange(null, false, false)
+        });
+        expect(component.treeTablePassthrough.pcPaginator?.first).toEqual({
+          'aria-disabled': 'true',
+          tabindex: -1
+        });
+      });
+
+      it('should be enabled when not on the first page', () => {
+        component.hasMore = true;
+        component.first = 10;
+        component.data = makeNodes(10);
+        component.ngOnChanges({ hasMore: new SimpleChange(null, true, false) });
+        expect(component.treeTablePassthrough.pcPaginator?.first).toEqual({
+          'aria-disabled': null,
+          tabindex: 0
+        });
+      });
+    });
+
+    it('should rebuild treeTablePassthrough when hasMore changes', () => {
+      const before = component.treeTablePassthrough;
+      component.hasMore = true;
+      component.ngOnChanges({ hasMore: new SimpleChange(null, true, false) });
+      expect(component.treeTablePassthrough).not.toBe(before);
+    });
+
+    describe('rendering', () => {
+      const getTreeTableEl = (): HTMLElement =>
+        fixture.nativeElement.querySelector('[data-testid="cps-treetable"]');
+
+      beforeEach(() => {
+        fixture.componentRef.setInput('lazy', true);
+        fixture.componentRef.setInput('paginator', true);
+        fixture.componentRef.setInput('rows', 10);
+        fixture.componentRef.setInput('first', 0);
+        fixture.componentRef.setInput('data', makeNodes(10));
+      });
+
+      it('should not add unknown-total class when hasMore is null', () => {
+        fixture.detectChanges();
+        expect(getTreeTableEl().classList).not.toContain(
+          'cps-treetable-unknown-total'
+        );
+      });
+
+      it('should add unknown-total class and pass computed total to PrimeNG when hasMore is true', () => {
+        fixture.componentRef.setInput('hasMore', true);
+        fixture.detectChanges();
+        expect(getTreeTableEl().classList).toContain(
+          'cps-treetable-unknown-total'
+        );
+        expect(component.primengTreeTable.totalRecords).toBe(11);
+      });
+
+      it('should pass exact total to PrimeNG when hasMore becomes false', () => {
+        fixture.componentRef.setInput('hasMore', false);
+        fixture.componentRef.setInput('data', makeNodes(4));
+        fixture.detectChanges();
+        expect(component.primengTreeTable.totalRecords).toBe(4);
+      });
+    });
+  });
+
   describe('getExportData', () => {
     it('should return exportOriginalData when it is set', () => {
       const orig = [{ id: 1 }, { id: 2 }];

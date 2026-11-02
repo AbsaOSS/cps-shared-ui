@@ -383,6 +383,13 @@ export class CpsTreeTableComponent
   @Input() totalRecords = 0;
 
   /**
+   * Use with lazy paginated tree tables when the total number of records is unknown.
+   * Indicates whether more records exist after the current page. When set (not null), totalRecords is ignored.
+   * @group Props
+   */
+  @Input() hasMore: boolean | null = null;
+
+  /**
    * Text to display when there is no data.
    * @group Props
    */
@@ -991,7 +998,13 @@ export class CpsTreeTableComponent
     this._calcAutoLayoutHeaderWidths();
     this._recalcVirtualHeight();
 
-    if (changes.first || changes.totalRecords || changes.paginator) {
+    if (
+      changes.first ||
+      changes.totalRecords ||
+      changes.paginator ||
+      changes.hasMore ||
+      changes.data
+    ) {
       this.treeTablePassthrough = this._buildTreeTablePassthrough();
     }
   }
@@ -1659,7 +1672,7 @@ export class CpsTreeTableComponent
     const pt: TreeTablePassThrough = {};
     if (this.paginator) {
       const effectiveTotalRecords = this.lazy
-        ? this.totalRecords
+        ? this.paginatorTotalRecords
         : (this.data?.length ?? 0);
       const firstDisabled = this.first === 0 || effectiveTotalRecords === 0;
       const paginatorPt: PaginatorPassThrough = {
@@ -1671,6 +1684,23 @@ export class CpsTreeTableComponent
       pt.pcPaginator = paginatorPt;
     }
     return pt;
+  }
+
+  get isTotalUnknown(): boolean {
+    return this.lazy && this.hasMore !== null;
+  }
+
+  get paginatorTotalRecords(): number {
+    if (!this.isTotalUnknown) return this.totalRecords;
+    return (
+      this.first + (this.hasMore ? this.rows + 1 : (this.data?.length ?? 0))
+    );
+  }
+
+  get pageReportTemplate(): string {
+    return this.isTotalUnknown && this.hasMore
+      ? '{first} - {last} of unknown'
+      : '{first} - {last} of {totalRecords}';
   }
 
   onPaginatorKeydown(event: KeyboardEvent): void {

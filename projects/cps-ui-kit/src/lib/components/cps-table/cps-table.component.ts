@@ -374,6 +374,13 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
   @Input() totalRecords = 0;
 
   /**
+   * Use with lazy paginated tables when the total number of records is unknown.
+   * Indicates whether more records exist after the current page. When set (not null), totalRecords is ignored.
+   * @group Props
+   */
+  @Input() hasMore: boolean | null = null;
+
+  /**
    * Text to display when there is no data.
    * @group Props
    */
@@ -801,7 +808,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     }
     if (this.paginator) {
       const effectiveTotalRecords = this.lazy
-        ? this.totalRecords
+        ? this.paginatorTotalRecords
         : (this.data?.length ?? 0);
       const firstDisabled = this.first === 0 || effectiveTotalRecords === 0;
       const paginatorPt: PaginatorPassThrough = {
@@ -813,6 +820,23 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       pt.pcPaginator = paginatorPt;
     }
     return pt;
+  }
+
+  get isTotalUnknown(): boolean {
+    return this.lazy && this.hasMore !== null;
+  }
+
+  get paginatorTotalRecords(): number {
+    if (!this.isTotalUnknown) return this.totalRecords;
+    return (
+      this.first + (this.hasMore ? this.rows + 1 : (this.data?.length ?? 0))
+    );
+  }
+
+  get pageReportTemplate(): string {
+    return this.isTotalUnknown && this.hasMore
+      ? '{first} - {last} of unknown'
+      : '{first} - {last} of {totalRecords}';
   }
 
   get styleClass() {
@@ -871,7 +895,8 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       changes.scrollHeight ||
       changes.paginator ||
       changes.first ||
-      changes.totalRecords
+      changes.totalRecords ||
+      changes.hasMore
     ) {
       this.tablePassthrough = this._buildTablePassthrough();
     }
