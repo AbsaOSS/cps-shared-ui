@@ -781,6 +781,20 @@ ${virtualColsAndDataTs.trim()}`
   toolbarTitle="Lazy table with unknown total number of records, paginated using a 'hasMore' flag from the API">
 </cps-table>`,
     ts: `
+cols = [
+  { field: 'a', header: 'A' },
+  { field: 'b', header: 'B' },
+  { field: 'c', header: 'C' },
+  { field: 'd', header: 'D' },
+  { field: 'e', header: 'E' }
+];
+dataVirtual = Array.from({ length: 47 }, (_, i) => ({
+  a: 'a' + i,
+  b: 'b' + (i % 5),
+  c: Number((i * 0.1).toFixed(1)),
+  d: new Date(Date.now() - Math.random() * 1e12),
+  e: Math.random() > 0.5
+}));
 hasMoreData: any[] = [];
 hasMoreFlag = false;
 hasMoreLoading = false;
