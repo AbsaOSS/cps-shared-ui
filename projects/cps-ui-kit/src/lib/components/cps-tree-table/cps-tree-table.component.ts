@@ -1703,7 +1703,7 @@ export class CpsTreeTableComponent
 
   get pageReportTemplate(): string {
     return this.isTotalUnknown && this.hasMore
-      ? '{first} - {last} of unknown'
+      ? '{first} - {last}'
       : '{first} - {last} of {totalRecords}';
   }
 

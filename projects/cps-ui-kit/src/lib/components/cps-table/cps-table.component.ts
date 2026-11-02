@@ -835,7 +835,7 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
   get pageReportTemplate(): string {
     return this.isTotalUnknown && this.hasMore
-      ? '{first} - {last} of unknown'
+      ? '{first} - {last}'
       : '{first} - {last} of {totalRecords}';
   }
 

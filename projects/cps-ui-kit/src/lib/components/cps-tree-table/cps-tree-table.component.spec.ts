@@ -824,11 +824,9 @@ describe('CpsTreeTableComponent', () => {
         );
       });
 
-      it('should show "unknown" when hasMore is true', () => {
+      it('should show only the range when hasMore is true', () => {
         component.hasMore = true;
-        expect(component.pageReportTemplate).toBe(
-          '{first} - {last} of unknown'
-        );
+        expect(component.pageReportTemplate).toBe('{first} - {last}');
       });
 
       it('should show total when hasMore is false', () => {
