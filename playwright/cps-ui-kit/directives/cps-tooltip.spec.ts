@@ -185,4 +185,91 @@ test.describe('cps-tooltip', () => {
       await expect(tooltip(page)).toHaveCount(0);
     });
   });
+
+  test.describe('Escape dismissal (WCAG 1.4.13)', () => {
+    test('pressing Escape while the tooltip is shown on hover closes it without propagating', async ({
+      page
+    }) => {
+      const target = button(page, 'hover-open-tooltip');
+
+      await target.hover();
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.evaluate(() => {
+        (window as any).__escapePropagated = false;
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') (window as any).__escapePropagated = true;
+        });
+      });
+
+      await page.keyboard.press('Escape');
+
+      await expect(tooltip(page)).toHaveCount(0);
+      const propagated = await page.evaluate(
+        () => (window as any).__escapePropagated
+      );
+      expect(propagated).toBe(false);
+    });
+
+    test('pressing Escape while the trigger has focus closes the tooltip and keeps focus on the trigger', async ({
+      page
+    }) => {
+      const target = button(page, 'focus-only-tooltip');
+      const innerButton = target.getByTestId('cps-button');
+
+      await innerButton.focus();
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.evaluate(() => {
+        (window as any).__escapePropagated = false;
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') (window as any).__escapePropagated = true;
+        });
+      });
+
+      await page.keyboard.press('Escape');
+
+      await expect(tooltip(page)).toHaveCount(0);
+      await expect(innerButton).toBeFocused();
+      const propagated = await page.evaluate(
+        () => (window as any).__escapePropagated
+      );
+      expect(propagated).toBe(false);
+    });
+
+    test('pressing Escape while focus is inside a persistent tooltip closes it', async ({
+      page
+    }) => {
+      const target = button(page, 'persistent-tooltip');
+      const innerButton = target.getByTestId('cps-button');
+
+      await innerButton.focus();
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.keyboard.press('Tab');
+      const firstLink = tooltip(page).locator('a').first();
+      await expect(firstLink).toBeFocused();
+
+      await page.keyboard.press('Escape');
+      await expect(tooltip(page)).toHaveCount(0);
+    });
+  });
+
+  test.describe('Hoverable tooltip popup (WCAG 1.4.13)', () => {
+    test('moving the pointer from the trigger onto the tooltip keeps it open until leaving both', async ({
+      page
+    }) => {
+      const target = button(page, 'hover-open-tooltip');
+
+      await target.hover();
+      await expect(tooltip(page)).toBeVisible();
+
+      await tooltip(page).hover();
+      await page.waitForTimeout(500);
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.mouse.move(0, 0);
+      await expect(tooltip(page)).toHaveCount(0);
+    });
+  });
 });

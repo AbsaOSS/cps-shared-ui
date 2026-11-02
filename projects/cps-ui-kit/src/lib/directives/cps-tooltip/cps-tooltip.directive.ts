@@ -41,6 +41,8 @@ export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
     '(focusin)': 'onFocus()',
     '(focusout)': 'onFocusOut($event)',
     '(keydown.tab)': 'onTabFromTrigger($event)',
+    '(keydown.escape)': 'onEscape($event)',
+    '(document:keydown.escape)': 'onEscape($event)',
     '(click)': 'onClick()',
     '(document:click)': 'onDocumentClick($event.target)',
     '(window:resize)': 'onPageResize()'
@@ -235,11 +237,36 @@ export class CpsTooltipDirective implements OnDestroy {
     this._destroyTooltip(true);
   }
 
+  onEscape(event: Event): void {
+    if (!this._popup) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation?.();
+    clearTimeout(this._showTimeout);
+    clearTimeout(this._hideTimeout);
+    this._destroyTooltip();
+  }
+
   private _onScrollDestroy = (): void => {
     this._destroyTooltip(true);
   };
 
+  private _onPopupMouseEnter = (): void => {
+    clearTimeout(this._hideTimeout);
+  };
+
+  private _onPopupMouseLeave = (): void => {
+    this._hideTimeout = setTimeout(
+      this._destroyTooltip,
+      this.tooltipCloseDelay() as number
+    );
+  };
+
   private _onPopupKeydown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      this.onEscape(event);
+      return;
+    }
     if (event.key !== 'Tab' || !this._popup) return;
     const focusable = this._focusableIn(this._popup);
     if (!focusable.length) return;
@@ -308,6 +335,9 @@ export class CpsTooltipDirective implements OnDestroy {
     if (this.tooltipPersistent()) {
       this._popup.addEventListener('focusout', this._onPopupFocusOut);
       this._popup.addEventListener('keydown', this._onPopupKeydown);
+    } else {
+      this._popup.addEventListener('mouseenter', this._onPopupMouseEnter);
+      this._popup.addEventListener('mouseleave', this._onPopupMouseLeave);
     }
 
     this._attachScrollDestroyWhenSettled();
@@ -336,6 +366,8 @@ export class CpsTooltipDirective implements OnDestroy {
     this.window.removeEventListener('scroll', this._onScrollDestroy, true);
     if (!this._popup) return;
 
+    this._popup.removeEventListener('mouseenter', this._onPopupMouseEnter);
+    this._popup.removeEventListener('mouseleave', this._onPopupMouseLeave);
     this._popup.removeEventListener('focusout', this._onPopupFocusOut);
     this._popup.removeEventListener('keydown', this._onPopupKeydown);
 

@@ -738,5 +738,85 @@ describe('CpsTooltipDirective', () => {
         expect(focusSpy).toHaveBeenCalled();
       }));
     });
+
+    describe('onEscape', () => {
+      it('should do nothing when there is no open popup', () => {
+        const event = {
+          preventDefault: jest.fn(),
+          stopPropagation: jest.fn(),
+          stopImmediatePropagation: jest.fn()
+        } as unknown as Event;
+
+        directive.onEscape(event);
+
+        expect(event.preventDefault).not.toHaveBeenCalled();
+        expect(event.stopPropagation).not.toHaveBeenCalled();
+      });
+
+      it('should dismiss an open tooltip and stop event propagation on Escape', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+
+        const event = {
+          preventDefault: jest.fn(),
+          stopPropagation: jest.fn(),
+          stopImmediatePropagation: jest.fn()
+        } as unknown as Event;
+
+        directive.onEscape(event);
+        tick(200);
+
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(event.stopPropagation).toHaveBeenCalled();
+        expect((event as any).stopImmediatePropagation).toHaveBeenCalled();
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should dismiss a persistent tooltip when Escape is pressed inside the popup', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+
+        const popup = document.body.querySelector(
+          '.cps-tooltip'
+        ) as HTMLElement;
+        expect(popup).toBeTruthy();
+
+        const event = new KeyboardEvent('keydown', {
+          key: 'Escape',
+          bubbles: true,
+          cancelable: true
+        });
+        popup.dispatchEvent(event);
+        tick(200);
+
+        expect(event.defaultPrevented).toBe(true);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+    });
+
+    describe('hovering over the popup', () => {
+      it('should keep the tooltip open when hovering the popup and close after leaving it', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const popup = document.body.querySelector(
+          '.cps-tooltip'
+        ) as HTMLElement;
+        expect(popup).toBeTruthy();
+
+        divElement.triggerEventHandler('mouseleave', null);
+        tick(150);
+
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(500);
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+
+        popup.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(500);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+    });
   });
 });
