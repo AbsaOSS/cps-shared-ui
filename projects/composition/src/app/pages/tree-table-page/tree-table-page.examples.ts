@@ -878,6 +878,8 @@ initialColumnsVirtual = this.colsVirtual.slice(0, 3);`
   toolbarTitle="Lazy tree table with unknown total number of records, paginated using a 'hasMore' flag from the API">
 </cps-tree-table>`,
       ts: `
+${virtualColsAndDataTs.trim()}
+
 hasMoreData: any[] = [];
 hasMoreFlag = false;
 hasMoreLoading = false;
