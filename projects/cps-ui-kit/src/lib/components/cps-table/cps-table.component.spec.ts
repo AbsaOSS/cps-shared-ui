@@ -1248,9 +1248,13 @@ describe('CpsTableComponent', () => {
         component.ngOnChanges({
           hasMore: new SimpleChange(null, false, false)
         });
-        expect(component.tablePassthrough.pcPaginator?.first).toEqual({
-          'aria-disabled': 'true',
-          tabindex: -1
+        expect(component.tablePassthrough).toMatchObject({
+          pcPaginator: {
+            first: {
+              'aria-disabled': 'true',
+              tabindex: -1
+            }
+          }
         });
       });
 
@@ -1259,9 +1263,13 @@ describe('CpsTableComponent', () => {
         component.first = 10;
         component.data = makeRows(10);
         component.ngOnChanges({ hasMore: new SimpleChange(null, true, false) });
-        expect(component.tablePassthrough.pcPaginator?.first).toEqual({
-          'aria-disabled': null,
-          tabindex: 0
+        expect(component.tablePassthrough).toMatchObject({
+          pcPaginator: {
+            first: {
+              'aria-disabled': null,
+              tabindex: 0
+            }
+          }
         });
       });
     });

@@ -845,9 +845,13 @@ describe('CpsTreeTableComponent', () => {
         component.ngOnChanges({
           hasMore: new SimpleChange(null, false, false)
         });
-        expect(component.treeTablePassthrough.pcPaginator?.first).toEqual({
-          'aria-disabled': 'true',
-          tabindex: -1
+        expect(component.treeTablePassthrough).toMatchObject({
+          pcPaginator: {
+            first: {
+              'aria-disabled': 'true',
+              tabindex: -1
+            }
+          }
         });
       });
 
@@ -856,9 +860,13 @@ describe('CpsTreeTableComponent', () => {
         component.first = 10;
         component.data = makeNodes(10);
         component.ngOnChanges({ hasMore: new SimpleChange(null, true, false) });
-        expect(component.treeTablePassthrough.pcPaginator?.first).toEqual({
-          'aria-disabled': null,
-          tabindex: 0
+        expect(component.treeTablePassthrough).toMatchObject({
+          pcPaginator: {
+            first: {
+              'aria-disabled': null,
+              tabindex: 0
+            }
+          }
         });
       });
     });
