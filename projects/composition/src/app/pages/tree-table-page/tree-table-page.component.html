@@ -558,5 +558,24 @@
         </cps-tree-table>
       </app-code-example>
     </cps-tab>
+    <cps-tab label="Tree table 16">
+      <app-code-example
+        [htmlCode]="examples.treeTable16.html"
+        [tsCode]="examples.treeTable16.ts">
+        <cps-tree-table
+          data-testid="treetable-16-has-more"
+          [data]="hasMoreData"
+          [columns]="colsVirtual"
+          [lazy]="true"
+          [lazyLoadOnInit]="true"
+          [loading]="hasMoreLoading"
+          [paginator]="true"
+          [rows]="hasMoreRows"
+          [hasMore]="hasMoreFlag"
+          (lazyLoaded)="onHasMoreLazyLoad($event)"
+          toolbarTitle="Lazy tree table with unknown total number of records, paginated using a 'hasMore' flag from the API">
+        </cps-tree-table>
+      </app-code-example>
+    </cps-tab>
   </cps-tab-group>
 </app-component-docs-viewer>
