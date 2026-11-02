@@ -1265,6 +1265,57 @@ describe('CpsTableComponent', () => {
       expect(component.tablePassthrough).not.toBe(before);
     });
 
+    describe('paginator focus', () => {
+      let nextBtn: HTMLButtonElement;
+      let focusSpy: jest.SpyInstance;
+      const flushTimers = () => new Promise((r) => setTimeout(r, 0));
+
+      beforeEach(() => {
+        nextBtn = document.createElement('button');
+        nextBtn.classList.add('p-paginator-next');
+        fixture.nativeElement.appendChild(nextBtn);
+        jest.spyOn(document, 'activeElement', 'get').mockReturnValue(nextBtn);
+        focusSpy = jest
+          .spyOn(component as any, '_focusPaginatorSelectedPage')
+          .mockImplementation(() => {});
+      });
+
+      afterEach(() => nextBtn.remove());
+
+      it('should not move focus off "next" on page change while total is unknown', async () => {
+        component.hasMore = true;
+        component.primengTable.totalRecords = 11;
+        component.onPageChange({ first: 10, rows: 10 });
+        await flushTimers();
+        expect(focusSpy).not.toHaveBeenCalled();
+      });
+
+      it('should move focus to the current page when "next" becomes disabled', async () => {
+        component.hasMore = false;
+        component.ngOnChanges({
+          hasMore: new SimpleChange(true, false, false)
+        });
+        await flushTimers();
+        expect(focusSpy).toHaveBeenCalled();
+      });
+
+      it('should keep focus on "next" while more data is available', async () => {
+        component.hasMore = true;
+        component.ngOnChanges({
+          hasMore: new SimpleChange(false, true, false)
+        });
+        await flushTimers();
+        expect(focusSpy).not.toHaveBeenCalled();
+      });
+
+      it('should not move focus when hasMore is null', async () => {
+        component.hasMore = null;
+        component.ngOnChanges({ data: new SimpleChange([], [], false) });
+        await flushTimers();
+        expect(focusSpy).not.toHaveBeenCalled();
+      });
+    });
+
     describe('rendering', () => {
       const getTableEl = (): HTMLElement =>
         fixture.nativeElement.querySelector('[data-testid="cps-table"]');

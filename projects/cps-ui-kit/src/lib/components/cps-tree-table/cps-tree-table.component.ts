@@ -1007,6 +1007,10 @@ export class CpsTreeTableComponent
     ) {
       this.treeTablePassthrough = this._buildTreeTablePassthrough();
     }
+
+    if (changes.hasMore || changes.data) {
+      this._keepFocusWhenNextBecomesDisabled();
+    }
   }
 
   ngOnDestroy(): void {
@@ -1747,7 +1751,10 @@ export class CpsTreeTableComponent
 
     const activeEl = this.document.activeElement as HTMLElement | null;
     const atFirst = this.first === 0;
-    const atLast = this.first + this.rows >= this.primengTreeTable.totalRecords;
+    // With unknown total, the last page is only known after data loads (see ngOnChanges)
+    const atLast =
+      !this.isTotalUnknown &&
+      this.first + this.rows >= this.primengTreeTable.totalRecords;
     if (
       (atFirst &&
         (activeEl?.classList.contains('p-paginator-first') ||
@@ -1775,6 +1782,17 @@ export class CpsTreeTableComponent
       '.p-paginator-page[aria-current="page"]'
     ) as HTMLButtonElement | null;
     selected?.focus();
+  }
+
+  private _keepFocusWhenNextBecomesDisabled(): void {
+    if (!this.isTotalUnknown || this.hasMore) return;
+    const activeEl = this.document.activeElement as HTMLElement | null;
+    if (
+      activeEl?.classList.contains('p-paginator-next') &&
+      this._elementRef.nativeElement.contains(activeEl)
+    ) {
+      setTimeout(() => this._focusPaginatorSelectedPage());
+    }
   }
 
   onLazyLoaded(event: any) {

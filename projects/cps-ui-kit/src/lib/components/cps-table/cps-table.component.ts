@@ -900,6 +900,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
     ) {
       this.tablePassthrough = this._buildTablePassthrough();
     }
+
+    if (changes.hasMore || changes.data) {
+      this._keepFocusWhenNextBecomesDisabled();
+    }
   }
 
   resetSortingState() {
@@ -1059,7 +1063,10 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
 
     const activeEl = this._document.activeElement as HTMLElement | null;
     const atFirst = this.first === 0;
-    const atLast = this.first + this.rows >= this.primengTable.totalRecords;
+    // With unknown total, the last page is only known after data loads (see ngOnChanges)
+    const atLast =
+      !this.isTotalUnknown &&
+      this.first + this.rows >= this.primengTable.totalRecords;
     if (
       (atFirst &&
         (activeEl?.classList.contains('p-paginator-first') ||
@@ -1083,6 +1090,17 @@ export class CpsTableComponent implements OnInit, AfterViewChecked, OnChanges {
       '.p-paginator-page[aria-current="page"]'
     ) as HTMLButtonElement | null;
     selected?.focus();
+  }
+
+  private _keepFocusWhenNextBecomesDisabled(): void {
+    if (!this.isTotalUnknown || this.hasMore) return;
+    const activeEl = this._document.activeElement as HTMLElement | null;
+    if (
+      activeEl?.classList.contains('p-paginator-next') &&
+      this._elementRef.nativeElement.contains(activeEl)
+    ) {
+      setTimeout(() => this._focusPaginatorSelectedPage());
+    }
   }
 
   private _cleanupDrag(): void {
