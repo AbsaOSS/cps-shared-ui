@@ -62,17 +62,16 @@ test.describe('cps-menu', () => {
 
       await focusViaKeyboard(page, button);
       await page.keyboard.press('Enter');
-      await expect(
-        page.getByRole('menuitem', { name: 'First item' })
-      ).toBeFocused();
+      const firstItem = page.getByRole('menuitem', { name: 'First item' });
+      await expect(firstItem).toBeFocused();
+      await expect(firstItem).not.toHaveClass(/suppress-focus-visible/);
       await page.keyboard.press('Escape');
       await expect(button).toBeFocused();
       await expect(button).not.toHaveClass(/suppress-focus-visible/);
 
       await toggle.click();
-      await expect(
-        page.getByRole('menuitem', { name: 'First item' })
-      ).toBeFocused();
+      await expect(firstItem).toBeFocused();
+      await expect(firstItem).toHaveClass(/suppress-focus-visible/);
       await page.keyboard.press('Escape');
       await expect(button).toBeFocused();
       await expect(button).toHaveClass(/suppress-focus-visible/);

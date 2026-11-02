@@ -739,10 +739,20 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.zone.runOutsideAngular(() => {
       setTimeout(() => {
         const menuItems = this._getMenuItems();
-        if (menuItems.length) {
-          menuItems[0].focus({ preventScroll: true });
-        } else if (this.container) {
-          this._focusableIn(this.container)[0]?.focus({ preventScroll: true });
+        const firstFocusable = menuItems.length
+          ? menuItems[0]
+          : this.container
+            ? this._focusableIn(this.container)[0]
+            : undefined;
+        if (!firstFocusable) return;
+        if (this._cpsFocusService) {
+          this._cpsFocusService.focusElement(
+            firstFocusable,
+            this._openedByKeyboard,
+            { preventScroll: true }
+          );
+        } else {
+          firstFocusable.focus({ preventScroll: true });
         }
       }, 5);
     });
@@ -774,16 +784,22 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     let nextIndex = currentIndex + direction;
     if (nextIndex < 0) nextIndex = items.length - 1;
     if (nextIndex >= items.length) nextIndex = 0;
-    items[nextIndex]?.focus();
+    const nextItem = items[nextIndex];
+    nextItem?.classList.remove('suppress-focus-visible');
+    nextItem?.focus();
   }
 
   private _focusFirstItem() {
-    this._getMenuItems()[0]?.focus();
+    const firstItem = this._getMenuItems()[0];
+    firstItem?.classList.remove('suppress-focus-visible');
+    firstItem?.focus();
   }
 
   private _focusLastItem() {
     const items = this._getMenuItems();
-    items[items.length - 1]?.focus();
+    const lastItem = items[items.length - 1];
+    lastItem?.classList.remove('suppress-focus-visible');
+    lastItem?.focus();
   }
 
   private _focusableIn(el: HTMLElement): HTMLElement[] {

@@ -26,7 +26,12 @@ describe('CpsMenuComponent', () => {
 
   beforeEach(async () => {
     mockFocusService.isKeyboard.mockReturnValue(false);
-    mockFocusService.focusElement.mockReset();
+    mockFocusService.focusElement
+      .mockReset()
+      .mockImplementation(
+        (el: HTMLElement, _showFocusRing?: boolean, options?: FocusOptions) =>
+          el?.focus(options)
+      );
 
     await TestBed.configureTestingModule({
       imports: [CpsMenuComponent, NoopAnimationsModule],
@@ -768,7 +773,32 @@ describe('CpsMenuComponent', () => {
       component.focus();
       tick(10);
 
+      expect(mockFocusService.focusElement).toHaveBeenCalledWith(
+        menuItem,
+        false,
+        { preventScroll: true }
+      );
       expect(menuItem.focus).toHaveBeenCalledWith({ preventScroll: true });
+    }));
+
+    it('should pass _openedByKeyboard true to focusService when opened via keyboard', fakeAsync(() => {
+      const menuItem = document.createElement('a');
+      menuItem.className = 'cps-menu-item';
+      (component as any)._openedByKeyboard = true;
+
+      jest.spyOn(component as any, '_getMenuItems').mockReturnValue([menuItem]);
+      jest
+        .spyOn((component as any).zone, 'runOutsideAngular')
+        .mockImplementation((fn: unknown) => (fn as () => void)());
+
+      component.focus();
+      tick(10);
+
+      expect(mockFocusService.focusElement).toHaveBeenCalledWith(
+        menuItem,
+        true,
+        { preventScroll: true }
+      );
     }));
 
     it('should focus the first focusable element when no menu items exist', fakeAsync(() => {
@@ -787,7 +817,27 @@ describe('CpsMenuComponent', () => {
       component.focus();
       tick(10);
 
+      expect(mockFocusService.focusElement).toHaveBeenCalledWith(btn, false, {
+        preventScroll: true
+      });
       expect(btn.focus).toHaveBeenCalledWith({ preventScroll: true });
+    }));
+
+    it('should fall back to native focus when focusService is unavailable', fakeAsync(() => {
+      const menuItem = document.createElement('a');
+      menuItem.className = 'cps-menu-item';
+      jest.spyOn(menuItem, 'focus');
+      (component as any)._cpsFocusService = undefined;
+
+      jest.spyOn(component as any, '_getMenuItems').mockReturnValue([menuItem]);
+      jest
+        .spyOn((component as any).zone, 'runOutsideAngular')
+        .mockImplementation((fn: unknown) => (fn as () => void)());
+
+      component.focus();
+      tick(10);
+
+      expect(menuItem.focus).toHaveBeenCalledWith({ preventScroll: true });
     }));
   });
 
