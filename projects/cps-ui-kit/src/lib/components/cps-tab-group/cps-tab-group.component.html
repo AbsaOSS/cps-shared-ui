@@ -119,25 +119,29 @@
       (mousedown)="onMouseDown($event)">
       @if (tab.active) {
         @if (animationType === 'slide') {
-          <div
-            [@slideInOut]="{
-              value: animationState,
-              params: { transitionParams: resolvedTransitionParams }
-            }"
-            class="cps-tab-content-inner"
-            [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
-            <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
+          <div class="cps-tab-content-frame">
+            <div
+              [@slideInOut]="{
+                value: animationState,
+                params: { transitionParams: resolvedTransitionParams }
+              }"
+              class="cps-tab-content-inner"
+              [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
+              <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
+            </div>
           </div>
         }
         @if (animationType === 'fade') {
-          <div
-            [@fadeInOut]="{
-              value: animationState,
-              params: { transitionParams: resolvedFadeTransitionParams }
-            }"
-            class="cps-tab-content-inner"
-            [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
-            <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
+          <div class="cps-tab-content-frame">
+            <div
+              [@fadeInOut]="{
+                value: animationState,
+                params: { transitionParams: resolvedFadeTransitionParams }
+              }"
+              class="cps-tab-content-inner"
+              [attr.data-testid]="'cps-tab-content-inner-' + panelIndex">
+              <ng-container [ngTemplateOutlet]="tab.content"></ng-container>
+            </div>
           </div>
         }
       }
