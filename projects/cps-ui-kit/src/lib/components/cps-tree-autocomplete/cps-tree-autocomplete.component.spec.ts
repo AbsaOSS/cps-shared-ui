@@ -260,7 +260,11 @@ describe('CpsTreeAutocompleteComponent', () => {
 
   describe('onContainerKeyDown', () => {
     function keyEvent(code: string): KeyboardEvent {
-      return new KeyboardEvent('keydown', { code, bubbles: true });
+      return new KeyboardEvent('keydown', {
+        code,
+        bubbles: true,
+        cancelable: true
+      });
     }
 
     it('should close and clear on Tab when dropdown is open', () => {
@@ -283,6 +287,17 @@ describe('CpsTreeAutocompleteComponent', () => {
       component.onContainerKeyDown(keyEvent('Escape'));
       expect(component.isOpened).toBe(false);
       expect(component.inputText).toBe('');
+    });
+
+    it('should mark Escape as handled only when it closes the dropdown', () => {
+      component.toggleOptions(true);
+      const closing = keyEvent('Escape');
+      component.onContainerKeyDown(closing);
+      expect(closing.defaultPrevented).toBe(true);
+
+      const closed = keyEvent('Escape');
+      component.onContainerKeyDown(closed);
+      expect(closed.defaultPrevented).toBe(false);
     });
 
     it('should open dropdown, set isKeyboardFocused, and call preventDefault on arrow keys', () => {

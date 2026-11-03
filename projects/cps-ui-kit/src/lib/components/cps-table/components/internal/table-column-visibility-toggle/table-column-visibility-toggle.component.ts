@@ -87,6 +87,9 @@ export class TableColumnVisibilityToggleComponent {
         break;
       }
       case 'Escape':
+        // Closing the menu here first stops it from marking
+        // Esc handled itself, keep notifications below open
+        event.preventDefault();
         this._menu().hide();
         break;
     }

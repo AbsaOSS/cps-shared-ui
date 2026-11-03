@@ -271,6 +271,48 @@ test.describe('cps-notification', () => {
     });
   });
 
+  test.describe('Real Esc closes notifications (WCAG 2.4.11)', () => {
+    test('Esc closes the notifications in every container and leaves focus where it was', async ({
+      page
+    }) => {
+      await trigger(page, 'info-notification-trigger').click();
+      const persistent = trigger(
+        page,
+        'persistent-notification-trigger'
+      ).locator('button');
+      await persistent.focus();
+      await page.keyboard.press('Enter');
+      await expect(masks(page)).toHaveCount(2);
+
+      await page.keyboard.press('Escape');
+
+      await expect(toasts(page)).toHaveCount(0);
+      await expect(masks(page)).toHaveCount(0);
+      await expect(persistent).toBeFocused();
+    });
+
+    test("Esc on a notification's close button sends focus back to where it was", async ({
+      page
+    }) => {
+      const persistent = trigger(
+        page,
+        'persistent-notification-trigger'
+      ).locator('button');
+      await persistent.focus();
+      await page.keyboard.press('Enter');
+      await expect(toasts(page)).toHaveCount(1);
+      await closeButton(toasts(page).first()).focus();
+
+      await page.keyboard.press('Escape');
+
+      await expect(toasts(page)).toHaveCount(0);
+      await expect(persistent).toBeFocused();
+      expect(
+        await persistent.evaluate((el) => el.matches(':focus-visible'))
+      ).toBe(true);
+    });
+  });
+
   test.describe('Real duplicate suppression', () => {
     test('clicking the same message repeatedly real-suppresses duplicates by default', async ({
       page

@@ -427,6 +427,8 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
               if (!this.overlayVisible) return;
               switch (event.key) {
                 case 'Escape':
+                  // Handled: notifications and dialogs below the menu stay open
+                  event.preventDefault();
                   this.zone.run(() => {
                     this.hide(CpsMenuHideReason.KEYDOWN_ESCAPE);
                   });
@@ -635,6 +637,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     if (this.autoZIndex) {
+      ZIndexUtils.clear(this.container);
       ZIndexUtils.set(
         'overlay',
         this.container,
