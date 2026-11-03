@@ -1448,9 +1448,14 @@ describe('CpsDialogComponent', () => {
       jest.spyOn(ZIndexUtils, 'getCurrent').mockReturnValue(1000);
       const fire = captureEscapeHandler();
 
-      fire(new KeyboardEvent('keydown', { key: 'Escape' }));
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        cancelable: true
+      });
+      fire(event);
 
       expect(mockDialogRef.close).toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(true);
     });
 
     it('should not hide the dialog on Escape when zIndex does not match', () => {
@@ -1461,9 +1466,14 @@ describe('CpsDialogComponent', () => {
       jest.spyOn(ZIndexUtils, 'getCurrent').mockReturnValue(2000);
       const fire = captureEscapeHandler();
 
-      fire(new KeyboardEvent('keydown', { key: 'Escape' }));
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        cancelable: true
+      });
+      fire(event);
 
       expect(mockDialogRef.close).not.toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
     });
 
     it('should ignore non-Escape keys', () => {

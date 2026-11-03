@@ -1,5 +1,8 @@
 import { ApplicationRef, EventEmitter } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { PrimeNG } from '../../primeng-temp/config/public_api';
+import { ZIndexUtils } from '../../primeng-temp/utils/public_api';
 import { CpsNotificationService } from './cps-notification.service';
 import {
   CpsNotificationAppearance,
@@ -332,5 +335,160 @@ describe('CpsNotificationService', () => {
     it('should not throw when no containers exist', () => {
       expect(() => service.clear()).not.toThrow();
     });
+  });
+});
+
+describe('CpsNotificationService Esc', () => {
+  let service: CpsNotificationService;
+  let appRef: ApplicationRef;
+  let trigger: HTMLButtonElement;
+  const overlays: HTMLElement[] = [];
+
+  const toasts = () => document.querySelectorAll('cps-toast').length;
+  const show = (
+    position = CpsNotificationPosition.TOPRIGHT,
+    message = 'Saved'
+  ) => {
+    service.info(message, undefined, { position, timeout: 0 });
+    appRef.tick();
+  };
+  /** Another kit overlay (a dialog, for example) opened above everything so far. */
+  const openOverlay = () => {
+    const el = document.createElement('div');
+    ZIndexUtils.set('modal', el, 1100);
+    overlays.push(el);
+    return el;
+  };
+  const pressEscape = async (
+    target: EventTarget = document.activeElement ?? document.body
+  ) => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      bubbles: true,
+      cancelable: true
+    });
+    target.dispatchEvent(event);
+    // The animations renderer removes destroyed views from the DOM asynchronously
+    appRef.tick();
+    await new Promise((resolve) => setTimeout(resolve));
+    return event;
+  };
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [PrimeNG, provideNoopAnimations()]
+    });
+    service = TestBed.inject(CpsNotificationService);
+    appRef = TestBed.inject(ApplicationRef);
+    trigger = document.createElement('button');
+    document.body.appendChild(trigger);
+    trigger.focus();
+  });
+
+  afterEach(() => {
+    service.clear();
+    overlays.splice(0).forEach((el) => ZIndexUtils.clear(el));
+    trigger.remove();
+  });
+
+  it('closes notifications in every position without moving focus', async () => {
+    show(CpsNotificationPosition.TOPRIGHT);
+    show(CpsNotificationPosition.BOTTOM);
+    expect(toasts()).toBe(2);
+
+    const event = await pressEscape();
+
+    expect(toasts()).toBe(0);
+    expect(event.defaultPrevented).toBe(true);
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it("sends focus back to where it was when Esc is pressed on a notification's button", async () => {
+    show();
+    const closeButton = document.querySelector<HTMLElement>(
+      '[data-testid="cps-toast-close-button"] button'
+    );
+    closeButton?.focus();
+    expect(document.activeElement).toBe(closeButton);
+
+    await pressEscape();
+
+    expect(toasts()).toBe(0);
+    expect(document.activeElement).toBe(trigger);
+  });
+
+  it('leaves notifications open when something else already handled Esc (an open menu)', async () => {
+    show();
+    const handle = (event: KeyboardEvent) => event.preventDefault();
+    document.addEventListener('keydown', handle);
+
+    await pressEscape();
+
+    document.removeEventListener('keydown', handle);
+    expect(toasts()).toBe(1);
+  });
+
+  it('leaves notifications open while another overlay is above them, and closes them after it', async () => {
+    show();
+    const overlay = openOverlay();
+
+    const event = await pressEscape();
+    expect(toasts()).toBe(1);
+    expect(event.defaultPrevented).toBe(false);
+
+    ZIndexUtils.clear(overlay);
+    await pressEscape();
+    expect(toasts()).toBe(0);
+  });
+
+  it('moves the notifications above an overlay opened since, when a new one is shown', async () => {
+    show(CpsNotificationPosition.TOPRIGHT, 'First');
+    openOverlay();
+
+    show(CpsNotificationPosition.TOPRIGHT, 'Second');
+    await pressEscape();
+
+    expect(toasts()).toBe(0);
+  });
+
+  it('ignores other keys', async () => {
+    show();
+    const event = new KeyboardEvent('keydown', {
+      key: 'Enter',
+      bubbles: true,
+      cancelable: true
+    });
+    trigger.dispatchEvent(event);
+
+    expect(toasts()).toBe(1);
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it('stops listening once no notification is shown', async () => {
+    show();
+    service.clear();
+
+    expect((await pressEscape()).defaultPrevented).toBe(false);
+  });
+
+  it('keeps a notification shown by the Esc that is being handled', async () => {
+    const report = () => show(CpsNotificationPosition.TOPRIGHT, 'Panel closed');
+    document.addEventListener('keydown', report);
+
+    await pressEscape();
+
+    document.removeEventListener('keydown', report);
+    expect(toasts()).toBe(1);
+    await pressEscape();
+    expect(toasts()).toBe(0);
+  });
+
+  it('stops listening when the app is destroyed', () => {
+    show();
+    const removed = jest.spyOn(window, 'removeEventListener');
+    TestBed.resetTestingModule();
+
+    expect(removed).toHaveBeenCalledWith('keydown', expect.any(Function));
+    removed.mockRestore();
   });
 });
