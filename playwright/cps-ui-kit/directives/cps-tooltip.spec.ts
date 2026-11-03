@@ -8,6 +8,18 @@ function tooltip(page: Page): Locator {
   return page.getByTestId('cps-tooltip');
 }
 
+// Counts the Esc presses that reach window listeners, where notifications listen
+async function countWindowEscapes(page: Page): Promise<() => Promise<number>> {
+  await page.evaluate(() => {
+    const w = window as any;
+    w.__escapes = 0;
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') w.__escapes++;
+    });
+  });
+  return () => page.evaluate(() => (window as any).__escapes);
+}
+
 function gapBetween(
   targetBox: { x: number; y: number; width: number; height: number },
   tooltipBox: { x: number; y: number; width: number; height: number }
@@ -151,6 +163,204 @@ test.describe('cps-tooltip', () => {
       await target.click();
       const announce = page.locator('.cps-sr-only[aria-live="assertive"]');
       await expect(announce).toHaveText('Triggered on click');
+    });
+  });
+
+  test.describe('Real Esc dismissal (WCAG 1.4.13)', () => {
+    test('Esc closes a hover tooltip and it stays closed while the pointer rests on the target', async ({
+      page
+    }) => {
+      const target = button(page, 'hover-open-tooltip');
+
+      await target.hover();
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.keyboard.press('Escape');
+      await expect(tooltip(page)).toHaveCount(0);
+
+      await page.waitForTimeout(600);
+      await expect(tooltip(page)).toHaveCount(0);
+    });
+
+    test('Esc closes a focus tooltip and focus stays on the target', async ({
+      page
+    }) => {
+      const innerButton = button(page, 'focus-only-tooltip').getByTestId(
+        'cps-button'
+      );
+
+      await innerButton.focus();
+
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+
+      await page.keyboard.press('Escape');
+
+      await expect(tooltip(page)).toHaveCount(0);
+      await expect(innerButton).toBeFocused();
+    });
+
+    test('Esc closes a click tooltip and focus stays on the target', async ({
+      page
+    }) => {
+      const innerButton = button(page, 'click-open-tooltip').getByTestId(
+        'cps-button'
+      );
+
+      await innerButton.focus();
+      await page.keyboard.press('Enter');
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.keyboard.press('Escape');
+
+      await expect(tooltip(page)).toHaveCount(0);
+      await expect(innerButton).toBeFocused();
+    });
+
+    test('Esc inside a persistent tooltip closes it and sends focus back to the target', async ({
+      page
+    }) => {
+      const innerButton = button(page, 'persistent-tooltip').getByTestId(
+        'cps-button'
+      );
+
+      await innerButton.scrollIntoViewIfNeeded();
+      await innerButton.focus();
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+      await tooltip(page).getByRole('link', { name: 'Google' }).focus();
+
+      await page.keyboard.press('Escape');
+
+      await expect(tooltip(page)).toHaveCount(0);
+      await expect(innerButton).toBeFocused();
+    });
+
+    test('the Esc that closes a tooltip is handled: it does not reach window listeners', async ({
+      page
+    }) => {
+      const escapes = await countWindowEscapes(page);
+
+      await button(page, 'hover-open-tooltip').hover();
+      await expect(tooltip(page)).toBeVisible();
+
+      await page.keyboard.press('Escape');
+      await expect(tooltip(page)).toHaveCount(0);
+      expect(await escapes()).toBe(0);
+
+      await page.keyboard.press('Escape');
+      expect(await escapes()).toBe(1);
+    });
+
+    test('Esc during the open delay cancels the tooltip and is left to the page', async ({
+      page
+    }) => {
+      const escapes = await countWindowEscapes(page);
+
+      await button(page, 'open-delay-tooltip').hover();
+      await page.keyboard.press('Escape');
+      expect(await escapes()).toBe(1);
+
+      await page.waitForTimeout(1500);
+      await expect(tooltip(page)).toHaveCount(0);
+    });
+  });
+
+  test.describe('Real hovering over the tooltip (WCAG 1.4.13)', () => {
+    async function moveOnto(page: Page, locator: Locator): Promise<void> {
+      const box = await locator.boundingBox();
+      if (!box) throw new Error('boundingBox() returned null');
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, {
+        steps: 10
+      });
+    }
+
+    test('the pointer can move from the target onto the tooltip and rest there', async ({
+      page
+    }) => {
+      const target = button(page, 'hover-open-tooltip');
+
+      await target.hover();
+      await expect(tooltip(page)).toBeVisible();
+
+      await moveOnto(page, tooltip(page));
+
+      await page.waitForTimeout(600);
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+
+      await page.mouse.move(0, 0);
+      await expect(tooltip(page)).toHaveCount(0);
+    });
+
+    test('the tooltip closes after the close delay once the pointer leaves it', async ({
+      page
+    }) => {
+      const target = button(page, 'close-delay-tooltip');
+
+      await target.hover();
+      await expect(tooltip(page)).toBeVisible();
+      await moveOnto(page, tooltip(page));
+
+      await page.mouse.move(0, 0);
+
+      await page.waitForTimeout(500);
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+      await expect(tooltip(page)).toHaveCount(0, { timeout: 1500 });
+    });
+
+    test('a keyboard-focused tooltip stays open when the pointer passes over it', async ({
+      page
+    }) => {
+      const innerButton = button(page, 'hover-open-tooltip').getByTestId(
+        'cps-button'
+      );
+
+      await innerButton.focus();
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+      const box = await tooltip(page).boundingBox();
+      if (!box) throw new Error('boundingBox() returned null');
+
+      const below = { x: box.x + box.width / 2, y: box.y + box.height + 40 };
+      await page.mouse.move(below.x, below.y);
+      await page.mouse.move(below.x, box.y + box.height / 2, { steps: 5 });
+      await page.mouse.move(below.x, below.y, { steps: 5 });
+
+      await page.waitForTimeout(600);
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+      await expect(innerButton).toBeFocused();
+    });
+
+    test('a keyboard-focused tooltip stays open when the pointer crosses its target', async ({
+      page
+    }) => {
+      const target = button(page, 'hover-open-tooltip');
+      const innerButton = target.getByTestId('cps-button');
+
+      await innerButton.focus();
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+      const box = await target.boundingBox();
+      if (!box) throw new Error('boundingBox() returned null');
+      const y = box.y + box.height / 2;
+      await page.mouse.move(box.x - 20, y);
+      await page.mouse.move(box.x + box.width / 2, y, { steps: 5 });
+      await page.mouse.move(box.x - 20, y, { steps: 5 });
+
+      await page.waitForTimeout(600);
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+      await expect(innerButton).toBeFocused();
+    });
+
+    test('with no close delay, the tooltip stays open when the pointer moves straight onto it', async ({
+      page
+    }) => {
+      await button(page, 'no-close-delay-tooltip').hover();
+      await expect(tooltip(page)).toBeVisible();
+
+      await moveOnto(page, tooltip(page));
+      // A closing tooltip fades to opacity 0 first, which toBeVisible() would accept
+      await page.waitForTimeout(300);
+      await expect(tooltip(page)).toHaveCSS('opacity', '1');
+
+      await page.mouse.move(0, 0);
+      await expect(tooltip(page)).toHaveCount(0, { timeout: 1000 });
     });
   });
 

@@ -16,6 +16,10 @@
   opacity: 0;
   z-index: 2000;
 
+  .cps-tooltip-bridge {
+    position: absolute;
+  }
+
   *:focus-visible {
     @include focus-ring(0.125rem, 0.25rem, inherit);
   }
