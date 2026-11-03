@@ -482,5 +482,24 @@
         </cps-table>
       </app-code-example>
     </cps-tab>
+    <cps-tab label="Table 16">
+      <app-code-example
+        [htmlCode]="examples.table16.html"
+        [tsCode]="examples.table16.ts">
+        <cps-table
+          data-testid="table-16-has-more"
+          [data]="hasMoreData"
+          [columns]="cols"
+          [lazy]="true"
+          [lazyLoadOnInit]="true"
+          [loading]="hasMoreLoading"
+          [paginator]="true"
+          [rows]="hasMoreRows"
+          [hasMore]="hasMoreFlag"
+          (lazyLoaded)="onHasMoreLazyLoad($event)"
+          toolbarTitle="Lazy table with unknown total number of records, paginated using a 'hasMore' flag from the API">
+        </cps-table>
+      </app-code-example>
+    </cps-tab>
   </cps-tab-group>
 </app-component-docs-viewer>

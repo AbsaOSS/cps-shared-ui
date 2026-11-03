@@ -764,5 +764,65 @@ onCustomSort(event: { data: any[]; field?: string; order?: number }) {
 </cps-table>`,
     ts: `
 ${virtualColsAndDataTs.trim()}`
+  },
+
+  table16: {
+    html: `
+<cps-table
+  [data]="hasMoreData"
+  [columns]="cols"
+  [lazy]="true"
+  [lazyLoadOnInit]="true"
+  [loading]="hasMoreLoading"
+  [paginator]="true"
+  [rows]="hasMoreRows"
+  [hasMore]="hasMoreFlag"
+  (lazyLoaded)="onHasMoreLazyLoad($event)"
+  toolbarTitle="Lazy table with unknown total number of records, paginated using a 'hasMore' flag from the API">
+</cps-table>`,
+    ts: `
+cols = [
+  { field: 'a', header: 'A' },
+  { field: 'b', header: 'B' },
+  { field: 'c', header: 'C' },
+  { field: 'd', header: 'D' },
+  { field: 'e', header: 'E' }
+];
+dataVirtual = Array.from({ length: 47 }, (_, i) => ({
+  a: 'a' + i,
+  b: 'b' + (i % 5),
+  c: Number((i * 0.1).toFixed(1)),
+  d: new Date(Date.now() - Math.random() * 1e12),
+  e: Math.random() > 0.5
+}));
+hasMoreData: any[] = [];
+hasMoreFlag = false;
+hasMoreLoading = false;
+hasMoreRows = 10;
+private _hasMoreTimeout?: ReturnType<typeof setTimeout>;
+private _lastHasMoreFirst = -1;
+private _lastHasMoreRows = -1;
+
+onHasMoreLazyLoad(event: { first?: number; rows?: number }) {
+  const first = event.first ?? 0;
+  const rows = event.rows ?? this.hasMoreRows;
+
+  if (first === this._lastHasMoreFirst && rows === this._lastHasMoreRows)
+    return;
+  this._lastHasMoreFirst = first;
+  this._lastHasMoreRows = rows;
+
+  Promise.resolve().then(() => {
+    this.hasMoreLoading = true;
+    clearTimeout(this._hasMoreTimeout);
+    this._hasMoreTimeout = setTimeout(() => {
+      // Simulated API: returns a page and a "hasMore" flag, but no total count
+      const source = this.dataVirtual.slice(0, 47);
+      this.hasMoreData = source.slice(first, first + rows);
+      this.hasMoreFlag = first + rows < source.length;
+      this.hasMoreLoading = false;
+    }, 600);
+  });
+}`
   }
 };
