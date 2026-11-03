@@ -352,6 +352,19 @@ describe('TableColumnVisibilityToggleComponent', () => {
       );
       expect(hideSpy).toHaveBeenCalled();
     });
+
+    it('should mark Escape as handled, so notifications below stay open', () => {
+      jest
+        .spyOn((component as any)._menu(), 'hide')
+        .mockImplementation(() => {});
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true
+      });
+      component.onKeydown(event);
+      expect(event.defaultPrevented).toBe(true);
+    });
   });
 
   describe('onKeydown - Enter / Space', () => {
