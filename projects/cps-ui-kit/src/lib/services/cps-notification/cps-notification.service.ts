@@ -5,6 +5,7 @@ import {
   Inject,
   ApplicationRef,
   createComponent,
+  DestroyRef,
   inject,
   NgZone
 } from '@angular/core';
@@ -41,12 +42,14 @@ export class CpsNotificationService {
   // Where focus was before it went into a notification, to go back to when Esc closes the notifications
   private _focusBeforeNotifications: HTMLElement | null = null;
   private _removeListeners: (() => void) | null = null;
+  private _escapeThatShowed: Event | null = null;
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     private _appRef: ApplicationRef,
     @Inject(DOCUMENT) private document: Document
-  ) {}
+  ) {
+    inject(DestroyRef).onDestroy(() => this._stopListening());
+  }
 
   /**
    * Shows a notification with type 'info'.
@@ -150,6 +153,15 @@ export class CpsNotificationService {
     config = this._initConfig(config);
     const data: CpsNotificationData = { type, message, details };
 
+    // Shown while an Esc is still being handled (a panel it
+    // closed reports back): that Esc must not close it
+    const current = this.document.defaultView?.event;
+    if (
+      current?.type === 'keydown' &&
+      (current as KeyboardEvent).key === 'Escape'
+    )
+      this._escapeThatShowed = current;
+
     this._appendNotificationToContainer(data, config);
   }
 
@@ -244,10 +256,16 @@ export class CpsNotificationService {
     this._removeListeners?.();
     this._removeListeners = null;
     this._focusBeforeNotifications = null;
+    this._escapeThatShowed = null;
   }
 
   private _onKeydown(event: KeyboardEvent) {
-    if (event.key !== 'Escape' || event.defaultPrevented) return;
+    if (
+      event.key !== 'Escape' ||
+      event.defaultPrevented ||
+      event === this._escapeThatShowed
+    )
+      return;
     const onTop = Array.from(this._containersMap.values()).some((container) =>
       container.instance.isOnTop()
     );

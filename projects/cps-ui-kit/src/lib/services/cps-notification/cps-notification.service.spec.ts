@@ -470,4 +470,25 @@ describe('CpsNotificationService Esc', () => {
 
     expect((await pressEscape()).defaultPrevented).toBe(false);
   });
+
+  it('keeps a notification shown by the Esc that is being handled', async () => {
+    const report = () => show(CpsNotificationPosition.TOPRIGHT, 'Panel closed');
+    document.addEventListener('keydown', report);
+
+    await pressEscape();
+
+    document.removeEventListener('keydown', report);
+    expect(toasts()).toBe(1);
+    await pressEscape();
+    expect(toasts()).toBe(0);
+  });
+
+  it('stops listening when the app is destroyed', () => {
+    show();
+    const removed = jest.spyOn(window, 'removeEventListener');
+    TestBed.resetTestingModule();
+
+    expect(removed).toHaveBeenCalledWith('keydown', expect.any(Function));
+    removed.mockRestore();
+  });
 });
