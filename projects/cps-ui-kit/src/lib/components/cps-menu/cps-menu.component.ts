@@ -637,6 +637,7 @@ export class CpsMenuComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     if (this.autoZIndex) {
+      ZIndexUtils.clear(this.container);
       ZIndexUtils.set(
         'overlay',
         this.container,
