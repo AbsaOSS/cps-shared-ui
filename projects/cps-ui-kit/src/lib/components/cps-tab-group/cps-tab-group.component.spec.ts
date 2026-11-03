@@ -58,6 +58,7 @@ class TestHostComponent {
           <cps-tab-group
             class="inner-tab-group"
             [isSubTabs]="true"
+            [animationType]="innerAnimationType"
             [selectedIndex]="innerIndex"
             (afterTabChanged)="innerIndex = $event.newIndex">
             <cps-tab label="Inner 1">Inner content 1</cps-tab>
@@ -70,7 +71,10 @@ class TestHostComponent {
   `
 })
 class NestedTestHostComponent {
+  // The @if is required to reproduce #929: it makes the inner group update before
+  // the outer group re-attaches its content. Without it, most of the tests below pass even without the fix.
   showInner = true;
+  innerAnimationType: 'slide' | 'fade' = 'slide';
   innerIndex = 0;
   resetInnerOnEntry = false;
   onOuterAfter(newIndex: number) {
@@ -809,41 +813,57 @@ describe('CpsTabGroupComponent nested in another tab group', () => {
     innerGroupEl = fixture.nativeElement.querySelector('.inner-tab-group');
   });
 
-  it('should keep a single content wrapper when the inner selection is reset on outer tab re-entry', async () => {
-    host.resetInnerOnEntry = true;
-    await clickAndRender(getInnerTabEls()[1]);
-    await clickAndRender(getOuterTabEls()[1]);
-    await clickAndRender(getOuterTabEls()[0]);
-
-    expect(host.innerIndex).toBe(0);
-    let contentInners = getInnerContentInners();
-    expect(contentInners.length).toBe(1);
-    expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
-
-    await clickAndRender(getInnerTabEls()[1]);
-
-    contentInners = getInnerContentInners();
-    expect(contentInners.length).toBe(1);
-    expect(contentInners[0].textContent?.trim()).toBe('Inner content 2');
-  });
-
-  it('should keep a single content wrapper when the inner selection changes while the outer tab is inactive', async () => {
-    await clickAndRender(getInnerTabEls()[1]);
-    await clickAndRender(getOuterTabEls()[1]);
-
-    host.innerIndex = 0;
+  async function setInnerAnimationType(
+    animationType: 'slide' | 'fade'
+  ): Promise<void> {
+    host.innerAnimationType = animationType;
     fixture.detectChanges();
     await fixture.whenStable();
-    await clickAndRender(getOuterTabEls()[0]);
+  }
 
-    let contentInners = getInnerContentInners();
-    expect(contentInners.length).toBe(1);
-    expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
+  it.each(['slide', 'fade'] as const)(
+    'should keep a single content wrapper when the inner selection is reset on outer tab re-entry (%s)',
+    async (animationType) => {
+      await setInnerAnimationType(animationType);
+      host.resetInnerOnEntry = true;
+      await clickAndRender(getInnerTabEls()[1]);
+      await clickAndRender(getOuterTabEls()[1]);
+      await clickAndRender(getOuterTabEls()[0]);
 
-    await clickAndRender(getInnerTabEls()[1]);
+      expect(host.innerIndex).toBe(0);
+      let contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
 
-    contentInners = getInnerContentInners();
-    expect(contentInners.length).toBe(1);
-    expect(contentInners[0].textContent?.trim()).toBe('Inner content 2');
-  });
+      await clickAndRender(getInnerTabEls()[1]);
+
+      contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 2');
+    }
+  );
+
+  it.each(['slide', 'fade'] as const)(
+    'should keep a single content wrapper when the inner selection changes while the outer tab is inactive (%s)',
+    async (animationType) => {
+      await setInnerAnimationType(animationType);
+      await clickAndRender(getInnerTabEls()[1]);
+      await clickAndRender(getOuterTabEls()[1]);
+
+      host.innerIndex = 0;
+      fixture.detectChanges();
+      await fixture.whenStable();
+      await clickAndRender(getOuterTabEls()[0]);
+
+      let contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
+
+      await clickAndRender(getInnerTabEls()[1]);
+
+      contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 2');
+    }
+  );
 });

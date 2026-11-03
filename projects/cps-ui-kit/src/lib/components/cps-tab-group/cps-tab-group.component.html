@@ -118,6 +118,8 @@
       [hidden]="!tab.active"
       (mousedown)="onMouseDown($event)">
       @if (tab.active) {
+        <!-- The frame must stay: if the animated element were the removed node, Angular
+             animations could leave it behind in nested tab groups (#929) -->
         @if (animationType === 'slide') {
           <div class="cps-tab-content-frame">
             <div

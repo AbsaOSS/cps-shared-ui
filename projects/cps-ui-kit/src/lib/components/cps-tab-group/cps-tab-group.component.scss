@@ -204,8 +204,7 @@
         @include focus-ring(-0.0625rem, 0, 0);
       }
 
-      // Box-less wrapper, so the animated element is never the node removed on
-      // tab change: Angular animations can leave such a node behind in nested tab groups
+      // Box-less, so the frame doesn't affect layout (see the template)
       .cps-tab-content-frame {
         display: contents;
       }
