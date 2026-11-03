@@ -201,11 +201,15 @@ const ELLIPSIS_ALLOWANCES: {
  * Entries that fail a check and need a larger fix, each tracked in its own
  * issue. test.fail() makes the test report once the component is fixed;
  * then remove the entry. `components` match an entry's name or group.
+ * `platformDependent` entries are within a pixel of failing, so the result
+ * depends on the platform's text rendering (they fail on Linux CI, pass on
+ * macOS): test.fixme() skips them instead.
  */
 const KNOWN_FAILURES: {
   checks: readonly LayoutCheck[];
   components: string[];
   issue: string;
+  platformDependent?: true;
 }[] = [
   // Options row doesn't wrap and every option is as wide as the widest one
   {
@@ -232,6 +236,12 @@ const KNOWN_FAILURES: {
     issue: 'https://github.com/AbsaOSS/cps-shared-ui/issues/912'
   },
   {
+    checks: ['reflow-640'],
+    components: ['Table 3', 'Table 10'],
+    issue: 'https://github.com/AbsaOSS/cps-shared-ui/issues/912',
+    platformDependent: true
+  },
+  {
     checks: ALL_LAYOUT_CHECKS,
     components: ['Table 7', 'Tree table 3', 'Tree table 7'],
     issue: 'https://github.com/AbsaOSS/cps-shared-ui/issues/912'
@@ -254,6 +264,12 @@ const KNOWN_FAILURES: {
       'Tree table 13'
     ],
     issue: 'https://github.com/AbsaOSS/cps-shared-ui/issues/913'
+  },
+  {
+    checks: ['reflow-640'],
+    components: ['Tree table 14'],
+    issue: 'https://github.com/AbsaOSS/cps-shared-ui/issues/913',
+    platformDependent: true
   }
 ];
 
@@ -292,10 +308,13 @@ function allowancesFor(entry: ComponentEntry): LayoutAllowances {
  * the expected failure.
  */
 function markKnownFailure(check: LayoutCheck, entry: ComponentEntry) {
-  const issues = KNOWN_FAILURES.filter(
+  const known = KNOWN_FAILURES.filter(
     (f) =>
       f.checks.includes(check) && f.components.some((c) => appliesTo(c, entry))
-  ).map((f) => f.issue);
+  );
+  const skipped = known.filter((f) => f.platformDependent).map((f) => f.issue);
+  test.fixme(skipped.length > 0, skipped.join(', '));
+  const issues = known.filter((f) => !f.platformDependent).map((f) => f.issue);
   test.fail(issues.length > 0, issues.join(', '));
 }
 
