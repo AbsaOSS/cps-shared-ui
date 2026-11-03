@@ -56,7 +56,7 @@ export const expansionPanelExamples: Record<
   headerTitle="Bordered panel with 0.25rem border radius and 32rem width"
   backgroundColor="white"
   borderRadius="0.25rem"
-  width="32rem">
+  width="min(32rem, 100%)">
   <div>Some content</div>
 </cps-expansion-panel>`
   },

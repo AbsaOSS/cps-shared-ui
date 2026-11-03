@@ -350,6 +350,11 @@ $disabled-day-color: var(--cps-color-text-light);
     .p-datepicker table th,
     .p-datepicker table td {
       padding: 0.125rem;
+
+      // Lets the calendar fit a 320px viewport (1280px at 400% zoom)
+      @media (max-width: 22.5rem) {
+        padding: 0.0625rem;
+      }
     }
 
     .p-datepicker-other-month {

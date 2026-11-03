@@ -78,7 +78,7 @@ ngOnInit() {
     html: `
 <div class="sync-val-example">
   <cps-textarea
-    width="25rem"
+    width="min(25rem, 100%)"
     label="Textarea with two-way binding, type something in"
     [(ngModel)]="syncVal"
     resizable="none"

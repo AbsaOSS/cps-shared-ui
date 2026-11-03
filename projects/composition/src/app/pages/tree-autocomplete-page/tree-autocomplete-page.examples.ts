@@ -239,7 +239,7 @@ selectedItems = [
 <div class="sync-val-example">
   <cps-tree-autocomplete
     [initialExpandDirectories]="true"
-    width="31.25rem"
+    width="min(31.25rem, 100%)"
     label="Single tree autocomplete with two-way binding, enter something"
     hint="This tree autocomplete has a fixed width of 31.25rem"
     [options]="options"

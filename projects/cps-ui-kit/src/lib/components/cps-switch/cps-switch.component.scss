@@ -10,6 +10,12 @@
   min-width: max-content;
   display: inline-block;
 
+  // Lets the label wrap on narrow screens (1280px at 200% zoom and beyond),
+  // wider ones keep the single-line label
+  @media (max-width: 40rem) {
+    min-width: auto;
+  }
+
   .cps-switch-container {
     line-height: normal;
     display: flex;
@@ -20,6 +26,11 @@
       display: inline-block;
       width: 3rem;
       height: 1.5rem;
+
+      // Keeps the track size when the label wraps (see :host)
+      @media (max-width: 40rem) {
+        flex-shrink: 0;
+      }
     }
 
     .cps-switch input {

@@ -112,7 +112,7 @@ private _checkDigits(control: AbstractControl) {
     html: `
 <div class="sync-val-example">
   <cps-input
-    width="25rem"
+    width="min(25rem, 100%)"
     label="Input with two-way binding, type something in"
     [(ngModel)]="syncVal"
     hint="This input has a fixed width of 25rem"

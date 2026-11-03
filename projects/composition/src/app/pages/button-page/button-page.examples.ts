@@ -167,7 +167,7 @@ onNativeReset() {
 <cps-button color="graphite" icon="eye" size="large" ariaLabel="View"></cps-button>
 
 <!-- Custom size -->
-<cps-button label="Custom size" borderRadius="2rem" width="300" height="60" color="white" type="outlined" icon="avatar-top-menu"></cps-button>
+<cps-button label="Custom size" borderRadius="2rem" width="min(18.75rem, 100%)" height="3.75rem" color="white" type="outlined" icon="avatar-top-menu"></cps-button>
 
 <!-- Custom content color -->
 <cps-button label="Custom content color" color="depth-highlighten" contentColor="depth"></cps-button>

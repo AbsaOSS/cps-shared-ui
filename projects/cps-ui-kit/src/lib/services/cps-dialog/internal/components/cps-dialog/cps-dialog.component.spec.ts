@@ -869,9 +869,46 @@ describe('CpsDialogComponent', () => {
       expect(component.cvtHeight).toBe('300px');
     });
 
-    it('should return converted minWidth', () => {
+    it('should return converted minWidth capped at the viewport width', () => {
       setup({ headerTitle: 'Test', minWidth: '200px' });
-      expect(component.cvtMinWidth).toBe('200px');
+      expect(component.cvtMinWidth).toBe('min(200px, 100%)');
+    });
+
+    it('should cap numeric minWidth at the viewport width', () => {
+      setup({ headerTitle: 'Test', minWidth: 300 });
+      expect(component.cvtMinWidth).toBe('min(300px, 100%)');
+    });
+
+    it('should cap calc() minWidth at the viewport width', () => {
+      setup({ headerTitle: 'Test', minWidth: 'calc(20rem + 2px)' });
+      expect(component.cvtMinWidth).toBe('min(calc(20rem + 2px), 100%)');
+    });
+
+    it('should leave room for the margins of a positioned dialog', () => {
+      setup({ headerTitle: 'Test', minWidth: '25rem', position: 'top-left' });
+      expect(component.cvtMinWidth).toBe('min(25rem, calc(100% - 1.5rem))');
+    });
+
+    it('should cap minWidth at the full width for a centered dialog', () => {
+      setup({ headerTitle: 'Test', minWidth: '25rem', position: 'center' });
+      expect(component.cvtMinWidth).toBe('min(25rem, 100%)');
+    });
+
+    it.each([
+      'auto',
+      'max-content',
+      'min-content',
+      'fit-content',
+      'inherit',
+      'var(--dialog-min-width)'
+    ])('should return minWidth %s without capping it', (minWidth) => {
+      setup({ headerTitle: 'Test', minWidth });
+      expect(component.cvtMinWidth).toBe(minWidth);
+    });
+
+    it('should return empty string for minWidth when not set', () => {
+      setup({ headerTitle: 'Test' });
+      expect(component.cvtMinWidth).toBe('');
     });
 
     it('should return converted minHeight', () => {
