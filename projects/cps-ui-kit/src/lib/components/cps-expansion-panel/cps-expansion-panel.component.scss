@@ -62,6 +62,15 @@ $header-active-background: var(--cps-color-highlight-active);
       flex: 1 0 auto;
       display: inline-flex;
       font-weight: 600;
+
+      // Lets a long title wrap on narrow screens (1280px at 200% zoom and
+      // beyond) instead of pushing the chevron out of the header; wider ones
+      // keep the current layout
+      @media (max-width: 40rem) {
+        flex-shrink: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
     }
 
     &-chevron {

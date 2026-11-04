@@ -172,7 +172,7 @@ onMultiInputChanged(val: string): void {
   twoWayBinding: {
     html: `
 <cps-autocomplete
-  width="31.25rem"
+  width="min(31.25rem, 100%)"
   label="Multiple autocomplete with two-way binding and keeping initial items order"
   [returnObject]="false"
   [options]="syncOptions"

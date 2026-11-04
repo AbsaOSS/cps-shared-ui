@@ -156,7 +156,7 @@ statusOptions = [
     html: `
 <div class="sync-val-example">
   <cps-select
-    width="31.25rem"
+    width="min(31.25rem, 100%)"
     label="Multiple select with two-way binding and keeping initial items order"
     [returnObject]="false"
     [options]="syncOptions"

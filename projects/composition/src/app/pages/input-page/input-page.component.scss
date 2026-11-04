@@ -1,7 +1,10 @@
 .sync-val-example {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  .sync-val {
-    margin-left: 1.5rem;
+  column-gap: 1.5rem;
+  cps-input {
+    flex: 0 0 25rem;
+    max-width: 100%;
   }
 }

@@ -54,7 +54,7 @@ export const fileUploadExamples: Record<string, { html: string; ts?: string }> =
   #fileUpload
   [extensions]="[selectedFileUploadType.value]"
   [fileDesc]="selectedFileUploadType!.label || ''"
-  width="25rem"
+  width="min(25rem, 100%)"
   fileNameTooltipPosition="bottom"
   (fileUploadFailed)="onFileUploadFailed($event)"
   (fileUploaded)="onFileUploaded($event)"
@@ -101,7 +101,7 @@ onFileExtensionChanged(event: string) {
   [fileInfo]="fileInfo"
   fileDesc="Pictures or PDFs"
   ariaLabel="Upload pictures or PDFs"
-  width="31.25rem"
+  width="min(31.25rem, 100%)"
   fileNameTooltipOffset="0.9375rem"
   [fileProcessingCallback]="processUploadedFile"
   (fileProcessingFailed)="onFileProcessingFailed($event)"
@@ -119,7 +119,7 @@ onFileExtensionChanged(event: string) {
 <cps-file-upload
   [extensions]="['.jpg', '.png', 'pdf']"
   fileDesc="Pictures or PDFs"
-  width="31.25rem"
+  width="min(31.25rem, 100%)"
   [fileProcessingCallback]="processFailingUploadedFile"
   (fileProcessingFailed)="onFileProcessingFailed($event)"
   (fileUploaded)="onFileUploaded($event)">
@@ -144,7 +144,7 @@ onFileUploaded(file: File) {
   [extensions]="['.jpg', '.png', 'pdf']"
   [fileInfo]="fileInfo"
   fileDesc="Pictures or PDFs"
-  width="31.25rem"
+  width="min(31.25rem, 100%)"
   fileNameTooltipOffset="0.9375rem"
   [disabled]="isDisabled"
   [fileProcessingCallback]="processUploadedFile"

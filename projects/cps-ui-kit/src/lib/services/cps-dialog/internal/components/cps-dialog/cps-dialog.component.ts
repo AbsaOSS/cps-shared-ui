@@ -169,7 +169,18 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get cvtMinWidth(): string {
-    return convertSize(this.config.minWidth);
+    const minWidth = convertSize(this.config.minWidth);
+    // Keywords (auto, max-content, ...) are invalid inside min(), and so is a
+    // var() holding one, so pass them as is
+    if (!minWidth || /^([a-z-]+|var\(.+\))$/i.test(minWidth)) return minWidth;
+    // Capped at the mask (viewport) width, less the 0.75rem margins a
+    // positioned dialog gets in the stylesheet, so the dialog reflows on
+    // narrow screens (dragging drops the margins; it stays 1.5rem narrower)
+    const available =
+      this.position && this.position !== 'center'
+        ? 'calc(100% - 1.5rem)'
+        : '100%';
+    return `min(${minWidth}, ${available})`;
   }
 
   get cvtMinHeight(): string {
