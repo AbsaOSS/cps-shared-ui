@@ -71,8 +71,6 @@ class TestHostComponent {
   `
 })
 class NestedTestHostComponent {
-  // The @if is required to reproduce #929: it makes the inner group update before
-  // the outer group re-attaches its content. Without it, most of the tests below pass even without the fix.
   showInner = true;
   innerAnimationType: 'slide' | 'fade' = 'slide';
   innerIndex = 0;
@@ -793,7 +791,6 @@ describe('CpsTabGroupComponent nested in another tab group', () => {
     return Array.from(innerGroupEl.querySelectorAll('.cps-tab-content-inner'));
   }
 
-  // Awaiting lets Angular animations finish and run their post-animation cleanup, as between real clicks
   async function clickAndRender(el: HTMLElement): Promise<void> {
     el.click();
     fixture.detectChanges();
@@ -809,7 +806,6 @@ describe('CpsTabGroupComponent nested in another tab group', () => {
     host = fixture.componentInstance;
     fixture.detectChanges();
     await fixture.whenStable();
-    // Kept as a reference: it is out of the document while the outer tab is inactive
     innerGroupEl = fixture.nativeElement.querySelector('.inner-tab-group');
   });
 
