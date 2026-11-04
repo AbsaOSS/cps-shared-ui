@@ -18,6 +18,7 @@ import {
   type CpsNotificationConfig,
   CpsNotificationPosition
 } from '../../../utils/cps-notification-config';
+import { markOverlayShown } from '../../../../../utils/internal/overlay-utils/overlay-utils';
 import type { CpsNotificationData } from '../../../utils/internal/cps-notification-data';
 import { CpsToastComponent } from '../cps-toast/cps-toast.component';
 import { animateChild, query, transition, trigger } from '@angular/animations';
@@ -96,6 +97,9 @@ export class CpsNotificationContainerComponent
       ZIndexUtils.clear(this.container.nativeElement);
       this.moveOnTop();
     }
+    // On top the z-index stays the same: tell a tooltip opened since that this notification is newer
+    if (this.container?.nativeElement)
+      markOverlayShown(this.container.nativeElement);
   }
 
   /**

@@ -13,6 +13,7 @@ import {
   convertSize,
   parseSize
 } from '../../utils/internal/size-utils/size-utils';
+import { overlayShownCount } from '../../utils/internal/overlay-utils/overlay-utils';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
@@ -127,7 +128,7 @@ export class CpsTooltipDirective implements OnDestroy {
   private _popup?: HTMLDivElement;
   private _shown = false;
   private _topZIndexAtShow = 0;
-  private _overlaysAtShow = new WeakSet<HTMLElement>();
+  private _overlaysAtShow = new WeakMap<HTMLElement, number>();
   private _hoverBridge?: HTMLDivElement;
   private _pointerHold?: 'target' | 'leaving' | 'popup';
   private _showTimeout?: ReturnType<typeof setTimeout>;
@@ -160,6 +161,7 @@ export class CpsTooltipDirective implements OnDestroy {
   onMouseEnter(): void {
     if (this.tooltipOpenOn() === 'hover') {
       clearTimeout(this._hideTimeout);
+      clearTimeout(this._showTimeout);
       this._pointerHold = 'target';
       this._showTimeout = setTimeout(() => {
         this._createTooltip();
@@ -381,8 +383,10 @@ export class CpsTooltipDirective implements OnDestroy {
 
     if (!this._shown) {
       this._topZIndexAtShow = ZIndexUtils.getCurrent();
-      this._overlaysAtShow = new WeakSet(
-        this._topZIndexAtShow ? this._elementsWithZIndex() : []
+      this._overlaysAtShow = new WeakMap(
+        (this._topZIndexAtShow ? this._elementsWithZIndex() : []).map(
+          (el): [HTMLElement, number] => [el, overlayShownCount(el)]
+        )
       );
     }
     this._shown = true;
@@ -400,8 +404,11 @@ export class CpsTooltipDirective implements OnDestroy {
     const top = ZIndexUtils.getCurrent();
     if (top > this._topZIndexAtShow) return true;
     if (!top) return false;
+    // Opened since, or showed something new at the same z-index (a notification added to an open container)
     return this._elementsWithZIndex().some(
-      (el) => ZIndexUtils.get(el) === top && !this._overlaysAtShow.has(el)
+      (el) =>
+        ZIndexUtils.get(el) === top &&
+        this._overlaysAtShow.get(el) !== overlayShownCount(el)
     );
   }
 

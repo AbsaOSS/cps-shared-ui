@@ -12,6 +12,7 @@ import {
   CpsNotificationData,
   CpsNotificationType
 } from '../../../utils/internal/cps-notification-data';
+import { overlayShownCount } from '../../../../../utils/internal/overlay-utils/overlay-utils';
 
 function makeConfig(
   overrides: Partial<CpsNotificationConfig> = {}
@@ -196,6 +197,29 @@ describe('CpsNotificationContainerComponent', () => {
         component.addNotification(config, makeData({ message: `msg${i}` }));
       }
       expect(component.notifications).toHaveLength(5);
+    });
+
+    it('should mark the container shown for each notification added while it stays on top', () => {
+      const el = component.container?.nativeElement as HTMLElement;
+      jest.spyOn(component, 'isOnTop').mockReturnValue(true);
+      const zIndex = el.style.zIndex;
+      const count = overlayShownCount(el);
+
+      component.addNotification(makeConfig(), makeData({ message: 'a' }));
+      component.addNotification(makeConfig(), makeData({ message: 'b' }));
+
+      expect(overlayShownCount(el)).toBe(count + 2);
+      expect(el.style.zIndex).toBe(zIndex);
+    });
+
+    it('should not mark the container shown for a skipped duplicate', () => {
+      const el = component.container?.nativeElement as HTMLElement;
+      component.addNotification(makeConfig(), makeData());
+      const count = overlayShownCount(el);
+
+      component.addNotification(makeConfig(), makeData());
+
+      expect(overlayShownCount(el)).toBe(count);
     });
   });
 

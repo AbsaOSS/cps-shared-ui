@@ -79,7 +79,8 @@ export class CpsTreeSelectComponent extends CpsBaseTreeDropdownComponent {
       return;
     }
 
-    event.preventDefault();
+    // Only closing the options handles Esc; otherwise it can still close notifications
+    if (code !== 'Escape' || this.isOpened) event.preventDefault();
 
     if (code === 'Escape') {
       this.toggleOptions(false);
