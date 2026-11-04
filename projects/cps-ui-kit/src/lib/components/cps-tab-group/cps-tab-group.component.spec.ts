@@ -47,7 +47,6 @@ class TestHostComponent {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: true,
   imports: [CpsTabGroupComponent, CpsTabComponent],
   template: `
     <cps-tab-group
@@ -826,6 +825,9 @@ describe('CpsTabGroupComponent nested in another tab group', () => {
       await clickAndRender(getOuterTabEls()[1]);
       await clickAndRender(getOuterTabEls()[0]);
 
+      expect(fixture.nativeElement.querySelector('.inner-tab-group')).toBe(
+        innerGroupEl
+      );
       expect(host.innerIndex).toBe(0);
       let contentInners = getInnerContentInners();
       expect(contentInners.length).toBe(1);
@@ -851,6 +853,9 @@ describe('CpsTabGroupComponent nested in another tab group', () => {
       await fixture.whenStable();
       await clickAndRender(getOuterTabEls()[0]);
 
+      expect(fixture.nativeElement.querySelector('.inner-tab-group')).toBe(
+        innerGroupEl
+      );
       let contentInners = getInnerContentInners();
       expect(contentInners.length).toBe(1);
       expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
