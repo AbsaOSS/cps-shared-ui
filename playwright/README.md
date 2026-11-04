@@ -106,13 +106,14 @@ These are written to `test-results/` and the HTML report goes to `playwright-rep
 
 The GitHub Actions workflow uploads artifacts and posts a PR comment summarising results:
 
-| Artifact / action                                 | Condition  | Retention |
-| ------------------------------------------------- | ---------- | --------- |
-| HTML report                                       | Always     | 10 days   |
-| Test results (screenshots, videos, traces)        | On failure | 10 days   |
-| PR comment (via `daun/playwright-report-summary`) | Always     | —         |
+| Artifact / action                                    | Condition  | Retention |
+| ---------------------------------------------------- | ---------- | --------- |
+| HTML report (merged across shards)                   | Always     | 10 days   |
+| Test results per shard (screenshots, videos, traces) | On failure | 10 days   |
+| Blob report per shard (input for merging)            | Always     | 1 day     |
+| PR comment (via `daun/playwright-report-summary`)    | Always     | —         |
 
-The PR comment includes direct download links to the uploaded artifacts.
+The PR comment includes a direct download link to the merged HTML report and, on failure, a link to the run's artifacts.
 
 ### Browser projects
 
@@ -153,7 +154,9 @@ Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/i
 
 ## CI
 
-Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). The HTML report is always uploaded as a workflow artifact (so passing runs stay discoverable too, e.g. to check the new accessibility warning annotations); on failure, test artifacts (screenshots, videos) are additionally uploaded.
+Playwright tests run in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`), [sharded](https://playwright.dev/docs/test-sharding) across 4 parallel `playwright` jobs (`--shard=N/4`). Each shard writes a blob report; the `playwright-report` job then merges them with `npx playwright merge-reports` into a single HTML report plus `summary.json` for the PR comment. To change the shard count, update both `shardIndex` and `shardTotal` in the job matrix.
+
+The merged HTML report is always uploaded as a workflow artifact (so passing runs stay discoverable too, e.g. to check the new accessibility warning annotations); on failure, each failing shard additionally uploads its test artifacts (screenshots, videos).
 
 ## Writing Tests
 
