@@ -1,5 +1,19 @@
 # Changelog
 
+## [22.3.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.2.0...v22.3.0) (2026-11-04)
+
+
+### Features
+
+* **table, tree-table:** support pagination with hasMore flag instead of totalRecords ([#915](https://github.com/AbsaOSS/cps-shared-ui/issues/915)) ([89e0b4d](https://github.com/AbsaOSS/cps-shared-ui/commit/89e0b4da53d06369525f22362daa7ebb70fb1b94))
+
+
+### Bug Fixes
+
+* close notifications on Esc ([#925](https://github.com/AbsaOSS/cps-shared-ui/issues/925)) ([fbd3a59](https://github.com/AbsaOSS/cps-shared-ui/commit/fbd3a59637cc9827c69e84a1b10e87167d55d305))
+* close tooltips on Esc and keep them open while hovered ([#931](https://github.com/AbsaOSS/cps-shared-ui/issues/931)) ([57d1daf](https://github.com/AbsaOSS/cps-shared-ui/commit/57d1daf90aa3351bbe144c4a3193149671de5b49))
+* keep a single content wrapper in nested cps-tab-group ([#933](https://github.com/AbsaOSS/cps-shared-ui/issues/933)) ([dada85a](https://github.com/AbsaOSS/cps-shared-ui/commit/dada85a5105143fd42f61f93d9f3572621255f7c))
+
 ## [22.2.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v22.1.0...v22.2.0) (2026-10-29)
 
 
