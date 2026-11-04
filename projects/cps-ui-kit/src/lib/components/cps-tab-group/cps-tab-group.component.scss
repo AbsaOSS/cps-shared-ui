@@ -202,6 +202,11 @@
         @include focus-ring(-0.0625rem, 0, 0);
       }
 
+      // Box-less, so the frame doesn't affect layout (see the template)
+      .cps-tab-content-frame {
+        display: contents;
+      }
+
       .cps-tab-content-inner {
         height: 100%;
         overflow: auto;
