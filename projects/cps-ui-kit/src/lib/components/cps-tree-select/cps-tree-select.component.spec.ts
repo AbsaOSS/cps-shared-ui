@@ -162,6 +162,13 @@ describe('CpsTreeSelectComponent', () => {
       expect(event.preventDefault).toHaveBeenCalled();
     });
 
+    it('should not call preventDefault on Escape when already closed', () => {
+      const event = keyEvent('Escape');
+      jest.spyOn(event, 'preventDefault');
+      component.onKeyDown(event);
+      expect(event.preventDefault).not.toHaveBeenCalled();
+    });
+
     it('should toggle dropdown on Enter and also open on Space and NumpadEnter', () => {
       component.onKeyDown(keyEvent('Enter'));
       expect(component.isOpened).toBe(true);
