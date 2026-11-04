@@ -12,6 +12,7 @@ import { Component, PLATFORM_ID } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
+import { ZIndexUtils } from 'primeng/utils';
 
 @Component({
   template: `<div cpsTooltip="<style onload='alert(420);'></style>"></div>`,
@@ -558,6 +559,27 @@ describe('CpsTooltipDirective', () => {
         expect(focusSpy).not.toHaveBeenCalled();
         middle.remove();
       }));
+
+      it('should shift-tab back to the target of a tooltip opened on hover, which has no aria target', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const first = makeFocusable();
+        getPopup().appendChild(first);
+        first.focus();
+        const inner = appendFocusable(divElement.nativeElement);
+        const preventDefault = jest.fn();
+
+        (directive as any)._onPopupKeydown({
+          key: 'Tab',
+          shiftKey: true,
+          preventDefault
+        });
+
+        expect(preventDefault).toHaveBeenCalled();
+        expect(document.activeElement).toBe(inner);
+      }));
     });
 
     describe('_onPopupFocusOut', () => {
@@ -587,6 +609,520 @@ describe('CpsTooltipDirective', () => {
         tick(500);
 
         expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      }));
+    });
+
+    function getPopup(): HTMLElement {
+      return document.body.querySelector('.cps-tooltip') as HTMLElement;
+    }
+
+    function appendFocusable(parent: HTMLElement): HTMLButtonElement {
+      const button = document.createElement('button');
+      Object.defineProperty(button, 'offsetWidth', {
+        value: 10,
+        configurable: true
+      });
+      jest.spyOn(button, 'matches').mockReturnValue(true);
+      parent.appendChild(button);
+      return button;
+    }
+
+    function keyboardFocusTarget(): void {
+      jest.spyOn(divElement.nativeElement, 'matches').mockReturnValue(true);
+      Object.defineProperty(document, 'activeElement', {
+        value: divElement.nativeElement,
+        configurable: true
+      });
+      divElement.triggerEventHandler('focusin', null);
+    }
+
+    function focusLinkInPopup(): HTMLAnchorElement {
+      const link = document.createElement('a');
+      link.href = '#';
+      getPopup().appendChild(link);
+      link.focus();
+      return link;
+    }
+
+    describe('Esc dismissal', () => {
+      function pressKey(
+        key: string,
+        target: EventTarget = document.body
+      ): KeyboardEvent {
+        const event = new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          cancelable: true
+        });
+        target.dispatchEvent(event);
+        return event;
+      }
+
+      it('should close a visible tooltip and keep the Esc from reaching the window', fakeAsync(() => {
+        const windowListener = jest.fn();
+        window.addEventListener('keydown', windowListener);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(true);
+          expect(windowListener).not.toHaveBeenCalled();
+          expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+        } finally {
+          window.removeEventListener('keydown', windowListener);
+        }
+      }));
+
+      it('should cancel a focus tooltip still waiting to show, without handling the Esc', fakeAsync(() => {
+        component.openOn = 'focus';
+        fixture.detectChanges();
+        keyboardFocusTarget();
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+
+        const event = pressKey('Escape');
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+        tick(300);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should cancel a hover tooltip still waiting to show, without handling the Esc', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(100);
+
+        const event = pressKey('Escape');
+        tick(300);
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should ignore other keys', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+
+        const event = pressKey('Enter');
+        tick(200);
+
+        expect(event.defaultPrevented).toBe(false);
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      }));
+
+      it('should stop handling Esc once the tooltip is closed', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        divElement.triggerEventHandler('mouseleave', null);
+        tick(500);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+
+        expect(pressKey('Escape').defaultPrevented).toBe(false);
+      }));
+
+      it('should send focus back to the target without reopening when it was inside the tooltip', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const link = focusLinkInPopup();
+        const inner = appendFocusable(divElement.nativeElement);
+
+        pressKey('Escape', link);
+        tick(500);
+
+        expect(document.activeElement).toBe(inner);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should not describe or return focus to an element outside the target after a click that does not focus', fakeAsync(() => {
+        component.openOn = 'click';
+        component.persistent = true;
+        fixture.detectChanges();
+        const inner = appendFocusable(divElement.nativeElement);
+        const outside = appendFocusable(document.body);
+        try {
+          outside.focus();
+          divElement.triggerEventHandler('click', null);
+          tick();
+          expect(outside.hasAttribute('aria-description')).toBe(false);
+          const link = focusLinkInPopup();
+
+          pressKey('Escape', link);
+          tick(500);
+
+          expect(document.activeElement).toBe(inner);
+        } finally {
+          outside.remove();
+        }
+      }));
+
+      it('should send focus to the target itself before its focusable content, even with tabindex -1', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        const target = divElement.nativeElement as HTMLElement;
+        target.setAttribute('tabindex', '-1');
+        appendFocusable(target);
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const link = focusLinkInPopup();
+
+        pressKey('Escape', link);
+        tick(500);
+
+        expect(document.activeElement).toBe(target);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should leave the Esc to a menu, dialog or notification opened after the tooltip', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const overlay = document.createElement('div');
+        ZIndexUtils.set('overlay', overlay, 1000);
+        try {
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(false);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          ZIndexUtils.clear(overlay);
+        }
+      }));
+
+      it('should take the Esc over a menu, dialog or notification that was open before it', fakeAsync(() => {
+        const overlay = document.createElement('div');
+        ZIndexUtils.set('overlay', overlay, 1000);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(true);
+          expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+        } finally {
+          ZIndexUtils.clear(overlay);
+        }
+      }));
+
+      it('should take the Esc over an overlay open before it that gets a lower z-index while open', fakeAsync(() => {
+        const below = document.body.appendChild(document.createElement('div'));
+        const overlay = document.body.appendChild(
+          document.createElement('div')
+        );
+        ZIndexUtils.set('modal', below, 1100);
+        ZIndexUtils.set('overlay', overlay, 1000);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          const zIndex = ZIndexUtils.get(overlay);
+          ZIndexUtils.clear(below);
+          ZIndexUtils.clear(overlay);
+          ZIndexUtils.set('overlay', overlay, 1000);
+          expect(ZIndexUtils.get(overlay)).toBeLessThan(zIndex);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(true);
+          expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+        } finally {
+          ZIndexUtils.clear(below);
+          ZIndexUtils.clear(overlay);
+          below.remove();
+          overlay.remove();
+        }
+      }));
+
+      it('should leave the Esc to an overlay opened after the tooltip with the z-index of one closed since', fakeAsync(() => {
+        const closed = document.body.appendChild(document.createElement('div'));
+        const opened = document.body.appendChild(document.createElement('div'));
+        ZIndexUtils.set('overlay', closed, 1000);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          const zIndex = ZIndexUtils.get(closed);
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.set('overlay', opened, 1000);
+          expect(ZIndexUtils.get(opened)).toBe(zIndex);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(false);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.clear(opened);
+          closed.remove();
+          opened.remove();
+        }
+      }));
+
+      it('should leave the Esc to an overlay opened after the tooltip at a z-index another element also has inline', fakeAsync(() => {
+        const closed = document.body.appendChild(document.createElement('div'));
+        const opened = document.body.appendChild(document.createElement('div'));
+        const header = document.body.appendChild(document.createElement('div'));
+        ZIndexUtils.set('overlay', closed, 1000);
+        header.style.zIndex = closed.style.zIndex;
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.set('overlay', opened, 1000);
+          expect(ZIndexUtils.get(opened)).toBe(ZIndexUtils.get(header));
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(false);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.clear(opened);
+          closed.remove();
+          opened.remove();
+          header.remove();
+        }
+      }));
+
+      it('should let clicks through the tooltip while it fades out', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const popup = getPopup();
+
+        pressKey('Escape');
+
+        expect(popup.style.pointerEvents).toBe('none');
+        tick(200);
+      }));
+    });
+
+    describe('hovering the tooltip', () => {
+      function rect(
+        left: number,
+        top: number,
+        right: number,
+        bottom: number
+      ): DOMRect {
+        return {
+          left,
+          top,
+          right,
+          bottom,
+          x: left,
+          y: top,
+          width: right - left,
+          height: bottom - top
+        } as DOMRect;
+      }
+
+      it('should stay open while the pointer is on the tooltip and close after it leaves', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const popup = getPopup();
+
+        divElement.triggerEventHandler('mouseleave', null);
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(500);
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+
+        popup.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(500);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should keep a focus-opened tooltip open when the pointer only passes over it', fakeAsync(() => {
+        keyboardFocusTarget();
+        tick(300);
+        const popup = getPopup();
+
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        popup.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      }));
+
+      it('should keep a keyboard-focused tooltip open when the pointer passes over the target', fakeAsync(() => {
+        keyboardFocusTarget();
+        tick(300);
+
+        divElement.triggerEventHandler('mouseenter', null);
+        divElement.triggerEventHandler('mouseleave', null);
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      }));
+
+      it('should keep a hover tooltip open under the pointer when focus leaves the target', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+
+        divElement.triggerEventHandler('focusout', {
+          relatedTarget: document.body
+        });
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      }));
+
+      it('should close a persistent tooltip when focus leaves, even with the pointer on the target', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+
+        divElement.triggerEventHandler('focusout', {
+          relatedTarget: document.body
+        });
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should not keep a closing tooltip open for a pointer that did not come from the target', fakeAsync(() => {
+        keyboardFocusTarget();
+        tick(300);
+        const popup = getPopup();
+        Object.defineProperty(document, 'activeElement', {
+          value: document.body,
+          configurable: true
+        });
+        divElement.triggerEventHandler('focusout', {
+          relatedTarget: document.body
+        });
+
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should cancel every pending close when the pointer reaches the tooltip', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const popup = getPopup();
+
+        divElement.triggerEventHandler('mouseleave', null);
+        divElement.triggerEventHandler('focusout', {
+          relatedTarget: document.body
+        });
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+      }));
+
+      it('should stop listening for Esc when the pointer leaves before anything showed', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        const removeSpy = jest.spyOn(document, 'removeEventListener');
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          divElement.triggerEventHandler('mouseleave', null);
+
+          expect(removeSpy).toHaveBeenCalledWith(
+            'keydown',
+            expect.any(Function),
+            true
+          );
+          tick(300);
+        } finally {
+          removeSpy.mockRestore();
+        }
+      }));
+
+      it('should send focus back to the target when the pointer closes a tooltip holding it', fakeAsync(() => {
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+        const popup = getPopup();
+        const inner = appendFocusable(divElement.nativeElement);
+        divElement.triggerEventHandler('mouseleave', null);
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        focusLinkInPopup();
+
+        popup.dispatchEvent(new MouseEvent('mouseleave'));
+        tick(1000);
+
+        expect(document.activeElement).toBe(inner);
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      it('should keep closing a click-opened tooltip when the pointer leaves the trigger', fakeAsync(() => {
+        component.openOn = 'click';
+        fixture.detectChanges();
+        divElement.triggerEventHandler('click', null);
+        tick();
+        const popup = getPopup();
+        expect(popup.querySelector('.cps-tooltip-bridge')).toBeFalsy();
+
+        divElement.triggerEventHandler('mouseleave', null);
+        popup.dispatchEvent(new MouseEvent('mouseenter'));
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
+      const bridgeCases = [
+        [
+          'top',
+          rect(50, 10, 250, 42),
+          ['3.0625rem', '1.9375rem', '6.25rem', '0.5rem']
+        ],
+        [
+          'bottom',
+          rect(50, 88, 250, 120),
+          ['3.0625rem', '-0.5625rem', '6.25rem', '0.5rem']
+        ],
+        [
+          'left',
+          rect(10, 40, 92, 90),
+          ['5.0625rem', '0.5625rem', '0.5rem', '1.875rem']
+        ],
+        [
+          'right',
+          rect(208, 40, 300, 90),
+          ['-0.5625rem', '0.5625rem', '0.5rem', '1.875rem']
+        ]
+      ] as const;
+
+      for (const [position, popupRect, expected] of bridgeCases) {
+        it(`should bridge only the gap facing the target to a ${position} tooltip`, fakeAsync(() => {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          const popup = getPopup();
+          popup.style.border = '1px solid';
+          jest
+            .spyOn(divElement.nativeElement, 'getBoundingClientRect')
+            .mockReturnValue(rect(100, 50, 200, 80));
+          jest.spyOn(popup, 'getBoundingClientRect').mockReturnValue(popupRect);
+
+          (directive as any)._placeHoverBridge(position);
+
+          const bridge = popup.querySelector(
+            '.cps-tooltip-bridge'
+          ) as HTMLElement;
+          const { left, top, width, height } = bridge.style;
+          expect(bridge.getAttribute('aria-hidden')).toBe('true');
+          expect([left, top, width, height]).toEqual(expected);
+        }));
+      }
+
+      it('should not add a bridge to a persistent tooltip', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        divElement.triggerEventHandler('mouseenter', null);
+        tick(300);
+
+        expect(
+          document.body.querySelector('.cps-tooltip .cps-tooltip-bridge')
+        ).toBeFalsy();
       }));
     });
 
@@ -733,6 +1269,24 @@ describe('CpsTooltipDirective', () => {
 
         expect(event.preventDefault).toHaveBeenCalled();
         expect(focusSpy).toHaveBeenCalled();
+      }));
+
+      it('should not move focus into a tooltip that has not shown yet, and focus moving into it keeps the show', fakeAsync(() => {
+        component.persistent = true;
+        fixture.detectChanges();
+        keyboardFocusTarget();
+        const popup = getPopup();
+        const focusable = appendFocusable(popup);
+
+        const event = { preventDefault: jest.fn() } as unknown as Event;
+        directive.onTabFromTrigger(event);
+        expect(event.preventDefault).not.toHaveBeenCalled();
+
+        divElement.triggerEventHandler('focusout', {
+          relatedTarget: focusable
+        });
+        tick(300);
+        expect(popup.style.left).not.toBe('');
       }));
     });
   });
