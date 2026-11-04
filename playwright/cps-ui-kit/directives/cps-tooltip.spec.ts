@@ -528,4 +528,32 @@ test.describe('cps-tooltip with menus, dialogs and notifications', () => {
     await page.keyboard.press('Escape');
     await expect(tooltip(page)).toHaveCount(0);
   });
+
+  test('a menu reopened after the tooltip takes the Esc first, though it was open when the tooltip showed', async ({
+    page
+  }) => {
+    await page.goto('/select');
+    const select = page.getByTestId('required-select');
+    const container = select.getByTestId('cps-select-container');
+    const menu = page.getByTestId('cps-menu-container');
+    await keyboardFocus(page, container);
+    await page.keyboard.press('ArrowDown');
+    await expect(menu).toBeVisible();
+    const zIndex = await menu.evaluate((el) => el.style.zIndex);
+    await select.getByTestId('cps-info-circle').hover();
+    await expect(tooltip(page)).toHaveCSS('opacity', '1');
+    await page.keyboard.press('Tab');
+    await expect(menu).toHaveCount(0);
+    await keyboardFocus(page, container);
+    await page.keyboard.press('ArrowDown');
+    await expect(menu).toBeVisible();
+    expect(await menu.evaluate((el) => el.style.zIndex)).toBe(zIndex);
+
+    await page.keyboard.press('Escape');
+    await expect(menu).toHaveCount(0);
+    await expect(tooltip(page)).toHaveCSS('opacity', '1');
+
+    await page.keyboard.press('Escape');
+    await expect(tooltip(page)).toHaveCount(0);
+  });
 });

@@ -126,7 +126,8 @@ export class CpsTooltipDirective implements OnDestroy {
   readonly cvtTooltipOffset = computed(() => convertSize(this.tooltipOffset()));
   private _popup?: HTMLDivElement;
   private _shown = false;
-  private _overlayZIndexAtShow = 0;
+  private _topZIndexAtShow = 0;
+  private _overlaysAtShow = new WeakSet<HTMLElement>();
   private _hoverBridge?: HTMLDivElement;
   private _pointerHold?: 'target' | 'leaving' | 'popup';
   private _showTimeout?: ReturnType<typeof setTimeout>;
@@ -259,7 +260,7 @@ export class CpsTooltipDirective implements OnDestroy {
       return;
     }
 
-    if (ZIndexUtils.getCurrent() > this._overlayZIndexAtShow) return;
+    if (this._overlayOpenedSinceShow()) return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -378,11 +379,31 @@ export class CpsTooltipDirective implements OnDestroy {
       this._placeHoverBridge(coords.position);
     }
 
-    if (!this._shown) this._overlayZIndexAtShow = ZIndexUtils.getCurrent();
+    if (!this._shown) {
+      this._topZIndexAtShow = ZIndexUtils.getCurrent();
+      this._overlaysAtShow = new WeakSet(
+        this._topZIndexAtShow ? this._elementsWithZIndex() : []
+      );
+    }
     this._shown = true;
     this._listenForEscape();
     this._attachScrollDestroyWhenSettled();
   };
+
+  private _elementsWithZIndex(): HTMLElement[] {
+    return Array.from(
+      this._document.querySelectorAll<HTMLElement>('[style*="z-index"]')
+    );
+  }
+
+  private _overlayOpenedSinceShow(): boolean {
+    const top = ZIndexUtils.getCurrent();
+    if (top > this._topZIndexAtShow) return true;
+    if (!top) return false;
+    return this._elementsWithZIndex().some(
+      (el) => ZIndexUtils.get(el) === top && !this._overlaysAtShow.has(el)
+    );
+  }
 
   private _listenForEscape(): void {
     this._zone.runOutsideAngular(() =>

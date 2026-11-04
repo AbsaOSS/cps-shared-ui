@@ -813,6 +813,87 @@ describe('CpsTooltipDirective', () => {
         }
       }));
 
+      it('should take the Esc over an overlay open before it that gets a lower z-index while open', fakeAsync(() => {
+        const below = document.body.appendChild(document.createElement('div'));
+        const overlay = document.body.appendChild(
+          document.createElement('div')
+        );
+        ZIndexUtils.set('modal', below, 1100);
+        ZIndexUtils.set('overlay', overlay, 1000);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          const zIndex = ZIndexUtils.get(overlay);
+          ZIndexUtils.clear(below);
+          ZIndexUtils.clear(overlay);
+          ZIndexUtils.set('overlay', overlay, 1000);
+          expect(ZIndexUtils.get(overlay)).toBeLessThan(zIndex);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(true);
+          expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+        } finally {
+          ZIndexUtils.clear(below);
+          ZIndexUtils.clear(overlay);
+          below.remove();
+          overlay.remove();
+        }
+      }));
+
+      it('should leave the Esc to an overlay opened after the tooltip with the z-index of one closed since', fakeAsync(() => {
+        const closed = document.body.appendChild(document.createElement('div'));
+        const opened = document.body.appendChild(document.createElement('div'));
+        ZIndexUtils.set('overlay', closed, 1000);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          const zIndex = ZIndexUtils.get(closed);
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.set('overlay', opened, 1000);
+          expect(ZIndexUtils.get(opened)).toBe(zIndex);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(false);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.clear(opened);
+          closed.remove();
+          opened.remove();
+        }
+      }));
+
+      it('should leave the Esc to an overlay opened after the tooltip at a z-index another element also has inline', fakeAsync(() => {
+        const closed = document.body.appendChild(document.createElement('div'));
+        const opened = document.body.appendChild(document.createElement('div'));
+        const header = document.body.appendChild(document.createElement('div'));
+        ZIndexUtils.set('overlay', closed, 1000);
+        header.style.zIndex = closed.style.zIndex;
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.set('overlay', opened, 1000);
+          expect(ZIndexUtils.get(opened)).toBe(ZIndexUtils.get(header));
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(false);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          ZIndexUtils.clear(closed);
+          ZIndexUtils.clear(opened);
+          closed.remove();
+          opened.remove();
+          header.remove();
+        }
+      }));
+
       it('should let clicks through the tooltip while it fades out', fakeAsync(() => {
         divElement.triggerEventHandler('mouseenter', null);
         tick(300);
