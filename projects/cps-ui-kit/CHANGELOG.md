@@ -1,5 +1,12 @@
 # Changelog
 
+## [21.33.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.32.0...v21.33.0) (2026-11-05)
+
+
+### Features
+
+* backport changes from v22.3.0 ([#941](https://github.com/AbsaOSS/cps-shared-ui/issues/941)) ([9861ddf](https://github.com/AbsaOSS/cps-shared-ui/commit/9861ddffaf407bfa55252ec09939c349e5bb3e14))
+
 ## [21.32.0](https://github.com/AbsaOSS/cps-shared-ui/compare/v21.31.0...v21.32.0) (2026-11-02)
 
 
