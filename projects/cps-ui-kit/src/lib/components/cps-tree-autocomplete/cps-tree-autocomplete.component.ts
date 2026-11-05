@@ -143,6 +143,9 @@ export class CpsTreeAutocompleteComponent extends CpsBaseTreeDropdownComponent {
     if (code === 'Tab') {
       if (this.isOpened) this._closeAndClear();
     } else if (code === 'Escape') {
+      // Closing the menu here first stops it from marking
+      // Esc handled itself, keep notifications below open
+      if (this.isOpened) event.preventDefault();
       this._closeAndClear();
     } else if (code === 'ArrowDown' || code === 'ArrowUp') {
       event.preventDefault();

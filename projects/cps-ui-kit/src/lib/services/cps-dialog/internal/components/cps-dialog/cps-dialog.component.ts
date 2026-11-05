@@ -876,6 +876,8 @@ export class CpsDialogComponent implements OnInit, AfterViewInit, OnDestroy {
             parseInt((this.container as HTMLDivElement).style.zIndex) ===
             ZIndexUtils.getCurrent()
           ) {
+            // Handled: notifications below the dialog stay open
+            event.preventDefault();
             this.hide();
           }
         }

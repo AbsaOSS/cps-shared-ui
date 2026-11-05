@@ -89,6 +89,24 @@ export class CpsNotificationContainerComponent
       this.notifications.pop();
     }
     this.notifications.unshift({ data, config });
+    // A dialog opened since the container was created would cover the new notification
+    if (this.container?.nativeElement && !this.isOnTop()) {
+      ZIndexUtils.clear(this.container.nativeElement);
+      this.moveOnTop();
+    }
+  }
+
+  /**
+   * Whether the container is above every other kit overlay (menus, dialogs, other notification containers).
+   * @group Method
+   */
+  isOnTop(): boolean {
+    const el = this.container?.nativeElement as HTMLElement | undefined;
+    return (
+      !!el &&
+      ZIndexUtils.get(el) > 0 &&
+      ZIndexUtils.get(el) === ZIndexUtils.getCurrent()
+    );
   }
 
   onCloseNotification(index: number) {

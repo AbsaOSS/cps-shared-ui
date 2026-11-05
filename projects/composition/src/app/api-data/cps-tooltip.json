@@ -1,7 +1,7 @@
 {
     "components": {
         "CpsTooltipDirective": {
-            "description": "CpsTooltipDirective provides advisory information for a target element.",
+            "description": "CpsTooltipDirective provides advisory information for a target element.\n\nPressing Esc closes an open tooltip (WCAG 1.4.13) and nothing else, such as a dialog, menu or notification below it.\nA menu, dialog or notification opened after the tooltip takes that Esc instead. Focus stays where it is; if it was\ninside the tooltip, it goes back to the target. A tooltip stays open while its target has keyboard focus, and one\nopened on hover also while the pointer is over the target or the tooltip.",
             "props": {
                 "description": "Defines the input properties of the component.",
                 "values": [

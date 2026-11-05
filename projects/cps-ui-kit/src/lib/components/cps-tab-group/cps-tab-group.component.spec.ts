@@ -44,6 +44,41 @@ class TestHostComponent {
   }
 }
 
+@Component({
+  imports: [CpsTabGroupComponent, CpsTabComponent],
+  template: `
+    <cps-tab-group
+      class="outer-tab-group"
+      (afterTabChanged)="onOuterAfter($event.newIndex)">
+      <cps-tab label="Nested">
+        @if (showInner) {
+          <cps-tab-group
+            class="inner-tab-group"
+            [isSubTabs]="true"
+            [animationType]="innerAnimationType"
+            [selectedIndex]="innerIndex"
+            (afterTabChanged)="innerIndex = $event.newIndex">
+            <cps-tab label="Inner 1">Inner content 1</cps-tab>
+            <cps-tab label="Inner 2">Inner content 2</cps-tab>
+          </cps-tab-group>
+        }
+      </cps-tab>
+      <cps-tab label="Other">Other content</cps-tab>
+    </cps-tab-group>
+  `
+})
+class NestedTestHostComponent {
+  showInner = true;
+  innerAnimationType: 'slide' | 'fade' = 'slide';
+  innerIndex = 0;
+  resetInnerOnEntry = false;
+  onOuterAfter(newIndex: number) {
+    if (this.resetInnerOnEntry && newIndex === 0) {
+      this.innerIndex = 0;
+    }
+  }
+}
+
 function getTabGroupInstance(
   fixture: ComponentFixture<TestHostComponent>
 ): CpsTabGroupComponent {
@@ -730,4 +765,104 @@ describe('CpsTabGroupComponent', () => {
       expect(component.resolvedFadeTransitionParams).toBe('1ms');
     });
   });
+});
+
+describe('CpsTabGroupComponent nested in another tab group', () => {
+  let fixture: ComponentFixture<NestedTestHostComponent>;
+  let host: NestedTestHostComponent;
+  let innerGroupEl: HTMLElement;
+
+  function getOuterTabEls(): HTMLElement[] {
+    return Array.from(
+      fixture.nativeElement.querySelectorAll(
+        '.outer-tab-group > .cps-tabs [role="tab"]'
+      )
+    );
+  }
+
+  function getInnerTabEls(): HTMLElement[] {
+    return Array.from(innerGroupEl.querySelectorAll('[role="tab"]'));
+  }
+
+  function getInnerContentInners(): HTMLElement[] {
+    return Array.from(innerGroupEl.querySelectorAll('.cps-tab-content-inner'));
+  }
+
+  async function clickAndRender(el: HTMLElement): Promise<void> {
+    el.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [NestedTestHostComponent, NoopAnimationsModule]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(NestedTestHostComponent);
+    host = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+    innerGroupEl = fixture.nativeElement.querySelector('.inner-tab-group');
+  });
+
+  async function setInnerAnimationType(
+    animationType: 'slide' | 'fade'
+  ): Promise<void> {
+    host.innerAnimationType = animationType;
+    fixture.detectChanges();
+    await fixture.whenStable();
+  }
+
+  it.each(['slide', 'fade'] as const)(
+    'should keep a single content wrapper when the inner selection is reset on outer tab re-entry (%s)',
+    async (animationType) => {
+      await setInnerAnimationType(animationType);
+      host.resetInnerOnEntry = true;
+      await clickAndRender(getInnerTabEls()[1]);
+      await clickAndRender(getOuterTabEls()[1]);
+      await clickAndRender(getOuterTabEls()[0]);
+
+      expect(fixture.nativeElement.querySelector('.inner-tab-group')).toBe(
+        innerGroupEl
+      );
+      expect(host.innerIndex).toBe(0);
+      let contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
+
+      await clickAndRender(getInnerTabEls()[1]);
+
+      contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 2');
+    }
+  );
+
+  it.each(['slide', 'fade'] as const)(
+    'should keep a single content wrapper when the inner selection changes while the outer tab is inactive (%s)',
+    async (animationType) => {
+      await setInnerAnimationType(animationType);
+      await clickAndRender(getInnerTabEls()[1]);
+      await clickAndRender(getOuterTabEls()[1]);
+
+      host.innerIndex = 0;
+      fixture.detectChanges();
+      await fixture.whenStable();
+      await clickAndRender(getOuterTabEls()[0]);
+
+      expect(fixture.nativeElement.querySelector('.inner-tab-group')).toBe(
+        innerGroupEl
+      );
+      let contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 1');
+
+      await clickAndRender(getInnerTabEls()[1]);
+
+      contentInners = getInnerContentInners();
+      expect(contentInners.length).toBe(1);
+      expect(contentInners[0].textContent?.trim()).toBe('Inner content 2');
+    }
+  );
 });

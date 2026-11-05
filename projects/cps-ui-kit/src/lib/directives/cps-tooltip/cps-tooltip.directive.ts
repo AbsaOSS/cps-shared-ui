@@ -4,6 +4,7 @@ import {
   ElementRef,
   inject,
   input,
+  NgZone,
   OnDestroy,
   SecurityContext,
   PLATFORM_ID
@@ -16,6 +17,7 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
+import { ZIndexUtils } from 'primeng/utils';
 
 /**
  * CpsTooltipPosition is used to define the position of the tooltip.
@@ -31,6 +33,11 @@ export type CpsTooltipOpenOn = 'hover' | 'click' | 'focus';
 
 /**
  * CpsTooltipDirective provides advisory information for a target element.
+ *
+ * Pressing Esc closes an open tooltip (WCAG 1.4.13) and nothing else, such as a dialog, menu or notification below it.
+ * A menu, dialog or notification opened after the tooltip takes that Esc instead. Focus stays where it is; if it was
+ * inside the tooltip, it goes back to the target. A tooltip stays open while its target has keyboard focus, and one
+ * opened on hover also while the pointer is over the target or the tooltip.
  * @group Components
  */
 @Directive({
@@ -118,6 +125,11 @@ export class CpsTooltipDirective implements OnDestroy {
 
   readonly cvtTooltipOffset = computed(() => convertSize(this.tooltipOffset()));
   private _popup?: HTMLDivElement;
+  private _shown = false;
+  private _topZIndexAtShow = 0;
+  private _overlaysAtShow = new WeakSet<HTMLElement>();
+  private _hoverBridge?: HTMLDivElement;
+  private _pointerHold?: 'target' | 'leaving' | 'popup';
   private _showTimeout?: ReturnType<typeof setTimeout>;
   private _hideTimeout?: ReturnType<typeof setTimeout>;
   private _ariaTarget?: HTMLElement;
@@ -133,6 +145,7 @@ export class CpsTooltipDirective implements OnDestroy {
   private _platformId = inject(PLATFORM_ID);
   private _domSanitizer = inject(DomSanitizer);
   private _liveAnnouncer = inject(CPS_LIVE_ANNOUNCER_SERVICE);
+  private _zone = inject(NgZone);
 
   constructor() {
     this.window = this._document.defaultView as Window;
@@ -147,22 +160,22 @@ export class CpsTooltipDirective implements OnDestroy {
   onMouseEnter(): void {
     if (this.tooltipOpenOn() === 'hover') {
       clearTimeout(this._hideTimeout);
+      this._pointerHold = 'target';
       this._showTimeout = setTimeout(() => {
         this._createTooltip();
         this._positionAndShow();
       }, this.tooltipOpenDelay() as number);
+      this._listenForEscape();
     }
   }
 
   onMouseLeave(): void {
-    clearTimeout(this._showTimeout);
+    this._pointerHold = 'leaving';
+    if (this._focusHolds()) return;
 
-    if (!this.tooltipPersistent()) {
-      this._hideTimeout = setTimeout(
-        this._destroyTooltip,
-        this.tooltipCloseDelay() as number
-      );
-    }
+    clearTimeout(this._showTimeout);
+    if (!this._popup) this._stopListeningForEscape();
+    if (!this.tooltipPersistent()) this._scheduleHide();
   }
 
   // Popup created synchronously so SR resolves aria-describedby on focus.
@@ -178,17 +191,16 @@ export class CpsTooltipDirective implements OnDestroy {
         this._positionAndShow,
         this.tooltipOpenDelay() as number
       );
+      this._listenForEscape();
     }
   }
 
   onFocusOut(event: FocusEvent): void {
+    if (this._popup?.contains(event.relatedTarget as Node)) return;
+    if (this._pointerHolds()) return;
+
     clearTimeout(this._showTimeout);
-    if (!this._popup?.contains(event.relatedTarget as Node)) {
-      this._hideTimeout = setTimeout(
-        this._destroyTooltip,
-        this.tooltipCloseDelay() as number
-      );
-    }
+    this._scheduleHide();
   }
 
   // Tab from the trigger moves focus into the persistent tooltip instead of
@@ -196,8 +208,9 @@ export class CpsTooltipDirective implements OnDestroy {
   // preventScroll avoids the browser's own scroll-into-view side effect,
   // which would otherwise fire a real scroll event and immediately destroy
   // the very tooltip focus just moved into (see _onScrollDestroy).
+  // Not before it shows: focus would land in an invisible popup.
   onTabFromTrigger(event: Event): void {
-    if (!this.tooltipPersistent() || !this._popup) return;
+    if (!this.tooltipPersistent() || !this._popup || !this._shown) return;
     const focusable = this._focusableIn(this._popup);
     if (!focusable.length) return;
     event.preventDefault();
@@ -239,6 +252,33 @@ export class CpsTooltipDirective implements OnDestroy {
     this._destroyTooltip(true);
   };
 
+  private _onEscapeKeydown = (event: KeyboardEvent): void => {
+    if (event.key !== 'Escape') return;
+    if (!this._shown) {
+      clearTimeout(this._showTimeout);
+      this._destroyTooltip(true);
+      return;
+    }
+
+    if (this._overlayOpenedSinceShow()) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    clearTimeout(this._showTimeout);
+    clearTimeout(this._hideTimeout);
+    this._destroyTooltip();
+  };
+
+  private _onPopupMouseEnter = (): void => {
+    if (this._pointerHold !== 'leaving') return;
+    clearTimeout(this._hideTimeout);
+    this._pointerHold = 'popup';
+  };
+
+  private _onPopupMouseLeave = (): void => {
+    if (this._pointerHold === 'popup') this.onMouseLeave();
+  };
+
   private _onPopupKeydown = (event: KeyboardEvent): void => {
     if (event.key !== 'Tab' || !this._popup) return;
     const focusable = this._focusableIn(this._popup);
@@ -247,10 +287,10 @@ export class CpsTooltipDirective implements OnDestroy {
     const last = focusable[focusable.length - 1];
     const active = this._document.activeElement;
     if (!event.shiftKey && active === last) {
-      this._ariaTarget?.focus({ preventScroll: true });
+      this._returnFocusToTarget();
     } else if (event.shiftKey && active === first) {
       event.preventDefault();
-      this._ariaTarget?.focus({ preventScroll: true });
+      this._returnFocusToTarget();
     }
   };
 
@@ -260,12 +300,34 @@ export class CpsTooltipDirective implements OnDestroy {
       !this._popup?.contains(newFocus) &&
       !this._elementRef.nativeElement.contains(newFocus)
     ) {
-      this._hideTimeout = setTimeout(
-        this._destroyTooltip,
-        this.tooltipCloseDelay() as number
-      );
+      this._scheduleHide();
     }
   };
+
+  private _scheduleHide(): void {
+    clearTimeout(this._hideTimeout);
+    this._hideTimeout = setTimeout(
+      this._destroyTooltip,
+      this.tooltipCloseDelay() as number
+    );
+  }
+
+  private _pointerHolds(): boolean {
+    return (
+      !this.tooltipPersistent() &&
+      (this._pointerHold === 'target' || this._pointerHold === 'popup')
+    );
+  }
+
+  private _focusHolds(): boolean {
+    if (this.tooltipOpenOn() === 'click') return false;
+    const active = this._document.activeElement;
+    return (
+      !!active &&
+      this._elementRef.nativeElement.contains(active) &&
+      active.matches(':focus-visible')
+    );
+  }
 
   private _createTooltip = (): void => {
     if (this._popup || this.tooltipDisabled()) return;
@@ -308,10 +370,90 @@ export class CpsTooltipDirective implements OnDestroy {
     if (this.tooltipPersistent()) {
       this._popup.addEventListener('focusout', this._onPopupFocusOut);
       this._popup.addEventListener('keydown', this._onPopupKeydown);
+    } else if (this.tooltipOpenOn() === 'hover') {
+      const popup = this._popup;
+      this._zone.runOutsideAngular(() => {
+        popup.addEventListener('mouseenter', this._onPopupMouseEnter);
+        popup.addEventListener('mouseleave', this._onPopupMouseLeave);
+      });
+      this._placeHoverBridge(coords.position);
     }
 
+    if (!this._shown) {
+      this._topZIndexAtShow = ZIndexUtils.getCurrent();
+      this._overlaysAtShow = new WeakSet(
+        this._topZIndexAtShow ? this._elementsWithZIndex() : []
+      );
+    }
+    this._shown = true;
+    this._listenForEscape();
     this._attachScrollDestroyWhenSettled();
   };
+
+  private _elementsWithZIndex(): HTMLElement[] {
+    return Array.from(
+      this._document.querySelectorAll<HTMLElement>('[style*="z-index"]')
+    );
+  }
+
+  private _overlayOpenedSinceShow(): boolean {
+    const top = ZIndexUtils.getCurrent();
+    if (top > this._topZIndexAtShow) return true;
+    if (!top) return false;
+    return this._elementsWithZIndex().some(
+      (el) => ZIndexUtils.get(el) === top && !this._overlaysAtShow.has(el)
+    );
+  }
+
+  private _listenForEscape(): void {
+    this._zone.runOutsideAngular(() =>
+      this._document.addEventListener('keydown', this._onEscapeKeydown, true)
+    );
+  }
+
+  private _stopListeningForEscape(): void {
+    this._document.removeEventListener('keydown', this._onEscapeKeydown, true);
+  }
+
+  private _placeHoverBridge(position: CpsTooltipPosition): void {
+    if (!this._popup) return;
+
+    if (!this._hoverBridge) {
+      this._hoverBridge = this._document.createElement('div');
+      this._hoverBridge.className = 'cps-tooltip-bridge';
+      this._hoverBridge.setAttribute('aria-hidden', 'true');
+      this._popup.appendChild(this._hoverBridge);
+    }
+
+    const popupRect = this._popup.getBoundingClientRect();
+    const targetRect = this._elementRef.nativeElement.getBoundingClientRect();
+
+    const facingX = {
+      left: Math.max(popupRect.left, targetRect.left),
+      right: Math.min(popupRect.right, targetRect.right)
+    };
+    const facingY = {
+      top: Math.max(popupRect.top, targetRect.top),
+      bottom: Math.min(popupRect.bottom, targetRect.bottom)
+    };
+    const bridgeRect = {
+      top: { ...facingX, top: popupRect.bottom, bottom: targetRect.top },
+      bottom: { ...facingX, top: targetRect.bottom, bottom: popupRect.top },
+      left: { ...facingY, left: popupRect.right, right: targetRect.left },
+      right: { ...facingY, left: targetRect.right, right: popupRect.left }
+    }[position];
+
+    const popupStyle = getComputedStyle(this._popup);
+    const borderLeft = parseFloat(popupStyle.borderLeftWidth) || 0;
+    const borderTop = parseFloat(popupStyle.borderTopWidth) || 0;
+    const rem = (px: number): string => `${this._pxToRem(px)}rem`;
+
+    const style = this._hoverBridge.style;
+    style.left = rem(bridgeRect.left - popupRect.left - borderLeft);
+    style.top = rem(bridgeRect.top - popupRect.top - borderTop);
+    style.width = rem(Math.max(0, bridgeRect.right - bridgeRect.left));
+    style.height = rem(Math.max(0, bridgeRect.bottom - bridgeRect.top));
+  }
 
   // Focusing the target can trigger the browser's own smooth-scroll-into-view,
   // which fires scroll events for several frames. Attaching the destroy
@@ -333,21 +475,34 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _destroyTooltip = (destroyImmediately?: boolean): void => {
+    const ariaTarget = this._ariaTarget;
+    if (this._popup?.contains(this._document.activeElement)) {
+      this._returnFocusToTarget();
+      clearTimeout(this._showTimeout);
+    }
+
     this.window.removeEventListener('scroll', this._onScrollDestroy, true);
+    this._stopListeningForEscape();
+    this._shown = false;
+    this._pointerHold = undefined;
     if (!this._popup) return;
 
     this._popup.removeEventListener('focusout', this._onPopupFocusOut);
     this._popup.removeEventListener('keydown', this._onPopupKeydown);
+    this._popup.removeEventListener('mouseenter', this._onPopupMouseEnter);
+    this._popup.removeEventListener('mouseleave', this._onPopupMouseLeave);
 
     const popup = this._popup;
     this._popup = undefined;
-    this._ariaTarget?.removeAttribute('aria-description');
+    this._hoverBridge = undefined;
+    ariaTarget?.removeAttribute('aria-description');
     this._ariaTarget = undefined;
 
     if (destroyImmediately) {
       popup.remove();
     } else {
       popup.style.opacity = '0';
+      popup.style.pointerEvents = 'none';
       setTimeout(() => popup.remove(), 200);
     }
   };
@@ -386,7 +541,8 @@ export class CpsTooltipDirective implements OnDestroy {
     throw new Error(`Unsupported unit "${parsed.unit}" for tooltipOffset.`);
   }
 
-  private _getCoords(): { left: number; top: number } | undefined {
+  private _getCoords():
+    { left: number; top: number; position: CpsTooltipPosition } | undefined {
     if (!this._popup) return undefined;
 
     let positions: CpsTooltipPosition[] = ['top', 'bottom', 'left', 'right'];
@@ -406,7 +562,7 @@ export class CpsTooltipDirective implements OnDestroy {
       );
 
       if (this._isInsideScreen(coords, popupRect)) {
-        return coords;
+        return { ...coords, position: pos };
       }
     }
 
@@ -489,6 +645,22 @@ export class CpsTooltipDirective implements OnDestroy {
   }
 
   private _resolveAriaTarget(): HTMLElement | undefined {
-    return (this._document.activeElement as HTMLElement | null) ?? undefined;
+    const active = this._document.activeElement as HTMLElement | null;
+    return active && this._elementRef.nativeElement.contains(active)
+      ? active
+      : undefined;
+  }
+
+  private _returnFocusToTarget(): void {
+    const options = { preventScroll: true };
+    if (this._ariaTarget) {
+      this._ariaTarget.focus(options);
+      return;
+    }
+
+    const target: HTMLElement = this._elementRef.nativeElement;
+    target.focus(options);
+    if (this._document.activeElement !== target)
+      this._focusableIn(target)[0]?.focus(options);
   }
 }

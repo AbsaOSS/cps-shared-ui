@@ -65,6 +65,15 @@ export const tooltipExamples: Record<string, { html: string; ts?: string }> = {
 </cps-button>`
   },
 
+  noCloseDelay: {
+    html: `
+<cps-button
+  cpsTooltip="Stays open while you hover it"
+  label="No close delay"
+  [tooltipCloseDelay]="0">
+</cps-button>`
+  },
+
   persistentHtmlTooltip: {
     html: `
 <cps-button

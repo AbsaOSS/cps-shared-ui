@@ -8,6 +8,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { DomHandler } from 'primeng/dom';
+import { ZIndexUtils } from 'primeng/utils';
 import { CPS_FOCUS_SERVICE } from '../../services/cps-focus/cps-focus.service';
 import {
   CpsMenuComponent,
@@ -537,6 +538,30 @@ describe('CpsMenuComponent', () => {
     });
   });
 
+  describe('align', () => {
+    it('should keep one z-index entry however often it realigns, and remove it on close', () => {
+      const before = ZIndexUtils.getCurrent();
+      const target = document.body.appendChild(
+        document.createElement('button')
+      );
+      component.target = target;
+      component.container = document.createElement('div');
+
+      component.align();
+      const zIndex = ZIndexUtils.get(component.container);
+      component.align();
+      component.align();
+
+      expect(ZIndexUtils.get(component.container)).toBe(zIndex);
+      expect(ZIndexUtils.getCurrent()).toBe(zIndex);
+      component.onAnimationEnd({
+        toState: 'close'
+      } as unknown as import('@angular/animations').AnimationEvent);
+      expect(ZIndexUtils.getCurrent()).toBe(before);
+      target.remove();
+    });
+  });
+
   describe('bindDocumentClickListener / unbindDocumentClickListener', () => {
     let target: HTMLElement;
 
@@ -643,6 +668,16 @@ describe('CpsMenuComponent', () => {
       expect(component.hide).toHaveBeenCalledWith(
         CpsMenuHideReason.KEYDOWN_ESCAPE
       );
+    });
+
+    it('should mark Escape as handled, so notifications and dialogs below stay open', () => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true
+      });
+      document.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
     });
 
     it('should focus the target on Escape via focusService', () => {
