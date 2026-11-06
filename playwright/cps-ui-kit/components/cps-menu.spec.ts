@@ -126,7 +126,7 @@ test.describe('cps-menu', () => {
       await toggle.evaluate((el) =>
         el.scrollIntoView({ block: 'center', behavior: 'instant' })
       );
-      await toggle.hover();
+      await toggle.hover({ force: true });
 
       await expect(menuContainer(page)).toBeVisible();
 
