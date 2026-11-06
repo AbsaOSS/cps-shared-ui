@@ -1,7 +1,7 @@
 {
     "components": {},
     "name": "CpsNotificationService",
-    "description": "Service for showing notifications.",
+    "description": "Service for showing notifications.\n\nPressing Esc closes all open notifications, since they can cover the focused element (WCAG 2.4.11). Focus stays\nwhere it is; if it was on a notification, it goes back to where it was before. An open menu or a dialog above the\nnotifications takes Esc first.",
     "methods": {
         "description": "Methods used in the service.",
         "values": [

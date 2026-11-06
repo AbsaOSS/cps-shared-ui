@@ -695,6 +695,10 @@ $tbar-normal-height: 4.5rem;
       height: calc(100% - $tbar-normal-height);
     }
 
+    .cps-treetable-unknown-total .p-paginator-last {
+      display: none;
+    }
+
     .cps-treetable-loading {
       .p-treetable {
         min-height: 12.5rem;
