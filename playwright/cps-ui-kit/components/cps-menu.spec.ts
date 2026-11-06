@@ -122,10 +122,6 @@ test.describe('cps-menu', () => {
       page
     }) => {
       const toggle = page.getByTestId('hover-menu-toggle');
-      // Instant scroll bypasses the app's smooth scrolling, which would otherwise close the menu.
-      await toggle.evaluate((el) =>
-        el.scrollIntoView({ block: 'center', behavior: 'instant' })
-      );
       await toggle.hover({ force: true });
 
       await expect(menuContainer(page)).toBeVisible();
