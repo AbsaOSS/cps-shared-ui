@@ -75,12 +75,12 @@ All config lives in [`playwright.config.ts`](../playwright.config.ts) at the pro
 
 ### Key settings
 
-| Setting               | Local            | CI    | Why                                                               |
-| --------------------- | ---------------- | ----- | ----------------------------------------------------------------- |
-| `retries`             | 0                | 2     | Avoid masking flaky tests locally, tolerate infra flakiness in CI |
-| `workers`             | 50% of CPU cores | 1     | Speed locally, stability in CI                                    |
-| `forbidOnly`          | false            | true  | Prevent `.only` from sneaking into PRs                            |
-| `reuseExistingServer` | true             | false | Reuse your running `ng serve`; CI always starts fresh             |
+| Setting               | Local            | CI                           | Why                                                               |
+| --------------------- | ---------------- | ---------------------------- | ----------------------------------------------------------------- |
+| `retries`             | 0                | 2                            | Avoid masking flaky tests locally, tolerate infra flakiness in CI |
+| `workers`             | 50% of CPU cores | 50% of CPU cores (per shard) | Playwright default; not overridden in config                      |
+| `forbidOnly`          | false            | true                         | Prevent `.only` from sneaking into PRs                            |
+| `reuseExistingServer` | true             | false                        | Reuse your running `ng serve`; CI always starts fresh             |
 
 ### Timeouts
 
@@ -106,13 +106,14 @@ These are written to `test-results/` and the HTML report goes to `playwright-rep
 
 The GitHub Actions workflow uploads artifacts and posts a PR comment summarising results:
 
-| Artifact / action                                 | Condition  | Retention |
-| ------------------------------------------------- | ---------- | --------- |
-| HTML report                                       | Always     | 10 days   |
-| Test results (screenshots, videos, traces)        | On failure | 10 days   |
-| PR comment (via `daun/playwright-report-summary`) | Always     | —         |
+| Artifact / action                                    | Condition  | Retention |
+| ---------------------------------------------------- | ---------- | --------- |
+| HTML report (merged across shards)                   | Always     | 10 days   |
+| Test results per shard (screenshots, videos, traces) | On failure | 10 days   |
+| Blob report per shard (input for merging)            | Always     | 1 day     |
+| PR comment (via `daun/playwright-report-summary`)    | Always     | —         |
 
-The PR comment includes direct download links to the uploaded artifacts.
+The PR comment includes a direct download link to the merged HTML report and, on failure, a link to the run's artifacts.
 
 ### Browser projects
 
@@ -130,15 +131,9 @@ Running `npm run test:playwright` executes all three. Accessibility (axe-core) s
 
 Playwright starts `npm run start` (Angular dev server) automatically and waits for `http://localhost:4200` before running tests. Locally, if the server is already running it's reused so you don't have to wait for a cold start.
 
-### Why is parallelism disabled in CI?
+### Parallelism in CI
 
-CI runners (GitHub Actions `ubuntu-latest`) have limited resources. Running multiple browser instances in parallel on that hardware might cause:
-
-- **Resource contention** — browsers compete for CPU/memory, leading to slow rendering and timeouts
-- **Non-deterministic failures** — a test that passes alone may fail when running alongside others due to timing differences
-- **Harder debugging** — when multiple tests fail simultaneously, it's hard to tell if it's a real bug or a resource issue
-
-With 1 worker, tests run one at a time — slower but predictable. If CI runs become too slow as the test suite grows, we can consider bumping `workers` value and see if tests remain stable.
+CI parallelizes on two levels: the suite is split across 4 shard jobs (see [CI](#ci)), and each shard runs its slice with Playwright's default worker count (half the runner's CPU cores). With `fullyParallel: true`, individual tests within a file are distributed across workers too.
 
 ## VS Code Extension
 
@@ -153,7 +148,11 @@ Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/i
 
 ## CI
 
-Playwright tests run as a separate job in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`). The HTML report is always uploaded as a workflow artifact (so passing runs stay discoverable too, e.g. to check the new accessibility warning annotations); on failure, test artifacts (screenshots, videos) are additionally uploaded.
+Playwright tests run in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`), [sharded](https://playwright.dev/docs/test-sharding) across 4 parallel `playwright` jobs (`--shard=N/4`). Each shard writes a blob report; the `playwright-report` job then merges them with `npx playwright merge-reports` into a single HTML report plus `summary.json` for the PR comment. To change the shard count, update both `shardIndex` and `shardTotal` in the job matrix.
+
+The shard jobs run inside the official [Playwright Docker image](https://playwright.dev/docs/docker) (`mcr.microsoft.com/playwright`), which ships with browsers and their system dependencies preinstalled, so there is no `playwright install` step. `@playwright/test` is pinned to an exact version in `package.json`, and **the image tag must be bumped together with it**; a mismatch fails the run with a message asking to update the Docker image.
+
+The merged HTML report is always uploaded as a workflow artifact (so passing runs stay discoverable too, e.g. to check the new accessibility warning annotations); on failure, each failing shard additionally uploads its test artifacts (screenshots, videos).
 
 ## Writing Tests
 
