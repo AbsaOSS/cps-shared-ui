@@ -75,12 +75,12 @@ All config lives in [`playwright.config.ts`](../playwright.config.ts) at the pro
 
 ### Key settings
 
-| Setting               | Local            | CI    | Why                                                               |
-| --------------------- | ---------------- | ----- | ----------------------------------------------------------------- |
-| `retries`             | 0                | 2     | Avoid masking flaky tests locally, tolerate infra flakiness in CI |
-| `workers`             | 50% of CPU cores | 1     | Speed locally, stability in CI                                    |
-| `forbidOnly`          | false            | true  | Prevent `.only` from sneaking into PRs                            |
-| `reuseExistingServer` | true             | false | Reuse your running `ng serve`; CI always starts fresh             |
+| Setting               | Local            | CI                           | Why                                                               |
+| --------------------- | ---------------- | ---------------------------- | ----------------------------------------------------------------- |
+| `retries`             | 0                | 2                            | Avoid masking flaky tests locally, tolerate infra flakiness in CI |
+| `workers`             | 50% of CPU cores | 50% of CPU cores (per shard) | Playwright default; not overridden in config                      |
+| `forbidOnly`          | false            | true                         | Prevent `.only` from sneaking into PRs                            |
+| `reuseExistingServer` | true             | false                        | Reuse your running `ng serve`; CI always starts fresh             |
 
 ### Timeouts
 
@@ -131,15 +131,9 @@ Running `npm run test:playwright` executes all three. Accessibility (axe-core) s
 
 Playwright starts `npm run start` (Angular dev server) automatically and waits for `http://localhost:4200` before running tests. Locally, if the server is already running it's reused so you don't have to wait for a cold start.
 
-### Why is parallelism disabled in CI?
+### Parallelism in CI
 
-CI runners (GitHub Actions `ubuntu-latest`) have limited resources. Running multiple browser instances in parallel on that hardware might cause:
-
-- **Resource contention** — browsers compete for CPU/memory, leading to slow rendering and timeouts
-- **Non-deterministic failures** — a test that passes alone may fail when running alongside others due to timing differences
-- **Harder debugging** — when multiple tests fail simultaneously, it's hard to tell if it's a real bug or a resource issue
-
-With 1 worker, tests run one at a time — slower but predictable. If CI runs become too slow as the test suite grows, we can consider bumping `workers` value and see if tests remain stable.
+CI parallelizes on two levels: the suite is split across 4 shard jobs (see [CI](#ci)), and each shard runs its slice with Playwright's default worker count (half the runner's CPU cores). With `fullyParallel: true`, individual tests within a file are distributed across workers too.
 
 ## VS Code Extension
 
