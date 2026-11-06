@@ -156,6 +156,8 @@ Install the [Playwright Test for VS Code](https://marketplace.visualstudio.com/i
 
 Playwright tests run in the GitHub Actions workflow (`.github/workflows/cps-shared-ui-checkers.yml`), [sharded](https://playwright.dev/docs/test-sharding) across 4 parallel `playwright` jobs (`--shard=N/4`). Each shard writes a blob report; the `playwright-report` job then merges them with `npx playwright merge-reports` into a single HTML report plus `summary.json` for the PR comment. To change the shard count, update both `shardIndex` and `shardTotal` in the job matrix.
 
+The shard jobs run inside the official [Playwright Docker image](https://playwright.dev/docs/docker) (`mcr.microsoft.com/playwright`), which ships with browsers and their system dependencies preinstalled, so there is no `playwright install` step. `@playwright/test` is pinned to an exact version in `package.json`, and **the image tag must be bumped together with it**; a mismatch fails the run with a message asking to update the Docker image.
+
 The merged HTML report is always uploaded as a workflow artifact (so passing runs stay discoverable too, e.g. to check the new accessibility warning annotations); on failure, each failing shard additionally uploads its test artifacts (screenshots, videos).
 
 ## Writing Tests

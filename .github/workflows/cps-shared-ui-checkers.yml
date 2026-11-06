@@ -96,6 +96,9 @@ jobs:
 
   playwright:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-resolute
+      options: --user 1001 --ipc=host
     strategy:
       fail-fast: false
       matrix:
@@ -113,9 +116,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium webkit
 
       - name: Run Playwright tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
         run: npm run test:playwright -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob
