@@ -96,6 +96,14 @@ jobs:
 
   playwright:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-resolute
+      options: --user 1001 --ipc=host
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -109,46 +117,75 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      - name: Run Playwright tests (shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }})
+        run: npm run test:playwright -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }} --reporter=blob
 
-      - name: Run Playwright tests
-        run: npm run test:playwright
+      - name: Upload blob report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: blob-report-${{ matrix.shardIndex }}
+          path: blob-report/
+          retention-days: 1
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-test-results-${{ matrix.shardIndex }}
+          path: test-results/
+          retention-days: 10
+
+  playwright-report:
+    needs: playwright
+    runs-on: ubuntu-latest
+    if: ${{ !cancelled() }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download blob reports
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge shard reports
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: playwright-report/summary.json
+        run: npx playwright merge-reports --reporter html,json ./all-blob-reports
 
       - name: Upload Playwright report
         id: upload-report
         uses: actions/upload-artifact@v4
-        if: always()
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 10
 
-      - name: Upload test results
-        id: upload-results
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-test-results
-          path: test-results/
-          retention-days: 10
-
       - name: Build artifact links
         id: artifact-links
-        if: always()
         run: |
           REPORT_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-report.outputs.artifact-id }}"
           MSG="For details, download the [Playwright report](${REPORT_URL})"
-          RESULTS_ID="${{ steps.upload-results.outputs.artifact-id }}"
-          if [ -n "$RESULTS_ID" ]; then
-            RESULTS_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${RESULTS_ID}"
-            MSG="${MSG} | [Test results — screenshots, videos, traces](${RESULTS_URL})"
+          if [ "${{ needs.playwright.result }}" = "failure" ]; then
+            RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts"
+            MSG="${MSG} | [Test results per shard — screenshots, videos, traces](${RUN_URL})"
           fi
           echo "msg=${MSG}" >> "$GITHUB_OUTPUT"
 
       - name: Playwright report summary
         uses: daun/playwright-report-summary@v3
-        if: always()
         with:
           report-file: playwright-report/summary.json
           comment-title: 'Playwright test results'

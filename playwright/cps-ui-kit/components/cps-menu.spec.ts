@@ -122,7 +122,7 @@ test.describe('cps-menu', () => {
       page
     }) => {
       const toggle = page.getByTestId('hover-menu-toggle');
-      await toggle.hover();
+      await toggle.hover({ force: true });
 
       await expect(menuContainer(page)).toBeVisible();
 

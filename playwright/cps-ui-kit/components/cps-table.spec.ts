@@ -599,12 +599,34 @@ test.describe('cps-table', () => {
     }) => {
       await page.getByRole('tab', { name: 'Table 12', exact: true }).click();
       const wrapper = example(page, 'table-12-always-show-paginator-false');
+      const paginator = wrapper.locator('.p-paginator');
+      const rows = wrapper.locator('tbody tr');
+      const toggle = page.getByRole('switch', {
+        name: 'Load enough records for multiple pages'
+      });
 
-      await expect(wrapper.locator('.p-paginator')).toBeHidden();
+      // Make sure the tab content is actually rendered, so the hidden check below is meaningful
+      await expect(rows).toHaveCount(3);
+      await expect(paginator).toBeAttached();
+      await expect(paginator).toBeHidden();
 
+      // Wait for the tab slide-in animation to finish, otherwise the click can land on a moving target
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () =>
+              document.getAnimations().filter((a) => a.playState === 'running')
+                .length
+          )
+        )
+        .toBe(0);
+
+      await expect(toggle).not.toBeChecked();
       await page.getByTestId('cps-switch-label').click();
+      await expect(toggle).toBeChecked();
 
-      await expect(wrapper.locator('.p-paginator')).toBeVisible();
+      await expect(rows).toHaveCount(10);
+      await expect(paginator).toBeVisible();
     });
   });
 

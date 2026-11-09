@@ -634,8 +634,22 @@ test.describe('cps-tree-table', () => {
         .click();
       const wrapper = example(page, 'treetable-12-always-show-paginator-false');
 
+      // Make sure the tab content is actually rendered, so the hidden check below is meaningful
+      await expect(wrapper.locator('.p-paginator')).toBeAttached();
       await expect(wrapper.locator('.p-paginator')).toBeHidden();
 
+      // Wait for the tab slide-in animation to finish, otherwise the click can land on a moving target
+      await expect
+        .poll(() =>
+          page.evaluate(
+            () =>
+              document.getAnimations().filter((a) => a.playState === 'running')
+                .length
+          )
+        )
+        .toBe(0);
+
+      await expect(page.getByTestId('cps-switch-input')).not.toBeChecked();
       await page.getByTestId('cps-switch-label').click();
 
       await expect(page.getByTestId('cps-switch-input')).toBeChecked();
