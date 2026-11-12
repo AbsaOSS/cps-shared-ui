@@ -49,7 +49,7 @@ jobs:
         run: npm run test:coverage:cps-ui-kit
 
       - name: Comment coverage on PR
-        uses: ArtiomTr/jest-coverage-report-action@v2
+        uses: ArtiomTr/jest-coverage-report-action@262a7bb0b20c4d1d6b6b026af0f008f78da72788 # v2.3.1
         if: github.event_name == 'pull_request'
         continue-on-error: true
         with:
@@ -185,7 +185,7 @@ jobs:
           echo "msg=${MSG}" >> "$GITHUB_OUTPUT"
 
       - name: Playwright report summary
-        uses: daun/playwright-report-summary@v3
+        uses: daun/playwright-report-summary@5359ae22f265fd2dfdb7744a0cc6614c5c3abde6 # v4.1.1
         with:
           report-file: playwright-report/summary.json
           comment-title: 'Playwright test results'
