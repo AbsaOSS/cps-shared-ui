@@ -1,8 +1,11 @@
 .sync-val-example {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  .sync-val {
-    margin-left: 1.5rem;
+  column-gap: 1.5rem;
+  cps-tree-select {
+    flex: 0 0 31.25rem;
+    max-width: 100%;
   }
 }
 

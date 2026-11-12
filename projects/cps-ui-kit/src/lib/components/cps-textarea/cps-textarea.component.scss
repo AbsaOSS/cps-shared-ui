@@ -78,6 +78,13 @@ $hover-transition-duration: 0.2s;
         border-radius: 0;
         width: 100%;
         box-sizing: border-box;
+
+        // The inline width matches the bordered wrap, which cuts off the
+        // right 2px (scrollbar, resize handle). Fitted on narrow screens
+        // (1280px at 200% zoom or text); wider ones keep the current layout
+        @media (max-width: 40rem) {
+          max-width: 100%;
+        }
         &:focus {
           outline: 0;
         }

@@ -9,6 +9,10 @@ function visibleByTestId(scope: Locator, testId: string): Locator {
 }
 
 test.describe('cps-tree-table', () => {
+  // Each example is in a tab that slides in for 200ms, which a click can miss
+  // on a slow runner. Under reduced motion it shortens to 1ms
+  test.use({ reducedMotion: 'reduce' });
+
   test.beforeEach(async ({ page }) => {
     page.setDefaultTimeout(15000);
     await page.goto('/tree-table');

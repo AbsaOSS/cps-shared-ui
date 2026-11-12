@@ -7,7 +7,7 @@ End-to-end and accessibility tests for the CPS UI Kit components and the composi
 ```
 playwright/
 ├── cps-ui-kit/
-│   ├── accessibility-cps-ui-kit.spec.ts   # axe-core scans, per cps-ui-kit component
+│   ├── accessibility-cps-ui-kit.spec.ts   # axe-core scans and reflow / 200% text checks, per cps-ui-kit component
 │   └── components/                        # Functional/behavioral component tests
 │       ├── cps-autocomplete.spec.ts
 │       ├── cps-scheduler.spec.ts
@@ -17,6 +17,7 @@ playwright/
 ├── fixtures/
 │   ├── axe-helpers.ts                     # Shared axe-core Playwright fixture + assertion helpers
 │   ├── composition-components.ts          # Component/page registry used to drive scans
+│   ├── layout-helpers.ts                  # Reflow and text resize measurements + assertion helpers
 │   └── table_6_fixture.xlsx               # Test data (e.g. expected xlsx exports)
 └── tsconfig.json                          # TypeScript config for editor support
 ```
@@ -34,6 +35,48 @@ configured rules remain active.
 This leaves WCAG 2.5.3 (Label in Name) unchecked by this rule. Follow-up work must
 address the reported file-upload, datepicker, tab badge, tree-autocomplete, and
 tree-select mismatches, add regression coverage, and remove the exception.
+
+### Reflow and text resize (WCAG 1.4.10, 1.4.4)
+
+axe-core doesn't cover these criteria. It has no rule for 1.4.10 Reflow, its only 1.4.4 Resize Text rule (`meta-viewport`) checks that pinch zoom isn't blocked rather than that text grows, and it never resizes the page. So `accessibility-cps-ui-kit.spec.ts` measures the layout itself, for every entry in `components` (same `route`, `selector` and `setup` as the axe scans, so overlays are checked while open):
+
+| Test                                  | Viewport    | Equivalent                                                    |
+| ------------------------------------- | ----------- | ------------------------------------------------------------- |
+| `Accessibility - reflow at 640px`     | 640 × 512   | 1280 × 1024 window at 200% zoom                               |
+| `Accessibility - reflow at 320px`     | 320 × 256   | 1280 × 1024 window at 400% zoom                               |
+| `Accessibility - text resize to 200%` | 1280 × 1024 | Browser font size set to 32px (200% of Chrome's 16px default) |
+
+The 200% test enlarges text the way a user does in the browser settings, through Chrome DevTools (`Page.setFontSizes`), before the page loads. It doesn't inject a CSS root font size. That matters for two reasons. Media queries in `rem` or `em` follow the browser font size but ignore a CSS root font size, and the kit uses them to reflow only on narrow screens. And an app that fixes its root font size in `px` doesn't follow the browser setting, which the test then reports.
+
+With 32px text, the 1280px viewport is exactly `40rem`, the breakpoint of the kit's narrow-screen rules (`@media (max-width: 40rem)`), so they apply as they do at 200% zoom in the same window. Keep the viewport at 1280px: one pixel wider and they stop applying. A wider window with 200% text gets the desktop layout, which these tests don't cover.
+
+The measuring code is in [`fixtures/layout-helpers.ts`](./fixtures/layout-helpers.ts). Each test checks:
+
+1. **The page doesn't scroll sideways.** `document.documentElement.scrollWidth <= clientWidth`, and no part of the component sticks out of a scroll or clip container around it. Content laid out directly in a scroll container (a child, or inline content in its lines) must also stay out of the container's end padding, because the browser scrolls that padding with it; other content may reach into it. The composition app scrolls inside `#main-content`, `.composition-page` and `.code-example__preview` rather than the document, so the document check alone would rarely fail.
+2. **Nothing is off-screen.** Every visible element inside the entry's selector(s) lies within the viewport horizontally.
+3. **No content is cut off.** Containers that hide part of their content in either direction (`scrollWidth > clientWidth` or `scrollHeight > clientHeight` with `overflow: hidden`/`clip`) are reported, as are containers that scroll sideways inside the component. So is text or a control cut off past a container's left or top edge, which `scrollWidth` leaves out, and a box squeezed to 0px wide that clips its content. Scrolling vertically inside a container is fine. Text truncated with an ellipsis passes only with an allowance.
+4. **Text doubles** (200% test only). Every visible text element's computed font size must be double its size at the default browser font size; one that isn't is sized in `px` (on the element, an ancestor or the root) instead of `rem` or `em`. The narrow-screen rules apply only to the 200% reading, so a font size set in them shows up here too. Text removed between the two readings (a toast closing on its timer) is read once more.
+
+Each failure message names the component, the element (tag, classes, text) and the measured sizes; the full report is attached to the test as JSON. Measurements allow 1px for sub-pixel rounding, ignore visually hidden elements (`clip: rect(0 0 0 0)`, e.g. `.cps-sr-only`), wait for the layout to settle (a `warning` annotation notes when it's still changing after 3s), and run with `prefers-reduced-motion: reduce` (the kit only shortens animations under it) with infinite animations such as spinners measured at their first frame.
+
+The checks run only in the `accessibility` project (Desktop Chrome). Layout can differ in WebKit, so verify layout fixes there by hand.
+
+Run only these tests:
+
+```bash
+npx playwright test playwright/cps-ui-kit/accessibility-cps-ui-kit.spec.ts --project=accessibility --grep "should (reflow|scale)"
+```
+
+#### Allowances
+
+All exceptions live in named lists at the top of the reflow section of `accessibility-cps-ui-kit.spec.ts`. `component` matches an entry's `name` or `group`. Never skip a whole component, and don't loosen a check to make a test pass.
+
+- **`REFLOW_SCROLL_ALLOWANCES`**: content that needs two dimensions (data tables, a single-row tab list with prev/next buttons) may scroll sideways inside its own container. Add `{ component, scrollContainer, reason }`, where `scrollContainer` is the selector of that container. Content it scrolls is then exempt from the off-screen and page checks; content positioned outside it (escaping it) isn't. The container itself is still measured: it must not cut off content vertically or past its left edge, and the page must still not scroll.
+- **`ELLIPSIS_ALLOWANCES`**: text may be truncated with an ellipsis only where the full text is available another way. Add `{ component, selector, fullTextVia }`, e.g. `fullTextVia: 'title attribute'`.
+
+#### Known failures
+
+A component whose fix is too large for the change that found it gets its own issue and an entry in **`KNOWN_FAILURES`**: `{ checks, components, issue }`, with a comment saying what fails. The matching tests are marked with `test.fail()`, so they keep passing while the problem exists and fail ("expected to fail, but passed") once the component is fixed; then remove the entry. The mark is applied only after navigation and `setup`, so a broken setup (a renamed tab, a timeout) still fails the test.
 
 ## Running Tests
 

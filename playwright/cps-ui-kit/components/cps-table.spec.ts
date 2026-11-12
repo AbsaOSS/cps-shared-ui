@@ -7,6 +7,10 @@ function example(page: Page, testId: string): Locator {
 }
 
 test.describe('cps-table', () => {
+  // Each example is in a tab that slides in for 200ms, which a click can miss
+  // on a slow runner. Under reduced motion it shortens to 1ms
+  test.use({ reducedMotion: 'reduce' });
+
   test.beforeEach(async ({ page }) => {
     await page.goto('/table');
     await page.addStyleTag({

@@ -78,6 +78,13 @@ $elem-active-background: var(--cps-color-highlight-active);
 
     .p-paginator-current {
       cursor: default;
+
+      // Text only, no ripple to contain: with line-height 1 the glyphs are
+      // clipped. Shown in full on narrow screens (1280px at 200% zoom or
+      // text); wider ones keep the current rendering
+      @media (max-width: 40rem) {
+        overflow: visible;
+      }
     }
 
     .p-paginator

@@ -13,6 +13,12 @@ $tick-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu
   min-width: max-content;
   display: inline-block;
 
+  // Lets the label wrap on narrow screens (1280px at 200% zoom and beyond),
+  // wider ones keep the single-line label
+  @media (max-width: 40rem) {
+    min-width: auto;
+  }
+
   .cps-checkbox-container {
     line-height: normal;
     display: flex;
@@ -51,6 +57,11 @@ $tick-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGlu
       box-sizing: border-box;
       border: 0.125rem solid $border-color;
       border-radius: $border-radius;
+
+      // Keeps the box square when the label wraps (see :host)
+      @media (max-width: 40rem) {
+        flex-shrink: 0;
+      }
     }
 
     .cps-checkbox-label,
