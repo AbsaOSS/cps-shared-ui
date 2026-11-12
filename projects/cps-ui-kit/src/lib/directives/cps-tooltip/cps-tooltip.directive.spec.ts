@@ -8,10 +8,18 @@ import {
   CpsTooltipDirective,
   CpsTooltipPosition
 } from './cps-tooltip.directive';
-import { ChangeDetectionStrategy, Component, PLATFORM_ID } from '@angular/core';
+import {
+  ApplicationRef,
+  ChangeDetectionStrategy,
+  Component,
+  PLATFORM_ID
+} from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { CPS_ROOT_FONT_SIZE_SERVICE } from '../../services/cps-root-font-size/cps-root-font-size.service';
 import { CPS_LIVE_ANNOUNCER_SERVICE } from '../../services/cps-live-announcer/cps-live-announcer.service';
+import { CpsNotificationService } from '../../services/cps-notification/cps-notification.service';
+import { markOverlayShown } from '../../utils/internal/overlay-utils/overlay-utils';
 import { ZIndexUtils } from '../../primeng-temp/utils/public_api';
 
 @Component({
@@ -71,7 +79,8 @@ describe('CpsTooltipDirective', () => {
         {
           provide: CPS_LIVE_ANNOUNCER_SERVICE,
           useValue: mockLiveAnnouncer
-        }
+        },
+        provideNoopAnimations()
       ]
     }).compileComponents();
   });
@@ -705,6 +714,19 @@ describe('CpsTooltipDirective', () => {
         expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
       }));
 
+      it('should stay closed after Esc when the pointer crossed a keyboard-focused target more than once', fakeAsync(() => {
+        keyboardFocusTarget();
+        tick(300);
+        divElement.triggerEventHandler('mouseenter', null);
+        divElement.triggerEventHandler('mouseleave', null);
+        divElement.triggerEventHandler('mouseenter', null);
+
+        pressKey('Escape');
+        tick(500);
+
+        expect(document.body.querySelector('.cps-tooltip')).toBeFalsy();
+      }));
+
       it('should ignore other keys', fakeAsync(() => {
         divElement.triggerEventHandler('mouseenter', null);
         tick(300);
@@ -891,6 +913,55 @@ describe('CpsTooltipDirective', () => {
           closed.remove();
           opened.remove();
           header.remove();
+        }
+      }));
+
+      it('should leave the Esc to an overlay open before the tooltip that showed something new since', fakeAsync(() => {
+        const overlay = document.body.appendChild(
+          document.createElement('div')
+        );
+        ZIndexUtils.set('modal', overlay, 1100);
+        try {
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          markOverlayShown(overlay);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          expect(event.defaultPrevented).toBe(false);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          ZIndexUtils.clear(overlay);
+          overlay.remove();
+        }
+      }));
+
+      it('should leave the Esc to a notification added after the tooltip to a container already open', fakeAsync(() => {
+        const notifications = TestBed.inject(CpsNotificationService);
+        const appRef = TestBed.inject(ApplicationRef);
+        const show = (message: string) => {
+          notifications.info(message, undefined, { timeout: 0 });
+          appRef.tick();
+          tick();
+        };
+        try {
+          show('Saved');
+          divElement.triggerEventHandler('mouseenter', null);
+          tick(300);
+          show('Saved again');
+          expect(
+            document.querySelectorAll('cps-notification-container')
+          ).toHaveLength(1);
+
+          const event = pressKey('Escape');
+          tick(200);
+
+          // Handled by the notifications, the tooltip stays open
+          expect(event.defaultPrevented).toBe(true);
+          expect(document.body.querySelector('.cps-tooltip')).toBeTruthy();
+        } finally {
+          notifications.clear();
         }
       }));
 
